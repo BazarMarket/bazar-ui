@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Card</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+   <meta name="description" content="">
+   <meta name="keywords" content="">
+   <link rel="stylesheet" href="css/icon-style.css" type="text/css"> <!-- Иконки -->
+   <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
+   <link rel="stylesheet" href="css/choices.min.css" type="text/css"> <!-- Кастомный select -->
+   <link rel="stylesheet" href="css/main.css" type="text/css"> <!-- Основные стили темы  -->
+   <link rel="icon" href="favicon.svg">
+</head>
+
+
+<body>
+   <div class="wrapper">
+
+      <header class="header-old">
+         <div class="container-full">
+            <div class="header-old__body">
+               <a href="#" class="logo">
+                  <img src="img/logo-old.svg" alt="">
+               </a>
+               <div class="burger-body">
+                  <div class="header-old__right">
+                     <div class="header-old__cell">
+                        <a href="#" class="btn btn_mini ">+ post an ad</a>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="icons-list">
+                           <a href="#" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                           <a href="#" class="icon-item icon-notification"><span class="icon-item__namber">3</span></a>
+                           <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                        </div>
+
+                        <div class="wallet-widget icon-win-wallet">£ 3 216 </div>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="user-link">
+                           <div class="user-link__title">Alexey</div>
+                           <div class="user-link__photo">
+                              <img class="img-cover" src="icon/man.svg" alt="">
+                           </div>
+
+                           <div class="user-menu">
+                              <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                              <hr class="user-menu__hr">
+                              <a href="#" class="user-menu-item icon-win-user">My Profile</a>
+                              <a href="#" class="user-menu-item icon-win-ad">My Ads</a>
+                              <a href="#" class="user-menu-item icon-win-wallet">My Payments</a>
+                              <a href="#" class="user-menu-item icon-heart">Favorites</a>
+
+                              <div class="subscription">
+                                 <p class="subscription__title icon-calendar-upd">Subscription</p>
+                                 <span class="subscription__stiker">PRO</span>
+                                 <span class="subscription__days">382дн</span>
+                              </div>
+
+
+                              <hr class="user-menu__hr">
+                              <div class="dark-mode">
+                                 <div class="user-menu-item icon-win-sun">Dark Mode</div>
+                                 <label class="toggle">
+                                    <input type="checkbox">
+                                    <span class="toggle__slider"></span>
+                                 </label>
+                              </div>
+
+                              <a href="#" class="user-menu-item icon-win-faq">Support</a>
+                              <a href="#" class="user-menu-item icon-win-setting">My Settings</a>
+                              <hr class="user-menu__hr">
+                              <a href="#" class="user-logout icon-win-logout">Log out</a>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="lang">
+                           <a href="" class="lang__item">
+                              <img src="icon/flag-engligh.svg" alt="">
+                              <span>EN</span>
+                           </a>
+                           <a href="" class="lang__item">
+                              <img src="icon/flag-greece.svg" alt="">
+                              <span>EL</span>
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="burger-old">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+               </div>
+            </div>
+         </div>
+      </header>
+      <div class="container">
+         <ul class="bread-custom">
+            <li><a href="#">Home</a> <span class="icon-arrow-r"></span> </li>
+            <li><a class="active" href="#">Post an ad</a></li>
+         </ul>
+      </div>
+
+      <main class="main header-indent">
+
+         <div class="post-anad">
+            <div class="container">
+               <div class="post-anad__head">
+                  <div class="page-head">
+                     <div class="page-head__left">
+                        <p class="page-head__title">Post an ad</p>
+                     </div>
+                  </div>
+                  <div class="choose-category">
+                     <div class="choose-category__head">
+                        <h2 class="choose-category__title">Choose a category</h2>
+                     </div>
+                     <div class="choose-category__body">
+                        <div class="choose-category__coll">
+                           <ul>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-1" type="radio">
+                                 <label for="radio1-1">Real Estate for sale</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-2" type="radio">
+                                 <label for="radio1-2">Real Estate to rent</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input checked name="radio1" id="radio1-3" type="radio">
+                                 <label for="radio1-3">Motors</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-4" type="radio">
+                                 <label for="radio1-4">Jobs</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-5" type="radio">
+                                 <label for="radio1-5">Mobile phones, communication</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-6" type="radio">
+                                 <label for="radio1-6">Kids' stuff</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-7" type="radio">
+                                 <label for="radio1-7">Clothes, footwear, accessories</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio1" id="radio1-8" type="radio">
+                                 <label for="radio1-8">Computers, gaming</label>
+                              </li>
+                           </ul>
+                        </div>
+                        <div class="choose-category__coll">
+                           <ul>
+                              <li class="input-radio-cat">
+                                 <input name="radio2" id="radio2-1" type="radio">
+                                 <label for="radio2-1">Houses</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio2" id="radio2-2" type="radio">
+                                 <label for="radio2-2">Apartments, flats</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio2" id="radio2-3" type="radio">
+                                 <label for="radio2-3">Commercial property</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio2" id="radio2-4" type="radio">
+                                 <label for="radio2-4">Plots of land</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input checked name="radio2" id="radio2-5" type="radio">
+                                 <label for="radio2-5">Residential buildings</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio2" id="radio2-6" type="radio">
+                                 <label for="radio2-6">Prefabricated houses</label>
+                              </li>
+                              <li class="input-radio-cat">
+                                 <input name="radio2" id="radio2-7" type="radio">
+                                 <label for="radio2-7">Other</label>
+                              </li>
+                           </ul>
+                        </div>
+                        <div class="choose-category__coll">
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="post-anad__body">
+                  <form action="">
+                     <div class="post-anad__cell">
+                        <div class="select-custom-anad">
+                           <label for="">Type:<span>*</span></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Detached house:</option>
+                                 <option value="">Выбор 2</option>
+                                 <option value="">Выбор 3</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Postal code:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="Username:">
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Choose the point:</label>
+                           <div class="select-custom-anad__box">
+                              <iframe
+                                 src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4634.477474318354!2d32.42508339803214!3d34.780250945755355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sua!4v1767128419222!5m2!1sru!2sua"
+                                 width="100%" height="230px" style="border:0;border-radius: 5px;" allowfullscreen=""
+                                 loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Bedrooms:<span>*</span></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Choose one:</option>
+                                 <option value="">Choose two:</option>
+                                 <option value="">Choose three:</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Parking:</label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Choose one:</option>
+                                 <option value="">Choose two:</option>
+                                 <option value="">Choose three:</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Furnishing:</label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Choose one:</option>
+                                 <option value="">Choose two:</option>
+                                 <option value="">Choose three:</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Air conditioning:></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Choose one:</option>
+                                 <option value="">Choose two:</option>
+                                 <option value="">Choose three:</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Condition:<span>*</span></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Choose one:</option>
+                                 <option value="">Choose two:</option>
+                                 <option value="">Choose three:</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Construction year:</label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Choose one:</option>
+                                 <option value="">Choose two:</option>
+                                 <option value="">Choose three:</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad input-custom-anad_unit">
+                           <label for="">Property area:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder=" ">
+                              <p class="input-unit">m<sup>2</sup></p>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad input-custom-anad_unit">
+                           <label for="">Plot area:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder=" ">
+                              <p class="input-unit">m<sup>2</sup></p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="post-anad__cell">
+                        <div class="post-anad__cell-head">
+                           <h3 class="post-anad__cell-title">Included:</h3>
+                           <a href="#" class="btn btn_small">Disable all options </a>
+                        </div>
+                        <div class="cehck-box">
+                           <div class="cehck-box__body">
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-1" type="checkbox">
+                                 <label for="checkbox1-1">Veranda</label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-2" type="checkbox">
+                                 <label for="checkbox1-2">Wi-Fi </label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-3" type="checkbox">
+                                 <label for="checkbox1-3">Air conditioner </label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-4" type="checkbox">
+                                 <label for="checkbox1-4">Television</label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-5" type="checkbox">
+                                 <label for="checkbox1-5">Household appliances
+                                 </label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-6" type="checkbox">
+                                 <label for="checkbox1-6">Tennis court
+                                 </label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-7" type="checkbox">
+                                 <label for="checkbox1-7">Gym</label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-8" type="checkbox">
+                                 <label for="checkbox1-8">Television</label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-9" type="checkbox">
+                                 <label for="checkbox1-9">Terrace</label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-10" type="checkbox">
+                                 <label for="checkbox1-10">Children's playground
+                                 </label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-11" type="checkbox">
+                                 <label for="checkbox1-11">Garden</label>
+                              </div>
+                              <div class="input-checkbox">
+                                 <input id="checkbox1-12" type="checkbox">
+                                 <label for="checkbox1-12">Children's bed
+                                 </label>
+                              </div>
+                           </div>
+                           <div class="cehck-box__down">
+                              <hr>
+                              <a href="" class="cehck-box__btn">Show more</a>
+                              <hr>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="post-anad__cell">
+                        <div class="select-custom-anad">
+                           <label for="">Online viewing:</label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Detached house:</option>
+                                 <option value="">Выбор 2</option>
+                                 <option value="">Выбор 3</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Energy Efficiency:<span>*</span></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Detached house:</option>
+                                 <option value="">Выбор 2</option>
+                                 <option value="">Выбор 3</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Registration block:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Reg-tion number:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                           </div>
+                        </div>
+                        <div class="input-custom-anad input-custom-anad_unit">
+                           <label for="">Price:<span>*</span></label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder=" ">
+                              <p class="input-unit">€</p>
+                           </div>
+                        </div>
+                        <div class="toggle-input">
+                           <label class="toggle">
+                              <input type="checkbox">
+                              <span class="toggle__slider"></span>
+                           </label>
+                           <p class="toggle-input__title">Negotiable price</p>
+                        </div>
+                     </div>
+                     <div class="post-anad__cell">
+
+                        <div class="image-upload-box">
+                           <p class="image-upload-box__label">Images: (Title image)</p>
+                           <div class="image-upload-box__body">
+                              <div class="image-upload">
+                                 <input class="image-upload__input" type="file" accept="image/*">
+                                 <div class="image-upload__box">
+                                    <span class="image-upload__plus">+</span>
+                                    <img class="image-upload__preview" alt="">
+                                    <button class="image-upload__remove" type="button">&times;</button>
+                                 </div>
+                              </div>
+                              <div class="image-upload-box__dop">
+                                 <p>Hold CTRL to choose several photos. Maximum file size is 5MB, the formats are .jpg,
+                                    .jpeg, .png, .gifNote: ads with good photos get more attention</p>
+                              </div>
+                           </div>
+                        </div>
+
+                        <hr class="line-decor">
+
+                        <div class="image-upload-box">
+                           <p class="image-upload-box__label">Floor plan:</p>
+                           <div class="image-upload-box__body">
+                              <div class="image-upload">
+                                 <input class="image-upload__input" type="file" accept="image/*">
+                                 <div class="image-upload__box">
+                                    <span class="image-upload__plus">+</span>
+                                    <img class="image-upload__preview" alt="">
+                                    <button class="image-upload__remove" type="button">&times;</button>
+                                 </div>
+                              </div>
+                              <div class="image-upload-box__dop">
+                              </div>
+                           </div>
+                        </div>
+
+
+
+
+                     </div>
+                     <div class="post-anad__cell">
+                        <div class="input-custom-anad">
+                           <label for="">Youtube video:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Tiktok link:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                           </div>
+                        </div>
+                        <div class="image-upload-box">
+                           <p class="image-upload-box__label">Video:</p>
+                           <div class="image-upload-box__body">
+                              <div class="image-upload">
+                                 <input class="image-upload__input" type="file" accept="image/*">
+                                 <div class="image-upload__box">
+                                    <span class="image-upload__plus">+</span>
+                                    <img class="image-upload__preview" alt="">
+                                    <button class="image-upload__remove" type="button">&times;</button>
+                                 </div>
+                              </div>
+                              <div class="image-upload-box__dop">
+                                 <p>You can upload a video for better presentation of your whatever you sell. Maximum
+                                    file size is 500MB, the formats are .mpg, .mp4, .mov</p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Virtual tour link:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                              <p class="input-custom-anad__text">Virtual tour will make you ad more vivid in ads listing
+                              </p>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Registration block:</label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                              <p class="input-custom-anad__text">
+                                 - Add a description of your good or service, specify the advantages and the important
+                                 details. <br>
+                                 - Please note: Contact details are not allowed in the description.
+                              </p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="post-anad__cell">
+                        <div class="select-custom-anad">
+                           <label for="">District:<span>*</span></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Detached house:</option>
+                                 <option value="">Выбор 2</option>
+                                 <option value="">Выбор 3</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="select-custom-anad">
+                           <label for="">Location:<span>*</span></label>
+                           <div class="select-custom-anad__box">
+                              <div class="select-custom-anad__arrow icon-arrow-mini"></div>
+                              <select name="" id="">
+                                 <option value="">Detached house:</option>
+                                 <option value="">Выбор 2</option>
+                                 <option value="">Выбор 3</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Name:<span>*</span></label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                              <p class="input-custom-anad__text">In the name is not allowed to use: only one letter,
+                                 only numbers, symbols, single words: the seller, the administrator, the name, owner,
+                                 owner, user, user, apple, samsung, iphone, galaxy, lexus, toyota, etc</p>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Email:<span>*</span></label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="">
+                              <p class="input-custom-anad__text">To get notifications about new replies to your ads
+                                 please confirm this email address. We have sent you a confirmation email, please click
+                                 "Confirm this email" in this letter. if you have not received confirmation email
+                                 yetclick here to resend it</p>
+                           </div>
+                        </div>
+                        <div class="input-custom-anad">
+                           <label for="">Phone:<span>*</span></label>
+                           <div class="input-custom-anad__input">
+                              <input type="text" placeholder="+38 (099) 999-99-99">
+                           </div>
+                        </div>
+                        <div class="input-row">
+                           <p class="input-row__title">Messengers:</p>
+                           <div class="input-row__body">
+                              <div class="input-checkbox">
+                                 <input id="checkbox3" type="checkbox">
+                                 <label for="checkbox3">Whatsapp</label>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="form-end">
+                           <p>If you want to change your contacts, go to the settings page</p>
+                           <a href="#" class="form-end__btn btn btn_start">Post an ad</a>
+                           <p>By clicking 'Post an ad', you agree to Term of use, posting rules and privacy policy</p>
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+
+
+
+
+      </main>
+
+   </div>
+
+   <!-- Попапы -->
+   <!-- data-popup="popup-pdf" class="popup-link" -->
+   <div id="popup-pdf" class="popup popup-mini">
+      <div class="popup__wraper">
+         <div class="popup-body popup__body">
+            <div class="popup-head">
+               <p class="popup-head__title icon-pdf">PDF</p>
+               <div class="popup-head__close popup-close  icon-close"></div>
+            </div>
+
+            <div class="pdf-popup">
+               <p class="pdf-popup__title">Открыть в PDF</p>
+               <div class="pdf-popup__body">
+                  <div class="input-checkbox">
+                     <input id="checkbox1" type="checkbox">
+                     <label for="checkbox1">Не показывать цену</label>
+                  </div>
+                  <div class="input-checkbox">
+                     <input id="checkbox2" type="checkbox">
+                     <label for="checkbox2">Не показывать логотип</label>
+                  </div>
+                  <div class="input-checkbox">
+                     <input id="checkbox3" type="checkbox">
+                     <label for="checkbox3">Не показывать ID</label>
+                  </div>
+                  <div class="input-checkbox">
+                     <input id="checkbox4" type="checkbox">
+                     <label for="checkbox4">Одна страница</label>
+                  </div>
+               </div>
+               <a href="#" class="btn btn_mini">Export</a>
+            </div>
+
+
+         </div>
+      </div>
+   </div>
+
+   <!-- data-popup="popup-share" class="popup-link" -->
+   <div id="popup-share" class="popup popup-mini ">
+      <div class="popup__wraper">
+         <div class="popup-body popup__body">
+            <div class="popup-head">
+               <p class="popup-head__title icon-share">Share</p>
+               <div class="popup-head__close popup-close  icon-close"></div>
+            </div>
+
+            <div class="share-popup">
+               <a href="#" class="share-links"><img src="icon/linked.png" alt=""><span>Скопировать ссылку</span></a>
+               <a href="#" class="share-links"><img src="icon/tg.svg" alt=""><span>Telegram</span></a>
+               <a href="#" class="share-links"><img src="icon/fb.svg" alt=""><span>Facebook</span></a>
+               <a href="#" class="share-links"><img src="icon/tw.svg" alt=""><span>Twiter</span></a>
+               <a href="#" class="share-links"><img src="icon/wp.svg" alt=""><span>Whatsapp</span></a>
+            </div>
+
+
+         </div>
+      </div>
+   </div>
+
+   <!-- data-popup="popup-location" class="popup-link" -->
+   <div id="popup-location" class="popup">
+      <div class="popup__wraper">
+         <div class="popup-body popup__body">
+            <div class="popup-head">
+               <p class="popup-head__title icon-location">Location</p>
+               <div class="popup-head__close popup-close  icon-close"></div>
+            </div>
+
+            <div class="map-popup">
+               <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d18989.386424518565!2d33.36439805884907!3d35.17365468290854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sus!4v1674761810943!5m2!1sru!2sus"
+                  width="100%" height="400px" style="border:0;" allowfullscreen="" loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+         </div>
+      </div>
+   </div>
+
+
+
+   <footer class="footer-old">
+      <div class="container-full">
+         <div class="footer-old__body">
+            <div class="footer-old__logo">
+               <a href="#" class="logo">
+                  <img src="img/logo-old.svg" alt="">
+               </a>
+            </div>
+            <div class="footer-old__list">
+               <ul class="list-link">
+                  <li><a href="">Mobile version </a></li>
+                  <li><a href="">Feedback & support </a></li>
+                  <li><a href="">Sitemap</a></li>
+                  <li><a href="">List of districts</a></li>
+                  <li><a href="">Terms and conditions</a></li>
+                  <li><a href="">Advertisement </a></li>
+                  <li><a href="">Help</a></li>
+                  <li><a href="">Safety</a></li>
+                  <li><a href="">Account verification</a></li>
+                  <li><a href="">Join our team</a></li>
+                  <li><a href="">Bazaraki.ru</a></li>
+                  <li><a href="">Check your XML feed</a></li>
+                  <li><a href="">Help</a></li>
+                  <li><a href="">Safety</a></li>
+                  <li><a href="">Account verification</a></li>
+                  <li><a href="">Join our team </a></li>
+                  <li><a href="">Bazaraki.ru </a></li>
+                  <li><a href="">Check your XML feed</a></li>
+               </ul>
+            </div>
+            <div class="footer-old__rigth">
+
+               <a href="#" class="btn btn_mini ">+ post an ad</a>
+
+               <div class="icons-list">
+                  <a href="#" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                  <a href="#" class="icon-item icon-notification"><span class="icon-item__dot"></span></a>
+                  <a href="#" class="icon-item icon-star"><span class="icon-item__namber">3</span></a>
+               </div>
+
+
+               <div class="lang">
+                  <a href="" class="lang__item">
+                     <img src="/icon/flag-engligh.svg" alt="">
+                     <span>EN</span>
+                  </a>
+                  <a href="" class="lang__item">
+                     <img src="/icon/flag-greece.svg" alt="">
+                     <span>EL</span>
+                  </a>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </footer>
+
+
+   <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
+   <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
+   <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+   <script type="text/javascript" src="js/script.js"></script>
+
+</body>
+
+</html>

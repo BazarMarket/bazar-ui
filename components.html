@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Components</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <link href="
+https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.css
+" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/icon-style.css" type="text/css"> <!-- Иконки -->
+    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
+    <link rel="stylesheet" href="css/choices.min.css" type="text/css"> <!-- Кастомный select -->
+    <link rel="stylesheet" href="css/main.css" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="icon" href="favicon.svg">
+</head>
+
+<body>
+
+    <div class="sending-main">
+        <img src="icon/load.gif" alt="">
+    </div>
+
+
+    <div class="wrapper">
+
+        <style>
+
+        </style>
+
+        <div class="page-numbers">
+            <a href="#" class="prev icon-arrow-l"></a>
+            <a href="#">1</a>
+            <span class="current">2</span>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#" class="next icon-arrow-r"></a>
+        </div>
+
+
+        <div class="compopnent">
+            <div class="container">
+                <div class="compopnent__body ">
+                    <!-- ======================================================================================================== -->
+                    <!-- ======= Форма обратной связи =========================================================================== -->
+                    <!-- ======================================================================================================== -->
+                    <div class="compopnent__item">
+                        <h2>Форма обратной связи</h2>
+                        <p></p>
+                        <div class="compopnent__box">
+                            <div class="form-validation">
+                                <form action="#">
+                                    <div class="input-custom">
+                                        <label for="">Обычное текстовое поле</label>
+                                        <input id="input" class="_req" placeholder="Имя" type="text">
+                                    </div>
+                                    <div class="input-custom">
+                                        <label for="">Поле с ошибкой </label>
+                                        <input class="_req" placeholder="Фамилия" type="text">
+                                        <p class="input-custom__error">Неправильный формат</p>
+                                    </div>
+                                    <div class="input-custom">
+                                        <label for="">Номер телефона</label>
+                                        <input class="_req" placeholder="Номер телефона" type="tel">
+                                    </div>
+
+
+                                    <div class="input-radio">
+                                        <input name="radio" id="radio1" type="radio">
+                                        <label for="radio1">Выбор 1</label>
+                                    </div>
+                                    <div class="input-radio">
+                                        <input name="radio" id="radio2" type="radio">
+                                        <label for="radio2">Выбор 2</label>
+                                    </div>
+
+
+                                    <div class="select-custom">
+                                        <label for="">Выбор чего-то</label>
+                                        <div class="select-custom__box">
+                                            <div class="select-custom__arrow icon-arrow-d"></div>
+                                            <select name="" id="">
+                                                <option value="">Выбор 1</option>
+                                                <option value="">Выбор 2</option>
+                                                <option value="">Выбор 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-custom">
+                                        <label for="">Сообшение</label>
+                                        <textarea placeholder="Сообшение" name="" id=""></textarea>
+                                    </div>
+
+
+                                    <div class="input-photos input-photos-js">
+                                        <p class="input-photos__title">Завантажити до 5 фотографій</p>
+                                        <div class="input-photos__body">
+                                            <div class="input-photos__input">
+                                                <input multiple name="" id="" accept=".png, .jpg, .gif, .jpeg, .bmp"
+                                                    type="file">
+                                                <div class="input-photos__btn"></div>
+                                            </div>
+                                            <div class="input-photos__info">
+                                                <p class="input-photos__text input-photos-itog-js">Натисніть область з
+                                                    іконкою</p>
+                                                <p class="input-photos__format">Формат JPG, JPEG, PNG, BMP, GIF</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-checkbox">
+                                        <input class="_req _policy" id="checkbox1" type="checkbox">
+                                        <label for="checkbox1">Согласие с условиями </label>
+                                    </div>
+
+                                    <button type="submit" class="btn btn_start">отправить</button>
+                                    <button class="btn btn_start disabled">отправить</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================================================================================= -->
+                    <!-- ======= Текст с функцией читать больше ================================================================== -->
+                    <!-- ========================================================================================================= -->
+                    <div class="compopnent__item">
+                        <div class="text-custom">
+                            <h2>Текст с функцией читать больше</h2>
+                            <ul>
+                                <li>data-showChar="500" - количество видимых символов (поумолчанию 500)</li>
+                                <li>data-ellipsestext="..." - текст перед кнопкой (поумолчанию ...) </li>
+                                <li>data-moretext="More" - текст на кнопке открыть (поумолчанию More) </li>
+                                <li>data-lesstext="Hide" - текст на кнопке закрыть (поумолчанию Hide) </li>
+                            </ul>
+                        </div>
+                        <div class="compopnent__box">
+
+                            <p data-showChar="420" class="more">
+                                Lorem ipsum dolor
+                                sit
+                                amet consectetur adipisicing elit. Unde
+                                repellendus deleniti error voluptates nihil
+                                molestias assumenda voluptatem ad tenetur vitae
+                                voluptatum expedita, minus consequuntur illum
+                                adipisci iste explicabo voluptate ex nulla!
+                                Neque ipsam iste culpa ut quia, est voluptate
+                                obcaecati similique veniam quae eos optio nobis
+                                atque labore molestiae voluptatem exercitationem
+                                placeat adipisci dolores aut aliquid laboriosam.
+                                Cumque libero nesciunt dolore, culpa earum
+                                possimus eaque in deserunt magni atque optio
+                                corporis delectus itaque beatae corrupti, eum
+                                recusandae suscipit? Debitis dolor unde nulla
+                                doloribus voluptatibus amet. Omnis beatae maxime
+                                fugit aliquam mollitia a incidunt non itaque
+                                reiciendis perspiciatis, repellendus optio
+                                nesciunt.</p>
+                        </div>
+                    </div>
+
+                    <!-- ========================================================================================================= -->
+                    <!-- ======= Базовый слайдер ================================================================================= -->
+                    <!-- ========================================================================================================= -->
+                    <div class="compopnent__item">
+                        <div class="text-custom">
+                            <h2>Базовый слайдер</h2>
+                        </div>
+                        <div class="compopnent__box">
+
+                            <div class="slider-slider">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">Slide 1</div>
+                                        <div class="swiper-slide">Slide 2</div>
+                                        <div class="swiper-slide">Slide 3</div>
+                                        <div class="swiper-slide">Slide 4</div>
+                                        <div class="swiper-slide">Slide 5</div>
+                                    </div>
+                                    <div class="swiper-control">
+                                        <div class="button-prev icon-arrow-l"></div>
+                                        <div class="swiper-pagination pagination-custom"></div>
+                                        <div class="button-next icon-arrow-r"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========================================================================================================= -->
+                    <!-- ======= Попап окно ====================================================================================== -->
+                    <!-- ========================================================================================================= -->
+                    <div class="compopnent__item">
+                        <div class="text-custom">
+                            <h2>Попап окно</h2>
+                        </div>
+                        <div class="compopnent__box">
+                            <p data-popup="popup1" class="btn btn_start popup-link">Открыть попап</p>
+                        </div>
+
+                        <!-- Попап -->
+                        <!-- <p data-popup="popup1" class="popup-link">vrijbkrm</p> -->
+                        <div id="popup1" class="popup ">
+                            <div class="popup__wraper">
+                                <div class="popup-body popup__body">
+
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo iure laboriosam
+                                        pariatur laudantium et.
+                                        Quo, suscipit? Ipsa magnam amet excepturi neque quas sed assumenda porro
+                                        tempora,
+                                        asperiores quaerat
+                                        voluptatibus possimus fuga ex recusandae rerum nobis deleniti omnis fugit. Odit
+                                        rerum quasi fuga
+                                        minus delectus velit dolore laboriosam odio! Delectus dolores maxime inventore
+                                        veniam quasi eius
+                                        commodi odio quae. Non et tempore autem eaque dolorum corporis saepe molestiae
+                                        voluptatum debitis
+                                        numquam molestias harum consequatur quo aliquid rerum temporibus at mollitia
+                                        labore
+                                        ipsa, ducimus
+                                        quod! Ad corporis libero, iste suscipit commodi quos esse qui soluta doloremque
+                                        placeat iure
+                                        similique dolorem aperiam laborum?
+                                    </p>
+                                    <div class="popup-close popup__close">закрыть</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+    <script src="
+https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.js
+"></script>
+
+    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
+    <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
+    <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+    <script type="text/javascript" src="js/script.js"></script>
+
+</body>
+
+</html>
