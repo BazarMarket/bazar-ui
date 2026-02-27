@@ -344,10 +344,11 @@ body {
   align-items: center;
   align-self: center;
   background: #fff;
-  border: 1px solid #d8d8d8;
+  border: 1px solid #e0e0e0;
   border-radius: 6px;
   padding: 10px 0;
   cursor: pointer;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.12);
 }
 .btn-down__text {
   font-family: "Poppins", sans-serif;
