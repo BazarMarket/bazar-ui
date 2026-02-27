@@ -4646,6 +4646,7 @@ p {
 .otp-subtitle {
   font-family: "Poppins", sans-serif;
   font-size: 15px;
+  font-weight: 500;
   color: #555;
   margin: 0 0 24px;
   text-align: left;
