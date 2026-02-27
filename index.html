@@ -2432,17 +2432,13 @@
             </div>
 
             <label class="modal-checkbox-label">
-                <input type="checkbox" class="modal-checkbox">
+                <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
                 <span>I agree to the <a href="terms-of-service.html">Terms of Service</a> and the <a href="privacy-policy.html">Privacy Policy</a></span>
             </label>
 
-            <div class="modal-btns">
+            <div class="modal-btns" id="modalSignBtns">
                 <button class="modal-btn modal-btn--gray">Sign in by an SMS</button>
                 <button class="modal-btn modal-btn--gray">Sign in by Whatsapp</button>
-            </div>
-            <div class="modal-btns">
-                <button class="modal-btn modal-btn--orange">Sign in by an SMS</button>
-                <button class="modal-btn modal-btn--orange">Sign in by Whatsapp</button>
             </div>
         </div>
     </div>
@@ -2462,6 +2458,18 @@
         }
         function closeModalOutside(e) {
             if (e.target === document.getElementById('createAccountModal')) closeCreateAccountModal();
+        }
+        function toggleSignBtns(checkbox) {
+            var btns = document.querySelectorAll('#modalSignBtns .modal-btn');
+            btns.forEach(function(btn) {
+                if (checkbox.checked) {
+                    btn.classList.remove('modal-btn--gray');
+                    btn.classList.add('modal-btn--orange');
+                } else {
+                    btn.classList.remove('modal-btn--orange');
+                    btn.classList.add('modal-btn--gray');
+                }
+            });
         }
     </script>
 
