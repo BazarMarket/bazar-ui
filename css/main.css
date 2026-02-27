@@ -4545,7 +4545,7 @@ p {
 .modal-phone-input {
   display: flex;
   align-items: stretch;
-  border: 2px solid #2e7d32;
+  border: 2px solid #222;
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 20px;
