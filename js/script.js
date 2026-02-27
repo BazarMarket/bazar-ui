@@ -1026,9 +1026,13 @@ window.onload = function () {
 
     document.querySelectorAll('.card').forEach(function(card) {
         card.style.cursor = 'pointer';
-        card.addEventListener('click', function() {
+    });
+
+    document.addEventListener('click', function(e) {
+        var card = e.target.closest('.card');
+        if (card) {
             window.location.href = 'card.html';
-        });
+        }
     });
 
 }
