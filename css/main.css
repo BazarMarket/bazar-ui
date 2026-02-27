@@ -4628,7 +4628,8 @@ p {
 /* -------- OTP Modal -------- */
 .modal-card--otp {
   text-align: left;
-  max-width: 420px;
+  max-width: 320px;
+  padding: 28px 28px 24px;
 }
 .otp-icon {
   margin: 0 0 16px;
@@ -4655,12 +4656,12 @@ p {
   margin-bottom: 24px;
 }
 .otp-input {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border: 2px solid #ccc;
   border-radius: 8px;
   font-family: "Poppins", sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   text-align: center;
   outline: none;
