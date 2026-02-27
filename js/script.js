@@ -493,7 +493,7 @@ window.onload = function () {
                     startUnfolding(element);
 
                 } else {
-                    activUnfolding(element.nextElementSibling);
+                    activUnfolding(element, element.nextElementSibling);
                 }
                 element.classList.remove('unfolding-open');
             }
@@ -503,7 +503,7 @@ window.onload = function () {
                 if (element.hasAttribute('data-unfolding')) {
                     startUnfolding(element);
                 } else {
-                    activUnfolding(this.nextElementSibling);
+                    activUnfolding(this, this.nextElementSibling);
                 }
             });
         });
