@@ -4011,8 +4011,13 @@ p {
 .search__duoble {
   display: flex;
   align-items: center;
+  flex: 1;
+}
+.search__first {
+  flex: 1;
 }
 .search__first input {
+  width: 100%;
   padding: 10px 12px 10px 12px;
   -webkit-appearance: none;
      -moz-appearance: none;
