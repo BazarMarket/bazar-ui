@@ -32,7 +32,7 @@
                     </div>
                     <div class="header__btns">
                         <a href="#" class="btn btn_start">Log in</a>
-                        <div class="btn-down icon">
+                        <div class="btn-down icon" onclick="openCreateAccountModal()">
                             <p class="btn-down__text">Create an account</p>
                             <span class="btn-down__icon icon-arrow-d"></span>
                         </div>
@@ -2418,10 +2418,65 @@
 
 
 
+    <!-- Create Account Modal -->
+    <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
+            <h2 class="modal-title">Create an account</h2>
+
+            <div class="modal-phone-display">
+                <span class="modal-phone-code">+44</span>
+                <span class="modal-phone-number">447123456789</span>
+            </div>
+
+            <div class="modal-phone-input">
+                <div class="modal-country-select">
+                    <select>
+                        <option value="+357">+357</option>
+                        <option value="+44" selected>+44</option>
+                        <option value="+1">+1</option>
+                        <option value="+7">+7</option>
+                        <option value="+49">+49</option>
+                        <option value="+33">+33</option>
+                        <option value="+380">+380</option>
+                    </select>
+                </div>
+                <input class="modal-number-input" type="tel" placeholder="Phone number">
+            </div>
+
+            <label class="modal-checkbox-label">
+                <input type="checkbox" class="modal-checkbox">
+                <span>I agree to the <a href="terms-of-service.html">Terms of Service</a> and the <a href="privacy-policy.html">Privacy Policy</a></span>
+            </label>
+
+            <div class="modal-btns">
+                <button class="modal-btn modal-btn--gray">Sign in by an SMS</button>
+                <button class="modal-btn modal-btn--gray">Sign in by Whatsapp</button>
+            </div>
+            <div class="modal-btns">
+                <button class="modal-btn modal-btn--orange">Sign in by an SMS</button>
+                <button class="modal-btn modal-btn--orange">Sign in by Whatsapp</button>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
     <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
     <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
     <script type="text/javascript" src="js/script.js"></script>
+    <script>
+        function openCreateAccountModal() {
+            document.getElementById('createAccountModal').classList.add('modal-overlay--active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeCreateAccountModal() {
+            document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
+            document.body.style.overflow = '';
+        }
+        function closeModalOutside(e) {
+            if (e.target === document.getElementById('createAccountModal')) closeCreateAccountModal();
+        }
+    </script>
 
 </body>
 
