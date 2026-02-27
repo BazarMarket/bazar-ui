@@ -4042,6 +4042,9 @@ p {
   font-size: 15px;
   color: #444;
 }
+.search__loc-arrow {
+  margin-left: auto;
+}
 .search__loc-arrow:before {
   font-size: 9px;
   color: #888;
