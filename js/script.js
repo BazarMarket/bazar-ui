@@ -1024,6 +1024,12 @@ window.onload = function () {
 
     //--------------------------------------------- end
 
+    document.querySelectorAll('.card').forEach(function(card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function() {
+            window.location.href = 'card.html';
+        });
+    });
 
 }
 
