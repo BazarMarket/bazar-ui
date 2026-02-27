@@ -342,28 +342,28 @@ body {
 .btn-down {
   display: flex;
   align-items: center;
-  gap: 2px;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  cursor: pointer;
 }
 .btn-down__text {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 16px;
-  color: #fff;
+  color: #333;
   line-height: normal;
-  padding: 10px 24px;
-  background: linear-gradient(270deg, #ffae49 0%, #fe7653 100%);
-  border-radius: 4px 0 0 4px;
+  padding: 10px 16px;
   text-align: center;
 }
 .btn-down__icon {
-  display: block;
-  padding: 10px 16px;
-  background: #ffae49;
-  border-radius: 0 4px 4px 0;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px 10px 0;
   text-align: center;
 }
 .btn-down__icon:before {
-  color: #fff;
+  color: #555;
   font-size: 10px;
 }
 
