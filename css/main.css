@@ -234,7 +234,7 @@ body {
   line-height: normal;
   padding: 10px 24px;
   gap: 8px;
-  background: linear-gradient(270deg, #ffae49 0%, #fe7653 100%);
+  background: #ff9138;
   border-radius: 4px;
   text-align: center;
 }
