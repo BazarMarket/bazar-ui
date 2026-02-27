@@ -4018,9 +4018,7 @@ p {
      -moz-appearance: none;
           appearance: none;
 }
-.search__second {
-  display: none;
-}
+
 .search__second input {
   padding: 10px 12px 10px 12px;
   -webkit-appearance: none;
