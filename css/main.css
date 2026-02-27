@@ -4004,6 +4004,7 @@ p {
   background: #fff;
   display: flex;
   align-items: center;
+  flex: 1;
   border: 1px solid #e4e4e4;
   border-radius: 4px;
   overflow: hidden;
