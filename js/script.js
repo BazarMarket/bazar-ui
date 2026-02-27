@@ -1024,16 +1024,6 @@ window.onload = function () {
 
     //--------------------------------------------- end
 
-    document.querySelectorAll('.card').forEach(function(card) {
-        card.style.cursor = 'pointer';
-    });
-
-    document.addEventListener('click', function(e) {
-        var card = e.target.closest('.card');
-        if (card) {
-            window.location.href = 'card.html';
-        }
-    });
 
 }
 
