@@ -4013,10 +4013,19 @@ p {
   align-items: center;
 }
 .search__first {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+.search__glass-icon {
+  color: #aaa;
+  font-size: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 .search__first input {
   width: 380px;
-  padding: 10px 12px 10px 12px;
+  padding: 10px 12px 10px 0;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
