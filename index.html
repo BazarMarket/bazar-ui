@@ -2479,6 +2479,15 @@
         function closeCreateAccountModal() {
             document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
             document.body.style.overflow = '';
+            var checkbox = document.getElementById('agreeCheckbox');
+            if (checkbox) checkbox.checked = false;
+            var btns = document.querySelectorAll('#modalSignBtns .modal-btn');
+            btns.forEach(function(btn) {
+                btn.classList.remove('modal-btn--orange');
+                btn.classList.add('modal-btn--gray');
+            });
+            var phoneInput = document.querySelector('#createAccountModal input[type="tel"]');
+            if (phoneInput) phoneInput.value = '';
         }
         function closeModalOutside(e) {
             if (e.target === document.getElementById('createAccountModal')) closeCreateAccountModal();
