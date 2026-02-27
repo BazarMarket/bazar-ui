@@ -4632,7 +4632,7 @@ p {
   padding: 44px 44px 38px;
 }
 .otp-icon {
-  margin: 0 0 20px;
+  margin: 0 0 20px -16px;
   display: flex;
   justify-content: flex-start;
 }
