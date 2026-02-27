@@ -222,6 +222,7 @@ body {
   background: #ff9138;
   border-radius: 4px;
   text-align: center;
+  box-shadow: 0 6px 18px rgba(255, 145, 56, 0.55);
 }
 .btn_grad {
   display: flex;
