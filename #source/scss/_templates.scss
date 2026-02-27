@@ -1,0 +1,1159 @@
+@import "components";
+
+/* Общие стили и классы*/
+.container {
+   max-width: 1354px;
+   margin: 0 auto;
+   padding: 0 32px;
+   width: 100%;
+}
+.container-full {
+   max-width: 1600px;
+   margin: 0 auto;
+   padding: 0 32px;
+   width: 100%;
+}
+body {
+   @include fontMain(400, normal, 16px, $color-text);
+}
+.img-cover {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   -o-object-fit: cover;
+   object-fit: cover;
+   max-width: 100%;
+}
+.wrapper {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   min-height: 100vh;
+   .main {
+      flex: 1 1 auto;
+   }
+}
+
+/* Кнопки/Ссылки */
+.btn {
+   text-align: center;
+   cursor: pointer;
+   appearance: none;
+   background: none;
+   box-shadow: none;
+   box-sizing: none;
+   display: block;
+   transition: 0.3s;
+
+   &_old {
+      @include fontMain(700, 130%, 20px, #fff);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $accent-color2;
+      border-radius: 10px;
+      &::before {
+         display: block;
+         margin-right: 10px;
+         font-size: 32px;
+         color: #fff;
+      }
+      &:hover {
+         background: $accent-hover-color;
+      }
+   }
+
+   &_start {
+      @include fontMain(500, normal, 16px, #fff);
+      padding: 10px 24px;
+      background: $color-acent-second;
+      border-radius: 4px;
+      text-align: center;
+   }
+   &_grad {
+      display: flex;
+      align-items: center;
+      @include fontMain(500, normal, 16px, #fff);
+      padding: 10px 24px;
+      gap: 8px;
+      background: $gradient-main;
+      border-radius: 4px;
+      text-align: center;
+   }
+   &_mini {
+      @include fontMain(700, 130%, 16px, #fff);
+      text-transform: uppercase;
+      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $accent-color2;
+      border-radius: 15px;
+      &:hover {
+         background: $color-acent-hover;
+      }
+   }
+
+   &_green {
+      background: #00d101;
+      text-transform: uppercase;
+      &:hover {
+         background: #009301;
+      }
+   }
+
+   &_empty {
+      @include fontMain(400, 120%, 14px, $text-color);
+      padding: 20px;
+      text-align: center;
+      background: #fff;
+      border-radius: 10px;
+      border: 2px solid $accent-color;
+      &:hover {
+         background: $accent-color;
+         color: #fff;
+      }
+   }
+
+   &_small {
+      @include fontMain(700, normal, 14px, #fff);
+      text-transform: uppercase;
+      padding: 6px 12px;
+      background: $color-acent;
+      border-radius: 16px;
+      text-align: center;
+      &:hover {
+         background: $color-acent-second;
+      }
+   }
+
+   &.disabled {
+      pointer-events: none;
+      cursor: not-allowed;
+      background: grey;
+   }
+
+   &:active {
+      opacity: 0.8;
+   }
+   &:focus {
+      // border: 1px solid red;
+   }
+
+   // @media (hover: hover) {
+   //    &:hover {
+   //       background: $color-acent;
+   //    }
+   // }
+}
+.btn-phone {
+   cursor: pointer;
+   padding: 16px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   background: $accent-color2;
+   border-radius: 10px;
+   transition: 0.3s;
+   &:hover {
+      background: $accent-hover-color;
+   }
+   &:before {
+      color: #fff;
+      font-size: 32px;
+      order: 2;
+   }
+   &__body {
+      order: 1;
+   }
+   &__title {
+      @include fontMain(900, 130%, 20px, #fff);
+   }
+
+   &__namber {
+      @include fontMain(700, 130%, 12px, $text-color);
+      span {
+         color: #fff;
+      }
+   }
+}
+.btn-down {
+   display: flex;
+   align-items: center;
+   gap: 2px;
+   &__text {
+      @include fontMain(500, normal, 16px, #fff);
+      padding: 10px 24px;
+      background: $gradient-main;
+      border-radius: 4px 0 0 4px;
+      text-align: center;
+   }
+
+   &__icon {
+      display: block;
+      &:before {
+         color: #fff;
+         font-size: 10px;
+      }
+      padding: 10px 16px;
+      background: $accent-color;
+      border-radius: 0 4px 4px 0;
+      text-align: center;
+   }
+}
+.link-comment {
+   border-radius: 50px;
+   padding: 7px 12px;
+   display: flex;
+   align-items: center;
+   background: $accent-color2;
+   @include fontMain(500, 130%, 16px, #fff);
+   transition: 0.3s;
+   &:before {
+      font-size: 18px;
+      color: #fff;
+      margin-right: 7px;
+   }
+   &:hover {
+      background: $text-color;
+   }
+}
+.link-icon {
+   display: inline-flex;
+   align-items: center;
+   @include fontMain(500, 130%, 16px, $grey-color);
+   transition: 0.3s;
+   padding: 5px 0;
+   &:before {
+      font-size: 25px;
+      color: $grey-color;
+      margin-right: 5px;
+      transition: 0.3s;
+   }
+   &:hover {
+      color: #000;
+      &:before {
+         color: #000;
+      }
+   }
+   &_vertical {
+      flex-direction: column;
+      font-size: 14px;
+      &:before {
+         margin: 0 0 5px 0;
+      }
+   }
+}
+.link-start {
+   @include fontMain(700, 130%, 14px, $accent-color);
+}
+.link-hover {
+   transition: 0.3s;
+   &:hover {
+      color: $accent-hover-color;
+   }
+}
+/* toggle */
+.toggle-input {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   &__title {
+      @include fontMain(400, normal, 16px, $color-text-second);
+      margin: 0;
+   }
+}
+
+.toggle {
+   position: relative;
+   display: inline-block;
+   width: 35px;
+   height: 22px;
+   input {
+      display: none;
+   }
+
+   &__slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #dcdce0;
+      border-radius: 999px;
+      transition: background-color 0.3s ease;
+      &:before {
+         content: "";
+         position: absolute;
+         height: 18px;
+         width: 18px;
+         left: 3px;
+         top: 2px;
+         background-color: #fff;
+         border-radius: 50%;
+         transition: transform 0.3s ease;
+      }
+   }
+   input:checked + .toggle__slider {
+      background-color: #f6a53a;
+   }
+   input:checked + .toggle__slider::before {
+      transform: translateX(11px);
+   }
+}
+
+/* Загрузка */
+.sending-main {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 20;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   opacity: 0;
+   visibility: hidden;
+   transition: 0.3s;
+   background: rgba(0, 0, 0, 0.3);
+   img {
+      width: 150px;
+   }
+   &.active {
+      opacity: 1;
+      visibility: visible;
+   }
+}
+
+/* Кастомная таблица */
+.table-custom {
+   border-radius: 10px;
+   overflow: hidden;
+   width: 100%;
+   caption {
+      width: 100%;
+      background: $accent-color2;
+      padding: 12px 15px;
+      @include fontMain(700, 130%, 20px, #fff);
+      text-transform: uppercase;
+      text-align: center;
+   }
+   tr {
+   }
+   tr th,
+   tr td {
+      padding: 10px;
+      border: 1px solid #e8e8e8;
+   }
+   tr th {
+      @include fontMain(700, 130%, 14px, $text-color);
+      text-align: left;
+      span {
+         color: $accent-color2;
+      }
+   }
+   tr td {
+      @include fontMain(400, 130%, 14px, $text-color);
+      text-align: left;
+      span {
+         color: $accent-color2;
+      }
+   }
+   tr:last-child {
+      th {
+         border-radius: 0 0 0 10px;
+      }
+      td {
+         border-radius: 0 0 10px 0;
+      }
+   }
+}
+/* end--------------------*/
+
+/* Елементы формы */
+/* -input */
+.input-custom {
+   margin: 20px 0;
+   label {
+      display: block;
+      @include fontMain(400, 140%, 14px, #000);
+      margin: 0 0 7px 0;
+   }
+   input {
+      appearance: none;
+      padding: 12px 16px;
+      width: 100%;
+      display: block;
+      background: #fafafa;
+      border: 1px solid #e9e9e9;
+      border-radius: 8px;
+      @include fontMain(400, 140%, 16px, #000);
+      &:focus {
+         border: 1px solid #cfcfcf;
+      }
+   }
+   &__error {
+      display: none;
+      margin: 5px 0 0 0;
+      @include fontMain(400, 140%, 12px, #e52d2e);
+      display: flex;
+      align-items: center;
+      &:before {
+         font-size: 14px;
+         margin-right: 7px;
+      }
+   }
+   &.error {
+      input {
+         border: 1px solid #e52d2e;
+      }
+      textarea {
+         border: 1px solid #e52d2e;
+      }
+      .input-custom__error {
+         display: block;
+      }
+   }
+   textarea {
+      padding: 12px 16px;
+      width: 100%;
+      display: block;
+      background: #fafafa;
+      border: 1px solid #e9e9e9;
+      border-radius: 8px;
+      @include fontMain(400, 140%, 16px, #000);
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      resize: none;
+      height: 100px;
+      &:focus {
+         border: 1px solid #cfcfcf;
+      }
+   }
+}
+
+/* -checkbox */
+.input-checkbox {
+   input {
+      display: none;
+   }
+   label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      @include fontMain(400, 140%, 16px, $text-color);
+      &:before {
+         content: "";
+         display: block;
+         background: none;
+         border: 1px solid $grey-color;
+         border-radius: 3px;
+         width: 20px;
+         height: 20px;
+         flex: 0 0 20px;
+         margin: 0 12px 0 0;
+      }
+   }
+   input:checked + label:before {
+      border-color: $accent-color;
+      background: $accent-color url("../icon/check.svg") no-repeat center;
+   }
+}
+.input-radio {
+   margin: 20px 0;
+   input {
+      display: none;
+   }
+   label {
+      cursor: pointer;
+      @include fontMain(400, 140%, 16px, #000);
+      position: relative;
+      padding: 3px 0 0 30px;
+      &:before {
+         content: "";
+         display: block;
+         background: #f6f6f6;
+         border: 1px solid #e9e9e9;
+         border-radius: 3px;
+         width: 24px;
+         height: 24px;
+         flex: 0 0 20px;
+         margin: 0 12px 0 0;
+         border-radius: 50%;
+
+         position: absolute;
+         top: 0;
+         left: 0;
+      }
+      &:after {
+         content: "";
+         position: absolute;
+         top: 4px;
+         left: 4px;
+         width: 16px;
+         height: 16px;
+         background: #000;
+         border-radius: 50%;
+         transition: 0.3s;
+         transform: scale(0);
+      }
+   }
+   input:checked + label:after {
+      transform: scale(1);
+   }
+}
+/* -input-photos */
+.image-upload-box {
+   margin: 16px 0;
+   display: flex;
+   gap: 20px;
+   &__label {
+      width: 100%;
+      max-width: 200px;
+      text-align: right;
+      @include fontMain(700, normal, 16px, $color-text);
+   }
+
+   &__body {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+   }
+
+   &__dop {
+      p {
+         margin: 0;
+         @include fontMain(400, normal, 14px, $color-text-second);
+      }
+   }
+}
+.image-upload {
+   width: 200px;
+   flex: 0 0 200px;
+
+   &__input {
+      display: none;
+   }
+
+   &__box {
+      aspect-ratio: 1 / 1;
+      border: 1px dashed #ccc;
+      border-radius: 12px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
+
+   &__plus {
+      font-size: 48px;
+      color: #fff;
+      pointer-events: none;
+      background: $color-acent;
+      width: 60px;
+      height: 60px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 100%;
+   }
+
+   &__preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+   }
+
+   &__remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+   }
+}
+
+/* end--------------------*/
+
+/* Общие стили для блока .more */
+.more {
+   &__link {
+      font-weight: 700;
+      margin: 0 8px;
+      // display: block;
+      cursor: pointer;
+   }
+}
+
+/* Пагинация */
+.page-numbers {
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   justify-content: center;
+   a {
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0px;
+      @include fontMain(400, normal, 18px, $color-text);
+      margin: 4px;
+      border: none;
+      transition: 0.3s;
+      &:hover {
+         color: $color-acent;
+      }
+   }
+   .current {
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0px;
+      @include fontMain(400, normal, 18px, $color-acent);
+      margin: 4px;
+      border: none;
+   }
+   .prev,
+   .next {
+      border-color: $color-acent;
+      transition: 0.3s;
+      span {
+         pointer-events: none;
+      }
+      span:before {
+         font-size: 14px;
+         transition: 0.3s;
+         color: $color-acent;
+      }
+      &:before {
+         font-size: 14px;
+         transition: 0.3s;
+         color: $color-acent;
+      }
+      &:hover {
+         & span:before {
+            color: $color-acent;
+         }
+      }
+   }
+   .prev {
+      margin-right: 24px;
+   }
+   .next {
+      margin-left: 24px;
+   }
+}
+
+.margin {
+   margin: 48px 0;
+}
+
+.hr-block {
+   width: 100%;
+   height: 2px;
+   background: $color-line;
+}
+
+/* Оценки пользователя */
+.grade {
+   display: flex;
+   border-radius: 50px;
+   overflow: hidden;
+   &__item {
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      background: $grey-color;
+      @include fontMain(500, 130%, 16px, #fff);
+      transition: 0.3s;
+      &:before {
+         font-size: 18px;
+         color: #fff;
+         margin-right: 7px;
+      }
+      &:hover {
+         background: $text-color;
+      }
+      &.active {
+         background: $accent-color2;
+      }
+   }
+}
+/* end--------------------*/
+
+/* Хлебные крошки */
+.bread {
+   display: flex;
+   align-items: center;
+   li {
+      @include fontMain(700, 130%, 16px, $accent-color2);
+      a {
+         @include fontMain(700, 130%, 16px, $accent-color2);
+      }
+      span {
+      }
+   }
+}
+.bread-custom {
+   padding: 16px 0;
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   li {
+      a {
+         @include fontMain(400, 130%, 16px, $text-color);
+         transition: 0.3s;
+         &:hover {
+            color: $accent-color;
+         }
+      }
+      span {
+         margin: 0 7px;
+         &:before {
+            font-size: 10px;
+            color: $text-color;
+         }
+      }
+   }
+}
+/* end--------------------*/
+
+/* -Пагинации */
+.pagination-custom {
+   margin: 0px;
+   .swiper-pagination-bullet {
+      height: 9px;
+      width: 9px;
+      opacity: 1;
+      background: #fff;
+   }
+   .swiper-pagination-bullet-active {
+      background: $accent-color;
+   }
+}
+/* -блок управления слайдера */
+.swiper-control {
+   margin: 20px 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+/* -кнопки слайдера */
+.button-prev,
+.button-next {
+   cursor: pointer;
+   background: #ffffff;
+   box-shadow: 0px 4px 15px rgba(0, 105, 164, 0.23);
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+   transition: 0.3s;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   &:before {
+      font-size: 13px;
+      color: #000;
+   }
+   &:hover {
+      // transform: scale(1.1);
+   }
+   &.swiper-button-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+   }
+   &.swiper-button-lock {
+      display: none;
+   }
+}
+/* end--------------------*/
+
+/* части статей  */
+.img-full {
+   display: block;
+   margin: 30px 0;
+   width: 100%;
+   max-width: 100%;
+}
+.page-text {
+   margin: 15px 0;
+   @include fontMain(400, 130%, 16px, #000);
+   span {
+      font-weight: 700;
+   }
+
+   &_italics {
+      font-style: italic;
+   }
+
+   &_bold {
+      font-weight: 700;
+   }
+   a {
+      color: #09af69;
+      text-decoration: underline;
+   }
+}
+.page-ul {
+   margin: 20px 0;
+   ul {
+      padding: 0 0 0 30px;
+   }
+   li {
+      padding: 0 0 0 20px;
+      position: relative;
+      display: flex;
+      &:before {
+         content: "";
+         width: 7px;
+         height: 7px;
+         border-radius: 50%;
+         background: $c1;
+
+         position: absolute;
+         left: 0;
+         top: 8px;
+      }
+   }
+}
+.page-ol {
+   margin: 20px 0;
+   ol {
+      padding: 0 0 0 40px;
+   }
+   li::marker {
+      font-weight: 700;
+      color: $c1;
+   }
+}
+
+/* Стили для пагинации  */
+.pagination {
+   padding: 30px 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   &__arrow {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include fontMain(700, 130%, 16px, $text-color);
+      &:before {
+         transition: 0.3s;
+      }
+      &:hover::before {
+         transform: scale(1.1);
+         color: $text-color;
+      }
+      &.no-active {
+         pointer-events: none;
+         &:before {
+            color: #b7b7b7;
+         }
+      }
+   }
+   ul {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+   }
+   li {
+      margin: 0 10px;
+   }
+   li a {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include fontMain(700, 130%, 16px, $text-color);
+      background: $light-color;
+      border-radius: 10px;
+      &:hover {
+         color: #fff;
+         background: $accent-color;
+      }
+      &.active {
+         color: #fff;
+         background: $accent-color;
+      }
+   }
+   li span {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include fontMain(700, 130%, 16px, $text-color);
+   }
+}
+
+/* Иконки   */
+.icons-list {
+   display: flex;
+   align-items: center;
+   .icon-item:not(:last-child) {
+      margin-right: 30px;
+   }
+}
+.icon-item {
+   position: relative;
+   &::before {
+      display: block;
+      font-size: 33px;
+      color: #a8a8a8;
+   }
+   &__namber {
+      position: absolute;
+      top: -2px;
+      right: -4px;
+      background: #ff0000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      @include fontMain(700, 130%, 12px, #fff);
+      border-radius: 50%;
+   }
+
+   &__dot {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #ff0000;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+   }
+}
+
+/*  Стили блока .share */
+.share {
+   display: inline-flex;
+   align-items: center;
+   background: #e1f7ff;
+   padding: 12px 24px;
+   border-radius: 12px;
+   &__name {
+      @include fontMain(700, 130%, 14px, #000);
+      margin: 0 50px 0 0;
+   }
+
+   &__list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      .share-lihk:not(:last-child) {
+         margin-right: 10px;
+      }
+   }
+}
+.share-lihk {
+   width: 25px;
+   height: 25px;
+   display: block;
+   &:hover {
+      opacity: 0.7;
+      cursor: pointer;
+   }
+
+   &_fb {
+      background: url("../icon/fb.svg") 0 0 / auto auto no-repeat;
+   }
+
+   &_in {
+      background: url("../icon/in.svg") 0 0 / auto auto no-repeat;
+   }
+
+   &_vb {
+      background: url("../icon/vb.svg") 0 0 / auto auto no-repeat;
+   }
+
+   &_tg {
+      background: url("../icon/tg.svg") 0 0 / auto auto no-repeat;
+   }
+
+   &_tw {
+      background: url("../icon/tw.svg") 0 0 / auto auto no-repeat;
+   }
+
+   &_wp {
+      background: url("../icon/wp.svg") 0 0 / auto auto no-repeat;
+   }
+}
+/* end--------------------*/
+
+/* stiker  */
+.stiker {
+   @include fontMain(700, 130%, 16px, #fff);
+   padding: 10px 15px;
+   border-radius: 10px;
+   display: inline-block;
+   text-align: center;
+   &__sale {
+      background: #ff0000;
+   }
+
+   &__new {
+      background: green;
+   }
+
+   &__top {
+      background: $accent-color;
+   }
+}
+/* end -------------------- */
+
+/* price-last  */
+.price-last {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+
+   &__text {
+      padding: 5px 0 0 0;
+      margin-top: 10px;
+      @include fontMain(700, 130%, 18px, $accent-hover-color);
+      width: 100%;
+      text-align: right;
+      position: relative;
+      &:before {
+         position: absolute;
+         z-index: 2;
+         content: "";
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 20px;
+         background: url("../icon/decor-line.svg");
+         background-repeat: no-repeat;
+         background-size: 100% auto;
+      }
+   }
+
+   &__link {
+      @include fontMain(700, 130%, 20px, $accent-hover-color);
+   }
+}
+.price-last-start {
+   @include fontMain(700, 130%, 20px, #fff);
+   padding: 10px 15px;
+   border-radius: 10px;
+   background: #14ff00;
+}
+.price-last-old {
+   display: inline-block;
+   @include fontMain(700, 100%, 22px, $accent-hover-color);
+   position: relative;
+   margin-bottom: -10px;
+   &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: red;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-20deg);
+   }
+}
+.price-last-new {
+   @include fontMain(700, 100%, 45px, red);
+}
+
+/* end -------------------- */
+
+.line-decor {
+   width: 100%;
+   height: 1px;
+   background: $color-border;
+}
+
+// ===================================================================================================
+// ======= СТИЛИ  ====================================================================================
+// ===================================================================================================
+
+@media screen and (max-width: 1200px) {
+}
+@media screen and (min-width: 992px) {
+   .after992 {
+      display: none !important;
+   }
+}
+@media screen and (max-width: 992px) {
+   .before992 {
+      display: none !important;
+   }
+}
+
+@media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 576px) {
+   .container {
+      padding: 0 20px;
+   }
+   .container-full {
+      padding: 0 20px;
+   }
+   /* Пагинация */
+   .page-numbers {
+      a {
+         width: 32px;
+         height: 32px;
+         font-size: 14px;
+      }
+      .current {
+         width: 32px;
+         height: 32px;
+         font-size: 14px;
+      }
+      .prev,
+      .next {
+         span:before {
+            font-size: 12px;
+         }
+         &:before {
+            font-size: 12px;
+         }
+      }
+      .prev {
+         margin-right: 12px;
+      }
+      .next {
+         margin-left: 12px;
+      }
+   }
+   .margin {
+      margin: 32px 0;
+   }
+}

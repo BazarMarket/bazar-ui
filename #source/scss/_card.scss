@@ -1,0 +1,478 @@
+@import "components";
+
+/* Общие стили для страницы card  */
+.card-tile {
+   // width: 100%;
+   padding: 16px;
+   background: #ffffff;
+   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+}
+/* end -------------------- */
+
+/* Сетка карточки товара  */
+.card-grid {
+   p {
+      margin: 0;
+   }
+   &__body {
+      margin: 0 0 32px 0;
+   }
+
+   &__top {
+   }
+
+   &__main {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+   }
+
+   &__left {
+      min-width: 0px;
+      flex: 0 0 70%;
+      margin-right: 16px;
+      display: flex;
+      flex-wrap: wrap;
+
+      .card-tab {
+         min-width: 0px;
+         margin-top: 16px;
+         flex: 0 0 100%;
+      }
+   }
+   &__gallery {
+      min-width: 0px;
+      flex: 0 0 50%;
+      margin-right: 16px;
+   }
+   &__description {
+      min-width: 0px;
+      flex: 1 1 auto;
+   }
+
+   &__right {
+      flex: 1 1 auto;
+      .card-tile:not(:last-child) {
+         margin-bottom: 16px;
+      }
+   }
+   & .share {
+      margin-top: 20px;
+   }
+   &__video {
+      position: relative;
+      width: 100%;
+      padding-bottom: 60%;
+      margin: 20px 0;
+   }
+}
+/* end -------------------- */
+
+/* Стили шапки карточки товара  */
+.card-head {
+   padding: 16px;
+   padding-top: 10px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-bottom: 16px;
+
+   &__left {
+   }
+
+   &__title {
+      @include fontMain(700, 100%, 34px, #000);
+      margin: 0 0 15px 0;
+   }
+
+   &__favorites {
+      &::before {
+         color: $accent-color2;
+         font-size: 40px;
+      }
+   }
+}
+/* end -------------------- */
+
+/* Стили навигации  */
+.card-nav {
+   margin-bottom: 16px;
+   display: flex;
+   &__item {
+      padding: 0 16px;
+      position: relative;
+      &::after {
+         content: "";
+         height: 25px;
+         width: 1px;
+         background: $light-color;
+         position: absolute;
+         top: 50%;
+         right: 0;
+         transform: translate(0, -50%);
+      }
+      &:last-child::after {
+         display: none;
+      }
+   }
+}
+.card-options {
+   display: flex;
+   align-items: center;
+   justify-content: space-around;
+}
+
+/* end -------------------- */
+
+/* Стили галиреии  */
+.card-gallery {
+   &__big {
+      margin-bottom: 16px;
+   }
+
+   &__mini {
+   }
+}
+.slider-gallery-big {
+   position: relative;
+   .swiper {
+      overflow: hidden;
+      position: relative;
+      &:hover .button-prev {
+         transform: translate(-0%, -50%);
+      }
+      &:hover .button-next {
+         transform: translate(-0%, -50%);
+      }
+   }
+   .swiper-wrapper {
+   }
+   .swiper-slide {
+   }
+   .swiper-control {
+   }
+
+   &__img {
+      position: relative;
+      padding-bottom: 70%;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+   }
+   .button-prev,
+   .button-next {
+      width: 40px;
+      height: 70px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0px;
+      position: absolute;
+      top: 50%;
+
+      z-index: 3;
+      box-shadow: none;
+      transition: 0.3s;
+      &:before {
+         font-size: 20px;
+         color: #999;
+      }
+
+      &:hover {
+         background: rgba(0, 0, 0, 0.6);
+         &:before {
+            color: #fff;
+         }
+      }
+   }
+   .button-prev {
+      left: 0px;
+      transform: translate(-100%, -50%);
+   }
+   .button-next {
+      right: 0px;
+      transform: translate(100%, -50%);
+   }
+}
+.slider-gallery-mini {
+   .swiper {
+      overflow: hidden;
+   }
+   .swiper-wrapper {
+   }
+   .swiper-slide {
+   }
+   &__img {
+      cursor: pointer;
+      position: relative;
+      height: 90px;
+      width: 100%;
+      border-radius: 7px;
+      overflow: hidden;
+   }
+}
+/* end--------------------*/
+
+/* Стили блока .card-description  */
+.card-description {
+   border-radius: 10px;
+   background: #ffffff;
+   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* end -------------------- */
+
+/*  Стили блока .card-tab */
+.card-tab {
+   &__btns {
+      display: flex;
+   }
+
+   &__btn {
+      padding: 12px 24px;
+      background: #ffffff;
+      box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 10px 10px 0 0;
+      @include fontMain(700, 130%, 18px, $text-color);
+      cursor: pointer;
+      &:hover {
+         color: $accent-color2;
+         transition: 0.3s;
+      }
+      &.active {
+         color: $accent-color2;
+         position: relative;
+         z-index: 4;
+      }
+      &.active::before {
+         content: "";
+         position: absolute;
+         left: 0;
+         width: 100%;
+         bottom: -18px;
+         height: 20px;
+         background: #fff;
+      }
+   }
+
+   &__contens {
+   }
+
+   &__item {
+      position: relative;
+      z-index: 2;
+      padding: 24px 16px;
+      background: #ffffff;
+      box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 0 10px 10px 10px;
+      display: none;
+      &.active {
+         display: block;
+      }
+   }
+
+   &__btn-mob {
+      display: none;
+   }
+
+   &__body {
+   }
+
+   &__text {
+   }
+}
+/* end -------------------- */
+
+/*  Стили блока .card-name */
+.card-name {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   &__left {
+      display: flex;
+      align-items: center;
+      margin: 0 20px 0 0;
+   }
+
+   &__photo {
+      margin: 0 16px 0 0;
+      width: 75px;
+      height: 75px;
+      flex: 0 0 75px;
+      position: relative;
+      border-radius: 50%;
+      &.online {
+         position: relative;
+         &::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background: #33e550;
+            position: absolute;
+            top: 3px;
+            right: 0px;
+            border-radius: 50%;
+            z-index: 2;
+         }
+      }
+   }
+
+   &__info {
+   }
+
+   &__head {
+      margin: 7px 0;
+   }
+
+   &__name {
+      @include fontMain(700, 130%, 14px, $text-color);
+      text-transform: uppercase;
+   }
+
+   &__text {
+      @include fontMain(400, 130%, 14px, $grey-color);
+   }
+
+   &__links {
+      .link-start:first-child {
+         margin-right: 15px;
+      }
+   }
+
+   &__right {
+   }
+}
+.stars {
+   display: flex;
+   align-items: center;
+   &__body {
+      display: flex;
+      align-items: center;
+   }
+
+   &__item {
+      &::before {
+         display: block;
+         font-size: 22px;
+         margin-right: 4px;
+         color: #999;
+      }
+      &.active:before {
+         color: #fd9800;
+      }
+   }
+
+   &__link {
+      margin-left: 5px;
+      @include fontMain(400, 130%, 14px, $accent-color2);
+   }
+}
+.network {
+   display: flex;
+   align-items: center;
+   &__item {
+      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $accent-color2;
+      transition: 0.3s;
+      &:before {
+         font-size: 24px;
+         color: #fff;
+      }
+      &:not(:last-child) {
+         margin-right: 8px;
+      }
+      &:hover {
+         transform: scale(1.1);
+      }
+   }
+   .icon-wp {
+      background: #00af01;
+   }
+   .icon-tg {
+   }
+   .icon-vb {
+      background: #6f00c6;
+   }
+}
+/* end -------------------- */
+
+/*  Стили блока .card-price */
+.card-price {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   &__info {
+      .info-icon:not(:last-child) {
+         margin-bottom: 10px;
+      }
+   }
+
+   &__right {
+   }
+}
+.info-icon {
+   @include fontMain(400, 130%, 14px, $text-color);
+   display: flex;
+   align-items: center;
+   &:before {
+      font-size: 20px;
+      color: $accent-color2;
+      display: block;
+      margin-right: 5px;
+   }
+}
+
+/* end -------------------- */
+
+/*  Стили блока .card-btns */
+.card-btns {
+   .btn:not(:last-child) {
+      margin-bottom: 10px;
+   }
+   .btn-phone {
+      margin-bottom: 10px;
+   }
+}
+
+/* end -------------------- */
+
+/*  Стили блока .card-buy */
+.card-buy {
+   &__info {
+      padding: 16px;
+      border-bottom: 1px solid #e7e7e7;
+   }
+
+   &__text {
+      @include fontMain(400, 130%, 14px, $text-color);
+   }
+
+   &__link {
+      @include fontMain(400, 130%, 12px, $accent-color2);
+   }
+
+   &__btns {
+      padding: 16px 0 0 0;
+      display: flex;
+      .btn:not(:last-child) {
+         margin-right: 16px;
+      }
+   }
+}
+/* end -------------------- */
+
+/*  Стили блока ------------- */
+/* end -------------------- */
+
+/*  Стили блока ------------- */
+/* end -------------------- */
+
+/*  Стили блока ------------- */
+/* end -------------------- */
+
+/*  Стили блока ------------- */
+/* end -------------------- */

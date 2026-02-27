@@ -1,0 +1,131 @@
+// Общие стили для всплывающих окон
+.popup-link {
+   cursor: pointer;
+}
+
+.popup {
+   position: fixed;
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   z-index: 15;
+   background: rgba(0, 0, 0, 0.3);
+   max-height: 100%;
+   overflow: auto;
+   opacity: 0;
+   visibility: hidden;
+   transition: 0.3s;
+   display: flex;
+   flex-direction: column;
+   &.active {
+      opacity: 1;
+      visibility: visible;
+   }
+   &__wraper {
+      width: 100%;
+      max-width: 970px;
+      position: relative;
+      margin: auto;
+      padding: 30px 15px;
+   }
+
+   &__body {
+      position: relative;
+      width: 100%;
+      background: #fff;
+      padding: 20px;
+      -webkit-box-shadow: 0px 0px 100px rgba(0, 0, 0, 0.5);
+      box-shadow: 0px 0px 100px rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      transform: scale(0);
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+   }
+   &.active &__body {
+      transform: scale(1);
+   }
+
+   &__close {
+      &:before {
+      }
+   }
+}
+
+.popup-mini {
+   .popup__wraper {
+      max-width: 350px;
+   }
+   .popup__body {
+   }
+}
+
+.popup-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0 0 15px 0;
+   margin: 0 0 15px 0;
+   border-bottom: 2px solid $light-color;
+   &__title {
+      display: flex;
+      align-items: center;
+      @include fontMain(500, 130%, 16px, $grey-color);
+      &:before {
+         color: $grey-color;
+         font-size: 20px;
+         margin-right: 10px;
+      }
+   }
+   &__close {
+      cursor: pointer;
+      padding: 5px;
+      &:before {
+         font-size: 10px;
+         color: #000;
+      }
+   }
+}
+
+.pdf-popup {
+   &__title {
+      @include fontMain(700, 130%, 20px, $text-color);
+      margin: 0 0 20px 0;
+   }
+
+   &__body {
+      .input-checkbox {
+      }
+   }
+}
+
+.share-popup {
+   .share-links {
+      margin: 5px 0;
+   }
+}
+.share-links {
+   display: flex;
+   align-items: center;
+   @include fontMain(700, 130%, 16px, $text-color);
+   padding: 7px;
+   transition: 0.3s;
+   border-radius: 10px;
+   &:hover {
+      background: $accent-color-light;
+   }
+   img {
+      width: 25px;
+      height: 25px;
+      margin-right: 15px;
+   }
+}
+
+.map-popup {
+   border-radius: 10px;
+   overflow: hidden;
+   iframe {
+      width: 100%;
+   }
+}
