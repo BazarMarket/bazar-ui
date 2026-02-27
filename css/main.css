@@ -4671,7 +4671,7 @@ p {
   transition: border-color 0.2s;
 }
 .otp-input:focus {
-  border-color: #2e7d32;
+  border-color: #ff9138;
 }
 .otp-resend-btn {
   width: 100%;
