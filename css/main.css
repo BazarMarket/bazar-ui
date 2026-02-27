@@ -4628,8 +4628,8 @@ p {
 /* -------- OTP Modal -------- */
 .modal-card--otp {
   text-align: left;
-  max-width: 320px;
-  padding: 28px 28px 24px;
+  max-width: 480px;
+  padding: 42px 42px 36px;
 }
 .otp-icon {
   margin: 0 0 16px;
@@ -4638,30 +4638,31 @@ p {
 }
 .otp-title {
   border-bottom: none;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   padding-bottom: 0;
   text-align: left;
+  font-size: 50px;
 }
 .otp-subtitle {
   font-family: "Poppins", sans-serif;
-  font-size: 14px;
+  font-size: 21px;
   color: #555;
-  margin: 0 0 28px;
+  margin: 0 0 42px;
   text-align: left;
 }
 .otp-inputs {
   display: flex;
   justify-content: flex-start;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 18px;
+  margin-bottom: 36px;
 }
 .otp-input {
-  width: 50px;
-  height: 50px;
+  width: 75px;
+  height: 75px;
   border: 2px solid #ccc;
   border-radius: 8px;
   font-family: "Poppins", sans-serif;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 700;
   text-align: center;
   outline: none;
@@ -4675,12 +4676,12 @@ p {
   background: #f0f0f0;
   border: none;
   border-radius: 8px;
-  padding: 12px;
+  padding: 18px;
   font-family: "Poppins", sans-serif;
-  font-size: 14px;
+  font-size: 21px;
   color: #888;
   cursor: not-allowed;
-  margin-bottom: 14px;
+  margin-bottom: 21px;
 }
 .otp-resend-btn:not(:disabled) {
   background: #ff9138;
@@ -4691,9 +4692,9 @@ p {
   background: none;
   border: 1px solid #ccc;
   border-radius: 20px;
-  padding: 10px 24px;
+  padding: 15px 36px;
   font-family: "Poppins", sans-serif;
-  font-size: 14px;
+  font-size: 21px;
   font-weight: 700;
   color: #222;
   cursor: pointer;
