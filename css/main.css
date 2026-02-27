@@ -4690,12 +4690,14 @@ p {
   cursor: pointer;
 }
 .otp-back-btn {
+  display: block;
+  margin: 0 auto;
   background: none;
   border: 1.5px solid #ccc;
   border-radius: 30px;
   padding: 12px 28px;
   font-family: "Poppins", sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: #222;
   cursor: pointer;
