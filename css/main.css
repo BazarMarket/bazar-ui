@@ -4627,28 +4627,30 @@ p {
 
 /* -------- OTP Modal -------- */
 .modal-card--otp {
-  text-align: center;
+  text-align: left;
   max-width: 420px;
 }
 .otp-icon {
-  margin: 0 auto 16px;
+  margin: 0 0 16px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .otp-title {
   border-bottom: none;
   margin-bottom: 8px;
   padding-bottom: 0;
+  text-align: left;
 }
 .otp-subtitle {
   font-family: "Poppins", sans-serif;
   font-size: 14px;
   color: #555;
   margin: 0 0 28px;
+  text-align: left;
 }
 .otp-inputs {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 12px;
   margin-bottom: 24px;
 }
