@@ -4591,9 +4591,10 @@ p {
   flex-shrink: 0;
   cursor: pointer;
 }
-.modal-checkbox-label a {
-  color: #8aaa9a;
-  text-decoration: underline;
+.modal-checkbox-label a,
+.modal-checkbox-label a:visited {
+  color: #999 !important;
+  text-decoration: underline !important;
 }
 .modal-btns {
   display: flex;
