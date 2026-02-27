@@ -4556,16 +4556,13 @@ p {
   display: flex;
   align-items: center;
 }
-.modal-country-select select {
-  background: none;
-  border: none;
-  outline: none;
+.modal-country-code {
   font-family: "Poppins", sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #333;
-  padding: 10px;
-  cursor: pointer;
+  padding: 10px 12px;
+  user-select: none;
 }
 .modal-number-input {
   flex: 1;
