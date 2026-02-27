@@ -4027,7 +4027,23 @@ p {
 }
 .search__third {
   border-left: 1px solid #e4e4e4;
-  padding-left: 12px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.search__loc-text {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  color: #444;
+}
+.search__loc-arrow:before {
+  font-size: 9px;
+  color: #888;
 }
 .search__third input {
   padding: 10px 12px 10px 12px;
