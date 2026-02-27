@@ -4628,7 +4628,7 @@ p {
 /* -------- OTP Modal -------- */
 .modal-card--otp {
   text-align: left;
-  max-width: 520px;
+  max-width: 600px;
   padding: 40px 40px 34px;
 }
 .otp-icon {
