@@ -4628,8 +4628,8 @@ p {
 /* -------- OTP Modal -------- */
 .modal-card--otp {
   text-align: left;
-  max-width: 360px;
-  padding: 32px 32px 28px;
+  max-width: 520px;
+  padding: 40px 40px 34px;
 }
 .otp-icon {
   margin: 0 0 14px;
