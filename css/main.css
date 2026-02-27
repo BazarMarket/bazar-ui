@@ -4013,8 +4013,7 @@ p {
   align-items: center;
 }
 .search__first input {
-  padding: 10px 12px 10px 40px;
-  background: url("../icon/search.svg") 12px 50%/auto auto no-repeat;
+  padding: 10px 12px 10px 12px;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
