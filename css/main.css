@@ -4624,3 +4624,77 @@ p {
 .modal-btn:hover {
   opacity: 0.88;
 }
+
+/* -------- OTP Modal -------- */
+.modal-card--otp {
+  text-align: center;
+  max-width: 420px;
+}
+.otp-icon {
+  margin: 0 auto 16px;
+  display: flex;
+  justify-content: center;
+}
+.otp-title {
+  border-bottom: none;
+  margin-bottom: 8px;
+  padding-bottom: 0;
+}
+.otp-subtitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 28px;
+}
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.otp-input {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.otp-input:focus {
+  border-color: #2e7d32;
+}
+.otp-resend-btn {
+  width: 100%;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #888;
+  cursor: not-allowed;
+  margin-bottom: 14px;
+}
+.otp-resend-btn:not(:disabled) {
+  background: #ff9138;
+  color: #fff;
+  cursor: pointer;
+}
+.otp-back-btn {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px 24px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.otp-back-btn:hover {
+  border-color: #888;
+}
