@@ -4631,10 +4631,11 @@ p {
   max-width: 500px;
   padding: 44px 44px 38px;
 }
-.otp-icon {
-  margin: 0 0 20px;
+.otp-header {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
 }
 .otp-title {
   border-bottom: none;
