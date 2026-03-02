@@ -524,10 +524,10 @@ body {
 .table-custom caption {
   width: 100%;
   background: #ff9138;
-  padding: 8px 12px;
+  padding: 12px 15px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 20px;
   color: #fff;
   line-height: 130%;
   text-transform: uppercase;
@@ -535,13 +535,13 @@ body {
 }
 .table-custom tr th,
 .table-custom tr td {
-  padding: 6px 10px;
+  padding: 10px;
   border: 1px solid #e8e8e8;
 }
 .table-custom tr th {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   color: #1d1d1b;
   line-height: 130%;
   text-align: left;
@@ -552,7 +552,7 @@ body {
 .table-custom tr td {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 14px;
   color: #1d1d1b;
   line-height: 130%;
   text-align: left;
