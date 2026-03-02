@@ -200,7 +200,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2ebdee;
+  background: #ff9138;
   border-radius: 10px;
 }
 .btn_old::before {
@@ -249,7 +249,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2ebdee;
+  background: #ff9138;
   border-radius: 15px;
 }
 .btn_mini:hover {
@@ -307,7 +307,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #2ebdee;
+  background: #ff9138;
   border-radius: 10px;
   transition: 0.3s;
 }
@@ -378,7 +378,7 @@ body {
   padding: 7px 12px;
   display: flex;
   align-items: center;
-  background: #2ebdee;
+  background: #ff9138;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -523,7 +523,7 @@ body {
 }
 .table-custom caption {
   width: 100%;
-  background: #2ebdee;
+  background: #ff9138;
   padding: 12px 15px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
@@ -547,7 +547,7 @@ body {
   text-align: left;
 }
 .table-custom tr th span {
-  color: #2ebdee;
+  color: #ff9138;
 }
 .table-custom tr td {
   font-family: "Poppins", sans-serif;
@@ -558,7 +558,7 @@ body {
   text-align: left;
 }
 .table-custom tr td span {
-  color: #2ebdee;
+  color: #ff9138;
 }
 .table-custom tr:last-child th {
   border-radius: 0 0 0 10px;
@@ -928,7 +928,7 @@ body {
   background: #1d1d1b;
 }
 .grade__item.active {
-  background: #2ebdee;
+  background: #ff9138;
 }
 
 /* end--------------------*/
@@ -941,14 +941,14 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 16px;
-  color: #2ebdee;
+  color: #ff9138;
   line-height: 130%;
 }
 .bread li a {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 16px;
-  color: #2ebdee;
+  color: #ff9138;
   line-height: 130%;
 }
 .bread-custom {
@@ -1692,7 +1692,7 @@ body {
   margin: 0 0 15px 0;
 }
 .card-head__favorites::before {
-  color: #2ebdee;
+  color: #ff9138;
   font-size: 40px;
 }
 
@@ -1823,11 +1823,11 @@ body {
   cursor: pointer;
 }
 .card-tab__btn:hover {
-  color: #2ebdee;
+  color: #ff9138;
   transition: 0.3s;
 }
 .card-tab__btn.active {
-  color: #2ebdee;
+  color: #ff9138;
   position: relative;
   z-index: 4;
 }
@@ -1932,7 +1932,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #2ebdee;
+  color: #ff9138;
   line-height: 130%;
 }
 
@@ -1947,7 +1947,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2ebdee;
+  background: #ff9138;
   transition: 0.3s;
 }
 .network__item:before {
@@ -1962,6 +1962,9 @@ body {
 }
 .network .icon-wp {
   background: #00af01;
+}
+.network .icon-tg {
+  background: #2aabee;
 }
 .network .icon-vb {
   background: #6f00c6;
@@ -1988,7 +1991,7 @@ body {
 }
 .info-icon:before {
   font-size: 20px;
-  color: #2ebdee;
+  color: #ff9138;
   display: block;
   margin-right: 5px;
 }
@@ -2019,7 +2022,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #2ebdee;
+  color: #ff9138;
   line-height: 130%;
 }
 .card-buy__btns {
@@ -3707,7 +3710,7 @@ p {
   width: 9px;
   height: 9px;
   border-radius: 2px;
-  background: #2ebdee;
+  background: #ff9138;
   margin-right: 12px;
 }
 .list-link li a {
@@ -3719,7 +3722,7 @@ p {
   transition: 0.3s;
 }
 .list-link li a:hover {
-  color: #2ebdee;
+  color: #ff9138;
 }
 
 /* ------- end ------- */
@@ -3742,7 +3745,7 @@ p {
   margin: 0;
 }
 .page-head__favorites::before {
-  color: #2ebdee;
+  color: #ff9138;
   font-size: 40px;
 }
 
