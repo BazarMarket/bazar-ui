@@ -1875,10 +1875,10 @@ body {
   flex-shrink: 0;
 }
 .card-name__photo {
-  margin: 0 0 10px 0;
-  width: 75px;
-  height: 75px;
-  flex: 0 0 75px;
+  margin: 0 0 8px 0;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
   position: relative;
   border-radius: 50%;
 }
@@ -1918,13 +1918,13 @@ body {
   margin-bottom: 8px;
 }
 .card-name__left .network__item {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  margin-right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  margin-right: 5px;
 }
 .card-name__left .network__item:before {
-  font-size: 19px;
+  font-size: 16px;
 }
 .card-name__links {
   display: flex;
