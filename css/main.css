@@ -1917,6 +1917,15 @@ body {
 .card-name__left .network {
   margin-bottom: 8px;
 }
+.card-name__left .network__item {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  margin-right: 6px;
+}
+.card-name__left .network__item:before {
+  font-size: 19px;
+}
 .card-name__links {
   display: flex;
   align-items: center;
