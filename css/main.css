@@ -535,7 +535,7 @@ body {
 }
 .table-custom tr th,
 .table-custom tr td {
-  padding: 10px 2px;
+  padding: 10px;
   border: 1px solid #e8e8e8;
 }
 .table-custom tr th {
@@ -1655,7 +1655,7 @@ body {
 }
 .card-grid__description {
   min-width: 0px;
-  flex: 0 0 44%;
+  flex: 1 1 auto;
 }
 .card-grid__right {
   flex: 1 1 auto;
