@@ -1899,6 +1899,7 @@ body {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  max-width: 170px;
 }
 .card-name__name {
   font-family: "Poppins", sans-serif;
