@@ -2690,7 +2690,17 @@ p {
   gap: 24px;
 }
 .header-old__cell:first-child {
-  padding-left: 0;
+  padding-left: 30px;
+}
+.header-old__cell:first-child::before {
+  content: "";
+  width: 2px;
+  height: 40px;
+  background: #e7e7e7;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .header-old__cell:last-child {
   padding-right: 0;
