@@ -1638,7 +1638,7 @@ body {
 }
 .card-grid__left {
   min-width: 0px;
-  flex: 0 0 70%;
+  flex: 0 0 62%;
   margin-right: 16px;
   display: flex;
   flex-wrap: wrap;
@@ -1650,7 +1650,7 @@ body {
 }
 .card-grid__gallery {
   min-width: 0px;
-  flex: 0 0 57%;
+  flex: 0 0 50%;
   margin-right: 16px;
 }
 .card-grid__description {
