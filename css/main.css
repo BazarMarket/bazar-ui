@@ -1912,8 +1912,23 @@ body {
   color: #797979;
   line-height: 130%;
 }
+.card-name__links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.card-name__links .network__item {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  margin-right: 0;
+}
+.card-name__links .network__item:before {
+  font-size: 18px;
+}
 .card-name__links .link-start:first-child {
-  margin-right: 15px;
+  margin-right: 0;
 }
 .stars {
   display: flex;
