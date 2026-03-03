@@ -1920,7 +1920,7 @@ body {
   border-radius: 5px;
 }
 .card-name__bottom .network__item:not(:last-child) {
-  margin-right: 2px;
+  margin-right: 4px;
 }
 .card-name__bottom .network__item:before {
   font-size: 13px;
