@@ -2706,17 +2706,17 @@ p {
   padding-right: 0;
 }
 .header-old__cell:after {
-  content: "";
-  width: 1px;
-  height: 44px;
-  background: #b8b8b8;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  display: none;
 }
 .header-old__cell:last-child::after {
   display: none;
+}
+.hdr-div {
+  display: block;
+  width: 1px;
+  height: 44px;
+  background: #c0c0c0;
+  flex-shrink: 0;
 }
 .header-old .burger-old {
   display: none;
