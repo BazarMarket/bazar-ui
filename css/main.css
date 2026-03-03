@@ -1864,16 +1864,18 @@ body {
 /*  Стили блока .card-name */
 .card-name {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 .card-name__left {
   display: flex;
-  align-items: center;
-  margin: 0 20px 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 16px 0 0;
+  flex-shrink: 0;
 }
 .card-name__photo {
-  margin: 0 16px 0 0;
+  margin: 0 0 10px 0;
   width: 75px;
   height: 75px;
   flex: 0 0 75px;
@@ -1912,20 +1914,13 @@ body {
   color: #797979;
   line-height: 130%;
 }
+.card-name__left .network {
+  margin-bottom: 8px;
+}
 .card-name__links {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.card-name__links .network__item {
-  width: 30px;
-  height: 30px;
-  border-radius: 7px;
-  margin-right: 0;
-}
-.card-name__links .network__item:before {
-  font-size: 18px;
+  gap: 8px;
 }
 .card-name__links .link-start:first-child {
   margin-right: 0;
