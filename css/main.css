@@ -2694,9 +2694,9 @@ p {
 }
 .header-old__cell:first-child::before {
   content: "";
-  width: 2px;
-  height: 40px;
-  background: #e7e7e7;
+  width: 1px;
+  height: 44px;
+  background: #b8b8b8;
   position: absolute;
   left: 0;
   top: 50%;
@@ -2707,9 +2707,9 @@ p {
 }
 .header-old__cell:after {
   content: "";
-  width: 2px;
-  height: 40px;
-  background: #e7e7e7;
+  width: 1px;
+  height: 44px;
+  background: #b8b8b8;
   position: absolute;
   right: 0;
   top: 50%;
