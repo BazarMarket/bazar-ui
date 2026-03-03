@@ -1865,7 +1865,7 @@ body {
 .card-name {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 .card-name__top {
   display: flex;
