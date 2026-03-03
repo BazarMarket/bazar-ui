@@ -1672,6 +1672,11 @@ body {
   padding-bottom: 60%;
   margin: 20px 0;
 }
+@media screen and (max-width: 1200px) {
+  .card-grid__left {
+    flex: 0 0 62%;
+  }
+}
 
 /* end -------------------- */
 /* Стили шапки карточки товара  */
