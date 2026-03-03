@@ -2681,9 +2681,6 @@ p {
 .header-old__right {
   display: flex;
   align-items: stretch;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
 }
 .header-old__cell {
   position: relative;
