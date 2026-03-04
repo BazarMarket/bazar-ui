@@ -200,7 +200,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ff9138;
+  background: #2ebdee;
   border-radius: 10px;
 }
 .btn_old::before {
@@ -249,7 +249,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ff9138;
+  background: #2ebdee;
   border-radius: 15px;
 }
 .btn_mini:hover {
@@ -307,7 +307,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ff9138;
+  background: #2ebdee;
   border-radius: 10px;
   transition: 0.3s;
 }
@@ -378,7 +378,7 @@ body {
   padding: 7px 12px;
   display: flex;
   align-items: center;
-  background: #ff9138;
+  background: #2ebdee;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -523,7 +523,7 @@ body {
 }
 .table-custom caption {
   width: 100%;
-  background: #ff9138;
+  background: #2ebdee;
   padding: 12px 15px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
@@ -535,7 +535,7 @@ body {
 }
 .table-custom tr th,
 .table-custom tr td {
-  padding: 10px 4px;
+  padding: 10px;
   border: 1px solid #e8e8e8;
 }
 .table-custom tr th {
@@ -547,7 +547,7 @@ body {
   text-align: left;
 }
 .table-custom tr th span {
-  color: #ff9138;
+  color: #2ebdee;
 }
 .table-custom tr td {
   font-family: "Poppins", sans-serif;
@@ -558,7 +558,7 @@ body {
   text-align: left;
 }
 .table-custom tr td span {
-  color: #ff9138;
+  color: #2ebdee;
 }
 .table-custom tr:last-child th {
   border-radius: 0 0 0 10px;
@@ -928,7 +928,7 @@ body {
   background: #1d1d1b;
 }
 .grade__item.active {
-  background: #ff9138;
+  background: #2ebdee;
 }
 
 /* end--------------------*/
@@ -941,14 +941,14 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 16px;
-  color: #ff9138;
+  color: #2ebdee;
   line-height: 130%;
 }
 .bread li a {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 16px;
-  color: #ff9138;
+  color: #2ebdee;
   line-height: 130%;
 }
 .bread-custom {
@@ -1672,11 +1672,6 @@ body {
   padding-bottom: 60%;
   margin: 20px 0;
 }
-@media screen and (max-width: 1200px) {
-  .card-grid__left {
-    flex: 0 0 62%;
-  }
-}
 
 /* end -------------------- */
 /* Стили шапки карточки товара  */
@@ -1697,7 +1692,7 @@ body {
   margin: 0 0 15px 0;
 }
 .card-head__favorites::before {
-  color: #ff9138;
+  color: #2ebdee;
   font-size: 40px;
 }
 
@@ -1828,11 +1823,11 @@ body {
   cursor: pointer;
 }
 .card-tab__btn:hover {
-  color: #ff9138;
+  color: #2ebdee;
   transition: 0.3s;
 }
 .card-tab__btn.active {
-  color: #ff9138;
+  color: #2ebdee;
   position: relative;
   z-index: 4;
 }
@@ -1864,16 +1859,16 @@ body {
 /*  Стили блока .card-name */
 .card-name {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
 }
-.card-name__top {
+.card-name__left {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  margin: 0 20px 0 0;
 }
 .card-name__photo {
-  margin: 0;
+  margin: 0 16px 0 0;
   width: 75px;
   height: 75px;
   flex: 0 0 75px;
@@ -1894,12 +1889,8 @@ body {
   border-radius: 50%;
   z-index: 2;
 }
-.card-name__info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  max-width: 170px;
+.card-name__head {
+  margin: 7px 0;
 }
 .card-name__name {
   font-family: "Poppins", sans-serif;
@@ -1908,36 +1899,16 @@ body {
   color: #1d1d1b;
   line-height: 130%;
   text-transform: uppercase;
-  margin: 0;
-}
-.card-name__bottom {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.card-name__bottom .network__item {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-}
-.card-name__bottom .network__item:not(:last-child) {
-  margin-right: 4px;
-}
-.card-name__bottom .network__item:before {
-  font-size: 13px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 14px;
   color: #797979;
   line-height: 130%;
-  margin: 0;
 }
-.card-name__links {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.card-name__links .link-start:first-child {
+  margin-right: 15px;
 }
 .stars {
   display: flex;
@@ -1961,7 +1932,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #ff9138;
+  color: #2ebdee;
   line-height: 130%;
 }
 
@@ -1976,7 +1947,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ff9138;
+  background: #2ebdee;
   transition: 0.3s;
 }
 .network__item:before {
@@ -1991,9 +1962,6 @@ body {
 }
 .network .icon-wp {
   background: #00af01;
-}
-.network .icon-tg {
-  background: #2aabee;
 }
 .network .icon-vb {
   background: #6f00c6;
@@ -2020,7 +1988,7 @@ body {
 }
 .info-icon:before {
   font-size: 20px;
-  color: #ff9138;
+  color: #2ebdee;
   display: block;
   margin-right: 5px;
 }
@@ -2051,7 +2019,7 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #ff9138;
+  color: #2ebdee;
   line-height: 130%;
 }
 .card-buy__btns {
@@ -2665,13 +2633,9 @@ p {
 /* ------- end ------- */
 /* Стили для header-old */
 .header-old {
-  padding: 8px 0;
+  padding: 15px 0;
   background: #ffffff;
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
-}
-.header-old .logo img {
-  max-height: 60px;
-  width: auto;
 }
 .header-old__body {
   display: flex;
@@ -3743,7 +3707,7 @@ p {
   width: 9px;
   height: 9px;
   border-radius: 2px;
-  background: #ff9138;
+  background: #2ebdee;
   margin-right: 12px;
 }
 .list-link li a {
@@ -3755,7 +3719,7 @@ p {
   transition: 0.3s;
 }
 .list-link li a:hover {
-  color: #ff9138;
+  color: #2ebdee;
 }
 
 /* ------- end ------- */
@@ -3778,7 +3742,7 @@ p {
   margin: 0;
 }
 .page-head__favorites::before {
-  color: #ff9138;
+  color: #2ebdee;
   font-size: 40px;
 }
 

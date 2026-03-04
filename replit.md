@@ -30,23 +30,3 @@ Workflow: "Start application" on port 5000 (webview)
 ## Deployment
 
 Configured as a static deployment with `publicDir: "."`.
-
-## Design Notes
-
-- Color scheme: orange `#ff9138` (primary), Telegram `#2aabee` (preserved)
-- `container-full`: max-width 1600px, padding 0 32px
-- `container`: max-width 1354px (footer)
-- At max-width 1200px: `card-grid__left` shrinks from 70% to 62%
-- Table cell padding: `10px 4px` (reduced horizontal)
-- Site is English-only — no language switcher anywhere
-
-### card.html header (`.header-old`):
-- Logo: `max-height: 60px`, padding `8px 0`
-- Bell icon removed, language selector (EN/EL) removed
-- CSS version param: `css/main.css?v=8` (cache-busting)
-- Dividers between header cells via `::after` pseudo-elements (`#e7e7e7`, 2px, 40px)
-
-### card.html — seller block (`.card-name`) layout:
-- Row 1 (`.card-name__top`): avatar 75px + stars/name (max-width 170px) side by side
-- Row 2 (`.card-name__bottom`): small icons WA/TG/VB (22px, 4px gap) + "2 года на Grant Market"
-- Row 3 (`.card-name__links`): "More ads" + "Edit ads"
