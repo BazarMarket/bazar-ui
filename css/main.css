@@ -1859,16 +1859,19 @@ body {
 /*  Стили блока .card-name */
 .card-name {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 5px;
 }
-.card-name__left {
+.card-name__top {
   display: flex;
-  align-items: center;
-  margin: 0 20px 0 0;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+}
+.card-name__info {
+  max-width: 170px;
 }
 .card-name__photo {
-  margin: 0 16px 0 0;
   width: 75px;
   height: 75px;
   flex: 0 0 75px;
@@ -1889,9 +1892,6 @@ body {
   border-radius: 50%;
   z-index: 2;
 }
-.card-name__head {
-  margin: 7px 0;
-}
 .card-name__name {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
@@ -1903,12 +1903,31 @@ body {
 .card-name__text {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   color: #797979;
   line-height: 130%;
 }
+.card-name__bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.card-name__bottom .network {
+  display: flex;
+  gap: 4px;
+}
+.card-name__bottom .network__item {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 5px;
+}
+.card-name__links {
+  display: flex;
+  gap: 15px;
+}
 .card-name__links .link-start:first-child {
-  margin-right: 15px;
+  margin-right: 0;
 }
 .stars {
   display: flex;
