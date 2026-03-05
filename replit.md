@@ -55,7 +55,13 @@ Workflow: "Start application" on port 5000 (webview)
 - Telegram синий: #2aabee (сохранён)
 - Цветовая схема НЕ менялась на синюю — остаётся оранжевой
 
-### Другие правки css/main.css:
+### ВАЖНО — CSS-ловушка (запомнить для всех страниц!):
+- Правило `.card-grid p { margin: 0 }` обнуляет отступы у ВСЕХ `<p>` внутри карточки
+- Если меняешь margin/padding у элемента-`<p>` внутри `.card-grid` и изменение не работает — добавь `!important`
+- Пример: `.card-head__title { margin: 0 0 15px 0 !important; }`
+- Аналогично может быть и на других страницах — всегда проверяй специфичность
+
+## Другие правки css/main.css:
 - .container-full: max-width 1600px
 - .container: max-width 1354px (footer)
 - При max-width 1200px: card-grid__left shrinks 70% → 62%
