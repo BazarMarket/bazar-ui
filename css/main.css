@@ -1684,8 +1684,7 @@ body {
 /* Стили шапки карточки товара  */
 .card-head {
   padding: 16px;
-  padding-top: 10px;
-  padding-bottom: 8px;
+  padding-top: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1697,7 +1696,7 @@ body {
   font-size: 34px;
   color: #000;
   line-height: 100%;
-  margin: 0 0 8px 0 !important;
+  margin: 0 0 12px 0 !important;
 }
 .card-head__favorites::before {
   color: #ff9138;
