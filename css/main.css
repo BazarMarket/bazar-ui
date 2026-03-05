@@ -1685,6 +1685,7 @@ body {
 .card-head {
   padding: 16px;
   padding-top: 10px;
+  padding-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
