@@ -1706,10 +1706,11 @@ body {
 .card-head__edit {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   color: #000;
   text-decoration: none;
   line-height: 130%;
+  text-transform: uppercase;
   transition: 0.3s;
 }
 .card-head__edit:hover {
