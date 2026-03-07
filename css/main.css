@@ -1758,8 +1758,13 @@ body {
 .card-options {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   margin-right: 20%;
+}
+.card-options__item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 /* end -------------------- */
