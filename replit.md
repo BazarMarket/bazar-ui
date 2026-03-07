@@ -69,7 +69,7 @@ Workflow: "Start application" on port 5000 (webview)
 - .card-head и .card-nav: margin-right 6% (выровнены по правому краю сайдбара)
 - .card-price: align-items flex-end; .card-price__right: margin-right calc(10% - 28px)
 - .card-price__right .price-last-old: font-size 22px; position relative; top -10px
-- .card-head__edit: margin-right 90px; .header-old__right: margin-right 120px
+- .card-head__edit: margin-right -7px; .header-old__right: margin-right 110px
 - Все блоки правого сайдбара (.card-price, .card-btns, .card-options, .card-name): margin-right 20%
 
 ## Design Notes
