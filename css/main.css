@@ -1985,6 +1985,7 @@ body {
   color: #797979;
   line-height: 130%;
   margin: 0;
+  margin-top: auto !important;
 }
 .card-name__right .stars__item::before {
   font-size: 22px;
