@@ -2781,7 +2781,7 @@ p {
 .header-old__right {
   display: flex;
   align-items: center;
-  margin-right: 120px;
+  margin-right: 110px;
 }
 .header-old__cell {
   position: relative;
