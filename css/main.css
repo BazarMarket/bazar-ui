@@ -1902,9 +1902,8 @@ body {
 .card-name {
   display: flex;
   flex-direction: row;
-  gap: 15px;
+  gap: 21px;
   margin-right: 20%;
-  margin-left: 6px;
 }
 .card-name__left {
   display: flex;
