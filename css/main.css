@@ -1302,6 +1302,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 5px;
 }
 .price-last__text {
   padding: 5px 0 0 0;
