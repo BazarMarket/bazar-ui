@@ -2070,7 +2070,7 @@ body {
   margin-bottom: 10px;
 }
 .card-price__right {
-  margin-right: calc(10% - 30px);
+  margin-right: calc(10% - 28px);
 }
 .card-price__right .price-last-old {
   font-size: 18px;
