@@ -2069,6 +2069,9 @@ body {
 .card-price__info .info-icon:not(:last-child) {
   margin-bottom: 10px;
 }
+.card-price__right {
+  margin-right: 10%;
+}
 .card-price__right .price-last-old {
   font-size: 18px;
 }
