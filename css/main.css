@@ -2062,6 +2062,10 @@ body {
 }
 .card-btns .btn-phone {
   margin-bottom: 10px;
+  width: 60%;
+}
+.card-btns .btn_old {
+  width: 60%;
 }
 
 /* end -------------------- */
