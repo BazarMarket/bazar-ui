@@ -1902,6 +1902,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-right: 20%;
 }
 .card-name__top {
   display: flex;
@@ -2077,15 +2078,18 @@ body {
 
 /* end -------------------- */
 /*  Стили блока .card-btns */
+.card-btns {
+  margin-right: 20%;
+}
 .card-btns .btn:not(:last-child) {
   margin-bottom: 10px;
 }
 .card-btns .btn-phone {
   margin-bottom: 10px;
-  width: 80%;
+  width: 100%;
 }
 .card-btns .btn_old {
-  width: 80%;
+  width: 100%;
 }
 .card-btns .icon-chat {
   background: #3ecb60;
