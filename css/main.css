@@ -2035,6 +2035,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-right: 20%;
 }
 .card-price__info .info-icon:not(:last-child) {
   margin-bottom: 10px;
