@@ -1956,7 +1956,7 @@ body {
 .card-name__name {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 17px;
   color: #1d1d1b;
   line-height: 130%;
   text-transform: uppercase;
@@ -1981,10 +1981,16 @@ body {
 .card-name__text {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 16px;
   color: #797979;
   line-height: 130%;
   margin: 0;
+}
+.card-name__right .stars__item::before {
+  font-size: 26px;
+}
+.card-name__right .stars__link {
+  font-size: 17px;
 }
 .card-name__links {
   display: flex;
