@@ -433,6 +433,12 @@ body {
   color: #ffae49;
   line-height: 130%;
 }
+.card-name__links .link-start {
+  display: inline-block;
+  border: 1.5px solid #1d1d1b;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
 
 .link-hover {
   transition: 0.3s;
