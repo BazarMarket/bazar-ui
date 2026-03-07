@@ -1702,6 +1702,7 @@ body {
 .card-head__right {
   display: flex;
   align-items: center;
+  margin-right: 5px;
 }
 .card-head__edit {
   font-family: "Poppins", sans-serif;
