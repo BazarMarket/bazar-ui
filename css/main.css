@@ -2040,17 +2040,17 @@ body {
   margin-bottom: 10px;
 }
 .card-price__right .price-last-old {
-  font-size: 18px;
+  font-size: 20px;
 }
 .card-price__right .price-last-new {
-  font-size: 36px;
+  font-size: 40px;
 }
 .card-price__right .price__link,
 .card-price__right .price-last__link {
-  font-size: 16px;
+  font-size: 18px;
 }
 .card-price__right .price-last__text {
-  font-size: 14px;
+  font-size: 15px;
 }
 .info-icon {
   font-family: "Poppins", sans-serif;
