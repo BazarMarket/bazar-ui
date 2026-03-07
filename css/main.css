@@ -2074,10 +2074,10 @@ body {
 }
 .card-price__right .price-last-old {
   font-size: 18px;
+  margin-top: -5px;
 }
 .card-price__right .price-last-new {
   font-size: 36px;
-  margin-top: -5px;
 }
 .card-price__right .price__link,
 .card-price__right .price-last__link {
