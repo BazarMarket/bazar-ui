@@ -1699,6 +1699,22 @@ body {
   line-height: 100%;
   margin: 0 0 12px 0 !important;
 }
+.card-head__right {
+  display: flex;
+  align-items: center;
+}
+.card-head__edit {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000;
+  text-decoration: none;
+  line-height: 130%;
+  transition: 0.3s;
+}
+.card-head__edit:hover {
+  color: #ff9138;
+}
 .card-head__favorites::before {
   color: #ff9138;
   font-size: 40px;
