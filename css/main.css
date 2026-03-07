@@ -1758,7 +1758,9 @@ body {
 .card-options {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 16px;
+  margin-right: 20%;
 }
 
 /* end -------------------- */
