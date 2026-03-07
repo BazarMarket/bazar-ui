@@ -435,7 +435,7 @@ body {
 }
 .card-name__links .link-start {
   display: inline-block;
-  border: 1.5px solid #e82222;
+  border: 1.5px solid #ffaaaa;
   border-radius: 20px;
   padding: 3px 10px;
   color: #1d1d1b;
