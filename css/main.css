@@ -2779,7 +2779,7 @@ p {
 .header-old__right {
   display: flex;
   align-items: center;
-  margin-right: 80px;
+  margin-right: 120px;
 }
 .header-old__cell {
   position: relative;
