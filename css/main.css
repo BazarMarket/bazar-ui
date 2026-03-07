@@ -2073,7 +2073,7 @@ body {
   margin-right: calc(10% - 28px);
 }
 .card-price__right .price-last-old {
-  font-size: 20px;
+  font-size: 22px;
   position: relative;
   top: -10px;
 }
