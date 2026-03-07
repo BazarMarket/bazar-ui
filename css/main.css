@@ -1902,6 +1902,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-right: 20%;
 }
 .card-name__top {
   display: flex;
@@ -1935,7 +1936,7 @@ body {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-  max-width: 170px;
+  flex: 1;
 }
 .card-name__name {
   font-family: "Poppins", sans-serif;
