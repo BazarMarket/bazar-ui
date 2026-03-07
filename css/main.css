@@ -2062,7 +2062,7 @@ body {
 /*  Стили блока .card-price */
 .card-price {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   margin-right: 20%;
 }
