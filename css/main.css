@@ -2067,6 +2067,18 @@ body {
 .card-btns .btn_old {
   width: 80%;
 }
+.card-btns .icon-chat {
+  background: #3ecb60;
+}
+.card-btns .icon-chat:hover {
+  background: #2fb84f;
+}
+.card-btns .icon-email {
+  background: #47b5e6;
+}
+.card-btns .icon-email:hover {
+  background: #2fa0d4;
+}
 
 /* end -------------------- */
 /*  Стили блока .card-buy */
