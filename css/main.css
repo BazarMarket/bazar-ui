@@ -437,8 +437,9 @@ body {
   display: inline-block;
   border: 1.5px solid #b0b0b0;
   border-radius: 20px;
-  padding: 3px 10px;
+  padding: 2px 8px;
   color: #1d1d1b;
+  font-size: 11px;
 }
 
 .link-hover {
