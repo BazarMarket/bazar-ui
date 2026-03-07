@@ -66,6 +66,11 @@ Workflow: "Start application" on port 5000 (webview)
 - .container: max-width 1354px (footer)
 - При max-width 1200px: card-grid__left shrinks 70% → 62%
 - Паддинг ячеек таблицы: 10px 4px
+- .card-head и .card-nav: margin-right 6% (выровнены по правому краю сайдбара)
+- .card-price: align-items flex-end; .card-price__right: margin-right calc(10% - 28px)
+- .card-price__right .price-last-old: font-size 22px; position relative; top -10px
+- .card-head__edit: margin-right 90px; .header-old__right: margin-right 120px
+- Все блоки правого сайдбара (.card-price, .card-btns, .card-options, .card-name): margin-right 20%
 
 ## Design Notes
 
