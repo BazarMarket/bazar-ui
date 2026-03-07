@@ -2062,23 +2062,6 @@ body {
 }
 .card-btns .btn-phone {
   margin-bottom: 10px;
-  padding: 10px 14px;
-}
-.card-btns .btn-phone:before {
-  font-size: 22px;
-}
-.card-btns .btn-phone__title {
-  font-size: 16px;
-}
-.card-btns .btn-phone__namber {
-  font-size: 11px;
-}
-.card-btns .btn_old {
-  padding: 12px 16px;
-  font-size: 16px;
-}
-.card-btns .btn_old::before {
-  font-size: 22px;
 }
 
 /* end -------------------- */
