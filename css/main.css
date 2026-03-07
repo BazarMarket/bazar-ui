@@ -1911,9 +1911,9 @@ body {
 }
 .card-name__photo {
   margin: 0;
-  width: 83px;
-  height: 83px;
-  flex: 0 0 83px;
+  width: 91px;
+  height: 91px;
+  flex: 0 0 91px;
   position: relative;
   border-radius: 50%;
 }
@@ -1953,15 +1953,15 @@ body {
   gap: 10px;
 }
 .card-name__bottom .network__item {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 5px;
 }
 .card-name__bottom .network__item:not(:last-child) {
   margin-right: 4px;
 }
 .card-name__bottom .network__item:before {
-  font-size: 14px;
+  font-size: 15px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
