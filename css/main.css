@@ -1698,7 +1698,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
-  margin-right: 6.5%;
+  margin-right: 7%;
 }
 .card-head__title {
   font-family: "Poppins", sans-serif;
@@ -1738,7 +1738,7 @@ body {
 /* Стили навигации  */
 .card-nav {
   margin-bottom: 16px;
-  margin-right: 6.5%;
+  margin-right: 7%;
   display: flex;
 }
 .card-nav__item {
