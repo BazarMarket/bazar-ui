@@ -942,6 +942,12 @@ body {
 .grade__item.active {
   background: red;
 }
+.grade__item.icon-dislike {
+  background: #3ecb60;
+}
+.grade__item.icon-dislike:hover {
+  background: #2fb84f;
+}
 
 /* end--------------------*/
 /* Хлебные крошки */
