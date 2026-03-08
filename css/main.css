@@ -1933,9 +1933,9 @@ body {
 }
 .card-name__photo {
   margin: 0;
-  width: 100px;
-  height: 100px;
-  flex: 0 0 100px;
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
   position: relative;
   border-radius: 50%;
 }
