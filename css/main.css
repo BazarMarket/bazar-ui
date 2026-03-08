@@ -940,13 +940,16 @@ body {
   background: #1d1d1b;
 }
 .grade__item.active {
-  background: red;
-}
-.grade__item.icon-dislike {
   background: #3ecb60;
 }
-.grade__item.icon-dislike:hover {
+.grade__item.active:hover {
   background: #2fb84f;
+}
+.grade__item.icon-dislike {
+  background: red;
+}
+.grade__item.icon-dislike:hover {
+  background: #cc0000;
 }
 
 /* end--------------------*/
