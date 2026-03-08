@@ -542,6 +542,7 @@ body {
   font-size: 20px;
   color: #fff;
   line-height: 130%;
+  text-transform: uppercase;
   text-align: center;
 }
 .table-custom tr th,
