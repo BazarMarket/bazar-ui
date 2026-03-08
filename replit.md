@@ -37,7 +37,7 @@ Workflow: "Start application" on port 5000 (webview)
 ## ВАЖНО — Что уже сделано (не откатывать!)
 
 ### card.html — шапка (.header-old):
-- Логотип: `img/logo.png`, max-height: 60px, padding шапки: 8px 0
+- Логотип: `img/logo.png`, max-height: 70px, padding шапки: 8px 0
 - Колокольчик (icon-notification) УБРАН — из шапки и мобильного меню
 - Выбор языка EN/EL УБРАН — из шапки и мобильного меню
 - Сайт только на английском, переключатель языка не нужен нигде
