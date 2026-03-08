@@ -418,6 +418,10 @@ body {
 .link-icon:hover:before {
   color: #000;
 }
+.link-icon.icon-heart-full,
+.link-icon.icon-heart-full:before {
+  color: #e00;
+}
 .link-icon_vertical {
   flex-direction: column;
   font-size: 14px;

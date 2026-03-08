@@ -1024,6 +1024,21 @@ window.onload = function () {
 
     //--------------------------------------------- end
 
+    // FAVOURITE TOGGLE (card-nav) =========================================
+    var favBtn = document.querySelector('.card-nav .link-icon.icon-heart');
+    if (favBtn) {
+        favBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (this.classList.contains('icon-heart-full')) {
+                this.classList.remove('icon-heart-full');
+                this.classList.add('icon-heart');
+            } else {
+                this.classList.remove('icon-heart');
+                this.classList.add('icon-heart-full');
+            }
+        });
+    }
+    // end ------------------------------------------------------------------
 
 }
 
