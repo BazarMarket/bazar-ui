@@ -940,7 +940,7 @@ body {
   background: #1d1d1b;
 }
 .grade__item.active {
-  background: #ff9138;
+  background: red;
 }
 
 /* end--------------------*/
