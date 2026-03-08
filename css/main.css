@@ -946,10 +946,10 @@ body {
   background: #2fb84f;
 }
 .grade__item.icon-dislike {
-  background: red;
+  background: #ff9999;
 }
 .grade__item.icon-dislike:hover {
-  background: #cc0000;
+  background: #ff8080;
 }
 
 /* end--------------------*/
