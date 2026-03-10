@@ -317,10 +317,10 @@ body {
 .btn-phone:before {
   color: #fff;
   font-size: 32px;
-  order: 2;
+  order: 1;
 }
 .btn-phone__body {
-  order: 1;
+  order: 2;
 }
 .btn-phone__title {
   font-family: "Poppins", sans-serif;

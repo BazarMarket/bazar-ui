@@ -1044,10 +1044,8 @@ window.onload = function () {
     window.showPhone = function(btn) {
         var masked = btn.querySelector('.phone-masked');
         var full = btn.querySelector('.phone-full');
-        var hint = btn.querySelector('.phone-hint');
-        if (masked && full && hint && masked.style.display !== 'none') {
+        if (masked && full && masked.style.display !== 'none') {
             masked.style.display = 'none';
-            hint.style.display = 'none';
             full.style.display = 'block';
         }
     };
