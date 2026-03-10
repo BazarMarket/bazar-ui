@@ -1041,7 +1041,7 @@ window.onload = function () {
     // end ------------------------------------------------------------------
 
     // SHOW PHONE NUMBER ===================================================
-    window.showPhone = function(btn) {
+    window.showPhone = function(e, btn) {
         var masked = btn.querySelector('.phone-masked');
         var full = btn.querySelector('.phone-full');
         if (masked && full) {
@@ -1049,6 +1049,7 @@ window.onload = function () {
                 masked.style.display = 'none';
                 full.style.display = 'block';
             } else {
+                e.preventDefault();
                 masked.style.display = 'block';
                 full.style.display = 'none';
             }
