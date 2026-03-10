@@ -1040,6 +1040,45 @@ window.onload = function () {
     }
     // end ------------------------------------------------------------------
 
+    // COMMENT RATE BUTTONS ================================================
+    var rateLike = document.querySelector('.comment-rate-like');
+    var rateDislike = document.querySelector('.comment-rate-dislike');
+
+    if (rateLike) {
+        rateLike.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!this.classList.contains('active')) {
+                this.classList.add('active');
+                this.textContent = parseInt(this.textContent) + 1;
+                if (rateDislike && rateDislike.classList.contains('active')) {
+                    rateDislike.classList.remove('active');
+                    rateDislike.textContent = Math.max(0, parseInt(rateDislike.textContent) - 1);
+                }
+            } else {
+                this.classList.remove('active');
+                this.textContent = Math.max(0, parseInt(this.textContent) - 1);
+            }
+        });
+    }
+
+    if (rateDislike) {
+        rateDislike.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!this.classList.contains('active')) {
+                this.classList.add('active');
+                this.textContent = parseInt(this.textContent) + 1;
+                if (rateLike && rateLike.classList.contains('active')) {
+                    rateLike.classList.remove('active');
+                    rateLike.textContent = Math.max(0, parseInt(rateLike.textContent) - 1);
+                }
+            } else {
+                this.classList.remove('active');
+                this.textContent = Math.max(0, parseInt(this.textContent) - 1);
+            }
+        });
+    }
+    // end ------------------------------------------------------------------
+
 }
 
 

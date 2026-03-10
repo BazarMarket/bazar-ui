@@ -1964,6 +1964,20 @@ body {
   padding: 12px 14px;
   border-top: 1px solid #e0e0e0;
   background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.comment-form__rate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.comment-form__rate-label {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #555;
 }
 .comment-form__submit {
   background: #1d1d1b;
