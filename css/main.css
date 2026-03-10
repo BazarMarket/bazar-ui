@@ -1683,7 +1683,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: start;
-  margin: 0 calc(10% - 5px) 0 6%;
+  margin: 0 6%;
 }
 .card-grid__left {
   min-width: 0px;
@@ -1737,7 +1737,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
-  margin-right: calc(10% - 5px);
+  margin-right: 6%;
   margin-left: 6%;
 }
 .card-head__title {
@@ -1783,7 +1783,7 @@ body {
 /* Стили навигации  */
 .card-nav {
   margin-bottom: 16px;
-  margin-right: calc(10% - 5px);
+  margin-right: 6%;
   margin-left: 6%;
   display: flex;
 }
