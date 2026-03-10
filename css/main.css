@@ -251,6 +251,7 @@ body {
   justify-content: center;
   background: #ff9138;
   border-radius: 15px;
+  white-space: nowrap;
 }
 .btn_mini:hover {
   background: #fe7653;
@@ -2997,7 +2998,8 @@ p {
 .header-old__right {
   display: flex;
   align-items: center;
-  margin-right: 110px;
+  flex-shrink: 0;
+  margin-right: calc(10% - 5px);
 }
 .header-old__cell {
   position: relative;
@@ -3148,6 +3150,7 @@ p {
   display: flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
 }
 .wallet-widget:before {
   font-size: 24px;
