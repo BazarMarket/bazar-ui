@@ -1751,6 +1751,7 @@ body {
 }
 .card-nav__item--edit {
   margin-left: auto;
+  align-self: center;
 }
 .card-head__edit {
   display: inline-block;
