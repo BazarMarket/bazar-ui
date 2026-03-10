@@ -1913,6 +1913,129 @@ body {
 .card-tab__btn-mob {
   display: none;
 }
+/* Comment form */
+.comment-form {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.comment-form__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f9f9f9;
+  flex-wrap: wrap;
+}
+.comment-form__tool {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 15px;
+  color: #444;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.comment-form__tool:hover {
+  background: #ececec;
+}
+.comment-form__sep {
+  width: 1px;
+  height: 20px;
+  background: #ddd;
+  margin: 0 4px;
+}
+.comment-form__textarea {
+  width: 100%;
+  min-height: 130px;
+  border: none;
+  outline: none;
+  padding: 14px;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  color: #333;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.comment-form__footer {
+  padding: 12px 14px;
+  border-top: 1px solid #e0e0e0;
+  background: #f9f9f9;
+}
+.comment-form__submit {
+  background: #1d1d1b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 24px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.comment-form__submit:hover {
+  background: #ff9138;
+}
+/* Comments list */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.comment-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  background: #fff;
+}
+.comment-item__avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+}
+.comment-item__body {
+  flex: 1;
+  min-width: 0;
+}
+.comment-item__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.comment-item__name {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1d1d1b;
+}
+.comment-item__date {
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  color: #999;
+}
+.comment-item__text {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #444;
+  line-height: 160%;
+  margin: 0;
+}
 /* end -------------------- */
 /*  Стили блока .card-name */
 .card-name {
