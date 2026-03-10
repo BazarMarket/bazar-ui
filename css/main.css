@@ -319,6 +319,7 @@ body {
   color: #fff;
   font-size: 32px;
   order: 1;
+  transform: translateX(20px);
 }
 .btn-phone__body {
   order: 2;
