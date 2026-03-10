@@ -1040,6 +1040,20 @@ window.onload = function () {
     }
     // end ------------------------------------------------------------------
 
+    // COMMENT COUNT on Submit =============================================
+    var submitBtn = document.querySelector('.comment-form__submit');
+    var countBadge = document.getElementById('comments-count');
+    if (submitBtn && countBadge) {
+        submitBtn.addEventListener('click', function () {
+            var textarea = document.querySelector('.comment-form__textarea');
+            if (textarea && textarea.value.trim() !== '') {
+                countBadge.textContent = parseInt(countBadge.textContent) + 1;
+                textarea.value = '';
+            }
+        });
+    }
+    // end ------------------------------------------------------------------
+
     // COMMENT RATE BUTTONS ================================================
     var rateLike = document.querySelector('.comment-rate-like');
     var rateDislike = document.querySelector('.comment-rate-dislike');
