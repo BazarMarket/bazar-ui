@@ -1681,6 +1681,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: start;
+  margin: 0 6%;
 }
 .card-grid__left {
   min-width: 0px;
@@ -1735,6 +1736,7 @@ body {
   justify-content: space-between;
   margin-bottom: 16px;
   margin-right: 6%;
+  margin-left: 6%;
 }
 .card-head__title {
   font-family: "Poppins", sans-serif;
@@ -1780,6 +1782,7 @@ body {
 .card-nav {
   margin-bottom: 16px;
   margin-right: 6%;
+  margin-left: 6%;
   display: flex;
 }
 .card-nav__item {
@@ -1804,7 +1807,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-right: 20%;
+  margin-right: 14%;
 }
 .card-options__item {
   flex: 1;
@@ -2114,7 +2117,7 @@ body {
   display: flex;
   flex-direction: row;
   gap: 25px;
-  margin-right: 20%;
+  margin-right: 14%;
 }
 .card-name__left {
   display: flex;
@@ -2276,7 +2279,7 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-right: 20%;
+  margin-right: 14%;
 }
 .card-price__info .info-icon:not(:last-child) {
   margin-bottom: 10px;
@@ -2318,7 +2321,7 @@ body {
 /* end -------------------- */
 /*  Стили блока .card-btns */
 .card-btns {
-  margin-right: 20%;
+  margin-right: 14%;
 }
 .card-btns .btn:not(:last-child) {
   margin-bottom: 10px;
