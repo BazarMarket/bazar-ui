@@ -1974,6 +1974,20 @@ body {
   align-items: center;
   gap: 10px;
 }
+.comment-rate-like {
+  background: #3ecb60 !important;
+  color: #fff !important;
+}
+.comment-rate-like:hover {
+  background: #32b850 !important;
+}
+.comment-rate-dislike {
+  background: #ff5555 !important;
+  color: #fff !important;
+}
+.comment-rate-dislike:hover {
+  background: #e84444 !important;
+}
 .comment-form__rate-label {
   font-family: "Poppins", sans-serif;
   font-size: 14px;
