@@ -3159,11 +3159,26 @@ p {
   color: #1a1a1a;
 }
 .wallet-plus {
-  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #ff9138;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: 2px;
+  transition: background 0.2s;
+}
+.wallet-plus:hover {
+  background: #fe7653;
+}
+.wallet-plus__icon {
+  font-size: 16px;
   font-weight: 700;
-  color: #ff9138;
+  color: #fff;
   line-height: 1;
-  margin-left: -4px;
+  margin-top: -1px;
 }
 
 .user-menu {
