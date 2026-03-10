@@ -305,9 +305,9 @@ body {
   cursor: pointer;
   padding: 16px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background: #ff9138;
   border-radius: 10px;
   transition: 0.3s;
@@ -315,8 +315,14 @@ body {
 .btn-phone:hover {
   background: #fe7653;
 }
+.btn-phone:before {
+  color: #fff;
+  font-size: 32px;
+  order: 1;
+}
 .btn-phone__body {
-  text-align: center;
+  order: 2;
+  text-align: right;
 }
 .btn-phone__title {
   font-family: "Poppins", sans-serif;
@@ -324,14 +330,6 @@ body {
   font-size: 18px;
   color: #fff;
   line-height: 130%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.btn-phone__icon:before {
-  font-size: 22px;
-  color: #fff;
 }
 .btn-phone__namber {
   font-family: "Poppins", sans-serif;
