@@ -66,7 +66,9 @@
       }
       .cat-item {
          cursor: pointer;
-         display: block;
+         display: flex;
+         align-items: center;
+         gap: 8px;
          padding: 5px 14px;
          border-radius: 4px;
          margin: 1px 4px;
@@ -75,6 +77,12 @@
          font-size: 14px;
          color: #1d1d1b;
          transition: background .12s, color .12s;
+      }
+      .cat-item__icon {
+         width: 26px;
+         height: 26px;
+         object-fit: contain;
+         flex-shrink: 0;
       }
       .cat-item:hover { color: #ff9138; }
       .cat-item.active {
@@ -339,19 +347,19 @@
                <p class="pa-section__title">Choose a category</p>
                <div class="cat-cols">
                   <div class="cat-col" id="mainCats">
-                     <div class="cat-item active" data-cat="real-estate-sale" onclick="selectCat(this)">Real Estate for sale</div>
-                     <div class="cat-item" data-cat="real-estate-rent" onclick="selectCat(this)">Real Estate to rent</div>
-                     <div class="cat-item" data-cat="motors" onclick="selectCat(this)">Motors</div>
-                     <div class="cat-item" data-cat="jobs" onclick="selectCat(this)">Jobs</div>
-                     <div class="cat-item" data-cat="phones" onclick="selectCat(this)">Mobile phones, communication</div>
-                     <div class="cat-item" data-cat="kids" onclick="selectCat(this)">Kids' stuff</div>
-                     <div class="cat-item" data-cat="clothes" onclick="selectCat(this)">Clothes, footwear, accessories</div>
-                     <div class="cat-item" data-cat="computers" onclick="selectCat(this)">Computers, gaming</div>
-                     <div class="cat-item" data-cat="electronics" onclick="selectCat(this)">Electronics, appliances</div>
-                     <div class="cat-item" data-cat="home" onclick="selectCat(this)">Home, garden, pool</div>
-                     <div class="cat-item" data-cat="services" onclick="selectCat(this)">Services</div>
-                     <div class="cat-item" data-cat="animals" onclick="selectCat(this)">Animals</div>
-                     <div class="cat-item" data-cat="sports" onclick="selectCat(this)">Sports, leisure, hobbies</div>
+                     <div class="cat-item active" data-cat="real-estate-sale" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image1.png" alt="">Real Estate for sale</div>
+                     <div class="cat-item" data-cat="real-estate-rent" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image2.png" alt="">Real Estate to rent</div>
+                     <div class="cat-item" data-cat="motors" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image3.png" alt="">Motors</div>
+                     <div class="cat-item" data-cat="jobs" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image11.png" alt="">Jobs</div>
+                     <div class="cat-item" data-cat="phones" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image5.png" alt="">Mobile phones, communication</div>
+                     <div class="cat-item" data-cat="kids" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image16.png" alt="">Kids' stuff</div>
+                     <div class="cat-item" data-cat="clothes" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image7.png" alt="">Clothes, footwear, accessories</div>
+                     <div class="cat-item" data-cat="computers" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image6.png" alt="">Computers, gaming</div>
+                     <div class="cat-item" data-cat="electronics" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image9.png" alt="">Electronics, appliances</div>
+                     <div class="cat-item" data-cat="home" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image10.png" alt="">Home, garden, pool</div>
+                     <div class="cat-item" data-cat="services" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image14.png" alt="">Services</div>
+                     <div class="cat-item" data-cat="animals" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image12.png" alt="">Animals</div>
+                     <div class="cat-item" data-cat="sports" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image8.png" alt="">Sports, leisure, hobbies</div>
                   </div>
                   <div class="cat-col" id="subCats"></div>
                   <div class="cat-col" id="subSubCats"></div>
