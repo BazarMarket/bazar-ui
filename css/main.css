@@ -2931,7 +2931,7 @@ p {
     align-items: center;
   }
   .burger-body {
-    margin-right: calc(6% - 30px);
+    margin-right: calc(6% - 14px);
   }
 }
 @media screen and (max-width: 992px) {
