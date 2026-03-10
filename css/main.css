@@ -3164,14 +3164,14 @@ p {
   justify-content: center;
   width: 22px;
   height: 22px;
-  background: #ff9138;
+  background: #b0b0b0;
   border-radius: 50%;
   flex-shrink: 0;
   margin-left: 2px;
   transition: background 0.2s;
 }
 .wallet-plus:hover {
-  background: #fe7653;
+  background: #909090;
 }
 .wallet-plus__icon {
   font-size: 16px;
