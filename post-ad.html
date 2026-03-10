@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Post an Ad – Bazar</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+   <meta name="description" content="">
+   <link rel="stylesheet" href="css/icon-style.css" type="text/css">
+   <link rel="stylesheet" href="css/main.css" type="text/css">
+   <link rel="icon" href="favicon.svg">
+   <style>
+      /* ---- Компактный выбор категории ---- */
+      .pa-section {
+         max-width: 860px;
+         margin: 0 auto 24px;
+         background: #fff;
+         border-radius: 12px;
+         box-shadow: 0 0 30px rgba(0,0,0,.08);
+         padding: 24px 28px;
+      }
+      .pa-section__title {
+         font-family: "Poppins", sans-serif;
+         font-weight: 700;
+         font-size: 15px;
+         color: #1a1a1a;
+         margin: 0 0 16px;
+         text-transform: uppercase;
+         letter-spacing: .5px;
+      }
+      .pa-page-title {
+         font-family: "Poppins", sans-serif;
+         font-weight: 700;
+         font-size: 28px;
+         color: #1a1a1a;
+         margin: 0 0 20px;
+      }
+      .pa-wrap {
+         max-width: 860px;
+         margin: 0 auto;
+         padding: 32px 16px 60px;
+      }
+
+      /* Chips категорий */
+      .cat-chips {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 8px;
+      }
+      .cat-chip {
+         cursor: pointer;
+         padding: 8px 18px;
+         border-radius: 50px;
+         border: 1.5px solid #e4e4e4;
+         background: #fff;
+         font-family: "Poppins", sans-serif;
+         font-weight: 500;
+         font-size: 14px;
+         color: #444;
+         transition: all .2s;
+         white-space: nowrap;
+      }
+      .cat-chip:hover {
+         border-color: #ff9138;
+         color: #ff9138;
+      }
+      .cat-chip.active {
+         background: #ff9138;
+         border-color: #ff9138;
+         color: #fff;
+         font-weight: 600;
+      }
+
+      /* Подкатегории */
+      .subcat-row {
+         display: none;
+         margin-top: 16px;
+         padding-top: 16px;
+         border-top: 1px solid #f0f0f0;
+      }
+      .subcat-row.visible {
+         display: block;
+      }
+      .subcat-row__label {
+         font-family: "Poppins", sans-serif;
+         font-weight: 600;
+         font-size: 13px;
+         color: #888;
+         margin: 0 0 10px;
+         text-transform: uppercase;
+         letter-spacing: .4px;
+      }
+      .subcat-chip {
+         cursor: pointer;
+         padding: 6px 14px;
+         border-radius: 50px;
+         border: 1.5px solid #e4e4e4;
+         background: #fff;
+         font-family: "Poppins", sans-serif;
+         font-weight: 500;
+         font-size: 13px;
+         color: #555;
+         transition: all .2s;
+         white-space: nowrap;
+      }
+      .subcat-chip:hover {
+         border-color: #ff9138;
+         color: #ff9138;
+      }
+      .subcat-chip.active {
+         background: #ff9138;
+         border-color: #ff9138;
+         color: #fff;
+      }
+
+      /* Форма */
+      .pa-form {
+         display: none;
+      }
+      .pa-form.visible {
+         display: block;
+      }
+      .pa-field {
+         display: flex;
+         align-items: flex-start;
+         gap: 20px;
+         margin: 14px 0;
+      }
+      .pa-field__label {
+         font-family: "Poppins", sans-serif;
+         font-weight: 600;
+         font-size: 14px;
+         color: #333;
+         min-width: 160px;
+         max-width: 160px;
+         text-align: right;
+         padding-top: 12px;
+      }
+      .pa-field__label span { color: red; }
+      .pa-field__control {
+         flex: 1;
+      }
+      .pa-input,
+      .pa-select {
+         width: 100%;
+         padding: 11px 16px;
+         border: 1px solid #e4e4e4;
+         border-radius: 8px;
+         font-family: "Poppins", sans-serif;
+         font-size: 15px;
+         color: #333;
+         background: #fff;
+         box-shadow: inset 0 2px 4px rgba(0,0,0,.06);
+         -webkit-appearance: none;
+         appearance: none;
+         box-sizing: border-box;
+      }
+      .pa-input:focus,
+      .pa-select:focus {
+         outline: none;
+         border-color: #ff9138;
+      }
+      .pa-select-wrap {
+         position: relative;
+      }
+      .pa-select-wrap::after {
+         content: "\e907";
+         font-family: "icon";
+         font-size: 9px;
+         color: #bbb;
+         position: absolute;
+         right: 14px;
+         top: 50%;
+         transform: translateY(-50%);
+         pointer-events: none;
+      }
+      .pa-textarea {
+         width: 100%;
+         min-height: 120px;
+         padding: 11px 16px;
+         border: 1px solid #e4e4e4;
+         border-radius: 8px;
+         font-family: "Poppins", sans-serif;
+         font-size: 15px;
+         color: #333;
+         resize: vertical;
+         box-sizing: border-box;
+      }
+      .pa-textarea:focus {
+         outline: none;
+         border-color: #ff9138;
+      }
+      .pa-section__divider {
+         height: 1px;
+         background: #f0f0f0;
+         margin: 20px 0;
+      }
+      .pa-checkboxes {
+         display: grid;
+         grid-template-columns: repeat(3, 1fr);
+         gap: 8px 16px;
+         padding: 4px 0;
+      }
+      .pa-photo-grid {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 10px;
+         padding: 4px 0;
+      }
+      .pa-photo-box {
+         width: 100px;
+         height: 100px;
+         border: 2px dashed #e4e4e4;
+         border-radius: 8px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         cursor: pointer;
+         position: relative;
+         overflow: hidden;
+         transition: border-color .2s;
+      }
+      .pa-photo-box:hover { border-color: #ff9138; }
+      .pa-photo-box input[type="file"] {
+         position: absolute;
+         inset: 0;
+         opacity: 0;
+         cursor: pointer;
+      }
+      .pa-photo-box__plus {
+         font-size: 32px;
+         color: #ccc;
+         line-height: 1;
+      }
+      .pa-toggle-row {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         padding: 4px 0;
+      }
+      .pa-toggle-row p {
+         font-family: "Poppins", sans-serif;
+         font-size: 14px;
+         color: #555;
+         margin: 0;
+      }
+      .pa-price-row {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+      }
+      .pa-price-row .pa-input {
+         max-width: 200px;
+      }
+      .pa-price-currency {
+         font-family: "Poppins", sans-serif;
+         font-weight: 700;
+         font-size: 18px;
+         color: #555;
+      }
+      .pa-submit-row {
+         display: flex;
+         align-items: center;
+         gap: 20px;
+         padding: 8px 0 0 180px;
+      }
+      .pa-btn-submit {
+         padding: 14px 40px;
+         background: #ff9138;
+         border: none;
+         border-radius: 10px;
+         font-family: "Poppins", sans-serif;
+         font-weight: 700;
+         font-size: 17px;
+         color: #fff;
+         cursor: pointer;
+         transition: background .2s;
+      }
+      .pa-btn-submit:hover { background: #fe7653; }
+      .pa-btn-preview {
+         padding: 14px 32px;
+         background: #f4f4f4;
+         border: none;
+         border-radius: 10px;
+         font-family: "Poppins", sans-serif;
+         font-weight: 600;
+         font-size: 15px;
+         color: #555;
+         cursor: pointer;
+         transition: background .2s;
+      }
+      .pa-btn-preview:hover { background: #e8e8e8; }
+   </style>
+</head>
+
+<body>
+   <div class="wrapper">
+
+      <header class="header-old">
+         <div class="container-full">
+            <div class="header-old__body">
+               <a href="index.html" class="logo">
+                  <img src="img/logo.png" alt="">
+               </a>
+               <div class="burger-body">
+                  <div class="header-old__right">
+                     <div class="header-old__cell">
+                        <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="icons-list">
+                           <a href="#" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                           <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                        </div>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="wallet-widget icon-win-wallet">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="user-link">
+                           <div class="user-link__title">Alexey</div>
+                           <div class="user-link__photo">
+                              <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                           </div>
+                           <div class="user-menu">
+                              <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                              <hr class="user-menu__hr">
+                              <a href="#" class="user-menu-item icon-win-user">My Profile</a>
+                              <a href="#" class="user-menu-item icon-win-ad">My Ads</a>
+                              <a href="#" class="user-menu-item icon-win-wallet">My Payments</a>
+                              <a href="#" class="user-menu-item icon-heart">Favorites</a>
+                              <div class="subscription">
+                                 <p class="subscription__title icon-calendar-upd">Subscription</p>
+                                 <span class="subscription__stiker">PRO</span>
+                                 <span class="subscription__days">382дн</span>
+                              </div>
+                              <hr class="user-menu__hr">
+                              <div class="dark-mode">
+                                 <div class="user-menu-item icon-win-sun">Dark Mode</div>
+                                 <label class="toggle">
+                                    <input type="checkbox">
+                                    <span class="toggle__slider"></span>
+                                 </label>
+                              </div>
+                              <a href="#" class="user-menu-item icon-win-faq">Support</a>
+                              <a href="#" class="user-menu-item icon-win-setting">My Settings</a>
+                              <hr class="user-menu__hr">
+                              <a href="#" class="user-logout icon-win-logout">Log out</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="burger-old">
+                  <span></span><span></span><span></span>
+               </div>
+            </div>
+         </div>
+      </header>
+
+      <main class="main header-indent">
+         <div class="pa-wrap">
+
+            <p class="pa-page-title">Post an Ad</p>
+
+            <!-- Шаг 1: Выбор категории -->
+            <div class="pa-section" id="step-category">
+               <p class="pa-section__title">Choose a category</p>
+               <div class="cat-chips" id="mainCats">
+                  <div class="cat-chip active" data-cat="real-estate-sale" onclick="selectCat(this)">Real Estate for sale</div>
+                  <div class="cat-chip" data-cat="real-estate-rent" onclick="selectCat(this)">Real Estate to rent</div>
+                  <div class="cat-chip" data-cat="motors" onclick="selectCat(this)">Motors</div>
+                  <div class="cat-chip" data-cat="jobs" onclick="selectCat(this)">Jobs</div>
+                  <div class="cat-chip" data-cat="phones" onclick="selectCat(this)">Mobile phones</div>
+                  <div class="cat-chip" data-cat="kids" onclick="selectCat(this)">Kids' stuff</div>
+                  <div class="cat-chip" data-cat="clothes" onclick="selectCat(this)">Clothes &amp; accessories</div>
+                  <div class="cat-chip" data-cat="computers" onclick="selectCat(this)">Computers &amp; gaming</div>
+                  <div class="cat-chip" data-cat="services" onclick="selectCat(this)">Services</div>
+                  <div class="cat-chip" data-cat="animals" onclick="selectCat(this)">Animals</div>
+               </div>
+
+               <!-- Подкатегории (показываются динамически) -->
+               <div class="subcat-row" id="subcatRow">
+                  <p class="subcat-row__label">Subcategory</p>
+                  <div class="cat-chips" id="subCats"></div>
+               </div>
+            </div>
+
+            <!-- Шаг 2: Форма -->
+            <div class="pa-form" id="paForm">
+
+               <!-- Основные данные -->
+               <div class="pa-section">
+                  <p class="pa-section__title">Ad details</p>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Title: <span>*</span></span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="e.g. Apple iPhone XR 128gb">
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Description: <span>*</span></span>
+                     <div class="pa-field__control">
+                        <textarea class="pa-textarea" placeholder="Describe your item in detail..."></textarea>
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Condition: <span>*</span></span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select">
+                           <option value="">Select condition</option>
+                           <option>New</option>
+                           <option>Like new</option>
+                           <option>Good</option>
+                           <option>Fair</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-section__divider"></div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Price: <span>*</span></span>
+                     <div class="pa-field__control">
+                        <div class="pa-price-row">
+                           <input class="pa-input" type="number" placeholder="0">
+                           <span class="pa-price-currency">£</span>
+                        </div>
+                        <div class="pa-toggle-row" style="margin-top:10px">
+                           <label class="toggle">
+                              <input type="checkbox">
+                              <span class="toggle__slider"></span>
+                           </label>
+                           <p>Negotiable price</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Delivery:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select">
+                           <option value="">Select option</option>
+                           <option>Pickup only</option>
+                           <option>Delivery available</option>
+                           <option>Both</option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Локация -->
+               <div class="pa-section">
+                  <p class="pa-section__title">Location</p>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">City: <span>*</span></span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select">
+                           <option value="">Select city</option>
+                           <option>Limassol</option>
+                           <option>Nicosia</option>
+                           <option>Larnaca</option>
+                           <option>Paphos</option>
+                           <option>Famagusta</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Area:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="e.g. Kapsalos">
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Postal code:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="">
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Фотографии -->
+               <div class="pa-section">
+                  <p class="pa-section__title">Photos</p>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Images: <span>*</span></span>
+                     <div class="pa-field__control">
+                        <div class="pa-photo-grid">
+                           <div class="pa-photo-box">
+                              <input type="file" accept="image/*" multiple>
+                              <span class="pa-photo-box__plus">+</span>
+                           </div>
+                           <div class="pa-photo-box">
+                              <input type="file" accept="image/*">
+                              <span class="pa-photo-box__plus">+</span>
+                           </div>
+                           <div class="pa-photo-box">
+                              <input type="file" accept="image/*">
+                              <span class="pa-photo-box__plus">+</span>
+                           </div>
+                           <div class="pa-photo-box">
+                              <input type="file" accept="image/*">
+                              <span class="pa-photo-box__plus">+</span>
+                           </div>
+                           <div class="pa-photo-box">
+                              <input type="file" accept="image/*">
+                              <span class="pa-photo-box__plus">+</span>
+                           </div>
+                        </div>
+                        <p style="font-size:12px;color:#999;margin:8px 0 0;font-family:'Poppins',sans-serif">Max file size 5MB · jpg, jpeg, png · First photo is the title image</p>
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">YouTube video:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="https://youtube.com/...">
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Контактные данные -->
+               <div class="pa-section">
+                  <p class="pa-section__title">Contact details</p>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Name: <span>*</span></span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="Your name">
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Phone: <span>*</span></span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="tel" placeholder="+357 xx xxxxxx">
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Show phone:</span>
+                     <div class="pa-field__control pa-toggle-row" style="padding-top:8px">
+                        <label class="toggle">
+                           <input type="checkbox" checked>
+                           <span class="toggle__slider"></span>
+                        </label>
+                        <p>Display phone number on ad</p>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Кнопки -->
+               <div class="pa-submit-row">
+                  <button class="pa-btn-submit">Publish Ad</button>
+                  <button class="pa-btn-preview">Preview</button>
+               </div>
+
+            </div>
+         </div>
+      </main>
+
+   </div>
+
+   <script src="js/script.js"></script>
+   <script>
+      var subcats = {
+         'real-estate-sale': ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Residential buildings', 'Prefabricated houses', 'Other'],
+         'real-estate-rent': ['Houses', 'Apartments & flats', 'Commercial property', 'Rooms', 'Holiday rentals', 'Other'],
+         'motors': ['Cars', 'Motorcycles', 'Trucks & vans', 'Boats & watercraft', 'Parts & accessories', 'Other'],
+         'jobs': ['Full-time', 'Part-time', 'Freelance', 'Internship', 'Other'],
+         'phones': ['Smartphones', 'Tablets', 'Accessories', 'SIM cards', 'Other'],
+         'kids': ['Toys', 'Clothing', 'Strollers', 'Books', 'Other'],
+         'clothes': ['Men\'s clothing', 'Women\'s clothing', 'Shoes', 'Bags', 'Accessories', 'Other'],
+         'computers': ['Laptops', 'Desktops', 'Components', 'Monitors', 'Gaming consoles', 'Accessories', 'Other'],
+         'services': ['Cleaning', 'Repair & handyman', 'IT & tech', 'Beauty & wellness', 'Tutoring', 'Other'],
+         'animals': ['Dogs', 'Cats', 'Birds', 'Fish & aquarium', 'Other']
+      };
+
+      function selectCat(el) {
+         document.querySelectorAll('#mainCats .cat-chip').forEach(c => c.classList.remove('active'));
+         el.classList.add('active');
+         var cat = el.dataset.cat;
+         var subcatRow = document.getElementById('subcatRow');
+         var subCats = document.getElementById('subCats');
+         var list = subcats[cat] || [];
+         if (list.length) {
+            subCats.innerHTML = list.map(function(s, i) {
+               return '<div class="subcat-chip' + (i === 0 ? ' active' : '') + '" onclick="selectSubcat(this)">' + s + '</div>';
+            }).join('');
+            subcatRow.classList.add('visible');
+         } else {
+            subcatRow.classList.remove('visible');
+         }
+         document.getElementById('paForm').classList.add('visible');
+      }
+
+      function selectSubcat(el) {
+         document.querySelectorAll('#subCats .subcat-chip').forEach(c => c.classList.remove('active'));
+         el.classList.add('active');
+      }
+
+      // Показать форму и подкатегории для первой активной категории при загрузке
+      window.addEventListener('DOMContentLoaded', function() {
+         var first = document.querySelector('#mainCats .cat-chip.active');
+         if (first) selectCat(first);
+      });
+   </script>
+</body>
+</html>
