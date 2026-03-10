@@ -1000,6 +1000,7 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  margin-left: 6%;
 }
 .bread-custom li a {
   font-family: "Poppins", sans-serif;
