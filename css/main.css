@@ -3158,6 +3158,13 @@ p {
   font-size: 24px;
   color: #1a1a1a;
 }
+.wallet-plus {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff9138;
+  line-height: 1;
+  margin-left: -4px;
+}
 
 .user-menu {
   transition: 0.3s;
