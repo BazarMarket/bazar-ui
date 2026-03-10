@@ -2930,6 +2930,9 @@ p {
     display: flex;
     align-items: center;
   }
+  .burger-body {
+    margin-right: calc(6% - 30px);
+  }
 }
 @media screen and (max-width: 992px) {
   .mob-992 {
@@ -2999,7 +3002,6 @@ p {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  margin-right: 6%;
 }
 .header-old__cell {
   position: relative;
