@@ -1044,9 +1044,14 @@ window.onload = function () {
     window.showPhone = function(btn) {
         var masked = btn.querySelector('.phone-masked');
         var full = btn.querySelector('.phone-full');
-        if (masked && full && masked.style.display !== 'none') {
-            masked.style.display = 'none';
-            full.style.display = 'block';
+        if (masked && full) {
+            if (masked.style.display !== 'none') {
+                masked.style.display = 'none';
+                full.style.display = 'block';
+            } else {
+                masked.style.display = 'block';
+                full.style.display = 'none';
+            }
         }
     };
     // end ------------------------------------------------------------------
