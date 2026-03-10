@@ -1749,9 +1749,12 @@ body {
   align-items: center;
   margin-right: 10px;
 }
+.card-nav__item--edit {
+  margin-left: auto;
+}
 .card-head__edit {
   display: inline-block;
-  margin-top: 8px;
+  margin-top: 0;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 13px;
