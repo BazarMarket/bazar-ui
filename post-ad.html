@@ -41,76 +41,47 @@
          padding: 32px 16px 60px;
       }
 
-      /* Chips категорий */
-      .cat-chips {
+      /* Двухколоночный выбор категории */
+      .cat-cols {
          display: flex;
-         flex-wrap: wrap;
-         gap: 8px;
+         gap: 0;
+         border-top: 1px solid #ececec;
       }
-      .cat-chip {
-         cursor: pointer;
-         padding: 8px 18px;
-         border-radius: 50px;
-         border: 1.5px solid #e4e4e4;
-         background: #fff;
-         font-family: "Poppins", sans-serif;
-         font-weight: 500;
-         font-size: 14px;
-         color: #444;
-         transition: all .2s;
-         white-space: nowrap;
+      .cat-col {
+         flex: 1;
+         border-right: 1px solid #ececec;
+         padding: 6px 0;
       }
-      .cat-chip:hover {
-         border-color: #ff9138;
-         color: #ff9138;
-      }
-      .cat-chip.active {
-         background: #ff9138;
-         border-color: #ff9138;
-         color: #fff;
-         font-weight: 600;
-      }
-
-      /* Подкатегории */
-      .subcat-row {
-         display: none;
-         margin-top: 16px;
-         padding-top: 16px;
-         border-top: 1px solid #f0f0f0;
-      }
-      .subcat-row.visible {
-         display: block;
-      }
-      .subcat-row__label {
+      .cat-col:last-child { border-right: none; }
+      .cat-col__label {
          font-family: "Poppins", sans-serif;
          font-weight: 600;
-         font-size: 13px;
-         color: #888;
-         margin: 0 0 10px;
+         font-size: 11px;
+         color: #bbb;
          text-transform: uppercase;
-         letter-spacing: .4px;
+         letter-spacing: .5px;
+         padding: 6px 14px 4px;
       }
-      .subcat-chip {
+      .cat-item {
          cursor: pointer;
+         display: block;
          padding: 6px 14px;
          border-radius: 50px;
-         border: 1.5px solid #e4e4e4;
-         background: #fff;
+         margin: 1px 6px;
          font-family: "Poppins", sans-serif;
-         font-weight: 500;
-         font-size: 13px;
+         font-weight: 400;
+         font-size: 14px;
          color: #555;
-         transition: all .2s;
+         transition: all .15s;
          white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
       }
-      .subcat-chip:hover {
-         border-color: #ff9138;
-         color: #ff9138;
-      }
-      .subcat-chip.active {
+      .cat-item:hover { color: #ff9138; }
+      .cat-item.active {
          background: #ff9138;
-         border-color: #ff9138;
          color: #fff;
+         font-weight: 500;
       }
 
       /* Форма */
@@ -366,23 +337,21 @@
             <!-- Шаг 1: Выбор категории -->
             <div class="pa-section" id="step-category">
                <p class="pa-section__title">Choose a category</p>
-               <div class="cat-chips" id="mainCats">
-                  <div class="cat-chip active" data-cat="real-estate-sale" onclick="selectCat(this)">Real Estate for sale</div>
-                  <div class="cat-chip" data-cat="real-estate-rent" onclick="selectCat(this)">Real Estate to rent</div>
-                  <div class="cat-chip" data-cat="motors" onclick="selectCat(this)">Motors</div>
-                  <div class="cat-chip" data-cat="jobs" onclick="selectCat(this)">Jobs</div>
-                  <div class="cat-chip" data-cat="phones" onclick="selectCat(this)">Mobile phones</div>
-                  <div class="cat-chip" data-cat="kids" onclick="selectCat(this)">Kids' stuff</div>
-                  <div class="cat-chip" data-cat="clothes" onclick="selectCat(this)">Clothes &amp; accessories</div>
-                  <div class="cat-chip" data-cat="computers" onclick="selectCat(this)">Computers &amp; gaming</div>
-                  <div class="cat-chip" data-cat="services" onclick="selectCat(this)">Services</div>
-                  <div class="cat-chip" data-cat="animals" onclick="selectCat(this)">Animals</div>
-               </div>
-
-               <!-- Подкатегории (показываются динамически) -->
-               <div class="subcat-row" id="subcatRow">
-                  <p class="subcat-row__label">Subcategory</p>
-                  <div class="cat-chips" id="subCats"></div>
+               <div class="cat-cols">
+                  <div class="cat-col" id="mainCats">
+                     <div class="cat-item active" data-cat="real-estate-sale" onclick="selectCat(this)">Real Estate for sale</div>
+                     <div class="cat-item" data-cat="real-estate-rent" onclick="selectCat(this)">Real Estate to rent</div>
+                     <div class="cat-item" data-cat="motors" onclick="selectCat(this)">Motors</div>
+                     <div class="cat-item" data-cat="jobs" onclick="selectCat(this)">Jobs</div>
+                     <div class="cat-item" data-cat="phones" onclick="selectCat(this)">Mobile phones</div>
+                     <div class="cat-item" data-cat="kids" onclick="selectCat(this)">Kids' stuff</div>
+                     <div class="cat-item" data-cat="clothes" onclick="selectCat(this)">Clothes &amp; accessories</div>
+                     <div class="cat-item" data-cat="computers" onclick="selectCat(this)">Computers &amp; gaming</div>
+                     <div class="cat-item" data-cat="services" onclick="selectCat(this)">Services</div>
+                     <div class="cat-item" data-cat="animals" onclick="selectCat(this)">Animals</div>
+                  </div>
+                  <div class="cat-col" id="subCats">
+                  </div>
                </div>
             </div>
 
@@ -584,31 +553,28 @@
       };
 
       function selectCat(el) {
-         document.querySelectorAll('#mainCats .cat-chip').forEach(c => c.classList.remove('active'));
+         document.querySelectorAll('#mainCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
          var cat = el.dataset.cat;
-         var subcatRow = document.getElementById('subcatRow');
          var subCats = document.getElementById('subCats');
          var list = subcats[cat] || [];
          if (list.length) {
             subCats.innerHTML = list.map(function(s, i) {
-               return '<div class="subcat-chip' + (i === 0 ? ' active' : '') + '" onclick="selectSubcat(this)">' + s + '</div>';
+               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" onclick="selectSubcat(this)">' + s + '</div>';
             }).join('');
-            subcatRow.classList.add('visible');
          } else {
-            subcatRow.classList.remove('visible');
+            subCats.innerHTML = '';
          }
          document.getElementById('paForm').classList.add('visible');
       }
 
       function selectSubcat(el) {
-         document.querySelectorAll('#subCats .subcat-chip').forEach(c => c.classList.remove('active'));
+         document.querySelectorAll('#subCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
       }
 
-      // Показать форму и подкатегории для первой активной категории при загрузке
       window.addEventListener('DOMContentLoaded', function() {
-         var first = document.querySelector('#mainCats .cat-chip.active');
+         var first = document.querySelector('#mainCats .cat-item.active');
          if (first) selectCat(first);
       });
    </script>
