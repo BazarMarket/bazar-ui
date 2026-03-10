@@ -332,12 +332,31 @@ body {
 .btn-phone__namber {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 12px;
-  color: #1d1d1b;
-  line-height: 130%;
-}
-.btn-phone__namber span {
+  font-size: 13px;
   color: #fff;
+  line-height: 130%;
+  display: block;
+}
+.phone-masked {
+  display: block;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.phone-full {
+  display: block;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+}
+.phone-hint {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  text-decoration: underline;
+  margin-top: 2px;
+  cursor: pointer;
 }
 
 .btn-down {
