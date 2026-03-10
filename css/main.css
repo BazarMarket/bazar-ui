@@ -5074,3 +5074,154 @@ p {
   bottom: 0;
   z-index: 1;
 }
+
+
+/* ================================================================================================================ */
+/* АДАПТАЦИЯ КАРТОЧКИ ТОВАРА                                                                                       */
+/* ================================================================================================================ */
+
+/* ------- Tablet (≤ 991px) ------- */
+@media screen and (max-width: 991px) {
+  .bread-custom {
+    margin-left: 3%;
+  }
+  .card-head {
+    margin-left: 3%;
+    margin-right: 3%;
+  }
+  .card-nav {
+    margin-left: 3%;
+    margin-right: 3%;
+  }
+  .card-grid__main {
+    margin: 0 3%;
+  }
+  .card-grid__left {
+    flex: 0 0 60%;
+  }
+  .card-head__title {
+    font-size: 24px;
+  }
+}
+/* ------- end ------- */
+
+/* ------- Mobile (≤ 767px) ------- */
+@media screen and (max-width: 767px) {
+  .bread-custom {
+    margin-left: 12px;
+  }
+  .card-head {
+    margin: 0 12px 12px 12px;
+  }
+  .card-nav {
+    margin: 0 12px 12px 12px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .card-nav__item {
+    padding: 0 10px;
+  }
+  .card-grid__main {
+    flex-direction: column;
+    margin: 0 12px;
+  }
+  .card-grid__left {
+    flex: 0 0 100%;
+    width: 100%;
+    margin-right: 0;
+  }
+  .card-grid__gallery {
+    flex: 0 0 100%;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  .card-grid__description {
+    flex: 0 0 100%;
+  }
+  .card-grid__right {
+    width: 100%;
+    margin-top: 12px;
+  }
+  .card-head__title {
+    font-size: 20px;
+  }
+  /* Вкладки — аккордеон на мобиле */
+  .card-tab__btns {
+    display: none;
+  }
+  .card-tab__btn-mob {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ff9138;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .card-tab__item {
+    display: block !important;
+    border-radius: 10px;
+    margin-top: 12px;
+  }
+  /* Иконка телефона — уменьшить сдвиг */
+  .btn-phone:before {
+    transform: translateX(30px);
+  }
+  /* Видео — полная ширина */
+  .card-grid__video {
+    margin: 12px 0 0 0;
+  }
+  /* Share / options — перенос */
+  .card-options {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .card-options__item {
+    flex: 0 0 auto;
+  }
+}
+/* ------- end ------- */
+
+/* ------- Small mobile (≤ 480px) ------- */
+@media screen and (max-width: 480px) {
+  .bread-custom {
+    margin-left: 8px;
+  }
+  .card-head {
+    margin: 0 8px 10px 8px;
+    padding: 12px;
+  }
+  .card-nav {
+    margin: 0 8px 10px 8px;
+    padding: 10px;
+  }
+  .card-grid__main {
+    margin: 0 8px;
+  }
+  .card-grid__right {
+    margin-top: 10px;
+  }
+  .card-head__title {
+    font-size: 18px;
+  }
+  .card-nav__item {
+    padding: 0 8px;
+    font-size: 13px;
+  }
+  .btn-phone__title {
+    font-size: 16px;
+  }
+  .btn-phone__namber,
+  .phone-full {
+    font-size: 15px;
+  }
+  .btn-phone:before {
+    transform: translateX(15px);
+  }
+  .slider-gallery-mini__img {
+    height: 70px;
+  }
+}
+/* ------- end ------- */
