@@ -104,6 +104,10 @@
                               <li><a href="#">Limassol</a> <span>/</span></li>
                               <li><a href="#">Kapsalos</a></li>
                            </ul>
+                           <div class="card-head__mob-price">
+                              <div class="card-head__mob-price-new"> 814,<sup>99</sup>£</div>
+                              <div class="card-head__mob-price-old"> 853,<sup>08</sup>£</div>
+                           </div>
                         </div>
                      </div>
                      <div class="card-nav card-tile">
@@ -456,6 +460,24 @@
 
 
 
+
+      <!-- Кнопка Contact Seller (только мобайл) -->
+      <div class="mob-contact-bar">
+         <button class="mob-contact-btn" onclick="openContactPopup()">&#128100; Contact Seller</button>
+      </div>
+
+      <!-- Попап Contact Seller (только мобайл) -->
+      <div id="mob-contact-popup" class="mob-contact-popup">
+         <div class="mob-contact-popup__overlay" onclick="closeContactPopup()"></div>
+         <div class="mob-contact-popup__sheet">
+            <div class="mob-contact-popup__handle"></div>
+            <p class="mob-contact-popup__name">Andreas Xenofontos</p>
+            <p class="mob-contact-popup__since">2 years with Bazar Market</p>
+            <a href="tel:+35796123456" class="mob-contact-popup__btn icon-phone">Call</a>
+            <a href="#" class="mob-contact-popup__btn icon-wp">WhatsApp</a>
+            <a href="#" class="mob-contact-popup__btn icon-chat">Start Chat</a>
+         </div>
+      </div>
 
       </main>
 

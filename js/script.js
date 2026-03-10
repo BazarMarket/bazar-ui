@@ -1110,6 +1110,23 @@ window.onload = function () {
     }
     // end ------------------------------------------------------------------
 
+    // MOBILE CONTACT POPUP ================================================
+    window.openContactPopup = function() {
+        var popup = document.getElementById('mob-contact-popup');
+        if (popup) {
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+    window.closeContactPopup = function() {
+        var popup = document.getElementById('mob-contact-popup');
+        if (popup) {
+            popup.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    };
+    // end ------------------------------------------------------------------
+
 }
 
 

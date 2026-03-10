@@ -5210,3 +5210,161 @@ p {
   }
 }
 /* ------- end ------- */
+
+
+/* ================================================================================================================ */
+/* МОБИЛЬНЫЕ ЭЛЕМЕНТЫ КАРТОЧКИ (цена, стикки-кнопка, попап)                                                       */
+/* ================================================================================================================ */
+
+/* Мобильная цена в заголовке — скрыта на десктопе */
+.card-head__mob-price {
+  display: none;
+}
+.card-head__mob-price-new {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: red;
+  line-height: 110%;
+  margin-top: 10px;
+}
+.card-head__mob-price-old {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #1d1d1b;
+  display: inline-block;
+  position: relative;
+  margin-top: 4px;
+}
+.card-head__mob-price-old::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: red;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+}
+
+/* Стикки-кнопка Contact Seller — скрыта на десктопе */
+.mob-contact-bar {
+  display: none;
+}
+
+/* Попап — скрыт по умолчанию */
+.mob-contact-popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+}
+.mob-contact-popup.active {
+  display: block;
+}
+.mob-contact-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.mob-contact-popup__sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 20px 40px 20px;
+}
+.mob-contact-popup__handle {
+  width: 48px;
+  height: 5px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  margin: 0 auto 20px;
+}
+.mob-contact-popup__name {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #1d1d1b;
+  margin: 0 0 4px;
+}
+.mob-contact-popup__since {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #797979;
+  margin: 0 0 20px;
+}
+.mob-contact-popup__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px;
+  background: #3ecb60;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: #fff;
+  text-decoration: none;
+  gap: 10px;
+  box-sizing: border-box;
+}
+.mob-contact-popup__btn:not(:last-child) {
+  margin-bottom: 10px;
+}
+.mob-contact-popup__btn::before {
+  font-size: 20px;
+  color: #fff;
+}
+.mob-contact-popup__btn:hover {
+  background: #2fb84f;
+  color: #fff;
+}
+
+/* --- Только мобайл (≤ 767px) --- */
+@media screen and (max-width: 767px) {
+  .card-head__mob-price {
+    display: block;
+  }
+  .mob-contact-bar {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 12px 16px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+    z-index: 100;
+  }
+  .mob-contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px;
+    background: #3ecb60;
+    border: none;
+    border-radius: 10px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+    gap: 10px;
+    transition: background 0.2s;
+  }
+  .mob-contact-btn:active {
+    background: #2fb84f;
+  }
+  /* Отступ снизу чтобы кнопка не перекрывала контент */
+  body {
+    padding-bottom: 80px;
+  }
+}
+/* ------- end ------- */
