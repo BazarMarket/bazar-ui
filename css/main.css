@@ -2999,7 +2999,7 @@ p {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  margin-right: calc(10% + 155px);
+  margin-right: 6%;
 }
 .header-old__cell {
   position: relative;
