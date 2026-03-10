@@ -2984,7 +2984,7 @@ p {
 .header-old .logo img {
   max-height: 70px;
   width: auto;
-  transform: translateX(80px);
+  transform: translateX(85px);
 }
 .header-old__body {
   display: flex;
