@@ -343,15 +343,18 @@
                      <div class="cat-item" data-cat="real-estate-rent" onclick="selectCat(this)">Real Estate to rent</div>
                      <div class="cat-item" data-cat="motors" onclick="selectCat(this)">Motors</div>
                      <div class="cat-item" data-cat="jobs" onclick="selectCat(this)">Jobs</div>
-                     <div class="cat-item" data-cat="phones" onclick="selectCat(this)">Mobile phones</div>
+                     <div class="cat-item" data-cat="phones" onclick="selectCat(this)">Mobile phones, communication</div>
                      <div class="cat-item" data-cat="kids" onclick="selectCat(this)">Kids' stuff</div>
-                     <div class="cat-item" data-cat="clothes" onclick="selectCat(this)">Clothes &amp; accessories</div>
-                     <div class="cat-item" data-cat="computers" onclick="selectCat(this)">Computers &amp; gaming</div>
+                     <div class="cat-item" data-cat="clothes" onclick="selectCat(this)">Clothes, footwear, accessories</div>
+                     <div class="cat-item" data-cat="computers" onclick="selectCat(this)">Computers, gaming</div>
+                     <div class="cat-item" data-cat="electronics" onclick="selectCat(this)">Electronics, appliances</div>
+                     <div class="cat-item" data-cat="home" onclick="selectCat(this)">Home, garden, pool</div>
                      <div class="cat-item" data-cat="services" onclick="selectCat(this)">Services</div>
                      <div class="cat-item" data-cat="animals" onclick="selectCat(this)">Animals</div>
+                     <div class="cat-item" data-cat="sports" onclick="selectCat(this)">Sports, leisure, hobbies</div>
                   </div>
-                  <div class="cat-col" id="subCats">
-                  </div>
+                  <div class="cat-col" id="subCats"></div>
+                  <div class="cat-col" id="subSubCats"></div>
                </div>
             </div>
 
@@ -539,17 +542,111 @@
 
    <script src="js/script.js"></script>
    <script>
-      var subcats = {
-         'real-estate-sale': ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Residential buildings', 'Prefabricated houses', 'Other'],
-         'real-estate-rent': ['Houses', 'Apartments & flats', 'Commercial property', 'Rooms', 'Holiday rentals', 'Other'],
-         'motors': ['Cars', 'Motorcycles', 'Trucks & vans', 'Boats & watercraft', 'Parts & accessories', 'Other'],
-         'jobs': ['Full-time', 'Part-time', 'Freelance', 'Internship', 'Other'],
-         'phones': ['Smartphones', 'Tablets', 'Accessories', 'SIM cards', 'Other'],
-         'kids': ['Toys', 'Clothing', 'Strollers', 'Books', 'Other'],
-         'clothes': ['Men\'s clothing', 'Women\'s clothing', 'Shoes', 'Bags', 'Accessories', 'Other'],
-         'computers': ['Laptops', 'Desktops', 'Components', 'Monitors', 'Gaming consoles', 'Accessories', 'Other'],
-         'services': ['Cleaning', 'Repair & handyman', 'IT & tech', 'Beauty & wellness', 'Tutoring', 'Other'],
-         'animals': ['Dogs', 'Cats', 'Birds', 'Fish & aquarium', 'Other']
+      var catData = {
+         'real-estate-sale': {
+            'Houses':                ['Detached house', 'Semi-detached house', 'Townhouse', 'Villa', 'Bungalow', 'Other'],
+            'Apartments & flats':    ['Studio', '1-bedroom', '2-bedroom', '3-bedroom', 'Penthouse', 'Other'],
+            'Commercial property':   ['Office', 'Retail', 'Warehouse', 'Hotel', 'Other'],
+            'Plots of land':         ['Residential plot', 'Agricultural land', 'Commercial plot', 'Other'],
+            'Residential buildings': ['Apartment block', 'Complex', 'Other'],
+            'Prefabricated houses':  [],
+            'Other':                 []
+         },
+         'real-estate-rent': {
+            'Houses':             ['Detached house', 'Semi-detached', 'Townhouse', 'Villa', 'Other'],
+            'Apartments & flats': ['Studio', '1-bedroom', '2-bedroom', '3-bedroom+', 'Penthouse', 'Other'],
+            'Rooms':              ['Single room', 'Double room', 'Shared room', 'Other'],
+            'Holiday rentals':    ['Villa', 'Apartment', 'Cottage', 'Other'],
+            'Commercial':         ['Office', 'Retail space', 'Warehouse', 'Other'],
+            'Other':              []
+         },
+         'motors': {
+            'Cars':                          ['New cars', 'Used cars', 'Classic cars', 'Other'],
+            'Car rentals':                   [],
+            'Motorbikes':                    ['Motorbikes', 'Scooters', 'Quads & ATVs', 'Other'],
+            'Auto parts':                    ['Car batteries and accessories', 'Cars for spares', 'Car parts', 'Tyres, rims', 'Van Parts'],
+            'Auto accessories':              [],
+            'Motorbike parts, accessories':  [],
+            'Tractors, parts':               [],
+            'Trucks, truck parts':           [],
+            'Boats, sailing, marine equipment': [],
+            'Buses':                         [],
+            'Other':                         []
+         },
+         'jobs': {
+            'Full-time':   ['IT & Technology', 'Sales', 'Marketing', 'Finance', 'Healthcare', 'Other'],
+            'Part-time':   ['Retail', 'Hospitality', 'Education', 'Other'],
+            'Freelance':   ['Design', 'Writing', 'Programming', 'Other'],
+            'Internship':  [],
+            'Other':       []
+         },
+         'phones': {
+            'Smartphones':  ['Apple iPhone', 'Samsung', 'Xiaomi', 'Other Android', 'Other'],
+            'Tablets':      ['iPad', 'Android tablet', 'Other'],
+            'Accessories':  ['Cases', 'Chargers', 'Headphones', 'Other'],
+            'SIM cards':    [],
+            'Other':        []
+         },
+         'kids': {
+            'Toys':     ['Educational', 'Outdoor', 'Board games', 'Other'],
+            'Clothing': ['Babies 0-2', 'Ages 2-5', 'Ages 5-12', 'Other'],
+            'Strollers':['Prams', 'Pushchairs', 'Other'],
+            'Books':    [],
+            'Other':    []
+         },
+         'clothes': {
+            "Men's clothing":   ['Tops', 'Trousers', 'Jackets', 'Suits', 'Other'],
+            "Women's clothing": ['Tops', 'Dresses', 'Trousers', 'Jackets', 'Other'],
+            'Shoes':            ['Men', 'Women', 'Kids', 'Other'],
+            'Bags':             ['Handbags', 'Backpacks', 'Luggage', 'Other'],
+            'Accessories':      ['Belts', 'Hats', 'Sunglasses', 'Jewellery', 'Other'],
+            'Other':            []
+         },
+         'computers': {
+            'Laptops':          ['Apple MacBook', 'Windows laptops', 'Chromebook', 'Other'],
+            'Desktops':         ['Gaming PC', 'Office PC', 'All-in-one', 'Other'],
+            'Components':       ['CPU', 'GPU', 'RAM', 'Storage', 'Motherboard', 'Other'],
+            'Monitors':         [],
+            'Gaming consoles':  ['PlayStation', 'Xbox', 'Nintendo', 'Other'],
+            'Accessories':      ['Keyboards', 'Mice', 'Headsets', 'Other'],
+            'Other':            []
+         },
+         'electronics': {
+            'TV & Video':       ['Smart TVs', 'Projectors', 'DVD & Blu-ray', 'Other'],
+            'Audio':            ['Speakers', 'Headphones', 'Hi-fi', 'Other'],
+            'Cameras':          ['DSLR', 'Mirrorless', 'Action cameras', 'Other'],
+            'Kitchen appliances': ['Fridges', 'Washing machines', 'Dishwashers', 'Other'],
+            'Other':            []
+         },
+         'home': {
+            'Furniture':        ['Sofas', 'Beds', 'Tables', 'Wardrobes', 'Other'],
+            'Garden & outdoor': ['Garden furniture', 'BBQ', 'Tools', 'Plants', 'Other'],
+            'Pool & spa':       ['Pool equipment', 'Jacuzzi', 'Accessories', 'Other'],
+            'DIY & tools':      ['Power tools', 'Hand tools', 'Other'],
+            'Other':            []
+         },
+         'services': {
+            'Cleaning':         [],
+            'Repair & handyman':['Plumbing', 'Electrical', 'Painting', 'Other'],
+            'IT & tech':        ['Web development', 'IT support', 'Design', 'Other'],
+            'Beauty & wellness':['Hair', 'Nails', 'Massage', 'Other'],
+            'Tutoring':         ['Languages', 'Maths', 'Music', 'Other'],
+            'Other':            []
+         },
+         'animals': {
+            'Dogs':             ['Puppies for sale', 'Dogs for rehoming', 'Dog accessories', 'Other'],
+            'Cats':             ['Kittens for sale', 'Cats for rehoming', 'Cat accessories', 'Other'],
+            'Birds':            [],
+            'Fish & aquarium':  [],
+            'Other':            []
+         },
+         'sports': {
+            'Fitness & gym':    ['Weights', 'Treadmills', 'Bikes', 'Other'],
+            'Water sports':     ['Surfing', 'Diving', 'Sailing', 'Other'],
+            'Cycling':          ['Road bikes', 'Mountain bikes', 'E-bikes', 'Other'],
+            'Team sports':      ['Football', 'Basketball', 'Tennis', 'Other'],
+            'Other':            []
+         }
       };
 
       function selectCat(el) {
@@ -557,20 +654,39 @@
          el.classList.add('active');
          var cat = el.dataset.cat;
          var subCats = document.getElementById('subCats');
-         var list = subcats[cat] || [];
-         if (list.length) {
-            subCats.innerHTML = list.map(function(s, i) {
-               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" onclick="selectSubcat(this)">' + s + '</div>';
+         var subSubCats = document.getElementById('subSubCats');
+         var data = catData[cat] || {};
+         var keys = Object.keys(data);
+         subSubCats.innerHTML = '';
+         if (keys.length) {
+            subCats.innerHTML = keys.map(function(k, i) {
+               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
             }).join('');
+            var firstSub = subCats.querySelector('.cat-item.active');
+            if (firstSub) fillSubSub(cat, keys[0]);
          } else {
             subCats.innerHTML = '';
          }
          document.getElementById('paForm').classList.add('visible');
       }
 
-      function selectSubcat(el) {
+      function selectSubcat(el, cat) {
          document.querySelectorAll('#subCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
+         var sub = el.dataset.subcat;
+         fillSubSub(cat, sub);
+      }
+
+      function fillSubSub(cat, sub) {
+         var subSubCats = document.getElementById('subSubCats');
+         var list = (catData[cat] && catData[cat][sub]) || [];
+         if (list.length) {
+            subSubCats.innerHTML = list.map(function(s, i) {
+               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '">' + s + '</div>';
+            }).join('');
+         } else {
+            subSubCats.innerHTML = '';
+         }
       }
 
       window.addEventListener('DOMContentLoaded', function() {
