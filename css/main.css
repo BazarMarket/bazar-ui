@@ -324,7 +324,14 @@ body {
   font-size: 18px;
   color: #fff;
   line-height: 130%;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-phone__icon:before {
+  font-size: 22px;
+  color: #fff;
 }
 .btn-phone__namber {
   font-family: "Poppins", sans-serif;
