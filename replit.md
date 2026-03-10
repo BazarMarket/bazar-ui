@@ -61,16 +61,24 @@ Workflow: "Start application" on port 5000 (webview)
 - Пример: `.card-head__title { margin: 0 0 15px 0 !important; }`
 - Аналогично может быть и на других страницах — всегда проверяй специфичность
 
-## Другие правки css/main.css:
-- .container-full: max-width 1600px
+## Текущие значения отступов (card.html):
+
+### Единая система выравнивания — всё по 6% слева и справа:
+- Логотип: `margin-left: 6%` (на .header-old .logo)
+- Хлебные крошки (.bread-custom): `margin-left: 6%`
+- .card-head, .card-nav: `margin: 0 6% / margin-left: 6%; margin-right: 6%`
+- .card-grid__main: `margin: 0 6%`
+- Тайлы сайдбара (.card-name, .card-price, .card-btns, .card-options): `margin-right: 0`
+- Иконки хедера (.burger-body): `margin-right: 6%` в @media (min-width: 992px)
+  - Последняя ячейка (.header-old__cell:last-child) имеет padding-right: 0
+  - Значит аватар вплотную к .burger-body краю = точно 6% от правого края
+
+### Прочее:
+- .container-full: max-width 1600px, padding: 0 32px
 - .container: max-width 1354px (footer)
 - При max-width 1200px: card-grid__left shrinks 70% → 62%
 - Паддинг ячеек таблицы: 10px 4px
-- .card-head и .card-nav: margin-right 6% (выровнены по правому краю сайдбара)
-- .card-price: align-items flex-end; .card-price__right: margin-right calc(10% - 28px)
-- .card-price__right .price-last-old: font-size 22px; position relative; top -10px
-- .card-head__edit: margin-right -7px; .header-old__right: margin-right 110px
-- Все блоки правого сайдбара (.card-price, .card-btns, .card-options, .card-name): margin-right 20%
+- .btn_mini, .wallet-widget: white-space: nowrap (предотвращает перенос текста)
 
 ## Design Notes
 
