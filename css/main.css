@@ -322,7 +322,8 @@ body {
 }
 .btn-phone__body {
   order: 2;
-  text-align: right;
+  flex: 1;
+  text-align: center;
 }
 .btn-phone__title {
   font-family: "Poppins", sans-serif;
