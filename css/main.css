@@ -2841,8 +2841,13 @@ p {
   gap: 10px;
 }
 .header .logo {
+  margin-left: 6%;
 }
 .header .header__btns {
+  margin-right: 6%;
+}
+.index-body {
+  padding: 0 6%;
 }
 .header .logo img {
   max-height: 70px;
