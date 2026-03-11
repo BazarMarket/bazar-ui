@@ -2823,7 +2823,7 @@ p {
 /* ================================================================================================================ */
 /* Стили для header */
 .header {
-  padding: 10px 0;
+  padding: 8px 0;
   top: 0;
   left: 0;
   width: 100%;
@@ -2841,15 +2841,16 @@ p {
   gap: 10px;
 }
 .header .logo {
-  width: 100%;
-  max-width: 200px;
   margin-left: 6%;
 }
 .header .header__btns {
   margin-right: 6%;
 }
 .header .logo img {
-  max-width: 100%;
+  max-height: 70px;
+  width: auto;
+  transform: scale(1.12);
+  transform-origin: left center;
 }
 
 .mob-992 {
