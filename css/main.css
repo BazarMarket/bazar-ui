@@ -2992,7 +2992,7 @@ p {
 .header-old .logo img {
   max-height: 70px;
   width: auto;
-  transform: scale(1.15);
+  transform: scale(1.12);
   transform-origin: left center;
 }
 .header-old__body {
