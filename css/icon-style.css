@@ -66,7 +66,15 @@
   content: "\e90c";
 }
 .icon-calendar-upd:before {
-  content: "\e90d";
+  content: '' !important;
+  font-family: initial !important;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  -webkit-mask: url('../icon/subscription.svg') center / contain no-repeat;
+  mask: url('../icon/subscription.svg') center / contain no-repeat;
+  vertical-align: -0.15em;
 }
 .icon-chat:before {
   content: "\e90e";
