@@ -12,24 +12,8 @@
    <link rel="stylesheet" href="css/main.css?v=13" type="text/css">
    <link rel="icon" href="favicon.svg">
    <style>
-      .sr-wrap { display: flex; gap: 24px; max-width: 1440px; margin: 0 auto; padding: 0 6%; }
-      .sr-sidebar { flex: 0 0 270px; }
-      .sr-results { flex: 1; min-width: 0; }
-      .sr-filter-box { background: #fff; border-radius: 12px; border: 1px solid #e8e8e8; padding: 20px; margin-bottom: 16px; }
-      .sr-filter-box__title { font-family: "Poppins", sans-serif; font-weight: 600; font-size: 14px; color: #1a1a1a; margin: 0 0 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-      .sr-filter-box__title span { font-weight: 400; font-size: 12px; color: #ff9138; }
-      .sr-filter-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
-      .sr-filter-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #ff9138; cursor: pointer; flex-shrink: 0; }
-      .sr-filter-item label { font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; flex: 1; display: flex; justify-content: space-between; }
-      .sr-filter-item label span { color: #b0b0b0; font-size: 12px; }
-      .sr-price-range { display: flex; gap: 10px; align-items: center; }
-      .sr-price-input { flex: 1; border: 1px solid #e8e8e8; border-radius: 8px; padding: 8px 12px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; width: 100%; }
-      .sr-price-input:focus { border-color: #ff9138; }
-      .sr-price-sep { color: #b0b0b0; font-size: 13px; flex-shrink: 0; }
-      .sr-btn-apply { width: 100%; background: #ff9138; border: none; border-radius: 8px; color: #fff; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 14px; padding: 10px; cursor: pointer; margin-top: 12px; transition: 0.2s; }
-      .sr-btn-apply:hover { background: #e07d25; }
-      .sr-btn-reset { width: 100%; background: #f4f6fa; border: none; border-radius: 8px; color: #808080; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 13px; padding: 9px; cursor: pointer; margin-top: 8px; transition: 0.2s; }
-      .sr-btn-reset:hover { background: #e8e8e8; }
+      .sr-wrap { max-width: 1440px; margin: 0 auto; padding: 0 6%; }
+      .sr-results { width: 100%; }
 
       .sr-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
       .sr-count { font-family: "Poppins", sans-serif; font-size: 14px; color: #808080; }
@@ -135,94 +119,6 @@
 
       <main class="main header-indent">
          <div class="sr-wrap">
-
-            <aside class="sr-sidebar">
-
-               <div class="sr-filter-box">
-                  <p class="sr-filter-box__title">Category <span>Reset</span></p>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cat1" checked>
-                     <label for="cat1">Mobile Phones <span>(84)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cat2">
-                     <label for="cat2">Tablets <span>(23)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cat3">
-                     <label for="cat3">Accessories <span>(35)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cat4">
-                     <label for="cat4">Electronics <span>(12)</span></label>
-                  </div>
-               </div>
-
-               <div class="sr-filter-box">
-                  <p class="sr-filter-box__title">Price (£)</p>
-                  <div class="sr-price-range">
-                     <input type="number" class="sr-price-input" placeholder="From" value="100">
-                     <span class="sr-price-sep">—</span>
-                     <input type="number" class="sr-price-input" placeholder="To" value="2000">
-                  </div>
-                  <button class="sr-btn-apply">Apply</button>
-               </div>
-
-               <div class="sr-filter-box">
-                  <p class="sr-filter-box__title">Condition</p>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cond1" checked>
-                     <label for="cond1">New <span>(47)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cond2" checked>
-                     <label for="cond2">Used <span>(106)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="cond3">
-                     <label for="cond3">Refurbished <span>(28)</span></label>
-                  </div>
-               </div>
-
-               <div class="sr-filter-box">
-                  <p class="sr-filter-box__title">Location</p>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="loc1" checked>
-                     <label for="loc1">London <span>(52)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="loc2">
-                     <label for="loc2">Manchester <span>(31)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="loc3">
-                     <label for="loc3">Birmingham <span>(19)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="loc4">
-                     <label for="loc4">Leeds <span>(14)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="loc5">
-                     <label for="loc5">Bristol <span>(9)</span></label>
-                  </div>
-               </div>
-
-               <div class="sr-filter-box">
-                  <p class="sr-filter-box__title">Delivery</p>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="del1">
-                     <label for="del1">With delivery <span>(78)</span></label>
-                  </div>
-                  <div class="sr-filter-item">
-                     <input type="checkbox" id="del2">
-                     <label for="del2">Pickup only <span>(75)</span></label>
-                  </div>
-               </div>
-
-               <button class="sr-btn-reset">Reset all filters</button>
-
-            </aside>
 
             <div class="sr-results">
 
