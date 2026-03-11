@@ -2982,7 +2982,7 @@ p {
 /* ------- end ------- */
 /* Стили для header-old */
 .header-old {
-  padding: 8px 0;
+  padding: 4px 0;
   background: #ffffff;
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
 }
@@ -2990,10 +2990,8 @@ p {
   margin-left: 6%;
 }
 .header-old .logo img {
-  max-height: 70px;
+  max-height: 78px;
   width: auto;
-  transform: scale(1.12);
-  transform-origin: left center;
 }
 .header-old__body {
   display: flex;
