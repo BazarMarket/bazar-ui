@@ -1,0 +1,69 @@
+~/workspace$ cat cabinet.html | tail -67
+                            </a>
+                            <a href="#" class="cab-settings-row__name icon-tg" style="display:flex;align-items:center;gap:10px;font-family:Poppins,sans-serif;font-size:14px;color:#1a1a1a;font-weight:500;">
+                                &nbsp;@bazar_support
+                            </a>
+                            <a href="#" class="cab-settings-row__name icon-phone" style="display:flex;align-items:center;gap:10px;font-family:Poppins,sans-serif;font-size:14px;color:#1a1a1a;font-weight:500;">
+                                &nbsp;+44 20 7946 0000
+                            </a>
+                            <p style="font-family:Poppins,sans-serif;font-size:12px;color:#808080;margin:8px 0 0;line-height:1.6;">Working hours: Mon–Fri 9:00–18:00 GMT.<br>Average response time: 2 hours.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="cab-panel__title" style="font-size:18px;margin-bottom:16px;">Frequently Asked Questions</p>
+                <div class="cab-faq-list">
+                    <div class="cab-faq-item open">
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I post an ad?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Ads" and click "+ New Ad". Fill in the category, title, description, price, and photos, then submit. Your ad will be reviewed and go live within a few hours.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I top up my balance?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Payments", choose a preset amount or enter a custom one, select your card, and click "Top Up". Funds appear instantly.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">What is VIP / TOP promotion?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">VIP and TOP promotions put your ad at the top of search results and category pages. Both are paid from your wallet balance and renew monthly.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I withdraw funds?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Payments", switch to the Withdraw tab, enter the amount and your bank details, then click "Withdraw". Processing takes 1–3 business days.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">Is posting an ad free?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Yes — standard ads are completely free. You only pay for optional promotions (VIP, TOP) or premium subscription plans.</p></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ LOGOUT ══════════════ -->
+            <div class="cab-panel" data-panel="logout">
+                <div class="cab-logout-screen">
+                    <div class="cab-logout-screen__icon icon-win-logout"></div>
+                    <p class="cab-logout-screen__title">Log out of your account?</p>
+                    <p class="cab-logout-screen__text">You will need to sign in again to access your cabinet.</p>
+                    <div class="cab-logout-screen__btns">
+                        <a href="index.html" class="btn btn_grad">Yes, log out</a>
+                        <button class="cab-btn-ghost" onclick="switchToTab('dashboard')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/cabinet.js"></script>
+<script>
+    function switchToTab(tab) {
+        var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
+        if (item) item.click();
+    }
+</script>
+
+</body>
+</html>
+~/workspace$ 
