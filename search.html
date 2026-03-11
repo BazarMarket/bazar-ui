@@ -3,36 +3,112 @@
 
 <head>
    <meta charset="UTF-8">
-   <title>Search</title>
+   <title>Search Results — Bazar</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
    <meta name="description" content="">
    <meta name="keywords" content="">
-   <link rel="stylesheet" href="css/icon-style.css" type="text/css"> <!-- Иконки -->
-   <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-   <link rel="stylesheet" href="css/choices.min.css" type="text/css"> <!-- Кастомный select -->
-   <link rel="stylesheet" href="css/main.css" type="text/css"> <!-- Основные стили темы  -->
+   <link rel="stylesheet" href="css/icon-style.css" type="text/css">
+   <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css">
+   <link rel="stylesheet" href="css/main.css?v=13" type="text/css">
    <link rel="icon" href="favicon.svg">
-</head>
+   <style>
+      .sr-wrap { display: flex; gap: 24px; max-width: 1440px; margin: 0 auto; padding: 0 6%; }
+      .sr-sidebar { flex: 0 0 270px; }
+      .sr-results { flex: 1; min-width: 0; }
+      .sr-filter-box { background: #fff; border-radius: 12px; border: 1px solid #e8e8e8; padding: 20px; margin-bottom: 16px; }
+      .sr-filter-box__title { font-family: "Poppins", sans-serif; font-weight: 600; font-size: 14px; color: #1a1a1a; margin: 0 0 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+      .sr-filter-box__title span { font-weight: 400; font-size: 12px; color: #ff9138; }
+      .sr-filter-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+      .sr-filter-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #ff9138; cursor: pointer; flex-shrink: 0; }
+      .sr-filter-item label { font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; flex: 1; display: flex; justify-content: space-between; }
+      .sr-filter-item label span { color: #b0b0b0; font-size: 12px; }
+      .sr-price-range { display: flex; gap: 10px; align-items: center; }
+      .sr-price-input { flex: 1; border: 1px solid #e8e8e8; border-radius: 8px; padding: 8px 12px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; width: 100%; }
+      .sr-price-input:focus { border-color: #ff9138; }
+      .sr-price-sep { color: #b0b0b0; font-size: 13px; flex-shrink: 0; }
+      .sr-btn-apply { width: 100%; background: #ff9138; border: none; border-radius: 8px; color: #fff; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 14px; padding: 10px; cursor: pointer; margin-top: 12px; transition: 0.2s; }
+      .sr-btn-apply:hover { background: #e07d25; }
+      .sr-btn-reset { width: 100%; background: #f4f6fa; border: none; border-radius: 8px; color: #808080; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 13px; padding: 9px; cursor: pointer; margin-top: 8px; transition: 0.2s; }
+      .sr-btn-reset:hover { background: #e8e8e8; }
 
+      .sr-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+      .sr-count { font-family: "Poppins", sans-serif; font-size: 14px; color: #808080; }
+      .sr-count strong { color: #1a1a1a; font-weight: 600; }
+      .sr-sort { display: flex; align-items: center; gap: 10px; }
+      .sr-sort label { font-family: "Poppins", sans-serif; font-size: 13px; color: #808080; white-space: nowrap; }
+      .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 7px 12px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
+      .sr-sort select:focus { border-color: #ff9138; }
+
+      .sr-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+      .sr-tag { background: #fff3e8; border: 1px solid #ff9138; border-radius: 20px; padding: 5px 14px; font-family: "Poppins", sans-serif; font-size: 13px; color: #ff9138; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+      .sr-tag:hover { background: #ffe0c2; }
+      .sr-tag__close { font-size: 16px; line-height: 1; }
+   </style>
+</head>
 
 <body>
    <div class="wrapper">
 
-
-      <header class="header">
-         <div class="container">
-            <div class="header__body">
-               <div class="logo">
+      <header class="header-old">
+         <div class="container-full">
+            <div class="header-old__body">
+               <a href="index.html" class="logo">
                   <img src="img/logo.png" alt="">
-               </div>
-               <div class="header__btns">
-                  <a href="#" class="btn btn_start">Log in</a>
-                  <div class="btn-down icon">
-                     <p class="btn-down__text">Create an account</p>
-                     <span class="btn-down__icon icon-arrow-d"></span>
+               </a>
+               <div class="burger-body">
+                  <div class="header-old__right">
+                     <div class="header-old__cell">
+                        <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="icons-list">
+                           <a href="#" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                           <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                        </div>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="wallet-widget icon-win-wallet">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="user-link">
+                           <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__title">Alexey</div>
+                           <div class="user-link__photo">
+                              <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                           </div></a>
+                           <div class="user-menu">
+                              <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                              <hr class="user-menu__hr">
+                              <a href="cabinet.html#settings" class="user-menu-item icon-win-user">My Profile</a>
+                              <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
+                              <a href="cabinet.html#payments" class="user-menu-item icon-win-wallet">My Payments</a>
+                              <a href="cabinet.html#favorites" class="user-menu-item icon-heart">Favorites</a>
+                              <a href="cabinet.html#subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
+                                 <p class="subscription__title"><img src="icon/subscription.png" height="29" style="flex-shrink:0;width:auto" alt="">Subscription</p>
+                                 <span class="subscription__stiker">PRO</span>
+                                 <span class="subscription__days">382дн</span>
+                              </div></a>
+                              <hr class="user-menu__hr">
+                              <div class="dark-mode">
+                                 <div class="user-menu-item icon-win-sun">Dark Mode</div>
+                                 <label class="toggle">
+                                    <input type="checkbox">
+                                    <span class="toggle__slider"></span>
+                                 </label>
+                              </div>
+                              <a href="cabinet.html#support" class="user-menu-item icon-win-faq">Support</a>
+                              <a href="cabinet.html#settings" class="user-menu-item icon-win-setting">My Settings</a>
+                              <hr class="user-menu__hr">
+                              <a href="cabinet.html#logout" class="user-logout icon-win-logout">Log out</a>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                </div>
-
+               <div class="burger-old">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+               </div>
             </div>
          </div>
       </header>
@@ -40,31 +116,143 @@
       <div class="search">
          <div class="container">
             <div class="search__body">
-
                <div class="search__inputs">
                   <div class="search__duoble">
                      <div class="search__first">
                         <span class="icon-glass search__glass-icon"></span>
-                        <input type="text" placeholder="Search">
+                        <input type="text" placeholder="Search" value="iPhone">
                      </div>
                   </div>
                   <div class="search__third">
                      <label for="">All</label>
-                     <input type="text" placeholder="Search" value="UK">
+                     <input type="text" placeholder="Location" value="UK">
                   </div>
-
                </div>
                <a href="#" class="btn btn_grad icon-search">Search</a>
             </div>
          </div>
       </div>
 
-
-
       <main class="main header-indent">
+         <div class="sr-wrap">
 
-         <section class="list-products">
-            <div class="container">
+            <aside class="sr-sidebar">
+
+               <div class="sr-filter-box">
+                  <p class="sr-filter-box__title">Category <span>Reset</span></p>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cat1" checked>
+                     <label for="cat1">Mobile Phones <span>(84)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cat2">
+                     <label for="cat2">Tablets <span>(23)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cat3">
+                     <label for="cat3">Accessories <span>(35)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cat4">
+                     <label for="cat4">Electronics <span>(12)</span></label>
+                  </div>
+               </div>
+
+               <div class="sr-filter-box">
+                  <p class="sr-filter-box__title">Price (£)</p>
+                  <div class="sr-price-range">
+                     <input type="number" class="sr-price-input" placeholder="From" value="100">
+                     <span class="sr-price-sep">—</span>
+                     <input type="number" class="sr-price-input" placeholder="To" value="2000">
+                  </div>
+                  <button class="sr-btn-apply">Apply</button>
+               </div>
+
+               <div class="sr-filter-box">
+                  <p class="sr-filter-box__title">Condition</p>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cond1" checked>
+                     <label for="cond1">New <span>(47)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cond2" checked>
+                     <label for="cond2">Used <span>(106)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="cond3">
+                     <label for="cond3">Refurbished <span>(28)</span></label>
+                  </div>
+               </div>
+
+               <div class="sr-filter-box">
+                  <p class="sr-filter-box__title">Location</p>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="loc1" checked>
+                     <label for="loc1">London <span>(52)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="loc2">
+                     <label for="loc2">Manchester <span>(31)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="loc3">
+                     <label for="loc3">Birmingham <span>(19)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="loc4">
+                     <label for="loc4">Leeds <span>(14)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="loc5">
+                     <label for="loc5">Bristol <span>(9)</span></label>
+                  </div>
+               </div>
+
+               <div class="sr-filter-box">
+                  <p class="sr-filter-box__title">Delivery</p>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="del1">
+                     <label for="del1">With delivery <span>(78)</span></label>
+                  </div>
+                  <div class="sr-filter-item">
+                     <input type="checkbox" id="del2">
+                     <label for="del2">Pickup only <span>(75)</span></label>
+                  </div>
+               </div>
+
+               <button class="sr-btn-reset">Reset all filters</button>
+
+            </aside>
+
+            <div class="sr-results">
+
+               <ul class="bread-custom" style="margin: 0 0 16px;">
+                  <li><a href="index.html">Home</a><span class="icon-arrow-r"></span></li>
+                  <li><a href="#">Mobile Phones</a><span class="icon-arrow-r"></span></li>
+                  <li>Search results</li>
+               </ul>
+
+               <div class="sr-topbar">
+                  <p class="sr-count">Found <strong>154</strong> results for "<strong>iPhone</strong>"</p>
+                  <div class="sr-sort">
+                     <label>Sort by:</label>
+                     <select>
+                        <option>Relevance</option>
+                        <option>Price: low to high</option>
+                        <option>Price: high to low</option>
+                        <option>Newest first</option>
+                        <option>Most popular</option>
+                     </select>
+                  </div>
+               </div>
+
+               <div class="sr-tags">
+                  <div class="sr-tag">iPhone <span class="sr-tag__close">×</span></div>
+                  <div class="sr-tag">Mobile Phones <span class="sr-tag__close">×</span></div>
+                  <div class="sr-tag">New <span class="sr-tag__close">×</span></div>
+                  <div class="sr-tag">£100 — £2000 <span class="sr-tag__close">×</span></div>
+               </div>
+
                <div class="list-products__body">
 
                   <div class="product">
@@ -73,506 +261,265 @@
                            <div class="product-gallery">
                               <div class="swiper">
                                  <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
                                  </div>
                                  <div class="swiper-pagination pagination-custom"></div>
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__sale">-14%</div>
                               <div class="stiker stiker__new">New</div>
                               <div class="stiker stiker__top">Top</div>
                            </div>
                         </div>
                      </div>
                      <div class="product__center">
-                        <a href="#" class="product__title">Apple iPhone XR 128gb</a>
-                        <p class="product__text">New Villa in Paphos for sale</p>
-                        <div class="product__details">
-                           <p class="details-item icon-bed">2</p>
-                           <p class="details-item icon-bath">2</p>
-                           <p class="details-item icon-vacations">800m</p>
-                           <p class="details-item icon-house-area">80m<sub>2</sub></p>
-                        </div>
-
-                        <p class="product__desc">Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan victort ek
-                           porttitor rhoncus dolor purus non enim Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan
-                           victort ek porttitor dolor purus non enim praesent rhoncus dolor purus non enim praesent</p>
+                        <a href="card.html" class="product__title">Apple iPhone 14 Pro Max 256GB</a>
+                        <p class="product__text">London, UK</p>
+                        <p class="product__desc">Excellent condition, original box included, Face ID works perfectly, battery 98%. Selling due to upgrade.</p>
                         <div class="product__info">
-                           <p class="details-item icon-calendar">19 03 2022 | 19:43</p>
-                           <p class="details-item icon-namber">992301</p>
-                           <p class="details-item icon-eye">301</p>
+                           <p class="details-item icon-calendar">10 03 2026 | 14:22</p>
+                           <p class="details-item icon-namber">112401</p>
+                           <p class="details-item icon-eye">389</p>
                         </div>
-
-
                      </div>
                      <div class="product__right">
                         <div class="product__rating">
                            <div>
-                              <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">3843</a>
+                              <a href="#" class="rating icon-star-full">4.9</a>
+                              <a href="#" class="coment icon-chat-full">128</a>
                            </div>
                            <a href="#" class="favorites icon-heart"></a>
-                           <!-- <a href="#" class="favorites active icon-heart-full"></a> -->
                         </div>
                         <div class="product__price">
-                           <div class="price-start"> 12 453 € </div>
-                           <div class="price-old">
-                              <span> 853,<sup>08</sup>€</span>
-                           </div>
-                           <a href="#" class="product__negotiable">Negotiable</a>
+                           <div class="price-start">750 £</div>
+                           <div class="price-old"><span>899,<sup>00</sup>£</span></div>
                         </div>
                         <div class="product__shiping">
-                           <div class="product-shiping icon-truck"> Delivery in 24 hours</div>
+                           <div class="product-shiping icon-truck">Delivery available</div>
                         </div>
                         <div class="product__btns">
                            <div class="btn-phone icon-phone">
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span> +38</span> XXX XXXXXXX</a>
+                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
                               </div>
                            </div>
                            <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
-
                      </div>
                   </div>
+
                   <div class="product">
                      <div class="product__left">
                         <div class="product__gallery">
                            <div class="product-gallery">
                               <div class="swiper">
                                  <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
                                  </div>
                                  <div class="swiper-pagination pagination-custom"></div>
                               </div>
                            </div>
                            <div class="product__stiker">
                               <div class="stiker stiker__sale">-14%</div>
-                              <div class="stiker stiker__new">New</div>
-                              <div class="stiker stiker__top">Top</div>
                            </div>
                         </div>
                      </div>
                      <div class="product__center">
-                        <a href="#" class="product__title">Apple iPhone XR 128gb</a>
-                        <p class="product__text">New Villa in Paphos for sale</p>
-                        <div class="product__details">
-                           <p class="details-item icon-bed">2</p>
-                           <p class="details-item icon-bath">2</p>
-                           <p class="details-item icon-vacations">800m</p>
-                           <p class="details-item icon-house-area">80m<sub>2</sub></p>
-                        </div>
-
-                        <p class="product__desc">Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan victort ek
-                           porttitor rhoncus dolor purus non enim Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan
-                           victort ek porttitor dolor purus non enim praesent rhoncus dolor purus non enim praesent</p>
+                        <a href="card.html" class="product__title">Apple iPhone 13 128GB Midnight</a>
+                        <p class="product__text">Manchester, UK</p>
+                        <p class="product__desc">Used 8 months, no scratches, screen protector always on, comes with original charger and cable. Battery health 94%.</p>
                         <div class="product__info">
-                           <p class="details-item icon-calendar">19 03 2022 | 19:43</p>
-                           <p class="details-item icon-namber">992301</p>
-                           <p class="details-item icon-eye">301</p>
+                           <p class="details-item icon-calendar">09 03 2026 | 09:15</p>
+                           <p class="details-item icon-namber">112388</p>
+                           <p class="details-item icon-eye">215</p>
                         </div>
-
-
                      </div>
                      <div class="product__right">
                         <div class="product__rating">
                            <div>
-                              <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">3843</a>
+                              <a href="#" class="rating icon-star-full">4.7</a>
+                              <a href="#" class="coment icon-chat-full">54</a>
                            </div>
                            <a href="#" class="favorites icon-heart"></a>
-                           <!-- <a href="#" class="favorites active icon-heart-full"></a> -->
                         </div>
                         <div class="product__price">
-                           <div class="price-start"> 12 453 € </div>
-                           <div class="price-old">
-                              <span> 853,<sup>08</sup>€</span>
-                           </div>
-                           <a href="#" class="product__negotiable">Negotiable</a>
-                        </div>
-                        <div class="product__shiping">
-                           <div class="product-shiping icon-truck"> Delivery in 24 hours</div>
+                           <div class="price-start">480 £</div>
+                           <div class="price-old"><span>560,<sup>00</sup>£</span></div>
                         </div>
                         <div class="product__btns">
                            <div class="btn-phone icon-phone">
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span> +38</span> XXX XXXXXXX</a>
+                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
                               </div>
                            </div>
                            <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
-
                      </div>
                   </div>
+
                   <div class="product">
                      <div class="product__left">
                         <div class="product__gallery">
                            <div class="product-gallery">
                               <div class="swiper">
                                  <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
                                  </div>
                                  <div class="swiper-pagination pagination-custom"></div>
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__sale">-14%</div>
                               <div class="stiker stiker__new">New</div>
-                              <div class="stiker stiker__top">Top</div>
                            </div>
                         </div>
                      </div>
                      <div class="product__center">
-                        <a href="#" class="product__title">Apple iPhone XR 128gb</a>
-                        <p class="product__text">New Villa in Paphos for sale</p>
-                        <div class="product__details">
-                           <p class="details-item icon-bed">2</p>
-                           <p class="details-item icon-bath">2</p>
-                           <p class="details-item icon-vacations">800m</p>
-                           <p class="details-item icon-house-area">80m<sub>2</sub></p>
-                        </div>
-
-                        <p class="product__desc">Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan victort ek
-                           porttitor rhoncus dolor purus non enim Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan
-                           victort ek porttitor dolor purus non enim praesent rhoncus dolor purus non enim praesent</p>
+                        <a href="card.html" class="product__title">Apple iPhone XR 128GB Black (Sealed)</a>
+                        <p class="product__text">Birmingham, UK</p>
+                        <p class="product__desc">Brand new sealed box, UK model, unlocked for all networks. Warranty included.</p>
                         <div class="product__info">
-                           <p class="details-item icon-calendar">19 03 2022 | 19:43</p>
-                           <p class="details-item icon-namber">992301</p>
+                           <p class="details-item icon-calendar">08 03 2026 | 18:40</p>
+                           <p class="details-item icon-namber">112301</p>
                            <p class="details-item icon-eye">301</p>
                         </div>
-
-
                      </div>
                      <div class="product__right">
                         <div class="product__rating">
                            <div>
-                              <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">3843</a>
+                              <a href="#" class="rating icon-star-full">5.0</a>
+                              <a href="#" class="coment icon-chat-full">12</a>
                            </div>
                            <a href="#" class="favorites icon-heart"></a>
-                           <!-- <a href="#" class="favorites active icon-heart-full"></a> -->
                         </div>
                         <div class="product__price">
-                           <div class="price-start"> 12 453 € </div>
-                           <div class="price-old">
-                              <span> 853,<sup>08</sup>€</span>
-                           </div>
-                           <a href="#" class="product__negotiable">Negotiable</a>
+                           <div class="price-start">380 £</div>
                         </div>
                         <div class="product__shiping">
-                           <div class="product-shiping icon-truck"> Delivery in 24 hours</div>
+                           <div class="product-shiping icon-truck">Delivery available</div>
                         </div>
                         <div class="product__btns">
                            <div class="btn-phone icon-phone">
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span> +38</span> XXX XXXXXXX</a>
+                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
                               </div>
                            </div>
                            <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
-
                      </div>
                   </div>
+
                   <div class="product">
                      <div class="product__left">
                         <div class="product__gallery">
                            <div class="product-gallery">
                               <div class="swiper">
                                  <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
                                  </div>
                                  <div class="swiper-pagination pagination-custom"></div>
                               </div>
                            </div>
-                           <div class="product__stiker">
-                              <div class="stiker stiker__sale">-14%</div>
-                              <div class="stiker stiker__new">New</div>
-                              <div class="stiker stiker__top">Top</div>
-                           </div>
                         </div>
                      </div>
                      <div class="product__center">
-                        <a href="#" class="product__title">Apple iPhone XR 128gb</a>
-                        <p class="product__text">New Villa in Paphos for sale</p>
-                        <div class="product__details">
-                           <p class="details-item icon-bed">2</p>
-                           <p class="details-item icon-bath">2</p>
-                           <p class="details-item icon-vacations">800m</p>
-                           <p class="details-item icon-house-area">80m<sub>2</sub></p>
-                        </div>
-
-                        <p class="product__desc">Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan victort ek
-                           porttitor rhoncus dolor purus non enim Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan
-                           victort ek porttitor dolor purus non enim praesent rhoncus dolor purus non enim praesent</p>
+                        <a href="card.html" class="product__title">iPhone 12 Mini 64GB Blue — Good Condition</a>
+                        <p class="product__text">Leeds, UK</p>
+                        <p class="product__desc">Minor scuffs on back, screen perfect. Battery 89%. Comes with case and cable. Negotiable.</p>
                         <div class="product__info">
-                           <p class="details-item icon-calendar">19 03 2022 | 19:43</p>
-                           <p class="details-item icon-namber">992301</p>
-                           <p class="details-item icon-eye">301</p>
+                           <p class="details-item icon-calendar">07 03 2026 | 11:05</p>
+                           <p class="details-item icon-namber">112255</p>
+                           <p class="details-item icon-eye">178</p>
                         </div>
-
-
                      </div>
                      <div class="product__right">
                         <div class="product__rating">
                            <div>
-                              <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">3843</a>
+                              <a href="#" class="rating icon-star-full">4.5</a>
+                              <a href="#" class="coment icon-chat-full">31</a>
                            </div>
                            <a href="#" class="favorites icon-heart"></a>
-                           <!-- <a href="#" class="favorites active icon-heart-full"></a> -->
                         </div>
                         <div class="product__price">
-                           <div class="price-start"> 12 453 € </div>
-                           <div class="price-old">
-                              <span> 853,<sup>08</sup>€</span>
-                           </div>
+                           <div class="price-start">260 £</div>
                            <a href="#" class="product__negotiable">Negotiable</a>
-                        </div>
-                        <div class="product__shiping">
-                           <div class="product-shiping icon-truck"> Delivery in 24 hours</div>
                         </div>
                         <div class="product__btns">
                            <div class="btn-phone icon-phone">
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span> +38</span> XXX XXXXXXX</a>
+                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
                               </div>
                            </div>
                            <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
-
                      </div>
                   </div>
+
                   <div class="product">
                      <div class="product__left">
                         <div class="product__gallery">
                            <div class="product-gallery">
                               <div class="swiper">
                                  <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
+                                    <div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="img/phone.jpg" alt="" class="img-cover"></a></div>
                                  </div>
                                  <div class="swiper-pagination pagination-custom"></div>
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__sale">-14%</div>
-                              <div class="stiker stiker__new">New</div>
+                              <div class="stiker stiker__sale">-20%</div>
                               <div class="stiker stiker__top">Top</div>
                            </div>
                         </div>
                      </div>
                      <div class="product__center">
-                        <a href="#" class="product__title">Apple iPhone XR 128gb</a>
-                        <p class="product__text">New Villa in Paphos for sale</p>
-                        <div class="product__details">
-                           <p class="details-item icon-bed">2</p>
-                           <p class="details-item icon-bath">2</p>
-                           <p class="details-item icon-vacations">800m</p>
-                           <p class="details-item icon-house-area">80m<sub>2</sub></p>
-                        </div>
-
-                        <p class="product__desc">Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan victort ek
-                           porttitor rhoncus dolor purus non enim Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan
-                           victort ek porttitor dolor purus non enim praesent rhoncus dolor purus non enim praesent</p>
+                        <a href="card.html" class="product__title">Apple iPhone 15 256GB — Titanium</a>
+                        <p class="product__text">Bristol, UK</p>
+                        <p class="product__desc">2 months old, perfect condition, titanium frame, dynamic island, USB-C. All accessories included.</p>
                         <div class="product__info">
-                           <p class="details-item icon-calendar">19 03 2022 | 19:43</p>
-                           <p class="details-item icon-namber">992301</p>
-                           <p class="details-item icon-eye">301</p>
+                           <p class="details-item icon-calendar">06 03 2026 | 20:30</p>
+                           <p class="details-item icon-namber">112198</p>
+                           <p class="details-item icon-eye">512</p>
                         </div>
-
-
                      </div>
                      <div class="product__right">
                         <div class="product__rating">
                            <div>
                               <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">3843</a>
+                              <a href="#" class="coment icon-chat-full">87</a>
                            </div>
                            <a href="#" class="favorites icon-heart"></a>
-                           <!-- <a href="#" class="favorites active icon-heart-full"></a> -->
                         </div>
                         <div class="product__price">
-                           <div class="price-start"> 12 453 € </div>
-                           <div class="price-old">
-                              <span> 853,<sup>08</sup>€</span>
-                           </div>
-                           <a href="#" class="product__negotiable">Negotiable</a>
+                           <div class="price-start">920 £</div>
+                           <div class="price-old"><span>1 150,<sup>00</sup>£</span></div>
                         </div>
                         <div class="product__shiping">
-                           <div class="product-shiping icon-truck"> Delivery in 24 hours</div>
+                           <div class="product-shiping icon-truck">Delivery available</div>
                         </div>
                         <div class="product__btns">
                            <div class="btn-phone icon-phone">
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span> +38</span> XXX XXXXXXX</a>
+                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
                               </div>
                            </div>
                            <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
-
-                     </div>
-                  </div>
-                  <div class="product">
-                     <div class="product__left">
-                        <div class="product__gallery">
-                           <div class="product-gallery">
-                              <div class="swiper">
-                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                       <a href="#" class="product-gallery__img">
-                                          <img src="img/phone.jpg" alt="" class="img-cover">
-                                       </a>
-                                    </div>
-                                 </div>
-                                 <div class="swiper-pagination pagination-custom"></div>
-                              </div>
-                           </div>
-                           <div class="product__stiker">
-                              <div class="stiker stiker__sale">-14%</div>
-                              <div class="stiker stiker__new">New</div>
-                              <div class="stiker stiker__top">Top</div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="product__center">
-                        <a href="#" class="product__title">Apple iPhone XR 128gb</a>
-                        <p class="product__text">New Villa in Paphos for sale</p>
-                        <div class="product__details">
-                           <p class="details-item icon-bed">2</p>
-                           <p class="details-item icon-bath">2</p>
-                           <p class="details-item icon-vacations">800m</p>
-                           <p class="details-item icon-house-area">80m<sub>2</sub></p>
-                        </div>
-
-                        <p class="product__desc">Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan victort ek
-                           porttitor rhoncus dolor purus non enim Er tyur kgl fddktjut gjoeok fkjytuor yuio pottorisan
-                           victort ek porttitor dolor purus non enim praesent rhoncus dolor purus non enim praesent</p>
-                        <div class="product__info">
-                           <p class="details-item icon-calendar">19 03 2022 | 19:43</p>
-                           <p class="details-item icon-namber">992301</p>
-                           <p class="details-item icon-eye">301</p>
-                        </div>
-
-
-                     </div>
-                     <div class="product__right">
-                        <div class="product__rating">
-                           <div>
-                              <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">3843</a>
-                           </div>
-                           <a href="#" class="favorites icon-heart"></a>
-                           <!-- <a href="#" class="favorites active icon-heart-full"></a> -->
-                        </div>
-                        <div class="product__price">
-                           <div class="price-start"> 12 453 € </div>
-                           <div class="price-old">
-                              <span> 853,<sup>08</sup>€</span>
-                           </div>
-                           <a href="#" class="product__negotiable">Negotiable</a>
-                        </div>
-                        <div class="product__shiping">
-                           <div class="product-shiping icon-truck"> Delivery in 24 hours</div>
-                        </div>
-                        <div class="product__btns">
-                           <div class="btn-phone icon-phone">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span> +38</span> XXX XXXXXXX</a>
-                              </div>
-                           </div>
-                           <a href="#" class="btn btn_start icon-chat">Start Chat</a>
-                        </div>
-
                      </div>
                   </div>
 
                </div>
+
                <div class="list-products__pagination">
                   <div class="pagination">
                      <a class="pagination__arrow no-active icon-arrow-l" href="#"></a>
@@ -581,31 +528,27 @@
                         <li><a href="#">2</a></li>
                         <li><a href="#">3</a></li>
                         <li><span>...</span></li>
-                        <li><a href="#">12</a></li>
+                        <li><a href="#">13</a></li>
                      </ul>
                      <a class="pagination__arrow icon-arrow-r" href="#"></a>
                   </div>
                </div>
-            </div>
-         </section>
 
+            </div>
+         </div>
       </main>
 
    </div>
-
-
 
    <footer>
       <div class="footer before992">
          <div class="container">
             <div class="footer__body">
                <div class="footer__start">
-                  <a href="#" class="footer__logo">
+                  <a href="index.html" class="footer__logo">
                      <img src="img/logo.png" alt="">
                   </a>
-                  <p class="footer__text">
-                     Welcome to our marketplace, where products find their buyers.
-                  </p>
+                  <p class="footer__text">Welcome to our marketplace, where products find their buyers.</p>
                </div>
                <div class="footer__center">
                   <div class="footer__box">
@@ -616,31 +559,27 @@
                         <a href="#">Our Partners</a>
                      </div>
                   </div>
-
                   <div class="footer__box">
                      <h3 class="footer__title">Important Links</h3>
                      <div class="footer__links">
-                        <a href="#">Conditions</a>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Advertising Policy</a>
+                        <a href="terms-and-conditions.html">Conditions</a>
+                        <a href="privacy-policy.html">Privacy Policy</a>
+                        <a href="advertising-policy.html">Advertising Policy</a>
                      </div>
                   </div>
                   <div class="footer__box">
                      <h3 class="footer__title">Company Links</h3>
                      <div class="footer__links">
-                        <a href="#">Cookie Policy </a>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
+                        <a href="cookie-policy.html">Cookie Policy</a>
+                        <a href="privacy-policy2.html">Privacy Policy</a>
+                        <a href="terms-of-service.html">Terms of Service</a>
                      </div>
                   </div>
-
                </div>
                <div class="footer__end">
                   <div class="footer__box">
                      <h3 class="footer__title">Newsletter</h3>
-                     <div class="footer__links">
-                        <p>Subscribe our latest update</p>
-                     </div>
+                     <div class="footer__links"><p>Subscribe our latest update</p></div>
                      <form action="">
                         <div class="subform">
                            <input type="text" placeholder="Email">
@@ -664,64 +603,11 @@
                      <a href="#" class="networks__item networks__item_in"></a>
                   </div>
                </div>
-
                <div class="payment">
                   <p class="payment__title">Payment Accepted:</p>
                   <div class="payment__list">
                      <div class="payment__item"><img src="icon/visa.jpg" alt=""></div>
                      <div class="payment__item"><img src="icon/mscsrd.jpg" alt=""></div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="footer-mob after992">
-         <div class="container">
-            <div class="footer-mob__body">
-               <div class="accordion">
-                  <div class="accordion__item">
-                     <div class="unfolding accordion__head icon-arrow-d">Information </div>
-                     <div class="accordion__content">
-                        <div class="accordion__body">
-                           <div class="footer__links">
-                              <a href="#">Career</a>
-                              <a href="#">About us</a>
-                              <a href="#">Our Partners</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="accordion__item">
-                     <div class="unfolding accordion__head icon-arrow-d">Important Links </div>
-                     <div class="accordion__content">
-                        <div class="accordion__body">
-                           <div class="footer__links">
-                              <a href="#">Conditions</a>
-                              <a href="#">Privacy Policy</a>
-                              <a href="#">Advertising Policy</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="accordion__item">
-                     <div class="unfolding accordion__head icon-arrow-d">Company Links </div>
-                     <div class="accordion__content">
-                        <div class="accordion__body">
-                           <div class="footer__links">
-                              <a href="#">Cookie Policy</a>
-                              <a href="#">Privacy Policy</a>
-                              <a href="#">Terms of Service</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="networks">
-                  <div class="networks__list">
-                     <a href="#" class="networks__item networks__item_fb"></a>
-                     <a href="#" class="networks__item networks__item_x"></a>
-                     <a href="#" class="networks__item networks__item_li"></a>
-                     <a href="#" class="networks__item networks__item_in"></a>
                   </div>
                </div>
             </div>
@@ -734,11 +620,8 @@
       </div>
    </footer>
 
-   <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
-   <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
-   <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+   <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
+   <script type="text/javascript" src="js/inputmask.min.js"></script>
    <script type="text/javascript" src="js/script.js"></script>
-
 </body>
-
 </html>
