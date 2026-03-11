@@ -2843,6 +2843,10 @@ p {
 .header .logo {
   width: 100%;
   max-width: 200px;
+  margin-left: 6%;
+}
+.header .header__btns {
+  margin-right: 6%;
 }
 .header .logo img {
   max-width: 100%;
