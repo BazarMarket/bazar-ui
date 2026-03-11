@@ -898,6 +898,10 @@
         var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
         if (item) item.click();
     }
+    document.addEventListener('DOMContentLoaded', function () {
+        var hash = window.location.hash.replace('#', '');
+        if (hash) switchToTab(hash);
+    });
 </script>
 
 </body></html>
