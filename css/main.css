@@ -2992,6 +2992,8 @@ p {
 .header-old .logo img {
   max-height: 70px;
   width: auto;
+  transform: scale(1.2);
+  transform-origin: left center;
 }
 .header-old__body {
   display: flex;
