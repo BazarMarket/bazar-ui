@@ -1,0 +1,481 @@
+~/workspace$ cat cabinet.html | tail -n +426
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.5">
+                                    <span class="cab-ads-table-title">Sony PlayStation 5</span>
+                                </td>
+                                <td>Electronics</td>
+                                <td>£ 380</td>
+                                <td>56</td>
+                                <td><span class="cab-status cab-status--inactive">Inactive</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Reactivate"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.6">
+                                    <span class="cab-ads-table-title">Mountain Bike Trek X-Caliber</span>
+                                </td>
+                                <td>Sports</td>
+                                <td>£ 420</td>
+                                <td>—</td>
+                                <td><span class="cab-status cab-status--pending">Pending</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ MY PAYMENTS ══════════════ -->
+            <div class="cab-panel" data-panel="payments">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">My Payments</h1>
+                </div>
+
+                <!-- Stat cards -->
+                <div class="cab-payments-top">
+                    <div class="cab-stat-card cab-stat-card--accent">
+                        <p class="cab-stat-card__label icon-win-wallet">Balance</p>
+                        <p class="cab-stat-card__value">1 060.56 <span>£</span></p>
+                    </div>
+                    <div class="cab-stat-card">
+                        <p class="cab-stat-card__label icon-win-down">Total withdrawn</p>
+                        <p class="cab-stat-card__value">2 334.55 <span>£</span></p>
+                    </div>
+                    <div class="cab-stat-card">
+                        <p class="cab-stat-card__label icon-win-plus">Total deposited</p>
+                        <p class="cab-stat-card__value">3 395.11 <span>£</span></p>
+                    </div>
+                </div>
+
+                <div class="cab-two-col">
+                    <!-- Deposit/Withdraw forms -->
+                    <div class="cab-form-box">
+                        <div class="cab-form-box__tabs">
+                            <div class="cab-form-box__tab active" data-tab="deposit2">Deposit</div>
+                            <div class="cab-form-box__tab" data-tab="withdraw2">Withdraw</div>
+                        </div>
+                        <div class="cab-form-box__body">
+                            <div class="cab-form-box__sub active" data-sub="deposit2">
+                                <div class="cab-amount-btns">
+                                    <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                    <button class="cab-amount-btn active" data-amount="25">£ 25</button>
+                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                    <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                </div>
+                                <div class="cab-method-select">
+                                    <label class="cab-method-item"><input type="radio" name="dep2" checked><span class="cab-method-item__label">Visa ****4242</span></label>
+                                    <label class="cab-method-item"><input type="radio" name="dep2"><span class="cab-method-item__label">Mastercard ****8811</span></label>
+                                </div>
+                                <button class="btn btn_grad" style="width:100%">Top Up</button>
+                            </div>
+                            <div class="cab-form-box__sub" data-sub="withdraw2">
+                                <div class="cab-amount-btns">
+                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                    <button class="cab-amount-btn active" data-amount="100">£ 100</button>
+                                    <button class="cab-amount-btn" data-amount="200">£ 200</button>
+                                    <button class="cab-amount-btn" data-amount="500">£ 500</button>
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input type="number" min="1" placeholder="Amount to withdraw (£)" value="100">
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input type="text" placeholder="Bank account / IBAN">
+                                </div>
+                                <button class="btn btn_grad" style="width:100%">Withdraw</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Full transaction history -->
+                    <div class="cab-box">
+                        <div class="cab-box__head">
+                            <p class="cab-box__title">Transaction History</p>
+                        </div>
+                        <div class="cab-box__body">
+                            <table class="cab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="cab-table__date">28 Feb 2026</td>
+                                        <td>Top-up — Visa ****4242</td>
+                                        <td class="cab-table__amount--plus">+ £ 50.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cab-table__date">25 Feb 2026</td>
+                                        <td>VIP — Villa for Sale in Tsada</td>
+                                        <td class="cab-table__amount--minus">− £ 15.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cab-table__date">20 Feb 2026</td>
+                                        <td>TOP — iPhone 14 Pro Max</td>
+                                        <td class="cab-table__amount--minus">− £ 10.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cab-table__date">15 Feb 2026</td>
+                                        <td>Top-up — Visa ****4242</td>
+                                        <td class="cab-table__amount--plus">+ £ 100.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cab-table__date">10 Feb 2026</td>
+                                        <td>Subscription — Basic plan</td>
+                                        <td class="cab-table__amount--minus">− £ 9.99</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cab-table__date">02 Feb 2026</td>
+                                        <td>Top-up — Mastercard</td>
+                                        <td class="cab-table__amount--plus">+ £ 200.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cab-table__date">01 Feb 2026</td>
+                                        <td>VIP — Apartment Paphos</td>
+                                        <td class="cab-table__amount--minus">− £ 15.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ MY FAVORITES ══════════════ -->
+            <div class="cab-panel" data-panel="favorites">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">My Favorites</h1>
+                </div>
+
+                <div class="cab-fav-grid">
+                    <div class="cab-fav-card">
+                        <div class="cab-fav-card__img"><img src="img/product.jpg" alt=""></div>
+                        <div class="cab-fav-card__body">
+                            <p class="cab-fav-card__title">Villa for Sale in Tsada</p>
+                            <p class="cab-fav-card__price">£ 1,049.00</p>
+                        </div>
+                        <div class="cab-fav-card__foot">
+                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
+                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
+                        </div>
+                    </div>
+                    <div class="cab-fav-card">
+                        <div class="cab-fav-card__img"><img src="img/phone.jpg" alt=""></div>
+                        <div class="cab-fav-card__body">
+                            <p class="cab-fav-card__title">iPhone 14 Pro Max 256GB</p>
+                            <p class="cab-fav-card__price">£ 750.00</p>
+                        </div>
+                        <div class="cab-fav-card__foot">
+                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
+                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
+                        </div>
+                    </div>
+                    <div class="cab-fav-card">
+                        <div class="cab-fav-card__img"><img src="img/product.jpg" alt=""></div>
+                        <div class="cab-fav-card__body">
+                            <p class="cab-fav-card__title">Luxury Apartment, Limassol</p>
+                            <p class="cab-fav-card__price">£ 320,000</p>
+                        </div>
+                        <div class="cab-fav-card__foot">
+                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
+                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
+                        </div>
+                    </div>
+                    <div class="cab-fav-card">
+                        <div class="cab-fav-card__img"><img src="img/product.jpg" alt=""></div>
+                        <div class="cab-fav-card__body">
+                            <p class="cab-fav-card__title">Mountain Bike Trek 2024</p>
+                            <p class="cab-fav-card__price">£ 420.00</p>
+                        </div>
+                        <div class="cab-fav-card__foot">
+                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
+                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ MY SUBSCRIPTIONS ══════════════ -->
+            <div class="cab-panel" data-panel="subscriptions">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">My Subscriptions</h1>
+                </div>
+
+                <div class="cab-sub-card">
+                    <div class="cab-sub-card__info">
+                        <p class="cab-sub-card__name">Basic Plan</p>
+                        <p class="cab-sub-card__meta">Renews on 10 Mar 2026 &bull; 3 ads included</p>
+                    </div>
+                    <div class="cab-sub-card__right">
+                        <p class="cab-sub-card__price">£ 9.99 <span style="font-size:14px;font-weight:400;color:#808080">/mo</span></p>
+                        <span class="cab-status cab-status--active">Active</span>
+                        <button class="cab-btn-ghost">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="cab-sub-card">
+                    <div class="cab-sub-card__info">
+                        <p class="cab-sub-card__name">VIP — Villa for Sale in Tsada</p>
+                        <p class="cab-sub-card__meta">Expires 14 Mar 2026 &bull; Top placement</p>
+                    </div>
+                    <div class="cab-sub-card__right">
+                        <p class="cab-sub-card__price">£ 15.00 <span style="font-size:14px;font-weight:400;color:#808080">/mo</span></p>
+                        <span class="cab-status cab-status--active">Active</span>
+                        <button class="cab-btn-ghost">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="cab-sub-card">
+                    <div class="cab-sub-card__info">
+                        <p class="cab-sub-card__name">TOP — iPhone 14 Pro Max</p>
+                        <p class="cab-sub-card__meta">Expires 20 Mar 2026 &bull; Featured listing</p>
+                    </div>
+                    <div class="cab-sub-card__right">
+                        <p class="cab-sub-card__price">£ 10.00 <span style="font-size:14px;font-weight:400;color:#808080">/mo</span></p>
+                        <span class="cab-status cab-status--active">Active</span>
+                        <button class="cab-btn-ghost">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ MY SETTINGS (Edit Profile) ══════════════ -->
+            <div class="cab-panel" data-panel="settings">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">Edit Profile</h1>
+                </div>
+
+                <div class="cab-profile-grid">
+
+                    <!-- Photo column -->
+                    <div class="cab-profile-photo-col">
+                        <div class="cab-avatar-upload" id="avatarUploadBox">
+                            <span class="cab-avatar-upload__icon icon-win-user"></span>
+                            <img src="" alt="" id="avatarPreview">
+                            <div class="cab-avatar-upload__overlay icon-win-plus"></div>
+                            <input type="file" id="avatarInput" accept=".jpg,.jpeg,.png,.gif">
+                        </div>
+                        <p class="cab-avatar-hint">Click to upload photo<br>JPG, PNG — max 5 MB</p>
+                        <div style="margin-top:16px;">
+                            <p style="font-family:Poppins,sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;margin:0 0 10px;">Rating</p>
+                            <div class="cab-user-card__stars" style="justify-content:center;gap:6px;">
+                                <span class="filled" style="font-size:22px;">&#9733;</span>
+                                <span class="filled" style="font-size:22px;">&#9733;</span>
+                                <span class="filled" style="font-size:22px;">&#9733;</span>
+                                <span class="filled" style="font-size:22px;">&#9733;</span>
+                                <span style="font-size:22px;color:#e4e4e4;">&#9733;</span>
+                            </div>
+                            <p style="font-family:Poppins,sans-serif;font-size:12px;color:#808080;margin:8px 0 0;text-align:center;">4.0 / 5.0 rating</p>
+                        </div>
+
+                        <!-- Account settings section in photo col -->
+                        <div style="margin-top:24px;text-align:left;">
+                            <p class="cab-form-section-title">Account</p>
+                            <div class="cab-settings-row" style="padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                                <span class="cab-settings-row__name" style="font-size:13px;">Dark Mode</span>
+                                <label class="toggle">
+                                    <input type="checkbox">
+                                    <span class="toggle__slider"></span>
+                                </label>
+                            </div>
+                            <div class="cab-settings-row" style="padding:10px 0;">
+                                <span class="cab-settings-row__name" style="font-size:13px;">Notifications</span>
+                                <label class="toggle">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle__slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form column -->
+                    <div class="cab-profile-form-col">
+                        <form id="profileForm">
+                            <p class="cab-form-section-title">Personal Information</p>
+                            <div class="cab-form-grid">
+                                <div class="input-custom">
+                                    <label>First Name</label>
+                                    <input id="fieldFirstName" type="text" placeholder="First name" value="Andreas">
+                                </div>
+                                <div class="input-custom">
+                                    <label>Last Name</label>
+                                    <input id="fieldLastName" type="text" placeholder="Last name" value="Karafouni">
+                                </div>
+                                <div class="input-custom">
+                                    <label>Email</label>
+                                    <input id="fieldEmail" type="email" placeholder="your@email.com" value="andreas@email.com">
+                                </div>
+                                <div class="input-custom">
+                                    <label>Phone</label>
+                                    <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="+44 712 345 678">
+                                </div>
+                                <div class="input-custom">
+                                    <label>City</label>
+                                    <input type="text" placeholder="City" value="Paphos">
+                                </div>
+                                <div class="input-custom">
+                                    <label>Country</label>
+                                    <input type="text" placeholder="Country" value="Cyprus">
+                                </div>
+                                <div class="input-custom cab-form-full">
+                                    <label>About</label>
+                                    <textarea placeholder="Tell buyers about yourself...">Private seller based in Paphos, Cyprus. Interested in real estate and electronics.</textarea>
+                                </div>
+                            </div>
+
+                            <p class="cab-form-section-title" style="margin-top:24px;">Social Links</p>
+                            <div class="cab-form-grid">
+                                <div class="input-custom">
+                                    <label>Facebook</label>
+                                    <input type="url" placeholder="https://facebook.com/...">
+                                </div>
+                                <div class="input-custom">
+                                    <label>Instagram</label>
+                                    <input type="url" placeholder="https://instagram.com/...">
+                                </div>
+                                <div class="input-custom">
+                                    <label>LinkedIn</label>
+                                    <input type="url" placeholder="https://linkedin.com/...">
+                                </div>
+                                <div class="input-custom">
+                                    <label>Telegram</label>
+                                    <input type="text" placeholder="@username">
+                                </div>
+                            </div>
+
+                            <p class="cab-form-section-title" style="margin-top:24px;">Change Password</p>
+                            <div class="cab-form-grid">
+                                <div class="input-custom">
+                                    <label>Current Password</label>
+                                    <input type="password" placeholder="••••••••">
+                                </div>
+                                <div class="input-custom">
+                                    <label>New Password</label>
+                                    <input type="password" placeholder="••••••••">
+                                </div>
+                            </div>
+
+                            <div class="cab-form-actions">
+                                <button type="submit" class="btn btn_grad">Save Changes</button>
+                                <button type="reset" class="cab-btn-ghost">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ══════════════ SUPPORT / FAQ ══════════════ -->
+            <div class="cab-panel" data-panel="support">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">Support &amp; Help</h1>
+                </div>
+
+                <div class="cab-two-col" style="margin-bottom:24px;">
+                    <div class="cab-box">
+                        <div class="cab-box__head"><p class="cab-box__title">Contact Support</p></div>
+                        <div class="cab-box__body" style="padding:20px;">
+                            <div class="input-custom"><label>Subject</label><input type="text" placeholder="Briefly describe your issue"></div>
+                            <div class="input-custom"><label>Message</label><textarea placeholder="Describe your problem in detail..." style="height:120px"></textarea></div>
+                            <button class="btn btn_grad" style="width:100%">Send Message</button>
+                        </div>
+                    </div>
+                    <div class="cab-box">
+                        <div class="cab-box__head"><p class="cab-box__title">Quick Contacts</p></div>
+                        <div class="cab-box__body" style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+                            <a href="mailto:support@bazar.uk" class="cab-settings-row__name icon-email" style="display:flex;align-items:center;gap:10px;font-family:Poppins,sans-serif;font-size:14px;color:#1a1a1a;font-weight:500;">
+                                &nbsp;support@bazar.uk
+                            </a>
+                            <a href="#" class="cab-settings-row__name icon-tg" style="display:flex;align-items:center;gap:10px;font-family:Poppins,sans-serif;font-size:14px;color:#1a1a1a;font-weight:500;">
+                                &nbsp;@bazar_support
+                            </a>
+                            <a href="#" class="cab-settings-row__name icon-phone" style="display:flex;align-items:center;gap:10px;font-family:Poppins,sans-serif;font-size:14px;color:#1a1a1a;font-weight:500;">
+                                &nbsp;+44 20 7946 0000
+                            </a>
+                            <p style="font-family:Poppins,sans-serif;font-size:12px;color:#808080;margin:8px 0 0;line-height:1.6;">Working hours: Mon–Fri 9:00–18:00 GMT.<br>Average response time: 2 hours.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="cab-panel__title" style="font-size:18px;margin-bottom:16px;">Frequently Asked Questions</p>
+                <div class="cab-faq-list">
+                    <div class="cab-faq-item open">
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I post an ad?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Ads" and click "+ New Ad". Fill in the category, title, description, price, and photos, then submit. Your ad will be reviewed and go live within a few hours.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I top up my balance?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Payments", choose a preset amount or enter a custom one, select your card, and click "Top Up". Funds appear instantly.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">What is VIP / TOP promotion?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">VIP and TOP promotions put your ad at the top of search results and category pages. Both are paid from your wallet balance and renew monthly.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I withdraw funds?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Payments", switch to the Withdraw tab, enter the amount and your bank details, then click "Withdraw". Processing takes 1–3 business days.</p></div>
+                    </div>
+                    <div class="cab-faq-item">
+                        <div class="cab-faq-head"><p class="cab-faq-question">Is posting an ad free?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Yes — standard ads are completely free. You only pay for optional promotions (VIP, TOP) or premium subscription plans.</p></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ LOGOUT ══════════════ -->
+            <div class="cab-panel" data-panel="logout">
+                <div class="cab-logout-screen">
+                    <div class="cab-logout-screen__icon icon-win-logout"></div>
+                    <p class="cab-logout-screen__title">Log out of your account?</p>
+                    <p class="cab-logout-screen__text">You will need to sign in again to access your cabinet.</p>
+                    <div class="cab-logout-screen__btns">
+                        <a href="index.html" class="btn btn_grad">Yes, log out</a>
+                        <button class="cab-btn-ghost" onclick="switchToTab('dashboard')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/cabinet.js"></script>
+<script>
+    function switchToTab(tab) {
+        var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
+        if (item) item.click();
+    }
+</script>
+
+</body>
+</html>
+~/workspace$ 
