@@ -166,6 +166,7 @@
                 document.getElementById('emailInput').style.borderColor = '#e82222';
                 return;
             }
+            window.location.href = 'mailto:info@bazar.uk?subject=Notify me when Bazar launches&body=Please notify me at: ' + encodeURIComponent(email);
             document.getElementById('form').style.display = 'none';
             document.getElementById('thanks').style.display = 'block';
         }
