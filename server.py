@@ -5,6 +5,11 @@ import socketserver
 PORT = 5000
 
 class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/' or self.path == '/index.html':
+            self.path = '/coming-soon.html'
+        super().do_GET()
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
         self.send_header("Pragma", "no-cache")
