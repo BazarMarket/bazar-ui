@@ -3126,6 +3126,10 @@ p {
   transition: 0.3s;
   position: relative;
   z-index: 15;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .user-link__photo {
   width: 60px;
