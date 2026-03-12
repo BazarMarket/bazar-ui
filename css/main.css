@@ -2846,13 +2846,22 @@ p {
 .header .header__btns {
   margin-right: 6%;
 }
-.index-body > .search,
+.index-body > .search {
+  margin-left: -32px;
+  margin-right: -32px;
+}
+.index-body > .search .container {
+  margin: 0;
+  max-width: none;
+  padding-left: calc(28px + 6%);
+  padding-right: calc(28px + 6%);
+}
 .index-body > main,
 .index-body > .menu-mob {
   margin-left: 6%;
   margin-right: 6%;
 }
-.index-body .container {
+.index-body > main .container {
   margin: 0;
   max-width: none;
   padding: 0;
