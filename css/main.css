@@ -3126,7 +3126,7 @@ p {
   transition: 0.3s;
   position: relative;
   z-index: 15;
-  max-width: 100px;
+  max-width: 150px;
   text-align: left;
   display: -webkit-box;
   -webkit-line-clamp: 2;
