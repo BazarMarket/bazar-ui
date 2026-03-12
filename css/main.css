@@ -3134,7 +3134,7 @@ p {
   z-index: 15;
   width: 140px;
   flex-shrink: 0;
-  text-align: right;
+  text-align: left;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
