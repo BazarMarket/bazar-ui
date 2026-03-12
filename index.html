@@ -2473,6 +2473,7 @@
             </div>
 
             <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name">
+            <input class="profile-name-input" id="profileEmail" type="email" placeholder="E-mail">
 
             <button class="profile-submit-btn" onclick="finishRegistration()">Get started</button>
         </div>
@@ -2601,6 +2602,7 @@
             document.getElementById('genderMale').classList.add('profile-gender-btn--active');
             document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
             document.getElementById('profileFullName').value = '';
+            document.getElementById('profileEmail').value = '';
             document.getElementById('otpModal').classList.remove('modal-overlay--active');
             document.getElementById('profileModal').classList.add('modal-overlay--active');
         }
