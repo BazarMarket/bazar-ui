@@ -9,7 +9,7 @@
     <meta name="keywords" content="">
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
     <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/main.css?v=54" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/main.css?v=55" type="text/css"> <!-- Основные стили темы  -->
     <link rel="icon" href="favicon.svg">
 </head>
 
@@ -2468,14 +2468,13 @@
             <p class="profile-modal-subtitle">Tell us a little about yourself</p>
 
             <div class="profile-gender-btns">
-                <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+                <button class="profile-gender-btn" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
                 <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
             </div>
 
-            <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name">
-            <input class="profile-name-input" id="profileEmail" type="email" placeholder="E-mail">
+            <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
 
-            <button class="profile-submit-btn" onclick="finishRegistration()">Get started</button>
+            <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
         </div>
     </div>
 
@@ -2587,22 +2586,33 @@
             }, 1000);
         }
 
-        var selectedGender = 'male';
+        var selectedGender = null;
 
         function selectGender(gender) {
             selectedGender = gender;
             document.getElementById('profileAvatarPreview').src = gender === 'female' ? 'icon/woman.png' : 'icon/man.png';
             document.getElementById('genderMale').classList.toggle('profile-gender-btn--active', gender === 'male');
             document.getElementById('genderFemale').classList.toggle('profile-gender-btn--active', gender === 'female');
+            checkProfileReady();
+        }
+
+        function checkProfileReady() {
+            var name = document.getElementById('profileFullName').value.trim();
+            var btn = document.getElementById('profileSubmitBtn');
+            if (name && selectedGender) {
+                btn.classList.remove('profile-submit-btn--gray');
+            } else {
+                btn.classList.add('profile-submit-btn--gray');
+            }
         }
 
         function openProfileModal() {
-            selectedGender = 'male';
+            selectedGender = null;
             document.getElementById('profileAvatarPreview').src = 'icon/man.png';
-            document.getElementById('genderMale').classList.add('profile-gender-btn--active');
+            document.getElementById('genderMale').classList.remove('profile-gender-btn--active');
             document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
             document.getElementById('profileFullName').value = '';
-            document.getElementById('profileEmail').value = '';
+            document.getElementById('profileSubmitBtn').classList.add('profile-submit-btn--gray');
             document.getElementById('otpModal').classList.remove('modal-overlay--active');
             document.getElementById('profileModal').classList.add('modal-overlay--active');
         }
@@ -2614,11 +2624,7 @@
 
         function finishRegistration() {
             var name = document.getElementById('profileFullName').value.trim();
-            if (!name) {
-                document.getElementById('profileFullName').focus();
-                document.getElementById('profileFullName').style.borderColor = '#ff9138';
-                return;
-            }
+            if (!name || !selectedGender) return;
             document.getElementById('header-username').textContent = name;
             document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
             closeProfileModal();

@@ -5246,6 +5246,14 @@ p {
 .profile-submit-btn:hover {
   background: #e07d28;
 }
+.profile-submit-btn--gray {
+  background: #c8c8c8;
+  cursor: default;
+  pointer-events: none;
+}
+.profile-submit-btn--gray:hover {
+  background: #c8c8c8;
+}
 
 .card-link {
   position: absolute;
