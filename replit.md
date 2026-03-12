@@ -19,13 +19,22 @@ A static HTML/CSS/JS classified ads marketplace website UI.
 
 ## Running the Project
 
-The project is served as a static site using Python's built-in HTTP server:
+Сервер: `server.py` — кастомный Python HTTP server с `Cache-Control: no-cache` (чтобы браузер не кешировал старые файлы).
 
 ```
-python3 -m http.server 5000 --bind 0.0.0.0
+python3 server.py
 ```
 
 Workflow: "Start application" on port 5000 (webview)
+
+## Выравнивание контента на index.html
+
+Подход такой же как в card.html:
+- `<div class="index-body container-full">` — обёртка с padding: 0 32px (от container-full)
+- Секции внутри (`.search`, `main`, `.menu-mob`) имеют `margin: 0 6%`
+- 6% считается от ширины container-full content = (viewport − 64px) — точно так же как у логотипа
+- Контейнеры внутри секций: `margin: 0; max-width: none; padding: 0`
+- CSS версия: main.css?v=32
 
 ## Deployment
 
