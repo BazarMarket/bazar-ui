@@ -1,0 +1,2663 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Satr</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
+    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
+    <link rel="stylesheet" href="css/main.css?v=71" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="icon" href="favicon.svg">
+</head>
+
+<body>
+
+    <div class="sending-main">
+        <img loading="lazy" src="icon/load.gif" alt="">
+    </div>
+
+
+    <div class="wrapper">
+
+
+        <header class="header" id="header-guest">
+            <div class="container-full">
+                <div class="header__body">
+                    <div class="logo">
+                        <img loading="lazy" src="img/logo.png" alt="">
+                    </div>
+                    <div class="header__btns">
+                        <a href="#" class="btn btn_start" onclick="doLogin(); return false;">Log in</a>
+                        <div class="btn-down icon" onclick="openCreateAccountModal()">
+                            <p class="btn-down__text">Create an account</p>
+                            <span class="btn-down__icon icon-arrow-d"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <header class="header-old" id="header-logged-in" style="display:none;">
+           <div class="container-full">
+              <div class="header-old__body">
+                 <a href="index.html" class="logo">
+                    <img src="img/logo.png" alt="">
+                 </a>
+                 <div class="burger-body">
+                    <div class="header-old__right">
+                       <div class="header-old__vsep"></div>
+                       <div class="header-old__cell">
+                          <a href="cabinet.html#payments" class="wallet-widget icon-win-wallet">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></a>
+                       </div>
+                       <div class="header-old__cell">
+                          <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="icons-list">
+                             <a href="#" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                             <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                          </div>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="user-link">
+                             <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo">
+                                <img loading="lazy" class="img-cover" id="header-avatar" src="icon/man.svg" alt="">
+                             </div>
+                             <div class="user-link__title" id="header-username">Andreas Xenofontos</div></a>
+                             <div class="user-menu">
+                                <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                                <hr class="user-menu__hr">
+                                <a href="cabinet.html#settings" class="user-menu-item icon-win-user">My Profile</a>
+                                <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
+                                <a href="cabinet.html#payments" class="user-menu-item icon-win-wallet">My Payments</a>
+                                <a href="cabinet.html#favorites" class="user-menu-item icon-heart">Favorites</a>
+
+                                <a href="cabinet.html#subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
+                                   <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
+                                   <span class="subscription__stiker">PRO</span>
+                                   <span class="subscription__days">382дн</span>
+                                </div></a>
+                                <hr class="user-menu__hr">
+                                <a href="cabinet.html#support" class="user-menu-item icon-win-faq">Support</a>
+                                <a href="cabinet.html#settings" class="user-menu-item icon-win-setting">My Settings</a>
+                                <hr class="user-menu__hr">
+                                <a href="#" class="user-logout icon-win-logout" onclick="doLogout(); return false;">Log out</a>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="burger-old">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                 </div>
+              </div>
+           </div>
+        </header>
+
+      <div class="index-body container-full">
+
+        <div class="search">
+            <div class="container">
+                <div class="search__body">
+
+                    <div class="search__inputs">
+                        <div class="search__duoble">
+                            <div class="search__first">
+                                <span class="icon-glass search__glass-icon"></span>
+                                <input type="text" placeholder="297.671 ads near">
+                            </div>
+                        </div>
+                        <div class="search__third">
+                            <span class="search__loc-text">All locations</span>
+                            <span class="search__loc-arrow icon-arrow-d"></span>
+                        </div>
+
+                    </div>
+                    <a href="#" class="btn btn_grad icon-search">Search</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-mob  after992">
+            <a href="#" class="menu-mob__item icon-main-home">Home</a>
+            <a href="#" class="menu-mob__item icon-glass">Search</a>
+            <a href="#" class="menu-mob__item icon-heart-new">Favorites</a>
+            <a href="#" class="menu-mob__item icon-add">New AD</a>
+            <a href="#" class="menu-mob__item icon-user-big">Profile</a>
+        </div>
+
+
+        <main class="main header-indent">
+
+            <section class="category margin before992">
+                <div class="container">
+                    <div class="category__body">
+
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image1.png" alt="" class="category-item__img">
+                                <p class="category-item__title">Real Estate for sale</p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="search.html" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Commercial property</a>
+                                            <a href="#" class="menu-sub__links">Residential buildings</a>
+                                            <a href="#" class="menu-sub__links">Other</a>
+                                            <a href="#" class="menu-sub__links">Apartments, flats</a>
+                                            <a href="#" class="menu-sub__links">Plots of land</a>
+                                            <a href="#" class="menu-sub__links">Prefabricated houses</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image2.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Real Estate to rent </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image3.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Motors </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Cars</a>
+                                            <a href="#" class="menu-sub__links">Car rentals</a>
+                                            <a href="#" class="menu-sub__links">Motorbikes</a>
+                                            <a href="#" class="menu-sub__links">Auto parts</a>
+                                            <a href="#" class="menu-sub__links">Auto accessories</a>
+                                            <a href="#" class="menu-sub__links">Motorbike parts, accessories</a>
+                                            <a href="#" class="menu-sub__links">Tractors, parts</a>
+                                            <a href="#" class="menu-sub__links">Trucks, truck parts</a>
+                                            <a href="#" class="menu-sub__links">Boats, sailing, marine equipment</a>
+                                            <a href="#" class="menu-sub__links">Buses</a>
+                                            <a href="#" class="menu-sub__links">Vans</a>
+                                            <a href="#" class="menu-sub__links">Tools, equipment</a>
+                                            <a href="#" class="menu-sub__links">Lifts, cranes</a>
+                                            <a href="#" class="menu-sub__links">Trailers</a>
+                                            <a href="#" class="menu-sub__links">Caravans</a>
+                                            <a href="#" class="menu-sub__links">Quads, ATV, buggy</a>
+                                            <a href="#" class="menu-sub__links">Go-karts</a>
+                                            <a href="#" class="menu-sub__links">Aircraft</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image4.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Motors for rent </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image5.png" alt="" class="category-item__img">
+                                <p class="category-item__title">Mobile phones, communication
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Accessories</a>
+                                            <a href="#" class="menu-sub__links">Mobile phones</a>
+                                            <a href="#" class="menu-sub__links">Phones, answering machines</a>
+                                            <a href="#" class="menu-sub__links">Wearables, accessories</a>
+                                            <a href="#" class="menu-sub__links">Phone parts, tools</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image6.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Computers, gaming
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">PC, Laptop accessories</a>
+                                            <a href="#" class="menu-sub__links">Desktop parts</a>
+                                            <a href="#" class="menu-sub__links">Desktops, servers</a>
+                                            <a href="#" class="menu-sub__links">Laptops, notebooks</a>
+                                            <a href="#" class="menu-sub__links">Laptop parts, tools</a>
+                                            <a href="#" class="menu-sub__links">Miners</a>
+                                            <a href="#" class="menu-sub__links">Monitors</a>
+                                            <a href="#" class="menu-sub__links">Printers, scanners</a>
+                                            <a href="#" class="menu-sub__links">Routers, modems, switches</a>
+                                            <a href="#" class="menu-sub__links">Tablets, accessories</a>
+                                            <a href="#" class="menu-sub__links">Software</a>
+                                            <a href="#" class="menu-sub__links">Gaming</a>
+                                            <a href="#" class="menu-sub__links">Other</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image7.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Clothes, footwear, accessories
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Accessories</a>
+                                            <a href="#" class="menu-sub__links">Bags</a>
+                                            <a href="#" class="menu-sub__links">Clothing</a>
+                                            <a href="#" class="menu-sub__links">Costumes, accessories</a>
+                                            <a href="#" class="menu-sub__links">Glasses</a>
+                                            <a href="#" class="menu-sub__links">Jewellery</a>
+                                            <a href="#" class="menu-sub__links">Shoes</a>
+                                            <a href="#" class="menu-sub__links">Wrist watches</a>
+                                            <a href="#" class="menu-sub__links">Other</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image8.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Sports, Hobbies </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Bicycles, bicycle accessories</a>
+                                            <a href="#" class="menu-sub__links">Hobbies</a>
+                                            <a href="#" class="menu-sub__links">Music, musical instruments</a>
+                                            <a href="#" class="menu-sub__links">Sporting goods</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image9.png" alt="" class="category-item__img">
+                                <p class="category-item__title">Electronics, appliances
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Audio, stereo</a>
+                                            <a href="#" class="menu-sub__links">Air, cooling, heating</a>
+                                            <a href="#" class="menu-sub__links">Cameras, camcorders</a>
+                                            <a href="#" class="menu-sub__links">Health, beauty appliances</a>
+                                            <a href="#" class="menu-sub__links">Home appliances</a>
+                                            <a href="#" class="menu-sub__links">Kitchen appliances</a>
+                                            <a href="#" class="menu-sub__links">Measuring instruments</a>
+                                            <a href="#" class="menu-sub__links">Energy</a>
+                                            <a href="#" class="menu-sub__links">DVD, TVs, videos</a>
+                                            <a href="#" class="menu-sub__links">Binoculars, telescopes</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image10.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Home, garden, pool
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Building materials</a>
+                                            <a href="#" class="menu-sub__links">Bathrooms</a>
+                                            <a href="#" class="menu-sub__links">Christmas ornaments</a>
+                                            <a href="#" class="menu-sub__links">Fireplaces, heaters</a>
+                                            <a href="#" class="menu-sub__links">Furniture</a>
+                                            <a href="#" class="menu-sub__links">Garden, patio</a>
+                                            <a href="#" class="menu-sub__links">Home decor, accessories</a>
+                                            <a href="#" class="menu-sub__links">Kitchenware</a>
+                                            <a href="#" class="menu-sub__links">Pool</a>
+                                            <a href="#" class="menu-sub__links">Tools, equipment</a>
+                                            <a href="#" class="menu-sub__links">Other household goods</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image11.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Jobs
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Administration</a>
+                                            <a href="#" class="menu-sub__links">Advertising, Marketing</a>
+                                            <a href="#" class="menu-sub__links">Art, Design</a>
+                                            <a href="#" class="menu-sub__links">Babysitting, Nannies</a>
+                                            <a href="#" class="menu-sub__links">Betting, Casino</a>
+                                            <a href="#" class="menu-sub__links">Construction, Engineering</a>
+                                            <a href="#" class="menu-sub__links">Customer service</a>
+                                            <a href="#" class="menu-sub__links">Education</a>
+                                            <a href="#" class="menu-sub__links">Fashion, Beauty</a>
+                                            <a href="#" class="menu-sub__links">Financial services</a>
+                                            <a href="#" class="menu-sub__links">Health, Medicine</a>
+                                            <a href="#" class="menu-sub__links">Household, Cleaning</a>
+                                            <a href="#" class="menu-sub__links">Human resources</a>
+                                            <a href="#" class="menu-sub__links">Legal</a>
+                                            <a href="#" class="menu-sub__links">Property maintenance, Technicians</a>
+                                            <a href="#" class="menu-sub__links">Retail</a>
+                                            <a href="#" class="menu-sub__links">Sales</a>
+                                            <a href="#" class="menu-sub__links">Security</a>
+                                            <a href="#" class="menu-sub__links">Telecom, IT</a>
+                                            <a href="#" class="menu-sub__links">Tourism, Catering</a>
+                                            <a href="#" class="menu-sub__links">Logistics</a>
+                                            <a href="#" class="menu-sub__links">Volunteerism</a>
+                                            <a href="#" class="menu-sub__links">Wellness, Sports</a>
+                                            <a href="#" class="menu-sub__links">Other jobs</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image12.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Animals, pets
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image13.png" alt="" class="category-item__img">
+                                <p class="category-item__title">Health, beauty
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                            <a href="#" class="menu-sub__links">Houses</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image14.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Services
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Beauty Services</a>
+                                            <a href="#" class="menu-sub__links">Childcare</a>
+                                            <a href="#" class="menu-sub__links">Clothing</a>
+                                            <a href="#" class="menu-sub__links">Design, photo, copy, print, video</a>
+                                            <a href="#" class="menu-sub__links">Digital marketing</a>
+                                            <a href="#" class="menu-sub__links">Entertainment</a>
+                                            <a href="#" class="menu-sub__links">Finance, legal</a>
+                                            <a href="#" class="menu-sub__links">Food, drink</a>
+                                            <a href="#" class="menu-sub__links">Healthcare</a>
+                                            <a href="#" class="menu-sub__links">IT, computers, telecoms</a>
+                                            <a href="#" class="menu-sub__links">Life coaching</a>
+                                            <a href="#" class="menu-sub__links">Online classes</a>
+                                            <a href="#" class="menu-sub__links">Property, maintenance</a>
+                                            <a href="#" class="menu-sub__links">Transport, moving, repairing</a>
+                                            <a href="#" class="menu-sub__links">Travel, tourism</a>
+                                            <a href="#" class="menu-sub__links">Tuition, classes</a>
+                                            <a href="#" class="menu-sub__links">Weddings</a>
+                                            <a href="#" class="menu-sub__links">Other</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image15.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Business
+                                </p>
+                            </div>
+                            <div class="category-box__body">
+                                <div class="category-box__content">
+                                    <div class="menu-sub">
+                                        <div class="menu-sub__head">
+                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
+                                            <div class="btn btn_small">Show all</div>
+                                        </div>
+                                        <div class="menu-sub__body">
+                                            <a href="#" class="menu-sub__links">Businesses for sale</a>
+                                            <a href="#" class="menu-sub__links">Beauty equipment</a>
+                                            <a href="#" class="menu-sub__links">Commercial, industrial equipment</a>
+                                            <a href="#" class="menu-sub__links">Commercial furniture</a>
+                                            <a href="#" class="menu-sub__links">Goods suppliers, retailers</a>
+                                            <a href="#" class="menu-sub__links">Businesses to rent</a>
+                                            <a href="#" class="menu-sub__links">Stationery items</a>
+                                            <a href="#" class="menu-sub__links">Other</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-box">
+                            <a href="#" class="unfolding category-item">
+                                <img loading="lazy" src="img/cat/image16.png" alt="" class="category-item__img">
+                                <p class="category-item__title"> Free stuff </p>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="category-mob after992 margin">
+                <div class="container">
+                    <div class="category-mob__body ">
+                        <div class="category-mob-slider">
+                            <div class="swiper">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image1.png" alt="" class="category-item__img">
+                                            <p class="category-item__title">Real Estate for sale</p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image2.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Real Estate to rent </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image3.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Motors </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image4.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Motors for rent </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image5.png" alt="" class="category-item__img">
+                                            <p class="category-item__title">Mobile phones, communication
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image6.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Computers, gaming
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image7.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Clothes, footwear, accessories
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image8.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Sports, Hobbies </p>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-mob-slider">
+                            <div class="swiper">
+                                <div class="swiper-wrapper">
+
+
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image9.png" alt="" class="category-item__img">
+                                            <p class="category-item__title">Electronics, appliances
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image10.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Home, garden, pool
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image11.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Jobs
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image12.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Animals, pets
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image13.png" alt="" class="category-item__img">
+                                            <p class="category-item__title">Health, beauty
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image14.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Services
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image15.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Business
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <a href="#" class="category-item">
+                                            <img loading="lazy" src="img/cat/image16.png" alt="" class="category-item__img">
+                                            <p class="category-item__title"> Free stuff </p>
+                                        </a>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <hr class="hr-block">
+
+            <section class="cards margin">
+                <div class="container">
+                    <div class="cards__head">
+                        <h2 class="cards__title">Houses and Villas for Sale up to €200000</h2>
+                        <!-- <div class="long-filter">
+                            <a href="#" class="long-filter__item active">FREE</a>
+                            <a href="#" class="long-filter__item">VIP</a>
+                            <a href="#" class="long-filter__item">TOP</a>
+                        </div> -->
+                    </div>
+                    <div class="cards__body">
+                        <div class="cards__grid before992">
+                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/woman.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/woman.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+
+            <hr class="hr-block">
+
+            <section class="cards margin">
+                <div class="container">
+                    <div class="cards__head">
+                        <h2 class="cards__title">Latest updates</h2>
+                        <!-- <div class="long-filter">
+                            <a href="#" class="long-filter__item active">FREE</a>
+                            <a href="#" class="long-filter__item">VIP</a>
+                            <a href="#" class="long-filter__item">TOP</a>
+                        </div> -->
+                    </div>
+                    <div class="cards__body">
+                        <div class="cards__grid before992">
+                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada </p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/woman.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/woman.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                <div class="card__head">
+                                    <div class="card__logo">
+                                        <img loading="lazy" class="img-cover" src="icon/woman.png" alt="">
+                                    </div>
+                                    <div class="card__info">
+                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                        <p class="card__label">PAPHOS</p>
+                                    </div>
+                                </div>
+                                <div class="card__img">
+                                    <div class="card__stikers">
+                                        <span class="stiker stiker_vip">VIP</span>
+                                        <span class="stiker stiker_top">TOP</span>
+                                    </div>
+                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                </div>
+                                <div class="card__down">
+                                    <div class="card__prices">
+                                        <span class="price-new">£ 1,049.00</span>
+                                        <span class="price-old">£ 1,399.00</span>
+                                    </div>
+                                    <div class="card__dop">
+                                        <div class="info-bord">
+                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/fox.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="swiper-slide">
+                                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                                                <div class="card__head">
+                                                    <div class="card__logo">
+                                                        <img loading="lazy" class="img-cover" src="icon/man.png" alt="">
+                                                    </div>
+                                                    <div class="card__info">
+                                                        <p class="card__name">Villa for Sale in Tsada</p>
+                                                        <p class="card__label">PAPHOS</p>
+                                                    </div>
+                                                </div>
+                                                <div class="card__img">
+                                                    <div class="card__stikers">
+                                                        <span class="stiker stiker_vip">VIP</span>
+                                                        <span class="stiker stiker_top">TOP</span>
+                                                    </div>
+                                                    <img loading="lazy" src="img/product.jpg" alt="" class="img-cover">
+                                                </div>
+                                                <div class="card__down">
+                                                    <div class="card__prices">
+                                                        <span class="price-new">£ 1,049.00</span>
+                                                        <span class="price-old">£ 1,399.00</span>
+                                                    </div>
+                                                    <div class="card__dop">
+                                                        <div class="info-bord">
+                                                            <span class="info-bord__item icon-bead">2 beds</span>
+                                                            <span class="info-bord__item icon-bath">2 bath</span>
+                                                            <span class="info-bord__item icon-house-area">153 m2</span>
+                                                            <span class="info-bord__item icon-Plot">433 m2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+
+
+            <!-- 
+            <section class="">
+                <div class="container">
+                    <div class="__body">
+
+                    </div>
+                </div>
+            </section> -->
+
+
+
+        </main>
+
+      </div><!-- /index-body -->
+
+        <footer>
+            <div class="footer before992">
+                <div class="container">
+                    <div class="footer__body">
+                        <div class="footer__start">
+                            <a href="#" class="footer__logo">
+                                <img loading="lazy" src="img/logo.png" alt="">
+                            </a>
+                            <p class="footer__text">
+                                Welcome to our marketplace, where products find their buyers.
+                            </p>
+                        </div>
+                        <div class="footer__center">
+                            <div class="footer__box">
+                                <h3 class="footer__title">Information</h3>
+                                <div class="footer__links">
+                                    <a href="#">Career</a>
+                                    <a href="#">About us</a>
+                                    <a href="#">Our Partners</a>
+                                </div>
+                            </div>
+
+                            <div class="footer__box">
+                                <h3 class="footer__title">Important Links</h3>
+                                <div class="footer__links">
+                                    <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
+                                    <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                    <a href="advertising-policy.html" target="_blank">Advertising Policy</a>
+                                </div>
+                            </div>
+                            <div class="footer__box">
+                                <h3 class="footer__title">Company Links</h3>
+                                <div class="footer__links">
+                                    <a href="cookie-policy.html" target="_blank">Cookie Policy </a>
+                                    <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                    <a href="terms-of-service.html" target="_blank">Terms of Service</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="footer__end">
+                            <div class="footer__box">
+                                <h3 class="footer__title">Newsletter</h3>
+                                <div class="footer__links">
+                                    <p>Subscribe our latest update</p>
+                                </div>
+                                <form action="">
+                                    <div class="subform">
+                                        <input type="text" placeholder="Email">
+                                        <button type="submit" class="subform__btn icon-telega"></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-down before992">
+                <div class="container">
+                    <div class="footer-down__body">
+                        <div class="networks">
+                            <p class="networks__title">FOLLOW US</p>
+                            <div class="networks__list">
+                                <a href="#" class="networks__item networks__item_fb"></a>
+                                <a href="#" class="networks__item networks__item_x"></a>
+                                <a href="#" class="networks__item networks__item_li"></a>
+                                <a href="#" class="networks__item networks__item_in"></a>
+                            </div>
+                        </div>
+
+                        <div class="payment">
+                            <p class="payment__title">Payment Accepted:</p>
+                            <div class="payment__list">
+                                <div class="payment__item"><img loading="lazy" src="icon/visa.jpg" alt=""></div>
+                                <div class="payment__item"><img loading="lazy" src="icon/mscsrd.jpg" alt=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-mob after992">
+                <div class="container">
+                    <div class="footer-mob__body">
+                        <div class="accordion">
+                            <div class="accordion__item">
+                                <div class="unfolding accordion__head icon-arrow-d">Information </div>
+                                <div class="accordion__content">
+                                    <div class="accordion__body">
+                                        <div class="footer__links">
+                                            <a href="#">Career</a>
+                                            <a href="#">About us</a>
+                                            <a href="#">Our Partners</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion__item">
+                                <div class="unfolding accordion__head icon-arrow-d">Important Links </div>
+                                <div class="accordion__content">
+                                    <div class="accordion__body">
+                                        <div class="footer__links">
+                                            <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
+                                            <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                            <a href="advertising-policy.html" target="_blank">Advertising Policy</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion__item">
+                                <div class="unfolding accordion__head icon-arrow-d">Company Links </div>
+                                <div class="accordion__content">
+                                    <div class="accordion__body">
+                                        <div class="footer__links">
+                                            <a href="cookie-policy.html" target="_blank">Cookie Policy</a>
+                                            <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                            <a href="terms-of-service.html" target="_blank">Terms of Service</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="networks">
+                            <div class="networks__list">
+                                <a href="#" class="networks__item networks__item_fb"></a>
+                                <a href="#" class="networks__item networks__item_x"></a>
+                                <a href="#" class="networks__item networks__item_li"></a>
+                                <a href="#" class="networks__item networks__item_in"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-coop">
+                <div class="container">
+                    <p class="footer-coop__text">© 2025-2026 Bazar.uk. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+
+    <!-- OTP Code Modal -->
+    <div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
+        <div class="modal-card modal-card--otp">
+            <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
+
+            <div class="otp-icon">
+                <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
+            </div>
+
+            <h2 class="modal-title otp-title">Enter the code</h2>
+            <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
+
+            <div class="otp-inputs">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            </div>
+
+            <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
+            <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
+        </div>
+    </div>
+
+    <!-- Profile Setup Modal (Step 3) -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-card modal-card--profile">
+            <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
+
+            <div class="profile-avatar-wrap">
+                <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
+            </div>
+
+            <h2 class="modal-title profile-modal-title">Almost there!</h2>
+            <p class="profile-modal-subtitle">Just a few details</p>
+
+            <div class="profile-gender-btns">
+                <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+                <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
+            </div>
+
+            <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
+
+            <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
+        </div>
+    </div>
+
+    <!-- Create Account Modal -->
+    <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
+            <h2 class="modal-title">Create an account</h2>
+
+            <div class="modal-phone-input">
+                <div class="modal-country-select">
+                    <span class="modal-country-code">+44</span>
+                </div>
+                <input class="modal-number-input" type="tel" placeholder="Phone number">
+            </div>
+
+            <label class="modal-checkbox-label">
+                <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
+                <span>I agree to the <a href="terms-of-service.html" target="_blank">Terms of Service</a> and the <a href="privacy-policy.html" target="_blank">Privacy Policy</a></span>
+            </label>
+
+            <div class="modal-btns" id="modalSignBtns">
+                <button class="modal-btn modal-btn--gray" onclick="openOtpModal()">Sign in by an SMS</button>
+                <button class="modal-btn modal-btn--gray" onclick="openOtpModal()">Sign in by Whatsapp</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
+    <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
+    <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+    <script type="text/javascript" src="js/script.js"></script>
+    <script>
+        function doLogin() {
+            document.getElementById('header-guest').style.display = 'none';
+            document.getElementById('header-logged-in').style.display = '';
+        }
+        function doLogout() {
+            document.getElementById('header-logged-in').style.display = 'none';
+            document.getElementById('header-guest').style.display = '';
+        }
+        function openCreateAccountModal() {
+            document.getElementById('createAccountModal').classList.add('modal-overlay--active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeCreateAccountModal() {
+            document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
+            document.body.style.overflow = '';
+        }
+        function closeModalOutside(e) {
+            if (e.target === document.getElementById('createAccountModal')) closeCreateAccountModal();
+        }
+        function toggleSignBtns(checkbox) {
+            var btns = document.querySelectorAll('#modalSignBtns .modal-btn');
+            btns.forEach(function(btn) {
+                if (checkbox.checked) {
+                    btn.classList.remove('modal-btn--gray');
+                    btn.classList.add('modal-btn--orange');
+                } else {
+                    btn.classList.remove('modal-btn--orange');
+                    btn.classList.add('modal-btn--gray');
+                }
+            });
+        }
+
+        var otpTimerInterval = null;
+
+        function openOtpModal() {
+            var phone = '+44 ' + (document.querySelector('.modal-number-input').value || 'XXXXXXXXXX');
+            document.getElementById('otpPhoneDisplay').textContent = phone;
+            document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
+            document.getElementById('otpModal').classList.add('modal-overlay--active');
+            document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
+            document.querySelectorAll('.otp-input')[0].focus();
+            startOtpTimer();
+        }
+
+        function closeOtpModal() {
+            document.getElementById('otpModal').classList.remove('modal-overlay--active');
+            document.body.style.overflow = '';
+            clearInterval(otpTimerInterval);
+        }
+
+        function closeOtpModalOutside(e) {
+            if (e.target === document.getElementById('otpModal')) closeOtpModal();
+        }
+
+        function backToCreateAccount() {
+            document.getElementById('otpModal').classList.remove('modal-overlay--active');
+            document.getElementById('createAccountModal').classList.add('modal-overlay--active');
+            clearInterval(otpTimerInterval);
+        }
+
+        function startOtpTimer() {
+            clearInterval(otpTimerInterval);
+            var seconds = 60;
+            var btn = document.getElementById('otpResendBtn');
+            var timerEl = document.getElementById('otpTimer');
+            btn.disabled = true;
+            timerEl.textContent = seconds;
+            otpTimerInterval = setInterval(function() {
+                seconds--;
+                timerEl.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(otpTimerInterval);
+                    btn.disabled = false;
+                    btn.textContent = 'Get new code';
+                }
+            }, 1000);
+        }
+
+        var selectedGender = 'male';
+
+        function selectGender(gender) {
+            selectedGender = gender;
+            document.getElementById('profileAvatarPreview').src = gender === 'female' ? 'icon/woman.png' : 'icon/man.png';
+            document.getElementById('genderMale').classList.toggle('profile-gender-btn--active', gender === 'male');
+            document.getElementById('genderFemale').classList.toggle('profile-gender-btn--active', gender === 'female');
+            checkProfileReady();
+        }
+
+        function checkProfileReady() {
+            var name = document.getElementById('profileFullName').value.trim();
+            var btn = document.getElementById('profileSubmitBtn');
+            if (name && selectedGender) {
+                btn.classList.remove('profile-submit-btn--gray');
+            } else {
+                btn.classList.add('profile-submit-btn--gray');
+            }
+        }
+
+        function openProfileModal() {
+            selectedGender = 'male';
+            document.getElementById('profileAvatarPreview').src = 'icon/man.png';
+            document.getElementById('genderMale').classList.add('profile-gender-btn--active');
+            document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
+            document.getElementById('profileFullName').value = '';
+            document.getElementById('profileSubmitBtn').classList.add('profile-submit-btn--gray');
+            document.getElementById('otpModal').classList.remove('modal-overlay--active');
+            document.getElementById('profileModal').classList.add('modal-overlay--active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('modal-overlay--active');
+            document.body.style.overflow = '';
+        }
+
+        function finishRegistration() {
+            var name = document.getElementById('profileFullName').value.trim();
+            if (!name || !selectedGender) return;
+            document.getElementById('header-username').textContent = name;
+            document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+            closeProfileModal();
+            doLogin();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var otpInputs = document.querySelectorAll('.otp-input');
+            otpInputs.forEach(function(input, index) {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    if (this.value && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                    if (this.value && index === otpInputs.length - 1) {
+                        setTimeout(openProfileModal, 300);
+                    }
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
