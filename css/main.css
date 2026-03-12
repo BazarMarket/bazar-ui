@@ -3074,6 +3074,16 @@ p {
 .header-old__cell:last-child::after {
   display: none;
 }
+.header-old__right .header-old__cell:first-child::before {
+  content: "";
+  width: 2px;
+  height: 40px;
+  background: #e7e7e7;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
 .header-old .burger-old {
   display: none;
 }
