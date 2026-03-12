@@ -256,6 +256,11 @@ body {
 .btn_mini:hover {
   background: #fe7653;
 }
+.header-old .btn_mini {
+  font-size: 13px;
+  padding: 10px 10px;
+  border-radius: 12px;
+}
 .btn_green {
   background: #00d101;
   text-transform: uppercase;
