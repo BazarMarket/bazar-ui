@@ -3128,7 +3128,7 @@ p {
   font-size: 18px;
   color: #000;
   line-height: 130%;
-  text-transform: uppercase;
+  text-transform: capitalize;
   transition: 0.3s;
   position: relative;
   z-index: 15;
