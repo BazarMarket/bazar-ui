@@ -2849,6 +2849,10 @@ p {
 .index-body {
   padding: 0 6%;
 }
+.index-body .container {
+  margin: 0;
+  max-width: none;
+}
 .header .logo img {
   max-height: 70px;
   width: auto;
