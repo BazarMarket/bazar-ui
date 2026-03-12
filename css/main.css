@@ -2846,22 +2846,33 @@ p {
 .header .header__btns {
   margin-right: 6%;
 }
-.index-body > .search {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.index-body > .search .container {
-  margin: 0;
-  max-width: none;
-  padding-left: calc(28px + 6%);
-  padding-right: calc(28px + 6%);
-}
+.index-body > .search,
 .index-body > main,
 .index-body > .menu-mob {
   margin-left: 6%;
   margin-right: 6%;
+}
+.index-body > .search {
+  background: transparent;
+  position: relative;
+}
+.index-body > .search::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: #fef6fa;
+  z-index: 0;
+}
+.index-body > .search .container {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: none;
+  padding: 0;
 }
 .index-body > main .container {
   margin: 0;
