@@ -3126,7 +3126,8 @@ p {
   transition: 0.3s;
   position: relative;
   z-index: 15;
-  white-space: nowrap;
+  max-width: 100px;
+  text-align: left;
 }
 .user-link__photo {
   width: 60px;
