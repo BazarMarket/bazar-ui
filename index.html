@@ -160,15 +160,33 @@
     </div>
 
     <script>
-        function subscribe() {
+        async function subscribe() {
             var email = document.getElementById('emailInput').value;
+            var btn = document.querySelector('.notify-form button');
             if (!email || !email.includes('@')) {
                 document.getElementById('emailInput').style.borderColor = '#e82222';
                 return;
             }
-            window.location.href = 'mailto:info@bazar.uk?subject=Notify me when Bazar launches&body=Please notify me at: ' + encodeURIComponent(email);
-            document.getElementById('form').style.display = 'none';
-            document.getElementById('thanks').style.display = 'block';
+            btn.textContent = '...';
+            btn.disabled = true;
+            try {
+                var res = await fetch('https://formspree.io/f/FORM_ID', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                if (res.ok) {
+                    document.getElementById('form').style.display = 'none';
+                    document.getElementById('thanks').style.display = 'block';
+                } else {
+                    btn.textContent = 'Notify me';
+                    btn.disabled = false;
+                    alert('Something went wrong. Please try again.');
+                }
+            } catch(e) {
+                btn.textContent = 'Notify me';
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
