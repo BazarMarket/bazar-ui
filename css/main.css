@@ -3132,8 +3132,7 @@ p {
   transition: 0.3s;
   position: relative;
   z-index: 15;
-  width: 140px;
-  flex-shrink: 0;
+  max-width: 135px;
   text-align: left;
   display: -webkit-box;
   -webkit-line-clamp: 2;
