@@ -3127,6 +3127,7 @@ p {
   position: relative;
   z-index: 15;
   max-width: 100px;
+  text-align: center;
 }
 .user-link__photo {
   width: 60px;
