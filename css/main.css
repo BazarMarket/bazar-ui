@@ -2847,7 +2847,7 @@ p {
   margin-right: 6%;
 }
 .index-body {
-  padding: 0 32px;
+  padding: 0;
 }
 .index-body > .search,
 .index-body > main,
