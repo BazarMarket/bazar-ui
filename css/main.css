@@ -3122,7 +3122,7 @@ p {
   align-items: center;
 }
 .user-link__title {
-  margin-right: 5px;
+  margin-right: 8px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 18px;
@@ -3132,7 +3132,8 @@ p {
   transition: 0.3s;
   position: relative;
   z-index: 15;
-  max-width: 130px;
+  width: 110px;
+  flex-shrink: 0;
   text-align: left;
   display: -webkit-box;
   -webkit-line-clamp: 2;
