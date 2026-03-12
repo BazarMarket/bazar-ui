@@ -2847,8 +2847,10 @@ p {
   margin-right: 6%;
 }
 .index-body > .search {
-  margin-left: -32px;
-  margin-right: -32px;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .index-body > .search .container {
   margin: 0;
