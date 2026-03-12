@@ -5153,6 +5153,100 @@ p {
   border-color: #888;
 }
 
+.modal-card--profile {
+  text-align: center;
+}
+.profile-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.profile-avatar-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ff9138;
+  background: #f5f5f5;
+  transition: src 0.2s;
+}
+.profile-modal-title {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 6px;
+}
+.profile-modal-subtitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 22px;
+}
+.profile-gender-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.profile-gender-btn {
+  flex: 1;
+  max-width: 160px;
+  padding: 11px 0;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+}
+.profile-gender-btn--active {
+  border-color: #ff9138;
+  color: #ff9138;
+  background: #fff8f2;
+}
+.profile-gender-btn:hover {
+  border-color: #ff9138;
+  color: #ff9138;
+}
+.profile-name-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #222;
+  border-radius: 8px;
+  padding: 13px 16px;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 22px;
+  outline: none;
+  transition: border-color 0.18s;
+}
+.profile-name-input::placeholder {
+  color: #aaa;
+}
+.profile-name-input:focus {
+  border-color: #ff9138;
+}
+.profile-submit-btn {
+  display: block;
+  width: 100%;
+  padding: 15px 0;
+  background: #ff9138;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.profile-submit-btn:hover {
+  background: #e07d28;
+}
+
 .card-link {
   position: absolute;
   top: 0;

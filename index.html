@@ -9,7 +9,7 @@
     <meta name="keywords" content="">
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
     <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/main.css?v=53" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/main.css?v=54" type="text/css"> <!-- Основные стили темы  -->
     <link rel="icon" href="favicon.svg">
 </head>
 
@@ -63,9 +63,9 @@
                        </div>
                        <div class="header-old__cell">
                           <div class="user-link">
-                             <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__title">Andreas Xenofontos</div>
+                             <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__title" id="header-username">Andreas Xenofontos</div>
                              <div class="user-link__photo">
-                                <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                                <img loading="lazy" class="img-cover" id="header-avatar" src="icon/man.svg" alt="">
                              </div></a>
                              <div class="user-menu">
                                 <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
@@ -2455,6 +2455,29 @@
         </div>
     </div>
 
+    <!-- Profile Setup Modal (Step 3) -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-card modal-card--profile">
+            <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
+
+            <div class="profile-avatar-wrap">
+                <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
+            </div>
+
+            <h2 class="modal-title profile-modal-title">Almost there!</h2>
+            <p class="profile-modal-subtitle">Tell us a little about yourself</p>
+
+            <div class="profile-gender-btns">
+                <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+                <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
+            </div>
+
+            <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name">
+
+            <button class="profile-submit-btn" onclick="finishRegistration()">Get started</button>
+        </div>
+    </div>
+
     <!-- Create Account Modal -->
     <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
         <div class="modal-card">
@@ -2563,6 +2586,43 @@
             }, 1000);
         }
 
+        var selectedGender = 'male';
+
+        function selectGender(gender) {
+            selectedGender = gender;
+            document.getElementById('profileAvatarPreview').src = gender === 'female' ? 'icon/woman.png' : 'icon/man.png';
+            document.getElementById('genderMale').classList.toggle('profile-gender-btn--active', gender === 'male');
+            document.getElementById('genderFemale').classList.toggle('profile-gender-btn--active', gender === 'female');
+        }
+
+        function openProfileModal() {
+            selectedGender = 'male';
+            document.getElementById('profileAvatarPreview').src = 'icon/man.png';
+            document.getElementById('genderMale').classList.add('profile-gender-btn--active');
+            document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
+            document.getElementById('profileFullName').value = '';
+            document.getElementById('otpModal').classList.remove('modal-overlay--active');
+            document.getElementById('profileModal').classList.add('modal-overlay--active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('modal-overlay--active');
+            document.body.style.overflow = '';
+        }
+
+        function finishRegistration() {
+            var name = document.getElementById('profileFullName').value.trim();
+            if (!name) {
+                document.getElementById('profileFullName').focus();
+                document.getElementById('profileFullName').style.borderColor = '#ff9138';
+                return;
+            }
+            document.getElementById('header-username').textContent = name;
+            document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+            closeProfileModal();
+            doLogin();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             var otpInputs = document.querySelectorAll('.otp-input');
             otpInputs.forEach(function(input, index) {
@@ -2570,6 +2630,9 @@
                     this.value = this.value.replace(/[^0-9]/g, '');
                     if (this.value && index < otpInputs.length - 1) {
                         otpInputs[index + 1].focus();
+                    }
+                    if (this.value && index === otpInputs.length - 1) {
+                        setTimeout(openProfileModal, 300);
                     }
                 });
                 input.addEventListener('keydown', function(e) {
