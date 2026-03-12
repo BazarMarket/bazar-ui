@@ -2847,25 +2847,18 @@ p {
   margin-right: 6%;
 }
 .index-body {
-  padding: 0;
+  padding: 0 32px;
 }
-.index-body > .search {
-  margin-left: calc(6% + 28px);
-  margin-right: calc(6% + 28px);
-}
-.index-body > .search .container {
-  margin: 0;
-  max-width: none;
-  padding: 0;
-}
+.index-body > .search,
 .index-body > main,
 .index-body > .menu-mob {
   margin-left: 6%;
   margin-right: 6%;
 }
-.index-body > main .container {
+.index-body .container {
   margin: 0;
   max-width: none;
+  padding: 0;
 }
 .header .logo img {
   max-height: 70px;
