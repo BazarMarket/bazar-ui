@@ -2847,7 +2847,13 @@ p {
   margin-right: 6%;
 }
 .index-body {
-  padding: 0 6%;
+  padding: 0;
+}
+.index-body > .search,
+.index-body > main,
+.index-body > .menu-mob {
+  margin-left: 6%;
+  margin-right: 6%;
 }
 .index-body .container {
   margin: 0;
