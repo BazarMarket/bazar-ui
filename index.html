@@ -2468,7 +2468,7 @@
             <p class="profile-modal-subtitle">Just a few details</p>
 
             <div class="profile-gender-btns">
-                <button class="profile-gender-btn" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+                <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
                 <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
             </div>
 
@@ -2586,7 +2586,7 @@
             }, 1000);
         }
 
-        var selectedGender = null;
+        var selectedGender = 'male';
 
         function selectGender(gender) {
             selectedGender = gender;
@@ -2607,9 +2607,9 @@
         }
 
         function openProfileModal() {
-            selectedGender = null;
+            selectedGender = 'male';
             document.getElementById('profileAvatarPreview').src = 'icon/man.png';
-            document.getElementById('genderMale').classList.remove('profile-gender-btn--active');
+            document.getElementById('genderMale').classList.add('profile-gender-btn--active');
             document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
             document.getElementById('profileFullName').value = '';
             document.getElementById('profileSubmitBtn').classList.add('profile-submit-btn--gray');
