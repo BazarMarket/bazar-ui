@@ -3132,7 +3132,7 @@ p {
   transition: 0.3s;
   position: relative;
   z-index: 15;
-  width: 110px;
+  width: 140px;
   flex-shrink: 0;
   text-align: right;
   display: -webkit-box;
