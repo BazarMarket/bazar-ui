@@ -23,14 +23,14 @@
     <div class="wrapper">
 
 
-        <header class="header">
+        <header class="header" id="header-guest">
             <div class="container-full">
                 <div class="header__body">
                     <div class="logo">
                         <img loading="lazy" src="img/logo.png" alt="">
                     </div>
                     <div class="header__btns">
-                        <a href="#" class="btn btn_start">Log in</a>
+                        <a href="#" class="btn btn_start" onclick="doLogin(); return false;">Log in</a>
                         <div class="btn-down icon" onclick="openCreateAccountModal()">
                             <p class="btn-down__text">Create an account</p>
                             <span class="btn-down__icon icon-arrow-d"></span>
@@ -38,6 +38,58 @@
                     </div>
                 </div>
             </div>
+        </header>
+
+        <header class="header-old" id="header-logged-in" style="display:none;">
+           <div class="container-full">
+              <div class="header-old__body">
+                 <a href="index.html" class="logo">
+                    <img src="img/logo.png" alt="">
+                 </a>
+                 <div class="burger-body">
+                    <div class="header-old__right">
+                       <div class="header-old__cell">
+                          <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="icons-list">
+                             <a href="#" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                             <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                          </div>
+                       </div>
+                       <div class="header-old__cell">
+                          <a href="cabinet.html#payments" class="wallet-widget icon-win-wallet">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></a>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="user-link">
+                             <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__title">Alexey</div>
+                             <div class="user-link__photo">
+                                <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                             </div></a>
+                             <div class="user-menu">
+                                <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                                <hr class="user-menu__hr">
+                                <a href="cabinet.html#settings" class="user-menu-item icon-win-user">My Profile</a>
+                                <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
+                                <a href="cabinet.html#payments" class="user-menu-item icon-win-wallet">My Payments</a>
+                                <a href="cabinet.html#favorites" class="user-menu-item icon-heart">Favorites</a>
+                                <hr class="user-menu__hr">
+                                <a href="cabinet.html#support" class="user-menu-item icon-win-faq">Support</a>
+                                <a href="cabinet.html#settings" class="user-menu-item icon-win-setting">My Settings</a>
+                                <hr class="user-menu__hr">
+                                <a href="#" class="user-logout icon-win-logout" onclick="doLogout(); return false;">Log out</a>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="burger-old">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                 </div>
+              </div>
+           </div>
         </header>
 
       <div class="index-body container-full">
@@ -2432,6 +2484,14 @@
     <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
     <script type="text/javascript" src="js/script.js"></script>
     <script>
+        function doLogin() {
+            document.getElementById('header-guest').style.display = 'none';
+            document.getElementById('header-logged-in').style.display = '';
+        }
+        function doLogout() {
+            document.getElementById('header-logged-in').style.display = 'none';
+            document.getElementById('header-guest').style.display = '';
+        }
         function openCreateAccountModal() {
             document.getElementById('createAccountModal').classList.add('modal-overlay--active');
             document.body.style.overflow = 'hidden';
