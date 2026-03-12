@@ -24,6 +24,10 @@
                 </a>
                 <div class="burger-body">
                     <div class="header-old__right">
+                        <div class="header-old__vsep"></div>
+                        <div class="header-old__cell">
+                            <div class="wallet-widget icon-win-wallet" onclick="switchToTab('payments')">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
+                        </div>
                         <div class="header-old__cell">
                             <a href="#" class="btn btn_mini">+ post an ad</a>
                         </div>
@@ -34,14 +38,11 @@
                             </div>
                         </div>
                         <div class="header-old__cell">
-                            <div class="wallet-widget icon-win-wallet" onclick="switchToTab('payments')">£ 3 216</div>
-                        </div>
-                        <div class="header-old__cell">
                             <div class="user-link">
-                                <div class="user-link__title">Andreas</div>
-                                <div class="user-link__photo">
+                                <div class="user-link__photo" id="header-avatar">
                                     <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
                                 </div>
+                                <div class="user-link__title" id="header-username">Andreas</div>
                                 <div class="user-menu">
                                     <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
                                     <hr class="user-menu__hr">
@@ -49,11 +50,11 @@
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
                                     <a href="#" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">Favorites</a>
-                                    <div class="subscription">
-                                        <p class="subscription__title icon-calendar-upd">Subscription</p>
-                                        <span class="subscription__stiker">PRO</span>
-                                        <span class="subscription__days">382дн</span>
-                                    </div>
+                                    <a href="#" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
+                                       <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
+                                       <span class="subscription__stiker">PRO</span>
+                                       <span class="subscription__days">382дн</span>
+                                    </div></a>
                                     <hr class="user-menu__hr">
                                     <div class="dark-mode">
                                         <div class="user-menu-item icon-win-sun">Dark Mode</div>
@@ -63,8 +64,8 @@
                                         </label>
                                     </div>
                                     <hr class="user-menu__hr">
-                                    <a href="#" class="user-menu-item icon-win-setting" onclick="event.preventDefault();switchToTab('settings')">My Settings</a>
                                     <a href="#" class="user-menu-item icon-win-faq" onclick="event.preventDefault();switchToTab('support')">Support</a>
+                                    <a href="#" class="user-menu-item icon-win-setting" onclick="event.preventDefault();switchToTab('settings')">My Settings</a>
                                     <hr class="user-menu__hr">
                                     <a href="#" class="user-logout icon-win-logout" onclick="event.preventDefault();switchToTab('logout')">Log Out</a>
                                 </div>
