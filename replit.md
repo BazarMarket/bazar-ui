@@ -38,7 +38,7 @@ Workflow: "Start application" on port 5000 (webview)
 
 ## CSS Versioning
 
-**Текущая версия: main.css?v=65** (обновлять при каждом изменении CSS)
+**Текущая версия: main.css?v=70** (обновлять при каждом изменении CSS)
 icon-style.css?v=2
 
 Обновлять версию в: index.html, card.html, search.html, cabinet.html
@@ -53,10 +53,12 @@ card.html и index.html (залогиненный, `#header-logged-in`):
 
 ## user-link (имя + аватар в хедере)
 
+Порядок элементов внутри `.user-link`: **аватарка первой**, затем имя.
+
 ```css
 .user-link__title {
-  margin-right: 0;
-  font-size: 18px; font-weight: 700; text-transform: uppercase;
+  margin-left: 10px;
+  font-size: 18px; font-weight: 700; text-transform: capitalize;
   max-width: 135px; text-align: left;
   display: -webkit-box; -webkit-line-clamp: 2;
   -webkit-box-orient: vertical; overflow: hidden;
