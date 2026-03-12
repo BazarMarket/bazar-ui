@@ -1225,7 +1225,7 @@ body {
   align-items: center;
 }
 .icons-list .icon-item:not(:last-child) {
-  margin-right: 30px;
+  margin-right: 16px;
 }
 
 .icon-item {
@@ -3050,7 +3050,7 @@ p {
 }
 .header-old__cell {
   position: relative;
-  padding: 0 30px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 24px;
