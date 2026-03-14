@@ -661,6 +661,15 @@
 
       function onSubtypeChange() {
          reState.subtype = document.getElementById('subtypeSelect').value;
+         var bedroomsField = document.getElementById('bedroomsField');
+         var bedroomsSelect = document.getElementById('bedroomsSelect');
+         if (reState.subtype === 'Studio') {
+            if (bedroomsField) bedroomsField.style.display = 'none';
+            reState.bedrooms = '';
+            if (bedroomsSelect) bedroomsSelect.value = '';
+         } else {
+            if (bedroomsField) bedroomsField.style.display = 'flex';
+         }
          updateRealEstateTitle();
       }
 
