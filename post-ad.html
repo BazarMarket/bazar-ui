@@ -21,6 +21,7 @@
       }
       #step-category {
          max-width: 1100px;
+         margin-bottom: 28px;
       }
       .pa-section__title {
          font-family: "Poppins", sans-serif;
@@ -113,6 +114,10 @@
       }
       .pa-form .pa-section {
          padding-left: 16px;
+      }
+      #subtypeSelect {
+         max-width: 260px;
+         font-size: 14px;
       }
       .pa-field {
          display: flex;
@@ -723,6 +728,8 @@
          'Short term':           ['Villa', 'Apartment', 'Cottage', 'Room', 'Other']
       };
 
+      var conditionHiddenFor = ['Plots of land', 'Commercial property'];
+
       function selectSubSub(el) {
          document.querySelectorAll('#subSubCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
@@ -735,10 +742,11 @@
             select.innerHTML = '<option value="">Select subtype</option>' +
                subtypes.map(function(s) { return '<option>' + s + '</option>'; }).join('');
             field.style.display = 'flex';
-            if (condField) condField.style.display = 'none';
          } else {
             field.style.display = 'none';
-            if (condField) condField.style.display = 'flex';
+         }
+         if (condField) {
+            condField.style.display = conditionHiddenFor.includes(propType) ? 'none' : 'flex';
          }
       }
 
