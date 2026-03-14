@@ -448,7 +448,7 @@
                      <div class="pa-field__control">
                         <div class="pa-price-row">
                            <span class="pa-price-currency">£</span>
-                           <input class="pa-input" type="number" placeholder="0">
+                           <input class="pa-input" id="priceInput" type="text" inputmode="numeric" placeholder="0" oninput="formatPrice(this)">
                         </div>
                         <div class="pa-toggle-row" style="margin-top:6px">
                            <label class="toggle">
@@ -729,6 +729,15 @@
          } else {
             subSubCats.innerHTML = '';
          }
+      }
+
+      function formatPrice(input) {
+         var pos = input.selectionStart;
+         var raw = input.value.replace(/\./g, '').replace(/[^0-9]/g, '');
+         var formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+         var diff = formatted.length - input.value.length;
+         input.value = formatted;
+         input.setSelectionRange(pos + diff, pos + diff);
       }
 
       window.addEventListener('DOMContentLoaded', function() {
