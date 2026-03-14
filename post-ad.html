@@ -647,8 +647,14 @@
          var prop = propMap[reState.propType] || (reState.propType ? reState.propType.toLowerCase() : '');
          if (beds && beds !== '10 and more') parts.push(beds + ' bedroom');
          else if (beds === '10 and more') parts.push('10+ bedroom');
-         if (sub) parts.push(sub);
-         else if (prop) parts.push(prop);
+         if (sub === 'studio' || sub === 'penthouse') {
+            parts.push(sub);
+            if (prop) parts.push(prop);
+         } else if (sub) {
+            parts.push(sub);
+         } else if (prop) {
+            parts.push(prop);
+         }
          parts.push(listingStr);
          var title = parts.join(' ');
          titleInput.value = title.charAt(0).toUpperCase() + title.slice(1);
