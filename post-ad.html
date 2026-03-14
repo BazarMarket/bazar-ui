@@ -378,8 +378,7 @@
                <p class="pa-section__title">Choose a category</p>
                <div class="cat-cols">
                   <div class="cat-col" id="mainCats">
-                     <div class="cat-item active" data-cat="real-estate-sale" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image1.png" alt="">Real Estate for Sale</div>
-                     <div class="cat-item" data-cat="real-estate-rent" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image2.png" alt="">Real Estate for Rent</div>
+                     <div class="cat-item active" data-cat="real-estate" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image1.png" alt="">Real Estate</div>
                      <div class="cat-item" data-cat="motors" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image3.png" alt="">Motors</div>
                      <div class="cat-item" data-cat="jobs" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image11.png" alt="">Jobs</div>
                      <div class="cat-item" data-cat="phones" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image5.png" alt="">Mobile phones, communication</div>
@@ -581,22 +580,9 @@
    <script src="js/script.js"></script>
    <script>
       var catData = {
-         'real-estate-sale': {
-            'Houses':                ['Detached house', 'Semi-detached house', 'Townhouse', 'Villa', 'Bungalow', 'Other'],
-            'Apartments & flats':    ['Studio', '1-bedroom', '2-bedroom', '3-bedroom', 'Penthouse', 'Other'],
-            'Commercial property':   ['Office', 'Retail', 'Warehouse', 'Hotel', 'Other'],
-            'Plots of land':         ['Residential plot', 'Agricultural land', 'Commercial plot', 'Other'],
-            'Residential buildings': ['Apartment block', 'Complex', 'Other'],
-            'Prefabricated houses':  [],
-            'Other':                 []
-         },
-         'real-estate-rent': {
-            'Houses':             ['Detached house', 'Semi-detached', 'Townhouse', 'Villa', 'Other'],
-            'Apartments & flats': ['Studio', '1-bedroom', '2-bedroom', '3-bedroom+', 'Penthouse', 'Other'],
-            'Rooms':              ['Single room', 'Double room', 'Shared room', 'Other'],
-            'Holiday rentals':    ['Villa', 'Apartment', 'Cottage', 'Other'],
-            'Commercial':         ['Office', 'Retail space', 'Warehouse', 'Other'],
-            'Other':              []
+         'real-estate': {
+            'For Sale': ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Rooms / flatmates', 'Short term', 'Other'],
+            'For Rent': ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Rooms / flatmates', 'Short term', 'Other']
          },
          'motors': {
             'Cars':                          ['New cars', 'Used cars', 'Classic cars', 'Other'],
