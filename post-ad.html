@@ -130,12 +130,18 @@
          font-weight: 600;
          font-size: 14px;
          color: #333;
-         min-width: 100px;
-         max-width: 100px;
+         min-width: 120px;
+         max-width: 120px;
          text-align: right;
          padding-top: 12px;
+         white-space: nowrap;
       }
-      .pa-field__label span { color: red; }
+      .pa-field__label span {
+         color: #ff4d4f;
+         font-size: 13px;
+         font-weight: 700;
+         margin-left: 1px;
+      }
       .pa-field__control {
          flex: 1;
       }
@@ -408,7 +414,7 @@
                <div class="pa-section">
 
                   <div class="pa-field" id="subtypeField" style="display:none">
-                     <span class="pa-field__label">Property type: <span>*</span></span>
+                     <span class="pa-field__label">Property type:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select" id="subtypeSelect">
                            <option value="">Select type</option>
@@ -417,21 +423,21 @@
                   </div>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Title: <span>*</span></span>
+                     <span class="pa-field__label">Title:<span>*</span></span>
                      <div class="pa-field__control">
                         <input class="pa-input" type="text" placeholder="e.g. Apple iPhone XR 128gb">
                      </div>
                   </div>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Description: <span>*</span></span>
+                     <span class="pa-field__label">Description:<span>*</span></span>
                      <div class="pa-field__control">
                         <textarea class="pa-textarea" placeholder="Describe your item in detail..."></textarea>
                      </div>
                   </div>
 
                   <div class="pa-field" id="conditionField">
-                     <span class="pa-field__label">Condition: <span>*</span></span>
+                     <span class="pa-field__label">Condition:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select" id="conditionSelect">
                            <option value="">Select condition</option>
@@ -458,7 +464,7 @@
                   </div>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Price: <span>*</span></span>
+                     <span class="pa-field__label">Price:<span>*</span></span>
                      <div class="pa-field__control">
                         <div class="pa-price-row">
                            <span class="pa-price-currency">£</span>
@@ -480,7 +486,7 @@
                   <p class="pa-section__title">Location</p>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">City: <span>*</span></span>
+                     <span class="pa-field__label">City:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select">
                            <option value="">Select city</option>
@@ -513,7 +519,7 @@
                   <p class="pa-section__title">Photos</p>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Images: <span>*</span></span>
+                     <span class="pa-field__label">Images:<span>*</span></span>
                      <div class="pa-field__control">
                         <div class="pa-photo-grid">
                            <div class="pa-photo-box">
@@ -554,14 +560,14 @@
                   <p class="pa-section__title">Contact details</p>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Name: <span>*</span></span>
+                     <span class="pa-field__label">Name:<span>*</span></span>
                      <div class="pa-field__control">
                         <input class="pa-input" type="text" placeholder="Your name">
                      </div>
                   </div>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Phone: <span>*</span></span>
+                     <span class="pa-field__label">Phone:<span>*</span></span>
                      <div class="pa-field__control">
                         <input class="pa-input" type="tel" placeholder="+357 xx xxxxxx">
                      </div>
