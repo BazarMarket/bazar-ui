@@ -115,6 +115,11 @@
       .pa-form .pa-section {
          padding-left: 16px;
       }
+      #titleInput[readonly] {
+         background: #f5f5f5;
+         color: #555;
+         cursor: default;
+      }
       .pa-field {
          display: flex;
          align-items: flex-start;
@@ -412,7 +417,7 @@
                   <div class="pa-field" id="subtypeField" style="display:none">
                      <span class="pa-field__label">Property type:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select" id="subtypeSelect">
+                        <select class="pa-select" id="subtypeSelect" onchange="onSubtypeChange()">
                            <option value="">Select type</option>
                         </select>
                      </div>
@@ -421,7 +426,7 @@
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select">
+                        <select class="pa-select" id="bedroomsSelect" onchange="onBedroomsChange()">
                            <option value="">Select bedrooms</option>
                            <option>1</option>
                            <option>2</option>
@@ -440,7 +445,7 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Title:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" type="text" placeholder="e.g. Apple iPhone XR 128gb">
+                        <input class="pa-input" id="titleInput" type="text" placeholder="e.g. Apple iPhone XR 128gb">
                      </div>
                   </div>
 
@@ -614,6 +619,51 @@
 
    <script src="js/script.js"></script>
    <script>
+      var reState = { cat: '', listingType: '', propType: '', subtype: '', bedrooms: '' };
+
+      function updateRealEstateTitle() {
+         var titleInput = document.getElementById('titleInput');
+         if (!titleInput) return;
+         if (reState.cat !== 'real-estate') {
+            titleInput.removeAttribute('readonly');
+            titleInput.placeholder = 'e.g. Apple iPhone XR 128gb';
+            return;
+         }
+         titleInput.setAttribute('readonly', true);
+         titleInput.placeholder = '';
+         var propMap = {
+            'Houses':              'house',
+            'Apartments & flats':  'apartment',
+            'Commercial property': 'commercial property',
+            'Plots of land':       'plot of land',
+            'Rooms / flatmates':   'room',
+            'Short term':          'property',
+            'Other':               'property'
+         };
+         var listingStr = reState.listingType === 'For Rent' ? 'for rent' : 'for sale';
+         var parts = [];
+         var beds = reState.bedrooms;
+         var sub = reState.subtype && reState.subtype !== 'Other' ? reState.subtype.toLowerCase() : '';
+         var prop = propMap[reState.propType] || (reState.propType ? reState.propType.toLowerCase() : '');
+         if (beds && beds !== '10 and more') parts.push(beds + ' bedroom');
+         else if (beds === '10 and more') parts.push('10+ bedroom');
+         if (sub) parts.push(sub);
+         else if (prop) parts.push(prop);
+         parts.push(listingStr);
+         var title = parts.join(' ');
+         titleInput.value = title.charAt(0).toUpperCase() + title.slice(1);
+      }
+
+      function onBedroomsChange() {
+         reState.bedrooms = document.getElementById('bedroomsSelect').value;
+         updateRealEstateTitle();
+      }
+
+      function onSubtypeChange() {
+         reState.subtype = document.getElementById('subtypeSelect').value;
+         updateRealEstateTitle();
+      }
+
       var catData = {
          'real-estate': {
             'For Sale': ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Rooms / flatmates', 'Short term', 'Other'],
@@ -700,6 +750,13 @@
          document.querySelectorAll('#mainCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
          var cat = el.dataset.cat;
+         reState.cat = cat;
+         reState.listingType = '';
+         reState.propType = '';
+         reState.subtype = '';
+         reState.bedrooms = '';
+         var bedroomsSelect = document.getElementById('bedroomsSelect');
+         if (bedroomsSelect) bedroomsSelect.value = '';
          var subCats = document.getElementById('subCats');
          var subSubCats = document.getElementById('subSubCats');
          var data = catData[cat] || {};
@@ -710,7 +767,10 @@
                return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
             }).join('');
             var firstSub = subCats.querySelector('.cat-item.active');
-            if (firstSub) fillSubSub(cat, keys[0]);
+            if (firstSub) {
+               reState.listingType = keys[0];
+               fillSubSub(cat, keys[0]);
+            }
          } else {
             subCats.innerHTML = '';
          }
@@ -719,12 +779,17 @@
          var condField = document.getElementById('conditionField');
          if (subtypeField) subtypeField.style.display = 'none';
          if (condField) condField.style.display = 'flex';
+         updateRealEstateTitle();
       }
 
       function selectSubcat(el, cat) {
          document.querySelectorAll('#subCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
          var sub = el.dataset.subcat;
+         reState.listingType = sub;
+         reState.propType = '';
+         reState.subtype = '';
+         updateRealEstateTitle();
          fillSubSub(cat, sub);
       }
 
@@ -762,6 +827,8 @@
          document.querySelectorAll('#subSubCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
          var propType = el.textContent.trim();
+         reState.propType = propType;
+         reState.subtype = '';
          var subtypes = propertySubtypes[propType];
          var field = document.getElementById('subtypeField');
          var select = document.getElementById('subtypeSelect');
@@ -778,6 +845,7 @@
             condField.style.display = hide ? 'none' : 'flex';
             if (!hide) setConditionOptions(propType);
          }
+         updateRealEstateTitle();
       }
 
       function fillSubSub(cat, sub) {
