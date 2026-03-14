@@ -752,7 +752,7 @@
          var select = document.getElementById('subtypeSelect');
          var condField = document.getElementById('conditionField');
          if (subtypes && subtypes.length) {
-            select.innerHTML = '<option value="">Choose property type</option>' +
+            select.innerHTML = '<option value="">Select property type</option>' +
                subtypes.map(function(s) { return '<option>' + s + '</option>'; }).join('');
             field.style.display = 'flex';
          } else {
