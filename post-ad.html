@@ -697,12 +697,17 @@
          fillSubSub(cat, sub);
       }
 
+      function selectSubSub(el) {
+         document.querySelectorAll('#subSubCats .cat-item').forEach(c => c.classList.remove('active'));
+         el.classList.add('active');
+      }
+
       function fillSubSub(cat, sub) {
          var subSubCats = document.getElementById('subSubCats');
          var list = (catData[cat] && catData[cat][sub]) || [];
          if (list.length) {
             subSubCats.innerHTML = list.map(function(s, i) {
-               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '">' + s + '</div>';
+               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" onclick="selectSubSub(this)">' + s + '</div>';
             }).join('');
          } else {
             subSubCats.innerHTML = '';
