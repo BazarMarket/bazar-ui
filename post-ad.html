@@ -416,7 +416,16 @@
                      </div>
                   </div>
 
-                  <div class="pa-field">
+                  <div class="pa-field" id="subtypeField" style="display:none">
+                     <span class="pa-field__label">Property subtype:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select" id="subtypeSelect">
+                           <option value="">Select subtype</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="conditionField">
                      <span class="pa-field__label">Condition: <span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select">
@@ -692,6 +701,10 @@
             subCats.innerHTML = '';
          }
          document.getElementById('paForm').classList.add('visible');
+         var subtypeField = document.getElementById('subtypeField');
+         var condField = document.getElementById('conditionField');
+         if (subtypeField) subtypeField.style.display = 'none';
+         if (condField) condField.style.display = 'flex';
       }
 
       function selectSubcat(el, cat) {
@@ -701,9 +714,32 @@
          fillSubSub(cat, sub);
       }
 
+      var propertySubtypes = {
+         'Houses':               ['Detached house', 'Semi-detached house', 'Townhouse', 'Villa', 'Bungalow', 'Other'],
+         'Apartments & flats':   ['Studio', '1-bedroom', '2-bedroom', '3-bedroom', 'Penthouse', 'Other'],
+         'Commercial property':  ['Office', 'Retail', 'Warehouse', 'Hotel', 'Other'],
+         'Plots of land':        ['Residential plot', 'Agricultural land', 'Commercial plot', 'Other'],
+         'Rooms / flatmates':    ['Single room', 'Double room', 'Shared room', 'Other'],
+         'Short term':           ['Villa', 'Apartment', 'Cottage', 'Room', 'Other']
+      };
+
       function selectSubSub(el) {
          document.querySelectorAll('#subSubCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
+         var propType = el.textContent.trim();
+         var subtypes = propertySubtypes[propType];
+         var field = document.getElementById('subtypeField');
+         var select = document.getElementById('subtypeSelect');
+         var condField = document.getElementById('conditionField');
+         if (subtypes && subtypes.length) {
+            select.innerHTML = '<option value="">Select subtype</option>' +
+               subtypes.map(function(s) { return '<option>' + s + '</option>'; }).join('');
+            field.style.display = 'flex';
+            if (condField) condField.style.display = 'none';
+         } else {
+            field.style.display = 'none';
+            if (condField) condField.style.display = 'flex';
+         }
       }
 
       function fillSubSub(cat, sub) {
