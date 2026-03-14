@@ -175,19 +175,18 @@
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ email: email })
                 });
-                var data = await res.json();
                 if (res.ok) {
                     document.getElementById('form').style.display = 'none';
                     document.getElementById('thanks').style.display = 'block';
                 } else {
                     btn.textContent = 'Notify me';
                     btn.disabled = false;
-                    alert('Error ' + res.status + ': ' + (data.error || JSON.stringify(data)));
+                    alert('Something went wrong. Please try again.');
                 }
             } catch(e) {
                 btn.textContent = 'Notify me';
                 btn.disabled = false;
-                alert('Network error: ' + e.message);
+                alert('Something went wrong. Please try again.');
             }
         }
     </script>
