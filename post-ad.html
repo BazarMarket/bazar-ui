@@ -433,7 +433,7 @@
                   <div class="pa-field" id="conditionField">
                      <span class="pa-field__label">Condition: <span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select">
+                        <select class="pa-select" id="conditionSelect">
                            <option value="">Select condition</option>
                            <option>New</option>
                            <option>Like new</option>
@@ -719,7 +719,26 @@
          'Short term':           ['Villa', 'Apartment', 'Cottage', 'Room', 'Other']
       };
 
-      var conditionHiddenFor = ['Plots of land', 'Commercial property', 'Auto parts', 'Accessories', 'Boats & marine'];
+      var conditionHiddenFor = ['Plots of land', 'Commercial property'];
+
+      var conditionOptions = {
+         'Cars':            ['New', 'Used', 'Classic'],
+         'Motorbikes':      ['New', 'Used', 'Classic'],
+         'Trucks':          ['New', 'Used', 'Classic'],
+         'Boats & marine':  ['New', 'Used', 'Classic'],
+         'Auto parts':      ['New', 'Used'],
+         'Accessories':     ['New', 'Used']
+      };
+
+      var conditionDefault = ['New', 'Like new', 'Good', 'Fair'];
+
+      function setConditionOptions(propType) {
+         var sel = document.getElementById('conditionSelect');
+         if (!sel) return;
+         var opts = conditionOptions[propType] || conditionDefault;
+         sel.innerHTML = '<option value="">Select condition</option>' +
+            opts.map(function(o) { return '<option>' + o + '</option>'; }).join('');
+      }
 
       function selectSubSub(el) {
          document.querySelectorAll('#subSubCats .cat-item').forEach(c => c.classList.remove('active'));
@@ -737,7 +756,9 @@
             field.style.display = 'none';
          }
          if (condField) {
-            condField.style.display = conditionHiddenFor.includes(propType) ? 'none' : 'flex';
+            var hide = conditionHiddenFor.includes(propType);
+            condField.style.display = hide ? 'none' : 'flex';
+            if (!hide) setConditionOptions(propType);
          }
       }
 
