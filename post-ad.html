@@ -143,6 +143,23 @@
          font-weight: 700;
          margin-left: 1px;
       }
+      .pa-suggested {
+         display: none;
+         font-size: 13px;
+         color: #999;
+         margin-top: 6px;
+         line-height: 1.4;
+      }
+      .pa-suggested__label { color: #bbb; }
+      .pa-suggested__text  { font-weight: 600; color: #444; }
+      .pa-suggested__use {
+         color: #ff9138;
+         cursor: pointer;
+         font-weight: 600;
+         margin-left: 10px;
+         white-space: nowrap;
+      }
+      .pa-suggested__use:hover { text-decoration: underline; }
       .pa-field__control {
          flex: 1;
       }
@@ -443,10 +460,49 @@
                      </div>
                   </div>
 
+                  <div class="pa-field" id="brandField" style="display:none">
+                     <span class="pa-field__label">Brand:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="brandInput" type="text" placeholder="" oninput="updateSuggestedTitle()">
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="modelField" style="display:none">
+                     <span class="pa-field__label">Model:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="modelInput" type="text" placeholder="" oninput="updateSuggestedTitle()">
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="yearField" style="display:none">
+                     <span class="pa-field__label">Year:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="yearInput" type="text" placeholder="e.g. 2019" maxlength="4" oninput="updateSuggestedTitle()">
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="storageField" style="display:none">
+                     <span class="pa-field__label">Storage:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select" id="storageSelect" onchange="updateSuggestedTitle()">
+                           <option value="">Select storage</option>
+                           <option>32GB</option>
+                           <option>64GB</option>
+                           <option>128GB</option>
+                           <option>256GB</option>
+                           <option>512GB</option>
+                           <option>1TB</option>
+                        </select>
+                     </div>
+                  </div>
+
                   <div class="pa-field">
                      <span class="pa-field__label">Title:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" id="titleInput" type="text" placeholder="e.g. Apple iPhone XR 128gb">
+                        <input class="pa-input" id="titleInput" type="text" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
+                        <div class="pa-suggested" id="suggestedHint">
+                           <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
+                        </div>
                      </div>
                   </div>
 
@@ -622,12 +678,139 @@
    <script>
       var reState = { cat: '', listingType: '', propType: '', subtype: '', bedrooms: '' };
 
+      /* ── Suggested Title ──────────────────────────────────────────── */
+      var suggestState    = { brand: '', model: '', year: '', storage: '' };
+      var userEditedTitle = false;
+
+      var catSuggestFields = {
+         'motors':      ['brand', 'model', 'year'],
+         'phones':      ['brand', 'model', 'storage'],
+         'computers':   ['brand', 'model'],
+         'electronics': ['brand', 'model'],
+         'sports':      ['brand', 'model'],
+         'clothes':     ['brand']
+      };
+
+      var catPlaceholders = {
+         'motors':      'e.g. BMW 320d 2019',
+         'phones':      'e.g. iPhone 13 Pro Max 256GB',
+         'computers':   'e.g. MacBook Pro M1 13"',
+         'electronics': 'e.g. Sony Bravia 55"',
+         'home':        'e.g. Corner sofa grey',
+         'clothes':     'e.g. Nike Air Max size 42',
+         'health':      'e.g. Perfume 100ml gift set',
+         'jobs':        'e.g. Senior Web Developer',
+         'services':    'e.g. Professional plumber',
+         'animals':     'e.g. Labrador puppy 8 weeks',
+         'sports':      'e.g. Trek mountain bike 26"',
+         'free':        'e.g. IKEA sofa free to collect'
+      };
+
+      var brandPlaceholders = {
+         'motors':      ['e.g. BMW, Toyota',       'e.g. 320d, Corolla'],
+         'phones':      ['e.g. Apple, Samsung',    'e.g. iPhone 13, Galaxy S23'],
+         'computers':   ['e.g. Apple, Lenovo',     'e.g. MacBook Pro M1 13"'],
+         'electronics': ['e.g. Sony, LG',          'e.g. Bravia XR 55"'],
+         'sports':      ['e.g. Trek, Adidas',      'e.g. mountain bike 26"'],
+         'clothes':     ['e.g. Nike, Zara',        '']
+      };
+
+      function onCatFieldsChange() {
+         var cat = reState.cat;
+         suggestState    = { brand: '', model: '', year: '', storage: '' };
+         userEditedTitle = false;
+         var brandEl  = document.getElementById('brandInput');
+         var modelEl  = document.getElementById('modelInput');
+         var yearEl   = document.getElementById('yearInput');
+         var storSel  = document.getElementById('storageSelect');
+         if (brandEl)  brandEl.value  = '';
+         if (modelEl)  modelEl.value  = '';
+         if (yearEl)   yearEl.value   = '';
+         if (storSel)  storSel.value  = '';
+         ['brandField','modelField','yearField','storageField'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+         });
+         var fields = catSuggestFields[cat] || [];
+         fields.forEach(function(f) {
+            var el = document.getElementById(f + 'Field');
+            if (el) el.style.display = 'flex';
+         });
+         var ph = brandPlaceholders[cat];
+         if (ph) {
+            if (brandEl) brandEl.placeholder = ph[0];
+            if (modelEl) modelEl.placeholder = ph[1];
+         }
+         var hint = document.getElementById('suggestedHint');
+         if (hint) hint.style.display = 'none';
+      }
+
+      function computeSuggested() {
+         var cat     = reState.cat;
+         var brand   = suggestState.brand.trim();
+         var model   = suggestState.model.trim();
+         var year    = suggestState.year.trim();
+         var storage = suggestState.storage;
+         var parts   = [];
+         if (cat === 'motors') {
+            if (brand)  parts.push(brand);
+            if (model)  parts.push(model);
+            if (year && /^\d{4}$/.test(year)) parts.push(year);
+         } else if (cat === 'phones') {
+            if (brand)   parts.push(brand);
+            if (model)   parts.push(model);
+            if (storage) parts.push(storage);
+         } else if (['computers','electronics','sports'].indexOf(cat) !== -1) {
+            if (brand) parts.push(brand);
+            if (model) parts.push(model);
+         } else if (cat === 'clothes') {
+            if (brand) parts.push(brand);
+         }
+         return parts.join(' ');
+      }
+
+      function updateSuggestedTitle() {
+         var brandEl = document.getElementById('brandInput');
+         var modelEl = document.getElementById('modelInput');
+         var yearEl  = document.getElementById('yearInput');
+         var storSel = document.getElementById('storageSelect');
+         suggestState.brand   = brandEl  ? brandEl.value  : '';
+         suggestState.model   = modelEl  ? modelEl.value  : '';
+         suggestState.year    = yearEl   ? yearEl.value   : '';
+         suggestState.storage = storSel  ? storSel.value  : '';
+         var suggested = computeSuggested();
+         var hint      = document.getElementById('suggestedHint');
+         var textEl    = document.getElementById('suggestedText');
+         if (!hint || !textEl) return;
+         if (suggested) {
+            textEl.textContent  = suggested;
+            hint.style.display  = 'block';
+         } else {
+            hint.style.display  = 'none';
+         }
+      }
+
+      function useSuggestedTitle() {
+         var suggested = computeSuggested();
+         if (!suggested) return;
+         var titleInput = document.getElementById('titleInput');
+         if (titleInput) {
+            titleInput.value = suggested;
+            userEditedTitle  = false;
+         }
+      }
+
+      function onTitleManualEdit() {
+         userEditedTitle = true;
+      }
+      /* ─────────────────────────────────────────────────────────────── */
+
       function updateRealEstateTitle() {
          var titleInput = document.getElementById('titleInput');
          if (!titleInput) return;
          if (reState.cat !== 'real-estate') {
             titleInput.removeAttribute('readonly');
-            titleInput.placeholder = 'e.g. Apple iPhone XR 128gb';
+            titleInput.placeholder = catPlaceholders[reState.cat] || 'Enter a title';
             return;
          }
          titleInput.setAttribute('readonly', true);
@@ -808,6 +991,7 @@
          var condField = document.getElementById('conditionField');
          if (subtypeField) subtypeField.style.display = 'none';
          if (condField) condField.style.display = 'flex';
+         onCatFieldsChange();
          updateRealEstateTitle();
       }
 
