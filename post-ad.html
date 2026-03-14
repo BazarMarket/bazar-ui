@@ -599,17 +599,8 @@
             'For Rent': ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Rooms / flatmates', 'Short term', 'Other']
          },
          'motors': {
-            'Cars':                          ['New cars', 'Used cars', 'Classic cars', 'Other'],
-            'Car rentals':                   [],
-            'Motorbikes':                    ['Motorbikes', 'Scooters', 'Quads & ATVs', 'Other'],
-            'Auto parts':                    ['Car batteries and accessories', 'Cars for spares', 'Car parts', 'Tyres, rims', 'Van Parts'],
-            'Auto accessories':              [],
-            'Motorbike parts, accessories':  [],
-            'Tractors, parts':               [],
-            'Trucks, truck parts':           [],
-            'Boats, sailing, marine equipment': [],
-            'Buses':                         [],
-            'Other':                         []
+            'For Sale': ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
+            'For Rent': ['Cars', 'Motorbikes', 'Boats & marine', 'Other']
          },
          'jobs': {
             'Full-time':   ['IT & Technology', 'Sales', 'Marketing', 'Finance', 'Healthcare', 'Other'],
@@ -728,7 +719,7 @@
          'Short term':           ['Villa', 'Apartment', 'Cottage', 'Room', 'Other']
       };
 
-      var conditionHiddenFor = ['Plots of land', 'Commercial property'];
+      var conditionHiddenFor = ['Plots of land', 'Commercial property', 'Auto parts', 'Accessories', 'Boats & marine'];
 
       function selectSubSub(el) {
          document.querySelectorAll('#subSubCats .cat-item').forEach(c => c.classList.remove('active'));
