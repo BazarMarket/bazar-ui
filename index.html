@@ -187,6 +187,7 @@
             } catch(e) {
                 btn.textContent = 'Notify me';
                 btn.disabled = false;
+                alert('Network error: ' + e.message);
             }
         }
     </script>
