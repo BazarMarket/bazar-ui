@@ -120,6 +120,8 @@
          color: #555;
          cursor: default;
       }
+      #bedroomsSelect.pa-empty { color: #aaa; }
+      #bedroomsSelect option   { color: #333; }
       .pa-field {
          display: flex;
          align-items: flex-start;
@@ -444,7 +446,7 @@
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select" id="bedroomsSelect" onchange="onBedroomsChange()">
+                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
                            <option value="">Select bedrooms</option>
                            <option>1</option>
                            <option>2</option>
@@ -845,7 +847,9 @@
       }
 
       function onBedroomsChange() {
-         reState.bedrooms = document.getElementById('bedroomsSelect').value;
+         var el = document.getElementById('bedroomsSelect');
+         el.value ? el.classList.remove('pa-empty') : el.classList.add('pa-empty');
+         reState.bedrooms = el.value;
          updateRealEstateTitle();
       }
 
