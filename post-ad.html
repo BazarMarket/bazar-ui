@@ -120,8 +120,32 @@
          color: #555;
          cursor: default;
       }
-      #bedroomsSelect.pa-empty { color: rgba(0,0,0,0.54); }
-      #bedroomsSelect option   { color: #333; }
+      #bedroomsSelect::placeholder { color: rgba(0,0,0,0.54); }
+      .pa-combo-wrap { position: relative; }
+      .pa-combo-list {
+         display: none;
+         position: absolute;
+         top: calc(100% + 4px);
+         left: 0; right: 0;
+         background: #fff;
+         border: 1px solid #e4e4e4;
+         border-radius: 8px;
+         box-shadow: 0 4px 16px rgba(0,0,0,.12);
+         list-style: none;
+         margin: 0; padding: 4px 0;
+         z-index: 200;
+         max-height: 240px;
+         overflow-y: auto;
+      }
+      .pa-combo-list.open { display: block; }
+      .pa-combo-list li {
+         padding: 9px 16px;
+         cursor: pointer;
+         font-size: 15px;
+         color: #333;
+      }
+      .pa-combo-list li:hover,
+      .pa-combo-list li.sel { background: #fff3e8; }
       .pa-field {
          display: flex;
          align-items: flex-start;
@@ -445,20 +469,21 @@
 
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()" onkeydown="onBedroomsKey(event)">
-                           <option value="" disabled hidden>Select bedrooms</option>
-                           <option>1</option>
-                           <option>2</option>
-                           <option>3</option>
-                           <option>4</option>
-                           <option>5</option>
-                           <option>6</option>
-                           <option>7</option>
-                           <option>8</option>
-                           <option>9</option>
-                           <option>10 and more</option>
-                        </select>
+                     <div class="pa-field__control pa-select-wrap pa-combo-wrap" id="bedroomsWrap">
+                        <input class="pa-select" id="bedroomsSelect" type="text" placeholder="Select bedrooms" autocomplete="off"
+                               oninput="onBedroomsInput()" onclick="bedroomsToggle()" onkeydown="onBedroomsKey(event)">
+                        <ul class="pa-combo-list" id="bedroomsCombo">
+                           <li onclick="bedroomsPick('1')">1</li>
+                           <li onclick="bedroomsPick('2')">2</li>
+                           <li onclick="bedroomsPick('3')">3</li>
+                           <li onclick="bedroomsPick('4')">4</li>
+                           <li onclick="bedroomsPick('5')">5</li>
+                           <li onclick="bedroomsPick('6')">6</li>
+                           <li onclick="bedroomsPick('7')">7</li>
+                           <li onclick="bedroomsPick('8')">8</li>
+                           <li onclick="bedroomsPick('9')">9</li>
+                           <li onclick="bedroomsPick('10 and more')">10 and more</li>
+                        </ul>
                      </div>
                   </div>
 
@@ -846,30 +871,50 @@
          titleInput.value = title.charAt(0).toUpperCase() + title.slice(1);
       }
 
-      function onBedroomsChange() {
+      function bedroomsSetVal(val) {
          var el = document.getElementById('bedroomsSelect');
-         el.value ? el.classList.remove('pa-empty') : el.classList.add('pa-empty');
-         reState.bedrooms = el.value;
+         if (el) el.value = val;
+         reState.bedrooms = val;
          updateRealEstateTitle();
+         var items = document.querySelectorAll('#bedroomsCombo li');
+         items.forEach(function(li) {
+            li.classList.toggle('sel', li.textContent === val);
+         });
+      }
+
+      function bedroomsToggle() {
+         var combo = document.getElementById('bedroomsCombo');
+         if (combo) combo.classList.toggle('open');
+      }
+
+      function bedroomsPick(val) {
+         bedroomsSetVal(val);
+         var combo = document.getElementById('bedroomsCombo');
+         if (combo) combo.classList.remove('open');
+      }
+
+      function onBedroomsInput() {
+         var val = document.getElementById('bedroomsSelect').value.trim();
+         var n = parseInt(val, 10);
+         if (!isNaN(n) && n >= 1 && n <= 9) bedroomsSetVal(String(n));
+         else if (val === '10') bedroomsSetVal('10 and more');
+         else if (val === '') bedroomsSetVal('');
       }
 
       function onBedroomsKey(e) {
-         var el = document.getElementById('bedroomsSelect');
-         var key = e.key;
-         if (key === 'Backspace' || key === 'Delete') {
-            e.preventDefault();
-            el.value = '';
-            onBedroomsChange();
-         } else if (key >= '1' && key <= '9') {
-            e.preventDefault();
-            el.value = key;
-            onBedroomsChange();
-         } else if (key === '0') {
-            e.preventDefault();
-            el.value = '10 and more';
-            onBedroomsChange();
+         if (e.key === 'Escape') {
+            var combo = document.getElementById('bedroomsCombo');
+            if (combo) combo.classList.remove('open');
          }
       }
+
+      document.addEventListener('click', function(e) {
+         var wrap = document.getElementById('bedroomsWrap');
+         if (wrap && !wrap.contains(e.target)) {
+            var combo = document.getElementById('bedroomsCombo');
+            if (combo) combo.classList.remove('open');
+         }
+      });
 
       function onSubtypeChange() {
          reState.subtype = document.getElementById('subtypeSelect').value;
