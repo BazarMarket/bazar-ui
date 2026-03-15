@@ -446,7 +446,7 @@
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
+                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()" onkeydown="onBedroomsKey(event)">
                            <option value="" disabled hidden>Select bedrooms</option>
                            <option>1</option>
                            <option>2</option>
@@ -851,6 +851,24 @@
          el.value ? el.classList.remove('pa-empty') : el.classList.add('pa-empty');
          reState.bedrooms = el.value;
          updateRealEstateTitle();
+      }
+
+      function onBedroomsKey(e) {
+         var el = document.getElementById('bedroomsSelect');
+         var key = e.key;
+         if (key === 'Backspace' || key === 'Delete') {
+            e.preventDefault();
+            el.value = '';
+            onBedroomsChange();
+         } else if (key >= '1' && key <= '9') {
+            e.preventDefault();
+            el.value = key;
+            onBedroomsChange();
+         } else if (key === '0') {
+            e.preventDefault();
+            el.value = '10 and more';
+            onBedroomsChange();
+         }
       }
 
       function onSubtypeChange() {
