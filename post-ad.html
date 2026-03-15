@@ -120,8 +120,7 @@
          color: #555;
          cursor: default;
       }
-      #bedroomsSelect.pa-empty { color: rgba(0,0,0,0.54); }
-      #bedroomsSelect option   { color: #333; }
+      #bedroomsSelect::placeholder { color: rgba(0,0,0,0.54); }
       .pa-field {
          display: flex;
          align-items: flex-start;
@@ -445,20 +444,20 @@
 
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
-                           <option value="" disabled hidden>Select bedrooms</option>
-                           <option>1</option>
-                           <option>2</option>
-                           <option>3</option>
-                           <option>4</option>
-                           <option>5</option>
-                           <option>6</option>
-                           <option>7</option>
-                           <option>8</option>
-                           <option>9</option>
-                           <option>10 and more</option>
-                        </select>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="bedroomsSelect" type="text" list="bedroomsList" placeholder="Select bedrooms" oninput="onBedroomsChange()" autocomplete="off">
+                        <datalist id="bedroomsList">
+                           <option value="1">
+                           <option value="2">
+                           <option value="3">
+                           <option value="4">
+                           <option value="5">
+                           <option value="6">
+                           <option value="7">
+                           <option value="8">
+                           <option value="9">
+                           <option value="10 and more">
+                        </datalist>
                      </div>
                   </div>
 
@@ -847,9 +846,13 @@
       }
 
       function onBedroomsChange() {
-         var el = document.getElementById('bedroomsSelect');
-         el.value ? el.classList.remove('pa-empty') : el.classList.add('pa-empty');
-         reState.bedrooms = el.value;
+         var val = document.getElementById('bedroomsSelect').value.trim();
+         if (val === '10 and more') {
+            reState.bedrooms = '10 and more';
+         } else {
+            var n = parseInt(val, 10);
+            reState.bedrooms = (!isNaN(n) && n >= 1 && n <= 10) ? String(n) : '';
+         }
          updateRealEstateTitle();
       }
 
