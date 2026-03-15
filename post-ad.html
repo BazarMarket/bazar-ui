@@ -115,8 +115,10 @@
       .pa-form .pa-section {
          padding-left: 16px;
       }
-      #titleInput.pa-title-auto {
-         color: #aaa;
+      #titleInput[readonly] {
+         background: #f5f5f5;
+         color: #555;
+         cursor: default;
       }
       .pa-field {
          display: flex;
@@ -800,8 +802,6 @@
 
       function onTitleManualEdit() {
          userEditedTitle = true;
-         var titleInput = document.getElementById('titleInput');
-         if (titleInput) titleInput.classList.remove('pa-title-auto');
       }
       /* ─────────────────────────────────────────────────────────────── */
 
@@ -809,12 +809,12 @@
          var titleInput = document.getElementById('titleInput');
          if (!titleInput) return;
          if (reState.cat !== 'real-estate') {
-            titleInput.classList.remove('pa-title-auto');
+            titleInput.removeAttribute('readonly');
             titleInput.placeholder = catPlaceholders[reState.cat] || 'Enter a title';
             return;
          }
+         titleInput.setAttribute('readonly', true);
          titleInput.placeholder = '';
-         if (userEditedTitle) return;
          var propMap = {
             'Houses':              'house',
             'Apartments & flats':  'apartment',
@@ -842,7 +842,6 @@
          parts.push(listingStr);
          var title = parts.join(' ');
          titleInput.value = title.charAt(0).toUpperCase() + title.slice(1);
-         titleInput.classList.add('pa-title-auto');
       }
 
       function onBedroomsChange() {
