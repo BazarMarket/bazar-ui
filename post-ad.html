@@ -443,20 +443,20 @@
 
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select" id="bedroomsSelect" onchange="onBedroomsChange()">
-                           <option value="">Select bedrooms</option>
-                           <option>1</option>
-                           <option>2</option>
-                           <option>3</option>
-                           <option>4</option>
-                           <option>5</option>
-                           <option>6</option>
-                           <option>7</option>
-                           <option>8</option>
-                           <option>9</option>
-                           <option>10 and more</option>
-                        </select>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="bedroomsSelect" type="text" list="bedroomsList" placeholder="Select bedrooms" oninput="onBedroomsChange()" autocomplete="off">
+                        <datalist id="bedroomsList">
+                           <option value="1">
+                           <option value="2">
+                           <option value="3">
+                           <option value="4">
+                           <option value="5">
+                           <option value="6">
+                           <option value="7">
+                           <option value="8">
+                           <option value="9">
+                           <option value="10">
+                        </datalist>
                      </div>
                   </div>
 
@@ -829,8 +829,7 @@
          var beds = reState.bedrooms;
          var sub = reState.subtype && reState.subtype !== 'Other' ? reState.subtype.toLowerCase() : '';
          var prop = propMap[reState.propType] || (reState.propType ? reState.propType.toLowerCase() : '');
-         if (beds && beds !== '10 and more') parts.push(beds + ' bedroom');
-         else if (beds === '10 and more') parts.push('10+ bedroom');
+         if (beds) parts.push(beds + ' bedroom');
          if (sub === 'studio' || sub === 'penthouse') {
             parts.push(sub);
             if (prop) parts.push(prop);
@@ -845,7 +844,9 @@
       }
 
       function onBedroomsChange() {
-         reState.bedrooms = document.getElementById('bedroomsSelect').value;
+         var val = document.getElementById('bedroomsSelect').value.trim();
+         var n = parseInt(val, 10);
+         reState.bedrooms = (!isNaN(n) && n >= 1) ? String(n) : '';
          updateRealEstateTitle();
       }
 
