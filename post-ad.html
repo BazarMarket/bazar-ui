@@ -230,6 +230,35 @@
          gap: 8px 16px;
          padding: 4px 0;
       }
+      .pa-area-wrap {
+         display: flex;
+         align-items: stretch;
+         border: 1px solid #e4e4e4;
+         border-radius: 8px;
+         overflow: hidden;
+         box-shadow: inset 0 2px 4px rgba(0,0,0,.06);
+         background: #fff;
+      }
+      .pa-area-wrap .pa-input {
+         border: none;
+         box-shadow: none;
+         border-radius: 0;
+         flex: 1;
+      }
+      .pa-area-unit {
+         padding: 0 14px;
+         font-family: "Poppins", sans-serif;
+         font-size: 14px;
+         color: #666;
+         border-left: 1px solid #e4e4e4;
+         display: flex;
+         align-items: center;
+         background: #fafafa;
+      }
+      .pa-field__label--wide {
+         min-width: 162px;
+         max-width: 162px;
+      }
       .pa-photo-grid {
          display: flex;
          flex-wrap: wrap;
@@ -439,7 +468,7 @@
                <div class="pa-section">
 
                   <div class="pa-field" id="subtypeField" style="display:none">
-                     <span class="pa-field__label">Property type:<span>*</span></span>
+                     <span class="pa-field__label">Type:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select" id="subtypeSelect" onchange="onSubtypeChange()">
                            <option value="">Select type</option>
@@ -447,11 +476,18 @@
                      </div>
                   </div>
 
+                  <div class="pa-field" id="rePostalField" style="display:none">
+                     <span class="pa-field__label">Postal code:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="">
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
-                           <option value="" disabled hidden>Select bedrooms</option>
+                           <option value="" disabled hidden>Choose one...</option>
                            <option>1</option>
                            <option>2</option>
                            <option>3</option>
@@ -462,6 +498,72 @@
                            <option>8</option>
                            <option>9</option>
                            <option>10 and more</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="bathroomsField" style="display:none">
+                     <span class="pa-field__label">Bathrooms:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>1</option>
+                           <option>2</option>
+                           <option>3</option>
+                           <option>4</option>
+                           <option>5 and more</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="reFloorField" style="display:none">
+                     <span class="pa-field__label">Floor:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>Ground floor</option>
+                           <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                           <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                           <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+                           <option>16 and higher</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="parkingField" style="display:none">
+                     <span class="pa-field__label">Parking:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>Yes</option>
+                           <option>No</option>
+                           <option>Covered parking</option>
+                           <option>Underground parking</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="furnishingField" style="display:none">
+                     <span class="pa-field__label">Furnishing:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>Furnished</option>
+                           <option>Semi-furnished</option>
+                           <option>Unfurnished</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="airConField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wide">Air conditioning:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>Yes</option>
+                           <option>No</option>
+                           <option>Central A/C</option>
+                           <option>Split A/C</option>
                         </select>
                      </div>
                   </div>
@@ -532,9 +634,87 @@
                      </div>
                   </div>
 
+                  <div class="pa-field" id="constructionYearField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wide">Construction year:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>2025</option><option>2024</option><option>2023</option><option>2022</option>
+                           <option>2021</option><option>2020</option><option>2019</option><option>2018</option>
+                           <option>2017</option><option>2016</option><option>2015</option><option>2014</option>
+                           <option>2013</option><option>2012</option><option>2011</option><option>2010</option>
+                           <option>2005</option><option>2000</option><option>1995</option><option>1990</option>
+                           <option>1985</option><option>1980</option><option>Before 1980</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="propertyAreaField" style="display:none">
+                     <span class="pa-field__label">Property area:<span>*</span></span>
+                     <div class="pa-field__control">
+                        <div class="pa-area-wrap">
+                           <input class="pa-input" type="text" inputmode="numeric" placeholder="">
+                           <span class="pa-area-unit">m²</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="includedField" style="display:none">
+                     <span class="pa-field__label">Included:</span>
+                     <div class="pa-field__control">
+                        <div class="pa-checkboxes">
+                           <label><input type="checkbox"> Pool</label>
+                           <label><input type="checkbox"> Garden</label>
+                           <label><input type="checkbox"> Elevator</label>
+                           <label><input type="checkbox"> Alarm</label>
+                           <label><input type="checkbox"> Fireplace</label>
+                           <label><input type="checkbox"> Balcony</label>
+                           <label><input type="checkbox"> Playroom</label>
+                           <label><input type="checkbox"> Attic/Loft</label>
+                           <label><input type="checkbox"> Storage room</label>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="onlineViewingField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wide">Online viewing:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>Yes</option>
+                           <option>No</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="energyField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wide">Energy Efficiency:<span>*</span></span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>A+</option><option>A</option><option>B</option><option>C</option>
+                           <option>D</option><option>E</option><option>F</option><option>G</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="regBlockField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wide">Registration block:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="">
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="regNumField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wide">Registration number:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" type="text" placeholder="">
+                     </div>
+                  </div>
+
                   <div class="pa-section__divider"></div>
 
-                  <div class="pa-field">
+                  <div class="pa-field" id="deliveryField">
                      <span class="pa-field__label">Delivery:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select">
@@ -749,6 +929,15 @@
          }
          var hint = document.getElementById('suggestedHint');
          if (hint) hint.style.display = 'none';
+
+         var isRE = cat === 'real-estate';
+         var reOnlyFields = ['rePostalField','bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','propertyAreaField','includedField','onlineViewingField','energyField','regBlockField','regNumField'];
+         reOnlyFields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = isRE ? 'flex' : 'none';
+         });
+         var deliveryEl = document.getElementById('deliveryField');
+         if (deliveryEl) deliveryEl.style.display = isRE ? 'none' : 'flex';
       }
 
       function computeSuggested() {
