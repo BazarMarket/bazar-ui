@@ -164,6 +164,10 @@
       .pa-suggested__use:hover { text-decoration: underline; }
       .pa-field__control {
          flex: 1;
+         max-width: 500px;
+      }
+      .pa-field__control--wide {
+         max-width: 680px;
       }
       .pa-input,
       .pa-select {
@@ -500,7 +504,7 @@
 
                   <div class="pa-field">
                      <span class="pa-field__label">Title:<span>*</span></span>
-                     <div class="pa-field__control">
+                     <div class="pa-field__control pa-field__control--wide">
                         <input class="pa-input" id="titleInput" type="text" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
                         <div class="pa-suggested" id="suggestedHint">
                            <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
