@@ -199,6 +199,21 @@
          gap: 8px;
          margin: 0 0 4px;
       }
+      .po-dur-cell {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         gap: 3px;
+      }
+      .po-dur-label {
+         font-family: 'Poppins', sans-serif;
+         font-size: 9px;
+         font-weight: 600;
+         color: #3ecb60;
+         text-align: center;
+         white-space: nowrap;
+         letter-spacing: .2px;
+      }
       .po-duration-btn {
          font-family: 'Poppins', sans-serif;
          font-size: 12px;
@@ -212,6 +227,11 @@
          transition: all .15s;
          white-space: nowrap;
          text-align: center;
+         width: 100%;
+      }
+      .po-duration-btn--best {
+         border-color: #d0e8d0;
+         background: #f4fbf4;
       }
       .po-duration-btn--pro.active  { border-color: #ff9138; background: #fff6ee; color: #f07d1f; }
       .po-duration-btn--vip.active  { border-color: #d4a017; background: #fef3c7; color: #92600a; }
@@ -382,12 +402,18 @@
                   <p class="po-plan-tagline">Most popular with sellers</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
-                     <button class="po-duration-btn po-duration-btn--pro active" onclick="setDuration('pro',3,'3.00',this)">3 days</button>
-                     <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',5,'5.00',this)">5 days</button>
-                     <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',7,'7.00',this)">7 days</button>
-                     <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',10,'10.00',this)">10 days</button>
-                     <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',14,'14.00',this)">14 days</button>
-                     <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',30,'30.00',this)">30 days</button>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro active" onclick="setDuration('pro',3,'3.00',this)">3 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',5,'4.00',this)">5 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',7,'5.00',this)">7 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',10,'6.00',this)">10 days</button></div>
+                     <div class="po-dur-cell">
+                        <button class="po-duration-btn po-duration-btn--pro po-duration-btn--best" onclick="setDuration('pro',14,'7.00',this)">14 days</button>
+                        <span class="po-dur-label">Best value</span>
+                     </div>
+                     <div class="po-dur-cell">
+                        <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',30,'10.00',this)">30 days</button>
+                        <span class="po-dur-label">Save 60%</span>
+                     </div>
                   </div>
                   <hr class="po-divider">
                   <ul class="po-features">
@@ -415,12 +441,18 @@
                   <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
-                     <button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',3,'6.00',this)">3 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',5,'10.00',this)">5 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',7,'14.00',this)">7 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',10,'20.00',this)">10 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',14,'28.00',this)">14 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',30,'60.00',this)">30 days</button>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',3,'6.00',this)">3 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',5,'8.00',this)">5 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',7,'10.00',this)">7 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',10,'12.00',this)">10 days</button></div>
+                     <div class="po-dur-cell">
+                        <button class="po-duration-btn po-duration-btn--vip po-duration-btn--best" onclick="setDuration('vip',14,'14.00',this)">14 days</button>
+                        <span class="po-dur-label">Best value</span>
+                     </div>
+                     <div class="po-dur-cell">
+                        <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',30,'20.00',this)">30 days</button>
+                        <span class="po-dur-label">Save 60%</span>
+                     </div>
                   </div>
                   <hr class="po-divider">
                   <ul class="po-features">
