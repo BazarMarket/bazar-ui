@@ -3726,7 +3726,7 @@ p {
   line-height: 1;
 }
 .stiker_top {
-  background: #7c3aed;
+  background: #ff9138;
 }
 .stiker_top::before {
   content: "★";
