@@ -4297,24 +4297,17 @@ p {
 .rent-toggle {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 10px 0 14px;
-}
-.rent-toggle__label {
-  font-family: "Poppins", sans-serif;
-  font-size: 13px;
-  color: #999;
-  font-weight: 500;
+  margin: 6px 0 12px;
 }
 .rent-toggle__btns {
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 .rent-toggle__btn {
   font-family: "Poppins", sans-serif;
   font-size: 13px;
-  font-weight: 500;
-  padding: 4px 14px;
+  font-weight: 600;
+  padding: 6px 18px;
   border-radius: 20px;
   border: 1.5px solid #e4e4e4;
   background: #fff;
@@ -4323,9 +4316,10 @@ p {
   transition: all 0.15s;
 }
 .rent-toggle__btn.active {
-  background: #ff9138;
-  border-color: #ff9138;
+  background: #f07d1f;
+  border-color: #f07d1f;
   color: #fff;
+  box-shadow: 0 2px 8px rgba(240,125,31,0.3);
 }
 .rent-toggle__btn:hover:not(.active) {
   border-color: #ff9138;
