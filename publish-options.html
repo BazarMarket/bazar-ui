@@ -60,7 +60,7 @@
          border-color: #ff9138;
          box-shadow: 0 4px 24px rgba(255,145,56,.15);
       }
-      .po-card--vip {
+      .po-card--premium {
          border-color: #e8c94a;
          box-shadow: 0 4px 24px rgba(232,201,74,.15);
       }
@@ -77,7 +77,7 @@
       }
       .po-badge--free  { background: #f0f0f0; color: #888; }
       .po-badge--top   { background: #fff0e4; color: #ff9138; }
-      .po-badge--vip   { background: #fdf7da; color: #b8901c; }
+      .po-badge--premium   { background: #fdf7da; color: #b8901c; }
       .po-recommended {
          position: absolute;
          top: -12px;
@@ -101,7 +101,7 @@
          color: #1a1a1a;
          margin: 0 0 4px;
       }
-      .po-plan-name--vip { color: #b8901c; }
+      .po-plan-name--premium { color: #b8901c; }
       .po-plan-name--top { color: #ff9138; }
       .po-price {
          font-family: 'Poppins', sans-serif;
@@ -164,7 +164,7 @@
       }
       .po-card--free  .po-features li::before { background-color: #f0f0f0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpolyline points='2,5 4,7.5 8,3' fill='none' stroke='%23aaa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
       .po-card--top   .po-features li::before { background-color: #fff0e4; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpolyline points='2,5 4,7.5 8,3' fill='none' stroke='%23ff9138' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
-      .po-card--vip   .po-features li::before { background-color: #fdf7da; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpolyline points='2,5 4,7.5 8,3' fill='none' stroke='%23b8901c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+      .po-card--premium   .po-features li::before { background-color: #fdf7da; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpolyline points='2,5 4,7.5 8,3' fill='none' stroke='%23b8901c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
       .po-features li.po-feat--dim { color: #bbb; }
       .po-features li.po-feat--dim::before { opacity: .4; }
       .po-btn {
@@ -186,8 +186,8 @@
       .po-btn--free:hover  { background: #e8e8e8; }
       .po-btn--top   { background: #ff9138; color: #fff; }
       .po-btn--top:hover   { background: #f07d1f; }
-      .po-btn--vip   { background: #e8c94a; color: #6b4e00; }
-      .po-btn--vip:hover   { background: #d9b93a; }
+      .po-btn--premium   { background: #e8c94a; color: #6b4e00; }
+      .po-btn--premium:hover   { background: #d9b93a; }
       .po-position {
          font-family: 'Poppins', sans-serif;
          font-size: 12px;
@@ -213,7 +213,7 @@
          transition: all .15s;
       }
       .po-duration-btn.active { border-color: #ff9138; background: #fff6ee; color: #ff9138; }
-      .po-duration-btn--vip.active { border-color: #e8c94a; background: #fdf7da; color: #b8901c; }
+      .po-duration-btn--premium.active { border-color: #e8c94a; background: #fdf7da; color: #b8901c; }
       @media (max-width: 680px) {
          .po-cards { grid-template-columns: 1fr; }
          .po-card--top { order: -1; }
@@ -288,9 +288,9 @@
 
             <div class="po-cards">
 
-               <!-- Standard -->
+               <!-- Free -->
                <div class="po-card po-card--free">
-                  <span class="po-badge po-badge--free">Standard</span>
+                  <span class="po-badge po-badge--free">Free</span>
                   <p class="po-plan-name">Free listing</p>
                   <p class="po-position">Shown among all ads in category</p>
                   <div class="po-price"><span class="po-price__free">Free</span></div>
@@ -333,10 +333,10 @@
                   <button class="po-btn po-btn--top" id="topBtn" onclick="publishAd('top')">Publish Top for £4.99</button>
                </div>
 
-               <!-- VIP -->
-               <div class="po-card po-card--vip">
-                  <span class="po-badge po-badge--vip">VIP</span>
-                  <p class="po-plan-name po-plan-name--vip">VIP listing</p>
+               <!-- Premium -->
+               <div class="po-card po-card--premium">
+                  <span class="po-badge po-badge--premium">Premium</span>
+                  <p class="po-plan-name po-plan-name--premium">Premium listing</p>
                   <p class="po-position">Position 1 in category — always</p>
                   <div class="po-price">
                      <span class="po-price__currency">£</span>
@@ -344,19 +344,19 @@
                   </div>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
-                     <button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',7,'12.99',this)">7 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',14,'22.99',this)">14 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',30,'38.99',this)">30 days</button>
+                     <button class="po-duration-btn po-duration-btn--premium active" onclick="setDuration('vip',7,'12.99',this)">7 days</button>
+                     <button class="po-duration-btn po-duration-btn--premium" onclick="setDuration('vip',14,'22.99',this)">14 days</button>
+                     <button class="po-duration-btn po-duration-btn--premium" onclick="setDuration('vip',30,'38.99',this)">30 days</button>
                   </div>
                   <hr class="po-divider">
                   <ul class="po-features">
                      <li>Top #1 position in category</li>
                      <li>Unlimited photos</li>
-                     <li>Gold <b>VIP</b> badge on listing</li>
+                     <li>Gold <b>Premium</b> badge on listing</li>
                      <li>Featured on homepage</li>
                      <li>Priority in search &amp; filters</li>
                   </ul>
-                  <button class="po-btn po-btn--vip" id="vipBtn" onclick="publishAd('vip')">Publish VIP for £12.99</button>
+                  <button class="po-btn po-btn--premium" id="vipBtn" onclick="publishAd('vip')">Publish Premium for £12.99</button>
                </div>
 
             </div>
@@ -376,7 +376,7 @@
             document.getElementById('topBtn').textContent = 'Publish Top for \u00A3' + price;
          } else {
             document.getElementById('vipPrice').textContent = price;
-            document.getElementById('vipBtn').textContent = 'Publish VIP for \u00A3' + price;
+            document.getElementById('vipBtn').textContent = 'Publish Premium for \u00A3' + price;
          }
       }
 
