@@ -410,14 +410,17 @@
                   <p class="po-position">Position 1 in category — always</p>
                   <div class="po-price">
                      <span class="po-price__currency">£</span>
-                     <span id="vipPrice">12.99</span>
+                     <span id="vipPrice">6.00</span>
                   </div>
                   <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
-                     <button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',7,'12.99',this)">7 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',14,'22.99',this)">14 days</button>
-                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',30,'38.99',this)">30 days</button>
+                     <button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',3,'6.00',this)">3 days</button>
+                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',6,'12.00',this)">6 days</button>
+                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',10,'20.00',this)">10 days</button>
+                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',15,'30.00',this)">15 days</button>
+                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',20,'40.00',this)">20 days</button>
+                     <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',30,'60.00',this)">30 days</button>
                   </div>
                   <hr class="po-divider">
                   <ul class="po-features">
@@ -427,7 +430,7 @@
                      <li>Featured on homepage</li>
                      <li>Priority in search &amp; filters</li>
                   </ul>
-                  <button class="po-btn po-btn--vip" id="vipBtn" onclick="publishAd('vip')">Publish VIP for £12.99</button>
+                  <button class="po-btn po-btn--vip" id="vipBtn" onclick="publishAd('vip')">Publish VIP for £6.00</button>
                </div>
 
             </div>
@@ -447,7 +450,7 @@
             document.getElementById('proBtn').textContent = 'Publish PRO for \u00A3' + price;
          } else {
             document.getElementById('vipPrice').textContent = price;
-            document.getElementById('vipBtn').textContent = 'Publish VIP for \u00A3' + price;
+            document.getElementById('vipBtn').textContent = 'Publish VIP for \u00A3' + parseFloat(price).toFixed(2);
          }
       }
 
