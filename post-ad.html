@@ -467,6 +467,16 @@
                <!-- Основные данные -->
                <div class="pa-section">
 
+                  <div class="pa-field">
+                     <span class="pa-field__label">Ad Title:<span>*</span></span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="titleInput" type="text" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
+                        <div class="pa-suggested" id="suggestedHint">
+                           <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="subtypeField" style="display:none">
                      <span class="pa-field__label">Type:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
@@ -601,16 +611,6 @@
                            <option>512GB</option>
                            <option>1TB</option>
                         </select>
-                     </div>
-                  </div>
-
-                  <div class="pa-field">
-                     <span class="pa-field__label">Title:<span>*</span></span>
-                     <div class="pa-field__control">
-                        <input class="pa-input" id="titleInput" type="text" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
-                        <div class="pa-suggested" id="suggestedHint">
-                           <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
-                        </div>
                      </div>
                   </div>
 
