@@ -259,6 +259,10 @@
          min-width: 162px;
          max-width: 162px;
       }
+      .pa-field__label--wrap {
+         white-space: normal;
+         line-height: 1.3;
+      }
       .pa-photo-grid {
          display: flex;
          flex-wrap: wrap;
@@ -560,7 +564,7 @@
                   </div>
 
                   <div class="pa-field" id="airConField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wide">Air conditioning:</span>
+                     <span class="pa-field__label pa-field__label--wrap">Air conditioning:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
@@ -629,7 +633,7 @@
                   </div>
 
                   <div class="pa-field" id="constructionYearField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wide">Construction year:</span>
+                     <span class="pa-field__label pa-field__label--wrap">Construction year:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
