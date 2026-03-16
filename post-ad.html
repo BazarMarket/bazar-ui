@@ -1181,14 +1181,9 @@
          var keys = Object.keys(data);
          subSubCats.innerHTML = '';
          if (keys.length) {
-            subCats.innerHTML = keys.map(function(k, i) {
-               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
+            subCats.innerHTML = keys.map(function(k) {
+               return '<div class="cat-item" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
             }).join('');
-            var firstSub = subCats.querySelector('.cat-item.active');
-            if (firstSub) {
-               reState.listingType = keys[0];
-               fillSubSub(cat, keys[0]);
-            }
          } else {
             subCats.innerHTML = '';
          }
