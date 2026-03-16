@@ -214,6 +214,11 @@
          white-space: nowrap;
          letter-spacing: .2px;
       }
+      .po-dur-label--save {
+         font-size: 8px;
+         font-weight: 500;
+         color: #a8d5b5;
+      }
       .po-duration-btn {
          font-family: 'Poppins', sans-serif;
          font-size: 12px;
@@ -397,22 +402,22 @@
                   <p class="po-position">Positions 1–5 in category</p>
                   <div class="po-price">
                      <span class="po-price__currency">£</span>
-                     <span id="proPrice">3.00</span>
+                     <span id="proPrice">7.00</span>
                   </div>
                   <p class="po-plan-tagline">Most popular with sellers</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
-                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro active" onclick="setDuration('pro',3,'3.00',this)">3 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',3,'3.00',this)">3 days</button></div>
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',5,'4.00',this)">5 days</button></div>
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',7,'5.00',this)">7 days</button></div>
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',10,'6.00',this)">10 days</button></div>
                      <div class="po-dur-cell">
-                        <button class="po-duration-btn po-duration-btn--pro po-duration-btn--best" onclick="setDuration('pro',14,'7.00',this)">14 days</button>
+                        <button class="po-duration-btn po-duration-btn--pro po-duration-btn--best active" onclick="setDuration('pro',14,'7.00',this)">14 days</button>
                         <span class="po-dur-label">Best value</span>
                      </div>
                      <div class="po-dur-cell">
                         <button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',30,'10.00',this)">30 days</button>
-                        <span class="po-dur-label">Save 60%</span>
+                        <span class="po-dur-label po-dur-label--save">Save 60%</span>
                      </div>
                   </div>
                   <hr class="po-divider">
@@ -423,7 +428,7 @@
                      <li>Highlighted in search results</li>
                      <li>Contact form &amp; phone visible</li>
                   </ul>
-                  <button class="po-btn po-btn--pro" id="proBtn" onclick="publishAd('pro')">Publish PRO for £3.00</button>
+                  <button class="po-btn po-btn--pro" id="proBtn" onclick="publishAd('pro')">Publish PRO for £7.00</button>
                </div>
 
                <!-- VIP -->
@@ -436,22 +441,22 @@
                   <p class="po-position">Position 1 in category — always</p>
                   <div class="po-price">
                      <span class="po-price__currency">£</span>
-                     <span id="vipPrice">6.00</span>
+                     <span id="vipPrice">14.00</span>
                   </div>
                   <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
-                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',3,'6.00',this)">3 days</button></div>
+                     <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',3,'6.00',this)">3 days</button></div>
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',5,'8.00',this)">5 days</button></div>
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',7,'10.00',this)">7 days</button></div>
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',10,'12.00',this)">10 days</button></div>
                      <div class="po-dur-cell">
-                        <button class="po-duration-btn po-duration-btn--vip po-duration-btn--best" onclick="setDuration('vip',14,'14.00',this)">14 days</button>
+                        <button class="po-duration-btn po-duration-btn--vip po-duration-btn--best active" onclick="setDuration('vip',14,'14.00',this)">14 days</button>
                         <span class="po-dur-label">Best value</span>
                      </div>
                      <div class="po-dur-cell">
                         <button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',30,'20.00',this)">30 days</button>
-                        <span class="po-dur-label">Save 60%</span>
+                        <span class="po-dur-label po-dur-label--save">Save 60%</span>
                      </div>
                   </div>
                   <hr class="po-divider">
@@ -462,7 +467,7 @@
                      <li>Featured on homepage</li>
                      <li>Priority in search &amp; filters</li>
                   </ul>
-                  <button class="po-btn po-btn--vip" id="vipBtn" onclick="publishAd('vip')">Publish VIP for £6.00</button>
+                  <button class="po-btn po-btn--vip" id="vipBtn" onclick="publishAd('vip')">Publish VIP for £14.00</button>
                </div>
 
             </div>
