@@ -241,6 +241,49 @@
          gap: 8px 16px;
          padding: 4px 0;
       }
+      .pa-feat-top { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px 16px; padding: 4px 0; }
+      .pa-feat-groups { display: none; margin-top: 12px; }
+      .pa-feat-groups.open { display: block; }
+      .pa-feat-group { margin-bottom: 10px; }
+      .pa-feat-group__title {
+         font-family: 'Poppins', sans-serif;
+         font-size: 11px;
+         font-weight: 600;
+         text-transform: uppercase;
+         letter-spacing: .4px;
+         color: #bbb;
+         margin: 0 0 6px;
+      }
+      .pa-feat-group__items { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px 16px; }
+      .pa-feat-more {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+         margin-top: 10px;
+         font-family: 'Poppins', sans-serif;
+         font-size: 12px;
+         font-weight: 500;
+         color: #ff9138;
+         cursor: pointer;
+         background: none;
+         border: none;
+         padding: 0;
+      }
+      .pa-feat-more:hover { text-decoration: underline; }
+      .pa-feat-more svg { transition: transform .2s; }
+      .pa-feat-more.open svg { transform: rotate(180deg); }
+      .pa-checkboxes label,
+      .pa-feat-top label,
+      .pa-feat-group__items label {
+         display: flex;
+         align-items: center;
+         gap: 7px;
+         font-family: 'Poppins', sans-serif;
+         font-size: 13px;
+         color: #444;
+         cursor: pointer;
+         white-space: nowrap;
+      }
       .pa-area-wrap {
          display: flex;
          align-items: stretch;
@@ -709,41 +752,74 @@
                   <div class="pa-field" id="includedField" style="display:none">
                      <span class="pa-field__label">Included:</span>
                      <div class="pa-field__control">
-                        <div class="pa-checkboxes">
-                           <label><input type="checkbox"> Balcony</label>
-                           <label><input type="checkbox"> Terrace</label>
-                           <label><input type="checkbox"> Veranda</label>
-                           <label><input type="checkbox"> Roof garden</label>
-                           <label><input type="checkbox"> Garden</label>
-                           <label><input type="checkbox"> Swimming pool</label>
-                           <label><input type="checkbox"> Sauna</label>
-                           <label><input type="checkbox"> Jacuzzi</label>
-                           <label><input type="checkbox"> Gym</label>
-                           <label><input type="checkbox"> Tennis court</label>
-                           <label><input type="checkbox"> Playground</label>
-                           <label><input type="checkbox"> Elevator</label>
-                           <label><input type="checkbox"> Storage room</label>
-                           <label><input type="checkbox"> Attic/Loft</label>
+                        <div class="pa-feat-top">
                            <label><input type="checkbox"> Parking</label>
-                           <label><input type="checkbox"> Double glazing</label>
-                           <label><input type="checkbox"> Heating floor</label>
-                           <label><input type="checkbox"> Central heating</label>
-                           <label><input type="checkbox"> Fireplace</label>
+                           <label><input type="checkbox"> Terrace</label>
                            <label><input type="checkbox"> Air conditioning</label>
-                           <label><input type="checkbox"> Smart home</label>
+                           <label><input type="checkbox"> Garden</label>
+                           <label><input type="checkbox"> Elevator</label>
+                           <label><input type="checkbox"> Central heating</label>
+                           <label><input type="checkbox"> Balcony</label>
+                           <label><input type="checkbox"> Swimming pool</label>
                            <label><input type="checkbox"> Security system</label>
-                           <label><input type="checkbox"> Solar panel</label>
-                           <label><input type="checkbox"> Wi-Fi</label>
-                           <label><input type="checkbox"> Built-in kitchen</label>
-                           <label><input type="checkbox"> Dishwasher</label>
-                           <label><input type="checkbox"> Washing machine</label>
-                           <label><input type="checkbox"> Fridge</label>
-                           <label><input type="checkbox"> TV</label>
-                           <label><input type="checkbox"> Home cinema</label>
-                           <label><input type="checkbox"> BBQ</label>
-                           <label><input type="checkbox"> Shower cabin</label>
-                           <label><input type="checkbox"> Bath</label>
                         </div>
+
+                        <div class="pa-feat-groups" id="featGroups">
+                           <div class="pa-feat-group">
+                              <p class="pa-feat-group__title">Outdoor</p>
+                              <div class="pa-feat-group__items">
+                                 <label><input type="checkbox"> Roof garden</label>
+                                 <label><input type="checkbox"> Veranda</label>
+                                 <label><input type="checkbox"> BBQ</label>
+                                 <label><input type="checkbox"> Playground</label>
+                              </div>
+                           </div>
+                           <div class="pa-feat-group">
+                              <p class="pa-feat-group__title">Building</p>
+                              <div class="pa-feat-group__items">
+                                 <label><input type="checkbox"> Storage room</label>
+                                 <label><input type="checkbox"> Attic/Loft</label>
+                                 <label><input type="checkbox"> Double glazing</label>
+                              </div>
+                           </div>
+                           <div class="pa-feat-group">
+                              <p class="pa-feat-group__title">Comfort</p>
+                              <div class="pa-feat-group__items">
+                                 <label><input type="checkbox"> Fireplace</label>
+                                 <label><input type="checkbox"> Heating floor</label>
+                                 <label><input type="checkbox"> Smart home</label>
+                                 <label><input type="checkbox"> Wi-Fi</label>
+                              </div>
+                           </div>
+                           <div class="pa-feat-group">
+                              <p class="pa-feat-group__title">Interior</p>
+                              <div class="pa-feat-group__items">
+                                 <label><input type="checkbox"> Built-in kitchen</label>
+                                 <label><input type="checkbox"> Dishwasher</label>
+                                 <label><input type="checkbox"> Washing machine</label>
+                                 <label><input type="checkbox"> Fridge</label>
+                                 <label><input type="checkbox"> TV</label>
+                                 <label><input type="checkbox"> Shower cabin</label>
+                                 <label><input type="checkbox"> Bath</label>
+                              </div>
+                           </div>
+                           <div class="pa-feat-group">
+                              <p class="pa-feat-group__title">Lifestyle</p>
+                              <div class="pa-feat-group__items">
+                                 <label><input type="checkbox"> Sauna</label>
+                                 <label><input type="checkbox"> Jacuzzi</label>
+                                 <label><input type="checkbox"> Gym</label>
+                                 <label><input type="checkbox"> Tennis court</label>
+                                 <label><input type="checkbox"> Home cinema</label>
+                                 <label><input type="checkbox"> Solar panel</label>
+                              </div>
+                           </div>
+                        </div>
+
+                        <button type="button" class="pa-feat-more" id="featMoreBtn" onclick="toggleFeatMore()">
+                           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
+                           Show more features
+                        </button>
                      </div>
                   </div>
 
@@ -1339,6 +1415,14 @@
          var diff = formatted.length - input.value.length;
          input.value = formatted;
          input.setSelectionRange(pos + diff, pos + diff);
+      }
+
+      function toggleFeatMore() {
+         var groups = document.getElementById('featGroups');
+         var btn = document.getElementById('featMoreBtn');
+         var open = groups.classList.toggle('open');
+         btn.classList.toggle('open', open);
+         btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="' + (open ? '2,8 6,4 10,8' : '2,4 6,8 10,4') + '"/></svg> ' + (open ? 'Show less' : 'Show more features');
       }
 
       function onPhotosSelected(source) {
