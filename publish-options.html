@@ -55,7 +55,7 @@
       }
       .po-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.1); }
       .po-card--pro  { border: 1.5px solid #ff9138; box-shadow: 0 4px 24px rgba(255,145,56,.15); }
-      .po-card--vip  { border: 2.5px solid #d4a017; box-shadow: 0 6px 28px rgba(212,160,23,.22); }
+      .po-card--vip  { border: 2.5px solid #d4a017; box-shadow: 0 8px 24px rgba(212,163,0,.25); }
 
       /* ── Plan label badge (top of card) ── */
       .po-plan-badge {
@@ -171,6 +171,14 @@
       }
       .po-price__currency { font-size: 18px; font-weight: 600; color: #888; }
       .po-price__free     { font-size: 22px; color: #3ecb60; }
+      .po-plan-tagline {
+         font-family: 'Poppins', sans-serif;
+         font-size: 12px;
+         font-weight: 600;
+         color: #ff9138;
+         margin: -6px 0 10px;
+      }
+      .po-plan-tagline--vip { color: #b8880e; }
       .po-price__note {
          font-family: 'Poppins', sans-serif;
          font-size: 12px;
@@ -261,8 +269,8 @@
       .po-btn--free:hover { background: #e8e8e8; color: #888; }
       .po-btn--pro  { background: #ff9138; color: #fff; }
       .po-btn--pro:hover  { background: #f07d1f; }
-      .po-btn--vip  { background: #d4a017; color: #fff; }
-      .po-btn--vip:hover  { background: #b8880e; }
+      .po-btn--vip  { background: #b8880e; color: #fff; }
+      .po-btn--vip:hover  { background: #a07a0c; }
 
       @media (max-width: 680px) {
          .po-cards { grid-template-columns: 1fr; }
@@ -369,6 +377,7 @@
                      <span class="po-price__currency">£</span>
                      <span id="proPrice">4.99</span>
                   </div>
+                  <p class="po-plan-tagline">Most chosen by sellers</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
                      <button class="po-duration-btn po-duration-btn--pro active" onclick="setDuration('pro',7,'4.99',this)">7 days</button>
@@ -398,6 +407,7 @@
                      <span class="po-price__currency">£</span>
                      <span id="vipPrice">12.99</span>
                   </div>
+                  <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
                      <button class="po-duration-btn po-duration-btn--vip active" onclick="setDuration('vip',7,'12.99',this)">7 days</button>
