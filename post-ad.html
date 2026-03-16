@@ -505,12 +505,6 @@
                      </div>
                   </div>
 
-                  <div class="pa-field" id="rePostalField" style="display:none">
-                     <span class="pa-field__label">Postal code:</span>
-                     <div class="pa-field__control">
-                        <input class="pa-input" type="text" placeholder="">
-                     </div>
-                  </div>
 
                   <div class="pa-field" id="bathroomsField" style="display:none">
                      <span class="pa-field__label">Bathrooms:</span>
@@ -939,7 +933,7 @@
          if (hint) hint.style.display = 'none';
 
          var isRE = cat === 'real-estate';
-         var reOnlyFields = ['rePostalField','bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','propertyAreaField','includedField','onlineViewingField','energyField','regBlockField','regNumField'];
+         var reOnlyFields = ['bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','propertyAreaField','includedField','onlineViewingField','energyField','regBlockField','regNumField'];
          reOnlyFields.forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.style.display = isRE ? 'flex' : 'none';
