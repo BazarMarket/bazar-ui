@@ -862,6 +862,14 @@
 
    <script src="js/script.js"></script>
    <script>
+      window.addEventListener('pageshow', function() {
+         document.querySelectorAll('.cat-item').forEach(function(el) { el.classList.remove('active'); });
+         var s = document.getElementById('subCats'); if (s) s.innerHTML = '';
+         var ss = document.getElementById('subSubCats'); if (ss) ss.innerHTML = '';
+         var f = document.getElementById('paForm'); if (f) f.classList.remove('visible');
+         reState.cat = ''; reState.listingType = ''; reState.propType = ''; reState.subtype = ''; reState.bedrooms = '';
+      });
+
       var reState = { cat: '', listingType: '', propType: '', subtype: '', bedrooms: '' };
 
       /* ── Suggested Title ──────────────────────────────────────────── */
