@@ -263,15 +263,53 @@
          white-space: normal;
          line-height: 1.3;
       }
+      .pa-upload-zone {
+         border: 2px dashed #e4e4e4;
+         border-radius: 10px;
+         padding: 20px 24px;
+         display: flex;
+         align-items: center;
+         gap: 16px;
+         cursor: pointer;
+         transition: border-color .2s, background .2s;
+         background: #fafafa;
+         max-width: 500px;
+      }
+      .pa-upload-zone:hover {
+         border-color: #ff9138;
+         background: #fff8f3;
+      }
+      .pa-upload-zone__icon {
+         flex-shrink: 0;
+         width: 40px;
+         height: 40px;
+         color: #ccc;
+      }
+      .pa-upload-zone__body { display: flex; flex-direction: column; gap: 2px; }
+      .pa-upload-zone__text {
+         font-family: 'Poppins', sans-serif;
+         font-size: 14px;
+         font-weight: 500;
+         color: #555;
+         margin: 0;
+      }
+      .pa-upload-zone__text span { color: #ff9138; text-decoration: underline; }
+      .pa-upload-zone__hint {
+         font-family: 'Poppins', sans-serif;
+         font-size: 11px;
+         color: #aaa;
+         margin: 0;
+      }
       .pa-photo-grid {
          display: flex;
          flex-wrap: wrap;
-         gap: 10px;
-         padding: 4px 0;
+         gap: 8px;
+         margin-top: 10px;
+         max-width: 500px;
       }
       .pa-photo-box {
-         width: 100px;
-         height: 100px;
+         width: 72px;
+         height: 72px;
          border: 2px dashed #e4e4e4;
          border-radius: 8px;
          display: flex;
@@ -290,7 +328,7 @@
          cursor: pointer;
       }
       .pa-photo-box__plus {
-         font-size: 32px;
+         font-size: 24px;
          color: #ccc;
          line-height: 1;
       }
@@ -750,29 +788,19 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Images:<span>*</span></span>
                      <div class="pa-field__control">
-                        <div class="pa-photo-grid">
-                           <div class="pa-photo-box">
-                              <input type="file" accept="image/*" multiple>
-                              <span class="pa-photo-box__plus">+</span>
-                           </div>
-                           <div class="pa-photo-box">
-                              <input type="file" accept="image/*">
-                              <span class="pa-photo-box__plus">+</span>
-                           </div>
-                           <div class="pa-photo-box">
-                              <input type="file" accept="image/*">
-                              <span class="pa-photo-box__plus">+</span>
-                           </div>
-                           <div class="pa-photo-box">
-                              <input type="file" accept="image/*">
-                              <span class="pa-photo-box__plus">+</span>
-                           </div>
-                           <div class="pa-photo-box">
-                              <input type="file" accept="image/*">
-                              <span class="pa-photo-box__plus">+</span>
+                        <input type="file" id="photoInput" accept="image/jpeg,image/png" multiple style="display:none" onchange="onPhotosSelected(this)">
+                        <div class="pa-upload-zone" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.style.borderColor='#ff9138'" ondragleave="this.style.borderColor=''" ondrop="event.preventDefault();this.style.borderColor='';onPhotosSelected({files:event.dataTransfer.files})">
+                           <svg class="pa-upload-zone__icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="4" y="10" width="32" height="24" rx="3"/>
+                              <polyline points="13,17 20,10 27,17"/>
+                              <line x1="20" y1="10" x2="20" y2="26"/>
+                           </svg>
+                           <div class="pa-upload-zone__body">
+                              <p class="pa-upload-zone__text">Drag &amp; drop photos or <span>click to browse</span></p>
+                              <p class="pa-upload-zone__hint">JPG, PNG · Max 5 MB · First photo is the cover image</p>
                            </div>
                         </div>
-                        <p style="font-size:12px;color:#999;margin:8px 0 0;font-family:'Poppins',sans-serif">Max file size 5MB · jpg, jpeg, png · First photo is the title image</p>
+                        <div class="pa-photo-grid" id="photoPreviewGrid"></div>
                      </div>
                   </div>
 
@@ -833,6 +861,7 @@
          var s = document.getElementById('subCats'); if (s) s.innerHTML = '';
          var ss = document.getElementById('subSubCats'); if (ss) ss.innerHTML = '';
          var f = document.getElementById('paForm'); if (f) f.classList.remove('visible');
+         var pg = document.getElementById('photoPreviewGrid'); if (pg) pg.innerHTML = '';
          reState.cat = ''; reState.listingType = ''; reState.propType = ''; reState.subtype = ''; reState.bedrooms = '';
       });
 
@@ -1250,6 +1279,31 @@
          var diff = formatted.length - input.value.length;
          input.value = formatted;
          input.setSelectionRange(pos + diff, pos + diff);
+      }
+
+      function onPhotosSelected(source) {
+         var files = source.files;
+         if (!files || !files.length) return;
+         var grid = document.getElementById('photoPreviewGrid');
+         Array.from(files).forEach(function(file) {
+            if (!file.type.match(/image\/(jpeg|png)/)) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+               var box = document.createElement('div');
+               box.className = 'pa-photo-box';
+               box.style.backgroundImage = 'url(' + e.target.result + ')';
+               box.style.backgroundSize = 'cover';
+               box.style.backgroundPosition = 'center';
+               box.style.border = '2px solid #e4e4e4';
+               var rm = document.createElement('span');
+               rm.textContent = '×';
+               rm.style.cssText = 'position:absolute;top:2px;right:5px;font-size:16px;color:#fff;cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.6);line-height:1';
+               rm.onclick = function(ev) { ev.stopPropagation(); box.remove(); };
+               box.appendChild(rm);
+               grid.appendChild(box);
+            };
+            reader.readAsDataURL(file);
+         });
       }
 
       window.addEventListener('DOMContentLoaded', function() {
