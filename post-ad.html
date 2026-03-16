@@ -1266,8 +1266,8 @@
          var subSubCats = document.getElementById('subSubCats');
          var list = (catData[cat] && catData[cat][sub]) || [];
          if (list.length) {
-            subSubCats.innerHTML = list.map(function(s, i) {
-               return '<div class="cat-item' + (i === 0 ? ' active' : '') + '" onclick="selectSubSub(this)">' + s + '</div>';
+            subSubCats.innerHTML = list.map(function(s) {
+               return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>';
             }).join('');
          } else {
             subSubCats.innerHTML = '';
