@@ -830,7 +830,7 @@
             'Short term':          'property',
             'Other':               'property'
          };
-         var listingStr = reState.listingType === 'For Long Term Rent' ? 'for long term rent' : reState.listingType === 'For Short Term Rent' ? 'for short term rent' : 'for sale';
+         var listingStr = reState.listingType === 'For Long-term Rent' ? 'for long term rent' : reState.listingType === 'For Short-term Rent' ? 'for short term rent' : 'for sale';
          var parts = [];
          var beds = reState.bedrooms;
          var sub = reState.subtype && reState.subtype !== 'Other' ? reState.subtype.toLowerCase() : '';
@@ -874,8 +874,8 @@
       var catData = {
          'real-estate': {
             'For Sale':            ['Houses', 'Apartments & flats', 'Commercial property', 'Plots of land', 'Rooms / flatmates', 'Other'],
-            'For Long Term Rent':  ['Houses', 'Apartments & flats', 'Commercial property', 'Rooms / flatmates', 'Residential buildings', 'Other'],
-            'For Short Term Rent': ['Apartments', 'Villas', 'Holiday homes', 'Rooms', 'Other']
+            'For Long-term Rent':  ['Houses', 'Apartments & flats', 'Commercial property', 'Rooms / flatmates', 'Residential buildings', 'Other'],
+            'For Short-term Rent': ['Apartments', 'Villas', 'Holiday homes', 'Rooms', 'Other']
          },
          'motors': {
             'For Sale': ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
