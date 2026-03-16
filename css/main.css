@@ -4270,28 +4270,19 @@ p {
   grid-template-columns: repeat(4, 1fr);
 }
 .menu-sub__links {
-  position: relative;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 16px;
   color: #808080;
   line-height: normal;
   display: flex;
-  padding-left: 20px;
-}
-.menu-sub__links:before {
-  top: 8px;
-  left: 0;
-  position: absolute;
-  content: "";
-  width: 9px;
-  height: 9px;
-  flex: 0 0 9px;
-  border-radius: 2px;
-  background: #ffae49;
+  text-decoration: none;
+  cursor: pointer;
 }
 .menu-sub__links:hover {
-  color: #1a1a1a;
+  color: #555;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .category {
