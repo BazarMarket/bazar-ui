@@ -1726,6 +1726,38 @@ body {
   padding-bottom: 60%;
   margin: 20px 0;
 }
+.card-grid__map-section {
+  margin: 24px 0 0;
+}
+.card-map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.card-map-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+.card-map-title::before {
+  margin-right: 6px;
+  color: #ff9138;
+}
+.card-map-link {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ff9138;
+  text-decoration: none;
+}
+.card-map-link:hover { text-decoration: underline; }
+.card-map-embed {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
 @media screen and (max-width: 1200px) {
   .card-grid__left {
     flex: 0 0 62%;
