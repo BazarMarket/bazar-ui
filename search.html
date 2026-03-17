@@ -27,6 +27,17 @@
       .sr-tag { background: #fff3e8; border: 1px solid #ff9138; border-radius: 20px; padding: 5px 14px; font-family: "Poppins", sans-serif; font-size: 13px; color: #ff9138; display: flex; align-items: center; gap: 6px; cursor: pointer; }
       .sr-tag:hover { background: #ffe0c2; }
       .sr-tag__close { font-size: 16px; line-height: 1; }
+
+      .sr-view-btns { display: flex; gap: 4px; }
+      .sr-view-btn { width: 34px; height: 34px; border: 1px solid #e8e8e8; border-radius: 8px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
+      .sr-view-btn:hover { border-color: #ff9138; }
+      .sr-view-btn.active { border-color: #ff9138; background: #fff3e8; }
+      .sr-view-btn svg { display: block; }
+
+      .sr-grid-view { display: none; }
+      .sr-grid-view.active { display: block; }
+      .sr-grid-view .cards__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      .list-products__body.hidden { display: none; }
    </style>
 </head>
 
@@ -129,6 +140,26 @@
                </ul>
 
                <div class="sr-topbar">
+                  <div class="sr-view-btns">
+                     <button class="sr-view-btn active" id="btn-list" title="List view" onclick="setView('list')">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                           <rect x="5" y="3" width="11" height="2.5" rx="1" fill="#1a1a1a"/>
+                           <rect x="5" y="7.75" width="11" height="2.5" rx="1" fill="#1a1a1a"/>
+                           <rect x="5" y="12.5" width="11" height="2.5" rx="1" fill="#1a1a1a"/>
+                           <rect x="2" y="3" width="2.5" height="2.5" rx="0.5" fill="#1a1a1a"/>
+                           <rect x="2" y="7.75" width="2.5" height="2.5" rx="0.5" fill="#1a1a1a"/>
+                           <rect x="2" y="12.5" width="2.5" height="2.5" rx="0.5" fill="#1a1a1a"/>
+                        </svg>
+                     </button>
+                     <button class="sr-view-btn" id="btn-grid" title="Grid view" onclick="setView('grid')">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                           <rect x="2" y="2" width="6" height="6" rx="1" fill="#1a1a1a"/>
+                           <rect x="10" y="2" width="6" height="6" rx="1" fill="#1a1a1a"/>
+                           <rect x="2" y="10" width="6" height="6" rx="1" fill="#1a1a1a"/>
+                           <rect x="10" y="10" width="6" height="6" rx="1" fill="#1a1a1a"/>
+                        </svg>
+                     </button>
+                  </div>
                   <p class="sr-count">Found <strong>154</strong> results for "<strong>iPhone</strong>"</p>
                   <div class="sr-sort">
                      <label>Sort by:</label>
@@ -430,6 +461,51 @@
                   </div>
                </div>
 
+               <div class="sr-grid-view" id="sr-grid-view">
+                  <div class="cards__grid">
+                     <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/profile.png" alt=""></div><div class="card__info"><p class="card__name">Villa for Sale in Tsada</p><p class="card__label">PAPHOS</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/product.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 1,049.00</span><span class="price-old">£ 1,399.00</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">153 m2</span><span class="info-bord__item icon-Plot">433 m2</span></div></div></div>
+                     </div>
+                     <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/fox.png" alt=""></div><div class="card__info"><p class="card__name">Villa for Sale in Tsada</p><p class="card__label">PAPHOS</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/product.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 1,049.00</span><span class="price-old">£ 1,399.00</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">153 m2</span><span class="info-bord__item icon-Plot">433 m2</span></div></div></div>
+                     </div>
+                     <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">Villa for Sale in Tsada</p><p class="card__label">PAPHOS</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/product.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 1,049.00</span><span class="price-old">£ 1,399.00</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">153 m2</span><span class="info-bord__item icon-Plot">433 m2</span></div></div></div>
+                     </div>
+                     <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">Villa for Sale in Tsada</p><p class="card__label">PAPHOS</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/product.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 1,049.00</span><span class="price-old">£ 1,399.00</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">153 m2</span><span class="info-bord__item icon-Plot">433 m2</span></div></div></div>
+                     </div>
+                     <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/profile.png" alt=""></div><div class="card__info"><p class="card__name">Apple iPhone 14 Pro</p><p class="card__label">LONDON</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/phone.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 750.00</span><span class="price-old">£ 899.00</span></div></div>
+                     </div>
+                     <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/fox.png" alt=""></div><div class="card__info"><p class="card__name">Apple iPhone 14 Pro</p><p class="card__label">LONDON</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/phone.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 750.00</span><span class="price-old">£ 899.00</span></div></div>
+                     </div>
+                     <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">Apple iPhone 14 Pro</p><p class="card__label">LONDON</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/phone.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 750.00</span><span class="price-old">£ 899.00</span></div></div>
+                     </div>
+                     <div class="card" style="position:relative;cursor:pointer"><a href="card.html" class="card-link" aria-label="View listing"></a>
+                        <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">Apple iPhone 14 Pro</p><p class="card__label">LONDON</p></div></div>
+                        <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/phone.jpg" alt="" class="img-cover"></div>
+                        <div class="card__down"><div class="card__prices"><span class="price-new">£ 750.00</span><span class="price-old">£ 899.00</span></div></div>
+                     </div>
+                  </div>
+               </div>
+
             </div>
          </div>
       </main>
@@ -519,5 +595,24 @@
    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
    <script type="text/javascript" src="js/inputmask.min.js"></script>
    <script type="text/javascript" src="js/script.js"></script>
+   <script>
+      function setView(type) {
+         var listView = document.querySelector('.list-products__body');
+         var gridView = document.getElementById('sr-grid-view');
+         var btnList = document.getElementById('btn-list');
+         var btnGrid = document.getElementById('btn-grid');
+         if (type === 'grid') {
+            listView.classList.add('hidden');
+            gridView.classList.add('active');
+            btnGrid.classList.add('active');
+            btnList.classList.remove('active');
+         } else {
+            listView.classList.remove('hidden');
+            gridView.classList.remove('active');
+            btnList.classList.add('active');
+            btnGrid.classList.remove('active');
+         }
+      }
+   </script>
 </body>
 </html>
