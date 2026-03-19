@@ -1654,7 +1654,7 @@
     word-break: break-word;
 }
 .cab-bubble--in .cab-bubble__text { background: #f2f2f2; border-bottom-left-radius: 4px; }
-.cab-bubble--out .cab-bubble__text { background: #ff9138; color: #fff; border-bottom-right-radius: 4px; }
+.cab-bubble--out .cab-bubble__text { background: #FFF3E8; color: #333; border: 1px solid #FFD8B5; border-bottom-right-radius: 4px; }
 .cab-bubble__time { font-size: 11px; color: #bbb; flex-shrink: 0; white-space: nowrap; }
 .cab-bubble--out .cab-bubble__time { color: rgba(255,145,56,.65); }
 
