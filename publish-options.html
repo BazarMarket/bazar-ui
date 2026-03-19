@@ -464,15 +464,22 @@
          box-shadow: 0 16px 36px rgba(212,163,0,.35);
       }
 
-      /* ── Tablet (≤ 960px) ── */
-      @media (max-width: 960px) {
+      /* ── Tablet (≤ 1100px) ── */
+      @media (max-width: 1100px) {
          .po-wrap { padding: 20px 16px 48px; }
-         .po-main-layout { flex-direction: column; gap: 24px; }
 
-         /* Preview: горизонтальный блок, карточка слева, info справа */
+         /* Всё вертикально: карточки сверху, preview снизу */
+         .po-main-layout {
+            display: flex;
+            flex-direction: column !important;
+            gap: 24px;
+         }
+
+         /* Preview: горизонтальный внутри, на всю ширину */
          .po-preview-panel {
-            width: 100%;
-            position: static;
+            width: 100% !important;
+            position: static !important;
+            display: flex !important;
             flex-direction: row;
             align-items: center;
             gap: 20px;
@@ -488,7 +495,7 @@
          .po-lp-card-wrap .card__img { height: 110px; }
          .po-lp-footer { flex: 1; }
 
-         /* Cards */
+         /* Cards: 3 колонки на планшете */
          .po-cards { grid-template-columns: repeat(3, 1fr); gap: 12px; }
          .po-card { padding: 20px 14px 18px; }
          .po-plan-name { font-size: 17px; }
