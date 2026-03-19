@@ -9,7 +9,7 @@
    <link rel="icon" href="favicon.svg">
    <style>
       .po-wrap {
-         max-width: 920px;
+         max-width: 1120px;
          margin: 0 auto;
          padding: 36px 20px 60px;
       }
@@ -299,6 +299,91 @@
       .po-btn--vip  { background: #b8880e; color: #fff; }
       .po-btn--vip:hover  { background: #a07a0c; }
 
+      /* ── Main layout: plans + live preview ── */
+      .po-main-layout {
+         display: flex;
+         gap: 24px;
+         align-items: flex-start;
+      }
+      .po-plans-area {
+         flex: 1;
+         min-width: 0;
+      }
+
+      /* ── Live preview panel ── */
+      .po-preview-panel {
+         width: 218px;
+         flex-shrink: 0;
+         position: sticky;
+         top: 24px;
+         background: #fff;
+         border-radius: 16px;
+         border: 2px solid #eee;
+         box-shadow: 0 4px 20px rgba(0,0,0,.08);
+         overflow: hidden;
+         transition: border-color .25s, box-shadow .25s;
+      }
+      .po-preview-panel.is-pro {
+         border-color: #ff9138;
+         box-shadow: 0 4px 24px rgba(255,145,56,.18);
+      }
+      .po-preview-panel.is-vip {
+         border-color: #d4a017;
+         box-shadow: 0 4px 24px rgba(212,160,0,.25);
+      }
+      .po-lp-label {
+         font-family: 'Poppins', sans-serif;
+         font-size: 10px;
+         font-weight: 600;
+         text-transform: uppercase;
+         letter-spacing: .6px;
+         color: #bbb;
+         padding: 12px 14px 8px;
+      }
+      .po-lp-card-wrap {
+         padding: 0 0 0;
+      }
+      .po-lp-card-wrap .card {
+         border-radius: 0;
+         box-shadow: none;
+         border: none;
+         margin: 0;
+      }
+      .po-lp-card-wrap .card__head {
+         border-radius: 0;
+      }
+      .po-lp-footer {
+         padding: 10px 14px 14px;
+         border-top: 1px solid #f0f0f0;
+         display: flex;
+         flex-direction: column;
+         gap: 2px;
+      }
+      .po-lp-plan-name {
+         font-family: 'Poppins', sans-serif;
+         font-size: 13px;
+         font-weight: 700;
+         color: #1a1a1a;
+         transition: color .2s;
+      }
+      .po-lp-plan-name.is-pro { color: #f07d1f; }
+      .po-lp-plan-name.is-vip { color: #92600a; }
+      .po-lp-duration-text {
+         font-family: 'Poppins', sans-serif;
+         font-size: 11px;
+         color: #aaa;
+      }
+
+      /* ── Plan card selected outline ── */
+      .po-card { cursor: pointer; }
+      .po-card.is-selected { outline: 3px solid #bbb; outline-offset: 2px; }
+      .po-card--pro.is-selected { outline-color: #ff9138; }
+      .po-card--vip.is-selected { outline-color: #d4a017; }
+
+      @media (max-width: 900px) {
+         .po-main-layout { flex-direction: column; }
+         .po-preview-panel { width: 100%; position: static; }
+      }
       @media (max-width: 680px) {
          .po-cards { grid-template-columns: 1fr; }
          .po-card--pro { order: -1; }
@@ -371,10 +456,13 @@
             <p class="po-title">Your ad is ready — choose how to list it</p>
             <p class="po-subtitle">Pick a plan that fits your goal. You can upgrade at any time from your account.</p>
 
+            <div class="po-main-layout">
+
+            <div class="po-plans-area">
             <div class="po-cards">
 
                <!-- FREE -->
-               <div class="po-card po-card--free">
+               <div class="po-card po-card--free" onclick="selectPlan('free')">
                   <span class="po-plan-badge po-plan-badge--free">Free</span>
                   <p class="po-plan-name">✔ Free listing</p>
                   <p class="po-position">Standard placement in category</p>
@@ -392,7 +480,7 @@
                </div>
 
                <!-- PRO -->
-               <div class="po-card po-card--pro">
+               <div class="po-card po-card--pro" onclick="selectPlan('pro')">
                   <span class="po-recommended">Most popular</span>
                   <span class="po-plan-badge po-plan-badge--pro">
                      <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,1 6.2,3.8 9.5,4.1 7.2,6.2 7.9,9.5 5,7.8 2.1,9.5 2.8,6.2 0.5,4.1 3.8,3.8"/></svg>
@@ -432,7 +520,7 @@
                </div>
 
                <!-- VIP -->
-               <div class="po-card po-card--vip">
+               <div class="po-card po-card--vip" onclick="selectPlan('vip')">
                   <span class="po-plan-badge po-plan-badge--vip">
                      <svg width="9" height="9" viewBox="0 0 12 10" fill="currentColor"><path d="M1,9 L2.5,3 L5.5,6.5 L6,1 L6.5,6.5 L9.5,3 L11,9 Z"/></svg>
                      VIP
@@ -471,6 +559,50 @@
                </div>
 
             </div>
+            </div><!-- /po-plans-area -->
+
+            <!-- ── Live preview panel ── -->
+            <div class="po-preview-panel" id="livePanel">
+               <div class="po-lp-label">Ad preview</div>
+               <div class="po-lp-card-wrap">
+                  <div class="card card_orange" id="lpCard">
+                     <div class="card__head">
+                        <div class="card__logo">
+                           <img loading="lazy" class="img-cover" src="icon/profile.png" alt="">
+                        </div>
+                        <div class="card__info">
+                           <p class="card__name">Villa for Sale in Tsada</p>
+                           <p class="card__label">PAPHOS</p>
+                        </div>
+                     </div>
+                     <div class="card__img">
+                        <div class="card__stikers" id="lpStikers"></div>
+                        <img loading="lazy" class="img-cover" src="img/product.jpg" alt="Villa for Sale">
+                     </div>
+                     <div class="card__down">
+                        <div class="card__prices">
+                           <span class="price-new">£ 1,049.00</span>
+                           <span class="price-old">£ 1,399.00</span>
+                        </div>
+                        <div class="card__dop">
+                           <div class="info-bord">
+                              <span class="info-bord__item icon-bead">2 beds</span>
+                              <span class="info-bord__item icon-bath">2 bath</span>
+                              <span class="info-bord__item icon-house-area">153 m2</span>
+                              <span class="info-bord__item icon-Plot">Plot</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="po-lp-footer">
+                  <div class="po-lp-plan-name" id="lpPlanName">⭐ PRO listing</div>
+                  <div class="po-lp-duration-text" id="lpDurationText">Featured for 14 days</div>
+               </div>
+            </div>
+
+            </div><!-- /po-main-layout -->
+
          </div>
       </main>
 
@@ -478,10 +610,17 @@
 
    <script src="js/script.js"></script>
    <script>
+      var currentPlan = 'pro';
+      var currentDays = { pro: 14, vip: 14 };
+      var currentPrice = { pro: '7.00', vip: '14.00' };
+
       function setDuration(plan, days, price, btn) {
+         event.stopPropagation();
          var row = btn.closest('.po-duration-row');
          row.querySelectorAll('.po-duration-btn').forEach(function(b) { b.classList.remove('active'); });
          btn.classList.add('active');
+         currentDays[plan] = days;
+         currentPrice[plan] = price;
          if (plan === 'pro') {
             document.getElementById('proPrice').textContent = price;
             document.getElementById('proBtn').textContent = 'Publish PRO for \u00A3' + price;
@@ -489,11 +628,56 @@
             document.getElementById('vipPrice').textContent = price;
             document.getElementById('vipBtn').textContent = 'Publish VIP for \u00A3' + parseFloat(price).toFixed(2);
          }
+         selectPlan(plan);
+      }
+
+      function selectPlan(plan) {
+         currentPlan = plan;
+         document.querySelectorAll('.po-card').forEach(function(c) { c.classList.remove('is-selected'); });
+         var sel = document.querySelector('.po-card--' + plan);
+         if (sel) sel.classList.add('is-selected');
+         updatePreview();
+      }
+
+      function updatePreview() {
+         var panel   = document.getElementById('livePanel');
+         var card    = document.getElementById('lpCard');
+         var stikers = document.getElementById('lpStikers');
+         var planEl  = document.getElementById('lpPlanName');
+         var durEl   = document.getElementById('lpDurationText');
+
+         panel.classList.remove('is-pro', 'is-vip');
+         card.className = 'card';
+         stikers.innerHTML = '';
+
+         if (currentPlan === 'free') {
+            planEl.textContent = '\u2714 Free listing';
+            planEl.className = 'po-lp-plan-name';
+            durEl.textContent = 'Standard listing \u2022 30 days';
+         } else if (currentPlan === 'pro') {
+            panel.classList.add('is-pro');
+            card.className = 'card card_orange';
+            stikers.innerHTML = '<span class="stiker stiker_top">PRO</span>';
+            planEl.textContent = '\u2b50 PRO listing';
+            planEl.className = 'po-lp-plan-name is-pro';
+            durEl.textContent = 'Priority in search \u2022 ' + currentDays.pro + ' days';
+         } else if (currentPlan === 'vip') {
+            panel.classList.add('is-vip');
+            card.className = 'card card_orange';
+            stikers.innerHTML = '<span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span>';
+            planEl.textContent = '\ud83d\udc51 VIP listing';
+            planEl.className = 'po-lp-plan-name is-vip';
+            durEl.textContent = 'Top featured \u2022 ' + currentDays.vip + ' days';
+         }
       }
 
       function publishAd(plan) {
          alert('Ad published! Plan: ' + plan.toUpperCase());
       }
+
+      document.addEventListener('DOMContentLoaded', function() {
+         selectPlan('pro');
+      });
    </script>
 </body>
 </html>
