@@ -475,39 +475,35 @@
             gap: 24px;
          }
 
-         /* Preview: компактный вертикальный блок */
+         /* Preview: компактный блок по ширине контента */
          .po-preview-panel {
-            width: 100% !important;
+            width: auto !important;
+            max-width: 360px !important;
             position: static !important;
             height: auto !important;
             display: flex !important;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
             gap: 0;
             padding: 14px 16px 16px;
+            margin: 0 auto;
          }
          .po-lp-label {
             font-size: 11px;
             margin-bottom: 2px;
-            align-self: flex-start;
          }
          .po-lp-sublabel {
             font-size: 11px;
             margin-bottom: 10px;
-            align-self: flex-start;
          }
          .po-lp-card-wrap {
             width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
+            margin: 0;
          }
          .po-lp-card-wrap .card__img { height: 140px; }
          .po-lp-footer {
             width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
             padding-top: 8px;
-            text-align: left;
          }
 
          /* Cards: 3 колонки на планшете */
