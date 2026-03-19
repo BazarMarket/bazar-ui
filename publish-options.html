@@ -40,7 +40,7 @@
       }
       .po-cards {
          display: grid;
-         grid-template-columns: repeat(3, 1fr);
+         grid-template-columns: repeat(3, minmax(160px, 1fr));
          gap: 20px;
          align-items: start;
       }
@@ -312,7 +312,7 @@
 
       /* ── Live preview panel ── */
       .po-preview-panel {
-         width: 310px;
+         width: 270px;
          flex-shrink: 0;
          position: sticky;
          top: 24px;
