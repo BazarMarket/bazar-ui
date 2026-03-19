@@ -33,7 +33,7 @@
                         </div>
                         <div class="header-old__cell">
                             <div class="icons-list">
-                                <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                                <a href="#" class="icon-item icon-email" onclick="event.preventDefault();switchToTab('messages')"><span class="icon-item__namber">2</span></a>
                                 <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
                             </div>
                         </div>
@@ -50,6 +50,7 @@
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
                                     <a href="#" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">Favorites</a>
+                                    <a href="#" class="user-menu-item icon-email" onclick="event.preventDefault();switchToTab('messages')">My Messages</a>
                                     <a href="#" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                        <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
                                        <span class="subscription__stiker">PRO</span>
@@ -102,6 +103,10 @@
                 </div>
                 <div class="cab-nav__item icon-win-wallet" data-tab="payments">My Payments</div>
                 <div class="cab-nav__item icon-heart-new" data-tab="favorites">My Favorites</div>
+                <div class="cab-nav__item icon-email" data-tab="messages">
+                    My Messages
+                    <span class="cab-nav__badge">2</span>
+                </div>
                 <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Subscriptions</div>
                 <div class="cab-nav__divider"></div>
                 <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
@@ -642,6 +647,277 @@
 
             </div>
 
+            <!-- ══════════════ MY MESSAGES ══════════════ -->
+            <div class="cab-panel cab-panel--messages" data-panel="messages">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">My Messages</h1>
+                </div>
+
+                <div class="cab-msgs-wrap">
+
+                    <!-- ── Conversation list ── -->
+                    <div class="cab-msgs-list">
+                        <div class="cab-msgs-search">
+                            <span class="cab-msgs-search__icon">🔍</span>
+                            <input type="text" class="cab-msgs-search__input" placeholder="Search conversations...">
+                        </div>
+                        <div class="cab-msgs-convs">
+
+                            <!-- Bazar Support -->
+                            <div class="cab-conv-item" onclick="cabOpenChat('support')">
+                                <div class="cab-conv-avatar cab-conv-avatar--orange">B</div>
+                                <div class="cab-conv-body">
+                                    <div class="cab-conv-top">
+                                        <span class="cab-conv-name">Bazar Support</span>
+                                        <span class="cab-conv-time">09:14</span>
+                                    </div>
+                                    <div class="cab-conv-preview">Welcome to Bazar! How can we h…</div>
+                                </div>
+                                <div class="cab-conv-online"></div>
+                            </div>
+
+                            <!-- Sarah Mitchell -->
+                            <div class="cab-conv-item active" onclick="cabOpenChat('sarah')">
+                                <div class="cab-conv-avatar">
+                                    <img src="icon/man.svg" alt="">
+                                </div>
+                                <div class="cab-conv-body">
+                                    <div class="cab-conv-top">
+                                        <span class="cab-conv-name">Sarah Mitchell</span>
+                                        <span class="cab-conv-time">11:32</span>
+                                    </div>
+                                    <div class="cab-conv-preview">Is the villa still available?</div>
+                                </div>
+                                <span class="cab-conv-badge">2</span>
+                                <div class="cab-conv-online"></div>
+                            </div>
+
+                            <!-- Michael Green -->
+                            <div class="cab-conv-item" onclick="cabOpenChat('michael')">
+                                <div class="cab-conv-avatar">
+                                    <img src="icon/man.svg" alt="">
+                                </div>
+                                <div class="cab-conv-body">
+                                    <div class="cab-conv-top">
+                                        <span class="cab-conv-name">Michael Green</span>
+                                        <span class="cab-conv-time">Yesterday</span>
+                                    </div>
+                                    <div class="cab-conv-preview">Can we meet Thursday?</div>
+                                </div>
+                            </div>
+
+                            <!-- Elena Vassileva -->
+                            <div class="cab-conv-item" onclick="cabOpenChat('elena')">
+                                <div class="cab-conv-avatar">
+                                    <img src="icon/man.svg" alt="">
+                                </div>
+                                <div class="cab-conv-body">
+                                    <div class="cab-conv-top">
+                                        <span class="cab-conv-name">Elena Vassileva</span>
+                                        <span class="cab-conv-time">Mon</span>
+                                    </div>
+                                    <div class="cab-conv-preview">Thank you, I'll think about it</div>
+                                </div>
+                            </div>
+
+                            <!-- John Papadopoulos -->
+                            <div class="cab-conv-item" onclick="cabOpenChat('john')">
+                                <div class="cab-conv-avatar">
+                                    <img src="icon/man.svg" alt="">
+                                </div>
+                                <div class="cab-conv-body">
+                                    <div class="cab-conv-top">
+                                        <span class="cab-conv-name">John Papadopoulos</span>
+                                        <span class="cab-conv-time">Sun</span>
+                                    </div>
+                                    <div class="cab-conv-preview">What's the lowest you'd go?</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ── Chat area ── -->
+                    <div class="cab-msgs-chat">
+
+                        <!-- Empty state -->
+                        <div class="cab-msgs-empty" id="cabMsgEmpty" style="display:none;">
+                            <div style="font-size:40px;opacity:.3;">💬</div>
+                            <div style="color:#bbb;font-size:14px;margin-top:8px;">Choose a conversation</div>
+                        </div>
+
+                        <!-- Sarah chat -->
+                        <div class="cab-chat-content" id="cab-chat-sarah" style="display:flex;flex-direction:column;height:100%;">
+                            <div class="cab-chat-head">
+                                <img class="cab-chat-head__avatar" src="icon/man.svg" alt="">
+                                <div>
+                                    <div class="cab-chat-head__name">Sarah Mitchell</div>
+                                    <div class="cab-chat-head__status">Online now</div>
+                                </div>
+                                <div class="cab-chat-head__ad">
+                                    <img src="img/product.jpg" alt="" style="width:36px;height:36px;border-radius:6px;object-fit:cover;">
+                                    <div>
+                                        <div style="font-size:11px;font-weight:600;color:#1a1a1a;line-height:1.2;">Villa for Sale in Tsada</div>
+                                        <div style="font-size:11px;color:#ff9138;font-weight:600;">£ 1,049,000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cab-chat-body">
+                                <div class="cab-chat-date">Yesterday</div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Hello! I saw your villa listing in Tsada. Is it still available?</div>
+                                    <span class="cab-bubble__time">18:42</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--out">
+                                    <div class="cab-bubble__text">Hi Sarah! Yes, the villa is still available. Are you interested in scheduling a viewing?</div>
+                                    <span class="cab-bubble__time">18:55</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">That would be great! Could you tell me more about the plot size?</div>
+                                    <span class="cab-bubble__time">19:03</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--out">
+                                    <div class="cab-bubble__text">The plot is 433 m². The villa itself is 153 m² with 2 bedrooms, 2 bathrooms, and a private pool. 🏊</div>
+                                    <span class="cab-bubble__time">19:10</span>
+                                </div>
+                                <div class="cab-chat-date">Today</div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Is the villa still available?</div>
+                                    <span class="cab-bubble__time">11:32</span>
+                                </div>
+                            </div>
+                            <div class="cab-chat-input-row">
+                                <button class="cab-chat-attach">📎</button>
+                                <input class="cab-chat-input" type="text" placeholder="Write a message..." id="cabChatInput">
+                                <button class="cab-chat-emoji">😊</button>
+                                <button class="cab-chat-send" onclick="cabSendMessage()">&#10148;</button>
+                            </div>
+                        </div>
+
+                        <!-- Michael chat -->
+                        <div class="cab-chat-content" id="cab-chat-michael">
+                            <div class="cab-chat-head">
+                                <img class="cab-chat-head__avatar" src="icon/man.svg" alt="">
+                                <div><div class="cab-chat-head__name">Michael Green</div><div class="cab-chat-head__status" style="color:#aaa;">Last seen yesterday</div></div>
+                            </div>
+                            <div class="cab-chat-body">
+                                <div class="cab-chat-date">Yesterday</div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Hi! Is the iPhone still for sale?</div>
+                                    <span class="cab-bubble__time">14:10</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--out">
+                                    <div class="cab-bubble__text">Yes it is! In perfect condition, barely used.</div>
+                                    <span class="cab-bubble__time">14:22</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Can we meet Thursday?</div>
+                                    <span class="cab-bubble__time">14:45</span>
+                                </div>
+                            </div>
+                            <div class="cab-chat-input-row">
+                                <button class="cab-chat-attach">📎</button>
+                                <input class="cab-chat-input" type="text" placeholder="Write a message...">
+                                <button class="cab-chat-emoji">😊</button>
+                                <button class="cab-chat-send">&#10148;</button>
+                            </div>
+                        </div>
+
+                        <!-- Elena chat -->
+                        <div class="cab-chat-content" id="cab-chat-elena">
+                            <div class="cab-chat-head">
+                                <img class="cab-chat-head__avatar" src="icon/man.svg" alt="">
+                                <div><div class="cab-chat-head__name">Elena Vassileva</div><div class="cab-chat-head__status" style="color:#aaa;">Last seen Mon</div></div>
+                            </div>
+                            <div class="cab-chat-body">
+                                <div class="cab-chat-date">Monday</div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Would you consider £280,000 for the apartment?</div>
+                                    <span class="cab-bubble__time">10:05</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--out">
+                                    <div class="cab-bubble__text">The minimum I can go is £300,000. The location alone is worth it.</div>
+                                    <span class="cab-bubble__time">10:18</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Thank you, I'll think about it</div>
+                                    <span class="cab-bubble__time">10:30</span>
+                                </div>
+                            </div>
+                            <div class="cab-chat-input-row">
+                                <button class="cab-chat-attach">📎</button>
+                                <input class="cab-chat-input" type="text" placeholder="Write a message...">
+                                <button class="cab-chat-emoji">😊</button>
+                                <button class="cab-chat-send">&#10148;</button>
+                            </div>
+                        </div>
+
+                        <!-- John chat -->
+                        <div class="cab-chat-content" id="cab-chat-john">
+                            <div class="cab-chat-head">
+                                <img class="cab-chat-head__avatar" src="icon/man.svg" alt="">
+                                <div><div class="cab-chat-head__name">John Papadopoulos</div><div class="cab-chat-head__status" style="color:#aaa;">Last seen Sun</div></div>
+                            </div>
+                            <div class="cab-chat-body">
+                                <div class="cab-chat-date">Sunday</div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">Great bike! What's the lowest you'd go?</div>
+                                    <span class="cab-bubble__time">16:20</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--out">
+                                    <div class="cab-bubble__text">Best I can do is £390. It's in mint condition.</div>
+                                    <span class="cab-bubble__time">16:35</span>
+                                </div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                    <div class="cab-bubble__text">What's the lowest you'd go?</div>
+                                    <span class="cab-bubble__time">17:01</span>
+                                </div>
+                            </div>
+                            <div class="cab-chat-input-row">
+                                <button class="cab-chat-attach">📎</button>
+                                <input class="cab-chat-input" type="text" placeholder="Write a message...">
+                                <button class="cab-chat-emoji">😊</button>
+                                <button class="cab-chat-send">&#10148;</button>
+                            </div>
+                        </div>
+
+                        <!-- Support chat -->
+                        <div class="cab-chat-content" id="cab-chat-support">
+                            <div class="cab-chat-head">
+                                <div class="cab-chat-head__avatar cab-chat-head__avatar--b">B</div>
+                                <div><div class="cab-chat-head__name">Bazar Support</div><div class="cab-chat-head__status">Online now</div></div>
+                            </div>
+                            <div class="cab-chat-body">
+                                <div class="cab-chat-date">Today</div>
+                                <div class="cab-bubble cab-bubble--in">
+                                    <div class="cab-bubble__avatar cab-bubble__avatar--b">B</div>
+                                    <div class="cab-bubble__text">Welcome to Bazar! How can we help you today?</div>
+                                    <span class="cab-bubble__time">09:14</span>
+                                </div>
+                            </div>
+                            <div class="cab-chat-input-row">
+                                <button class="cab-chat-attach">📎</button>
+                                <input class="cab-chat-input" type="text" placeholder="Write a message...">
+                                <button class="cab-chat-emoji">😊</button>
+                                <button class="cab-chat-send">&#10148;</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
             <!-- ══════════════ MY SUBSCRIPTIONS ══════════════ -->
             <div class="cab-panel" data-panel="subscriptions">
 
@@ -902,6 +1178,52 @@
     document.addEventListener('DOMContentLoaded', function () {
         var hash = window.location.hash.replace('#', '');
         if (hash) switchToTab(hash);
+    });
+
+    function cabOpenChat(id) {
+        document.querySelectorAll('.cab-conv-item').forEach(function(el) { el.classList.remove('active'); });
+        var item = document.querySelector('.cab-conv-item[onclick*="' + id + '"]');
+        if (item) item.classList.add('active');
+
+        document.querySelectorAll('.cab-chat-content').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        var chat = document.getElementById('cab-chat-' + id);
+        if (chat) { chat.style.display = 'flex'; chat.style.flexDirection = 'column'; chat.style.height = '100%'; }
+
+        var empty = document.getElementById('cabMsgEmpty');
+        if (empty) empty.style.display = 'none';
+
+        var badge = item && item.querySelector('.cab-conv-badge');
+        if (badge) badge.remove();
+
+        var navBadge = document.querySelector('.cab-nav__item[data-tab="messages"] .cab-nav__badge');
+        if (navBadge) navBadge.remove();
+    }
+
+    function cabSendMessage() {
+        var input = document.getElementById('cabChatInput');
+        if (!input || !input.value.trim()) return;
+        var text = input.value.trim();
+        var body = document.querySelector('#cab-chat-sarah .cab-chat-body');
+        if (!body) return;
+        var now = new Date();
+        var h = now.getHours().toString().padStart(2,'0');
+        var m = now.getMinutes().toString().padStart(2,'0');
+        var bubble = document.createElement('div');
+        bubble.className = 'cab-bubble cab-bubble--out';
+        bubble.innerHTML = '<div class="cab-bubble__text">' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
+        body.appendChild(bubble);
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.cab-chat-content').forEach(function(el) { el.style.display = 'none'; });
+        var sarah = document.getElementById('cab-chat-sarah');
+        if (sarah) { sarah.style.display = 'flex'; sarah.style.flexDirection = 'column'; sarah.style.height = '100%'; }
+        var input = document.getElementById('cabChatInput');
+        if (input) input.addEventListener('keydown', function(e) { if (e.key === 'Enter') cabSendMessage(); });
     });
 </script>
 
