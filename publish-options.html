@@ -464,13 +464,76 @@
          box-shadow: 0 16px 36px rgba(212,163,0,.35);
       }
 
-      @media (max-width: 900px) {
-         .po-main-layout { flex-direction: column; }
-         .po-preview-panel { width: 100%; position: static; }
+      /* ── Tablet (≤ 960px) ── */
+      @media (max-width: 960px) {
+         .po-wrap { padding: 20px 16px 48px; }
+         .po-main-layout { flex-direction: column; gap: 24px; }
+         .po-preview-panel {
+            width: 100%;
+            position: static;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px;
+         }
+         .po-lp-label { margin-bottom: 2px; }
+         .po-lp-sublabel { margin-bottom: 0; }
+         .po-lp-card-wrap { flex: 1; margin: 0; }
+         .po-lp-footer { flex: 1; }
+         .po-cards { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+         .po-card { padding: 20px 16px 18px; }
+         .po-plan-name { font-size: 17px; }
+         .po-price { font-size: 26px; }
+         .po-duration-btn { font-size: 11px; padding: 6px 4px; }
+         .po-btn { font-size: 13px; padding: 12px 10px; }
       }
-      @media (max-width: 680px) {
-         .po-cards { grid-template-columns: 1fr; }
-         .po-card--pro { order: -1; }
+
+      /* ── Small tablet / large phone (≤ 720px) ── */
+      @media (max-width: 720px) {
+         .po-cards { grid-template-columns: 1fr; gap: 14px; }
+         .po-card--pro { order: -2; }
+         .po-card--vip { order: -1; }
+         .po-card { padding: 22px 20px 20px; }
+         .po-plan-name { font-size: 18px; }
+         .po-duration-row { grid-template-columns: repeat(3, 1fr); }
+         .po-preview-panel {
+            flex-direction: row;
+            align-items: center;
+         }
+         .po-lp-card-wrap { max-width: 260px; }
+      }
+
+      /* ── Mobile (≤ 480px) ── */
+      @media (max-width: 480px) {
+         .po-wrap { padding: 14px 12px 40px; }
+         .po-title { font-size: 20px; line-height: 1.3; }
+         .po-subtitle { font-size: 13px; margin: 0 0 20px; }
+         .po-card { padding: 20px 16px 18px; border-radius: 14px; }
+         .po-plan-name { font-size: 17px; }
+         .po-price { font-size: 28px; }
+         .po-duration-btn {
+            font-size: 12px;
+            padding: 9px 4px;
+            border-radius: 8px;
+         }
+         .po-btn {
+            font-size: 14px;
+            padding: 14px 12px;
+            border-radius: 10px;
+         }
+         .po-preview-panel {
+            flex-direction: column;
+            align-items: stretch;
+         }
+         .po-lp-card-wrap { max-width: 100%; }
+         .po-features li { font-size: 13px; }
+      }
+
+      /* ── Very small phones (≤ 360px) ── */
+      @media (max-width: 360px) {
+         .po-title { font-size: 18px; }
+         .po-duration-btn { font-size: 11px; padding: 8px 2px; }
+         .po-price { font-size: 24px; }
       }
    </style>
 </head>
