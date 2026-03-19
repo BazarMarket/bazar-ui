@@ -1622,7 +1622,7 @@
     margin: 4px 0;
 }
 
-.cab-bubble { display: flex; align-items: flex-end; gap: 8px; max-width: 65%; }
+.cab-bubble { display: flex; align-items: flex-end; gap: 8px; max-width: 60%; }
 .cab-bubble--in { align-self: flex-start; }
 .cab-bubble--out { align-self: flex-end; flex-direction: row-reverse; }
 .cab-bubble__avatar {
@@ -1646,9 +1646,9 @@
     flex-shrink: 0;
 }
 .cab-bubble__text {
-    padding: 12px 16px;
+    padding: 10px 14px;
     border-radius: 16px;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.55;
     color: #1a1a1a;
     word-break: break-word;
@@ -1734,34 +1734,22 @@
     background: #fafafa;
 }
 .cab-qr-btn {
-    background: #f5f5f5;
-    border: 1px solid #e8e8e8;
+    background: #fff;
+    border: 1px solid #e0e0e0;
     border-radius: 20px;
-    padding: 6px 13px;
+    padding: 5px 12px;
     font-size: 12px;
     font-family: 'Poppins', sans-serif;
-    color: #555;
+    color: #444;
     cursor: pointer;
-    transition: border-color .15s, color .15s, background .15s;
+    transition: border-color .15s, color .15s;
     white-space: nowrap;
-    font-weight: 500;
 }
-.cab-qr-btn:hover { border-color: #ff9138; color: #ff9138; background: #fff; }
-.cab-qr-btn--offer {
-    background: #ff9138;
-    border-color: #ff9138;
-    color: #fff;
-    font-weight: 600;
-}
-.cab-qr-btn--offer:hover { background: #e07d2a; border-color: #e07d2a; color: #fff; }
-.cab-qr-btn--schedule {
-    background: #ff9138;
-    border-color: #ff9138;
-    color: #fff;
-    font-weight: 600;
-}
-.cab-qr-btn--schedule:hover { background: #e07d2a; border-color: #e07d2a; color: #fff; }
-.cab-qr-divider { width: 1px; height: 22px; background: #e0e0e0; flex-shrink: 0; align-self: center; }
+.cab-qr-btn:hover { border-color: #ff9138; color: #ff9138; }
+.cab-qr-btn--offer { border-color: #ff9138; color: #ff9138; font-weight: 600; }
+.cab-qr-btn--offer:hover { background: #ff9138; color: #fff; }
+.cab-qr-btn--schedule { border-color: #5b8dee; color: #5b8dee; font-weight: 600; }
+.cab-qr-btn--schedule:hover { background: #5b8dee; color: #fff; }
 
 /* ── Make an offer panel ── */
 .cab-offer-panel {
@@ -1858,25 +1846,18 @@
 .cab-schedule-panel__cancel:hover { color: #666; }
 
 /* ── Offer bubble actions ── */
-.cab-bubble__text--offer-resp {
-    background: #fff !important;
-    border: 1.5px solid #f0f0f0 !important;
-    color: #1a1a1a !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,.06);
-    min-width: 200px;
-}
-.cab-offer-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.cab-offer-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .cab-offer-btn {
     border: none;
     border-radius: 8px;
-    padding: 6px 12px;
+    padding: 4px 10px;
     font-size: 12px;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: opacity .15s;
 }
-.cab-offer-btn:hover { opacity: .82; }
-.cab-offer-btn--accept { background: #3ecb60; color: #fff; }
-.cab-offer-btn--counter { background: #ff9138; color: #fff; }
-.cab-offer-btn--reject { background: #f0f0f0; color: #888; }
+.cab-offer-btn:hover { opacity: .8; }
+.cab-offer-btn--accept { background: #e8f9ee; color: #2aab52; }
+.cab-offer-btn--counter { background: #fff3e0; color: #e07d2a; }
+.cab-offer-btn--reject { background: #fdecea; color: #e03030; }
