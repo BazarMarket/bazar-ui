@@ -312,7 +312,7 @@
 
       /* ── Live preview panel ── */
       .po-preview-panel {
-         width: 256px;
+         width: 282px;
          flex-shrink: 0;
          position: sticky;
          top: 24px;
@@ -334,14 +334,25 @@
       .po-lp-label {
          font-family: 'Poppins', sans-serif;
          font-size: 10px;
-         font-weight: 600;
+         font-weight: 700;
          text-transform: uppercase;
-         letter-spacing: .6px;
+         letter-spacing: .7px;
+         color: #999;
+         padding: 13px 14px 2px;
+      }
+      .po-lp-sublabel {
+         font-family: 'Poppins', sans-serif;
+         font-size: 10px;
+         font-weight: 400;
          color: #bbb;
-         padding: 12px 14px 8px;
+         padding: 0 14px 10px;
       }
       .po-lp-card-wrap {
          padding: 0;
+         transition: opacity .22s ease;
+      }
+      .po-lp-card-wrap.is-fading {
+         opacity: 0;
       }
       .po-lp-card-wrap .card {
          border-radius: 0;
@@ -597,8 +608,9 @@
 
             <!-- ── Live preview panel ── -->
             <div class="po-preview-panel" id="livePanel">
-               <div class="po-lp-label">Ad preview</div>
-               <div class="po-lp-card-wrap">
+               <div class="po-lp-label">Ad Preview</div>
+               <div class="po-lp-sublabel">See how your ad appears</div>
+               <div class="po-lp-card-wrap" id="lpCardWrap">
                   <div class="card card_orange" id="lpCard">
                      <div class="card__head">
                         <div class="card__logo">
@@ -673,6 +685,15 @@
       }
 
       function updatePreview() {
+         var wrap    = document.getElementById('lpCardWrap');
+         wrap.classList.add('is-fading');
+         setTimeout(function() {
+            applyPreview();
+            wrap.classList.remove('is-fading');
+         }, 200);
+      }
+
+      function applyPreview() {
          var panel   = document.getElementById('livePanel');
          var card    = document.getElementById('lpCard');
          var stikers = document.getElementById('lpStikers');
