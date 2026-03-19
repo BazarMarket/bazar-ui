@@ -329,8 +329,34 @@
       }
       .po-preview-panel.is-vip {
          border-color: #d4a017;
-         box-shadow: 0 4px 24px rgba(212,160,0,.25);
+         box-shadow: 0 8px 36px rgba(212,160,0,.35);
+         background: linear-gradient(160deg, #fffbf0 0%, #fff 60%);
       }
+      .po-vip-featured-bar {
+         display: none;
+         background: linear-gradient(90deg, #c9940f, #e8b930);
+         color: #fff;
+         font-family: 'Poppins', sans-serif;
+         font-size: 10px;
+         font-weight: 700;
+         letter-spacing: .5px;
+         text-transform: uppercase;
+         padding: 5px 12px;
+         text-align: center;
+      }
+      .po-vip-featured-bar.visible { display: block; }
+      .po-vip-placement {
+         display: none;
+         padding: 9px 14px 13px;
+         border-top: 1px solid #f5e8c0;
+         background: #fffbf0;
+         font-family: 'Poppins', sans-serif;
+         font-size: 11px;
+         font-weight: 600;
+         color: #b8880e;
+         text-align: center;
+      }
+      .po-vip-placement.visible { display: block; }
       .po-lp-label {
          font-family: 'Poppins', sans-serif;
          font-size: 10px;
@@ -610,6 +636,7 @@
             <div class="po-preview-panel" id="livePanel">
                <div class="po-lp-label">Ad Preview</div>
                <div class="po-lp-sublabel">See how your ad appears</div>
+               <div class="po-vip-featured-bar" id="lpFeaturedBar">⭐ Featured listing — Top #1</div>
                <div class="po-lp-card-wrap" id="lpCardWrap">
                   <div class="card card_orange" id="lpCard">
                      <div class="card__head">
@@ -644,6 +671,7 @@
                   <div class="po-lp-plan-name" id="lpPlanName">⭐ PRO listing</div>
                   <div class="po-lp-duration-text" id="lpDurationText">Featured for 14 days</div>
                </div>
+               <div class="po-vip-placement" id="lpPlacement">🔝 #1 in category · Maximum exposure</div>
             </div>
 
             </div><!-- /po-main-layout -->
@@ -694,16 +722,20 @@
       }
 
       function applyPreview() {
-         var panel   = document.getElementById('livePanel');
-         var card    = document.getElementById('lpCard');
-         var stikers = document.getElementById('lpStikers');
-         var planEl  = document.getElementById('lpPlanName');
-         var durEl   = document.getElementById('lpDurationText');
-         var logo    = document.getElementById('lpLogo');
+         var panel     = document.getElementById('livePanel');
+         var card      = document.getElementById('lpCard');
+         var stikers   = document.getElementById('lpStikers');
+         var planEl    = document.getElementById('lpPlanName');
+         var durEl     = document.getElementById('lpDurationText');
+         var logo      = document.getElementById('lpLogo');
+         var featBar   = document.getElementById('lpFeaturedBar');
+         var placement = document.getElementById('lpPlacement');
 
          panel.classList.remove('is-pro', 'is-vip');
          card.className = 'card';
          stikers.innerHTML = '';
+         featBar.classList.remove('visible');
+         placement.classList.remove('visible');
 
          if (currentPlan === 'free') {
             logo.src = 'icon/man.svg';
@@ -726,6 +758,8 @@
             planEl.textContent = '\ud83d\udc51 VIP listing';
             planEl.className = 'po-lp-plan-name is-vip';
             durEl.textContent = 'Top featured \u2022 ' + currentDays.vip + ' days';
+            featBar.classList.add('visible');
+            placement.classList.add('visible');
          }
       }
 
