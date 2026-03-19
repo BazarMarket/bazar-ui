@@ -1747,10 +1747,10 @@
     font-weight: 500;
 }
 .cab-qr-btn:hover { border-color: #ff9138; color: #ff9138; background: #fff; }
-.cab-qr-btn--offer { background: #ff9138; border-color: #ff9138; color: #fff; font-weight: 600; }
-.cab-qr-btn--offer:hover { background: #e07d2a; border-color: #e07d2a; }
-.cab-qr-btn--schedule { background: #ff9138; border-color: #ff9138; color: #fff; font-weight: 600; }
-.cab-qr-btn--schedule:hover { background: #e07d2a; border-color: #e07d2a; }
+.cab-qr-btn--offer { background: #fff; border-color: #ff9138; color: #ff9138; font-weight: 600; }
+.cab-qr-btn--offer:hover { background: #ff9138; color: #fff; }
+.cab-qr-btn--schedule { background: #fff; border-color: #5b8dee; color: #5b8dee; font-weight: 600; }
+.cab-qr-btn--schedule:hover { background: #5b8dee; color: #fff; }
 
 /* ── Make an offer panel ── */
 .cab-offer-panel {
