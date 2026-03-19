@@ -468,20 +468,29 @@
       @media (max-width: 960px) {
          .po-wrap { padding: 20px 16px 48px; }
          .po-main-layout { flex-direction: column; gap: 24px; }
+
+         /* Preview: горизонтальный блок, карточка слева, info справа */
          .po-preview-panel {
             width: 100%;
             position: static;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            padding: 16px;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            padding: 14px 16px;
          }
-         .po-lp-label { margin-bottom: 2px; }
-         .po-lp-sublabel { margin-bottom: 0; }
-         .po-lp-card-wrap { flex: 1; margin: 0; }
+         .po-lp-label { font-size: 11px; margin-bottom: 2px; }
+         .po-lp-sublabel { font-size: 11px; margin-bottom: 8px; }
+         .po-lp-card-wrap {
+            flex-shrink: 0;
+            width: 200px;
+            margin: 0;
+         }
+         .po-lp-card-wrap .card__img { height: 110px; }
          .po-lp-footer { flex: 1; }
+
+         /* Cards */
          .po-cards { grid-template-columns: repeat(3, 1fr); gap: 12px; }
-         .po-card { padding: 20px 16px 18px; }
+         .po-card { padding: 20px 14px 18px; }
          .po-plan-name { font-size: 17px; }
          .po-price { font-size: 26px; }
          .po-duration-btn { font-size: 11px; padding: 6px 4px; }
@@ -495,12 +504,10 @@
          .po-card--vip { order: -1; }
          .po-card { padding: 22px 20px 20px; }
          .po-plan-name { font-size: 18px; }
-         .po-duration-row { grid-template-columns: repeat(3, 1fr); }
-         .po-preview-panel {
-            flex-direction: row;
-            align-items: center;
-         }
-         .po-lp-card-wrap { max-width: 260px; }
+         .po-price { font-size: 28px; }
+         /* Preview компактнее */
+         .po-lp-card-wrap { width: 180px; }
+         .po-lp-card-wrap .card__img { height: 100px; }
       }
 
       /* ── Mobile (≤ 480px) ── */
@@ -521,11 +528,14 @@
             padding: 14px 12px;
             border-radius: 10px;
          }
+         /* Preview на мобильном — вертикальный, полная ширина */
          .po-preview-panel {
             flex-direction: column;
             align-items: stretch;
+            gap: 12px;
          }
-         .po-lp-card-wrap { max-width: 100%; }
+         .po-lp-card-wrap { width: 100%; }
+         .po-lp-card-wrap .card__img { height: 160px; }
          .po-features li { font-size: 13px; }
       }
 
@@ -534,6 +544,7 @@
          .po-title { font-size: 18px; }
          .po-duration-btn { font-size: 11px; padding: 8px 2px; }
          .po-price { font-size: 24px; }
+         .po-lp-card-wrap .card__img { height: 130px; }
       }
    </style>
 </head>
