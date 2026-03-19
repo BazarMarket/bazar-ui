@@ -402,14 +402,16 @@
          font-weight: 700;
       }
       .po-lp-card-wrap .info-bord {
-         gap: 0;
-         padding: 5px 6px;
-         justify-content: space-between;
+         display: grid;
+         grid-template-columns: repeat(4, 1fr);
+         gap: 4px;
+         padding: 6px 8px;
       }
       .po-lp-card-wrap .info-bord__item {
          font-size: 9px;
-         flex: 1;
          align-items: center;
+         flex: unset;
+         padding: 0 2px;
       }
       .po-lp-card-wrap .info-bord__item::before {
          font-size: 15px;
