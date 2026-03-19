@@ -1453,7 +1453,22 @@
 /* ════════════════════════════════════════════
    MY MESSAGES PANEL
 ════════════════════════════════════════════ */
-.cab-panel--messages .cab-panel__top { margin-bottom: 12px; }
+.cab-panel--messages .cab-panel__top { margin-bottom: 16px; }
+.cab-panel__top--msgs { display: flex; align-items: center; justify-content: space-between; }
+.cab-msgs-search-toggle {
+    background: none;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 5px 9px;
+    font-size: 15px;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    transition: background .15s, border-color .15s;
+}
+.cab-msgs-search-toggle:hover, .cab-msgs-search-toggle.active { background: #fff6ee; border-color: #ff9138; }
+.cab-msgs-search--collapsible { display: none !important; }
+.cab-msgs-search--collapsible.cab-msgs-search--open { display: flex !important; }
 
 .cab-msgs-wrap {
     display: flex;

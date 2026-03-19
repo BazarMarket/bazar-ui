@@ -650,18 +650,19 @@
             <!-- ══════════════ MY MESSAGES ══════════════ -->
             <div class="cab-panel cab-panel--messages" data-panel="messages">
 
-                <div class="cab-panel__top">
+                <div class="cab-panel__top cab-panel__top--msgs">
                     <h1 class="cab-panel__title">My Messages</h1>
+                    <button class="cab-msgs-search-toggle" title="Search" onclick="this.classList.toggle('active');document.getElementById('cabMsgsSearchBox').classList.toggle('cab-msgs-search--open')">🔍</button>
+                </div>
+                <div class="cab-msgs-search cab-msgs-search--collapsible" id="cabMsgsSearchBox">
+                    <span class="cab-msgs-search__icon">🔍</span>
+                    <input type="text" class="cab-msgs-search__input" placeholder="Search conversations...">
                 </div>
 
                 <div class="cab-msgs-wrap">
 
                     <!-- ── Conversation list ── -->
                     <div class="cab-msgs-list">
-                        <div class="cab-msgs-search">
-                            <span class="cab-msgs-search__icon">🔍</span>
-                            <input type="text" class="cab-msgs-search__input" placeholder="Search conversations...">
-                        </div>
                         <div class="cab-msgs-convs">
 
                             <!-- Bazar Support -->
