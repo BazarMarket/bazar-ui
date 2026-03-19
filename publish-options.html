@@ -602,7 +602,7 @@
                   <div class="card card_orange" id="lpCard">
                      <div class="card__head">
                         <div class="card__logo">
-                           <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                           <img id="lpLogo" loading="lazy" class="img-cover" src="icon/man.svg" alt="">
                         </div>
                         <div class="card__info">
                            <p class="card__name">Villa for Sale in Tsada</p>
@@ -678,16 +678,19 @@
          var stikers = document.getElementById('lpStikers');
          var planEl  = document.getElementById('lpPlanName');
          var durEl   = document.getElementById('lpDurationText');
+         var logo    = document.getElementById('lpLogo');
 
          panel.classList.remove('is-pro', 'is-vip');
          card.className = 'card';
          stikers.innerHTML = '';
 
          if (currentPlan === 'free') {
+            logo.src = 'icon/man.svg';
             planEl.textContent = '\u2714 Free listing';
             planEl.className = 'po-lp-plan-name';
             durEl.textContent = 'Standard listing \u2022 30 days';
          } else if (currentPlan === 'pro') {
+            logo.src = 'icon/man.svg';
             panel.classList.add('is-pro');
             card.className = 'card card_orange';
             stikers.innerHTML = '<span class="stiker stiker_top">PRO</span>';
@@ -695,6 +698,7 @@
             planEl.className = 'po-lp-plan-name is-pro';
             durEl.textContent = 'Priority in search \u2022 ' + currentDays.pro + ' days';
          } else if (currentPlan === 'vip') {
+            logo.src = 'icon/profile.png';
             panel.classList.add('is-vip');
             card.className = 'card card_gold';
             stikers.innerHTML = '<span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span>';
