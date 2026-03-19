@@ -312,7 +312,7 @@
 
       /* ── Live preview panel ── */
       .po-preview-panel {
-         width: 218px;
+         width: 256px;
          flex-shrink: 0;
          position: sticky;
          top: 24px;
@@ -341,7 +341,7 @@
          padding: 12px 14px 8px;
       }
       .po-lp-card-wrap {
-         padding: 0 0 0;
+         padding: 0;
       }
       .po-lp-card-wrap .card {
          border-radius: 0;
@@ -351,6 +351,36 @@
       }
       .po-lp-card-wrap .card__head {
          border-radius: 0;
+      }
+      .po-lp-card-wrap .card__down {
+         flex-direction: column;
+         align-items: stretch;
+         gap: 8px;
+         padding: 10px 12px 12px;
+      }
+      .po-lp-card-wrap .card__prices {
+         display: flex;
+         align-items: baseline;
+         gap: 8px;
+      }
+      .po-lp-card-wrap .price-new {
+         font-size: 15px;
+      }
+      .po-lp-card-wrap .price-old {
+         font-size: 12px;
+      }
+      .po-lp-card-wrap .info-bord {
+         gap: 0;
+         padding: 5px 6px;
+         justify-content: space-between;
+      }
+      .po-lp-card-wrap .info-bord__item {
+         font-size: 9px;
+         flex: 1;
+         align-items: center;
+      }
+      .po-lp-card-wrap .info-bord__item::before {
+         font-size: 15px;
       }
       .po-lp-footer {
          padding: 10px 14px 14px;
@@ -588,8 +618,8 @@
                            <div class="info-bord">
                               <span class="info-bord__item icon-bead">2 beds</span>
                               <span class="info-bord__item icon-bath">2 bath</span>
-                              <span class="info-bord__item icon-house-area">153 m2</span>
-                              <span class="info-bord__item icon-Plot">Plot</span>
+                              <span class="info-bord__item icon-house-area">153 m²</span>
+                              <span class="info-bord__item icon-Plot">433 m²</span>
                            </div>
                         </div>
                      </div>
