@@ -475,25 +475,38 @@
             gap: 24px;
          }
 
-         /* Preview: горизонтальный внутри, на всю ширину */
+         /* Preview: вертикальный блок, карточка по центру */
          .po-preview-panel {
             width: 100% !important;
             position: static !important;
             display: flex !important;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
-            padding: 14px 16px;
+            gap: 0;
+            padding: 20px 16px;
          }
-         .po-lp-label { font-size: 11px; margin-bottom: 2px; }
-         .po-lp-sublabel { font-size: 11px; margin-bottom: 8px; }
+         .po-lp-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            align-self: flex-start;
+         }
+         .po-lp-sublabel {
+            font-size: 12px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+         }
          .po-lp-card-wrap {
-            flex-shrink: 0;
-            width: 200px;
-            margin: 0;
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
          }
-         .po-lp-card-wrap .card__img { height: 110px; }
-         .po-lp-footer { flex: 1; }
+         .po-lp-card-wrap .card__img { height: 170px; }
+         .po-lp-footer {
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
+            text-align: left;
+         }
 
          /* Cards: 3 колонки на планшете */
          .po-cards { grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -512,9 +525,8 @@
          .po-card { padding: 22px 20px 20px; }
          .po-plan-name { font-size: 18px; }
          .po-price { font-size: 28px; }
-         /* Preview компактнее */
-         .po-lp-card-wrap { width: 180px; }
-         .po-lp-card-wrap .card__img { height: 100px; }
+         .po-lp-card-wrap { max-width: 320px; }
+         .po-lp-card-wrap .card__img { height: 160px; }
       }
 
       /* ── Mobile (≤ 480px) ── */
@@ -535,14 +547,9 @@
             padding: 14px 12px;
             border-radius: 10px;
          }
-         /* Preview на мобильном — вертикальный, полная ширина */
-         .po-preview-panel {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 12px;
-         }
-         .po-lp-card-wrap { width: 100%; }
-         .po-lp-card-wrap .card__img { height: 160px; }
+         .po-lp-card-wrap { max-width: 100%; }
+         .po-lp-card-wrap .card__img { height: 180px; }
+         .po-lp-footer { max-width: 100%; }
          .po-features li { font-size: 13px; }
       }
 
@@ -551,7 +558,7 @@
          .po-title { font-size: 18px; }
          .po-duration-btn { font-size: 11px; padding: 8px 2px; }
          .po-price { font-size: 24px; }
-         .po-lp-card-wrap .card__img { height: 130px; }
+         .po-lp-card-wrap .card__img { height: 150px; }
       }
    </style>
 </head>
