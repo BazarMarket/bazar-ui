@@ -1459,7 +1459,7 @@
     display: flex;
     height: calc(100vh - 178px);
     min-height: 460px;
-    max-width: 880px;
+    max-width: 1060px;
     border: 1px solid #e8e8e8;
     border-radius: 16px;
     overflow: hidden;
