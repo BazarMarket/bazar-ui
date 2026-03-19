@@ -524,7 +524,7 @@
                </div>
 
                <!-- Sarah -->
-               <div class="msg-item" data-chat="sarah" onclick="openChat('sarah')">
+               <div class="msg-item active" data-chat="sarah" onclick="openChat('sarah')">
                   <div class="msg-item__avatar">
                      <img src="icon/man.svg" alt="">
                      <div class="msg-item__online"></div>
@@ -588,7 +588,7 @@
          <section class="msg-chat">
 
             <!-- Empty state -->
-            <div class="msg-empty" id="msgEmpty">
+            <div class="msg-empty hidden" id="msgEmpty">
                <div class="msg-empty__icon">💬</div>
                <div class="msg-empty__text">Choose a conversation</div>
                <div class="msg-empty__sub">or start chatting with a seller</div>
@@ -633,7 +633,7 @@
             </div>
 
             <!-- Chat: Sarah -->
-            <div class="chat-content" id="chat-sarah">
+            <div class="chat-content visible" id="chat-sarah">
                <div class="chat-head">
                   <div class="chat-head__avatar"><img src="icon/man.svg" alt=""></div>
                   <div class="chat-head__info">
