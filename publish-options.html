@@ -382,6 +382,10 @@
       .po-lp-card-wrap .info-bord__item::before {
          font-size: 15px;
       }
+      .po-lp-card-wrap .card.card_gold .card__head { background: #d4a017; }
+      .po-lp-card-wrap .card.card_gold .card__logo { border-radius: 0; }
+      .po-lp-card-wrap .card.card_gold .card__name  { color: #fff; }
+      .po-lp-card-wrap .card.card_gold .card__label { color: #fff; opacity: .8; }
       .po-lp-footer {
          padding: 10px 14px 14px;
          border-top: 1px solid #f0f0f0;
@@ -692,7 +696,7 @@
             durEl.textContent = 'Priority in search \u2022 ' + currentDays.pro + ' days';
          } else if (currentPlan === 'vip') {
             panel.classList.add('is-vip');
-            card.className = 'card card_red';
+            card.className = 'card card_gold';
             stikers.innerHTML = '<span class="stiker stiker_vip">VIP</span><span class="stiker stiker_top">PRO</span>';
             planEl.textContent = '\ud83d\udc51 VIP listing';
             planEl.className = 'po-lp-plan-name is-vip';
