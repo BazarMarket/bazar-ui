@@ -756,14 +756,17 @@
                                     <div class="cab-chat-head__status">Online now</div>
                                 </div>
                                 <div class="cab-chat-head__ad">
-                                    <img src="img/product.jpg" alt="" style="width:36px;height:36px;border-radius:6px;object-fit:cover;">
+                                    <img src="img/product.jpg" alt="" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;">
                                     <div>
-                                        <div style="font-size:11px;font-weight:600;color:#1a1a1a;line-height:1.2;">Villa for Sale in Tsada</div>
-                                        <div style="font-size:11px;color:#ff9138;font-weight:600;">£ 1,049,000</div>
+                                        <div style="font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.3;">Villa for Sale in Tsada</div>
+                                        <div style="font-size:12px;color:#ff9138;font-weight:700;">£ 1,049,000</div>
                                     </div>
+                                    <span class="cab-ad-status cab-ad-status--active">✓ Active</span>
+                                    <a href="card.html" class="cab-ad-viewbtn">View listing →</a>
                                 </div>
                             </div>
-                            <div class="cab-chat-body">
+
+                            <div class="cab-chat-body" id="cabChatBody">
                                 <div class="cab-chat-date">Yesterday</div>
                                 <div class="cab-bubble cab-bubble--in">
                                     <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
@@ -790,6 +793,38 @@
                                     <span class="cab-bubble__time">11:32</span>
                                 </div>
                             </div>
+
+                            <!-- Make an offer panel -->
+                            <div class="cab-offer-panel" id="cabOfferPanel">
+                                <div class="cab-offer-panel__title">💰 Make an offer</div>
+                                <div class="cab-offer-panel__row">
+                                    <span class="cab-offer-panel__currency">£</span>
+                                    <input type="number" class="cab-offer-panel__input" id="cabOfferInput" placeholder="Your price">
+                                    <button class="cab-offer-panel__send" onclick="cabSendOffer()">Send offer</button>
+                                    <button class="cab-offer-panel__cancel" onclick="cabHideOffer()">✕</button>
+                                </div>
+                            </div>
+
+                            <!-- Schedule viewing panel -->
+                            <div class="cab-schedule-panel" id="cabSchedulePanel">
+                                <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
+                                <div class="cab-schedule-panel__row">
+                                    <input type="date" class="cab-schedule-panel__input" id="cabScheduleDate">
+                                    <input type="time" class="cab-schedule-panel__input" id="cabScheduleTime" value="10:00">
+                                    <button class="cab-schedule-panel__send" onclick="cabSendSchedule()">Confirm</button>
+                                    <button class="cab-schedule-panel__cancel" onclick="cabHideSchedule()">✕</button>
+                                </div>
+                            </div>
+
+                            <!-- Quick replies -->
+                            <div class="cab-quick-replies">
+                                <button class="cab-qr-btn" onclick="cabQuickReply('Is it available?')">Is it available?</button>
+                                <button class="cab-qr-btn" onclick="cabQuickReply('What is the final price?')">Final price?</button>
+                                <button class="cab-qr-btn" onclick="cabQuickReply('Can I see it today?')">See it today?</button>
+                                <button class="cab-qr-btn cab-qr-btn--offer" onclick="cabShowOffer()">💰 Make offer</button>
+                                <button class="cab-qr-btn cab-qr-btn--schedule" onclick="cabShowSchedule()">📅 Schedule viewing</button>
+                            </div>
+
                             <div class="cab-chat-input-row">
                                 <button class="cab-chat-attach">📎</button>
                                 <input class="cab-chat-input" type="text" placeholder="Write a message..." id="cabChatInput">
@@ -1204,18 +1239,83 @@
     function cabSendMessage() {
         var input = document.getElementById('cabChatInput');
         if (!input || !input.value.trim()) return;
-        var text = input.value.trim();
-        var body = document.querySelector('#cab-chat-sarah .cab-chat-body');
+        cabPostBubble(input.value.trim());
+        input.value = '';
+    }
+
+    function cabPostBubble(text, extraClass) {
+        var body = document.getElementById('cabChatBody');
         if (!body) return;
         var now = new Date();
         var h = now.getHours().toString().padStart(2,'0');
         var m = now.getMinutes().toString().padStart(2,'0');
         var bubble = document.createElement('div');
-        bubble.className = 'cab-bubble cab-bubble--out';
+        bubble.className = 'cab-bubble cab-bubble--out' + (extraClass ? ' ' + extraClass : '');
         bubble.innerHTML = '<div class="cab-bubble__text">' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
         body.appendChild(bubble);
-        input.value = '';
         body.scrollTop = body.scrollHeight;
+    }
+
+    function cabQuickReply(text) {
+        cabPostBubble(text);
+    }
+
+    function cabShowOffer() {
+        document.getElementById('cabOfferPanel').classList.add('is-open');
+        document.getElementById('cabSchedulePanel').classList.remove('is-open');
+        setTimeout(function(){ var el=document.getElementById('cabOfferInput'); if(el) el.focus(); }, 100);
+    }
+    function cabHideOffer() {
+        document.getElementById('cabOfferPanel').classList.remove('is-open');
+    }
+    function cabSendOffer() {
+        var val = document.getElementById('cabOfferInput').value;
+        if (!val || isNaN(val) || +val <= 0) return;
+        var formatted = '£ ' + (+val).toLocaleString('en-GB');
+        cabPostBubble('💰 Offer: <strong>' + formatted + '</strong>', 'cab-bubble--offer');
+        document.getElementById('cabOfferInput').value = '';
+        cabHideOffer();
+        setTimeout(function() {
+            var body = document.getElementById('cabChatBody');
+            var resp = document.createElement('div');
+            resp.className = 'cab-bubble cab-bubble--in';
+            resp.innerHTML = '<img class="cab-bubble__avatar" src="icon/man.svg" alt=""><div class="cab-bubble__text cab-bubble__text--offer-resp"><span style="font-weight:600;">Offer received!</span> I\'ll get back to you shortly.<div class="cab-offer-actions"><button class="cab-offer-btn cab-offer-btn--accept" onclick="cabOfferReply(\'accept\',this)">✓ Accept</button><button class="cab-offer-btn cab-offer-btn--counter" onclick="cabOfferReply(\'counter\',this)">Counter</button><button class="cab-offer-btn cab-offer-btn--reject" onclick="cabOfferReply(\'reject\',this)">✕ Reject</button></div></div><span class="cab-bubble__time">now</span>';
+            body.appendChild(resp);
+            body.scrollTop = body.scrollHeight;
+        }, 900);
+    }
+    function cabOfferReply(action, btn) {
+        var msgs = { accept: '✅ Offer accepted! Let\'s proceed.', counter: '🔄 How about £ 980,000?', reject: '❌ Sorry, the price is firm at £ 1,049,000.' };
+        var actions = btn.closest('.cab-offer-actions');
+        if (actions) actions.remove();
+        cabPostBubble(msgs[action]);
+    }
+
+    function cabShowSchedule() {
+        document.getElementById('cabSchedulePanel').classList.add('is-open');
+        document.getElementById('cabOfferPanel').classList.remove('is-open');
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('cabScheduleDate').min = today;
+        if (!document.getElementById('cabScheduleDate').value) document.getElementById('cabScheduleDate').value = today;
+    }
+    function cabHideSchedule() {
+        document.getElementById('cabSchedulePanel').classList.remove('is-open');
+    }
+    function cabSendSchedule() {
+        var d = document.getElementById('cabScheduleDate').value;
+        var t = document.getElementById('cabScheduleTime').value;
+        if (!d || !t) return;
+        var dateStr = new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+        cabPostBubble('📅 Viewing request: <strong>' + dateStr + ' at ' + t + '</strong>');
+        cabHideSchedule();
+        setTimeout(function() {
+            var body = document.getElementById('cabChatBody');
+            var resp = document.createElement('div');
+            resp.className = 'cab-bubble cab-bubble--in';
+            resp.innerHTML = '<img class="cab-bubble__avatar" src="icon/man.svg" alt=""><div class="cab-bubble__text">✅ Confirmed! I\'ll see you on <strong>' + dateStr + ' at ' + t + '</strong>. I\'ll send the address shortly.</div><span class="cab-bubble__time">now</span>';
+            body.appendChild(resp);
+            body.scrollTop = body.scrollHeight;
+        }, 800);
     }
 
     document.addEventListener('DOMContentLoaded', function() {

@@ -1694,3 +1694,169 @@
     transition: background .2s;
 }
 .cab-chat-send:hover { background: #e07d2a; }
+
+/* ── Ad status badge & view button in chat head ── */
+.cab-ad-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.cab-ad-status--active { background: #e8f9ee; color: #2aab52; }
+.cab-ad-status--reserved { background: #fff3e0; color: #e07d2a; }
+.cab-ad-status--sold { background: #fdecea; color: #e03030; }
+.cab-ad-viewbtn {
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ff9138;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border: 1px solid #ff9138;
+    border-radius: 8px;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+}
+.cab-ad-viewbtn:hover { background: #ff9138; color: #fff; }
+
+/* ── Quick replies ── */
+.cab-quick-replies {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    flex-wrap: wrap;
+    border-top: 1px solid #f5f5f5;
+    background: #fafafa;
+}
+.cab-qr-btn {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+    color: #444;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+    white-space: nowrap;
+}
+.cab-qr-btn:hover { border-color: #ff9138; color: #ff9138; }
+.cab-qr-btn--offer { border-color: #ff9138; color: #ff9138; font-weight: 600; }
+.cab-qr-btn--offer:hover { background: #ff9138; color: #fff; }
+.cab-qr-btn--schedule { border-color: #5b8dee; color: #5b8dee; font-weight: 600; }
+.cab-qr-btn--schedule:hover { background: #5b8dee; color: #fff; }
+
+/* ── Make an offer panel ── */
+.cab-offer-panel {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #fff8f2;
+    border-top: 1px solid #ffe0c0;
+}
+.cab-offer-panel.is-open { display: flex; }
+.cab-offer-panel__title { font-size: 13px; font-weight: 600; color: #ff9138; white-space: nowrap; }
+.cab-offer-panel__row { display: flex; align-items: center; gap: 6px; flex: 1; }
+.cab-offer-panel__currency { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+.cab-offer-panel__input {
+    flex: 1;
+    border: 1px solid #ffd0a0;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+}
+.cab-offer-panel__input:focus { border-color: #ff9138; }
+.cab-offer-panel__send {
+    background: #ff9138;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+}
+.cab-offer-panel__send:hover { background: #e07d2a; }
+.cab-offer-panel__cancel {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #aaa;
+    padding: 4px;
+    line-height: 1;
+}
+.cab-offer-panel__cancel:hover { color: #666; }
+
+/* ── Schedule viewing panel ── */
+.cab-schedule-panel {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #f0f4ff;
+    border-top: 1px solid #c8d8ff;
+}
+.cab-schedule-panel.is-open { display: flex; }
+.cab-schedule-panel__title { font-size: 13px; font-weight: 600; color: #5b8dee; white-space: nowrap; }
+.cab-schedule-panel__row { display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; }
+.cab-schedule-panel__input {
+    border: 1px solid #c8d8ff;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    cursor: pointer;
+}
+.cab-schedule-panel__input:focus { border-color: #5b8dee; }
+.cab-schedule-panel__send {
+    background: #5b8dee;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background .2s;
+}
+.cab-schedule-panel__send:hover { background: #3d6fd4; }
+.cab-schedule-panel__cancel {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #aaa;
+    padding: 4px;
+    line-height: 1;
+}
+.cab-schedule-panel__cancel:hover { color: #666; }
+
+/* ── Offer bubble actions ── */
+.cab-offer-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.cab-offer-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+.cab-offer-btn:hover { opacity: .8; }
+.cab-offer-btn--accept { background: #e8f9ee; color: #2aab52; }
+.cab-offer-btn--counter { background: #fff3e0; color: #e07d2a; }
+.cab-offer-btn--reject { background: #fdecea; color: #e03030; }
