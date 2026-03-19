@@ -1457,17 +1457,19 @@
 
 .cab-msgs-wrap {
     display: flex;
-    height: 62vh;
-    min-height: 420px;
-    border: 1px solid #ebebeb;
+    height: calc(100vh - 178px);
+    min-height: 460px;
+    max-width: 1060px;
+    border: 1px solid #e8e8e8;
     border-radius: 16px;
     overflow: hidden;
     background: #fff;
+    box-shadow: 0 2px 16px rgba(0,0,0,.06);
 }
 
 /* ── Conversation list ── */
 .cab-msgs-list {
-    width: 250px;
+    width: 280px;
     flex-shrink: 0;
     border-right: 1px solid #f0f0f0;
     display: flex;
@@ -1478,15 +1480,15 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 12px 14px;
     border-bottom: 1px solid #f0f0f0;
 }
-.cab-msgs-search__icon { font-size: 13px; opacity: .5; }
+.cab-msgs-search__icon { font-size: 14px; opacity: .45; }
 .cab-msgs-search__input {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 12px;
+    font-size: 13px;
     font-family: 'Poppins', sans-serif;
     color: #333;
     background: transparent;
@@ -1496,8 +1498,8 @@
 .cab-conv-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
+    gap: 12px;
+    padding: 13px 14px;
     cursor: pointer;
     position: relative;
     border-left: 3px solid transparent;
@@ -1509,8 +1511,8 @@
     border-left-color: #ff9138;
 }
 .cab-conv-avatar {
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -1518,39 +1520,39 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 16px;
     color: #fff;
     background: #ccc;
 }
 .cab-conv-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .cab-conv-avatar--orange { background: #ff9138; }
 .cab-conv-body { flex: 1; min-width: 0; }
-.cab-conv-top { display: flex; justify-content: space-between; align-items: center; }
-.cab-conv-name { font-size: 12px; font-weight: 600; color: #1a1a1a; }
-.cab-conv-time { font-size: 10px; color: #aaa; flex-shrink: 0; }
-.cab-conv-preview { font-size: 11px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.cab-conv-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.cab-conv-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.cab-conv-time { font-size: 11px; color: #aaa; flex-shrink: 0; }
+.cab-conv-preview { font-size: 12px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
 .cab-conv-badge {
     background: #ff9138;
     color: #fff;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 .cab-conv-online {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
     background: #3ecb60;
     border-radius: 50%;
-    border: 1.5px solid #fff;
+    border: 2px solid #fff;
     position: absolute;
-    bottom: 10px;
-    left: 38px;
+    bottom: 12px;
+    left: 44px;
 }
 
 /* ── Chat area ── */
@@ -1566,14 +1568,14 @@
 .cab-chat-head {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
+    gap: 12px;
+    padding: 14px 20px;
     border-bottom: 1px solid #f0f0f0;
     flex-shrink: 0;
 }
 .cab-chat-head__avatar {
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -1582,49 +1584,49 @@
     background: #ff9138;
     color: #fff;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 17px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     flex-shrink: 0;
 }
-.cab-chat-head__name { font-size: 13px; font-weight: 600; color: #1a1a1a; }
-.cab-chat-head__status { font-size: 11px; color: #3ecb60; }
+.cab-chat-head__name { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+.cab-chat-head__status { font-size: 12px; color: #3ecb60; margin-top: 1px; }
 .cab-chat-head__ad {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: #fafafa;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #ebebeb;
     border-radius: 10px;
-    padding: 6px 10px;
+    padding: 8px 12px;
 }
 
 .cab-chat-body {
     flex: 1;
     overflow-y: auto;
-    padding: 14px 16px;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 .cab-chat-date {
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
     color: #bbb;
     margin: 4px 0;
 }
 
-.cab-bubble { display: flex; align-items: flex-end; gap: 8px; max-width: 75%; }
+.cab-bubble { display: flex; align-items: flex-end; gap: 8px; max-width: 60%; }
 .cab-bubble--in { align-self: flex-start; }
 .cab-bubble--out { align-self: flex-end; flex-direction: row-reverse; }
 .cab-bubble__avatar {
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -1633,57 +1635,57 @@
     background: #ff9138;
     color: #fff;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     flex-shrink: 0;
 }
 .cab-bubble__text {
-    padding: 8px 12px;
-    border-radius: 14px;
-    font-size: 12px;
-    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.55;
     color: #1a1a1a;
     word-break: break-word;
 }
-.cab-bubble--in .cab-bubble__text { background: #f3f3f3; border-bottom-left-radius: 4px; }
+.cab-bubble--in .cab-bubble__text { background: #f2f2f2; border-bottom-left-radius: 4px; }
 .cab-bubble--out .cab-bubble__text { background: #ff9138; color: #fff; border-bottom-right-radius: 4px; }
-.cab-bubble__time { font-size: 10px; color: #bbb; flex-shrink: 0; white-space: nowrap; }
-.cab-bubble--out .cab-bubble__time { color: rgba(255,145,56,.7); }
+.cab-bubble__time { font-size: 11px; color: #bbb; flex-shrink: 0; white-space: nowrap; }
+.cab-bubble--out .cab-bubble__time { color: rgba(255,145,56,.65); }
 
 .cab-chat-input-row {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 14px;
+    padding: 12px 16px;
     border-top: 1px solid #f0f0f0;
     flex-shrink: 0;
 }
-.cab-chat-attach, .cab-chat-emoji { background: none; border: none; cursor: pointer; font-size: 16px; opacity: .5; padding: 4px; transition: opacity .15s; }
+.cab-chat-attach, .cab-chat-emoji { background: none; border: none; cursor: pointer; font-size: 18px; opacity: .45; padding: 4px; transition: opacity .15s; }
 .cab-chat-attach:hover, .cab-chat-emoji:hover { opacity: 1; }
 .cab-chat-input {
     flex: 1;
-    border: 1px solid #e8e8e8;
-    border-radius: 20px;
-    padding: 7px 14px;
-    font-size: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 22px;
+    padding: 9px 16px;
+    font-size: 14px;
     font-family: 'Poppins', sans-serif;
     outline: none;
     transition: border-color .2s;
 }
 .cab-chat-input:focus { border-color: #ff9138; }
 .cab-chat-send {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: #ff9138;
     border: none;
     color: #fff;
-    font-size: 15px;
+    font-size: 17px;
     cursor: pointer;
     display: flex;
     align-items: center;
