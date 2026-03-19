@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Messages — Bazar</title>
+   <link rel="stylesheet" href="css/main.css" type="text/css">
+   <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
+   <link rel="icon" href="favicon.svg">
+   <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body { background: #f5f5f5; font-family: 'Poppins', sans-serif; }
+
+      .msg-layout {
+         display: flex;
+         height: calc(100vh - 68px);
+         background: #f5f5f5;
+         width: 100%;
+         padding: 16px;
+         gap: 16px;
+      }
+
+      /* ── Sidebar ── */
+      .msg-sidebar {
+         width: 300px;
+         flex-shrink: 0;
+         background: #fff;
+         border-radius: 16px;
+         border: 1px solid #eee;
+         display: flex;
+         flex-direction: column;
+         overflow: hidden;
+      }
+      .msg-sidebar__head {
+         padding: 18px 16px 12px;
+         border-bottom: 1px solid #f0f0f0;
+      }
+      .msg-sidebar__title {
+         font-size: 16px;
+         font-weight: 700;
+         color: #1a1a1a;
+      }
+      .msg-sidebar__search {
+         margin-top: 10px;
+         position: relative;
+      }
+      .msg-sidebar__search input {
+         width: 100%;
+         padding: 8px 12px 8px 34px;
+         border: 1.5px solid #eee;
+         border-radius: 10px;
+         font-size: 13px;
+         font-family: 'Poppins', sans-serif;
+         outline: none;
+         color: #333;
+         transition: border-color .2s;
+      }
+      .msg-sidebar__search input:focus { border-color: #ff9138; }
+      .msg-sidebar__search::before {
+         content: '🔍';
+         position: absolute;
+         left: 10px;
+         top: 50%;
+         transform: translateY(-50%);
+         font-size: 12px;
+         opacity: .5;
+      }
+
+      .msg-list {
+         flex: 1;
+         overflow-y: auto;
+         padding: 6px 0;
+      }
+      .msg-list::-webkit-scrollbar { width: 4px; }
+      .msg-list::-webkit-scrollbar-track { background: transparent; }
+      .msg-list::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 4px; }
+
+      .msg-item {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         padding: 12px 16px;
+         cursor: pointer;
+         transition: background .15s;
+         position: relative;
+      }
+      .msg-item:hover { background: #fafafa; }
+      .msg-item.active { background: #fff6ee; }
+      .msg-item.active::before {
+         content: '';
+         position: absolute;
+         left: 0; top: 0; bottom: 0;
+         width: 3px;
+         background: #ff9138;
+         border-radius: 0 3px 3px 0;
+      }
+
+      .msg-item__avatar {
+         width: 46px;
+         height: 46px;
+         border-radius: 50%;
+         overflow: hidden;
+         flex-shrink: 0;
+         background: #f0f0f0;
+         position: relative;
+      }
+      .msg-item__avatar img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+      }
+      .msg-item__online {
+         position: absolute;
+         bottom: 2px; right: 2px;
+         width: 10px; height: 10px;
+         background: #3ecb60;
+         border-radius: 50%;
+         border: 2px solid #fff;
+      }
+
+      .msg-item__body { flex: 1; min-width: 0; }
+      .msg-item__top {
+         display: flex;
+         justify-content: space-between;
+         align-items: baseline;
+         gap: 4px;
+      }
+      .msg-item__name {
+         font-size: 13px;
+         font-weight: 600;
+         color: #1a1a1a;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+      }
+      .msg-item__time {
+         font-size: 11px;
+         color: #aaa;
+         flex-shrink: 0;
+      }
+      .msg-item__preview {
+         font-size: 12px;
+         color: #888;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         margin-top: 2px;
+      }
+      .msg-item__badge {
+         min-width: 18px;
+         height: 18px;
+         background: #ff9138;
+         color: #fff;
+         border-radius: 9px;
+         font-size: 10px;
+         font-weight: 700;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 0 5px;
+         margin-top: 2px;
+         flex-shrink: 0;
+      }
+
+      /* ── Support item special ── */
+      .msg-item--support .msg-item__avatar {
+         background: linear-gradient(135deg, #ff9138, #f07d1f);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 20px;
+      }
+
+      /* ── Chat area ── */
+      .msg-chat {
+         flex: 1;
+         min-width: 0;
+         background: #fff;
+         border-radius: 16px;
+         border: 1px solid #eee;
+         display: flex;
+         flex-direction: column;
+         overflow: hidden;
+      }
+
+      /* Empty state */
+      .msg-empty {
+         flex: 1;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         color: #bbb;
+         gap: 12px;
+      }
+      .msg-empty__icon { font-size: 52px; opacity: .4; }
+      .msg-empty__text { font-size: 15px; color: #bbb; }
+      .msg-empty__sub { font-size: 13px; color: #ccc; }
+
+      /* Chat header */
+      .chat-head {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         padding: 14px 20px;
+         border-bottom: 1px solid #f0f0f0;
+         flex-shrink: 0;
+      }
+      .chat-head__avatar {
+         width: 42px; height: 42px;
+         border-radius: 50%;
+         overflow: hidden;
+         background: #f0f0f0;
+         flex-shrink: 0;
+      }
+      .chat-head__avatar img { width: 100%; height: 100%; object-fit: cover; }
+      .chat-head__info { flex: 1; min-width: 0; }
+      .chat-head__name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+      .chat-head__status { font-size: 12px; color: #3ecb60; }
+      .chat-head__status--offline { color: #aaa; }
+
+      .chat-head__ad {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         background: #f8f8f8;
+         border: 1px solid #eee;
+         border-radius: 10px;
+         padding: 6px 10px;
+         text-decoration: none;
+         max-width: 220px;
+         flex-shrink: 0;
+      }
+      .chat-head__ad-img {
+         width: 36px; height: 36px;
+         border-radius: 6px;
+         object-fit: cover;
+         background: #eee;
+         flex-shrink: 0;
+      }
+      .chat-head__ad-text { min-width: 0; }
+      .chat-head__ad-title {
+         font-size: 11px;
+         font-weight: 600;
+         color: #1a1a1a;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         display: block;
+      }
+      .chat-head__ad-price { font-size: 11px; color: #ff9138; font-weight: 700; }
+
+      /* Messages area */
+      .chat-messages {
+         flex: 1;
+         overflow-y: auto;
+         padding: 20px;
+         display: flex;
+         flex-direction: column;
+         gap: 4px;
+         background: #fafafa;
+      }
+      .chat-messages::-webkit-scrollbar { width: 4px; }
+      .chat-messages::-webkit-scrollbar-track { background: transparent; }
+      .chat-messages::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 4px; }
+
+      .chat-date-sep {
+         text-align: center;
+         font-size: 11px;
+         color: #aaa;
+         margin: 12px 0 8px;
+         position: relative;
+      }
+      .chat-date-sep::before, .chat-date-sep::after {
+         content: '';
+         position: absolute;
+         top: 50%;
+         width: calc(50% - 50px);
+         height: 1px;
+         background: #eee;
+      }
+      .chat-date-sep::before { left: 0; }
+      .chat-date-sep::after { right: 0; }
+
+      .chat-msg {
+         display: flex;
+         align-items: flex-end;
+         gap: 8px;
+         margin-bottom: 2px;
+         max-width: 70%;
+      }
+      .chat-msg--in { align-self: flex-start; }
+      .chat-msg--out { align-self: flex-end; flex-direction: row-reverse; }
+
+      .chat-msg__avatar {
+         width: 28px; height: 28px;
+         border-radius: 50%;
+         overflow: hidden;
+         flex-shrink: 0;
+         background: #f0f0f0;
+      }
+      .chat-msg__avatar img { width: 100%; height: 100%; object-fit: cover; }
+      .chat-msg--out .chat-msg__avatar { display: none; }
+
+      .chat-msg__bubble {
+         padding: 10px 14px;
+         border-radius: 18px;
+         font-size: 13.5px;
+         line-height: 1.5;
+         color: #1a1a1a;
+         position: relative;
+         max-width: 100%;
+         word-break: break-word;
+      }
+      .chat-msg--in .chat-msg__bubble {
+         background: #fff;
+         border: 1px solid #eee;
+         border-bottom-left-radius: 4px;
+         box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      }
+      .chat-msg--out .chat-msg__bubble {
+         background: #ff9138;
+         color: #fff;
+         border-bottom-right-radius: 4px;
+      }
+      .chat-msg__time {
+         font-size: 10px;
+         color: #bbb;
+         margin-top: 4px;
+         white-space: nowrap;
+         padding: 0 4px;
+      }
+      .chat-msg--out .chat-msg__time { text-align: right; }
+
+      .chat-msg__wrap {
+         display: flex;
+         flex-direction: column;
+      }
+
+      /* Status ticks */
+      .chat-msg--out .chat-msg__time::after {
+         content: ' ✓✓';
+         color: rgba(255,255,255,.7);
+         font-size: 9px;
+      }
+
+      /* Typing indicator */
+      .chat-typing {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         padding: 0 20px 8px;
+         font-size: 12px;
+         color: #aaa;
+         flex-shrink: 0;
+      }
+      .chat-typing__dots {
+         display: flex;
+         gap: 3px;
+      }
+      .chat-typing__dot {
+         width: 5px; height: 5px;
+         background: #ccc;
+         border-radius: 50%;
+         animation: typingBounce 1.2s infinite ease-in-out;
+      }
+      .chat-typing__dot:nth-child(2) { animation-delay: .2s; }
+      .chat-typing__dot:nth-child(3) { animation-delay: .4s; }
+      @keyframes typingBounce {
+         0%, 60%, 100% { transform: translateY(0); }
+         30% { transform: translateY(-5px); }
+      }
+
+      /* Input area */
+      .chat-input-area {
+         display: flex;
+         align-items: flex-end;
+         gap: 10px;
+         padding: 12px 16px;
+         border-top: 1px solid #f0f0f0;
+         background: #fff;
+         flex-shrink: 0;
+      }
+      .chat-input-btn {
+         width: 38px; height: 38px;
+         border: none;
+         background: none;
+         cursor: pointer;
+         border-radius: 50%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 18px;
+         color: #aaa;
+         transition: background .15s, color .15s;
+         flex-shrink: 0;
+      }
+      .chat-input-btn:hover { background: #f5f5f5; color: #555; }
+
+      .chat-input-wrap {
+         flex: 1;
+         position: relative;
+      }
+      .chat-input {
+         width: 100%;
+         padding: 10px 16px;
+         border: 1.5px solid #eee;
+         border-radius: 22px;
+         font-size: 13.5px;
+         font-family: 'Poppins', sans-serif;
+         outline: none;
+         resize: none;
+         max-height: 100px;
+         line-height: 1.4;
+         color: #1a1a1a;
+         transition: border-color .2s;
+         display: block;
+         overflow: auto;
+      }
+      .chat-input:focus { border-color: #ff9138; }
+      .chat-input:empty::before {
+         content: attr(data-placeholder);
+         color: #bbb;
+         pointer-events: none;
+      }
+
+      .chat-send-btn {
+         width: 42px; height: 42px;
+         border: none;
+         background: #ff9138;
+         color: #fff;
+         border-radius: 50%;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         flex-shrink: 0;
+         transition: background .2s, transform .15s;
+         font-size: 16px;
+      }
+      .chat-send-btn:hover { background: #f07d1f; }
+      .chat-send-btn:active { transform: scale(.93); }
+
+      /* ── Hidden state ── */
+      .chat-content { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+      .chat-content.visible { display: flex; }
+      .msg-empty { display: flex; }
+      .msg-empty.hidden { display: none; }
+
+      /* ── Mobile ── */
+      @media (max-width: 720px) {
+         .msg-layout { padding: 0; gap: 0; height: calc(100vh - 60px); border-radius: 0; }
+         .msg-sidebar { width: 100%; border-radius: 0; border: none; display: none; }
+         .msg-sidebar.mob-visible { display: flex; }
+         .msg-chat { border-radius: 0; border: none; }
+         .chat-head__ad { display: none; }
+      }
+   </style>
+</head>
+<body>
+   <div class="wrapper">
+
+      <header class="header-old">
+         <div class="container-full">
+            <div class="header-old__body">
+               <a href="dev-index.html" class="logo">
+                  <img src="img/logo.png" alt="">
+               </a>
+               <div class="burger-body">
+                  <div class="header-old__right">
+                     <div class="header-old__cell">
+                        <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="icons-list">
+                           <a href="messages.html" class="icon-item icon-email" style="color:#ff9138;"><span class="icon-item__namber">2</span></a>
+                           <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                        </div>
+                     </div>
+                     <div class="header-old__cell">
+                        <a href="cabinet.html#payments" class="wallet-widget icon-win-wallet">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></a>
+                     </div>
+                     <div class="header-old__cell">
+                        <div class="user-link">
+                           <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;">
+                           <div class="user-link__photo">
+                              <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                           </div>
+                           <div class="user-link__title">Alexey</div></a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </header>
+
+      <div class="msg-layout">
+
+         <!-- ── Sidebar ── -->
+         <aside class="msg-sidebar" id="msgSidebar">
+            <div class="msg-sidebar__head">
+               <div class="msg-sidebar__title">Messages</div>
+               <div class="msg-sidebar__search">
+                  <input type="text" placeholder="Search conversations…" oninput="filterChats(this.value)">
+               </div>
+            </div>
+            <div class="msg-list" id="msgList">
+
+               <!-- Support -->
+               <div class="msg-item msg-item--support" data-chat="support" onclick="openChat('support')">
+                  <div class="msg-item__avatar">
+                     <div class="msg-item__online"></div>
+                     🅱
+                  </div>
+                  <div class="msg-item__body">
+                     <div class="msg-item__top">
+                        <span class="msg-item__name">Bazar Support</span>
+                        <span class="msg-item__time">09:14</span>
+                     </div>
+                     <div class="msg-item__preview">Welcome to Bazar! How can we help?</div>
+                  </div>
+               </div>
+
+               <!-- Sarah -->
+               <div class="msg-item" data-chat="sarah" onclick="openChat('sarah')">
+                  <div class="msg-item__avatar">
+                     <img src="icon/man.svg" alt="">
+                     <div class="msg-item__online"></div>
+                  </div>
+                  <div class="msg-item__body">
+                     <div class="msg-item__top">
+                        <span class="msg-item__name">Sarah Mitchell</span>
+                        <span class="msg-item__time">11:32</span>
+                     </div>
+                     <div class="msg-item__preview">Is the villa still available?</div>
+                  </div>
+                  <div class="msg-item__badge">2</div>
+               </div>
+
+               <!-- Michael -->
+               <div class="msg-item" data-chat="michael" onclick="openChat('michael')">
+                  <div class="msg-item__avatar">
+                     <img src="icon/man.svg" alt="">
+                  </div>
+                  <div class="msg-item__body">
+                     <div class="msg-item__top">
+                        <span class="msg-item__name">Michael Green</span>
+                        <span class="msg-item__time">Yesterday</span>
+                     </div>
+                     <div class="msg-item__preview">Can we meet Thursday?</div>
+                  </div>
+               </div>
+
+               <!-- Elena -->
+               <div class="msg-item" data-chat="elena" onclick="openChat('elena')">
+                  <div class="msg-item__avatar">
+                     <img src="icon/man.svg" alt="">
+                  </div>
+                  <div class="msg-item__body">
+                     <div class="msg-item__top">
+                        <span class="msg-item__name">Elena Vassileva</span>
+                        <span class="msg-item__time">Mon</span>
+                     </div>
+                     <div class="msg-item__preview">Thank you, I'll think about it</div>
+                  </div>
+               </div>
+
+               <!-- John -->
+               <div class="msg-item" data-chat="john" onclick="openChat('john')">
+                  <div class="msg-item__avatar">
+                     <img src="icon/man.svg" alt="">
+                  </div>
+                  <div class="msg-item__body">
+                     <div class="msg-item__top">
+                        <span class="msg-item__name">John Papadopoulos</span>
+                        <span class="msg-item__time">Sun</span>
+                     </div>
+                     <div class="msg-item__preview">What's the lowest you'd go?</div>
+                  </div>
+               </div>
+
+            </div>
+         </aside>
+
+         <!-- ── Chat panel ── -->
+         <section class="msg-chat">
+
+            <!-- Empty state -->
+            <div class="msg-empty" id="msgEmpty">
+               <div class="msg-empty__icon">💬</div>
+               <div class="msg-empty__text">Choose a conversation</div>
+               <div class="msg-empty__sub">or start chatting with a seller</div>
+            </div>
+
+            <!-- Chat: Support -->
+            <div class="chat-content" id="chat-support">
+               <div class="chat-head">
+                  <div class="chat-head__avatar">
+                     <img src="icon/logo.svg" alt="" style="object-fit:contain;background:#fff8f2;padding:4px;">
+                  </div>
+                  <div class="chat-head__info">
+                     <div class="chat-head__name">Bazar Support</div>
+                     <div class="chat-head__status">Online · always available</div>
+                  </div>
+               </div>
+               <div class="chat-messages">
+                  <div class="chat-date-sep">Today</div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/logo.svg" alt="" style="padding:3px;background:#fff8f2;"></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">👋 Welcome to Bazar! We're happy to help with any questions about your listings, account, or payments.</div>
+                        <div class="chat-msg__time">09:14</div>
+                     </div>
+                  </div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/logo.svg" alt="" style="padding:3px;background:#fff8f2;"></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">How can we help you today?</div>
+                        <div class="chat-msg__time">09:14</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="chat-input-area">
+                  <button class="chat-input-btn" title="Attach file">📎</button>
+                  <div class="chat-input-wrap">
+                     <div class="chat-input" contenteditable="true" data-placeholder="Write a message…" data-chat="support" onkeydown="handleKey(event,this)"></div>
+                  </div>
+                  <button class="chat-input-btn" title="Emoji" onclick="insertEmoji(this)">😊</button>
+                  <button class="chat-send-btn" onclick="sendMsg('support')" title="Send">➤</button>
+               </div>
+            </div>
+
+            <!-- Chat: Sarah -->
+            <div class="chat-content" id="chat-sarah">
+               <div class="chat-head">
+                  <div class="chat-head__avatar"><img src="icon/man.svg" alt=""></div>
+                  <div class="chat-head__info">
+                     <div class="chat-head__name">Sarah Mitchell</div>
+                     <div class="chat-head__status">Online now</div>
+                  </div>
+                  <a href="card.html" class="chat-head__ad">
+                     <img src="img/product.jpg" alt="" class="chat-head__ad-img">
+                     <div class="chat-head__ad-text">
+                        <span class="chat-head__ad-title">Villa for Sale in Tsada</span>
+                        <span class="chat-head__ad-price">£ 1,049,000</span>
+                     </div>
+                  </a>
+               </div>
+               <div class="chat-messages">
+                  <div class="chat-date-sep">Yesterday</div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Hello! I saw your villa listing in Tsada. Is it still available?</div>
+                        <div class="chat-msg__time">18:42</div>
+                     </div>
+                  </div>
+                  <div class="chat-msg chat-msg--out">
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Hi Sarah! Yes, the villa is still available. Are you interested in scheduling a viewing?</div>
+                        <div class="chat-msg__time">18:55</div>
+                     </div>
+                  </div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">That would be great! Could you tell me more about the plot size?</div>
+                        <div class="chat-msg__time">19:03</div>
+                     </div>
+                  </div>
+                  <div class="chat-msg chat-msg--out">
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">The plot is 433 m². The villa itself is 153 m² with 2 bedrooms, 2 bathrooms, and a private pool. 🏊</div>
+                        <div class="chat-msg__time">19:10</div>
+                     </div>
+                  </div>
+                  <div class="chat-date-sep">Today</div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Is the villa still available?</div>
+                        <div class="chat-msg__time">11:32</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="chat-typing" id="typing-sarah" style="display:none;">
+                  <div class="chat-typing__dots">
+                     <div class="chat-typing__dot"></div>
+                     <div class="chat-typing__dot"></div>
+                     <div class="chat-typing__dot"></div>
+                  </div>
+                  <span>Sarah is typing…</span>
+               </div>
+               <div class="chat-input-area">
+                  <button class="chat-input-btn" title="Attach file">📎</button>
+                  <div class="chat-input-wrap">
+                     <div class="chat-input" contenteditable="true" data-placeholder="Write a message…" data-chat="sarah" onkeydown="handleKey(event,this)"></div>
+                  </div>
+                  <button class="chat-input-btn" title="Emoji">😊</button>
+                  <button class="chat-send-btn" onclick="sendMsg('sarah')" title="Send">➤</button>
+               </div>
+            </div>
+
+            <!-- Chat: Michael -->
+            <div class="chat-content" id="chat-michael">
+               <div class="chat-head">
+                  <div class="chat-head__avatar"><img src="icon/man.svg" alt=""></div>
+                  <div class="chat-head__info">
+                     <div class="chat-head__name">Michael Green</div>
+                     <div class="chat-head__status chat-head__status--offline">Last seen yesterday</div>
+                  </div>
+                  <a href="#" class="chat-head__ad">
+                     <img src="img/product.jpg" alt="" class="chat-head__ad-img">
+                     <div class="chat-head__ad-text">
+                        <span class="chat-head__ad-title">iPhone 14 Pro Max 256GB</span>
+                        <span class="chat-head__ad-price">£ 850</span>
+                     </div>
+                  </a>
+               </div>
+               <div class="chat-messages">
+                  <div class="chat-date-sep">Monday</div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Hi, is the iPhone still available?</div>
+                        <div class="chat-msg__time">14:20</div>
+                     </div>
+                  </div>
+                  <div class="chat-msg chat-msg--out">
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Yes! It's in perfect condition, used only 6 months.</div>
+                        <div class="chat-msg__time">14:35</div>
+                     </div>
+                  </div>
+                  <div class="chat-date-sep">Yesterday</div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Can we meet Thursday? I'd like to see it in person.</div>
+                        <div class="chat-msg__time">10:15</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="chat-input-area">
+                  <button class="chat-input-btn" title="Attach file">📎</button>
+                  <div class="chat-input-wrap">
+                     <div class="chat-input" contenteditable="true" data-placeholder="Write a message…" data-chat="michael" onkeydown="handleKey(event,this)"></div>
+                  </div>
+                  <button class="chat-input-btn" title="Emoji">😊</button>
+                  <button class="chat-send-btn" onclick="sendMsg('michael')" title="Send">➤</button>
+               </div>
+            </div>
+
+            <!-- Chat: Elena -->
+            <div class="chat-content" id="chat-elena">
+               <div class="chat-head">
+                  <div class="chat-head__avatar"><img src="icon/man.svg" alt=""></div>
+                  <div class="chat-head__info">
+                     <div class="chat-head__name">Elena Vassileva</div>
+                     <div class="chat-head__status chat-head__status--offline">Last seen Mon at 17:30</div>
+                  </div>
+               </div>
+               <div class="chat-messages">
+                  <div class="chat-date-sep">Monday</div>
+                  <div class="chat-msg chat-msg--out">
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Hello Elena! Are you still interested in the apartment?</div>
+                        <div class="chat-msg__time">16:50</div>
+                     </div>
+                  </div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Thank you, I'll think about it. The price is a bit high for me.</div>
+                        <div class="chat-msg__time">17:28</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="chat-input-area">
+                  <button class="chat-input-btn" title="Attach file">📎</button>
+                  <div class="chat-input-wrap">
+                     <div class="chat-input" contenteditable="true" data-placeholder="Write a message…" data-chat="elena" onkeydown="handleKey(event,this)"></div>
+                  </div>
+                  <button class="chat-input-btn" title="Emoji">😊</button>
+                  <button class="chat-send-btn" onclick="sendMsg('elena')" title="Send">➤</button>
+               </div>
+            </div>
+
+            <!-- Chat: John -->
+            <div class="chat-content" id="chat-john">
+               <div class="chat-head">
+                  <div class="chat-head__avatar"><img src="icon/man.svg" alt=""></div>
+                  <div class="chat-head__info">
+                     <div class="chat-head__name">John Papadopoulos</div>
+                     <div class="chat-head__status chat-head__status--offline">Last seen Sunday</div>
+                  </div>
+               </div>
+               <div class="chat-messages">
+                  <div class="chat-date-sep">Sunday</div>
+                  <div class="chat-msg chat-msg--in">
+                     <div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div>
+                     <div class="chat-msg__wrap">
+                        <div class="chat-msg__bubble">Hi, I'm interested in the Toyota Camry. What's the lowest you'd go?</div>
+                        <div class="chat-msg__time">13:05</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="chat-input-area">
+                  <button class="chat-input-btn" title="Attach file">📎</button>
+                  <div class="chat-input-wrap">
+                     <div class="chat-input" contenteditable="true" data-placeholder="Write a message…" data-chat="john" onkeydown="handleKey(event,this)"></div>
+                  </div>
+                  <button class="chat-input-btn" title="Emoji">😊</button>
+                  <button class="chat-send-btn" onclick="sendMsg('john')" title="Send">➤</button>
+               </div>
+            </div>
+
+         </section>
+      </div>
+   </div>
+
+   <script>
+      var currentChat = null;
+
+      function openChat(id) {
+         document.querySelectorAll('.msg-item').forEach(function(el) {
+            el.classList.remove('active');
+         });
+         var item = document.querySelector('[data-chat="' + id + '"]');
+         if (item) {
+            item.classList.add('active');
+            var badge = item.querySelector('.msg-item__badge');
+            if (badge) badge.remove();
+         }
+
+         document.querySelectorAll('.chat-content').forEach(function(el) {
+            el.classList.remove('visible');
+         });
+         var chatEl = document.getElementById('chat-' + id);
+         if (chatEl) chatEl.classList.add('visible');
+
+         var empty = document.getElementById('msgEmpty');
+         if (empty) empty.classList.add('hidden');
+
+         currentChat = id;
+
+         var msgs = chatEl ? chatEl.querySelector('.chat-messages') : null;
+         if (msgs) msgs.scrollTop = msgs.scrollHeight;
+
+         var inp = chatEl ? chatEl.querySelector('.chat-input') : null;
+         if (inp) inp.focus();
+      }
+
+      function sendMsg(chatId) {
+         var chatEl = document.getElementById('chat-' + chatId);
+         if (!chatEl) return;
+         var inp = chatEl.querySelector('.chat-input');
+         var text = inp ? inp.innerText.trim() : '';
+         if (!text) return;
+
+         var msgs = chatEl.querySelector('.chat-messages');
+         var now = new Date();
+         var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+         var msgEl = document.createElement('div');
+         msgEl.className = 'chat-msg chat-msg--out';
+         msgEl.innerHTML = '<div class="chat-msg__wrap"><div class="chat-msg__bubble">' + escHtml(text) + '</div><div class="chat-msg__time">' + time + '</div></div>';
+         msgs.appendChild(msgEl);
+         msgs.scrollTop = msgs.scrollHeight;
+
+         inp.innerText = '';
+
+         var listItem = document.querySelector('[data-chat="' + chatId + '"]');
+         if (listItem) {
+            var prev = listItem.querySelector('.msg-item__preview');
+            if (prev) prev.textContent = text;
+            var t = listItem.querySelector('.msg-item__time');
+            if (t) t.textContent = time;
+         }
+
+         if (chatId === 'sarah') showTyping(chatId, text);
+      }
+
+      function showTyping(chatId, originalMsg) {
+         var typingEl = document.getElementById('typing-' + chatId);
+         if (!typingEl) return;
+         typingEl.style.display = 'flex';
+         var chatEl = document.getElementById('chat-' + chatId);
+         var msgs = chatEl ? chatEl.querySelector('.chat-messages') : null;
+
+         setTimeout(function() {
+            if (typingEl) typingEl.style.display = 'none';
+            if (!msgs) return;
+            var replies = [
+               'Yes, please! When can I schedule a viewing? 😊',
+               'Thank you for the quick reply!',
+               'Great, I'm very interested. What documents do you need?',
+               'Is the price negotiable?'
+            ];
+            var reply = replies[Math.floor(Math.random() * replies.length)];
+            var now = new Date();
+            var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+            var msgEl = document.createElement('div');
+            msgEl.className = 'chat-msg chat-msg--in';
+            msgEl.innerHTML = '<div class="chat-msg__avatar"><img src="icon/man.svg" alt=""></div><div class="chat-msg__wrap"><div class="chat-msg__bubble">' + reply + '</div><div class="chat-msg__time">' + time + '</div></div>';
+            msgs.appendChild(msgEl);
+            msgs.scrollTop = msgs.scrollHeight;
+
+            var listItem = document.querySelector('[data-chat="sarah"]');
+            if (listItem) {
+               var prev = listItem.querySelector('.msg-item__preview');
+               if (prev) prev.textContent = reply;
+               var t = listItem.querySelector('.msg-item__time');
+               if (t) t.textContent = time;
+            }
+         }, 1800);
+      }
+
+      function handleKey(e, el) {
+         if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            var chatId = el.getAttribute('data-chat');
+            sendMsg(chatId);
+         }
+      }
+
+      function escHtml(str) {
+         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+
+      function filterChats(query) {
+         var q = query.toLowerCase();
+         document.querySelectorAll('.msg-item').forEach(function(el) {
+            var name = el.querySelector('.msg-item__name');
+            var prev = el.querySelector('.msg-item__preview');
+            var match = (name && name.textContent.toLowerCase().includes(q)) ||
+                        (prev && prev.textContent.toLowerCase().includes(q));
+            el.style.display = match ? '' : 'none';
+         });
+      }
+
+      openChat('sarah');
+   </script>
+</body>
+</html>
