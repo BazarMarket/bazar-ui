@@ -54,8 +54,8 @@
       }
       .po-card { transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease; }
       .po-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.1); transform: translateY(-2px); }
-      .po-card--pro  { border: 1.5px solid #ff9138; box-shadow: 0 4px 24px rgba(255,145,56,.15); }
-      .po-card--vip  { border: 2.5px solid #d4a017; box-shadow: 0 8px 24px rgba(212,163,0,.25); }
+      .po-card--pro  { border: 1.5px solid rgba(255,145,56,.65); box-shadow: 0 4px 18px rgba(255,145,56,.10); }
+      .po-card--vip  { border: 2px solid rgba(212,160,0,.70); box-shadow: 0 6px 18px rgba(212,163,0,.15); }
 
       /* ── Plan label badge (top of card) ── */
       .po-plan-badge {
@@ -449,19 +449,19 @@
 
       /* ── Plan card selected outline ── */
       .po-card.is-selected {
-         outline: 3px solid #bbb;
+         outline: 2px solid #ccc;
          outline-offset: 2px;
          transform: translateY(-4px) scale(1.01);
-         box-shadow: 0 12px 28px rgba(0,0,0,.13);
+         box-shadow: 0 10px 24px rgba(0,0,0,.10);
       }
       .po-card--pro.is-selected {
-         outline-color: #ff9138;
-         box-shadow: 0 12px 30px rgba(255,145,56,.28);
+         outline-color: rgba(255,145,56,.75);
+         box-shadow: 0 10px 24px rgba(255,145,56,.18);
       }
       .po-card--vip.is-selected {
-         outline-color: #d4a017;
-         transform: translateY(-6px) scale(1.02);
-         box-shadow: 0 16px 36px rgba(212,163,0,.35);
+         outline-color: rgba(212,160,0,.75);
+         transform: translateY(-5px) scale(1.015);
+         box-shadow: 0 12px 28px rgba(212,163,0,.22);
       }
 
       /* ── Tablet (≤ 1100px) ── */
