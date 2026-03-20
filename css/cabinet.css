@@ -166,7 +166,7 @@
 /* Sidebar nav */
 .cab-nav {
     flex: 1;
-    padding: 8px 0;
+    padding: 0;
 }
 
 .cab-nav__group-label {
@@ -176,7 +176,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #b0b0b0;
-    padding: 16px 20px 4px;
+    padding: 10px 20px 4px;
     margin: 0;
     user-select: none;
 }
