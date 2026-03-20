@@ -1994,7 +1994,7 @@
 .po-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 22px;
     align-items: start;
 }
 .po-card {
@@ -2007,11 +2007,12 @@
     transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 .po-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.10); transform: translateY(-2px); }
+.po-card--free { border: 1.5px solid #d8ead8; }
 .po-card--pro  { border: 1.5px solid rgba(255,145,56,.65); box-shadow: 0 4px 18px rgba(255,145,56,.10); }
-.po-card--vip  { border: 2px solid rgba(212,160,0,.70); box-shadow: 0 6px 18px rgba(212,163,0,.15); }
+.po-card--vip  { border: 2px solid rgba(212,160,0,.80); box-shadow: 0 8px 28px rgba(212,163,0,.22); background: linear-gradient(160deg, #fffbf0 0%, #fff 55%); }
 .po-card.is-selected { outline: 2px solid #ccc; outline-offset: 2px; transform: translateY(-4px) scale(1.01); box-shadow: 0 10px 24px rgba(0,0,0,.10); }
 .po-card--pro.is-selected { outline-color: rgba(255,145,56,.75); box-shadow: 0 10px 24px rgba(255,145,56,.18); }
-.po-card--vip.is-selected { outline-color: rgba(212,160,0,.75); transform: translateY(-5px) scale(1.015); box-shadow: 0 12px 28px rgba(212,163,0,.22); }
+.po-card--vip.is-selected { outline-color: rgba(212,160,0,.80); transform: translateY(-5px) scale(1.015); box-shadow: 0 14px 36px rgba(212,163,0,.30); }
 .po-plan-badge {
     display: inline-flex;
     align-items: center;
@@ -2061,16 +2062,16 @@
 }
 .po-price {
     font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 28px;
+    font-weight: 800;
+    font-size: 34px;
     color: #1a1a1a;
     margin: 0 0 4px;
     display: flex;
     align-items: baseline;
     gap: 4px;
 }
-.po-price__currency { font-size: 16px; font-weight: 600; color: #888; }
-.po-price__free     { font-size: 22px; color: #3ecb60; }
+.po-price__currency { font-size: 20px; font-weight: 600; color: #888; }
+.po-price__free     { font-size: 28px; font-weight: 800; color: #3ecb60; }
 .po-plan-tagline {
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
@@ -2173,12 +2174,19 @@
     text-align: center;
 }
 .po-btn:active { transform: scale(.98); }
-.po-btn--free { background: #f0f0f0; color: #aaa; }
-.po-btn--free:hover { background: #e8e8e8; color: #888; }
-.po-btn--pro  { background: #ff9138; color: #fff; }
+.po-btn--free { background: #f0faf4; color: #2aab52; border: 1.5px solid #b6dfc4; }
+.po-btn--free:hover { background: #e4f7ec; color: #1e9144; border-color: #9ccfb0; }
+.po-btn--pro  { background: #ff9138; color: #fff; border: none; }
 .po-btn--pro:hover  { background: #f07d1f; }
-.po-btn--vip  { background: #b8880e; color: #fff; }
-.po-btn--vip:hover  { background: #a07a0c; }
+.po-btn--vip  { background: linear-gradient(135deg, #c99a10 0%, #a07208 100%); color: #fff; border: none; box-shadow: 0 4px 14px rgba(180,130,10,.35); }
+.po-btn--vip:hover  { background: linear-gradient(135deg, #b88c0e 0%, #8f6507 100%); box-shadow: 0 6px 18px rgba(180,130,10,.45); }
+.cab-panel__subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999;
+    margin: 4px 0 0;
+}
 @media (max-width: 900px) {
     .po-cards { grid-template-columns: 1fr; gap: 14px; }
     .po-card--pro { order: -2; }

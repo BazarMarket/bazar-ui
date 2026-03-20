@@ -973,6 +973,7 @@
 
                 <div class="cab-panel__top">
                     <h1 class="cab-panel__title">My Subscriptions</h1>
+                    <p class="cab-panel__subtitle">Manage your listing visibility and promotions</p>
                 </div>
 
                 <!-- Plan cards -->
@@ -996,7 +997,7 @@
                             <li class="po-feat--dim">No priority placement</li>
                             <li class="po-feat--dim">No highlight or badge</li>
                         </ul>
-                        <button class="po-btn po-btn--free" onclick="event.stopPropagation()">Publish for free</button>
+                        <button class="po-btn po-btn--free" onclick="event.stopPropagation()">Start for free</button>
                     </div>
 
                     <!-- PRO -->
@@ -1036,7 +1037,7 @@
                             <li>Highlighted in search results</li>
                             <li>Contact form &amp; phone visible</li>
                         </ul>
-                        <button class="po-btn po-btn--pro" id="cabProBtn" onclick="event.stopPropagation()">Publish PRO for £7.00</button>
+                        <button class="po-btn po-btn--pro" id="cabProBtn" onclick="event.stopPropagation()">Upgrade to PRO — £7.00</button>
                     </div>
 
                     <!-- VIP -->
@@ -1075,7 +1076,7 @@
                             <li>Featured on homepage</li>
                             <li>Priority in search &amp; filters</li>
                         </ul>
-                        <button class="po-btn po-btn--vip" id="cabVipBtn" onclick="event.stopPropagation()">Publish VIP for £14.00</button>
+                        <button class="po-btn po-btn--vip" id="cabVipBtn" onclick="event.stopPropagation()">Upgrade to VIP — £14.00</button>
                     </div>
 
                 </div>
@@ -1311,7 +1312,7 @@
         var priceEl = document.getElementById(prefix + 'Price');
         var btnEl = document.getElementById(prefix + 'Btn');
         if (priceEl) priceEl.textContent = price;
-        if (btnEl) btnEl.textContent = 'Publish ' + plan.toUpperCase() + ' for £' + price;
+        if (btnEl) btnEl.textContent = 'Upgrade to ' + plan.toUpperCase() + ' \u2014 \u00A3' + price;
     }
 
     function cabToggleSearch() {
