@@ -373,12 +373,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- VIP ad -->
                             <tr>
                                 <td>
                                     <img class="cab-ads-table-img" src="img/product.jpg" alt="">
                                     <div class="cab-ads-table-info">
                                         <span class="cab-ads-table-title">Villa for Sale in Tsada</span>
-                                        <span class="cab-promo-badge cab-promo-badge--vip">👑 VIP · expires 14 Mar</span>
+                                        <span class="cab-promo-badge cab-promo-badge--vip">👑 VIP · 25 days left</span>
                                     </div>
                                 </td>
                                 <td>Real Estate</td>
@@ -387,18 +388,19 @@
                                 <td><span class="cab-status cab-status--active">Active</span></td>
                                 <td>
                                     <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <button class="cab-extend-btn cab-extend-btn--vip" onclick="switchToTab('subscriptions')" title="Extend VIP">Extend</button>
                                         <div class="cab-icon-btn icon-update" title="Edit"></div>
                                         <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
                                     </div>
                                 </td>
                             </tr>
+                            <!-- PRO ad -->
                             <tr>
                                 <td>
                                     <img class="cab-ads-table-img" src="img/phone.jpg" alt="">
                                     <div class="cab-ads-table-info">
                                         <span class="cab-ads-table-title">iPhone 14 Pro Max 256GB</span>
-                                        <span class="cab-promo-badge cab-promo-badge--pro">⭐ PRO · expires 20 Mar</span>
+                                        <span class="cab-promo-badge cab-promo-badge--pro">⭐ PRO · 14 days left</span>
                                     </div>
                                 </td>
                                 <td>Mobile phones</td>
@@ -407,17 +409,19 @@
                                 <td><span class="cab-status cab-status--active">Active</span></td>
                                 <td>
                                     <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <button class="cab-extend-btn cab-extend-btn--pro" onclick="switchToTab('subscriptions')" title="Extend PRO">Extend</button>
                                         <div class="cab-icon-btn icon-update" title="Edit"></div>
                                         <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
                                     </div>
                                 </td>
                             </tr>
+                            <!-- Free active ad -->
                             <tr>
                                 <td>
                                     <img class="cab-ads-table-img" src="img/product.jpg" alt="">
                                     <div class="cab-ads-table-info">
                                         <span class="cab-ads-table-title">2-Bed Apartment, Paphos</span>
+                                        <button class="cab-boost-btn" onclick="switchToTab('subscriptions')">⭐ Boost listing</button>
                                     </div>
                                 </td>
                                 <td>Real Estate</td>
@@ -432,6 +436,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            <!-- Inactive ad -->
                             <tr>
                                 <td>
                                     <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.5">
@@ -451,6 +456,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            <!-- Pending ad -->
                             <tr>
                                 <td>
                                     <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.6">
