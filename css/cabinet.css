@@ -288,7 +288,7 @@
 .cab-content {
     flex: 1;
     min-width: 0;
-    padding: 32px;
+    padding: 20px 32px 32px;
     overflow-y: auto;
 }
 
