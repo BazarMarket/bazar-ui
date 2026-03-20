@@ -23,10 +23,9 @@
     display: flex;
     flex: 1;
     min-height: calc(100vh - 70px);
-    max-width: 1600px;
+    max-width: 1440px;
     margin: 0 auto;
     width: 100%;
-    padding-left: 32px;
 }
 
 /* ── Sidebar ── */
@@ -170,7 +169,7 @@
 /* Sidebar nav */
 .cab-nav {
     flex: 1;
-    padding: 0;
+    padding: 0 0 0 32px;
 }
 
 .cab-nav__group-label {
