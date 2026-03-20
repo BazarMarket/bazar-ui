@@ -1304,6 +1304,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         var hash = window.location.hash.replace('#', '');
         if (hash) switchToTab(hash);
+        if (hash === 'messages') setTimeout(cabScrollToBottom, 100);
     });
 
     function cabSelectPlan(card, plan) {
@@ -1336,6 +1337,15 @@
         }
     }
 
+    function cabScrollToBottom() {
+        var activeChat = document.querySelector('.cab-chat-content[style*="flex"]');
+        if (!activeChat) activeChat = document.getElementById('cab-chat-sarah');
+        if (activeChat) {
+            var body = activeChat.querySelector('.cab-chat-body');
+            if (body) body.scrollTop = body.scrollHeight;
+        }
+    }
+
     function cabOpenChat(id) {
         document.querySelectorAll('.cab-conv-item').forEach(function(el) { el.classList.remove('active'); });
         var item = document.querySelector('.cab-conv-item[onclick*="' + id + '"]');
@@ -1355,6 +1365,8 @@
 
         var navBadge = document.querySelector('.cab-nav__item[data-tab="messages"] .cab-nav__badge');
         if (navBadge) navBadge.remove();
+
+        setTimeout(cabScrollToBottom, 30);
     }
 
     function cabSendMessage() {

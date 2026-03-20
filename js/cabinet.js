@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.innerWidth <= 768) {
             document.querySelector('.cab-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        if (tabId === 'messages' && typeof cabScrollToBottom === 'function') {
+            setTimeout(cabScrollToBottom, 50);
+        }
     }
 
     navItems.forEach(function (item) {
