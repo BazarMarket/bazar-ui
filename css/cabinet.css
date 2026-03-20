@@ -1456,7 +1456,7 @@
 .cab-panel--messages { margin-top: -10px; }
 .cab-msgs-wrap {
     display: flex;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 140px);
     min-height: 460px;
     max-width: 1060px;
     border: 1px solid #e8e8e8;
