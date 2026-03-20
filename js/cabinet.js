@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         panels.forEach(function (panel) {
             panel.classList.toggle('active', panel.dataset.panel === tabId);
         });
+        history.replaceState(null, '', '#' + tabId);
         if (window.innerWidth <= 768) {
             document.querySelector('.cab-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
