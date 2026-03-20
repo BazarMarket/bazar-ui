@@ -2006,10 +2006,13 @@
     cursor: pointer;
     transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
-.po-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.10); transform: translateY(-2px); }
+.po-card:hover { box-shadow: 0 10px 36px rgba(0,0,0,.13); transform: translateY(-3px) scale(1.015); }
 .po-card--free { border: 1.5px solid #d8ead8; }
+.po-card--free:hover { box-shadow: 0 10px 28px rgba(62,203,96,.12); }
 .po-card--pro  { border: 1.5px solid rgba(255,145,56,.65); box-shadow: 0 4px 18px rgba(255,145,56,.10); }
+.po-card--pro:hover  { box-shadow: 0 12px 36px rgba(255,145,56,.20); }
 .po-card--vip  { border: 2px solid rgba(212,160,0,.80); box-shadow: 0 8px 28px rgba(212,163,0,.22); background: linear-gradient(160deg, #fffbf0 0%, #fff 55%); }
+.po-card--vip:hover  { box-shadow: 0 14px 42px rgba(212,163,0,.32); }
 .po-card.is-selected { outline: 2px solid #ccc; outline-offset: 2px; transform: translateY(-4px) scale(1.01); box-shadow: 0 10px 24px rgba(0,0,0,.10); }
 .po-card--pro.is-selected { outline-color: rgba(255,145,56,.75); box-shadow: 0 10px 24px rgba(255,145,56,.18); }
 .po-card--vip.is-selected { outline-color: rgba(212,160,0,.80); transform: translateY(-5px) scale(1.015); box-shadow: 0 14px 36px rgba(212,163,0,.30); }
@@ -2107,7 +2110,15 @@
     white-space: nowrap;
     letter-spacing: .2px;
 }
-.po-dur-label--save { font-size: 8px; font-weight: 500; color: #a8d5b5; }
+.po-dur-label--save {
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    background: #3ecb60;
+    padding: 1px 6px;
+    border-radius: 20px;
+    letter-spacing: .1px;
+}
 .po-duration-btn {
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
@@ -2124,8 +2135,8 @@
     width: 100%;
 }
 .po-duration-btn--best { border-color: #d0e8d0; background: #f4fbf4; }
-.po-duration-btn--pro.active { border-color: #ff9138; background: #fff6ee; color: #f07d1f; }
-.po-duration-btn--vip.active { border-color: #d4a017; background: #fef3c7; color: #92600a; }
+.po-duration-btn--pro.active { border-color: #ff9138; border-width: 2px; background: #fff0e0; color: #e06800; font-weight: 700; box-shadow: 0 2px 8px rgba(255,145,56,.20); }
+.po-duration-btn--vip.active { border-color: #c99a10; border-width: 2px; background: #fef0c0; color: #7a5200; font-weight: 700; box-shadow: 0 2px 8px rgba(212,160,0,.22); }
 .po-divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
 .po-features {
     list-style: none;
