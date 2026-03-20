@@ -23,9 +23,10 @@
     display: flex;
     flex: 1;
     min-height: calc(100vh - 70px);
-    max-width: 1440px;
+    max-width: 1600px;
     margin: 0 auto;
     width: 100%;
+    padding-left: 32px;
 }
 
 /* ── Sidebar ── */
