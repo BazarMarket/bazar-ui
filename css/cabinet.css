@@ -1551,7 +1551,7 @@
 /* ════════════════════════════════════════════
    MY MESSAGES PANEL
 ════════════════════════════════════════════ */
-.cab-panel--messages { margin-top: -10px; }
+.cab-panel--messages { margin-top: 0; }
 .cab-msgs-wrap {
     display: flex;
     height: calc(100vh - 140px);
