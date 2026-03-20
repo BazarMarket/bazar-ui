@@ -737,6 +737,16 @@
     background: #fff6ee;
     color: #e07d1f;
 }
+.cab-promo-badge--warning {
+    background: #fff7ed !important;
+    color: #c2660a !important;
+    border: 1px solid #fed7aa;
+}
+.cab-promo-badge--urgent {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca;
+}
 
 .cab-ads-table-img {
     width: 54px;
@@ -800,6 +810,21 @@
 .cab-extend-btn--pro:hover {
     background: #fff6ee;
     border-color: #ff9138;
+}
+.cab-extend-btn--warning-state {
+    border-color: #f97316 !important;
+    color: #c2660a !important;
+    background: #fff7ed !important;
+}
+.cab-extend-btn--urgent-state {
+    border-color: #dc2626 !important;
+    color: #dc2626 !important;
+    background: #fef2f2 !important;
+    animation: extendPulse 1.8s ease-in-out infinite;
+}
+@keyframes extendPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.25); }
+    50%       { box-shadow: 0 0 0 5px rgba(220,38,38,0); }
 }
 
 /* Boost button (for free active ads) */

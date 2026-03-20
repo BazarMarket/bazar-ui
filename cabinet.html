@@ -1476,6 +1476,23 @@
             }
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.cab-promo-badge').forEach(function(badge) {
+            var m = badge.textContent.match(/(\d+)\s+days?\s+left/i);
+            if (!m) return;
+            var days = parseInt(m[1], 10);
+            var row = badge.closest('tr');
+            var extendBtn = row ? row.querySelector('.cab-extend-btn') : null;
+            if (days < 10) {
+                badge.classList.add('cab-promo-badge--urgent');
+                if (extendBtn) extendBtn.classList.add('cab-extend-btn--urgent-state');
+            } else if (days < 20) {
+                badge.classList.add('cab-promo-badge--warning');
+                if (extendBtn) extendBtn.classList.add('cab-extend-btn--warning-state');
+            }
+        });
+    });
 </script>
 
 </body></html>
