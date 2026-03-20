@@ -2294,11 +2294,11 @@
 .po-active-meta {
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
-    font-weight: 600;
-    color: #3ecb60;
+    font-weight: 500;
+    color: #6b7280;
     margin: 0 0 12px;
     padding: 6px 10px;
-    background: #f0fbf3;
+    background: #f3f4f6;
     border-radius: 8px;
-    border-left: 3px solid #3ecb60;
+    border-left: 3px solid #d1d5db;
 }
