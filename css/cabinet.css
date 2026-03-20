@@ -2259,3 +2259,36 @@
     .po-card--pro { order: -2; }
     .po-card--vip { order: -1; }
 }
+
+/* ── Active plan state ── */
+.po-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+.po-active-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #e8f9ec;
+    color: #259a44;
+    border: 1px solid #a8e6bc;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    letter-spacing: .3px;
+    white-space: nowrap;
+}
+.po-active-meta {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #3ecb60;
+    margin: 0 0 12px;
+    padding: 6px 10px;
+    background: #f0fbf3;
+    border-radius: 8px;
+    border-left: 3px solid #3ecb60;
+}
