@@ -963,17 +963,8 @@
                     <h1 class="cab-panel__title">My Subscriptions</h1>
                 </div>
 
-                <div class="cab-sub-card">
-                    <div class="cab-sub-card__info">
-                        <p class="cab-sub-card__name">Basic Plan</p>
-                        <p class="cab-sub-card__meta">Renews on 10 Mar 2026 &bull; 3 ads included</p>
-                    </div>
-                    <div class="cab-sub-card__right">
-                        <p class="cab-sub-card__price">£ 9.99 <span style="font-size:14px;font-weight:400;color:#808080">/mo</span></p>
-                        <span class="cab-status cab-status--active">Active</span>
-                        <button class="cab-btn-ghost">Cancel</button>
-                    </div>
-                </div>
+                <!-- Active subscriptions -->
+                <p class="cab-sub-plans-section">Active promotions</p>
 
                 <div class="cab-sub-card">
                     <div class="cab-sub-card__info">
@@ -989,14 +980,119 @@
 
                 <div class="cab-sub-card">
                     <div class="cab-sub-card__info">
-                        <p class="cab-sub-card__name">TOP — iPhone 14 Pro Max</p>
-                        <p class="cab-sub-card__meta">Expires 20 Mar 2026 &bull; Featured listing</p>
+                        <p class="cab-sub-card__name">PRO — iPhone 14 Pro Max</p>
+                        <p class="cab-sub-card__meta">Expires 20 Mar 2026 &bull; Priority placement</p>
                     </div>
                     <div class="cab-sub-card__right">
-                        <p class="cab-sub-card__price">£ 10.00 <span style="font-size:14px;font-weight:400;color:#808080">/mo</span></p>
+                        <p class="cab-sub-card__price">£ 7.00 <span style="font-size:14px;font-weight:400;color:#808080">/mo</span></p>
                         <span class="cab-status cab-status--active">Active</span>
                         <button class="cab-btn-ghost">Cancel</button>
                     </div>
+                </div>
+
+                <!-- Plan cards -->
+                <p class="cab-sub-plans-section" style="margin-top:36px;">Upgrade your listing</p>
+                <p class="cab-sub-plans-sub">Pick a plan that fits your goal. You can upgrade at any time.</p>
+
+                <div class="po-cards">
+
+                    <!-- FREE -->
+                    <div class="po-card po-card--free" onclick="cabSelectPlan(this,'free')">
+                        <span class="po-plan-badge po-plan-badge--free">Free</span>
+                        <p class="po-plan-name">✔ Free listing</p>
+                        <p class="po-position">Standard placement in category</p>
+                        <div class="po-price"><span class="po-price__free">Free</span></div>
+                        <p class="po-price__note">Active for 30 days</p>
+                        <hr class="po-divider">
+                        <ul class="po-features">
+                            <li>Listed in search results</li>
+                            <li>Up to 10 photos</li>
+                            <li>Contact form &amp; phone visible</li>
+                            <li class="po-feat--dim">No priority placement</li>
+                            <li class="po-feat--dim">No highlight or badge</li>
+                        </ul>
+                        <button class="po-btn po-btn--free" onclick="event.stopPropagation()">Publish for free</button>
+                    </div>
+
+                    <!-- PRO -->
+                    <div class="po-card po-card--pro" onclick="cabSelectPlan(this,'pro')">
+                        <span class="po-recommended">Most popular</span>
+                        <span class="po-plan-badge po-plan-badge--pro">
+                            <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,1 6.2,3.8 9.5,4.1 7.2,6.2 7.9,9.5 5,7.8 2.1,9.5 2.8,6.2 0.5,4.1 3.8,3.8"/></svg>
+                            PRO
+                        </span>
+                        <p class="po-plan-name po-plan-name--pro">⭐ PRO listing</p>
+                        <p class="po-position">Positions 1–5 in category</p>
+                        <div class="po-price">
+                            <span class="po-price__currency">£</span>
+                            <span id="cabProPrice">7.00</span>
+                        </div>
+                        <p class="po-plan-tagline">Most popular with sellers</p>
+                        <p class="po-price__note">Choose duration:</p>
+                        <div class="po-duration-row">
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',3,'3.00',this);event.stopPropagation()">3 days</button></div>
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',5,'4.00',this);event.stopPropagation()">5 days</button></div>
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',7,'5.00',this);event.stopPropagation()">7 days</button></div>
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',10,'6.00',this);event.stopPropagation()">10 days</button></div>
+                            <div class="po-dur-cell">
+                                <button class="po-duration-btn po-duration-btn--pro po-duration-btn--best active" onclick="cabSetDur('pro',14,'7.00',this);event.stopPropagation()">14 days</button>
+                                <span class="po-dur-label">Best value</span>
+                            </div>
+                            <div class="po-dur-cell">
+                                <button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',30,'10.00',this);event.stopPropagation()">30 days</button>
+                                <span class="po-dur-label po-dur-label--save">Save 60%</span>
+                            </div>
+                        </div>
+                        <hr class="po-divider">
+                        <ul class="po-features">
+                            <li>Priority placement in search</li>
+                            <li>Up to 20 photos</li>
+                            <li>Orange <b>PRO</b> badge on listing</li>
+                            <li>Highlighted in search results</li>
+                            <li>Contact form &amp; phone visible</li>
+                        </ul>
+                        <button class="po-btn po-btn--pro" id="cabProBtn" onclick="event.stopPropagation()">Publish PRO for £7.00</button>
+                    </div>
+
+                    <!-- VIP -->
+                    <div class="po-card po-card--vip" onclick="cabSelectPlan(this,'vip')">
+                        <span class="po-plan-badge po-plan-badge--vip">
+                            <svg width="9" height="9" viewBox="0 0 12 10" fill="currentColor"><path d="M1,9 L2.5,3 L5.5,6.5 L6,1 L6.5,6.5 L9.5,3 L11,9 Z"/></svg>
+                            VIP
+                        </span>
+                        <p class="po-plan-name po-plan-name--vip">👑 VIP listing</p>
+                        <p class="po-position" style="font-weight:500;color:#555;">Always #1 in category</p>
+                        <div class="po-price">
+                            <span class="po-price__currency">£</span>
+                            <span id="cabVipPrice">14.00</span>
+                        </div>
+                        <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
+                        <p class="po-price__note">Choose duration:</p>
+                        <div class="po-duration-row">
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',3,'6.00',this);event.stopPropagation()">3 days</button></div>
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',5,'8.00',this);event.stopPropagation()">5 days</button></div>
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',7,'10.00',this);event.stopPropagation()">7 days</button></div>
+                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',10,'12.00',this);event.stopPropagation()">10 days</button></div>
+                            <div class="po-dur-cell">
+                                <button class="po-duration-btn po-duration-btn--vip po-duration-btn--best active" onclick="cabSetDur('vip',14,'14.00',this);event.stopPropagation()">14 days</button>
+                                <span class="po-dur-label">Best value</span>
+                            </div>
+                            <div class="po-dur-cell">
+                                <button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',30,'20.00',this);event.stopPropagation()">30 days</button>
+                                <span class="po-dur-label po-dur-label--save">Save 60%</span>
+                            </div>
+                        </div>
+                        <hr class="po-divider">
+                        <ul class="po-features">
+                            <li>Top #1 position in category</li>
+                            <li>Up to 50 photos</li>
+                            <li>Gold <b>VIP</b> badge on listing</li>
+                            <li>Featured on homepage</li>
+                            <li>Priority in search &amp; filters</li>
+                        </ul>
+                        <button class="po-btn po-btn--vip" id="cabVipBtn" onclick="event.stopPropagation()">Publish VIP for £14.00</button>
+                    </div>
+
                 </div>
 
             </div>
@@ -1217,6 +1313,21 @@
         var hash = window.location.hash.replace('#', '');
         if (hash) switchToTab(hash);
     });
+
+    function cabSelectPlan(card, plan) {
+        document.querySelectorAll('.po-card').forEach(function(c) { c.classList.remove('is-selected'); });
+        card.classList.add('is-selected');
+    }
+    function cabSetDur(plan, days, price, btn) {
+        var prefix = plan === 'pro' ? 'cabPro' : 'cabVip';
+        var cls = 'po-duration-btn--' + plan;
+        btn.closest('.po-cards').querySelectorAll('.' + cls).forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var priceEl = document.getElementById(prefix + 'Price');
+        var btnEl = document.getElementById(prefix + 'Btn');
+        if (priceEl) priceEl.textContent = price;
+        if (btnEl) btnEl.textContent = 'Publish ' + plan.toUpperCase() + ' for £' + price;
+    }
 
     function cabToggleSearch() {
         var label = document.getElementById('cabMsgsLabel');
