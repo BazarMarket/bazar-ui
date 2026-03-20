@@ -1453,9 +1453,10 @@
 /* ════════════════════════════════════════════
    MY MESSAGES PANEL
 ════════════════════════════════════════════ */
+.cab-panel--messages { margin-top: -10px; }
 .cab-msgs-wrap {
     display: flex;
-    height: calc(100vh - 110px);
+    height: calc(100vh - 100px);
     min-height: 460px;
     max-width: 1060px;
     border: 1px solid #e8e8e8;
