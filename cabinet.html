@@ -1018,7 +1018,7 @@
                             <span id="cabProPrice">7.00</span>
                         </div>
                         <p class="po-plan-tagline">Most popular with sellers</p>
-                        <p class="po-active-meta">Used in 1 listing · 14 days left</p>
+                        <p class="po-active-meta">⏱ Used in 1 listing · 14 days left</p>
                         <p class="po-price__note">Choose duration:</p>
                         <div class="po-duration-row">
                             <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',3,'3.00',this);event.stopPropagation()">3 days</button></div>
@@ -1061,7 +1061,7 @@
                             <span id="cabVipPrice">14.00</span>
                         </div>
                         <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
-                        <p class="po-active-meta">Used in 1 listing · 25 days left</p>
+                        <p class="po-active-meta">⏱ Used in 1 listing · 25 days left</p>
                         <p class="po-price__note">Choose duration:</p>
                         <div class="po-duration-row">
                             <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',3,'6.00',this);event.stopPropagation()">3 days</button></div>
@@ -1462,6 +1462,19 @@
         if (sarah) { sarah.style.display = 'flex'; sarah.style.flexDirection = 'column'; sarah.style.height = '100%'; }
         var input = document.getElementById('cabChatInput');
         if (input) input.addEventListener('keydown', function(e) { if (e.key === 'Enter') cabSendMessage(); });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.po-active-meta').forEach(function(el) {
+            var m = el.textContent.match(/(\d+)\s+days?\s+left/i);
+            if (!m) return;
+            var days = parseInt(m[1], 10);
+            if (days < 10) {
+                el.classList.add('po-active-meta--urgent');
+            } else if (days < 20) {
+                el.classList.add('po-active-meta--warning');
+            }
+        });
     });
 </script>
 
