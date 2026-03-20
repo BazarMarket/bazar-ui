@@ -84,33 +84,28 @@
         <!-- ─────────────────── SIDEBAR ─────────────────── -->
         <aside class="cab-sidebar">
 
-            <!-- Balance -->
-            <div class="cab-balance-block">
-                <p class="cab-balance-block__label">Balance</p>
-                <p class="cab-balance-block__amount">1 060 <span>£</span></p>
-                <div class="cab-balance-block__btns">
-                    <button class="cab-btn-add" onclick="switchToTab('payments')">+ Add fund</button>
-                    <button class="cab-btn-withdraw" onclick="switchToTab('payments')">Withdraw</button>
-                </div>
-            </div>
-
             <!-- Navigation -->
             <nav class="cab-nav">
+                <p class="cab-nav__group-label">Main</p>
                 <div class="cab-nav__item icon-main-home active" data-tab="dashboard">Dashboard</div>
                 <div class="cab-nav__item icon-win-ad" data-tab="my-ads">
                     My Ads
                     <span class="cab-nav__badge">5</span>
                 </div>
-                <div class="cab-nav__item icon-win-wallet" data-tab="payments">My Payments</div>
-                <div class="cab-nav__item icon-heart-new" data-tab="favorites">My Favorites</div>
                 <div class="cab-nav__item icon-email" data-tab="messages">
                     My Messages
                     <span class="cab-nav__badge">2</span>
                 </div>
+                <div class="cab-nav__item icon-heart-new" data-tab="favorites">My Favorites</div>
+
+                <p class="cab-nav__group-label">Account</p>
                 <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Subscriptions</div>
-                <div class="cab-nav__divider"></div>
+                <div class="cab-nav__item icon-win-wallet" data-tab="payments">My Payments</div>
+
+                <p class="cab-nav__group-label">System</p>
                 <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
                 <div class="cab-nav__item icon-question" data-tab="support">Support</div>
+
                 <div class="cab-nav__divider"></div>
                 <div class="cab-nav__darkmode">
                     <span class="cab-nav__darkmode-label icon-win-sun">Dark Mode</span>
