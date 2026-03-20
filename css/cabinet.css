@@ -1453,11 +1453,9 @@
 /* ════════════════════════════════════════════
    MY MESSAGES PANEL
 ════════════════════════════════════════════ */
-.cab-panel--messages .cab-panel__top { margin-bottom: 12px; }
-
 .cab-msgs-wrap {
     display: flex;
-    height: calc(100vh - 178px);
+    height: calc(100vh - 110px);
     min-height: 460px;
     max-width: 1060px;
     border: 1px solid #e8e8e8;
@@ -1480,10 +1478,28 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 14px;
+    padding: 14px 14px;
     border-bottom: 1px solid #f0f0f0;
 }
-.cab-msgs-search__icon { font-size: 14px; opacity: .45; }
+.cab-msgs-search__icon-btn {
+    background: none;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+    opacity: .5;
+    transition: opacity .15s;
+}
+.cab-msgs-search__icon-btn:hover { opacity: 1; }
+.cab-msgs-search__label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-family: 'Poppins', sans-serif;
+    flex: 1;
+}
 .cab-msgs-search__input {
     flex: 1;
     border: none;
@@ -1493,6 +1509,7 @@
     color: #333;
     background: transparent;
 }
+.cab-msgs-search__input--hidden { display: none; }
 .cab-msgs-convs { flex: 1; overflow-y: auto; }
 
 .cab-conv-item {

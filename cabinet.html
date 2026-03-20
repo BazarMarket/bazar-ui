@@ -650,17 +650,14 @@
             <!-- ══════════════ MY MESSAGES ══════════════ -->
             <div class="cab-panel cab-panel--messages" data-panel="messages">
 
-                <div class="cab-panel__top">
-                    <h1 class="cab-panel__title">My Messages</h1>
-                </div>
-
                 <div class="cab-msgs-wrap">
 
                     <!-- ── Conversation list ── -->
                     <div class="cab-msgs-list">
-                        <div class="cab-msgs-search">
-                            <span class="cab-msgs-search__icon">🔍</span>
-                            <input type="text" class="cab-msgs-search__input" placeholder="Search conversations...">
+                        <div class="cab-msgs-search" id="cabMsgsSearchBar">
+                            <button class="cab-msgs-search__icon-btn" onclick="cabToggleSearch()" title="Search">🔍</button>
+                            <span class="cab-msgs-search__label" id="cabMsgsLabel">My Messages</span>
+                            <input type="text" class="cab-msgs-search__input cab-msgs-search__input--hidden" id="cabMsgsInput" placeholder="Search conversations...">
                         </div>
                         <div class="cab-msgs-convs">
 
@@ -1225,6 +1222,21 @@
         var hash = window.location.hash.replace('#', '');
         if (hash) switchToTab(hash);
     });
+
+    function cabToggleSearch() {
+        var label = document.getElementById('cabMsgsLabel');
+        var input = document.getElementById('cabMsgsInput');
+        var isSearch = label.style.display === 'none';
+        if (isSearch) {
+            label.style.display = '';
+            input.classList.add('cab-msgs-search__input--hidden');
+            input.value = '';
+        } else {
+            label.style.display = 'none';
+            input.classList.remove('cab-msgs-search__input--hidden');
+            input.focus();
+        }
+    }
 
     function cabOpenChat(id) {
         document.querySelectorAll('.cab-conv-item').forEach(function(el) { el.classList.remove('active'); });
