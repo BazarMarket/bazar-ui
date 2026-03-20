@@ -2301,6 +2301,9 @@
     background: #f3f4f6;
     border-radius: 8px;
     border-left: 3px solid #d1d5db;
+    transition: background 0.25s ease, color 0.25s ease, border-left-color 0.25s ease;
+    position: relative;
+    cursor: default;
 }
 .po-active-meta--warning {
     color: #c2660a;
@@ -2308,7 +2311,28 @@
     border-left-color: #f97316;
 }
 .po-active-meta--urgent {
-    color: #b91c1c;
+    color: #dc2626;
     background: #fef2f2;
-    border-left-color: #ef4444;
+    border-left-color: #dc2626;
+}
+.po-active-meta--urgent::after {
+    content: 'Your listing will expire soon';
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 400;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    z-index: 10;
+}
+.po-active-meta--urgent:hover::after {
+    opacity: 1;
 }
