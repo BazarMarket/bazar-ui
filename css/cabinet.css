@@ -1465,9 +1465,6 @@
 }
 
 /* ── header-old overrides for cabinet (from bazar-ui) ── */
-.cab-page .container-full {
-    max-width: 1440px;
-}
 .cab-page .header-old {
     padding: 8px 0 !important;
     background: #ffffff;
