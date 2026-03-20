@@ -170,7 +170,7 @@
 /* Sidebar nav */
 .cab-nav {
     flex: 1;
-    padding: 0;
+    padding: 24px 0 0;
 }
 
 .cab-nav__group-label {
