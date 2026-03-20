@@ -698,8 +698,34 @@
 
 .cab-ads-table .cab-table td:first-child {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
+}
+.cab-ads-table-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 2px;
+}
+.cab-promo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    width: fit-content;
+}
+.cab-promo-badge--vip {
+    background: #fef3c7;
+    color: #92600a;
+}
+.cab-promo-badge--pro {
+    background: #fff6ee;
+    color: #e07d1f;
 }
 
 .cab-ads-table-img {
