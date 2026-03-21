@@ -724,6 +724,7 @@
     font-family: 'Poppins', sans-serif;
     font-size: 10px;
     font-weight: 600;
+    letter-spacing: 0.2px;
     padding: 2px 8px;
     border-radius: 20px;
     white-space: nowrap;
@@ -2320,6 +2321,7 @@
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
     font-weight: 500;
+    letter-spacing: 0.2px;
     color: #6b7280;
     margin: 0 0 12px;
     padding: 6px 10px;
