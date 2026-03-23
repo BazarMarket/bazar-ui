@@ -36,9 +36,8 @@
       .sf-add-btn:hover { border-color: #ff9138; color: #ff9138; }
       .sf-add-btn svg { flex-shrink: 0; }
 
-      /* More filters panel */
-      .sf-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 200; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,.10); padding: 24px; min-width: 560px; }
-      .sf-panel.open { display: block; }
+      /* More filters panel — always visible */
+      .sf-panel { display: block; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.06); padding: 24px; margin-top: 16px; }
       .sf-panel__title { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: #1a1a1a; margin: 0 0 16px; letter-spacing: .2px; }
       .sf-panel__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
       .sf-panel__field { display: flex; flex-direction: column; gap: 5px; }
@@ -140,26 +139,6 @@
          </div>
       </header>
 
-      <div class="search">
-         <div class="container">
-            <div class="search__body">
-               <div class="search__inputs">
-                  <div class="search__duoble">
-                     <div class="search__first">
-                        <span class="icon-glass search__glass-icon"></span>
-                        <input type="text" placeholder="Search" value="iPhone">
-                     </div>
-                  </div>
-                  <div class="search__third">
-                     <label for="">All</label>
-                     <input type="text" placeholder="Location" value="UK">
-                  </div>
-               </div>
-               <a href="#" class="btn btn_grad icon-search">Search</a>
-            </div>
-         </div>
-      </div>
-
       <main class="main header-indent">
          <div class="sr-wrap">
 
@@ -172,10 +151,6 @@
                      <div class="sr-tag">Mobile Phones <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
                      <div class="sr-tag">New <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
                      <div class="sr-tag">£100 — £2000 <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
-                     <button class="sf-add-btn" id="sfAddBtn" onclick="toggleFilterPanel(event)">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                        Add filter
-                     </button>
                   </div>
 
                   <!-- More filters dropdown panel -->
