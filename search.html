@@ -92,6 +92,19 @@
          .cf-price { width: 100%; }
          .cf-price .cf-ctrl { flex: 1; width: auto; }
       }
+
+      /* ── Redesigned list card ── */
+      .product__right { display: none !important; }
+      .product__left { flex: 0 0 26% !important; }
+      .product__center { margin: 0 0 0 20px !important; display: flex; flex-direction: column; justify-content: center; }
+      .product__seller { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+      .product__seller-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #f3f4f6; flex-shrink: 0; }
+      .product__seller-name { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: #444; }
+      .product__title { font-size: 22px !important; margin-bottom: 6px; display: block; }
+      .product__price-row { display: flex; align-items: baseline; gap: 12px; margin: 6px 0 8px; }
+      .product__price-row .price-start { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 26px; color: #1a1a1a; }
+      .product__price-row .price-old { font-family: "Poppins", sans-serif; font-size: 15px; color: #aaa; text-decoration: line-through; }
+      .product__price-row .product__negotiable { font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 600; color: #f4705a; }
    </style>
 </head>
 
@@ -341,38 +354,21 @@
                         </div>
                      </div>
                      <div class="product__center">
+                        <div class="product__seller">
+                           <img src="img/user-avatar.png" class="product__seller-avatar" alt="" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22 viewBox=%220 0 36 36%22%3E%3Ccircle cx=%2218%22 cy=%2218%22 r=%2218%22 fill=%22%23e5e7eb%22/%3E%3Ccircle cx=%2218%22 cy=%2214%22 r=%226%22 fill=%22%239ca3af%22/%3E%3Cellipse cx=%2218%22 cy=%2230%22 rx=%2211%22 ry=%228%22 fill=%22%239ca3af%22/%3E%3C/svg%3E'">
+                           <span class="product__seller-name">James Mitchell</span>
+                        </div>
                         <a href="card.html" class="product__title">Apple iPhone 14 Pro Max 256GB</a>
+                        <div class="product__price-row">
+                           <span class="price-start">750 £</span>
+                           <span class="price-old">899 £</span>
+                        </div>
                         <p class="product__text">London, UK</p>
                         <p class="product__desc">Excellent condition, original box included, Face ID works perfectly, battery 98%. Selling due to upgrade.</p>
                         <div class="product__info">
                            <p class="details-item icon-calendar">10 03 2026 | 14:22</p>
                            <p class="details-item icon-namber">112401</p>
                            <p class="details-item icon-eye">389</p>
-                        </div>
-                     </div>
-                     <div class="product__right">
-                        <div class="product__rating">
-                           <div>
-                              <a href="#" class="rating icon-star-full">4.9</a>
-                              <a href="#" class="coment icon-chat-full">128</a>
-                           </div>
-                           <a href="#" class="favorites icon-heart"></a>
-                        </div>
-                        <div class="product__price">
-                           <div class="price-start">750 £</div>
-                           <div class="price-old"><span>899,<sup>00</sup>£</span></div>
-                        </div>
-                        <div class="product__shiping">
-                           <div class="product-shiping icon-truck">Delivery available</div>
-                        </div>
-                        <div class="product__btns">
-                           <div class="btn-phone icon-phone">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
-                              </div>
-                           </div>
-                           <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
                      </div>
                   </div>
@@ -395,35 +391,21 @@
                         </div>
                      </div>
                      <div class="product__center">
+                        <div class="product__seller">
+                           <img src="img/user-avatar.png" class="product__seller-avatar" alt="" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22 viewBox=%220 0 36 36%22%3E%3Ccircle cx=%2218%22 cy=%2218%22 r=%2218%22 fill=%22%23e5e7eb%22/%3E%3Ccircle cx=%2218%22 cy=%2214%22 r=%226%22 fill=%22%239ca3af%22/%3E%3Cellipse cx=%2218%22 cy=%2230%22 rx=%2211%22 ry=%228%22 fill=%22%239ca3af%22/%3E%3C/svg%3E'">
+                           <span class="product__seller-name">Sarah Collins</span>
+                        </div>
                         <a href="card.html" class="product__title">Apple iPhone 13 128GB Midnight</a>
+                        <div class="product__price-row">
+                           <span class="price-start">480 £</span>
+                           <span class="price-old">560 £</span>
+                        </div>
                         <p class="product__text">Manchester, UK</p>
                         <p class="product__desc">Used 8 months, no scratches, screen protector always on, comes with original charger and cable. Battery health 94%.</p>
                         <div class="product__info">
                            <p class="details-item icon-calendar">09 03 2026 | 09:15</p>
                            <p class="details-item icon-namber">112388</p>
                            <p class="details-item icon-eye">215</p>
-                        </div>
-                     </div>
-                     <div class="product__right">
-                        <div class="product__rating">
-                           <div>
-                              <a href="#" class="rating icon-star-full">4.7</a>
-                              <a href="#" class="coment icon-chat-full">54</a>
-                           </div>
-                           <a href="#" class="favorites icon-heart"></a>
-                        </div>
-                        <div class="product__price">
-                           <div class="price-start">480 £</div>
-                           <div class="price-old"><span>560,<sup>00</sup>£</span></div>
-                        </div>
-                        <div class="product__btns">
-                           <div class="btn-phone icon-phone">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
-                              </div>
-                           </div>
-                           <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
                      </div>
                   </div>
@@ -446,37 +428,20 @@
                         </div>
                      </div>
                      <div class="product__center">
+                        <div class="product__seller">
+                           <img src="img/user-avatar.png" class="product__seller-avatar" alt="" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22 viewBox=%220 0 36 36%22%3E%3Ccircle cx=%2218%22 cy=%2218%22 r=%2218%22 fill=%22%23e5e7eb%22/%3E%3Ccircle cx=%2218%22 cy=%2214%22 r=%226%22 fill=%22%239ca3af%22/%3E%3Cellipse cx=%2218%22 cy=%2230%22 rx=%2211%22 ry=%228%22 fill=%22%239ca3af%22/%3E%3C/svg%3E'">
+                           <span class="product__seller-name">Tom Harper</span>
+                        </div>
                         <a href="card.html" class="product__title">Apple iPhone XR 128GB Black (Sealed)</a>
+                        <div class="product__price-row">
+                           <span class="price-start">380 £</span>
+                        </div>
                         <p class="product__text">Birmingham, UK</p>
                         <p class="product__desc">Brand new sealed box, UK model, unlocked for all networks. Warranty included.</p>
                         <div class="product__info">
                            <p class="details-item icon-calendar">08 03 2026 | 18:40</p>
                            <p class="details-item icon-namber">112301</p>
                            <p class="details-item icon-eye">301</p>
-                        </div>
-                     </div>
-                     <div class="product__right">
-                        <div class="product__rating">
-                           <div>
-                              <a href="#" class="rating icon-star-full">5.0</a>
-                              <a href="#" class="coment icon-chat-full">12</a>
-                           </div>
-                           <a href="#" class="favorites icon-heart"></a>
-                        </div>
-                        <div class="product__price">
-                           <div class="price-start">380 £</div>
-                        </div>
-                        <div class="product__shiping">
-                           <div class="product-shiping icon-truck">Delivery available</div>
-                        </div>
-                        <div class="product__btns">
-                           <div class="btn-phone icon-phone">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
-                              </div>
-                           </div>
-                           <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
                      </div>
                   </div>
@@ -496,35 +461,21 @@
                         </div>
                      </div>
                      <div class="product__center">
+                        <div class="product__seller">
+                           <img src="img/user-avatar.png" class="product__seller-avatar" alt="" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22 viewBox=%220 0 36 36%22%3E%3Ccircle cx=%2218%22 cy=%2218%22 r=%2218%22 fill=%22%23e5e7eb%22/%3E%3Ccircle cx=%2218%22 cy=%2214%22 r=%226%22 fill=%22%239ca3af%22/%3E%3Cellipse cx=%2218%22 cy=%2230%22 rx=%2211%22 ry=%228%22 fill=%22%239ca3af%22/%3E%3C/svg%3E'">
+                           <span class="product__seller-name">Emily Ward</span>
+                        </div>
                         <a href="card.html" class="product__title">iPhone 12 Mini 64GB Blue — Good Condition</a>
+                        <div class="product__price-row">
+                           <span class="price-start">260 £</span>
+                           <span class="product__negotiable">Negotiable</span>
+                        </div>
                         <p class="product__text">Leeds, UK</p>
                         <p class="product__desc">Minor scuffs on back, screen perfect. Battery 89%. Comes with case and cable. Negotiable.</p>
                         <div class="product__info">
                            <p class="details-item icon-calendar">07 03 2026 | 11:05</p>
                            <p class="details-item icon-namber">112255</p>
                            <p class="details-item icon-eye">178</p>
-                        </div>
-                     </div>
-                     <div class="product__right">
-                        <div class="product__rating">
-                           <div>
-                              <a href="#" class="rating icon-star-full">4.5</a>
-                              <a href="#" class="coment icon-chat-full">31</a>
-                           </div>
-                           <a href="#" class="favorites icon-heart"></a>
-                        </div>
-                        <div class="product__price">
-                           <div class="price-start">260 £</div>
-                           <a href="#" class="product__negotiable">Negotiable</a>
-                        </div>
-                        <div class="product__btns">
-                           <div class="btn-phone icon-phone">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
-                              </div>
-                           </div>
-                           <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
                      </div>
                   </div>
@@ -548,38 +499,21 @@
                         </div>
                      </div>
                      <div class="product__center">
+                        <div class="product__seller">
+                           <img src="img/user-avatar.png" class="product__seller-avatar" alt="" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22 viewBox=%220 0 36 36%22%3E%3Ccircle cx=%2218%22 cy=%2218%22 r=%2218%22 fill=%22%23e5e7eb%22/%3E%3Ccircle cx=%2218%22 cy=%2214%22 r=%226%22 fill=%22%239ca3af%22/%3E%3Cellipse cx=%2218%22 cy=%2230%22 rx=%2211%22 ry=%228%22 fill=%22%239ca3af%22/%3E%3C/svg%3E'">
+                           <span class="product__seller-name">Daniel Brooks</span>
+                        </div>
                         <a href="card.html" class="product__title">Apple iPhone 15 256GB — Titanium</a>
+                        <div class="product__price-row">
+                           <span class="price-start">920 £</span>
+                           <span class="price-old">1 150 £</span>
+                        </div>
                         <p class="product__text">Bristol, UK</p>
                         <p class="product__desc">2 months old, perfect condition, titanium frame, dynamic island, USB-C. All accessories included.</p>
                         <div class="product__info">
                            <p class="details-item icon-calendar">06 03 2026 | 20:30</p>
                            <p class="details-item icon-namber">112198</p>
                            <p class="details-item icon-eye">512</p>
-                        </div>
-                     </div>
-                     <div class="product__right">
-                        <div class="product__rating">
-                           <div>
-                              <a href="#" class="rating icon-star-full">4.8</a>
-                              <a href="#" class="coment icon-chat-full">87</a>
-                           </div>
-                           <a href="#" class="favorites icon-heart"></a>
-                        </div>
-                        <div class="product__price">
-                           <div class="price-start">920 £</div>
-                           <div class="price-old"><span>1 150,<sup>00</sup>£</span></div>
-                        </div>
-                        <div class="product__shiping">
-                           <div class="product-shiping icon-truck">Delivery available</div>
-                        </div>
-                        <div class="product__btns">
-                           <div class="btn-phone icon-phone">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Call</p>
-                                 <a href="#" class="btn-phone__namber"><span>+44</span> XXX XXXXXXX</a>
-                              </div>
-                           </div>
-                           <a href="#" class="btn btn_start icon-chat">Start Chat</a>
                         </div>
                      </div>
                   </div>
