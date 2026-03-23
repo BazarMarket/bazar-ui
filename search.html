@@ -45,10 +45,14 @@
 
       /* Row 1 */
       .cf-row1 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-      .cf-search { display: flex; align-items: center; gap: 8px; flex: 1 1 260px; padding: 0 14px; }
-      .cf-search svg { flex-shrink: 0; color: #b0b7c3; }
-      .cf-search input { border: none; outline: none; font-family: "Poppins", sans-serif; font-size: 15px; color: #1a1a1a; background: transparent; width: 100%; }
-      .cf-search input::placeholder { color: #b0b7c3; }
+      .cf-search { display: flex; align-items: center; flex: 1 1 320px; overflow: hidden; padding: 0; }
+      .cf-search-q { display: flex; align-items: center; gap: 8px; flex: 1; padding: 0 14px; min-width: 0; }
+      .cf-search-q svg { flex-shrink: 0; color: #b0b7c3; }
+      .cf-search-q input { border: none; outline: none; font-family: "Poppins", sans-serif; font-size: 15px; color: #1a1a1a; background: transparent; width: 100%; }
+      .cf-search-q input::placeholder { color: #b0b7c3; }
+      .cf-search-loc { display: flex; align-items: center; gap: 6px; border-left: 1.5px solid #e5e7eb; padding: 0 16px; cursor: pointer; white-space: nowrap; flex-shrink: 0; height: 44px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #444; transition: background .15s; }
+      .cf-search-loc:hover { background: #fafafa; }
+      .cf-search-loc svg { color: #888; flex-shrink: 0; }
       .cf-btn { display: flex; align-items: center; justify-content: center; gap: 7px; height: 44px; padding: 0 20px; border-radius: 10px; border: none; background: #ff9138; color: #fff; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; white-space: nowrap; flex-shrink: 0; }
       .cf-btn:hover { background: #e07a20; }
 
@@ -154,11 +158,17 @@
 
                <!-- Compact filter block -->
                <div class="cf-block">
-                  <!-- Row 1: search + category + location + button -->
+                  <!-- Row 1: search+location + category + button -->
                   <div class="cf-row1">
                      <div class="cf-ctrl cf-search">
-                        <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                        <input type="text" value="iPhone" placeholder="Search anything...">
+                        <div class="cf-search-q">
+                           <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                           <input type="text" value="iPhone" placeholder="Search anything...">
+                        </div>
+                        <div class="cf-search-loc">
+                           All locations
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
                      </div>
                      <select class="cf-ctrl">
                         <option>Mobile Phones</option>
@@ -166,13 +176,6 @@
                         <option>Cars</option>
                         <option>Real Estate</option>
                         <option>All categories</option>
-                     </select>
-                     <select class="cf-ctrl">
-                        <option>UK</option>
-                        <option>London</option>
-                        <option>Manchester</option>
-                        <option>Birmingham</option>
-                        <option>Bristol</option>
                      </select>
                      <button class="cf-btn">
                         <svg width="15" height="15" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="2"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
