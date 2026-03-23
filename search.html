@@ -63,8 +63,7 @@
       .sfc-more-btn:hover, .sfc-more-btn.active { border-color: #ff9138; color: #ff9138; }
 
       /* More filters dropdown */
-      .sfc-more-panel { display: none; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,.09); padding: 24px; margin-top: 12px; }
-      .sfc-more-panel.open { display: block; }
+      .sfc-more-panel { display: block; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.06); padding: 24px; margin-bottom: 4px; }
       .sfp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
       .sfp-field { display: flex; flex-direction: column; gap: 5px; }
       .sfp-label { font-family: "Poppins", sans-serif; font-size: 10px; font-weight: 700; color: #9ca3af; letter-spacing: .4px; text-transform: uppercase; }
@@ -161,51 +160,8 @@
 
             <div class="sr-results">
 
-               <!-- Floating search card -->
-               <div class="sfc-strip">
-                  <div class="sfc-card">
-                     <!-- Row 1: search + dropdowns + button -->
-                     <div class="sfc-top">
-                        <div class="sfc-search">
-                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                           <input type="text" value="iPhone" placeholder="Search anything...">
-                        </div>
-                        <select class="sfc-select">
-                           <option>All categories</option>
-                           <option>Mobile Phones</option>
-                           <option>Electronics</option>
-                           <option>Cars</option>
-                           <option>Real Estate</option>
-                           <option>Jobs</option>
-                        </select>
-                        <select class="sfc-select">
-                           <option>UK</option>
-                           <option>London</option>
-                           <option>Manchester</option>
-                           <option>Birmingham</option>
-                           <option>Bristol</option>
-                        </select>
-                        <button class="sfc-btn-search">
-                           <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.9"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-                           Search
-                        </button>
-                     </div>
-                     <!-- Row 2: active chips + add filter + more filters -->
-                     <div class="sfc-chips">
-                        <div class="sr-tag">iPhone <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
-                        <div class="sr-tag">Mobile Phones <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
-                        <div class="sr-tag">New <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
-                        <div class="sr-tag">£100 — £2000 <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
-                        <button class="sfc-add-btn">+ Add filter</button>
-                        <button class="sfc-more-btn" id="sfcMoreBtn" onclick="toggleMoreFilters(event)">
-                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="2" r="1.3" fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="12" r="1.3" fill="currentColor"/></svg>
-                           More filters
-                        </button>
-                     </div>
-                  </div>
-
-                  <!-- More filters panel -->
-                  <div class="sfc-more-panel" id="sfcMorePanel">
+               <!-- Filter form -->
+               <div class="sfc-more-panel" id="sfcMorePanel" style="display:block;">
                      <div class="sfp-grid">
                         <div class="sfp-field">
                            <span class="sfp-label">Price range</span>
@@ -287,7 +243,6 @@
                         <button class="sfp-clear" onclick="clearMoreFilters()">Clear all</button>
                         <button class="sfp-apply" onclick="applyMoreFilters()">Apply filters</button>
                      </div>
-                  </div>
                </div>
 
                <ul class="bread-custom" style="margin: 20px 0 16px;">
