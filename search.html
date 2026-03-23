@@ -51,8 +51,22 @@
       .cf-search-q input { border: none; outline: none; font-family: "Poppins", sans-serif; font-size: 15px; color: #1a1a1a; background: transparent; width: 100%; }
       .cf-search-q input::placeholder { color: #b0b7c3; }
       .cf-search-loc { border-left: 1.5px solid #e5e7eb; padding: 0 14px; flex-shrink: 0; height: 44px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #444; background: transparent; border-top: none; border-right: none; border-bottom: none; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='11' height='11' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 32px; }
-      .cf-btn { display: flex; align-items: center; justify-content: center; gap: 7px; height: 44px; padding: 0 20px; border-radius: 10px; border: none; background: #ff9138; color: #fff; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s; white-space: nowrap; flex-shrink: 0; }
-      .cf-btn:hover { background: #e07a20; }
+      /* Category custom dropdown */
+      .cf-cat { position: relative; flex-shrink: 0; }
+      .cf-cat-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; }
+      .cf-cat-btn:hover, .cf-cat-btn.open { border-color: #ff9138; }
+      .cf-cat-btn img { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; }
+      .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+      .cf-cat-btn svg { color: #888; flex-shrink: 0; transition: transform .15s; }
+      .cf-cat-btn.open svg { transform: rotate(180deg); }
+      .cf-cat-panel { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 280px; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,.12); padding: 8px 0; z-index: 200; max-height: 420px; overflow-y: auto; }
+      .cf-cat-panel.open { display: block; }
+      .cf-cat-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; cursor: pointer; font-family: "Poppins", sans-serif; font-size: 13.5px; color: #1a1a1a; transition: background .12s; white-space: nowrap; }
+      .cf-cat-item:hover { background: #fff7f0; }
+      .cf-cat-item.active { background: #fff3e8; font-weight: 600; color: #ff9138; }
+      .cf-cat-item img { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+      .cf-cat-all { font-style: italic; color: #9ca3af; }
+      .cf-cat-divider { height: 1px; background: #f3f4f6; margin: 4px 0; }
 
       /* Row 2 */
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -156,9 +170,9 @@
 
                <!-- Compact filter block -->
                <div class="cf-block">
-                  <!-- Row 1: search+location + category + button -->
+                  <!-- Row 1: search+location + category -->
                   <div class="cf-row1">
-                     <div class="cf-ctrl cf-search">
+                     <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px;">
                         <div class="cf-search-q">
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                            <input type="text" value="iPhone" placeholder="Search anything...">
@@ -172,17 +186,34 @@
                            <option>Bristol</option>
                         </select>
                      </div>
-                     <select class="cf-ctrl">
-                        <option>Mobile Phones</option>
-                        <option>Electronics</option>
-                        <option>Cars</option>
-                        <option>Real Estate</option>
-                        <option>All categories</option>
-                     </select>
-                     <button class="cf-btn">
-                        <svg width="15" height="15" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="2"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                        Search
-                     </button>
+                     <!-- Category custom dropdown -->
+                     <div class="cf-cat">
+                        <button class="cf-cat-btn" id="cfCatBtn" onclick="toggleCatPanel(event)">
+                           <img src="img/cat/image5.png" id="cfCatImg" alt="">
+                           <span class="cf-cat-btn-label" id="cfCatLabel">Mobile phones</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfCatPanel">
+                           <div class="cf-cat-item cf-cat-all" onclick="selectCat(this, '', '', 'All categories')">All categories</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item active" onclick="selectCat(this, 'img/cat/image5.png', 'image5', 'Mobile phones')"><img src="img/cat/image5.png" alt="">Mobile phones, communication</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image1.png', 'image1', 'Real Estate for sale')"><img src="img/cat/image1.png" alt="">Real Estate for sale</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for Rent')"><img src="img/cat/image2.png" alt="">Real Estate for Rent</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image3.png', 'image3', 'Motors')"><img src="img/cat/image3.png" alt="">Motors</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image4.png', 'image4', 'Motors for rent')"><img src="img/cat/image4.png" alt="">Motors for rent</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image6.png', 'image6', 'Computers, gaming')"><img src="img/cat/image6.png" alt="">Computers, gaming</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image9.png', 'image9', 'Electronics, appliances')"><img src="img/cat/image9.png" alt="">Electronics, appliances</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image7.png', 'image7', 'Clothes, footwear')"><img src="img/cat/image7.png" alt="">Clothes, footwear, accessories</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image10.png', 'image10', 'Home, garden, pool')"><img src="img/cat/image10.png" alt="">Home, garden, pool</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image8.png', 'image8', 'Sports, Hobbies')"><img src="img/cat/image8.png" alt="">Hobbies, sports, leisure</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image12.png', 'image12', 'Animals, pets')"><img src="img/cat/image12.png" alt="">Animals, pets</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image13.png', 'image13', 'Health, beauty')"><img src="img/cat/image13.png" alt="">Health, beauty</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image11.png', 'image11', 'Jobs')"><img src="img/cat/image11.png" alt="">Jobs</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image14.png', 'image14', 'Services')"><img src="img/cat/image14.png" alt="">Services</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image15.png', 'image15', 'Business')"><img src="img/cat/image15.png" alt="">Business</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image16.png', 'image16', 'Free stuff')"><img src="img/cat/image16.png" alt="">Free stuff</div>
+                        </div>
+                     </div>
                   </div>
                   <!-- Row 2: price + filters -->
                   <div class="cf-row2">
@@ -707,10 +738,33 @@
    <script type="text/javascript" src="js/inputmask.min.js"></script>
    <script type="text/javascript" src="js/script.js"></script>
    <script>
-      function removeChip(x) { x.parentElement.remove(); }
-      function clearAllChips() {
-         document.querySelectorAll('.cf-tag').forEach(function(t){ t.remove(); });
+      /* Category dropdown */
+      function toggleCatPanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfCatBtn');
+         var panel = document.getElementById('cfCatPanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
       }
+      function selectCat(el, imgSrc, imgKey, label) {
+         document.getElementById('cfCatLabel').textContent = label;
+         var imgEl = document.getElementById('cfCatImg');
+         if (imgSrc) { imgEl.src = imgSrc; imgEl.style.display = ''; }
+         else { imgEl.style.display = 'none'; }
+         document.querySelectorAll('.cf-cat-item').forEach(function(i){ i.classList.remove('active'); });
+         el.classList.add('active');
+         document.getElementById('cfCatPanel').classList.remove('open');
+         document.getElementById('cfCatBtn').classList.remove('open');
+      }
+      document.addEventListener('click', function(e) {
+         var panel = document.getElementById('cfCatPanel');
+         var btn = document.getElementById('cfCatBtn');
+         if (panel && !panel.contains(e.target) && !btn.contains(e.target)) {
+            panel.classList.remove('open');
+            btn.classList.remove('open');
+         }
+      });
 
       function setView(type) {
          var listView = document.querySelector('.list-products__body');
