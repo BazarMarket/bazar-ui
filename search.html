@@ -9,7 +9,7 @@
    <meta name="keywords" content="">
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css">
-   <link rel="stylesheet" href="css/main.css?v=92" type="text/css">
+   <link rel="stylesheet" href="css/main.css?v=93" type="text/css">
    <link rel="icon" href="favicon.svg">
    <style>
       .sr-wrap { max-width: 1440px; margin: 0 auto; padding: 0 6%; }
@@ -23,10 +23,38 @@
       .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 7px 12px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
       .sr-sort select:focus { border-color: #ff9138; }
 
-      .sr-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-      .sr-tag { background: #fff3e8; border: 1px solid #ff9138; border-radius: 20px; padding: 5px 14px; font-family: "Poppins", sans-serif; font-size: 13px; color: #ff9138; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+      /* ── Filter chips row ── */
+      .sf-chips-wrap { margin: 20px 0 18px; position: relative; }
+      .sf-chips-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+      .sr-tag { background: #fff3e8; border: 1px solid #ff9138; border-radius: 999px; padding: 6px 14px; font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 500; color: #ff9138; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: background .15s; }
       .sr-tag:hover { background: #ffe0c2; }
-      .sr-tag__close { font-size: 16px; line-height: 1; }
+      .sr-tag__close { font-size: 15px; line-height: 1; opacity: .7; }
+      .sr-tag:hover .sr-tag__close { opacity: 1; }
+
+      /* "+ Add filter" ghost button */
+      .sf-add-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: 999px; border: 1.5px solid #d1d5db; background: #fff; font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 500; color: #6b7280; cursor: pointer; transition: border-color .15s, color .15s; white-space: nowrap; }
+      .sf-add-btn:hover { border-color: #ff9138; color: #ff9138; }
+      .sf-add-btn svg { flex-shrink: 0; }
+
+      /* More filters panel */
+      .sf-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 200; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,.10); padding: 24px; min-width: 560px; }
+      .sf-panel.open { display: block; }
+      .sf-panel__title { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: #1a1a1a; margin: 0 0 16px; letter-spacing: .2px; }
+      .sf-panel__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+      .sf-panel__field { display: flex; flex-direction: column; gap: 5px; }
+      .sf-panel__label { font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 600; color: #9ca3af; letter-spacing: .3px; text-transform: uppercase; }
+      .sf-panel__select, .sf-panel__input { font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 9px 12px; background: #fff; outline: none; cursor: pointer; transition: border-color .15s; width: 100%; }
+      .sf-panel__select:focus, .sf-panel__input:focus { border-color: #ff9138; }
+      .sf-panel__price-row { display: flex; gap: 8px; }
+      .sf-panel__price-row .sf-panel__input { flex: 1; }
+      .sf-panel__footer { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; padding-top: 16px; border-top: 1px solid #f3f4f6; }
+      .sf-panel__clear { font-family: "Poppins", sans-serif; font-size: 13px; color: #9ca3af; background: none; border: none; cursor: pointer; padding: 0; }
+      .sf-panel__clear:hover { color: #6b7280; }
+      .sf-panel__apply { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: #fff; background: #ff9138; border: none; border-radius: 10px; padding: 10px 24px; cursor: pointer; transition: background .15s; }
+      .sf-panel__apply:hover { background: #e07a20; }
+
+      /* legacy — keep for compatibility */
+      .sr-tags { display: none; }
 
       .sr-results-wrap { display: flex; gap: 0; align-items: flex-start; }
       .sr-view-sidebar { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; padding-top: 4px; flex-shrink: 0; }
@@ -137,6 +165,96 @@
 
             <div class="sr-results">
 
+               <!-- Filter chips + Add filter -->
+               <div class="sf-chips-wrap">
+                  <div class="sf-chips-row" id="sfChipsRow">
+                     <div class="sr-tag">iPhone <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
+                     <div class="sr-tag">Mobile Phones <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
+                     <div class="sr-tag">New <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
+                     <div class="sr-tag">£100 — £2000 <span class="sr-tag__close" onclick="removeTag(this)">×</span></div>
+                     <button class="sf-add-btn" id="sfAddBtn" onclick="toggleFilterPanel(event)">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        Add filter
+                     </button>
+                  </div>
+
+                  <!-- More filters dropdown panel -->
+                  <div class="sf-panel" id="sfPanel">
+                     <p class="sf-panel__title">More filters</p>
+                     <div class="sf-panel__grid">
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Price</span>
+                           <div class="sf-panel__price-row">
+                              <input class="sf-panel__input" type="number" placeholder="Min £">
+                              <input class="sf-panel__input" type="number" placeholder="Max £">
+                           </div>
+                        </div>
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Condition</span>
+                           <select class="sf-panel__select">
+                              <option value="">Any condition</option>
+                              <option>New</option>
+                              <option>Like new</option>
+                              <option>Good</option>
+                              <option>Fair</option>
+                           </select>
+                        </div>
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Brand</span>
+                           <select class="sf-panel__select">
+                              <option value="">Any brand</option>
+                              <option>Apple</option>
+                              <option>Samsung</option>
+                              <option>Google</option>
+                              <option>OnePlus</option>
+                              <option>Xiaomi</option>
+                           </select>
+                        </div>
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Storage</span>
+                           <select class="sf-panel__select">
+                              <option value="">Any storage</option>
+                              <option>64 GB</option>
+                              <option>128 GB</option>
+                              <option>256 GB</option>
+                              <option>512 GB</option>
+                              <option>1 TB</option>
+                           </select>
+                        </div>
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Delivery</span>
+                           <select class="sf-panel__select">
+                              <option value="">Any</option>
+                              <option>Delivery available</option>
+                              <option>Collection only</option>
+                           </select>
+                        </div>
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Seller type</span>
+                           <select class="sf-panel__select">
+                              <option value="">Any seller</option>
+                              <option>Private</option>
+                              <option>Business</option>
+                           </select>
+                        </div>
+                        <div class="sf-panel__field">
+                           <span class="sf-panel__label">Posted</span>
+                           <select class="sf-panel__select">
+                              <option value="">Any time</option>
+                              <option>Today</option>
+                              <option>Last 3 days</option>
+                              <option>Last week</option>
+                              <option>Last month</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="sf-panel__footer">
+                        <button class="sf-panel__clear" onclick="clearFilters()">Clear all</button>
+                        <button class="sf-panel__apply" onclick="applyFilters()">Apply filters</button>
+                     </div>
+                  </div>
+               </div>
+
                <ul class="bread-custom" style="margin: 0 0 16px;">
                   <li><a href="index.html">Home</a><span class="icon-arrow-r"></span></li>
                   <li><a href="#">Mobile Phones</a><span class="icon-arrow-r"></span></li>
@@ -157,12 +275,6 @@
                   </div>
                </div>
 
-               <div class="sr-tags">
-                  <div class="sr-tag">iPhone <span class="sr-tag__close">×</span></div>
-                  <div class="sr-tag">Mobile Phones <span class="sr-tag__close">×</span></div>
-                  <div class="sr-tag">New <span class="sr-tag__close">×</span></div>
-                  <div class="sr-tag">£100 — £2000 <span class="sr-tag__close">×</span></div>
-               </div>
 
                <div class="sr-results-wrap">
                   <div class="sr-view-sidebar">
@@ -606,6 +718,30 @@
    <script type="text/javascript" src="js/inputmask.min.js"></script>
    <script type="text/javascript" src="js/script.js"></script>
    <script>
+      /* ── Filter panel ── */
+      function toggleFilterPanel(e) {
+         e.stopPropagation();
+         var panel = document.getElementById('sfPanel');
+         panel.classList.toggle('open');
+      }
+      document.addEventListener('click', function(e) {
+         var panel = document.getElementById('sfPanel');
+         var btn = document.getElementById('sfAddBtn');
+         if (panel && !panel.contains(e.target) && e.target !== btn) {
+            panel.classList.remove('open');
+         }
+      });
+      function removeTag(closeEl) {
+         closeEl.parentElement.remove();
+      }
+      function clearFilters() {
+         document.querySelectorAll('.sf-panel__select').forEach(function(s){ s.value = ''; });
+         document.querySelectorAll('.sf-panel__input').forEach(function(i){ i.value = ''; });
+      }
+      function applyFilters() {
+         document.getElementById('sfPanel').classList.remove('open');
+      }
+
       function setView(type) {
          var listView = document.querySelector('.list-products__body');
          var gridView = document.getElementById('sr-grid-view');
