@@ -99,7 +99,8 @@
 
       /* ── Redesigned list card ── */
       .product__right { display: none !important; }
-      .product__stiker { display: none !important; }
+      .product__stiker { position: absolute; z-index: 3; top: 14px; left: 14px; right: auto; display: flex; flex-direction: row; gap: 6px; }
+      .product__stiker .stiker { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
       .product { padding: 14px !important; align-items: stretch !important; justify-content: flex-start !important; gap: 16px; }
       .product__left { flex: 0 0 340px !important; }
       .product__left .product__gallery { height: 100%; }
@@ -365,8 +366,8 @@
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__new">New</div>
-                              <div class="stiker stiker__top">Top</div>
+                              <div class="stiker stiker_vip">VIP</div>
+                              <div class="stiker stiker_top">PRO</div>
                            </div>
                         </div>
                      </div>
@@ -409,7 +410,8 @@
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__sale">-14%</div>
+                              <div class="stiker stiker_vip">VIP</div>
+                              <div class="stiker stiker_top">PRO</div>
                            </div>
                         </div>
                      </div>
@@ -452,7 +454,8 @@
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__new">New</div>
+                              <div class="stiker stiker_vip">VIP</div>
+                              <div class="stiker stiker_top">PRO</div>
                            </div>
                         </div>
                      </div>
@@ -492,6 +495,10 @@
                                  </div>
                                  <div class="swiper-pagination pagination-custom"></div>
                               </div>
+                           </div>
+                           <div class="product__stiker">
+                              <div class="stiker stiker_vip">VIP</div>
+                              <div class="stiker stiker_top">PRO</div>
                            </div>
                         </div>
                      </div>
@@ -534,8 +541,8 @@
                               </div>
                            </div>
                            <div class="product__stiker">
-                              <div class="stiker stiker__sale">-20%</div>
-                              <div class="stiker stiker__top">Top</div>
+                              <div class="stiker stiker_vip">VIP</div>
+                              <div class="stiker stiker_top">PRO</div>
                            </div>
                         </div>
                      </div>
