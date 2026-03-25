@@ -34,7 +34,7 @@ Workflow: "Start application" on port 5000 (webview)
 - Published: bazar-ui.replit.app
 - Production: www.bazar.uk
 - GitHub: BazarMarket/bazar-ui
-- Push: `bash push.sh`
+- Push: `bash push.sh` — **НЕ пушить автоматически!** Пользователь сам пушит через консоль когда нужно.
 
 ## CSS Versioning
 
