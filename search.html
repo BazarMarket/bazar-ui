@@ -60,7 +60,7 @@
       .cf-cat-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; }
       .cf-cat-btn:hover, .cf-cat-btn.open { border-color: #ff9138; }
       .cf-cat-btn img { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; }
-      .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+      .cf-cat-btn-label { white-space: nowrap; }
       .cf-cat-btn svg { color: #888; flex-shrink: 0; transition: transform .15s; }
       .cf-cat-btn.open svg { transform: rotate(180deg); }
       .cf-cat-panel { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 280px; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,.12); padding: 8px 0; z-index: 200; max-height: 420px; overflow-y: auto; }
@@ -223,13 +223,13 @@
                      <div class="cf-cat">
                         <button class="cf-cat-btn" id="cfCatBtn" onclick="toggleCatPanel(event)">
                            <img src="img/cat/image5.png" id="cfCatImg" alt="">
-                           <span class="cf-cat-btn-label" id="cfCatLabel">Mobile phones</span>
+                           <span class="cf-cat-btn-label" id="cfCatLabel">Mobile phones, communication</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <div class="cf-cat-panel" id="cfCatPanel">
                            <div class="cf-cat-item cf-cat-all" onclick="selectCat(this, '', '', 'All categories')">All categories</div>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item active" onclick="selectCat(this, 'img/cat/image5.png', 'image5', 'Mobile phones')"><img src="img/cat/image5.png" alt="">Mobile phones, communication</div>
+                           <div class="cf-cat-item active" onclick="selectCat(this, 'img/cat/image5.png', 'image5', 'Mobile phones, communication')"><img src="img/cat/image5.png" alt="">Mobile phones, communication</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image1.png', 'image1', 'Real Estate for sale')"><img src="img/cat/image1.png" alt="">Real Estate for sale</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for Rent')"><img src="img/cat/image2.png" alt="">Real Estate for Rent</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image3.png', 'image3', 'Motors')"><img src="img/cat/image3.png" alt="">Motors</div>
