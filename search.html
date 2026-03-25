@@ -15,12 +15,15 @@
       /* ── Page layout ── */
       .sr-wrap { max-width: 1440px; margin: 0 auto; padding: 0 6%; }
       .sr-results { width: 100%; }
-      .sr-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-      .sr-count { font-family: "Poppins", sans-serif; font-size: 14px; color: #808080; }
-      .sr-count strong { color: #1a1a1a; font-weight: 600; }
-      .sr-sort { display: flex; align-items: center; gap: 10px; }
-      .sr-sort label { font-family: "Poppins", sans-serif; font-size: 13px; color: #808080; white-space: nowrap; }
-      .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 7px 12px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
+      .sr-bread-sort { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 12px; }
+      .sr-bread-sort .bread-custom { margin: 0 !important; font-size: 13px; }
+      .sr-bread-sort .bread-custom li,
+      .sr-bread-sort .bread-custom li a { font-size: 13px; font-weight: 400; color: #999; }
+      .sr-bread-sort .bread-custom li a:hover { color: #ff9138; }
+      .sr-bread-sort .bread-custom li:last-child { color: #666; }
+      .sr-sort { display: flex; align-items: center; gap: 8px; }
+      .sr-sort label { font-family: "Poppins", sans-serif; font-size: 13px; color: #999; white-space: nowrap; }
+      .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 5px 10px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
       .sr-sort select:focus { border-color: #ff9138; }
       .sr-results-wrap { display: flex; gap: 0; align-items: flex-start; }
       .sr-view-sidebar { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; padding-top: 4px; flex-shrink: 0; }
@@ -303,13 +306,12 @@
                   </div>
                </div>
 
-               <ul class="bread-custom" style="margin: 14px 0 12px; font-size: 13px;">
-                  <li><a href="index.html">Home</a><span class="icon-arrow-r"></span></li>
-                  <li><a href="#">Mobile Phones</a><span class="icon-arrow-r"></span></li>
-                  <li>Search results</li>
-               </ul>
-
-               <div class="sr-topbar" style="justify-content: flex-start;">
+               <div class="sr-bread-sort">
+                  <ul class="bread-custom">
+                     <li><a href="index.html">Home</a><span class="icon-arrow-r"></span></li>
+                     <li><a href="#">Mobile Phones</a><span class="icon-arrow-r"></span></li>
+                     <li>Search results</li>
+                  </ul>
                   <div class="sr-sort">
                      <label>Sort by:</label>
                      <select>
