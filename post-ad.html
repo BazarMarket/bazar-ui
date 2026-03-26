@@ -107,6 +107,22 @@
       #subSubCats .cat-item {
          padding-left: 14px;
       }
+      .cat-group-label {
+         font-size: 11px;
+         font-weight: 600;
+         color: #8a919c;
+         text-transform: uppercase;
+         letter-spacing: .5px;
+         padding: 10px 14px 4px;
+         border-top: 1px solid #eee;
+         margin-top: 2px;
+         cursor: default;
+      }
+      .cat-group-label:first-child {
+         border-top: none;
+         margin-top: 0;
+         padding-top: 8px;
+      }
       .cat-item:hover { background: #f7f7f7; color: #ff9138; }
       .cat-item.active:hover { background: #ff9138; }
       .cat-item.active {
@@ -1209,7 +1225,7 @@
 
       var catData = {
          'real-estate': {
-            'For Sale':            ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Land', 'Building', 'Commercial property', 'Other'],
+            'For Sale':            ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment', 'Land', 'Building', 'Other'],
             'For Long-term Rent':  ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial', 'Other'],
             'For Short-term Rent': ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Other']
          },
@@ -1355,7 +1371,7 @@
          'Holiday home':         ['Cottage', 'Chalet', 'Beach house', 'Farmhouse', 'Cabin']
       };
 
-      var conditionHiddenFor = ['Land', 'Commercial property'];
+      var conditionHiddenFor = ['Land'];
 
       var conditionOptions = {
          'Cars':            ['New', 'Used', 'Classic'],
@@ -1413,15 +1429,40 @@
          updateRealEstateTitle();
       }
 
+      var reResidential = ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
+      var reCommercial = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
+      var reLand = ['Land', 'Building'];
+
       function fillSubSub(cat, sub) {
          var subSubCats = document.getElementById('subSubCats');
          var list = (catData[cat] && catData[cat][sub]) || [];
-         if (list.length) {
+         if (!list.length) { subSubCats.innerHTML = ''; return; }
+         if (cat === 'real-estate') {
+            var res = list.filter(function(t){ return reResidential.indexOf(t) !== -1; });
+            var com = list.filter(function(t){ return reCommercial.indexOf(t) !== -1; });
+            var lnd = list.filter(function(t){ return reLand.indexOf(t) !== -1; });
+            var other = list.filter(function(t){ return reResidential.indexOf(t) === -1 && reCommercial.indexOf(t) === -1 && reLand.indexOf(t) === -1; });
+            var html = '';
+            if (res.length) {
+               html += '<div class="cat-group-label">Residential</div>';
+               html += res.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
+            }
+            if (com.length) {
+               html += '<div class="cat-group-label">Commercial</div>';
+               html += com.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
+            }
+            if (lnd.length) {
+               html += '<div class="cat-group-label">Land & Development</div>';
+               html += lnd.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
+            }
+            if (other.length) {
+               html += other.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
+            }
+            subSubCats.innerHTML = html;
+         } else {
             subSubCats.innerHTML = list.map(function(s) {
                return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>';
             }).join('');
-         } else {
-            subSubCats.innerHTML = '';
          }
       }
 
