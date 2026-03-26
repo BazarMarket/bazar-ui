@@ -249,6 +249,45 @@
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image16.png', 'image16', 'Free stuff')"><img src="img/cat/image16.png" alt="">Free stuff</div>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfTypeWrap">
+                        <button class="cf-cat-btn" id="cfTypeBtn" onclick="toggleTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfTypeLabel">Type</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfTypePanel">
+                           <div class="cf-cat-item cf-cat-all" onclick="selectType(this, 'Choose from the list')">Choose from the list</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Apartment')">Apartment</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Building')">Building</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Bungalow')">Bungalow</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Business or Investment')">Business or Investment</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Duplex')">Duplex</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Hotel')">Hotel</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Industrial estate')">Industrial estate</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Land')">Land</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Office')">Office</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Penthouse')">Penthouse</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Restaurant')">Restaurant</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Shop')">Shop</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Studio')">Studio</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Townhouse')">Townhouse</div>
+                           <div class="cf-cat-divider"></div>
+                           <div class="cf-cat-item" onclick="selectType(this, 'Villa')">Villa</div>
+                        </div>
+                     </div>
                   </div>
                   <!-- Row 2: price + filters -->
                   <div class="cf-row2">
@@ -257,11 +296,10 @@
                         <input class="cf-ctrl" type="number" placeholder="Max £">
                      </div>
                      <select class="cf-ctrl">
-                        <option value="">Any condition</option>
-                        <option>New</option>
-                        <option>Like new</option>
-                        <option>Good</option>
-                        <option>Fair</option>
+                        <option value="">Condition</option>
+                        <option>Brand new</option>
+                        <option>Resale</option>
+                        <option>Under construction</option>
                      </select>
                      <select class="cf-ctrl">
                         <option value="">Any brand</option>
@@ -742,17 +780,40 @@
          var imgEl = document.getElementById('cfCatImg');
          if (imgSrc) { imgEl.src = imgSrc; imgEl.style.display = ''; }
          else { imgEl.style.display = 'none'; }
-         document.querySelectorAll('.cf-cat-item').forEach(function(i){ i.classList.remove('active'); });
+         document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i){ i.classList.remove('active'); });
          el.classList.add('active');
          document.getElementById('cfCatPanel').classList.remove('open');
          document.getElementById('cfCatBtn').classList.remove('open');
       }
+
+      function toggleTypePanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfTypeBtn');
+         var panel = document.getElementById('cfTypePanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function selectType(el, label) {
+         document.getElementById('cfTypeLabel').textContent = label;
+         document.getElementById('cfTypePanel').querySelectorAll('.cf-cat-item').forEach(function(i){ i.classList.remove('active'); });
+         el.classList.add('active');
+         document.getElementById('cfTypePanel').classList.remove('open');
+         document.getElementById('cfTypeBtn').classList.remove('open');
+      }
+
       document.addEventListener('click', function(e) {
          var panel = document.getElementById('cfCatPanel');
          var btn = document.getElementById('cfCatBtn');
          if (panel && !panel.contains(e.target) && !btn.contains(e.target)) {
             panel.classList.remove('open');
             btn.classList.remove('open');
+         }
+         var tPanel = document.getElementById('cfTypePanel');
+         var tBtn = document.getElementById('cfTypeBtn');
+         if (tPanel && !tPanel.contains(e.target) && !tBtn.contains(e.target)) {
+            tPanel.classList.remove('open');
+            tBtn.classList.remove('open');
          }
       });
 
