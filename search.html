@@ -341,6 +341,34 @@
                         <option>Resale</option>
                         <option>Under construction</option>
                      </select>
+                     <div class="cf-cat" id="cfBedroomsWrap">
+                        <button class="cf-cat-btn" id="cfBedroomsBtn" onclick="toggleBedroomsPanel(event)">
+                           <span class="cf-cat-btn-label" id="cfBedroomsLabel">Bedrooms</span>
+                           <span class="cf-type-clear" id="cfBedroomsClear" onclick="clearBedrooms(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfBedroomsPanel" style="max-height:none;">
+                           <label class="cf-type-item"><input type="checkbox" value="1" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>1</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="2" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>2</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="3" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>3</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="4" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>4</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="5" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>5</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="6" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>6</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="7" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>7</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="8" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>8</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="9" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>9</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>10+</label>
+                        </div>
+                     </div>
                      <select class="cf-ctrl">
                         <option value="">Any seller</option>
                         <option>Private</option>
@@ -1014,6 +1042,37 @@
          updateRoomtypeLabel();
       }
 
+      function toggleBedroomsPanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfBedroomsBtn');
+         var panel = document.getElementById('cfBedroomsPanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updateBedroomsLabel() {
+         var checks = document.querySelectorAll('#cfBedroomsPanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfBedroomsLabel');
+         var clearBtn = document.getElementById('cfBedroomsClear');
+         var btn = document.getElementById('cfBedroomsBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Bedrooms';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else {
+            var vals = [];
+            checks.forEach(function(c){ vals.push(c.value); });
+            label.textContent = vals.join(', ');
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearBedrooms(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfBedroomsPanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateBedroomsLabel();
+      }
+
       var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
 
       function buildPricePanels() {
@@ -1070,6 +1129,12 @@
          if (rPanel && !rPanel.contains(e.target) && !rBtn.contains(e.target)) {
             rPanel.classList.remove('open');
             rBtn.classList.remove('open');
+         }
+         var bPanel = document.getElementById('cfBedroomsPanel');
+         var bBtn = document.getElementById('cfBedroomsBtn');
+         if (bPanel && !bPanel.contains(e.target) && !bBtn.contains(e.target)) {
+            bPanel.classList.remove('open');
+            bBtn.classList.remove('open');
          }
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
             var pp = drop.querySelector('.cf-price-panel');
