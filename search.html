@@ -71,6 +71,16 @@
       .cf-cat-item img { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
       .cf-cat-all { font-style: italic; color: #9ca3af; }
       .cf-cat-divider { height: 1px; background: #f3f4f6; margin: 4px 0; }
+      .cf-type-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; font-family: "Poppins", sans-serif; font-size: 13.5px; color: #1a1a1a; transition: background .12s; white-space: nowrap; }
+      .cf-type-item:hover { background: #fff7f0; }
+      .cf-type-item input[type="checkbox"] { display: none; }
+      .cf-type-check { width: 20px; height: 20px; border: 2px solid #b0b7c3; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; background: #fff; }
+      .cf-type-item input:checked + .cf-type-check { background: #555; border-color: #555; }
+      .cf-type-item input:checked + .cf-type-check::after { content: ''; display: block; width: 6px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-top: -2px; }
+      .cf-type-clear { font-size: 18px; color: #888; cursor: pointer; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+      .cf-type-clear:hover { color: #333; }
+      .cf-cat-btn.has-selection { background: #fff8f0; border-color: #ff9138; }
+      #cfTypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
 
       /* Row 2 */
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -252,40 +262,39 @@
                      <div class="cf-cat" id="cfTypeWrap">
                         <button class="cf-cat-btn" id="cfTypeBtn" onclick="toggleTypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfTypeLabel">Type</span>
+                           <span class="cf-type-clear" id="cfTypeClear" onclick="clearType(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <div class="cf-cat-panel" id="cfTypePanel">
-                           <div class="cf-cat-item cf-cat-all" onclick="selectType(this, 'Choose from the list')">Choose from the list</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Apartment" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Apartment</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Apartment')">Apartment</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Building" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Building</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Building')">Building</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Bungalow" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Bungalow</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Bungalow')">Bungalow</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Business or Investment" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Business or Investment</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Business or Investment')">Business or Investment</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Duplex')">Duplex</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Hotel" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Hotel</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Hotel')">Hotel</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Industrial estate" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Industrial estate</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Industrial estate')">Industrial estate</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Land" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Land</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Land')">Land</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Office" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Office</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Office')">Office</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Penthouse" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Penthouse</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Penthouse')">Penthouse</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Restaurant" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Restaurant</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Restaurant')">Restaurant</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Shop" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Shop</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Shop')">Shop</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Studio" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Studio</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Studio')">Studio</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Townhouse" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Townhouse</label>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Townhouse')">Townhouse</div>
-                           <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item" onclick="selectType(this, 'Villa')">Villa</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Villa" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Villa</label>
                         </div>
                      </div>
                   </div>
@@ -794,12 +803,27 @@
          panel.classList.toggle('open', open);
          btn.classList.toggle('open', open);
       }
-      function selectType(el, label) {
-         document.getElementById('cfTypeLabel').textContent = label;
-         document.getElementById('cfTypePanel').querySelectorAll('.cf-cat-item').forEach(function(i){ i.classList.remove('active'); });
-         el.classList.add('active');
-         document.getElementById('cfTypePanel').classList.remove('open');
-         document.getElementById('cfTypeBtn').classList.remove('open');
+      function updateTypeLabel() {
+         var checks = document.querySelectorAll('#cfTypePanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfTypeLabel');
+         var clearBtn = document.getElementById('cfTypeClear');
+         var btn = document.getElementById('cfTypeBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Type';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else {
+            var vals = [];
+            checks.forEach(function(c){ vals.push(c.value); });
+            label.textContent = vals.join('; ');
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearType(e) {
+         e.stopPropagation();
+         document.querySelectorAll('#cfTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateTypeLabel();
       }
 
       document.addEventListener('click', function(e) {
