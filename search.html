@@ -81,7 +81,6 @@
       .cf-type-clear:hover { color: #333; }
       .cf-cat-btn.has-selection { background: #fff8f0; border-color: #ff9138; }
       #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
-      .cf-type-popular { font-size: 10px; background: #fff3e8; color: #ff9138; border-radius: 4px; padding: 1px 6px; margin-left: auto; font-weight: 600; letter-spacing: 0.3px; }
 
       /* Row 2 */
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -809,9 +808,8 @@
          for (var i = 0; i < sorted.length; i++) {
             if (i > 0) html += '<div class="cf-cat-divider"></div>';
             var t = sorted[i];
-            var pop = (saved[t] || 0) > 3 ? '<span class="cf-type-popular">Popular</span>' : '';
             html += '<label class="cf-type-item"><input type="checkbox" value="' + t + '" onchange="onTypeChange(this)">' +
-                    '<span class="cf-type-check"></span>' + t + pop + '</label>';
+                    '<span class="cf-type-check"></span>' + t + '</label>';
          }
          panel.innerHTML = html;
          updateTypeLabel();
