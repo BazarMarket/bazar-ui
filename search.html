@@ -449,68 +449,55 @@
                            <span class="cf-type-clear" id="cfFeaturesClear" onclick="clearFeatures(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <div class="cf-cat-panel" id="cfFeaturesPanel" style="max-height:none;">
-                           <label class="cf-type-item"><input type="checkbox" value="Garden" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Garden</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Elevator" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Elevator</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Security system" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Security system</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Balcony" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Balcony</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Swimming pool" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Swimming pool</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Central heating" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Central heating</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Terrace" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Terrace</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Veranda" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Veranda</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Storage room" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Storage room</label>
-                           <div class="cf-type-group-label">OUTDOOR</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Roof garden" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Roof garden</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="BBQ" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>BBQ</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Playground" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Playground</label>
+                        <div class="cf-cat-panel" id="cfFeaturesPanel" style="max-height:none;width:560px;right:0;left:auto;display:none;padding:10px 14px;">
+                           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px;">
+                              <label class="cf-type-item"><input type="checkbox" value="Garden" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Garden</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Elevator" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Elevator</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Security system" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Security system</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Balcony" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Balcony</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Swimming pool" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Swimming pool</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Central heating" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Central heating</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Terrace" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Terrace</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Veranda" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Veranda</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Storage room" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Storage room</label>
+                           </div>
+                           <div class="cf-type-group-label" style="grid-column:1/-1;">OUTDOOR</div>
+                           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px;">
+                              <label class="cf-type-item"><input type="checkbox" value="Roof garden" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Roof garden</label>
+                              <label class="cf-type-item"><input type="checkbox" value="BBQ" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>BBQ</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Playground" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Playground</label>
+                           </div>
                            <div class="cf-type-group-label">BUILDING</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Attic/Loft" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Attic/Loft</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Double glazing" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Double glazing</label>
+                           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px;">
+                              <label class="cf-type-item"><input type="checkbox" value="Attic/Loft" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Attic/Loft</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Double glazing" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Double glazing</label>
+                           </div>
                            <div class="cf-type-group-label">COMFORT</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Fireplace" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Fireplace</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Heating floor" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Heating floor</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Smart home" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Smart home</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Wi-Fi" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Wi-Fi</label>
+                           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px;">
+                              <label class="cf-type-item"><input type="checkbox" value="Fireplace" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Fireplace</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Heating floor" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Heating floor</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Smart home" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Smart home</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Wi-Fi" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Wi-Fi</label>
+                           </div>
                            <div class="cf-type-group-label">INTERIOR</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Built-in kitchen" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Built-in kitchen</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Dishwasher" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Dishwasher</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Washing machine" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Washing machine</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Fridge" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Fridge</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="TV" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>TV</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Shower cabin" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Shower cabin</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Bath" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Bath</label>
+                           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px;">
+                              <label class="cf-type-item"><input type="checkbox" value="Built-in kitchen" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Built-in kitchen</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Dishwasher" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Dishwasher</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Washing machine" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Washing machine</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Fridge" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Fridge</label>
+                              <label class="cf-type-item"><input type="checkbox" value="TV" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>TV</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Shower cabin" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Shower cabin</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Bath" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Bath</label>
+                           </div>
                            <div class="cf-type-group-label">LIFESTYLE</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Sauna" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Sauna</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Jacuzzi" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Jacuzzi</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Gym" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Gym</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Tennis court" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Tennis court</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Home cinema" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Home cinema</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Solar panel" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Solar panel</label>
+                           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px;">
+                              <label class="cf-type-item"><input type="checkbox" value="Sauna" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Sauna</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Jacuzzi" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Jacuzzi</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Gym" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Gym</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Tennis court" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Tennis court</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Home cinema" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Home cinema</label>
+                              <label class="cf-type-item"><input type="checkbox" value="Solar panel" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Solar panel</label>
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -1270,9 +1257,9 @@
          e.stopPropagation();
          var btn = document.getElementById('cfFeaturesBtn');
          var panel = document.getElementById('cfFeaturesPanel');
-         var open = !panel.classList.contains('open');
-         panel.classList.toggle('open', open);
-         btn.classList.toggle('open', open);
+         var isOpen = panel.style.display === 'block';
+         panel.style.display = isOpen ? 'none' : 'block';
+         btn.classList.toggle('open', !isOpen);
       }
       function updateFeaturesLabel() {
          var checks = document.querySelectorAll('#cfFeaturesPanel input[type="checkbox"]:checked');
@@ -1431,7 +1418,7 @@
          var fPanel = document.getElementById('cfFeaturesPanel');
          var fBtn = document.getElementById('cfFeaturesBtn');
          if (fPanel && !fPanel.contains(e.target) && !fBtn.contains(e.target)) {
-            fPanel.classList.remove('open');
+            fPanel.style.display = 'none';
             fBtn.classList.remove('open');
          }
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
