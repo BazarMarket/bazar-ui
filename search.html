@@ -80,7 +80,7 @@
       .cf-type-clear { font-size: 18px; color: #888; cursor: pointer; line-height: 1; padding: 0 2px; flex-shrink: 0; }
       .cf-type-clear:hover { color: #333; }
       .cf-cat-btn.has-selection { background: #fff8f0; border-color: #ff9138; }
-      #cfTypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+      #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
 
       /* Row 2 */
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -297,6 +297,22 @@
                            <label class="cf-type-item"><input type="checkbox" value="Industrial estate" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Industrial estate</label>
                            <div class="cf-cat-divider"></div>
                            <label class="cf-type-item"><input type="checkbox" value="Business or Investment" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Business or Investment</label>
+                        </div>
+                     </div>
+                     <div class="cf-cat" id="cfSubtypeWrap">
+                        <button class="cf-cat-btn" id="cfSubtypeBtn" onclick="toggleSubtypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfSubtypeLabel">Property subtype</span>
+                           <span class="cf-type-clear" id="cfSubtypeClear" onclick="clearSubtype(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfSubtypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Detached house" onchange="updateSubtypeLabel()"><span class="cf-type-check"></span>Detached house</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Semi-detached" onchange="updateSubtypeLabel()"><span class="cf-type-check"></span>Semi-detached</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Terraced" onchange="updateSubtypeLabel()"><span class="cf-type-check"></span>Terraced</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="End of terrace" onchange="updateSubtypeLabel()"><span class="cf-type-check"></span>End of terrace</label>
                         </div>
                      </div>
                   </div>
@@ -828,6 +844,37 @@
          updateTypeLabel();
       }
 
+      function toggleSubtypePanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfSubtypeBtn');
+         var panel = document.getElementById('cfSubtypePanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updateSubtypeLabel() {
+         var checks = document.querySelectorAll('#cfSubtypePanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfSubtypeLabel');
+         var clearBtn = document.getElementById('cfSubtypeClear');
+         var btn = document.getElementById('cfSubtypeBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Property subtype';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else {
+            var vals = [];
+            checks.forEach(function(c){ vals.push(c.value); });
+            label.textContent = vals.join('; ');
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearSubtype(e) {
+         e.stopPropagation();
+         document.querySelectorAll('#cfSubtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateSubtypeLabel();
+      }
+
       document.addEventListener('click', function(e) {
          var panel = document.getElementById('cfCatPanel');
          var btn = document.getElementById('cfCatBtn');
@@ -840,6 +887,12 @@
          if (tPanel && !tPanel.contains(e.target) && !tBtn.contains(e.target)) {
             tPanel.classList.remove('open');
             tBtn.classList.remove('open');
+         }
+         var sPanel = document.getElementById('cfSubtypePanel');
+         var sBtn = document.getElementById('cfSubtypeBtn');
+         if (sPanel && !sPanel.contains(e.target) && !sBtn.contains(e.target)) {
+            sPanel.classList.remove('open');
+            sBtn.classList.remove('open');
          }
       });
 
