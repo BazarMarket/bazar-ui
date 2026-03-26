@@ -337,7 +337,7 @@
                      </div>
                      <div class="cf-cat" id="cfYearFromWrap">
                         <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
-                           <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year</span>
+                           <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
                            <span class="cf-type-clear" id="cfYearFromClear" onclick="clearYear('From',event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -345,7 +345,7 @@
                      </div>
                      <div class="cf-cat" id="cfYearToWrap">
                         <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
-                           <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year</span>
+                           <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
                            <span class="cf-type-clear" id="cfYearToClear" onclick="clearYear('To',event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -1248,7 +1248,7 @@
          var label = document.getElementById('cfYear' + which + 'Label');
          var clearBtn = document.getElementById('cfYear' + which + 'Clear');
          var btn = document.getElementById('cfYear' + which + 'Btn');
-         label.textContent = 'Construction year';
+         label.textContent = which === 'From' ? 'Construction year min' : 'Construction year max';
          clearBtn.style.display = 'none';
          btn.classList.remove('has-selection');
       }
