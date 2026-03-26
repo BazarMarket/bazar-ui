@@ -1373,21 +1373,22 @@
          return parseInt(s.replace(/\./g, '').replace(/\+/g, ''), 10);
       }
 
-      function filterPricePanel(which) {
-         var otherWhich = which === 'Min' ? 'Max' : 'Min';
-         var otherLabel = document.getElementById('cfPrice' + otherWhich + 'Label').textContent;
-         var otherPanel = document.getElementById('cfPrice' + otherWhich + 'Panel');
-         var hasOther = otherLabel !== 'Price min' && otherLabel !== 'Price max';
-         var otherVal = hasOther ? parsePriceNum(otherLabel) : null;
-         otherPanel.querySelectorAll('.cf-price-item').forEach(function(item) {
+      function filterPricePanels() {
+         var minLabel = document.getElementById('cfPriceMinLabel').textContent;
+         var maxLabel = document.getElementById('cfPriceMaxLabel').textContent;
+         var minPanel = document.getElementById('cfPriceMinPanel');
+         var maxPanel = document.getElementById('cfPriceMaxPanel');
+         var hasMin = minLabel !== 'Price min';
+         var hasMax = maxLabel !== 'Price max';
+         var minVal = hasMin ? parsePriceNum(minLabel) : null;
+         var maxVal = hasMax ? parsePriceNum(maxLabel) : null;
+         maxPanel.querySelectorAll('.cf-price-item').forEach(function(item) {
             var val = parsePriceNum(item.textContent);
-            if (which === 'Min' && otherVal !== null) {
-               item.style.display = val < otherVal ? 'none' : '';
-            } else if (which === 'Max' && otherVal !== null) {
-               item.style.display = val > otherVal ? 'none' : '';
-            } else {
-               item.style.display = '';
-            }
+            item.style.display = (minVal !== null && val < minVal) ? 'none' : '';
+         });
+         minPanel.querySelectorAll('.cf-price-item').forEach(function(item) {
+            var val = parsePriceNum(item.textContent);
+            item.style.display = (maxVal !== null && val > maxVal) ? 'none' : '';
          });
       }
 
@@ -1405,7 +1406,7 @@
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
-         filterPricePanel(which);
+         filterPricePanels();
       }
 
       function clearPrice(which, e) {
@@ -1422,7 +1423,7 @@
          panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
          panel.classList.remove('open');
          btn.classList.remove('open');
-         filterPricePanel(which);
+         filterPricePanels();
       }
 
       document.addEventListener('click', function(e) {
