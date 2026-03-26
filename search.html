@@ -399,6 +399,34 @@
                            <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBedroomsLabel()"><span class="cf-type-check"></span>10+</label>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfBathroomsWrap">
+                        <button class="cf-cat-btn" id="cfBathroomsBtn" onclick="toggleBathroomsPanel(event)">
+                           <span class="cf-cat-btn-label" id="cfBathroomsLabel">Bathrooms</span>
+                           <span class="cf-type-clear" id="cfBathroomsClear" onclick="clearBathrooms(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfBathroomsPanel" style="max-height:none;">
+                           <label class="cf-type-item"><input type="checkbox" value="1" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>1</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="2" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>2</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="3" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>3</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="4" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>4</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="5" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>5</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="6" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>6</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="7" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>7</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="8" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>8</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="9" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>9</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>10+</label>
+                        </div>
+                     </div>
                   </div>
                </div>
 
@@ -1075,6 +1103,37 @@
          updateBedroomsLabel();
       }
 
+      function toggleBathroomsPanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfBathroomsBtn');
+         var panel = document.getElementById('cfBathroomsPanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updateBathroomsLabel() {
+         var checks = document.querySelectorAll('#cfBathroomsPanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfBathroomsLabel');
+         var clearBtn = document.getElementById('cfBathroomsClear');
+         var btn = document.getElementById('cfBathroomsBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Bathrooms';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else {
+            var vals = [];
+            checks.forEach(function(c){ vals.push(c.value); });
+            label.textContent = vals.join(', ');
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearBathrooms(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfBathroomsPanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateBathroomsLabel();
+      }
+
       var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
 
       function buildPricePanels() {
@@ -1137,6 +1196,12 @@
          if (bPanel && !bPanel.contains(e.target) && !bBtn.contains(e.target)) {
             bPanel.classList.remove('open');
             bBtn.classList.remove('open');
+         }
+         var bathPanel = document.getElementById('cfBathroomsPanel');
+         var bathBtn = document.getElementById('cfBathroomsBtn');
+         if (bathPanel && !bathPanel.contains(e.target) && !bathBtn.contains(e.target)) {
+            bathPanel.classList.remove('open');
+            bathBtn.classList.remove('open');
          }
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
             var pp = drop.querySelector('.cf-price-panel');
