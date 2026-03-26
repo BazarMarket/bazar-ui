@@ -1143,17 +1143,12 @@
          ['From','To'].forEach(function(which) {
             var panel = document.getElementById('cfYear' + which + 'Panel');
             panel.innerHTML = '';
-            yearValues.forEach(function(val, i) {
+            yearValues.forEach(function(val) {
                var item = document.createElement('div');
                item.className = 'cf-price-item';
                item.textContent = val;
                item.onclick = function() { selectYear(which, val); };
                panel.appendChild(item);
-               if (i < yearValues.length - 1) {
-                  var div = document.createElement('div');
-                  div.className = 'cf-cat-divider';
-                  panel.appendChild(div);
-               }
             });
          });
       }
