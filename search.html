@@ -335,20 +335,22 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
-                     <select class="cf-ctrl" id="cfYearFrom">
-                        <option value="">Construction year</option>
-                        <option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
-                        <option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option>
-                        <option>2009</option><option>2008</option><option>2007</option><option>2006</option><option>2005</option><option>2004</option><option>2003</option><option>2002</option><option>2001</option><option>2000</option>
-                        <option>Older</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfYearTo">
-                        <option value="">Construction year</option>
-                        <option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
-                        <option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>2014</option><option>2013</option><option>2012</option><option>2011</option><option>2010</option>
-                        <option>2009</option><option>2008</option><option>2007</option><option>2006</option><option>2005</option><option>2004</option><option>2003</option><option>2002</option><option>2001</option><option>2000</option>
-                        <option>Older</option>
-                     </select>
+                     <div class="cf-cat" id="cfYearFromWrap">
+                        <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
+                           <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year</span>
+                           <span class="cf-type-clear" id="cfYearFromClear" onclick="clearYear('From',event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
+                     </div>
+                     <div class="cf-cat" id="cfYearToWrap">
+                        <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
+                           <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year</span>
+                           <span class="cf-type-clear" id="cfYearToClear" onclick="clearYear('To',event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
+                     </div>
                      <select class="cf-ctrl">
                         <option value="">Property area</option>
                         <option>Up to 50 m²</option>
@@ -1133,6 +1135,57 @@
          updateBathroomsLabel();
       }
 
+      var yearValues = [];
+      for (var y = 2026; y >= 2000; y--) { yearValues.push(String(y)); }
+      yearValues.push('Older');
+
+      function buildYearPanels() {
+         ['From','To'].forEach(function(which) {
+            var panel = document.getElementById('cfYear' + which + 'Panel');
+            panel.innerHTML = '';
+            yearValues.forEach(function(val, i) {
+               var item = document.createElement('div');
+               item.className = 'cf-price-item';
+               item.textContent = val;
+               item.onclick = function() { selectYear(which, val); };
+               panel.appendChild(item);
+               if (i < yearValues.length - 1) {
+                  var div = document.createElement('div');
+                  div.className = 'cf-cat-divider';
+                  panel.appendChild(div);
+               }
+            });
+         });
+      }
+      function toggleYearPanel(which, e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfYear' + which + 'Btn');
+         var panel = document.getElementById('cfYear' + which + 'Panel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function selectYear(which, val) {
+         var label = document.getElementById('cfYear' + which + 'Label');
+         var clearBtn = document.getElementById('cfYear' + which + 'Clear');
+         var btn = document.getElementById('cfYear' + which + 'Btn');
+         var panel = document.getElementById('cfYear' + which + 'Panel');
+         label.textContent = val;
+         clearBtn.style.display = '';
+         btn.classList.add('has-selection');
+         panel.classList.remove('open');
+         btn.classList.remove('open');
+      }
+      function clearYear(which, e) {
+         if (e) e.stopPropagation();
+         var label = document.getElementById('cfYear' + which + 'Label');
+         var clearBtn = document.getElementById('cfYear' + which + 'Clear');
+         var btn = document.getElementById('cfYear' + which + 'Btn');
+         label.textContent = 'Construction year';
+         clearBtn.style.display = 'none';
+         btn.classList.remove('has-selection');
+      }
+
       var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
 
       function buildPricePanels() {
@@ -1142,6 +1195,7 @@
          maxPanel.innerHTML = priceValues.map(function(v, i){ var display = (i === priceValues.length - 1) ? v + '+' : v; return '<div class="cf-price-item" onclick="selectPrice(this,\'Max\')">' + display + '</div>'; }).join('');
       }
       buildPricePanels();
+      buildYearPanels();
 
       function togglePricePanel(e, which) {
          e.stopPropagation();
@@ -1202,6 +1256,14 @@
             bathPanel.classList.remove('open');
             bathBtn.classList.remove('open');
          }
+         ['From','To'].forEach(function(w) {
+            var yp = document.getElementById('cfYear' + w + 'Panel');
+            var yb = document.getElementById('cfYear' + w + 'Btn');
+            if (yp && !yp.contains(e.target) && !yb.contains(e.target)) {
+               yp.classList.remove('open');
+               yb.classList.remove('open');
+            }
+         });
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
             var pp = drop.querySelector('.cf-price-panel');
             var pb = drop.querySelector('.cf-cat-btn');
