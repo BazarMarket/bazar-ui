@@ -81,6 +81,7 @@
       .cf-type-clear:hover { color: #333; }
       .cf-cat-btn.has-selection { background: #fff8f0; border-color: #ff9138; }
       #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+      .cf-type-popular { font-size: 10px; background: #fff3e8; color: #ff9138; border-radius: 4px; padding: 1px 6px; margin-left: auto; font-weight: 600; letter-spacing: 0.3px; }
 
       /* Row 2 */
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -265,39 +266,7 @@
                            <span class="cf-type-clear" id="cfTypeClear" onclick="clearType(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <div class="cf-cat-panel" id="cfTypePanel">
-                           <label class="cf-type-item"><input type="checkbox" value="Flat / Apartment" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Flat / Apartment</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="House / Villa" onchange="updateTypeLabel()"><span class="cf-type-check"></span>House / Villa</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Studio" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Studio</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Townhouse" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Townhouse</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Penthouse" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Penthouse</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Bungalow" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Bungalow</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Cottage" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Cottage</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Building" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Building</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Land" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Land</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Office" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Office</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Shop" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Shop</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Restaurant" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Restaurant</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Hotel" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Hotel</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Industrial estate" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Industrial estate</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Business or Investment" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Business or Investment</label>
-                        </div>
+                        <div class="cf-cat-panel" id="cfTypePanel"></div>
                      </div>
                      <div class="cf-cat" id="cfSubtypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfSubtypeBtn" onclick="toggleSubtypePanel(event)">
@@ -793,6 +762,71 @@
    <script type="text/javascript" src="js/inputmask.min.js"></script>
    <script type="text/javascript" src="js/script.js"></script>
    <script>
+      var typesSale = [
+         'Flat / Apartment', 'House / Villa', 'Studio', 'Townhouse', 'Penthouse',
+         'Duplex', 'Bungalow', 'Cottage', 'Building', 'Land',
+         'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial estate', 'Business or Investment'
+      ];
+      var typesRent = [
+         'Flat / Apartment', 'Room', 'Studio', 'House / Villa', 'Townhouse',
+         'Penthouse', 'Duplex', 'Bungalow', 'Cottage',
+         'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial estate'
+      ];
+      var baseOrder = [
+         'Flat / Apartment', 'House / Villa', 'Studio', 'Room', 'Townhouse', 'Penthouse',
+         'Duplex', 'Bungalow', 'Cottage', 'Building', 'Land',
+         'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial estate', 'Business or Investment'
+      ];
+
+      var currentMode = 'sale';
+
+      function getTypesPopularity() {
+         try { return JSON.parse(localStorage.getItem('bazarPropertyTypes')) || {}; }
+         catch(e) { return {}; }
+      }
+      function saveTypeClick(type) {
+         var data = getTypesPopularity();
+         data[type] = (data[type] || 0) + 1;
+         localStorage.setItem('bazarPropertyTypes', JSON.stringify(data));
+      }
+
+      function getSortedTypes(mode) {
+         var list = (mode === 'rent') ? typesRent.slice() : typesSale.slice();
+         var saved = getTypesPopularity();
+         list.sort(function(a, b) {
+            var diff = (saved[b] || 0) - (saved[a] || 0);
+            if (diff !== 0) return diff;
+            return baseOrder.indexOf(a) - baseOrder.indexOf(b);
+         });
+         return list;
+      }
+
+      function buildTypePanel() {
+         var panel = document.getElementById('cfTypePanel');
+         var sorted = getSortedTypes(currentMode);
+         var saved = getTypesPopularity();
+         var html = '';
+         for (var i = 0; i < sorted.length; i++) {
+            if (i > 0) html += '<div class="cf-cat-divider"></div>';
+            var t = sorted[i];
+            var pop = (saved[t] || 0) > 3 ? '<span class="cf-type-popular">Popular</span>' : '';
+            html += '<label class="cf-type-item"><input type="checkbox" value="' + t + '" onchange="onTypeChange(this)">' +
+                    '<span class="cf-type-check"></span>' + t + pop + '</label>';
+         }
+         panel.innerHTML = html;
+         updateTypeLabel();
+      }
+
+      function onTypeChange(cb) {
+         if (cb.checked) saveTypeClick(cb.value);
+         updateTypeLabel();
+      }
+
+      function detectMode(catLabel) {
+         if (catLabel.toLowerCase().indexOf('rent') !== -1) return 'rent';
+         return 'sale';
+      }
+
       /* Category dropdown */
       function toggleCatPanel(e) {
          e.stopPropagation();
@@ -811,6 +845,12 @@
          el.classList.add('active');
          document.getElementById('cfCatPanel').classList.remove('open');
          document.getElementById('cfCatBtn').classList.remove('open');
+         var newMode = detectMode(label);
+         if (newMode !== currentMode) {
+            currentMode = newMode;
+            buildTypePanel();
+            clearSubtype(null);
+         }
       }
 
       function toggleTypePanel(e) {
@@ -837,7 +877,8 @@
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
-         var houseChecked = document.querySelector('#cfTypePanel input[value="House / Villa"]').checked;
+         var houseEl = document.querySelector('#cfTypePanel input[value="House / Villa"]');
+         var houseChecked = houseEl ? houseEl.checked : false;
          var subtypeWrap = document.getElementById('cfSubtypeWrap');
          if (houseChecked) {
             subtypeWrap.style.display = '';
@@ -879,7 +920,7 @@
          }
       }
       function clearSubtype(e) {
-         e.stopPropagation();
+         if (e) e.stopPropagation();
          document.querySelectorAll('#cfSubtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
          updateSubtypeLabel();
       }
@@ -922,6 +963,8 @@
             btnGrid.classList.remove('active');
          }
       }
+
+      buildTypePanel();
    </script>
 </body>
 </html>
