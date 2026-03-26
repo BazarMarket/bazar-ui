@@ -1250,6 +1250,26 @@
          panel.classList.toggle('open', open);
          btn.classList.toggle('open', open);
       }
+      function parseYearNum(s) {
+         if (s === 'Older') return 0;
+         return parseInt(s, 10) || 0;
+      }
+      function filterYearPanels() {
+         var fromLabel = document.getElementById('cfYearFromLabel').textContent;
+         var toLabel = document.getElementById('cfYearToLabel').textContent;
+         var hasFrom = fromLabel !== 'Construction year min';
+         var hasTo = toLabel !== 'Construction year max';
+         var fromVal = hasFrom ? parseYearNum(fromLabel) : null;
+         var toVal = hasTo ? parseYearNum(toLabel) : null;
+         document.getElementById('cfYearToPanel').querySelectorAll('.cf-price-item').forEach(function(item) {
+            var v = parseYearNum(item.textContent);
+            item.style.display = (fromVal !== null && v !== 0 && v < fromVal) ? 'none' : '';
+         });
+         document.getElementById('cfYearFromPanel').querySelectorAll('.cf-price-item').forEach(function(item) {
+            var v = parseYearNum(item.textContent);
+            item.style.display = (toVal !== null && toVal !== 0 && v > toVal) ? 'none' : '';
+         });
+      }
       function selectYear(which, val) {
          var label = document.getElementById('cfYear' + which + 'Label');
          var arrow = document.getElementById('cfYear' + which + 'Arrow');
@@ -1262,6 +1282,7 @@
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
+         filterYearPanels();
       }
       function clearYear(which, e) {
          if (e) { e.stopPropagation(); e.preventDefault(); }
@@ -1273,6 +1294,7 @@
          arrow.style.display = '';
          cross.style.display = 'none';
          btn.classList.remove('has-selection');
+         filterYearPanels();
       }
 
       function toggleFeaturesPanel(e) {
@@ -1329,6 +1351,25 @@
          panel.classList.toggle('open', open);
          btn.classList.toggle('open', open);
       }
+      function parseAreaNum(s) {
+         return parseInt(s.replace(/[^0-9]/g, ''), 10) || 0;
+      }
+      function filterAreaPanels() {
+         var minLabel = document.getElementById('cfAreaMinLabel').textContent;
+         var maxLabel = document.getElementById('cfAreaMaxLabel').textContent;
+         var hasMin = minLabel !== 'Property area min';
+         var hasMax = maxLabel !== 'Property area max';
+         var minVal = hasMin ? parseAreaNum(minLabel) : null;
+         var maxVal = hasMax ? parseAreaNum(maxLabel) : null;
+         document.getElementById('cfAreaMaxPanel').querySelectorAll('.cf-price-item').forEach(function(item) {
+            var v = parseAreaNum(item.textContent);
+            item.style.display = (minVal !== null && v < minVal) ? 'none' : '';
+         });
+         document.getElementById('cfAreaMinPanel').querySelectorAll('.cf-price-item').forEach(function(item) {
+            var v = parseAreaNum(item.textContent);
+            item.style.display = (maxVal !== null && v > maxVal) ? 'none' : '';
+         });
+      }
       function selectArea(which, val) {
          var label = document.getElementById('cfArea' + which + 'Label');
          var arrow = document.getElementById('cfArea' + which + 'Arrow');
@@ -1341,6 +1382,7 @@
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
+         filterAreaPanels();
       }
       function clearArea(which, e) {
          if (e) { e.stopPropagation(); e.preventDefault(); }
@@ -1352,6 +1394,7 @@
          arrow.style.display = '';
          cross.style.display = 'none';
          btn.classList.remove('has-selection');
+         filterAreaPanels();
       }
 
       var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
