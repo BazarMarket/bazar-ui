@@ -87,8 +87,12 @@
 
       /* Row 2 */
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-      .cf-price { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+      .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
+      .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; overflow: visible; gap: 0; }
+      .cf-price-joined:hover { border-color: #ff9138; }
+      .cf-price-joined .cf-cat-btn { border: none; border-radius: 0; height: 41px; }
+      .cf-price-joined .cf-price-divider { width: 1px; height: 22px; background: #e0e0e0; flex-shrink: 0; }
       .cf-price .cf-ctrl { width: 110px; }
       .cf-price-drop { flex-shrink: 0; }
       .cf-price-panel { min-width: 160px !important; }
@@ -320,7 +324,7 @@
                   </div>
                   <!-- Row 2: price + filters -->
                   <div class="cf-row2">
-                     <div class="cf-price">
+                     <div class="cf-price-joined">
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMinBtn" onclick="togglePricePanel(event,'Min')">
                               <span class="cf-cat-btn-label" id="cfPriceMinLabel">Price min</span>
@@ -328,7 +332,7 @@
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMinPanel"></div>
                         </div>
-                        <span style="color:#aab0b8;font-size:15px;line-height:44px;flex-shrink:0;">–</span>
+                        <div class="cf-price-divider"></div>
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMaxBtn" onclick="togglePricePanel(event,'Max')">
                               <span class="cf-cat-btn-label" id="cfPriceMaxLabel">Price max</span>
