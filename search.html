@@ -1369,6 +1369,28 @@
          btn.classList.toggle('open', open);
       }
 
+      function parsePriceNum(s) {
+         return parseInt(s.replace(/\./g, '').replace(/\+/g, ''), 10);
+      }
+
+      function filterPricePanel(which) {
+         var otherWhich = which === 'Min' ? 'Max' : 'Min';
+         var otherLabel = document.getElementById('cfPrice' + otherWhich + 'Label').textContent;
+         var otherPanel = document.getElementById('cfPrice' + otherWhich + 'Panel');
+         var hasOther = otherLabel !== 'Price min' && otherLabel !== 'Price max';
+         var otherVal = hasOther ? parsePriceNum(otherLabel) : null;
+         otherPanel.querySelectorAll('.cf-price-item').forEach(function(item) {
+            var val = parsePriceNum(item.textContent);
+            if (which === 'Min' && otherVal !== null) {
+               item.style.display = val < otherVal ? 'none' : '';
+            } else if (which === 'Max' && otherVal !== null) {
+               item.style.display = val > otherVal ? 'none' : '';
+            } else {
+               item.style.display = '';
+            }
+         });
+      }
+
       function selectPrice(el, which) {
          var label = document.getElementById('cfPrice' + which + 'Label');
          var panel = document.getElementById('cfPrice' + which + 'Panel');
@@ -1383,6 +1405,7 @@
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
+         filterPricePanel(which);
       }
 
       function clearPrice(which, e) {
@@ -1399,6 +1422,7 @@
          panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
          panel.classList.remove('open');
          btn.classList.remove('open');
+         filterPricePanel(which);
       }
 
       document.addEventListener('click', function(e) {
