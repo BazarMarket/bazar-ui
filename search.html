@@ -299,9 +299,9 @@
                            <label class="cf-type-item"><input type="checkbox" value="Business or Investment" onchange="updateTypeLabel()"><span class="cf-type-check"></span>Business or Investment</label>
                         </div>
                      </div>
-                     <div class="cf-cat" id="cfSubtypeWrap">
+                     <div class="cf-cat" id="cfSubtypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfSubtypeBtn" onclick="toggleSubtypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfSubtypeLabel">Property subtype</span>
+                           <span class="cf-cat-btn-label" id="cfSubtypeLabel">House type</span>
                            <span class="cf-type-clear" id="cfSubtypeClear" onclick="clearSubtype(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -837,6 +837,15 @@
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
+         var houseChecked = document.querySelector('#cfTypePanel input[value="House / Villa"]').checked;
+         var subtypeWrap = document.getElementById('cfSubtypeWrap');
+         if (houseChecked) {
+            subtypeWrap.style.display = '';
+         } else {
+            subtypeWrap.style.display = 'none';
+            document.querySelectorAll('#cfSubtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+            updateSubtypeLabel();
+         }
       }
       function clearType(e) {
          e.stopPropagation();
@@ -858,7 +867,7 @@
          var clearBtn = document.getElementById('cfSubtypeClear');
          var btn = document.getElementById('cfSubtypeBtn');
          if (checks.length === 0) {
-            label.textContent = 'Property subtype';
+            label.textContent = 'House type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
          } else {
