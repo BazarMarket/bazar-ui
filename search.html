@@ -843,9 +843,9 @@
          var resItems = list.filter(function(t){ return residentialTypes.indexOf(t) !== -1; });
          var comItems = list.filter(function(t){ return commercialTypes.indexOf(t) !== -1; });
          var lndItems = list.filter(function(t){ return landTypes.indexOf(t) !== -1; });
-         if (resItems.length) groups.push({ label: '🏠 Residential', items: resItems });
-         if (comItems.length) groups.push({ label: '🏢 Commercial', items: comItems });
-         if (lndItems.length) groups.push({ label: '🏗 Land & Development', items: lndItems });
+         if (resItems.length) groups.push({ label: 'Residential', items: resItems });
+         if (comItems.length) groups.push({ label: 'Commercial', items: comItems });
+         if (lndItems.length) groups.push({ label: 'Land & Development', items: lndItems });
          for (var g = 0; g < groups.length; g++) {
             html += '<div class="cf-type-group-label">' + groups[g].label + '</div>';
             for (var i = 0; i < groups[g].items.length; i++) {
