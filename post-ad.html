@@ -1444,15 +1444,15 @@
             var other = list.filter(function(t){ return reResidential.indexOf(t) === -1 && reCommercial.indexOf(t) === -1 && reLand.indexOf(t) === -1; });
             var html = '';
             if (res.length) {
-               html += '<div class="cat-group-label">Residential</div>';
+               html += '<div class="cat-group-label">🏠 Residential</div>';
                html += res.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
             }
             if (com.length) {
-               html += '<div class="cat-group-label">Commercial</div>';
+               html += '<div class="cat-group-label">🏢 Commercial</div>';
                html += com.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
             }
             if (lnd.length) {
-               html += '<div class="cat-group-label">Land & Development</div>';
+               html += '<div class="cat-group-label">🏗 Land & Development</div>';
                html += lnd.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
             }
             if (other.length) {
