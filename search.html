@@ -92,8 +92,8 @@
       .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; }
       .cf-price-joined:hover { border-color: #ff9138; }
       .cf-price-joined .cf-cat-btn { border: none; border-radius: 0; height: 41px; }
-      .cf-price-joined .cf-price-drop:first-child .cf-cat-btn { border-radius: 9px 0 0 9px; }
-      .cf-price-joined .cf-price-drop:last-child .cf-cat-btn { border-radius: 0 9px 9px 0; }
+      .cf-price-joined .cf-cat:first-child .cf-cat-btn { border-radius: 9px 0 0 9px; }
+      .cf-price-joined .cf-cat:last-child .cf-cat-btn { border-radius: 0 9px 9px 0; }
       .cf-price-joined .cf-price-divider { width: 1px; align-self: stretch; margin: 8px 0; background: #e0e0e0; flex-shrink: 0; }
       .cf-price .cf-ctrl { width: 110px; }
       .cf-price-drop { flex-shrink: 0; }
@@ -343,7 +343,7 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
-                     <div class="cf-price">
+                     <div class="cf-price-joined">
                         <div class="cf-cat" id="cfYearFromWrap">
                            <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
                               <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
@@ -352,7 +352,7 @@
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
                         </div>
-                        <span style="color:#aab0b8;font-size:15px;line-height:44px;flex-shrink:0;">–</span>
+                        <div class="cf-price-divider"></div>
                         <div class="cf-cat" id="cfYearToWrap">
                            <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
                               <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
@@ -362,7 +362,7 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
                         </div>
                      </div>
-                     <div class="cf-price">
+                     <div class="cf-price-joined">
                         <div class="cf-cat" id="cfAreaMinWrap">
                            <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
                               <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
@@ -371,7 +371,7 @@
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
                         </div>
-                        <span style="color:#aab0b8;font-size:15px;line-height:44px;flex-shrink:0;">–</span>
+                        <div class="cf-price-divider"></div>
                         <div class="cf-cat" id="cfAreaMaxWrap">
                            <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
                               <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
