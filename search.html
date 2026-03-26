@@ -330,6 +330,7 @@
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMinBtn" onclick="togglePricePanel(event,'Min')">
                               <span class="cf-cat-btn-label" id="cfPriceMinLabel">Price min</span>
+                              <span class="cf-type-clear" id="cfPriceMinClear" onclick="clearPrice('Min',event)" style="display:none;">&times;</span>
                               <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMinPanel"></div>
@@ -338,6 +339,7 @@
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMaxBtn" onclick="togglePricePanel(event,'Max')">
                               <span class="cf-cat-btn-label" id="cfPriceMaxLabel">Price max</span>
+                              <span class="cf-type-clear" id="cfPriceMaxClear" onclick="clearPrice('Max',event)" style="display:none;">&times;</span>
                               <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
@@ -1369,11 +1371,26 @@
          var label = document.getElementById('cfPrice' + which + 'Label');
          var panel = document.getElementById('cfPrice' + which + 'Panel');
          var btn = document.getElementById('cfPrice' + which + 'Btn');
+         var clearBtn = document.getElementById('cfPrice' + which + 'Clear');
          panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
          el.classList.add('active');
          label.textContent = el.textContent;
+         clearBtn.style.display = '';
+         btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
+      }
+
+      function clearPrice(which, e) {
+         if (e) e.stopPropagation();
+         var label = document.getElementById('cfPrice' + which + 'Label');
+         var clearBtn = document.getElementById('cfPrice' + which + 'Clear');
+         var btn = document.getElementById('cfPrice' + which + 'Btn');
+         var panel = document.getElementById('cfPrice' + which + 'Panel');
+         label.textContent = which === 'Min' ? 'Price min' : 'Price max';
+         clearBtn.style.display = 'none';
+         btn.classList.remove('has-selection');
+         panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
       }
 
       document.addEventListener('click', function(e) {
