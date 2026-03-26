@@ -798,6 +798,10 @@
          'Penthouse', 'Duplex', 'Bungalow', 'Cottage',
          'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial estate'
       ];
+      var typesShortRent = [
+         'Flat / Apartment', 'House / Villa', 'Maisonette', 'Room', 'Studio', 'Townhouse',
+         'Penthouse', 'Duplex', 'Bungalow', 'Cottage'
+      ];
       var baseOrder = [
          'Flat / Apartment', 'House / Villa', 'Maisonette', 'Studio', 'Room', 'Townhouse', 'Penthouse',
          'Duplex', 'Bungalow', 'Cottage', 'Building', 'Land',
@@ -817,7 +821,7 @@
       }
 
       function getSortedTypes(mode) {
-         var list = (mode === 'rent') ? typesRent.slice() : typesSale.slice();
+         var list = (mode === 'short-rent') ? typesShortRent.slice() : (mode === 'rent') ? typesRent.slice() : typesSale.slice();
          var saved = getTypesPopularity();
          list.sort(function(a, b) {
             var diff = (saved[b] || 0) - (saved[a] || 0);
@@ -848,7 +852,9 @@
       }
 
       function detectMode(catLabel) {
-         if (catLabel.toLowerCase().indexOf('rent') !== -1) return 'rent';
+         var l = catLabel.toLowerCase();
+         if (l.indexOf('short rent') !== -1 || l.indexOf('short-term') !== -1) return 'short-rent';
+         if (l.indexOf('rent') !== -1) return 'rent';
          return 'sale';
       }
 
