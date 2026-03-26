@@ -351,8 +351,8 @@
                         <div class="cf-cat" id="cfYearFromWrap">
                            <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
                               <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
-                              <span class="cf-type-clear" id="cfYearFromClear" onclick="clearYear('From',event)" style="display:none;">&times;</span>
-                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-arrow-icon" id="cfYearFromArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfYearFromCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearYear('From',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
                         </div>
@@ -360,8 +360,8 @@
                         <div class="cf-cat" id="cfYearToWrap">
                            <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
                               <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
-                              <span class="cf-type-clear" id="cfYearToClear" onclick="clearYear('To',event)" style="display:none;">&times;</span>
-                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-arrow-icon" id="cfYearToArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfYearToCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearYear('To',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
                         </div>
@@ -370,8 +370,8 @@
                         <div class="cf-cat" id="cfAreaMinWrap">
                            <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
                               <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
-                              <span class="cf-type-clear" id="cfAreaMinClear" onclick="clearArea('Min',event)" style="display:none;">&times;</span>
-                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-arrow-icon" id="cfAreaMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfAreaMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearArea('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
                         </div>
@@ -379,8 +379,8 @@
                         <div class="cf-cat" id="cfAreaMaxWrap">
                            <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
                               <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
-                              <span class="cf-type-clear" id="cfAreaMaxClear" onclick="clearArea('Max',event)" style="display:none;">&times;</span>
-                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-arrow-icon" id="cfAreaMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfAreaMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearArea('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
                         </div>
@@ -1252,22 +1252,26 @@
       }
       function selectYear(which, val) {
          var label = document.getElementById('cfYear' + which + 'Label');
-         var clearBtn = document.getElementById('cfYear' + which + 'Clear');
+         var arrow = document.getElementById('cfYear' + which + 'Arrow');
+         var cross = document.getElementById('cfYear' + which + 'Cross');
          var btn = document.getElementById('cfYear' + which + 'Btn');
          var panel = document.getElementById('cfYear' + which + 'Panel');
          label.textContent = val;
-         clearBtn.style.display = '';
+         arrow.style.display = 'none';
+         cross.style.display = '';
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
       }
       function clearYear(which, e) {
-         if (e) e.stopPropagation();
+         if (e) { e.stopPropagation(); e.preventDefault(); }
          var label = document.getElementById('cfYear' + which + 'Label');
-         var clearBtn = document.getElementById('cfYear' + which + 'Clear');
+         var arrow = document.getElementById('cfYear' + which + 'Arrow');
+         var cross = document.getElementById('cfYear' + which + 'Cross');
          var btn = document.getElementById('cfYear' + which + 'Btn');
          label.textContent = which === 'From' ? 'Construction year min' : 'Construction year max';
-         clearBtn.style.display = 'none';
+         arrow.style.display = '';
+         cross.style.display = 'none';
          btn.classList.remove('has-selection');
       }
 
@@ -1327,22 +1331,26 @@
       }
       function selectArea(which, val) {
          var label = document.getElementById('cfArea' + which + 'Label');
-         var clearBtn = document.getElementById('cfArea' + which + 'Clear');
+         var arrow = document.getElementById('cfArea' + which + 'Arrow');
+         var cross = document.getElementById('cfArea' + which + 'Cross');
          var btn = document.getElementById('cfArea' + which + 'Btn');
          var panel = document.getElementById('cfArea' + which + 'Panel');
          label.textContent = val;
-         clearBtn.style.display = '';
+         arrow.style.display = 'none';
+         cross.style.display = '';
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
       }
       function clearArea(which, e) {
-         if (e) e.stopPropagation();
+         if (e) { e.stopPropagation(); e.preventDefault(); }
          var label = document.getElementById('cfArea' + which + 'Label');
-         var clearBtn = document.getElementById('cfArea' + which + 'Clear');
+         var arrow = document.getElementById('cfArea' + which + 'Arrow');
+         var cross = document.getElementById('cfArea' + which + 'Cross');
          var btn = document.getElementById('cfArea' + which + 'Btn');
          label.textContent = which === 'Min' ? 'Property area min' : 'Property area max';
-         clearBtn.style.display = 'none';
+         arrow.style.display = '';
+         cross.style.display = 'none';
          btn.classList.remove('has-selection');
       }
 
