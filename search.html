@@ -337,37 +337,43 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
-                     <div class="cf-cat" id="cfYearFromWrap">
-                        <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
-                           <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
-                           <span class="cf-type-clear" id="cfYearFromClear" onclick="clearYear('From',event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
+                     <div class="cf-price">
+                        <div class="cf-cat" id="cfYearFromWrap">
+                           <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
+                              <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
+                              <span class="cf-type-clear" id="cfYearFromClear" onclick="clearYear('From',event)" style="display:none;">&times;</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
+                        </div>
+                        <span style="color:#aab0b8;font-size:15px;line-height:44px;flex-shrink:0;">–</span>
+                        <div class="cf-cat" id="cfYearToWrap">
+                           <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
+                              <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
+                              <span class="cf-type-clear" id="cfYearToClear" onclick="clearYear('To',event)" style="display:none;">&times;</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
+                        </div>
                      </div>
-                     <div class="cf-cat" id="cfYearToWrap">
-                        <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
-                           <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
-                           <span class="cf-type-clear" id="cfYearToClear" onclick="clearYear('To',event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
-                     </div>
-                     <div class="cf-cat" id="cfAreaMinWrap">
-                        <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
-                           <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
-                           <span class="cf-type-clear" id="cfAreaMinClear" onclick="clearArea('Min',event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
-                     </div>
-                     <div class="cf-cat" id="cfAreaMaxWrap">
-                        <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
-                           <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
-                           <span class="cf-type-clear" id="cfAreaMaxClear" onclick="clearArea('Max',event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
+                     <div class="cf-price">
+                        <div class="cf-cat" id="cfAreaMinWrap">
+                           <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
+                              <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
+                              <span class="cf-type-clear" id="cfAreaMinClear" onclick="clearArea('Min',event)" style="display:none;">&times;</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
+                        </div>
+                        <span style="color:#aab0b8;font-size:15px;line-height:44px;flex-shrink:0;">–</span>
+                        <div class="cf-cat" id="cfAreaMaxWrap">
+                           <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
+                              <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
+                              <span class="cf-type-clear" id="cfAreaMaxClear" onclick="clearArea('Max',event)" style="display:none;">&times;</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
+                        </div>
                      </div>
                   </div>
                   <div class="cf-row2" style="margin-top:6px;">
