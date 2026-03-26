@@ -351,14 +351,22 @@
                         </button>
                         <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
                      </div>
-                     <select class="cf-ctrl">
-                        <option value="">Property area</option>
-                        <option>Up to 50 m²</option>
-                        <option>50–100 m²</option>
-                        <option>100–200 m²</option>
-                        <option>200–500 m²</option>
-                        <option>500+ m²</option>
-                     </select>
+                     <div class="cf-cat" id="cfAreaMinWrap">
+                        <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
+                           <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area</span>
+                           <span class="cf-type-clear" id="cfAreaMinClear" onclick="clearArea('Min',event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
+                     </div>
+                     <div class="cf-cat" id="cfAreaMaxWrap">
+                        <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
+                           <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
+                           <span class="cf-type-clear" id="cfAreaMaxClear" onclick="clearArea('Max',event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
+                     </div>
                   </div>
                   <div class="cf-row2" style="margin-top:6px;">
                      <div class="cf-cat" id="cfBedroomsWrap">
@@ -1181,6 +1189,52 @@
          btn.classList.remove('has-selection');
       }
 
+      var areaValues = ['10 m²','15 m²','20 m²','30 m²','40 m²','50 m²','75 m²','100 m²','125 m²','150 m²','175 m²','200 m²','250 m²','300 m²','350 m²','400 m²','450 m²','500 m²','550 m²','600 m²','650 m²','700 m²','750 m²','800 m²','850 m²','900 m²','950 m²','1000 m²'];
+
+      function buildAreaPanels() {
+         ['Min','Max'].forEach(function(which) {
+            var panel = document.getElementById('cfArea' + which + 'Panel');
+            panel.innerHTML = '';
+            var vals = areaValues.slice();
+            if (which === 'Max') { vals[vals.length - 1] = '1000+ m²'; }
+            vals.forEach(function(val) {
+               var item = document.createElement('div');
+               item.className = 'cf-price-item';
+               item.textContent = val;
+               item.onclick = function() { selectArea(which, val); };
+               panel.appendChild(item);
+            });
+         });
+      }
+      function toggleAreaPanel(which, e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfArea' + which + 'Btn');
+         var panel = document.getElementById('cfArea' + which + 'Panel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function selectArea(which, val) {
+         var label = document.getElementById('cfArea' + which + 'Label');
+         var clearBtn = document.getElementById('cfArea' + which + 'Clear');
+         var btn = document.getElementById('cfArea' + which + 'Btn');
+         var panel = document.getElementById('cfArea' + which + 'Panel');
+         label.textContent = val;
+         clearBtn.style.display = '';
+         btn.classList.add('has-selection');
+         panel.classList.remove('open');
+         btn.classList.remove('open');
+      }
+      function clearArea(which, e) {
+         if (e) e.stopPropagation();
+         var label = document.getElementById('cfArea' + which + 'Label');
+         var clearBtn = document.getElementById('cfArea' + which + 'Clear');
+         var btn = document.getElementById('cfArea' + which + 'Btn');
+         label.textContent = which === 'Min' ? 'Property area' : 'Property area max';
+         clearBtn.style.display = 'none';
+         btn.classList.remove('has-selection');
+      }
+
       var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
 
       function buildPricePanels() {
@@ -1191,6 +1245,7 @@
       }
       buildPricePanels();
       buildYearPanels();
+      buildAreaPanels();
 
       function togglePricePanel(e, which) {
          e.stopPropagation();
@@ -1257,6 +1312,14 @@
             if (yp && !yp.contains(e.target) && !yb.contains(e.target)) {
                yp.classList.remove('open');
                yb.classList.remove('open');
+            }
+         });
+         ['Min','Max'].forEach(function(w) {
+            var ap = document.getElementById('cfArea' + w + 'Panel');
+            var ab = document.getElementById('cfArea' + w + 'Btn');
+            if (ap && !ap.contains(e.target) && !ab.contains(e.target)) {
+               ap.classList.remove('open');
+               ab.classList.remove('open');
             }
          });
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
