@@ -45,7 +45,7 @@
       /* shared control style */
       .cf-ctrl { font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; height: 44px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; outline: none; cursor: pointer; transition: border-color .15s; padding: 0 12px; }
       .cf-ctrl:focus, .cf-ctrl:focus-within { border-color: #ff9138; }
-      select.cf-ctrl { cursor: pointer; }
+      select.cf-ctrl { cursor: pointer; flex-shrink: 0; width: auto; }
 
       /* Row 1 */
       .cf-row1 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -95,7 +95,7 @@
       .cf-price-panel .cf-price-item:last-child { border-bottom: none; }
       .cf-price-panel .cf-price-item:hover { background: #fff7f0; }
       .cf-price-panel .cf-price-item.active { background: #fff2e6; font-weight: 500; color: #ff9138; }
-      .cf-row2 select.cf-ctrl { flex: 1 1 120px; min-width: 110px; }
+      .cf-row2 select.cf-ctrl { flex: 0 0 auto; min-width: 110px; }
 
       /* Chips */
       .cf-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f3f4f6; }
@@ -107,7 +107,7 @@
       .cf-clear:hover { color: #6b7280; }
 
       @media (max-width: 900px) {
-         .cf-row2 select.cf-ctrl { flex: 1 1 140px; }
+         .cf-row2 select.cf-ctrl { flex: 0 0 auto; }
       }
       @media (max-width: 600px) {
          .cf-row1, .cf-row2 { flex-direction: column; align-items: stretch; }
