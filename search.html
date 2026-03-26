@@ -95,6 +95,8 @@
       .cf-price-joined .cf-cat:first-child .cf-cat-btn { border-radius: 9px 0 0 9px; }
       .cf-price-joined .cf-cat:last-child .cf-cat-btn { border-radius: 0 9px 9px 0; }
       .cf-price-joined .cf-price-divider { width: 1px; align-self: stretch; margin: 8px 0; background: #e0e0e0; flex-shrink: 0; }
+      .cf-clear-icon { cursor: pointer; }
+      .cf-clear-icon:hover path { stroke: #e07a20; }
       .cf-price .cf-ctrl { width: 110px; }
       .cf-price-drop { flex-shrink: 0; }
       .cf-price-panel { min-width: 160px !important; }
@@ -330,8 +332,8 @@
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMinBtn" onclick="togglePricePanel(event,'Min')">
                               <span class="cf-cat-btn-label" id="cfPriceMinLabel">Price min</span>
-                              <span class="cf-type-clear" id="cfPriceMinClear" onclick="clearPrice('Min',event)" style="display:none;">&times;</span>
-                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-arrow-icon" id="cfPriceMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfPriceMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearPrice('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMinPanel"></div>
                         </div>
@@ -339,8 +341,8 @@
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMaxBtn" onclick="togglePricePanel(event,'Max')">
                               <span class="cf-cat-btn-label" id="cfPriceMaxLabel">Price max</span>
-                              <span class="cf-type-clear" id="cfPriceMaxClear" onclick="clearPrice('Max',event)" style="display:none;">&times;</span>
-                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-arrow-icon" id="cfPriceMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfPriceMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearPrice('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
                            </button>
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
@@ -1371,26 +1373,32 @@
          var label = document.getElementById('cfPrice' + which + 'Label');
          var panel = document.getElementById('cfPrice' + which + 'Panel');
          var btn = document.getElementById('cfPrice' + which + 'Btn');
-         var clearBtn = document.getElementById('cfPrice' + which + 'Clear');
+         var arrow = document.getElementById('cfPrice' + which + 'Arrow');
+         var cross = document.getElementById('cfPrice' + which + 'Cross');
          panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
          el.classList.add('active');
          label.textContent = el.textContent;
-         clearBtn.style.display = '';
+         arrow.style.display = 'none';
+         cross.style.display = '';
          btn.classList.add('has-selection');
          panel.classList.remove('open');
          btn.classList.remove('open');
       }
 
       function clearPrice(which, e) {
-         if (e) e.stopPropagation();
+         if (e) { e.stopPropagation(); e.preventDefault(); }
          var label = document.getElementById('cfPrice' + which + 'Label');
-         var clearBtn = document.getElementById('cfPrice' + which + 'Clear');
+         var arrow = document.getElementById('cfPrice' + which + 'Arrow');
+         var cross = document.getElementById('cfPrice' + which + 'Cross');
          var btn = document.getElementById('cfPrice' + which + 'Btn');
          var panel = document.getElementById('cfPrice' + which + 'Panel');
          label.textContent = which === 'Min' ? 'Price min' : 'Price max';
-         clearBtn.style.display = 'none';
+         arrow.style.display = '';
+         cross.style.display = 'none';
          btn.classList.remove('has-selection');
          panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
+         panel.classList.remove('open');
+         btn.classList.remove('open');
       }
 
       document.addEventListener('click', function(e) {
