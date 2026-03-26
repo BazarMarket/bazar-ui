@@ -261,7 +261,7 @@
                      </div>
                      <div class="cf-cat" id="cfTypeWrap">
                         <button class="cf-cat-btn" id="cfTypeBtn" onclick="toggleTypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfTypeLabel">Type</span>
+                           <span class="cf-cat-btn-label" id="cfTypeLabel">Property type</span>
                            <span class="cf-type-clear" id="cfTypeClear" onclick="clearType(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -811,7 +811,7 @@
          var clearBtn = document.getElementById('cfTypeClear');
          var btn = document.getElementById('cfTypeBtn');
          if (checks.length === 0) {
-            label.textContent = 'Type';
+            label.textContent = 'Property type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
          } else {
