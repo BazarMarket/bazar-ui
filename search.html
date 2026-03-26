@@ -353,7 +353,7 @@
                      </div>
                      <div class="cf-cat" id="cfAreaMinWrap">
                         <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
-                           <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area</span>
+                           <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
                            <span class="cf-type-clear" id="cfAreaMinClear" onclick="clearArea('Min',event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -1230,7 +1230,7 @@
          var label = document.getElementById('cfArea' + which + 'Label');
          var clearBtn = document.getElementById('cfArea' + which + 'Clear');
          var btn = document.getElementById('cfArea' + which + 'Btn');
-         label.textContent = which === 'Min' ? 'Property area' : 'Property area max';
+         label.textContent = which === 'Min' ? 'Property area min' : 'Property area max';
          clearBtn.style.display = 'none';
          btn.classList.remove('has-selection');
       }
