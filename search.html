@@ -89,6 +89,12 @@
       .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
       .cf-price { display: flex; gap: 6px; flex-shrink: 0; }
       .cf-price .cf-ctrl { width: 110px; }
+      .cf-price-drop { flex-shrink: 0; }
+      .cf-price-panel { min-width: 160px !important; }
+      .cf-price-panel .cf-price-item { padding: 9px 16px; cursor: pointer; font-family: "Poppins", sans-serif; font-size: 13.5px; color: #1a1a1a; border-bottom: 1px solid #f0f0f0; transition: background .12s; }
+      .cf-price-panel .cf-price-item:last-child { border-bottom: none; }
+      .cf-price-panel .cf-price-item:hover { background: #fff7f0; }
+      .cf-price-panel .cf-price-item.active { background: #fff2e6; font-weight: 500; color: #ff9138; }
       .cf-row2 select.cf-ctrl { flex: 1 1 120px; min-width: 110px; }
 
       /* Chips */
@@ -314,58 +320,20 @@
                   <!-- Row 2: price + filters -->
                   <div class="cf-row2">
                      <div class="cf-price">
-                        <select class="cf-ctrl" id="cfPriceMin">
-                           <option value="">Price min</option>
-                           <option>50.000</option>
-                           <option>75.000</option>
-                           <option>100.000</option>
-                           <option>150.000</option>
-                           <option>200.000</option>
-                           <option>250.000</option>
-                           <option>300.000</option>
-                           <option>400.000</option>
-                           <option>500.000</option>
-                           <option>600.000</option>
-                           <option>750.000</option>
-                           <option>800.000</option>
-                           <option>1.000.000</option>
-                           <option>1.250.000</option>
-                           <option>1.500.000</option>
-                           <option>1.750.000</option>
-                           <option>2.000.000</option>
-                           <option>2.500.000</option>
-                           <option>3.000.000</option>
-                           <option>4.000.000</option>
-                           <option>5.000.000</option>
-                           <option>7.500.000</option>
-                           <option>10.000.000</option>
-                        </select>
-                        <select class="cf-ctrl" id="cfPriceMax">
-                           <option value="">Price max</option>
-                           <option>50.000</option>
-                           <option>75.000</option>
-                           <option>100.000</option>
-                           <option>150.000</option>
-                           <option>200.000</option>
-                           <option>250.000</option>
-                           <option>300.000</option>
-                           <option>400.000</option>
-                           <option>500.000</option>
-                           <option>600.000</option>
-                           <option>750.000</option>
-                           <option>800.000</option>
-                           <option>1.000.000</option>
-                           <option>1.250.000</option>
-                           <option>1.500.000</option>
-                           <option>1.750.000</option>
-                           <option>2.000.000</option>
-                           <option>2.500.000</option>
-                           <option>3.000.000</option>
-                           <option>4.000.000</option>
-                           <option>5.000.000</option>
-                           <option>7.500.000</option>
-                           <option>10.000.000+</option>
-                        </select>
+                        <div class="cf-cat cf-price-drop">
+                           <button class="cf-cat-btn" id="cfPriceMinBtn" onclick="togglePricePanel(event,'Min')">
+                              <span class="cf-cat-btn-label" id="cfPriceMinLabel">Price min</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfPriceMinPanel"></div>
+                        </div>
+                        <div class="cf-cat cf-price-drop">
+                           <button class="cf-cat-btn" id="cfPriceMaxBtn" onclick="togglePricePanel(event,'Max')">
+                              <span class="cf-cat-btn-label" id="cfPriceMaxLabel">Price max</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
+                        </div>
                      </div>
                      <select class="cf-ctrl">
                         <option value="">Condition</option>
@@ -1062,6 +1030,38 @@
          updateRoomtypeLabel();
       }
 
+      var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
+
+      function buildPricePanels() {
+         var minPanel = document.getElementById('cfPriceMinPanel');
+         var maxPanel = document.getElementById('cfPriceMaxPanel');
+         minPanel.innerHTML = priceValues.map(function(v){ return '<div class="cf-price-item" onclick="selectPrice(this,\'Min\')">' + v + '</div>'; }).join('');
+         maxPanel.innerHTML = priceValues.map(function(v, i){ var display = (i === priceValues.length - 1) ? v + '+' : v; return '<div class="cf-price-item" onclick="selectPrice(this,\'Max\')">' + display + '</div>'; }).join('');
+      }
+      buildPricePanels();
+
+      function togglePricePanel(e, which) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfPrice' + which + 'Btn');
+         var panel = document.getElementById('cfPrice' + which + 'Panel');
+         var open = !panel.classList.contains('open');
+         document.querySelectorAll('.cf-price-panel').forEach(function(p){ p.classList.remove('open'); });
+         document.querySelectorAll('.cf-price-drop .cf-cat-btn').forEach(function(b){ b.classList.remove('open'); });
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+
+      function selectPrice(el, which) {
+         var label = document.getElementById('cfPrice' + which + 'Label');
+         var panel = document.getElementById('cfPrice' + which + 'Panel');
+         var btn = document.getElementById('cfPrice' + which + 'Btn');
+         panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
+         el.classList.add('active');
+         label.textContent = el.textContent;
+         panel.classList.remove('open');
+         btn.classList.remove('open');
+      }
+
       document.addEventListener('click', function(e) {
          var panel = document.getElementById('cfCatPanel');
          var btn = document.getElementById('cfCatBtn');
@@ -1087,6 +1087,14 @@
             rPanel.classList.remove('open');
             rBtn.classList.remove('open');
          }
+         document.querySelectorAll('.cf-price-drop').forEach(function(drop){
+            var pp = drop.querySelector('.cf-price-panel');
+            var pb = drop.querySelector('.cf-cat-btn');
+            if (pp && !drop.contains(e.target)) {
+               pp.classList.remove('open');
+               pb.classList.remove('open');
+            }
+         });
       });
 
       function setView(type) {
