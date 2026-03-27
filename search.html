@@ -303,6 +303,20 @@
                            <label class="cf-type-item"><input type="checkbox" value="End of terrace" onchange="updateSubtypeLabel()"><span class="cf-type-check"></span>End of terrace</label>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfAptTypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfAptTypeBtn" onclick="toggleAptTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfAptTypeLabel">Apartment type</span>
+                           <span class="cf-type-clear" id="cfAptTypeClear" onclick="clearAptType(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfAptTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Studio" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Studio</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Penthouse" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Penthouse</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
+                        </div>
+                     </div>
                      <div class="cf-cat" id="cfRoomtypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfRoomtypeBtn" onclick="toggleRoomtypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfRoomtypeLabel">Room type</span>
@@ -963,22 +977,22 @@
    <script type="text/javascript" src="js/script.js"></script>
    <script>
       var typesSale = [
-         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Townhouse', 'Penthouse',
-         'Duplex', 'Bungalow', 'Cottage', 'Land', 'Building',
+         'Flat / Apartment', 'House', 'Villa', 'Maisonette', 'Townhouse',
+         'Bungalow', 'Cottage', 'Land', 'Building',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
       var typesRent = [
-         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
-         'Penthouse', 'Duplex', 'Bungalow', 'Cottage',
+         'Flat / Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
+         'Bungalow', 'Cottage',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel'
       ];
       var typesShortRent = [
-         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
-         'Penthouse', 'Duplex', 'Bungalow', 'Cottage'
+         'Flat / Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
+         'Bungalow', 'Cottage'
       ];
       var baseOrder = [
-         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse',
-         'Duplex', 'Bungalow', 'Cottage', 'Building', 'Land',
+         'Flat / Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
+         'Bungalow', 'Cottage', 'Building', 'Land',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
 
@@ -1005,7 +1019,7 @@
          return list;
       }
 
-      var residentialTypes = ['Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
+      var residentialTypes = ['Flat / Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse', 'Bungalow', 'Cottage'];
       var commercialTypes = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var landTypes = ['Building', 'Land'];
 
@@ -1067,9 +1081,11 @@
          if (newMode !== currentMode) {
             currentMode = newMode;
             buildTypePanel();
+            clearAptType(null);
             clearSubtype(null);
             clearRoomtype(null);
             clearConstructionType(null);
+            document.getElementById('cfAptTypeWrap').style.display = 'none';
             document.getElementById('cfRoomtypeWrap').style.display = 'none';
             document.getElementById('cfConstructionTypeWrap').style.display = 'none';
          }
@@ -1098,6 +1114,16 @@
             label.textContent = vals.join('; ');
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
+         }
+         var flatEl = document.querySelector('#cfTypePanel input[value="Flat / Apartment"]');
+         var flatChecked = flatEl ? flatEl.checked : false;
+         var aptTypeWrap = document.getElementById('cfAptTypeWrap');
+         if (flatChecked) {
+            aptTypeWrap.style.display = '';
+         } else {
+            aptTypeWrap.style.display = 'none';
+            document.querySelectorAll('#cfAptTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+            updateAptTypeLabel();
          }
          var houseEl = document.querySelector('#cfTypePanel input[value="House"]');
          var villaEl = document.querySelector('#cfTypePanel input[value="Villa"]');
@@ -1133,6 +1159,39 @@
          e.stopPropagation();
          document.querySelectorAll('#cfTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
          updateTypeLabel();
+      }
+
+      function toggleAptTypePanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfAptTypeBtn');
+         var panel = document.getElementById('cfAptTypePanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updateAptTypeLabel() {
+         var checks = document.querySelectorAll('#cfAptTypePanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfAptTypeLabel');
+         var clearBtn = document.getElementById('cfAptTypeClear');
+         var btn = document.getElementById('cfAptTypeBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Apartment type';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearAptType(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfAptTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateAptTypeLabel();
       }
 
       function toggleSubtypePanel(e) {
@@ -1572,6 +1631,12 @@
          if (sPanel && !sPanel.contains(e.target) && !sBtn.contains(e.target)) {
             sPanel.classList.remove('open');
             sBtn.classList.remove('open');
+         }
+         var atPanel = document.getElementById('cfAptTypePanel');
+         var atBtn = document.getElementById('cfAptTypeBtn');
+         if (atPanel && !atPanel.contains(e.target) && !atBtn.contains(e.target)) {
+            atPanel.classList.remove('open');
+            atBtn.classList.remove('open');
          }
          var rPanel = document.getElementById('cfRoomtypePanel');
          var rBtn = document.getElementById('cfRoomtypeBtn');
