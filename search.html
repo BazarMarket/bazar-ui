@@ -1245,6 +1245,16 @@
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
+         var studioEl = document.querySelector('#cfAptTypePanel input[value="Studio"]');
+         var studioChecked = studioEl ? studioEl.checked : false;
+         var bedroomsWrap = document.getElementById('cfBedroomsWrap');
+         if (studioChecked && checks.length === 1) {
+            bedroomsWrap.style.display = 'none';
+            document.querySelectorAll('#cfBedroomsPanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+            updateBedroomsLabel();
+         } else {
+            bedroomsWrap.style.display = '';
+         }
       }
       function clearAptType(e) {
          if (e) e.stopPropagation();
