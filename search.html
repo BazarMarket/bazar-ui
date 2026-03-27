@@ -518,7 +518,7 @@
                            </div>
                         </div>
                      </div>
-                     <div class="cf-cat" id="cfConstructionTypeWrap">
+                     <div class="cf-cat" id="cfConstructionTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfConstructionTypeBtn" onclick="toggleConstructionTypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfConstructionTypeLabel">Construction type</span>
                            <span class="cf-type-clear" id="cfConstructionTypeClear" onclick="clearConstructionType(event)" style="display:none;">&times;</span>
@@ -1068,7 +1068,9 @@
             buildTypePanel();
             clearSubtype(null);
             clearRoomtype(null);
+            clearConstructionType(null);
             document.getElementById('cfRoomtypeWrap').style.display = 'none';
+            document.getElementById('cfConstructionTypeWrap').style.display = 'none';
          }
       }
 
@@ -1105,6 +1107,14 @@
             subtypeWrap.style.display = 'none';
             document.querySelectorAll('#cfSubtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateSubtypeLabel();
+         }
+         var ctWrap = document.getElementById('cfConstructionTypeWrap');
+         if (houseChecked) {
+            ctWrap.style.display = '';
+         } else {
+            ctWrap.style.display = 'none';
+            document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+            updateConstructionTypeLabel();
          }
          var roomEl = document.querySelector('#cfTypePanel input[value="Room"]');
          var roomChecked = roomEl ? roomEl.checked : false;
