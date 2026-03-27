@@ -23,7 +23,8 @@ use Illuminate\Database\Eloquent\Builder;
 class PropertyResource extends Resource
 {
     protected static ?string $model = Property::class;
-    protected static string | \BackedEnum | null $navigationIcon = null;
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+    protected static ?string $navigationGroup = 'Property';
 
     public static function getNavigationItems(): array
     {
@@ -32,6 +33,10 @@ class PropertyResource extends Resource
             ->get()
             ->keyBy(fn ($item) => $item->listing_type . '|' . $item->property_type)
             ->map(fn ($item) => $item->total);
+
+        $listingTotals = Property::selectRaw('listing_type, count(*) as total')
+            ->groupBy('listing_type')
+            ->pluck('total', 'listing_type');
 
         $typeLabels = [
             'apartment' => 'Apartment', 'studio' => 'Studio', 'house' => 'House',
@@ -44,15 +49,15 @@ class PropertyResource extends Resource
 
         $categories = [
             'sale' => [
-                'group' => 'For Sale',
+                'label' => 'For Sale',
                 'types' => ['apartment', 'studio', 'house', 'maisonette', 'townhouse', 'penthouse', 'duplex', 'bungalow', 'cottage', 'office', 'shop', 'restaurant', 'industrial', 'hotel', 'business', 'land', 'building'],
             ],
             'long_rent' => [
-                'group' => 'For Long-term Rent',
+                'label' => 'For Long-term Rent',
                 'types' => ['apartment', 'studio', 'house', 'maisonette', 'room', 'townhouse', 'penthouse', 'duplex', 'bungalow', 'cottage', 'office', 'shop', 'restaurant', 'hotel', 'industrial'],
             ],
             'short_rent' => [
-                'group' => 'For Short-term Rent',
+                'label' => 'For Short-term Rent',
                 'types' => ['apartment', 'studio', 'house', 'maisonette', 'room', 'townhouse', 'penthouse', 'duplex', 'bungalow', 'cottage'],
             ],
         ];
@@ -60,31 +65,47 @@ class PropertyResource extends Resource
         $items = [];
         $baseUrl = static::getUrl('index');
         $createUrl = static::getUrl('create');
+        $sort = 0;
 
         $allCount = Property::count();
         $items[] = NavigationItem::make("All Properties ({$allCount})")
             ->group('Property')
+            ->icon('heroicon-o-building-office-2')
             ->url($baseUrl)
             ->isActiveWhen(fn () => request()->routeIs(static::getRouteBaseName() . '.index') && !request()->query('listing_type'))
-            ->sort(0);
+            ->sort($sort++);
 
         $items[] = NavigationItem::make('+ Add Property')
             ->group('Property')
+            ->icon('heroicon-o-plus-circle')
             ->url($createUrl)
             ->isActiveWhen(fn () => request()->routeIs(static::getRouteBaseName() . '.create'))
-            ->sort(1);
+            ->sort($sort++);
 
-        $sort = 0;
         foreach ($categories as $listingType => $category) {
+            $lt = $listingType;
+            $catTotal = $listingTotals->get($listingType, 0);
+
+            $items[] = NavigationItem::make($category['label'] . " ({$catTotal})")
+                ->group('Property')
+                ->icon(match ($listingType) {
+                    'sale' => 'heroicon-o-banknotes',
+                    'long_rent' => 'heroicon-o-key',
+                    'short_rent' => 'heroicon-o-clock',
+                    default => 'heroicon-o-folder',
+                })
+                ->url($baseUrl . '?' . http_build_query(['listing_type' => $lt]))
+                ->isActiveWhen(fn () => request()->query('listing_type') === $lt && !request()->query('property_type'))
+                ->sort($sort++);
+
             foreach ($category['types'] as $propertyType) {
                 $count = $counts->get("{$listingType}|{$propertyType}", 0);
-                $label = ($typeLabels[$propertyType] ?? ucfirst($propertyType)) . " ({$count})";
+                $label = '· ' . ($typeLabels[$propertyType] ?? ucfirst($propertyType)) . " ({$count})";
 
-                $lt = $listingType;
                 $pt = $propertyType;
 
                 $items[] = NavigationItem::make($label)
-                    ->group($category['group'])
+                    ->group('Property')
                     ->url($baseUrl . '?' . http_build_query(['listing_type' => $lt, 'property_type' => $pt]))
                     ->isActiveWhen(fn () => request()->query('listing_type') === $lt && request()->query('property_type') === $pt)
                     ->sort($sort++);
