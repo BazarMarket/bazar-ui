@@ -45,7 +45,7 @@
       /* shared control style */
       .cf-ctrl { font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; height: 44px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; outline: none; cursor: pointer; transition: border-color .15s; padding: 0 12px; }
       .cf-ctrl:focus, .cf-ctrl:focus-within { border-color: #ff9138; }
-      select.cf-ctrl { cursor: pointer; flex-shrink: 0; width: auto; }
+      select.cf-ctrl { cursor: pointer; flex-shrink: 0; }
 
       /* Row 1 */
       .cf-row1 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -443,20 +443,20 @@
                            <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>10+</label>
                         </div>
                      </div>
-                     <select class="cf-ctrl">
+                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Condition</option>
                         <option>Brand new</option>
                         <option>Resale</option>
                         <option>Under construction</option>
                         <option>Off plan</option>
                      </select>
-                     <select class="cf-ctrl">
+                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Any seller</option>
                         <option>Private</option>
                         <option>Real Estate</option>
                         <option>Construction</option>
                      </select>
-                     <select class="cf-ctrl">
+                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Online viewing</option>
                         <option>Yes</option>
                         <option>No</option>
@@ -1406,6 +1406,16 @@
          maxPanel.innerHTML = priceValues.map(function(v, i){ var display = (i === priceValues.length - 1) ? v + '+' : v; return '<div class="cf-price-item" onclick="selectPrice(this,\'Max\')">' + display + '</div>'; }).join('');
       }
       buildPricePanels();
+
+      function autoWidthSelect(sel) {
+         var tmp = document.createElement('span');
+         tmp.style.cssText = 'font-family:Poppins,sans-serif;font-size:14px;visibility:hidden;position:absolute;white-space:nowrap;';
+         tmp.textContent = sel.options[sel.selectedIndex].text;
+         document.body.appendChild(tmp);
+         sel.style.width = (tmp.offsetWidth + 42) + 'px';
+         document.body.removeChild(tmp);
+      }
+      document.querySelectorAll('.cf-select-auto').forEach(function(s){ autoWidthSelect(s); });
       buildYearPanels();
       buildAreaPanels();
 
