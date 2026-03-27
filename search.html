@@ -40,7 +40,7 @@
       .sr-tags { display: none; }
 
       /* ── Compact filter block ── */
-      .cf-block { background: #fff; border: 1px solid #ececec; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,.06); padding: 16px 18px; margin-top: 20px; margin-bottom: 0; }
+      .cf-block { background: #fff; border: 1px solid #ececec; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,.06); padding: 20px 22px; margin-top: 20px; margin-bottom: 0; display: grid; gap: 14px; }
 
       /* shared control style */
       .cf-ctrl { font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; height: 44px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; outline: none; cursor: pointer; transition: border-color .15s; padding: 0 12px; }
@@ -56,8 +56,8 @@
       .cf-search-q input::placeholder { color: #b0b7c3; }
       .cf-search-loc { border-left: 1.5px solid #e5e7eb; padding: 0 14px; flex-shrink: 0; height: 44px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #444; background: transparent; border-top: none; border-right: none; border-bottom: none; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='11' height='11' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 32px; }
       /* Category custom dropdown */
-      .cf-cat { position: relative; flex-shrink: 0; }
-      .cf-cat-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; }
+      .cf-cat { position: relative; min-width: 0; }
+      .cf-cat-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; width: 100%; box-sizing: border-box; }
       .cf-cat-btn:hover, .cf-cat-btn.open { border-color: #ff9138; }
       .cf-cat-btn img { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; }
       .cf-cat-btn-label { white-space: nowrap; }
@@ -86,12 +86,13 @@
       .cf-cat-btn.has-selection > svg { display: none; }
       #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
 
-      /* Filter rows */
-      .cf-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-      .cf-row:first-child { margin-top: 0; }
+      /* Filter rows 2–4 */
+      .cf-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: center; }
+      .cf-row .cf-price-joined { grid-column: span 2; }
       .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
-      .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; }
+      .cf-price-joined { display: flex; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; min-width: 0; }
+      .cf-price-joined > .cf-cat { flex: 1; min-width: 0; }
       .cf-price-joined:hover { border-color: #ff9138; }
       .cf-price-joined .cf-cat-btn { border: none; border-radius: 0; height: 41px; }
       .cf-price-joined .cf-cat:first-child .cf-cat-btn { border-radius: 9px 0 0 9px; }
@@ -106,7 +107,7 @@
       .cf-price-panel .cf-price-item:last-child { border-bottom: none; }
       .cf-price-panel .cf-price-item:hover { background: #fff7f0; }
       .cf-price-panel .cf-price-item.active { background: #fff2e6; font-weight: 500; color: #ff9138; }
-      .cf-row select.cf-ctrl { flex: 0 0 auto; min-width: 110px; }
+      .cf-row select.cf-ctrl { width: 100%; min-width: 0; box-sizing: border-box; }
 
       /* Chips */
       .cf-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f3f4f6; }
@@ -118,13 +119,11 @@
       .cf-clear:hover { color: #6b7280; }
 
       @media (max-width: 900px) {
-         .cf-row select.cf-ctrl { flex: 0 0 auto; }
+         .cf-row1, .cf-row { grid-template-columns: repeat(2, 1fr); }
       }
       @media (max-width: 600px) {
-         .cf-row1, .cf-row { flex-direction: column; align-items: stretch; }
+         .cf-row1, .cf-row { grid-template-columns: 1fr; }
          .cf-btn, .cf-search { width: 100%; }
-         .cf-price { width: 100%; }
-         .cf-price .cf-ctrl { flex: 1; width: auto; }
       }
 
       /* ── Redesigned list card ── */
@@ -237,7 +236,7 @@
                <div class="cf-block">
                   <!-- Row 1: Search + Location + Category + Property type -->
                   <div class="cf-row1">
-                     <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px;">
+                     <div class="cf-ctrl cf-search">
                         <div class="cf-search-q">
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                            <input type="text" value="" placeholder="Search 297,671 ads">
