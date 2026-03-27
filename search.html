@@ -86,8 +86,9 @@
       .cf-cat-btn.has-selection > svg { display: none; }
       #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
 
-      /* Row 2 */
-      .cf-row2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+      /* Filter rows */
+      .cf-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+      .cf-row:first-child { margin-top: 0; }
       .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
       .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; }
@@ -105,7 +106,7 @@
       .cf-price-panel .cf-price-item:last-child { border-bottom: none; }
       .cf-price-panel .cf-price-item:hover { background: #fff7f0; }
       .cf-price-panel .cf-price-item.active { background: #fff2e6; font-weight: 500; color: #ff9138; }
-      .cf-row2 select.cf-ctrl { flex: 0 0 auto; min-width: 110px; }
+      .cf-row select.cf-ctrl { flex: 0 0 auto; min-width: 110px; }
 
       /* Chips */
       .cf-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f3f4f6; }
@@ -117,10 +118,10 @@
       .cf-clear:hover { color: #6b7280; }
 
       @media (max-width: 900px) {
-         .cf-row2 select.cf-ctrl { flex: 0 0 auto; }
+         .cf-row select.cf-ctrl { flex: 0 0 auto; }
       }
       @media (max-width: 600px) {
-         .cf-row1, .cf-row2 { flex-direction: column; align-items: stretch; }
+         .cf-row1, .cf-row { flex-direction: column; align-items: stretch; }
          .cf-btn, .cf-search { width: 100%; }
          .cf-price { width: 100%; }
          .cf-price .cf-ctrl { flex: 1; width: auto; }
@@ -234,7 +235,7 @@
 
                <!-- Compact filter block -->
                <div class="cf-block">
-                  <!-- Row 1: search+location + category -->
+                  <!-- Row 1: Search + Location + Category + Property type -->
                   <div class="cf-row1">
                      <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px;">
                         <div class="cf-search-q">
@@ -359,8 +360,8 @@
                         </div>
                      </div>
                   </div>
-                  <!-- Row 2: price + filters -->
-                  <div class="cf-row2">
+                  <!-- Row 2: Price + Bedrooms + Bathrooms -->
+                  <div class="cf-row">
                      <div class="cf-price-joined">
                         <div class="cf-cat cf-price-drop">
                            <button class="cf-cat-btn" id="cfPriceMinBtn" onclick="togglePricePanel(event,'Min')">
@@ -380,46 +381,6 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
-                     <div class="cf-price-joined">
-                        <div class="cf-cat" id="cfAreaMinWrap">
-                           <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
-                              <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
-                              <svg class="cf-arrow-icon" id="cfAreaMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                              <svg class="cf-clear-icon" id="cfAreaMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearArea('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
-                           </button>
-                           <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
-                        </div>
-                        <div class="cf-price-divider"></div>
-                        <div class="cf-cat" id="cfAreaMaxWrap">
-                           <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
-                              <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
-                              <svg class="cf-arrow-icon" id="cfAreaMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                              <svg class="cf-clear-icon" id="cfAreaMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearArea('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
-                           </button>
-                           <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
-                        </div>
-                     </div>
-                     <div class="cf-price-joined">
-                        <div class="cf-cat" id="cfYearFromWrap">
-                           <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
-                              <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
-                              <svg class="cf-arrow-icon" id="cfYearFromArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                              <svg class="cf-clear-icon" id="cfYearFromCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearYear('From',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
-                           </button>
-                           <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
-                        </div>
-                        <div class="cf-price-divider"></div>
-                        <div class="cf-cat" id="cfYearToWrap">
-                           <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
-                              <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
-                              <svg class="cf-arrow-icon" id="cfYearToArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                              <svg class="cf-clear-icon" id="cfYearToCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearYear('To',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
-                           </button>
-                           <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="cf-row2" style="margin-top:6px;">
                      <div class="cf-cat" id="cfBedroomsWrap">
                         <button class="cf-cat-btn" id="cfBedroomsBtn" onclick="toggleBedroomsPanel(event)">
                            <span class="cf-cat-btn-label" id="cfBedroomsLabel">Bedrooms</span>
@@ -476,6 +437,50 @@
                            <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>10+</label>
                         </div>
                      </div>
+                  </div>
+                  <!-- Row 3: Property area + Construction year -->
+                  <div class="cf-row">
+                     <div class="cf-price-joined">
+                        <div class="cf-cat" id="cfAreaMinWrap">
+                           <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
+                              <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
+                              <svg class="cf-arrow-icon" id="cfAreaMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfAreaMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearArea('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfAreaMinPanel"></div>
+                        </div>
+                        <div class="cf-price-divider"></div>
+                        <div class="cf-cat" id="cfAreaMaxWrap">
+                           <button class="cf-cat-btn" id="cfAreaMaxBtn" onclick="toggleAreaPanel('Max',event)">
+                              <span class="cf-cat-btn-label" id="cfAreaMaxLabel">Property area max</span>
+                              <svg class="cf-arrow-icon" id="cfAreaMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfAreaMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearArea('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
+                        </div>
+                     </div>
+                     <div class="cf-price-joined">
+                        <div class="cf-cat" id="cfYearFromWrap">
+                           <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
+                              <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
+                              <svg class="cf-arrow-icon" id="cfYearFromArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfYearFromCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearYear('From',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfYearFromPanel"></div>
+                        </div>
+                        <div class="cf-price-divider"></div>
+                        <div class="cf-cat" id="cfYearToWrap">
+                           <button class="cf-cat-btn" id="cfYearToBtn" onclick="toggleYearPanel('To',event)">
+                              <span class="cf-cat-btn-label" id="cfYearToLabel">Construction year max</span>
+                              <svg class="cf-arrow-icon" id="cfYearToArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfYearToCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearYear('To',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfYearToPanel"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Row 4: Condition + Seller + Online viewing + Key features + Construction type -->
+                  <div class="cf-row">
                      <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Condition</option>
                         <option>New Build</option>
