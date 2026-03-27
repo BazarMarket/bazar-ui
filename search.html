@@ -289,7 +289,7 @@
                      </div>
                      <div class="cf-cat" id="cfSubtypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfSubtypeBtn" onclick="toggleSubtypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfSubtypeLabel">House type</span>
+                           <span class="cf-cat-btn-label" id="cfSubtypeLabel">Building type</span>
                            <span class="cf-type-clear" id="cfSubtypeClear" onclick="clearSubtype(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -1208,7 +1208,7 @@
          var clearBtn = document.getElementById('cfSubtypeClear');
          var btn = document.getElementById('cfSubtypeBtn');
          if (checks.length === 0) {
-            label.textContent = 'House type';
+            label.textContent = 'Building type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
          } else {
