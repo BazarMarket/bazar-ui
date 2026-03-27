@@ -1166,9 +1166,9 @@
          titleInput.setAttribute('readonly', true);
          titleInput.placeholder = '';
          var propMap = {
-            'House / Villa':       'house',
+            'House':       'house',
             'Maisonette':          'maisonette',
-            'Flat / Apartment':    'apartment',
+            'Apartment':    'apartment',
             'Townhouse':           'townhouse',
             'Penthouse':           'penthouse',
             'Duplex':              'duplex',
@@ -1225,9 +1225,9 @@
 
       var catData = {
          'real-estate': {
-            'For Sale':            ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment', 'Land', 'Building'],
-            'For Long-term Rent':  ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial'],
-            'For Short-term Rent': ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
+            'For Sale':            ['Apartment', 'Studio', 'House', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment', 'Land', 'Building'],
+            'For Long-term Rent':  ['Apartment', 'Studio', 'House', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial'],
+            'For Short-term Rent': ['Apartment', 'Studio', 'House', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
          },
          'motors': {
             'For Sale': ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
@@ -1363,8 +1363,8 @@
       }
 
       var propertySubtypes = {
-         'House / Villa':        ['Detached house', 'Semi-detached', 'Terraced', 'End of terrace', 'Villa', 'Bungalow', 'Cottage'],
-         'Flat / Apartment':     ['Apartment', 'Penthouse', 'Studio', 'Duplex'],
+         'House':        ['Detached house', 'Semi-detached', 'Terraced', 'End of terrace', 'Villa', 'Bungalow', 'Cottage'],
+         'Apartment':     ['Apartment', 'Penthouse', 'Studio', 'Duplex'],
          'Commercial property':  ['Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial', 'Warehouse', 'Business or Investment'],
          'Land':                 ['Residential plot', 'Agricultural land', 'Commercial plot'],
          'Room':                 ['Private', 'Shared', 'Ensuite', 'Bills included', 'Bills excluded', 'Couples allowed', 'Furnished'],
@@ -1429,7 +1429,7 @@
          updateRealEstateTitle();
       }
 
-      var reResidential = ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
+      var reResidential = ['Apartment', 'Studio', 'House', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
       var reCommercial = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var reLand = ['Land', 'Building'];
 
