@@ -1125,9 +1125,7 @@
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
          } else {
-            var vals = [];
-            checks.forEach(function(c){ vals.push(c.value); });
-            label.textContent = vals.join('; ');
+            label.textContent = checks[0].value;
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
