@@ -38,10 +38,20 @@ Workflow: "Start application" on port 5000 (webview)
 
 ## CSS Versioning
 
-**Текущая версия: main.css?v=70** (обновлять при каждом изменении CSS)
+**Текущая версия: main.css?v=95** (обновлять при каждом изменении CSS)
 icon-style.css?v=2
 
-Обновлять версию в: index.html, card.html, search.html, cabinet.html
+Обновлять версию в: dev-index.html, card.html, search.html, cabinet.html
+
+## Responsive Breakpoints (search.html)
+
+- **≤1200px** — tablet landscape: smaller card images (320px), grid 3 cols
+- **≤992px** — tablet portrait: search full-width, card image 260px, hide description, hide view sidebar, grid 3 cols
+- **≤768px** — small tablet: cards stack vertically (image on top), smaller controls (40px), breadcrumb stacks, grid 2 cols, Key features panel 2-column
+- **≤576px** — mobile: all filters stack vertically full-width, controls 42px, grid 2 cols, Key features 1-column, compact card styling
+- **≤400px** — very small mobile: grid 1 col, hide location select, minimal padding
+- Media queries are placed AFTER base card styles to ensure proper cascade with !important
+- `toggleMoreFilters()` uses `scrollHeight` for dynamic height (mobile-aware)
 
 ## Заголовок (header-old) — порядок ячеек
 
