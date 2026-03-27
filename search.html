@@ -94,7 +94,7 @@
       .cf-more-btn:hover { border-color: #ff9138; color: #ff9138; }
       .cf-more-btn.active { border-color: #ff9138; color: #ff9138; border-style: solid; background: #fff8f0; }
       .cf-more-btn #cfMoreBtnIcon { font-size: 15px; font-weight: 600; line-height: 1; }
-      .cf-row-extra { margin-top: 10px; }
+      .cf-row-extra { margin-top: 10px; overflow: hidden; transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease; }
       .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
       .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; }
@@ -522,7 +522,7 @@
                      </button>
                   </div>
                   <!-- Row 5: Seller + Online viewing + Key features (hidden by default) -->
-                  <div class="cf-row cf-row-extra" id="cfMoreRow" style="display:none;">
+                  <div class="cf-row cf-row-extra" id="cfMoreRow" style="max-height:0;opacity:0;margin-top:0;">
                      <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Any seller</option>
                         <option>Private</option>
@@ -1502,8 +1502,16 @@
          var btn = document.getElementById('cfMoreBtn');
          var icon = document.getElementById('cfMoreBtnIcon');
          var label = document.getElementById('cfMoreBtnLabel');
-         var isOpen = row.style.display !== 'none';
-         row.style.display = isOpen ? 'none' : 'flex';
+         var isOpen = row.style.maxHeight !== '0px' && row.style.maxHeight !== '0';
+         if (isOpen) {
+            row.style.maxHeight = '0';
+            row.style.opacity = '0';
+            row.style.marginTop = '0';
+         } else {
+            row.style.maxHeight = '80px';
+            row.style.opacity = '1';
+            row.style.marginTop = '10px';
+         }
          btn.classList.toggle('active', !isOpen);
          icon.textContent = isOpen ? '+' : '–';
          label.textContent = isOpen ? 'More filters' : 'Less filters';
