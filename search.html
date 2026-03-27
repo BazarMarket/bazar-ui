@@ -1640,7 +1640,7 @@
          tmp.style.cssText = 'font-family:Poppins,sans-serif;font-size:14px;visibility:hidden;position:absolute;white-space:nowrap;';
          tmp.textContent = sel.options[sel.selectedIndex].text;
          document.body.appendChild(tmp);
-         sel.style.width = (tmp.offsetWidth + 52) + 'px';
+         sel.style.width = (tmp.offsetWidth + 58) + 'px';
          document.body.removeChild(tmp);
       }
       document.querySelectorAll('.cf-select-auto').forEach(function(s){ autoWidthSelect(s); });
