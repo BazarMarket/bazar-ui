@@ -295,9 +295,6 @@
                         </button>
                         <div class="cf-cat-panel" id="cfTypePanel"></div>
                      </div>
-                  </div>
-                  <!-- Row 2: Dynamic smart filters (appears based on Property type selection) -->
-                  <div class="cf-row cf-row-dynamic" id="cfDynamicRow" style="display:none;">
                      <div class="cf-cat" id="cfAptTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfAptTypeBtn" onclick="toggleAptTypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfAptTypeLabel">Apartment type</span>
@@ -312,6 +309,9 @@
                            <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
                         </div>
                      </div>
+                  </div>
+                  <!-- Row 2: Dynamic smart filters (appears based on Property type selection) -->
+                  <div class="cf-row cf-row-dynamic" id="cfDynamicRow" style="display:none;">
                      <div class="cf-cat" id="cfHouseTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfHouseTypeBtn" onclick="toggleHouseTypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfHouseTypeLabel">House type</span>
