@@ -13,11 +13,7 @@ echo -n "modifyQueryUsing: "
 grep -rl "function modifyQueryUsing" $LARAVEL_ROOT/vendor/filament/ 2>/dev/null | head -1 || echo "NOT FOUND"
 
 echo ""
-echo "=== Step 2: Check existing Pages ==="
-ls -la $LARAVEL_ROOT/app/Filament/Resources/PropertyResource/Pages/ 2>/dev/null || echo "Pages dir not found"
-
-echo ""
-echo "=== Step 3: Download and deploy ==="
+echo "=== Step 2: Download and deploy ==="
 cd /tmp
 rm -f bazar-admin-nav.tar.gz
 wget -q "$ARCHIVE_URL" -O bazar-admin-nav.tar.gz
@@ -27,7 +23,7 @@ tar xzf bazar-admin-nav.tar.gz -C $LARAVEL_ROOT/
 echo "Extracted to $LARAVEL_ROOT"
 
 echo ""
-echo "=== Step 4: Clear caches ==="
+echo "=== Step 3: Clear caches ==="
 cd $LARAVEL_ROOT
 php artisan optimize:clear 2>/dev/null || php artisan cache:clear
 php artisan filament:optimize-clear 2>/dev/null || true
@@ -36,9 +32,14 @@ php artisan route:clear
 echo "Caches cleared"
 
 echo ""
-echo "=== Step 5: Verify deployed files ==="
-ls -la $LARAVEL_ROOT/app/Filament/Resources/PropertyResource.php
-ls -la $LARAVEL_ROOT/app/Filament/Resources/PropertyResource/Pages/ListProperties.php
+echo "=== Step 4: Verify all deployed files ==="
+for f in PropertyResource.php PropertyResource/Pages/ListProperties.php PropertyResource/Pages/CreateProperty.php PropertyResource/Pages/EditProperty.php; do
+    if [ -f "$LARAVEL_ROOT/app/Filament/Resources/$f" ]; then
+        echo "OK: $f"
+    else
+        echo "MISSING: $f"
+    fi
+done
 
 echo ""
 echo "=== DONE! Test at https://dev.bazar.uk/admin ==="
