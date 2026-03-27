@@ -963,21 +963,21 @@
    <script type="text/javascript" src="js/script.js"></script>
    <script>
       var typesSale = [
-         'Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Townhouse', 'Penthouse',
+         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Townhouse', 'Penthouse',
          'Duplex', 'Bungalow', 'Cottage', 'Land', 'Building',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
       var typesRent = [
-         'Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse',
+         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
          'Penthouse', 'Duplex', 'Bungalow', 'Cottage',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel'
       ];
       var typesShortRent = [
-         'Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse',
+         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
          'Penthouse', 'Duplex', 'Bungalow', 'Cottage'
       ];
       var baseOrder = [
-         'Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse',
+         'Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse',
          'Duplex', 'Bungalow', 'Cottage', 'Building', 'Land',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
@@ -1005,7 +1005,7 @@
          return list;
       }
 
-      var residentialTypes = ['Flat / Apartment', 'Studio', 'House / Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
+      var residentialTypes = ['Flat / Apartment', 'Studio', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
       var commercialTypes = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var landTypes = ['Building', 'Land'];
 
@@ -1099,8 +1099,9 @@
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
-         var houseEl = document.querySelector('#cfTypePanel input[value="House / Villa"]');
-         var houseChecked = houseEl ? houseEl.checked : false;
+         var houseEl = document.querySelector('#cfTypePanel input[value="House"]');
+         var villaEl = document.querySelector('#cfTypePanel input[value="Villa"]');
+         var houseChecked = (houseEl && houseEl.checked) || (villaEl && villaEl.checked);
          var subtypeWrap = document.getElementById('cfSubtypeWrap');
          if (houseChecked) {
             subtypeWrap.style.display = '';
