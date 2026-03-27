@@ -96,7 +96,8 @@
       .cf-more-btn.active { border-color: #ff9138; color: #ff9138; border-style: solid; background: #fff8f0; }
       .cf-more-btn svg { transition: transform .2s; }
       .cf-more-btn.active svg { transform: rotate(45deg); }
-      .cf-row-extra { margin-top: 10px; overflow: hidden; padding-bottom: 4px; transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease; }
+      .cf-row-extra { margin-top: 10px; padding-bottom: 4px; transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease; }
+      .cf-row-extra.cf-collapsing { overflow: hidden; }
       .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
       .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; }
@@ -1503,6 +1504,7 @@
          var row = document.getElementById('cfMoreRow');
          var btn = document.getElementById('cfMoreBtn');
          var isOpen = row.style.maxHeight !== '0px' && row.style.maxHeight !== '0';
+         row.classList.add('cf-collapsing');
          if (isOpen) {
             row.style.maxHeight = '0';
             row.style.opacity = '0';
@@ -1511,6 +1513,7 @@
             row.style.maxHeight = '84px';
             row.style.opacity = '1';
             row.style.marginTop = '10px';
+            setTimeout(function(){ row.classList.remove('cf-collapsing'); }, 350);
          }
          btn.classList.toggle('active', !isOpen);
       }
