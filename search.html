@@ -463,6 +463,13 @@
                            <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>10+</label>
                         </div>
                      </div>
+                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
+                        <option value="">Condition</option>
+                        <option>New Build</option>
+                        <option>Resale</option>
+                        <option>Under construction</option>
+                        <option>Off plan</option>
+                     </select>
                   </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
                   <div class="cf-row">
@@ -505,15 +512,8 @@
                         </div>
                      </div>
                   </div>
-                  <!-- Row 5: Condition + Seller + Online viewing + Key features -->
+                  <!-- Row 5: Seller + Online viewing + Key features -->
                   <div class="cf-row">
-                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
-                        <option value="">Condition</option>
-                        <option>New Build</option>
-                        <option>Resale</option>
-                        <option>Under construction</option>
-                        <option>Off plan</option>
-                     </select>
                      <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Any seller</option>
                         <option>Private</option>
