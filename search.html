@@ -93,7 +93,8 @@
       .cf-more-btn { display: inline-flex; align-items: center; gap: 5px; height: 44px; padding: 0 16px; border: 1.5px dashed #d0d5dd; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 13.5px; color: #6b7280; cursor: pointer; white-space: nowrap; transition: all .15s; flex-shrink: 0; }
       .cf-more-btn:hover { border-color: #ff9138; color: #ff9138; }
       .cf-more-btn.active { border-color: #ff9138; color: #ff9138; border-style: solid; background: #fff8f0; }
-      .cf-more-btn #cfMoreBtnIcon { font-size: 15px; font-weight: 600; line-height: 1; }
+      .cf-more-btn svg { transition: transform .2s; }
+      .cf-more-btn.active svg { transform: rotate(45deg); }
       .cf-row-extra { margin-top: 10px; overflow: hidden; padding-bottom: 4px; transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease; }
       .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
@@ -517,8 +518,8 @@
                         </div>
                      </div>
                      <button class="cf-more-btn" id="cfMoreBtn" onclick="toggleMoreFilters()">
-                        <span id="cfMoreBtnIcon">+</span>
-                        <span id="cfMoreBtnLabel">More filters</span>
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        More filters
                      </button>
                   </div>
                   <!-- Row 5: Seller + Online viewing + Key features (hidden by default) -->
@@ -1500,8 +1501,6 @@
       function toggleMoreFilters() {
          var row = document.getElementById('cfMoreRow');
          var btn = document.getElementById('cfMoreBtn');
-         var icon = document.getElementById('cfMoreBtnIcon');
-         var label = document.getElementById('cfMoreBtnLabel');
          var isOpen = row.style.maxHeight !== '0px' && row.style.maxHeight !== '0';
          if (isOpen) {
             row.style.maxHeight = '0';
@@ -1513,8 +1512,6 @@
             row.style.marginTop = '10px';
          }
          btn.classList.toggle('active', !isOpen);
-         icon.textContent = isOpen ? '+' : '–';
-         label.textContent = isOpen ? 'More filters' : 'Less filters';
       }
 
       function toggleFeaturesPanel(e) {
