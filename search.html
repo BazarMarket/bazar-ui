@@ -89,6 +89,7 @@
       /* Filter rows */
       .cf-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
       .cf-row:first-child { margin-top: 0; }
+      .cf-row-dynamic { margin-top: 8px; }
       .cf-price { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
       .cf-price:hover .cf-cat-btn { border-color: #ff9138; }
       .cf-price-joined { display: flex; flex-shrink: 0; align-items: center; border: 1.5px solid #e5e7eb; border-radius: 10px; gap: 0; }
@@ -288,6 +289,23 @@
                         </button>
                         <div class="cf-cat-panel" id="cfTypePanel"></div>
                      </div>
+                  </div>
+                  <!-- Row 2: Dynamic smart filters (appears based on Property type selection) -->
+                  <div class="cf-row cf-row-dynamic" id="cfDynamicRow" style="display:none;">
+                     <div class="cf-cat" id="cfAptTypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfAptTypeBtn" onclick="toggleAptTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfAptTypeLabel">Apartment type</span>
+                           <span class="cf-type-clear" id="cfAptTypeClear" onclick="clearAptType(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfAptTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Studio" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Studio</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Penthouse" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Penthouse</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
+                        </div>
+                     </div>
                      <div class="cf-cat" id="cfHouseTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfHouseTypeBtn" onclick="toggleHouseTypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfHouseTypeLabel">House type</span>
@@ -322,18 +340,26 @@
                            <label class="cf-type-item"><input type="checkbox" value="End of terrace" onchange="updateSubtypeLabel()"><span class="cf-type-check"></span>End of terrace</label>
                         </div>
                      </div>
-                     <div class="cf-cat" id="cfAptTypeWrap" style="display:none;">
-                        <button class="cf-cat-btn" id="cfAptTypeBtn" onclick="toggleAptTypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfAptTypeLabel">Apartment type</span>
-                           <span class="cf-type-clear" id="cfAptTypeClear" onclick="clearAptType(event)" style="display:none;">&times;</span>
+                     <div class="cf-cat" id="cfConstructionTypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfConstructionTypeBtn" onclick="toggleConstructionTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfConstructionTypeLabel">Construction type</span>
+                           <span class="cf-type-clear" id="cfConstructionTypeClear" onclick="clearConstructionType(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <div class="cf-cat-panel" id="cfAptTypePanel">
-                           <label class="cf-type-item"><input type="checkbox" value="Studio" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Studio</label>
+                        <div class="cf-cat-panel" id="cfConstructionTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Traditional (Brick / Concrete)" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Traditional (Brick / Concrete)</label>
                            <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Penthouse" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Penthouse</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Prefabricated" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Prefabricated</label>
                            <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Modular" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Modular</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Container" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Container</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Timber Frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Timber Frame</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Steel Frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Steel Frame</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Eco / Passive House" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Eco / Passive House</label>
                         </div>
                      </div>
                      <div class="cf-cat" id="cfRoomtypeWrap" style="display:none;">
@@ -360,7 +386,7 @@
                         </div>
                      </div>
                   </div>
-                  <!-- Row 2: Price + Bedrooms + Bathrooms -->
+                  <!-- Row 3: Price min/max + Bedrooms + Bathrooms -->
                   <div class="cf-row">
                      <div class="cf-price-joined">
                         <div class="cf-cat cf-price-drop">
@@ -438,7 +464,7 @@
                         </div>
                      </div>
                   </div>
-                  <!-- Row 3: Property area + Construction year -->
+                  <!-- Row 4: Property area min/max + Construction year min/max -->
                   <div class="cf-row">
                      <div class="cf-price-joined">
                         <div class="cf-cat" id="cfAreaMinWrap">
@@ -479,7 +505,7 @@
                         </div>
                      </div>
                   </div>
-                  <!-- Row 4: Condition + Seller + Online viewing + Key features + Construction type -->
+                  <!-- Row 5: Condition + Seller + Online viewing + Key features -->
                   <div class="cf-row">
                      <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Condition</option>
@@ -554,28 +580,6 @@
                               <label class="cf-type-item"><input type="checkbox" value="Home cinema" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Home cinema</label>
                               <label class="cf-type-item"><input type="checkbox" value="Solar panel" onchange="updateFeaturesLabel()"><span class="cf-type-check"></span>Solar panel</label>
                            </div>
-                        </div>
-                     </div>
-                     <div class="cf-cat" id="cfConstructionTypeWrap" style="display:none;">
-                        <button class="cf-cat-btn" id="cfConstructionTypeBtn" onclick="toggleConstructionTypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfConstructionTypeLabel">Construction type</span>
-                           <span class="cf-type-clear" id="cfConstructionTypeClear" onclick="clearConstructionType(event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel" id="cfConstructionTypePanel">
-                           <label class="cf-type-item"><input type="checkbox" value="Traditional (Brick / Concrete)" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Traditional (Brick / Concrete)</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Prefabricated" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Prefabricated</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Modular" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Modular</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Container" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Container</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Timber Frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Timber Frame</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Steel Frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Steel Frame</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Eco / Passive House" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Eco / Passive House</label>
                         </div>
                      </div>
                   </div>
@@ -1107,8 +1111,10 @@
             clearConstructionType(null);
             document.getElementById('cfAptTypeWrap').style.display = 'none';
             document.getElementById('cfHouseTypeWrap').style.display = 'none';
+            document.getElementById('cfSubtypeWrap').style.display = 'none';
             document.getElementById('cfRoomtypeWrap').style.display = 'none';
             document.getElementById('cfConstructionTypeWrap').style.display = 'none';
+            updateDynamicRowVisibility();
          }
       }
 
@@ -1184,6 +1190,17 @@
             document.querySelectorAll('#cfRoomtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateRoomtypeLabel();
          }
+         updateDynamicRowVisibility();
+      }
+      function updateDynamicRowVisibility() {
+         var row = document.getElementById('cfDynamicRow');
+         if (!row) return;
+         var hasVisible = false;
+         var children = row.children;
+         for (var i = 0; i < children.length; i++) {
+            if (children[i].style.display !== 'none') { hasVisible = true; break; }
+         }
+         row.style.display = hasVisible ? '' : 'none';
       }
       function clearType(e) {
          e.stopPropagation();
