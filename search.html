@@ -1124,8 +1124,12 @@
             label.textContent = 'Property type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
-         } else {
+         } else if (checks.length === 1) {
             label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
@@ -1265,10 +1269,12 @@
             label.textContent = 'Building type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
          } else {
-            var vals = [];
-            checks.forEach(function(c){ vals.push(c.value); });
-            label.textContent = vals.join('; ');
+            label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
@@ -1296,10 +1302,12 @@
             label.textContent = 'Room type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
          } else {
-            var vals = [];
-            checks.forEach(function(c){ vals.push(c.value); });
-            label.textContent = vals.join('; ');
+            label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
@@ -1327,10 +1335,12 @@
             label.textContent = 'Bedrooms';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
          } else {
-            var vals = [];
-            checks.forEach(function(c){ vals.push(c.value); });
-            label.textContent = vals.join(', ');
+            label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
@@ -1358,10 +1368,12 @@
             label.textContent = 'Bathrooms';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
          } else {
-            var vals = [];
-            checks.forEach(function(c){ vals.push(c.value); });
-            label.textContent = vals.join(', ');
+            label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
@@ -1461,6 +1473,10 @@
             label.textContent = 'Key features';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
          } else {
             label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
