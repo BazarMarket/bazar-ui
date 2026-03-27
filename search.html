@@ -287,6 +287,24 @@
                         </button>
                         <div class="cf-cat-panel" id="cfTypePanel"></div>
                      </div>
+                     <div class="cf-cat" id="cfHouseTypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfHouseTypeBtn" onclick="toggleHouseTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfHouseTypeLabel">House type</span>
+                           <span class="cf-type-clear" id="cfHouseTypeClear" onclick="clearHouseType(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfHouseTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Villa" onchange="updateHouseTypeLabel()"><span class="cf-type-check"></span>Villa</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Maisonette" onchange="updateHouseTypeLabel()"><span class="cf-type-check"></span>Maisonette</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Townhouse" onchange="updateHouseTypeLabel()"><span class="cf-type-check"></span>Townhouse</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Bungalow" onchange="updateHouseTypeLabel()"><span class="cf-type-check"></span>Bungalow</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Cottage" onchange="updateHouseTypeLabel()"><span class="cf-type-check"></span>Cottage</label>
+                        </div>
+                     </div>
                      <div class="cf-cat" id="cfSubtypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfSubtypeBtn" onclick="toggleSubtypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfSubtypeLabel">Building type</span>
@@ -977,22 +995,18 @@
    <script type="text/javascript" src="js/script.js"></script>
    <script>
       var typesSale = [
-         'Apartment', 'House', 'Villa', 'Maisonette', 'Townhouse',
-         'Bungalow', 'Cottage', 'Land', 'Building',
+         'Apartment', 'House', 'Land', 'Building',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
       var typesRent = [
-         'Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
-         'Bungalow', 'Cottage',
+         'Apartment', 'House', 'Room',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel'
       ];
       var typesShortRent = [
-         'Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
-         'Bungalow', 'Cottage'
+         'Apartment', 'House', 'Room'
       ];
       var baseOrder = [
-         'Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse',
-         'Bungalow', 'Cottage', 'Building', 'Land',
+         'Apartment', 'House', 'Room', 'Building', 'Land',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
 
@@ -1019,7 +1033,7 @@
          return list;
       }
 
-      var residentialTypes = ['Apartment', 'House', 'Villa', 'Maisonette', 'Room', 'Townhouse', 'Bungalow', 'Cottage'];
+      var residentialTypes = ['Apartment', 'House', 'Room'];
       var commercialTypes = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var landTypes = ['Building', 'Land'];
 
@@ -1082,10 +1096,12 @@
             currentMode = newMode;
             buildTypePanel();
             clearAptType(null);
+            clearHouseType(null);
             clearSubtype(null);
             clearRoomtype(null);
             clearConstructionType(null);
             document.getElementById('cfAptTypeWrap').style.display = 'none';
+            document.getElementById('cfHouseTypeWrap').style.display = 'none';
             document.getElementById('cfRoomtypeWrap').style.display = 'none';
             document.getElementById('cfConstructionTypeWrap').style.display = 'none';
          }
@@ -1126,8 +1142,15 @@
             updateAptTypeLabel();
          }
          var houseEl = document.querySelector('#cfTypePanel input[value="House"]');
-         var villaEl = document.querySelector('#cfTypePanel input[value="Villa"]');
-         var houseChecked = (houseEl && houseEl.checked) || (villaEl && villaEl.checked);
+         var houseChecked = houseEl ? houseEl.checked : false;
+         var houseTypeWrap = document.getElementById('cfHouseTypeWrap');
+         if (houseChecked) {
+            houseTypeWrap.style.display = '';
+         } else {
+            houseTypeWrap.style.display = 'none';
+            document.querySelectorAll('#cfHouseTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+            updateHouseTypeLabel();
+         }
          var subtypeWrap = document.getElementById('cfSubtypeWrap');
          if (houseChecked) {
             subtypeWrap.style.display = '';
@@ -1159,6 +1182,39 @@
          e.stopPropagation();
          document.querySelectorAll('#cfTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
          updateTypeLabel();
+      }
+
+      function toggleHouseTypePanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfHouseTypeBtn');
+         var panel = document.getElementById('cfHouseTypePanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updateHouseTypeLabel() {
+         var checks = document.querySelectorAll('#cfHouseTypePanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfHouseTypeLabel');
+         var clearBtn = document.getElementById('cfHouseTypeClear');
+         var btn = document.getElementById('cfHouseTypeBtn');
+         if (checks.length === 0) {
+            label.textContent = 'House type';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearHouseType(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfHouseTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateHouseTypeLabel();
       }
 
       function toggleAptTypePanel(e) {
@@ -1631,6 +1687,12 @@
          if (sPanel && !sPanel.contains(e.target) && !sBtn.contains(e.target)) {
             sPanel.classList.remove('open');
             sBtn.classList.remove('open');
+         }
+         var htPanel = document.getElementById('cfHouseTypePanel');
+         var htBtn = document.getElementById('cfHouseTypeBtn');
+         if (htPanel && !htPanel.contains(e.target) && !htBtn.contains(e.target)) {
+            htPanel.classList.remove('open');
+            htBtn.classList.remove('open');
          }
          var atPanel = document.getElementById('cfAptTypePanel');
          var atBtn = document.getElementById('cfAptTypeBtn');
