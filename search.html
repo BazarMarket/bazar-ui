@@ -518,6 +518,28 @@
                            </div>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfConstructionTypeWrap">
+                        <button class="cf-cat-btn" id="cfConstructionTypeBtn" onclick="toggleConstructionTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfConstructionTypeLabel">Construction type</span>
+                           <span class="cf-type-clear" id="cfConstructionTypeClear" onclick="clearConstructionType(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfConstructionTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Traditional" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Traditional</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Prefab" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Prefab</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Modular" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Modular</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Container" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Container</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Timber frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Timber frame</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Steel frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Steel frame</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Eco / Passive" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Eco / Passive</label>
+                        </div>
+                     </div>
                   </div>
                </div>
 
@@ -1326,6 +1348,39 @@
          updateFeaturesLabel();
       }
 
+      function toggleConstructionTypePanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfConstructionTypeBtn');
+         var panel = document.getElementById('cfConstructionTypePanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updateConstructionTypeLabel() {
+         var checks = document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfConstructionTypeLabel');
+         var clearBtn = document.getElementById('cfConstructionTypeClear');
+         var btn = document.getElementById('cfConstructionTypeBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Construction type';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearConstructionType(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateConstructionTypeLabel();
+      }
+
       var areaValues = ['10 m²','15 m²','20 m²','30 m²','40 m²','50 m²','75 m²','100 m²','125 m²','150 m²','175 m²','200 m²','250 m²','300 m²','350 m²','400 m²','450 m²','500 m²','550 m²','600 m²','650 m²','700 m²','750 m²','800 m²','850 m²','900 m²','950 m²','1000 m²'];
 
       function buildAreaPanels() {
@@ -1545,6 +1600,12 @@
          if (fPanel && !fPanel.contains(e.target) && !fBtn.contains(e.target)) {
             fPanel.style.display = 'none';
             fBtn.classList.remove('open');
+         }
+         var ctPanel = document.getElementById('cfConstructionTypePanel');
+         var ctBtn = document.getElementById('cfConstructionTypeBtn');
+         if (ctPanel && !ctPanel.contains(e.target) && !ctBtn.contains(e.target)) {
+            ctPanel.classList.remove('open');
+            ctBtn.classList.remove('open');
          }
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
             var pp = drop.querySelector('.cf-price-panel');
