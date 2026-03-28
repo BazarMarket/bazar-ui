@@ -23,8 +23,8 @@ use Illuminate\Database\Eloquent\Builder;
 class PropertyResource extends Resource
 {
     protected static ?string $model = Property::class;
-    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
-    protected static ?string $navigationGroup = 'Property';
+    protected static string | \BackedEnum | null $navigationIcon = null;
+    protected static string | \UnitEnum | null $navigationGroup = null;
 
     public static function getNavigationItems(): array
     {
