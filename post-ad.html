@@ -618,6 +618,33 @@
                      </div>
                   </div>
 
+                  <div class="pa-field" id="buildingTypeField" style="display:none">
+                     <span class="pa-field__label">Building type:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="buildingTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled selected hidden>Select building type</option>
+                           <option>Detached</option>
+                           <option>Semi-detached</option>
+                           <option>Terraced</option>
+                           <option>End of terrace</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="constructionTypeField" style="display:none">
+                     <span class="pa-field__label">Construction type:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="constructionTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled selected hidden>Select construction type</option>
+                           <option>Traditional (Brick / Concrete)</option>
+                           <option>Prefabricated</option>
+                           <option>Modular</option>
+                           <option>Container</option>
+                           <option>Timber Frame</option>
+                        </select>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
@@ -1363,6 +1390,8 @@
          var keys = Object.keys(data);
          subSubCats.innerHTML = '';
          document.getElementById('houseTypeField').style.display = 'none';
+         document.getElementById('buildingTypeField').style.display = 'none';
+         document.getElementById('constructionTypeField').style.display = 'none';
          if (keys.length) {
             subCats.innerHTML = keys.map(function(k) {
                return '<div class="cat-item" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
@@ -1387,6 +1416,8 @@
          reState.propType = '';
          reState.subtype = '';
          document.getElementById('houseTypeField').style.display = 'none';
+         document.getElementById('buildingTypeField').style.display = 'none';
+         document.getElementById('constructionTypeField').style.display = 'none';
          updateRealEstateTitle();
          fillSubSub(cat, sub);
       }
@@ -1431,6 +1462,8 @@
          reState.subtype = '';
          var houseTypeField = document.getElementById('houseTypeField');
          var houseTypeSelect = document.getElementById('houseTypeSelect');
+         var buildingTypeField = document.getElementById('buildingTypeField');
+         var constructionTypeField = document.getElementById('constructionTypeField');
          var htList = reHouseSubtypes[propType];
          if (htList && htList.length) {
             houseTypeSelect.innerHTML = '<option value="" disabled selected hidden>Select house type</option>' +
@@ -1440,19 +1473,18 @@
          } else {
             houseTypeField.style.display = 'none';
          }
-         var subtypes = propertySubtypes[propType];
+         if (propType === 'House') {
+            buildingTypeField.style.display = 'flex';
+            constructionTypeField.style.display = 'flex';
+         } else {
+            buildingTypeField.style.display = 'none';
+            constructionTypeField.style.display = 'none';
+         }
          var field = document.getElementById('subtypeField');
-         var select = document.getElementById('subtypeSelect');
+         field.style.display = 'none';
          var condField = document.getElementById('conditionField');
          var bedroomsField = document.getElementById('bedroomsField');
          var bedroomsSelect = document.getElementById('bedroomsSelect');
-         if (subtypes && subtypes.length) {
-            select.innerHTML = '<option value="">Select property type</option>' +
-               subtypes.map(function(s) { return '<option>' + s + '</option>'; }).join('');
-            field.style.display = 'flex';
-         } else {
-            field.style.display = 'none';
-         }
          if (condField) {
             var hide = conditionHiddenFor.includes(propType);
             condField.style.display = hide ? 'none' : 'flex';
