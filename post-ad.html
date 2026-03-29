@@ -591,10 +591,6 @@
                   <div class="cat-col" id="subCats"></div>
                   <div class="cat-col" id="subSubCats"></div>
                </div>
-               <div id="houseTypeRow" style="display:none; border-top:1px solid #ececec; padding:10px 14px;">
-                  <div class="cat-group-label" style="border-top:none;margin-top:0;padding:0 0 6px;">House type</div>
-                  <div id="houseTypeItems" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
-               </div>
             </div>
 
             <!-- Шаг 2: Форма -->
@@ -610,6 +606,13 @@
                         <div class="pa-suggested" id="suggestedHint">
                            <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
                         </div>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="houseTypeField" style="display:none">
+                     <span class="pa-field__label">House type:</span>
+                     <div class="pa-field__control">
+                        <div id="houseTypeItems" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
                      </div>
                   </div>
 
@@ -1357,7 +1360,7 @@
          var data = catData[cat] || {};
          var keys = Object.keys(data);
          subSubCats.innerHTML = '';
-         document.getElementById('houseTypeRow').style.display = 'none';
+         document.getElementById('houseTypeField').style.display = 'none';
          if (keys.length) {
             subCats.innerHTML = keys.map(function(k) {
                return '<div class="cat-item" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
@@ -1381,7 +1384,7 @@
          reState.listingType = sub;
          reState.propType = '';
          reState.subtype = '';
-         document.getElementById('houseTypeRow').style.display = 'none';
+         document.getElementById('houseTypeField').style.display = 'none';
          updateRealEstateTitle();
          fillSubSub(cat, sub);
       }
@@ -1424,16 +1427,16 @@
          var propType = el.textContent.trim();
          reState.propType = propType;
          reState.subtype = '';
-         var houseTypeRow = document.getElementById('houseTypeRow');
+         var houseTypeField = document.getElementById('houseTypeField');
          var houseTypeItems = document.getElementById('houseTypeItems');
          var htList = reHouseSubtypes[propType];
          if (htList && htList.length) {
             houseTypeItems.innerHTML = htList.map(function(t) {
                return '<div class="ht-chip" onclick="selectHouseType(this)">' + t + '</div>';
             }).join('');
-            houseTypeRow.style.display = 'block';
+            houseTypeField.style.display = 'flex';
          } else {
-            houseTypeRow.style.display = 'none';
+            houseTypeField.style.display = 'none';
          }
          var subtypes = propertySubtypes[propType];
          var field = document.getElementById('subtypeField');
@@ -1482,8 +1485,8 @@
 
       function fillSubSub(cat, sub) {
          var subSubCats = document.getElementById('subSubCats');
-         var houseTypeRow = document.getElementById('houseTypeRow');
-         houseTypeRow.style.display = 'none';
+         var houseTypeField = document.getElementById('houseTypeField');
+         houseTypeField.style.display = 'none';
          var list = (catData[cat] && catData[cat][sub]) || [];
          if (!list.length) { subSubCats.innerHTML = ''; return; }
          if (cat === 'real-estate') {
