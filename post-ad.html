@@ -1506,6 +1506,15 @@
       function onHouseTypeChange(sel) {
          sel.classList.toggle('pa-empty', !sel.value);
          reState.subtype = sel.value;
+         var bedroomsField = document.getElementById('bedroomsField');
+         if (bedroomsField) {
+            bedroomsField.style.display = (sel.value === 'Studio') ? 'none' : 'flex';
+            if (sel.value === 'Studio') {
+               reState.bedrooms = '';
+               var bs = document.getElementById('bedroomsSelect');
+               if (bs) bs.value = '';
+            }
+         }
          updateRealEstateTitle();
       }
 
