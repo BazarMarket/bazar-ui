@@ -123,6 +123,24 @@
          margin-top: 0;
          padding-top: 8px;
       }
+      .ht-chip {
+         cursor: pointer;
+         padding: 6px 14px;
+         border-radius: 6px;
+         font-family: "Poppins", sans-serif;
+         font-weight: 500;
+         font-size: 14px;
+         color: #2b2b2b;
+         background: #f5f5f5;
+         border: 1px solid #e0e0e0;
+         transition: background .12s, border-color .12s;
+      }
+      .ht-chip:hover { background: #eee; }
+      .ht-chip.active {
+         background: #f7941d;
+         color: #fff;
+         border-color: #f7941d;
+      }
       .cat-item:hover { background: #f7f7f7; color: #ff9138; }
       .cat-item.active:hover { background: #ff9138; }
       .cat-item.active {
@@ -572,6 +590,10 @@
                   </div>
                   <div class="cat-col" id="subCats"></div>
                   <div class="cat-col" id="subSubCats"></div>
+               </div>
+               <div id="houseTypeRow" style="display:none; border-top:1px solid #ececec; padding:10px 14px;">
+                  <div class="cat-group-label" style="border-top:none;margin-top:0;padding:0 0 6px;">House type</div>
+                  <div id="houseTypeItems" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
                </div>
             </div>
 
@@ -1335,6 +1357,7 @@
          var data = catData[cat] || {};
          var keys = Object.keys(data);
          subSubCats.innerHTML = '';
+         document.getElementById('houseTypeRow').style.display = 'none';
          if (keys.length) {
             subCats.innerHTML = keys.map(function(k) {
                return '<div class="cat-item" data-subcat="' + k.replace(/"/g,'&quot;') + '" onclick="selectSubcat(this,\'' + cat + '\')">' + k + '</div>';
@@ -1358,6 +1381,7 @@
          reState.listingType = sub;
          reState.propType = '';
          reState.subtype = '';
+         document.getElementById('houseTypeRow').style.display = 'none';
          updateRealEstateTitle();
          fillSubSub(cat, sub);
       }
@@ -1400,6 +1424,17 @@
          var propType = el.textContent.trim();
          reState.propType = propType;
          reState.subtype = '';
+         var houseTypeRow = document.getElementById('houseTypeRow');
+         var houseTypeItems = document.getElementById('houseTypeItems');
+         var htList = reHouseSubtypes[propType];
+         if (htList && htList.length) {
+            houseTypeItems.innerHTML = htList.map(function(t) {
+               return '<div class="ht-chip" onclick="selectHouseType(this)">' + t + '</div>';
+            }).join('');
+            houseTypeRow.style.display = 'block';
+         } else {
+            houseTypeRow.style.display = 'none';
+         }
          var subtypes = propertySubtypes[propType];
          var field = document.getElementById('subtypeField');
          var select = document.getElementById('subtypeSelect');
@@ -1429,23 +1464,40 @@
          updateRealEstateTitle();
       }
 
-      var reResidential = ['Apartment', 'Studio', 'House', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'];
+      function selectHouseType(el) {
+         document.querySelectorAll('#houseTypeItems .ht-chip').forEach(c => c.classList.remove('active'));
+         el.classList.add('active');
+         reState.subtype = el.textContent.trim();
+         updateRealEstateTitle();
+      }
+
+      var reMainTypes = ['Apartment', 'House'];
+      var reHouseSubtypes = {
+         'House': ['Villa', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'],
+         'Apartment': ['Studio', 'Maisonette', 'Penthouse', 'Duplex']
+      };
       var reCommercial = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var reLand = ['Land', 'Building'];
+      var reOther = ['Room'];
 
       function fillSubSub(cat, sub) {
          var subSubCats = document.getElementById('subSubCats');
+         var houseTypeRow = document.getElementById('houseTypeRow');
+         houseTypeRow.style.display = 'none';
          var list = (catData[cat] && catData[cat][sub]) || [];
          if (!list.length) { subSubCats.innerHTML = ''; return; }
          if (cat === 'real-estate') {
-            var res = list.filter(function(t){ return reResidential.indexOf(t) !== -1; });
+            var main = list.filter(function(t){ return reMainTypes.indexOf(t) !== -1; });
             var com = list.filter(function(t){ return reCommercial.indexOf(t) !== -1; });
             var lnd = list.filter(function(t){ return reLand.indexOf(t) !== -1; });
-            var other = list.filter(function(t){ return reResidential.indexOf(t) === -1 && reCommercial.indexOf(t) === -1 && reLand.indexOf(t) === -1; });
+            var other = list.filter(function(t){ return reOther.indexOf(t) !== -1; });
             var html = '';
-            if (res.length) {
+            if (main.length) {
                html += '<div class="cat-group-label">Residential</div>';
-               html += res.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
+               html += main.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
+            }
+            if (other.length) {
+               html += other.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
             }
             if (com.length) {
                html += '<div class="cat-group-label">Commercial</div>';
@@ -1454,9 +1506,6 @@
             if (lnd.length) {
                html += '<div class="cat-group-label">Land & Development</div>';
                html += lnd.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
-            }
-            if (other.length) {
-               html += other.map(function(s){ return '<div class="cat-item" onclick="selectSubSub(this)">' + s + '</div>'; }).join('');
             }
             subSubCats.innerHTML = html;
          } else {
