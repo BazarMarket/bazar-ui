@@ -611,8 +611,10 @@
 
                   <div class="pa-field" id="houseTypeField" style="display:none">
                      <span class="pa-field__label">House type:</span>
-                     <div class="pa-field__control">
-                        <div id="houseTypeItems" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="houseTypeSelect" onchange="onHouseTypeChange(this)">
+                           <option value="" disabled selected hidden>Select house type</option>
+                        </select>
                      </div>
                   </div>
 
@@ -1428,12 +1430,12 @@
          reState.propType = propType;
          reState.subtype = '';
          var houseTypeField = document.getElementById('houseTypeField');
-         var houseTypeItems = document.getElementById('houseTypeItems');
+         var houseTypeSelect = document.getElementById('houseTypeSelect');
          var htList = reHouseSubtypes[propType];
          if (htList && htList.length) {
-            houseTypeItems.innerHTML = htList.map(function(t) {
-               return '<div class="ht-chip" onclick="selectHouseType(this)">' + t + '</div>';
-            }).join('');
+            houseTypeSelect.innerHTML = '<option value="" disabled selected hidden>Select house type</option>' +
+               htList.map(function(t) { return '<option>' + t + '</option>'; }).join('');
+            houseTypeSelect.classList.add('pa-empty');
             houseTypeField.style.display = 'flex';
          } else {
             houseTypeField.style.display = 'none';
@@ -1467,10 +1469,9 @@
          updateRealEstateTitle();
       }
 
-      function selectHouseType(el) {
-         document.querySelectorAll('#houseTypeItems .ht-chip').forEach(c => c.classList.remove('active'));
-         el.classList.add('active');
-         reState.subtype = el.textContent.trim();
+      function onHouseTypeChange(sel) {
+         sel.classList.toggle('pa-empty', !sel.value);
+         reState.subtype = sel.value;
          updateRealEstateTitle();
       }
 
