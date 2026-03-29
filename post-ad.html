@@ -1465,8 +1465,10 @@
          var buildingTypeField = document.getElementById('buildingTypeField');
          var constructionTypeField = document.getElementById('constructionTypeField');
          var htList = reHouseSubtypes[propType];
+         var htLabel = reHouseTypeLabels[propType] || 'House type';
          if (htList && htList.length) {
-            houseTypeSelect.innerHTML = '<option value="" disabled selected hidden>Select house type</option>' +
+            houseTypeField.querySelector('.pa-field__label').textContent = htLabel + ':';
+            houseTypeSelect.innerHTML = '<option value="" disabled selected hidden>Select ' + htLabel.toLowerCase() + '</option>' +
                htList.map(function(t) { return '<option>' + t + '</option>'; }).join('');
             houseTypeSelect.classList.add('pa-empty');
             houseTypeField.style.display = 'flex';
@@ -1510,7 +1512,11 @@
       var reMainTypes = ['Apartment', 'House'];
       var reHouseSubtypes = {
          'House': ['Villa', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage'],
-         'Apartment': ['Studio', 'Maisonette', 'Penthouse', 'Duplex']
+         'Apartment': ['Studio', 'Penthouse', 'Duplex']
+      };
+      var reHouseTypeLabels = {
+         'House': 'House type',
+         'Apartment': 'Apartment type'
       };
       var reCommercial = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var reLand = ['Land', 'Building'];
