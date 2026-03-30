@@ -12,11 +12,10 @@ var confirmationResult = null;
 var recaptchaVerifier = null;
 
 function setupRecaptcha() {
+    if (recaptchaVerifier) return;
     try {
-        if (recaptchaVerifier) {
-            recaptchaVerifier.clear();
-            recaptchaVerifier = null;
-        }
+        var container = document.getElementById('recaptcha-container');
+        if (container) container.innerHTML = '';
         recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
             size: 'invisible',
             callback: function() {}
@@ -53,7 +52,6 @@ function doLogout() {
 function openCreateAccountModal() {
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
-    setupRecaptcha();
 }
 
 function closeCreateAccountModal() {
