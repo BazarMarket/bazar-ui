@@ -13,13 +13,19 @@ var recaptchaVerifier = null;
 
 function setupRecaptcha() {
     try {
-        if (recaptchaVerifier) return;
+        if (recaptchaVerifier) {
+            recaptchaVerifier.clear();
+            recaptchaVerifier = null;
+        }
         recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
             size: 'invisible',
             callback: function() {}
-        }, auth);
+        });
+        recaptchaVerifier.render().catch(function(e) {
+            console.error('reCAPTCHA render error:', e.code, e.message);
+        });
     } catch(e) {
-        console.error('reCAPTCHA setup error:', e);
+        console.error('reCAPTCHA setup error:', e.code, e.message);
         recaptchaVerifier = null;
     }
 }
@@ -84,7 +90,7 @@ function sendSmsCode() {
     if (!recaptchaVerifier) {
         setupRecaptcha();
         if (!recaptchaVerifier) {
-            alert('Could not initialize verification. Please reload the page and try again.');
+            alert('Could not initialize verification. Please reload the page and try again. (Debug: check console for details)');
             return;
         }
     }
@@ -230,6 +236,7 @@ function finishRegistration() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    setupRecaptcha();
     var otpInputs = document.querySelectorAll('.otp-input');
     otpInputs.forEach(function(input, index) {
         input.addEventListener('input', function() {
