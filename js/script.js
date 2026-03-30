@@ -241,7 +241,7 @@ window.onload = function () {
 
     //ИНПУТ МАСКА ДЛЯ ТЕЛЕФОНА  =============================================================================================================
     const telInput = document.querySelectorAll('input[type="tel"]');
-    var im = new Inputmask("38(999)999-99-99");
+    var im = new Inputmask("9999 999999");
     im.mask(telInput);
 
 
