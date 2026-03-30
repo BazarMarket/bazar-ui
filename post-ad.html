@@ -1037,6 +1037,13 @@
                   </div>
 
                   <div class="pa-field">
+                     <span class="pa-field__label">Email:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="sellerEmailInput" type="email" placeholder="your@email.com">
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
                      <span class="pa-field__label">Show phone:</span>
                      <div class="pa-field__control pa-toggle-row" style="padding-top:8px">
                         <label class="toggle">
@@ -1723,6 +1730,8 @@
 
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
+         var sellerEmail = getInputVal('sellerEmailInput');
+         if (sellerEmail) formData.append('seller_email', sellerEmail);
 
          var youtube = getInputVal('youtubeInput');
          if (youtube) formData.append('video_url', youtube);
