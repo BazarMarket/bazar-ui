@@ -20,9 +20,6 @@ function setupRecaptcha() {
             size: 'invisible',
             callback: function() {}
         });
-        recaptchaVerifier.render().catch(function(e) {
-            console.error('reCAPTCHA render error:', e.code, e.message);
-        });
     } catch(e) {
         console.error('reCAPTCHA setup error:', e.code, e.message);
         recaptchaVerifier = null;
