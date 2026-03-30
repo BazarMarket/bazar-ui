@@ -2601,6 +2601,7 @@
         var otpTimerInterval = null;
 
         function sendSmsCode() {
+            if (!document.getElementById('agreeCheckbox').checked) { alert('Please agree to the Terms of Service and Privacy Policy'); return; }
             var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
             if (!rawValue || rawValue.length < 10) { alert('Please enter your phone number'); return; }
             var phoneNumber = '+44' + rawValue;
