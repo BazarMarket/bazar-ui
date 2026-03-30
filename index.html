@@ -2518,6 +2518,8 @@
                 <span>I agree to the <a href="terms-of-service.html" target="_blank">Terms of Service</a> and the <a href="privacy-policy.html" target="_blank">Privacy Policy</a></span>
             </label>
 
+            <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
+
             <div class="modal-btns" id="modalSignBtns">
                 <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
                 <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
@@ -2601,7 +2603,8 @@
         var otpTimerInterval = null;
 
         function sendSmsCode() {
-            if (!document.getElementById('agreeCheckbox').checked) { alert('Please agree to the Terms of Service and Privacy Policy'); return; }
+            if (!document.getElementById('agreeCheckbox').checked) { document.getElementById('agreeError').style.display = 'block'; return; }
+            document.getElementById('agreeError').style.display = 'none';
             var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
             if (!rawValue || rawValue.length < 10) { alert('Please enter your phone number'); return; }
             var phoneNumber = '+44' + rawValue;
