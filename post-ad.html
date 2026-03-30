@@ -1502,11 +1502,10 @@
          }
          if (propType === 'House') {
             buildingTypeField.style.display = 'flex';
-            constructionTypeField.style.display = 'flex';
          } else {
             buildingTypeField.style.display = 'none';
-            constructionTypeField.style.display = 'none';
          }
+         constructionTypeField.style.display = 'none';
          var field = document.getElementById('subtypeField');
          field.style.display = 'none';
          var condField = document.getElementById('conditionField');
@@ -1540,6 +1539,10 @@
                var bs = document.getElementById('bedroomsSelect');
                if (bs) bs.value = '';
             }
+         }
+         var constructionTypeField = document.getElementById('constructionTypeField');
+         if (constructionTypeField) {
+            constructionTypeField.style.display = (sel.value === 'House') ? 'flex' : 'none';
          }
          updateRealEstateTitle();
       }
