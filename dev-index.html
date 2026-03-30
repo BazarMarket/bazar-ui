@@ -2616,6 +2616,16 @@
             smsBtn.textContent = 'Sending...';
             smsBtn.disabled = true;
 
+            if (!recaptchaVerifier) {
+                setupRecaptcha();
+                if (!recaptchaVerifier) {
+                    alert('reCAPTCHA failed to initialize. Please reload the page.');
+                    smsBtn.textContent = 'Sign in by an SMS';
+                    smsBtn.disabled = false;
+                    return;
+                }
+            }
+
             auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
                 .then(function(result) {
                     confirmationResult = result;
