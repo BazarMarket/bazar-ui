@@ -1413,7 +1413,12 @@
          } else {
             subCats.innerHTML = '';
          }
-         document.getElementById('paForm').classList.add('visible');
+         var hasSubcats = keys.length > 0;
+         if (!hasSubcats) {
+            document.getElementById('paForm').classList.add('visible');
+         } else {
+            document.getElementById('paForm').classList.remove('visible');
+         }
          var subtypeField = document.getElementById('subtypeField');
          var condField = document.getElementById('conditionField');
          if (subtypeField) subtypeField.style.display = 'none';
@@ -1434,6 +1439,12 @@
          document.getElementById('constructionTypeField').style.display = 'none';
          updateRealEstateTitle();
          fillSubSub(cat, sub);
+         var subSubList = (catData[cat] && catData[cat][sub]) || [];
+         if (subSubList.length > 0) {
+            document.getElementById('paForm').classList.remove('visible');
+         } else {
+            document.getElementById('paForm').classList.add('visible');
+         }
       }
 
       var propertySubtypes = {
@@ -1515,6 +1526,7 @@
             }
          }
          updateRealEstateTitle();
+         document.getElementById('paForm').classList.add('visible');
       }
 
       function onHouseTypeChange(sel) {
