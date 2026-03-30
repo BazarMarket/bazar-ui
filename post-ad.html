@@ -483,26 +483,8 @@
       }
       .pa-btn-submit:hover { background: #fe7653; }
 
-      .pa-messengers { display: flex; gap: 10px; flex-wrap: wrap; }
-      .pa-messenger-chip { cursor: pointer; }
-      .pa-messenger-chip input[type="checkbox"] { display: none; }
-      .pa-messenger-chip__body {
-         display: inline-flex; align-items: center; gap: 8px;
-         padding: 8px 16px; border-radius: 24px;
-         border: 2px solid #e4e4e4; background: #fff;
-         font-size: 14px; font-weight: 500; color: #555;
-         transition: all .2s ease; user-select: none;
-      }
-      .pa-messenger-chip:hover .pa-messenger-chip__body { border-color: #ccc; }
-      .pa-messenger-chip input:checked + .pa-messenger-chip__body { border-color: #ff9138; background: #fff8f0; color: #333; }
-      .pa-messenger--whatsapp input:checked + .pa-messenger-chip__body { border-color: #25D366; background: #f0faf4; }
-      .pa-messenger--telegram input:checked + .pa-messenger-chip__body { border-color: #0088cc; background: #f0f7fc; }
-      .pa-messenger--viber input:checked + .pa-messenger-chip__body { border-color: #7360F2; background: #f4f2fe; }
-      .pa-messenger-icon {
-         display: inline-flex; align-items: center; justify-content: center;
-         width: 24px; height: 24px; border-radius: 50%;
-         color: #fff; font-size: 13px; font-weight: 700;
-      }
+      .pa-messengers { display: flex; gap: 16px; flex-wrap: wrap; }
+      .pa-messengers label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; cursor: pointer; }
       .pa-btn-preview {
          padding: 14px 32px;
          background: #f4f4f4;
@@ -1068,18 +1050,9 @@
                      <span class="pa-field__label">Messengers:</span>
                      <div class="pa-field__control">
                         <div class="pa-messengers">
-                           <label class="pa-messenger-chip pa-messenger--whatsapp">
-                              <input type="checkbox" id="whatsappCheck">
-                              <span class="pa-messenger-chip__body"><span class="pa-messenger-icon" style="background:#25D366">W</span> WhatsApp</span>
-                           </label>
-                           <label class="pa-messenger-chip pa-messenger--telegram">
-                              <input type="checkbox" id="telegramCheck">
-                              <span class="pa-messenger-chip__body"><span class="pa-messenger-icon" style="background:#0088cc">T</span> Telegram</span>
-                           </label>
-                           <label class="pa-messenger-chip pa-messenger--viber">
-                              <input type="checkbox" id="viberCheck">
-                              <span class="pa-messenger-chip__body"><span class="pa-messenger-icon" style="background:#7360F2">V</span> Viber</span>
-                           </label>
+                           <label><input type="checkbox" id="whatsappCheck"> WhatsApp</label>
+                           <label><input type="checkbox" id="telegramCheck"> Telegram</label>
+                           <label><input type="checkbox" id="viberCheck"> Viber</label>
                         </div>
                      </div>
                   </div>
