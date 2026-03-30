@@ -2614,8 +2614,9 @@
         var otpTimerInterval = null;
 
         function sendSmsCode() {
-            var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-]/g, '');
-            if (!rawValue) { alert('Please enter your phone number'); return; }
+            var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
+            if (rawValue.startsWith('38')) rawValue = rawValue.substring(2);
+            if (!rawValue || rawValue.length < 10) { alert('Please enter your phone number'); return; }
             var phoneNumber = '+44' + rawValue;
 
             var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
