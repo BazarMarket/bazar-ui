@@ -2467,7 +2467,10 @@
                 <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
                 <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
                 <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
             </div>
+            <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
 
             <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
             <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
@@ -2516,17 +2519,43 @@
             </label>
 
             <div class="modal-btns" id="modalSignBtns">
-                <button class="modal-btn modal-btn--gray" onclick="openOtpModal()">Sign in by an SMS</button>
-                <button class="modal-btn modal-btn--gray" onclick="openOtpModal()">Sign in by Whatsapp</button>
+                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
+                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
             </div>
         </div>
     </div>
 
-    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
-    <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
-    <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+    <div id="recaptcha-container"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
+    <script type="text/javascript" src="js/inputmask.min.js"></script>
+    <script type="text/javascript" src="js/fslightbox.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
     <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyDoE8UOGnc4IXprZG-TEce514JI1cwo0Z4",
+            authDomain: "bazar-code-auth.firebaseapp.com",
+            projectId: "bazar-code-auth",
+            storageBucket: "bazar-code-auth.firebasestorage.app",
+            messagingSenderId: "1065826568544",
+            appId: "1:1065826568544:web:f573e9e85dd9fab9483605"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var auth = firebase.auth();
+        var confirmationResult = null;
+        var recaptchaVerifier = null;
+
+        function setupRecaptcha() {
+            if (recaptchaVerifier) return;
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                size: 'invisible',
+                callback: function() {}
+            }, auth);
+        }
+
         function switchRentType(type, btn) {
             btn.closest('.rent-toggle__btns').querySelectorAll('.rent-toggle__btn').forEach(function(b) {
                 b.classList.remove('active');
@@ -2540,12 +2569,14 @@
             document.getElementById('header-logged-in').style.display = '';
         }
         function doLogout() {
+            auth.signOut();
             document.getElementById('header-logged-in').style.display = 'none';
             document.getElementById('header-guest').style.display = '';
         }
         function openCreateAccountModal() {
             document.getElementById('createAccountModal').classList.add('modal-overlay--active');
             document.body.style.overflow = 'hidden';
+            setupRecaptcha();
         }
         function closeCreateAccountModal() {
             document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
@@ -2569,14 +2600,68 @@
 
         var otpTimerInterval = null;
 
-        function openOtpModal() {
-            var phone = '+44 ' + (document.querySelector('.modal-number-input').value || 'XXXXXXXXXX');
-            document.getElementById('otpPhoneDisplay').textContent = phone;
+        function sendSmsCode() {
+            var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-]/g, '');
+            if (!rawValue) { alert('Please enter your phone number'); return; }
+            var phoneNumber = '+44' + rawValue;
+
+            var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
+            smsBtn.textContent = 'Sending...';
+            smsBtn.disabled = true;
+
+            auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+                .then(function(result) {
+                    confirmationResult = result;
+                    smsBtn.textContent = 'Sign in by an SMS';
+                    smsBtn.disabled = false;
+                    openOtpModal(phoneNumber);
+                })
+                .catch(function(error) {
+                    console.error('SMS error:', error);
+                    smsBtn.textContent = 'Sign in by an SMS';
+                    smsBtn.disabled = false;
+                    if (error.code === 'auth/invalid-phone-number') {
+                        alert('Invalid phone number. Please check and try again.');
+                    } else if (error.code === 'auth/too-many-requests') {
+                        alert('Too many attempts. Please try again later.');
+                    } else {
+                        alert('Error sending SMS: ' + error.message);
+                    }
+                    recaptchaVerifier = null;
+                    setupRecaptcha();
+                });
+        }
+
+        function openOtpModal(phoneNumber) {
+            var cleanNum = phoneNumber || '+44' + document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-]/g, '');
+            var display = cleanNum.replace(/(\+44)(\d{4})(\d{6})/, '$1 $2 $3');
+            document.getElementById('otpPhoneDisplay').textContent = display;
+            document.getElementById('otpError').style.display = 'none';
             document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
             document.getElementById('otpModal').classList.add('modal-overlay--active');
             document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
             document.querySelectorAll('.otp-input')[0].focus();
             startOtpTimer();
+        }
+
+        function verifyOtpCode() {
+            var code = '';
+            document.querySelectorAll('.otp-input').forEach(function(inp) { code += inp.value; });
+            if (code.length < 6 || !confirmationResult) return;
+
+            confirmationResult.confirm(code)
+                .then(function(result) {
+                    document.getElementById('otpError').style.display = 'none';
+                    openProfileModal();
+                })
+                .catch(function(error) {
+                    console.error('Verify error:', error);
+                    var errEl = document.getElementById('otpError');
+                    errEl.textContent = 'Wrong code. Please try again.';
+                    errEl.style.display = 'block';
+                    document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
+                    document.querySelectorAll('.otp-input')[0].focus();
+                });
         }
 
         function closeOtpModal() {
@@ -2601,7 +2686,8 @@
             var btn = document.getElementById('otpResendBtn');
             var timerEl = document.getElementById('otpTimer');
             btn.disabled = true;
-            timerEl.textContent = seconds;
+            btn.innerHTML = 'Get new code: <span id="otpTimer">' + seconds + '</span> s.';
+            timerEl = document.getElementById('otpTimer');
             otpTimerInterval = setInterval(function() {
                 seconds--;
                 timerEl.textContent = seconds;
@@ -2609,6 +2695,7 @@
                     clearInterval(otpTimerInterval);
                     btn.disabled = false;
                     btn.textContent = 'Get new code';
+                    btn.onclick = function() { sendSmsCode(); };
                 }
             }, 1000);
         }
@@ -2667,7 +2754,7 @@
                         otpInputs[index + 1].focus();
                     }
                     if (this.value && index === otpInputs.length - 1) {
-                        setTimeout(openProfileModal, 300);
+                        verifyOtpCode();
                     }
                 });
                 input.addEventListener('keydown', function(e) {
