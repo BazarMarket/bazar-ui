@@ -677,7 +677,7 @@
                   <div class="pa-field" id="bathroomsField" style="display:none">
                      <span class="pa-field__label">Bathrooms:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="bathroomsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>1</option>
                            <option>2</option>
@@ -691,7 +691,7 @@
                   <div class="pa-field" id="reFloorField" style="display:none">
                      <span class="pa-field__label">Floor:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="floorSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>Ground floor</option>
                            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
@@ -705,7 +705,7 @@
                   <div class="pa-field" id="parkingField" style="display:none">
                      <span class="pa-field__label">Parking:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="parkingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>Yes</option>
                            <option>No</option>
@@ -718,7 +718,7 @@
                   <div class="pa-field" id="furnishingField" style="display:none">
                      <span class="pa-field__label">Furnishing:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="furnishingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>Furnished</option>
                            <option>Semi-furnished</option>
@@ -730,7 +730,7 @@
                   <div class="pa-field" id="airConField" style="display:none">
                      <span class="pa-field__label pa-field__label--wrap">Air conditioning:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="airConSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>Yes</option>
                            <option>No</option>
@@ -779,7 +779,7 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Description:<span>*</span></span>
                      <div class="pa-field__control">
-                        <textarea class="pa-textarea" placeholder="Describe your item in detail..."></textarea>
+                        <textarea class="pa-textarea" id="descriptionInput" placeholder="Describe your item in detail..."></textarea>
                      </div>
                   </div>
 
@@ -799,7 +799,7 @@
                   <div class="pa-field" id="constructionYearField" style="display:none">
                      <span class="pa-field__label pa-field__label--wrap">Construction year:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="constructionYearSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>2025</option><option>2024</option><option>2023</option><option>2022</option>
                            <option>2021</option><option>2020</option><option>2019</option><option>2018</option>
@@ -815,7 +815,7 @@
                      <span class="pa-field__label">Property area:<span>*</span></span>
                      <div class="pa-field__control">
                         <div class="pa-area-wrap">
-                           <input class="pa-input" type="text" inputmode="numeric" placeholder="">
+                           <input class="pa-input" id="propertyAreaInput" type="text" inputmode="numeric" placeholder="">
                            <span class="pa-area-unit">m²</span>
                         </div>
                      </div>
@@ -896,7 +896,7 @@
                   <div class="pa-field" id="onlineViewingField" style="display:none">
                      <span class="pa-field__label pa-field__label--wide">Online viewing:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="onlineViewingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>Yes</option>
                            <option>No</option>
@@ -907,7 +907,7 @@
                   <div class="pa-field" id="energyField" style="display:none">
                      <span class="pa-field__label pa-field__label--wide">Energy Efficiency:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" onchange="this.classList.toggle('pa-empty',!this.value)">
+                        <select class="pa-select pa-empty" id="energySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="" disabled hidden>Choose one...</option>
                            <option>A+</option><option>A</option><option>B</option><option>C</option>
                            <option>D</option><option>E</option><option>F</option><option>G</option>
@@ -952,7 +952,7 @@
                         </div>
                         <div class="pa-toggle-row" style="margin-top:6px">
                            <label class="toggle">
-                              <input type="checkbox">
+                              <input type="checkbox" id="negotiableCheckbox">
                               <span class="toggle__slider"></span>
                            </label>
                            <p>Negotiable price</p>
@@ -990,7 +990,7 @@
                   <div class="pa-field">
                      <span class="pa-field__label">YouTube:</span>
                      <div class="pa-field__control">
-                        <input class="pa-input" type="text" placeholder="https://youtube.com/...">
+                        <input class="pa-input" id="youtubeInput" type="text" placeholder="https://youtube.com/...">
                      </div>
                   </div>
 
@@ -1025,14 +1025,14 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Name:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" type="text" placeholder="Your name">
+                        <input class="pa-input" id="sellerNameInput" type="text" placeholder="Your name">
                      </div>
                   </div>
 
                   <div class="pa-field">
                      <span class="pa-field__label">Phone:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" type="tel" placeholder="+357 xx xxxxxx">
+                        <input class="pa-input" id="sellerPhoneInput" type="tel" placeholder="+357 xx xxxxxx">
                      </div>
                   </div>
 
@@ -1050,7 +1050,7 @@
 
                <!-- Кнопки -->
                <div class="pa-submit-row">
-                  <button class="pa-btn-submit" onclick="window.location.href='publish-options.html'">Publish Ad</button>
+                  <button class="pa-btn-submit" onclick="submitProperty()">Publish Ad</button>
                   <button class="pa-btn-preview">Preview</button>
                </div>
 
@@ -1605,6 +1605,160 @@
                grid.appendChild(box);
             };
             reader.readAsDataURL(file);
+         });
+      }
+
+      var API_URL = 'https://admin.bazar.uk/api/properties';
+      var uploadedFiles = [];
+
+      var origOnPhotosSelected = onPhotosSelected;
+      onPhotosSelected = function(source) {
+         var files = source.files;
+         if (!files || !files.length) return;
+         Array.from(files).forEach(function(f) {
+            if (f.type && f.type.match(/image\/(jpeg|png|webp)/)) uploadedFiles.push(f);
+         });
+         origOnPhotosSelected(source);
+      };
+
+      function getSelectVal(id) {
+         var el = document.getElementById(id);
+         if (!el) return '';
+         return el.value || '';
+      }
+
+      function getInputVal(id) {
+         var el = document.getElementById(id);
+         if (!el) return '';
+         return el.value.trim();
+      }
+
+      function mapListingType(lt) {
+         if (lt === 'For Sale') return 'sale';
+         if (lt === 'For Long-term Rent') return 'long_rent';
+         if (lt === 'For Short-term Rent') return 'short_rent';
+         return 'sale';
+      }
+
+      function mapPropertyType(pt) {
+         var map = {
+            'Apartment': 'apartment', 'Studio': 'studio', 'House': 'house',
+            'Maisonette': 'maisonette', 'Townhouse': 'townhouse', 'Penthouse': 'penthouse',
+            'Duplex': 'duplex', 'Bungalow': 'bungalow', 'Cottage': 'cottage',
+            'Room': 'room', 'Office': 'office', 'Shop': 'shop',
+            'Restaurant': 'restaurant', 'Industrial': 'industrial', 'Hotel': 'hotel',
+            'Business or Investment': 'business', 'Land': 'land', 'Building': 'building'
+         };
+         return map[pt] || pt.toLowerCase();
+      }
+
+      function submitProperty() {
+         if (reState.cat !== 'real-estate') {
+            alert('Only Real Estate listings are supported for submission at the moment.');
+            return;
+         }
+
+         var title = getInputVal('titleInput');
+         var listingType = mapListingType(reState.listingType);
+         var propertyType = mapPropertyType(reState.propType);
+         var price = getInputVal('priceInput').replace(/\./g, '');
+         var sellerName = getInputVal('sellerNameInput');
+         var sellerPhone = getInputVal('sellerPhoneInput');
+
+         if (!title) { alert('Please enter the Ad Title.'); return; }
+         if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
+         if (!sellerName) { alert('Please enter your Name.'); return; }
+         if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+
+         var formData = new FormData();
+         formData.append('title', title);
+         formData.append('description', getInputVal('descriptionInput'));
+         formData.append('listing_type', listingType);
+         formData.append('property_type', propertyType);
+         formData.append('sub_type', getSelectVal('houseTypeSelect'));
+         formData.append('price', price);
+         formData.append('currency', 'GBP');
+         formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         formData.append('country', 'United Kingdom');
+         formData.append('city', 'London');
+
+         var bedrooms = getSelectVal('bedroomsSelect');
+         if (bedrooms) formData.append('bedrooms', bedrooms === '10 and more' ? 10 : parseInt(bedrooms));
+
+         var bathrooms = getSelectVal('bathroomsSelect');
+         if (bathrooms) formData.append('bathrooms', bathrooms === '5 and more' ? 5 : parseInt(bathrooms));
+
+         var area = getInputVal('propertyAreaInput');
+         if (area) formData.append('covered_area', parseInt(area));
+
+         var year = getSelectVal('constructionYearSelect');
+         if (year && year !== 'Before 1980') formData.append('construction_year', parseInt(year));
+
+         var energy = getSelectVal('energySelect');
+         if (energy) formData.append('energy_efficiency', energy);
+
+         var parking = getSelectVal('parkingSelect');
+         formData.append('parking', (parking === 'Yes' || parking === 'Covered parking' || parking === 'Underground parking') ? '1' : '0');
+
+         var furnishing = getSelectVal('furnishingSelect');
+         formData.append('furnished', furnishing === 'Furnished' ? '1' : '0');
+
+         var airCon = getSelectVal('airConSelect');
+         formData.append('air_conditioning', (airCon === 'Yes' || airCon === 'Central A/C' || airCon === 'Split A/C') ? '1' : '0');
+
+         var features = document.querySelectorAll('#includedField input[type="checkbox"]');
+         var featureMap = {
+            'Garden': 'garden', 'Elevator': 'elevator', 'Security system': 'security',
+            'Swimming pool': 'pool', 'Veranda': 'veranda', 'Gym': 'gym', 'Solar panel': 'solar_panels'
+         };
+         var boolFields = ['pool','garden','veranda','gym','elevator','security','solar_panels'];
+         boolFields.forEach(function(f) { formData.append(f, '0'); });
+         features.forEach(function(cb) {
+            if (cb.checked) {
+               var label = cb.parentElement.textContent.trim();
+               var field = featureMap[label];
+               if (field) formData.set(field, '1');
+            }
+         });
+
+         formData.append('seller_name', sellerName);
+         formData.append('seller_phone', sellerPhone);
+
+         var youtube = getInputVal('youtubeInput');
+         if (youtube) formData.append('video_url', youtube);
+
+         uploadedFiles.forEach(function(file) {
+            formData.append('images[]', file);
+         });
+
+         var btn = document.querySelector('.pa-btn-submit');
+         btn.textContent = 'Submitting...';
+         btn.disabled = true;
+
+         fetch(API_URL, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+         })
+         .then(function(response) {
+            if (!response.ok) {
+               return response.json().then(function(err) {
+                  throw new Error(err.message || 'Validation error');
+               });
+            }
+            return response.json();
+         })
+         .then(function(data) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            alert('Your ad has been submitted successfully! It will appear after review. (ID: ' + data.property_id + ')');
+            window.location.href = 'index.html';
+         })
+         .catch(function(error) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            alert('Error submitting ad: ' + error.message);
+            console.error('Submit error:', error);
          });
       }
 
