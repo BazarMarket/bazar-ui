@@ -2601,9 +2601,9 @@
         var otpTimerInterval = null;
 
         function sendSmsCode() {
-            var phoneInput = document.querySelector('.modal-number-input').value.replace(/\s/g, '');
-            if (!phoneInput) { alert('Please enter your phone number'); return; }
-            var phoneNumber = '+44' + phoneInput;
+            var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-]/g, '');
+            if (!rawValue) { alert('Please enter your phone number'); return; }
+            var phoneNumber = '+44' + rawValue;
 
             var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
             smsBtn.textContent = 'Sending...';
@@ -2633,7 +2633,8 @@
         }
 
         function openOtpModal(phoneNumber) {
-            var display = phoneNumber || '+44 ' + (document.querySelector('.modal-number-input').value || 'XXXXXXXXXX');
+            var cleanNum = phoneNumber || '+44' + document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-]/g, '');
+            var display = cleanNum.replace(/(\+44)(\d{4})(\d{6})/, '$1 $2 $3');
             document.getElementById('otpPhoneDisplay').textContent = display;
             document.getElementById('otpError').style.display = 'none';
             document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
