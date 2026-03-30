@@ -2549,11 +2549,18 @@
         var recaptchaVerifier = null;
 
         function setupRecaptcha() {
-            if (recaptchaVerifier) return;
-            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: 'invisible',
-                callback: function() {}
-            }, auth);
+            try {
+                if (recaptchaVerifier) {
+                    recaptchaVerifier.clear();
+                    recaptchaVerifier = null;
+                }
+                recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                    size: 'invisible',
+                    callback: function() {}
+                }, auth);
+            } catch(e) {
+                console.error('reCAPTCHA setup error:', e);
+            }
         }
 
         function switchRentType(type, btn) {
