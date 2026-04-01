@@ -573,13 +573,19 @@
                            <label class="cf-type-item"><input type="checkbox" value="10+" onchange="updateBathroomsLabel()"><span class="cf-type-check"></span>10+</label>
                         </div>
                      </div>
-                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
-                        <option value="">Condition</option>
-                        <option>New Build</option>
-                        <option>Resale</option>
-                        <option>Under construction</option>
-                        <option>Off plan</option>
-                     </select>
+                     <div class="cf-cat" id="cfConditionWrap">
+                        <button class="cf-cat-btn" id="cfConditionBtn" onclick="toggleConditionPanel(event)">
+                           <span class="cf-cat-btn-label" id="cfConditionLabel">Condition</span>
+                           <span class="cf-type-clear" id="cfConditionClear" onclick="clearCondition(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfConditionPanel" style="display:none;padding:10px 14px;width:auto;min-width:200px;">
+                           <label class="cf-type-item"><input type="checkbox" value="New Build" onchange="updateConditionLabel()"><span class="cf-type-check"></span>New Build</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Resale" onchange="updateConditionLabel()"><span class="cf-type-check"></span>Resale</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Under construction" onchange="updateConditionLabel()"><span class="cf-type-check"></span>Under construction</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Off plan" onchange="updateConditionLabel()"><span class="cf-type-check"></span>Off plan</label>
+                        </div>
+                     </div>
                   </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
                   <div class="cf-row">
@@ -1657,6 +1663,39 @@
          updateFeaturesLabel();
       }
 
+      function toggleConditionPanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfConditionBtn');
+         var panel = document.getElementById('cfConditionPanel');
+         var isOpen = panel.style.display === 'block';
+         panel.style.display = isOpen ? 'none' : 'block';
+         btn.classList.toggle('open', !isOpen);
+      }
+      function updateConditionLabel() {
+         var checks = document.querySelectorAll('#cfConditionPanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfConditionLabel');
+         var clearBtn = document.getElementById('cfConditionClear');
+         var btn = document.getElementById('cfConditionBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Condition';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearCondition(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfConditionPanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateConditionLabel();
+      }
+
       function toggleConstructionTypePanel(e) {
          e.stopPropagation();
          var btn = document.getElementById('cfConstructionTypeBtn');
@@ -1921,6 +1960,12 @@
          if (fPanel && !fPanel.contains(e.target) && !fBtn.contains(e.target)) {
             fPanel.style.display = 'none';
             fBtn.classList.remove('open');
+         }
+         var condPanel = document.getElementById('cfConditionPanel');
+         var condBtn = document.getElementById('cfConditionBtn');
+         if (condPanel && !condPanel.contains(e.target) && !condBtn.contains(e.target)) {
+            condPanel.style.display = 'none';
+            condBtn.classList.remove('open');
          }
          var ctPanel = document.getElementById('cfConstructionTypePanel');
          var ctBtn = document.getElementById('cfConstructionTypeBtn');
