@@ -634,12 +634,18 @@
                   </div>
                   <!-- Row 5: Seller + Online viewing + Key features (hidden by default) -->
                   <div class="cf-row cf-row-extra" id="cfMoreRow" style="max-height:0;opacity:0;margin-top:0;">
-                     <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
-                        <option value="">Any seller</option>
-                        <option>Private</option>
-                        <option>Real Estate</option>
-                        <option>Construction</option>
-                     </select>
+                     <div class="cf-cat" id="cfSellerWrap">
+                        <button class="cf-cat-btn" id="cfSellerBtn" onclick="toggleSellerPanel(event)">
+                           <span class="cf-cat-btn-label" id="cfSellerLabel">Any seller</span>
+                           <span class="cf-type-clear" id="cfSellerClear" onclick="clearSeller(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfSellerPanel" style="display:none;padding:10px 14px;width:auto;min-width:200px;">
+                           <label class="cf-type-item"><input type="checkbox" value="Private" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Private</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Real Estate" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Real Estate</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Construction" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Construction</label>
+                        </div>
+                     </div>
                      <select class="cf-ctrl cf-select-auto" onchange="autoWidthSelect(this)">
                         <option value="">Online viewing</option>
                         <option>Yes</option>
@@ -1663,6 +1669,39 @@
          updateFeaturesLabel();
       }
 
+      function toggleSellerPanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfSellerBtn');
+         var panel = document.getElementById('cfSellerPanel');
+         var isOpen = panel.style.display === 'block';
+         panel.style.display = isOpen ? 'none' : 'block';
+         btn.classList.toggle('open', !isOpen);
+      }
+      function updateSellerLabel() {
+         var checks = document.querySelectorAll('#cfSellerPanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfSellerLabel');
+         var clearBtn = document.getElementById('cfSellerClear');
+         var btn = document.getElementById('cfSellerBtn');
+         if (checks.length === 0) {
+            label.textContent = 'Any seller';
+            clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
+            clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearSeller(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfSellerPanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updateSellerLabel();
+      }
+
       function toggleConditionPanel(e) {
          e.stopPropagation();
          var btn = document.getElementById('cfConditionBtn');
@@ -1966,6 +2005,12 @@
          if (condPanel && !condPanel.contains(e.target) && !condBtn.contains(e.target)) {
             condPanel.style.display = 'none';
             condBtn.classList.remove('open');
+         }
+         var sellerPanel = document.getElementById('cfSellerPanel');
+         var sellerBtn = document.getElementById('cfSellerBtn');
+         if (sellerPanel && !sellerPanel.contains(e.target) && !sellerBtn.contains(e.target)) {
+            sellerPanel.style.display = 'none';
+            sellerBtn.classList.remove('open');
          }
          var ctPanel = document.getElementById('cfConstructionTypePanel');
          var ctBtn = document.getElementById('cfConstructionTypeBtn');
