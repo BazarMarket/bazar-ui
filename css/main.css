@@ -4625,6 +4625,42 @@ p {
   color: #9c5a1a;
   font-size: 14px;
 }
+.loc-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+  z-index: 1000;
+  padding: 6px 0;
+  margin-top: 6px;
+}
+.loc-dropdown.open {
+  display: block;
+}
+.loc-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.loc-dropdown__item:hover {
+  background: #f5f5f5;
+}
+.loc-dropdown__pin {
+  flex-shrink: 0;
+}
 
 /* ------- адаптация ------- */
 @media screen and (max-width: 992px) {

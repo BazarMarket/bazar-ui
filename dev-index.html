@@ -112,9 +112,39 @@
                                 <input type="text" placeholder="Search 297,671 ads">
                             </div>
                         </div>
-                        <div class="search__third search__third--loc">
+                        <div class="search__third search__third--loc" style="position:relative">
                             <span class="icon-location search__loc-icon"></span>
-                            <input type="text" class="search__loc-input" id="headerLocationInput" placeholder="All locations" autocomplete="off">
+                            <input type="text" class="search__loc-input" id="headerLocationInput" placeholder="All locations" autocomplete="off" onfocus="showLocDropdown()" oninput="onLocInput()">
+                            <div class="loc-dropdown" id="headerLocDropdown">
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="7" r="4" stroke="#888" stroke-width="1.5"/><path d="M8 11v3" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    All UK
+                                </div>
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="London">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
+                                    London
+                                </div>
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Manchester">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
+                                    Manchester
+                                </div>
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Birmingham">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
+                                    Birmingham
+                                </div>
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Leeds">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
+                                    Leeds
+                                </div>
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Liverpool">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
+                                    Liverpool
+                                </div>
+                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Bristol">
+                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
+                                    Bristol
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -2557,6 +2587,33 @@
           input.value = btn.dataset.city;
           input.dataset.city = btn.dataset.city;
        }
+       function showLocDropdown() {
+          var dd = document.getElementById('headerLocDropdown');
+          var input = document.getElementById('headerLocationInput');
+          if (!input.value) dd.classList.add('open');
+       }
+       function onLocInput() {
+          var dd = document.getElementById('headerLocDropdown');
+          var input = document.getElementById('headerLocationInput');
+          if (input.value.length > 0) {
+             dd.classList.remove('open');
+          } else {
+             dd.classList.add('open');
+          }
+       }
+       function pickLocItem(el) {
+          var input = document.getElementById('headerLocationInput');
+          var city = el.dataset.city;
+          input.value = city || '';
+          input.dataset.city = city;
+          input.placeholder = city ? city : 'All locations';
+          document.getElementById('headerLocDropdown').classList.remove('open');
+       }
+       document.addEventListener('click', function(e) {
+          var dd = document.getElementById('headerLocDropdown');
+          var wrap = dd ? dd.parentElement : null;
+          if (dd && wrap && !wrap.contains(e.target)) dd.classList.remove('open');
+       });
        function initHeaderLocationAutocomplete() {
           var input = document.getElementById('headerLocationInput');
           if (!input) return;
