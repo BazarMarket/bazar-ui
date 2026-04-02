@@ -2587,10 +2587,22 @@
           input.value = btn.dataset.city;
           input.dataset.city = btn.dataset.city;
        }
+       (function() {
+          var dd = document.getElementById('headerLocDropdown');
+          if (dd) document.body.appendChild(dd);
+       })();
+       function positionLocDropdown() {
+          var dd = document.getElementById('headerLocDropdown');
+          var input = document.getElementById('headerLocationInput');
+          var rect = input.getBoundingClientRect();
+          dd.style.top = (rect.bottom + 4) + 'px';
+          dd.style.left = rect.left + 'px';
+          dd.style.width = Math.max(rect.width, 220) + 'px';
+       }
        function showLocDropdown() {
           var dd = document.getElementById('headerLocDropdown');
           var input = document.getElementById('headerLocationInput');
-          if (!input.value) dd.classList.add('open');
+          if (!input.value) { positionLocDropdown(); dd.classList.add('open'); }
        }
        function onLocInput() {
           var dd = document.getElementById('headerLocDropdown');

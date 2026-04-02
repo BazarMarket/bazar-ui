@@ -2099,10 +2099,22 @@
          input.value = city;
          input.dataset.city = city;
       }
+      (function() {
+         var dd = document.getElementById('searchLocDropdown');
+         if (dd) document.body.appendChild(dd);
+      })();
+      function positionSearchLocDropdown() {
+         var dd = document.getElementById('searchLocDropdown');
+         var input = document.getElementById('searchLocationInput');
+         var rect = input.getBoundingClientRect();
+         dd.style.top = (rect.bottom + 4) + 'px';
+         dd.style.left = rect.left + 'px';
+         dd.style.width = Math.max(rect.width, 220) + 'px';
+      }
       function showSearchLocDropdown() {
          var dd = document.getElementById('searchLocDropdown');
          var input = document.getElementById('searchLocationInput');
-         if (!input.value) dd.classList.add('open');
+         if (!input.value) { positionSearchLocDropdown(); dd.classList.add('open'); }
       }
       function onSearchLocInput() {
          var dd = document.getElementById('searchLocDropdown');
