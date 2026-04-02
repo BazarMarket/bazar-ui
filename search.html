@@ -55,7 +55,8 @@
       .cf-search-q svg { flex-shrink: 0; color: #b0b7c3; }
       .cf-search-q input { border: none; outline: none; font-family: "Poppins", sans-serif; font-size: 15px; color: #1a1a1a; background: transparent; width: 100%; }
       .cf-search-q input::placeholder { color: #b0b7c3; }
-      .cf-search-loc { border-left: 1.5px solid #e5e7eb; padding: 0 14px; flex-shrink: 0; height: 44px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #444; background: transparent; border-top: none; border-right: none; border-bottom: none; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='11' height='11' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 32px; }
+      .cf-search-loc { border-left: 1.5px solid #e5e7eb; padding: 0 14px; flex-shrink: 0; height: 44px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #444; background: transparent; border-top: none; border-right: none; border-bottom: none; outline: none; cursor: text; -webkit-appearance: none; appearance: none; min-width: 160px; }
+      .cf-search-loc::placeholder { color: #444; opacity: 1; }
       /* Category custom dropdown */
       .cf-cat { position: relative; flex-shrink: 0; }
       .cf-cat-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; }
@@ -349,14 +350,7 @@
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                            <input type="text" value="" placeholder="Search 297,671 ads">
                         </div>
-                        <select class="cf-search-loc">
-                           <option value="">All locations</option>
-                           <option>UK</option>
-                           <option>London</option>
-                           <option>Manchester</option>
-                           <option>Birmingham</option>
-                           <option>Bristol</option>
-                        </select>
+                        <input type="text" class="cf-search-loc" id="searchLocationInput" placeholder="All locations" autocomplete="off">
                      </div>
                      <!-- Category custom dropdown -->
                      <div class="cf-cat">
@@ -2047,6 +2041,40 @@
       }
 
       buildTypePanel();
+   </script>
+   <script>
+      function initSearchLocationAutocomplete() {
+         var input = document.getElementById('searchLocationInput');
+         if (!input) return;
+         var autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['(regions)'],
+            componentRestrictions: { country: 'gb' },
+            fields: ['address_components', 'geometry', 'place_id', 'formatted_address']
+         });
+         autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            if (!place.geometry) return;
+            var city = '';
+            place.address_components.forEach(function(c) {
+               if (c.types.includes('postal_town') || c.types.includes('locality')) city = c.long_name;
+            });
+            if (!city && place.address_components.length > 0) city = place.address_components[0].long_name;
+            input.dataset.city = city;
+            input.dataset.lat = place.geometry.location.lat();
+            input.dataset.lng = place.geometry.location.lng();
+         });
+      }
+      (function() {
+         fetch('/api/config')
+            .then(function(r) { return r.json(); })
+            .then(function(cfg) {
+               if (!cfg.googleMapsApiKey) return;
+               var s = document.createElement('script');
+               s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initSearchLocationAutocomplete';
+               s.async = true; s.defer = true;
+               document.head.appendChild(s);
+            });
+      })();
    </script>
 </body>
 </html>
