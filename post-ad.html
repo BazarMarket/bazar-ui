@@ -1517,7 +1517,7 @@
             if (!hide) setConditionOptions(propType);
          }
          if (bedroomsField) {
-            var hideBeds = bedroomsHiddenFor.includes(propType);
+            var hideBeds = bedroomsHiddenFor.includes(propType) || (propType === 'Room' && reState.listingType === 'To Rent');
             bedroomsField.style.display = hideBeds ? 'none' : 'flex';
             if (hideBeds) {
                reState.bedrooms = '';
