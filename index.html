@@ -160,6 +160,12 @@
                 </div>
             </div>
         </div>
+        <script>
+           function showLocDropdown(){var d=document.getElementById('headerLocDropdown'),i=document.getElementById('headerLocationInput');if(i&&!i.value&&d)d.classList.add('open');}
+           function onLocInput(){var d=document.getElementById('headerLocDropdown'),i=document.getElementById('headerLocationInput');if(!d||!i)return;var s=d.querySelectorAll('.loc-dropdown__item:not(.loc-dropdown__item--result)');if(i.value.length>0){for(var j=0;j<s.length;j++)s[j].style.display='none';if(typeof LocationAutocomplete!=='undefined')LocationAutocomplete.clearResults('headerLocDropdown');d.classList.remove('open');}else{for(var j=0;j<s.length;j++)s[j].style.display='';if(typeof LocationAutocomplete!=='undefined')LocationAutocomplete.clearResults('headerLocDropdown');d.classList.add('open');}}
+           function pickLocItem(el){var i=document.getElementById('headerLocationInput'),c=el.dataset.city;i.value=c||'';i.dataset.city=c;i.placeholder=c?c:'All locations';document.getElementById('headerLocDropdown').classList.remove('open');}
+           document.addEventListener('click',function(e){var d=document.getElementById('headerLocDropdown');if(d&&!d.contains(e.target)&&e.target.id!=='headerLocationInput')d.classList.remove('open');});
+        </script>
 
         <div class="menu-mob  after992">
             <a href="#" class="menu-mob__item icon-main-home">Home</a>
@@ -2582,33 +2588,6 @@
           input.value = btn.dataset.city;
           input.dataset.city = btn.dataset.city;
        }
-       function showLocDropdown() {
-          var dd = document.getElementById('headerLocDropdown');
-          var input = document.getElementById('headerLocationInput');
-          if (!input.value) { dd.classList.add('open'); }
-       }
-       function onLocInput() {
-          var dd = document.getElementById('headerLocDropdown');
-          var input = document.getElementById('headerLocationInput');
-          var staticItems = dd.querySelectorAll('.loc-dropdown__item:not(.loc-dropdown__item--result)');
-          if (input.value.length > 0) {
-             for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = 'none';
-             LocationAutocomplete.clearResults('headerLocDropdown');
-             dd.classList.remove('open');
-          } else {
-             for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = '';
-             LocationAutocomplete.clearResults('headerLocDropdown');
-             dd.classList.add('open');
-          }
-       }
-       function pickLocItem(el) {
-          var input = document.getElementById('headerLocationInput');
-          var city = el.dataset.city;
-          input.value = city || '';
-          input.dataset.city = city;
-          input.placeholder = city ? city : 'All locations';
-          document.getElementById('headerLocDropdown').classList.remove('open');
-       }
        function useMyLocation(target) {
           var dd = document.getElementById(target === 'header' ? 'headerLocDropdown' : 'searchLocDropdown');
           dd.classList.remove('open');
@@ -2645,10 +2624,6 @@
              });
           }, function() { input.value = ''; alert('Location access denied'); });
        }
-       document.addEventListener('click', function(e) {
-          var dd = document.getElementById('headerLocDropdown');
-          if (dd && !dd.contains(e.target) && e.target.id !== 'headerLocationInput') dd.classList.remove('open');
-       });
        window.initMapsForLocation = function() {
           LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
        };
