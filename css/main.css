@@ -4658,6 +4658,9 @@ p {
 }
 .loc-dropdown__item--myloc {
   font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 2px;
+  padding-bottom: 10px;
 }
 
 /* ------- адаптация ------- */
