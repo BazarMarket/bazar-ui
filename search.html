@@ -355,6 +355,7 @@
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                            <input type="text" value="" placeholder="Search 297,671 ads">
                         </div>
+                        <div style="position:relative;">
                         <input type="text" class="cf-search-loc" id="searchLocationInput" placeholder="All locations" autocomplete="off" onfocus="showSearchLocDropdown()" oninput="onSearchLocInput()">
                         <div class="loc-dropdown" id="searchLocDropdown">
                            <div class="loc-dropdown__item" onclick="pickSearchLocItem(this)" data-city="">
@@ -389,6 +390,7 @@
                               <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
                               Bristol
                            </div>
+                        </div>
                         </div>
                         <script>
                            function showSearchLocDropdown(){var d=document.getElementById('searchLocDropdown'),i=document.getElementById('searchLocationInput');if(i&&!i.value&&d)d.classList.add('open');}
