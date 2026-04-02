@@ -939,6 +939,21 @@
 
                   <div class="pa-section__divider"></div>
 
+                  <div class="pa-field" id="locationField">
+                     <span class="pa-field__label">Location:<span>*</span></span>
+                     <div class="pa-field__control">
+                        <div style="position:relative">
+                           <input class="pa-input" id="locationInput" type="text" placeholder="Enter city or postcode" autocomplete="off">
+                           <input type="hidden" id="locationCity">
+                           <input type="hidden" id="locationRegion">
+                           <input type="hidden" id="locationPostcode">
+                           <input type="hidden" id="locationLat">
+                           <input type="hidden" id="locationLng">
+                           <input type="hidden" id="locationPlaceId">
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="deliveryField">
                      <span class="pa-field__label">Delivery:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -1709,7 +1724,17 @@
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
          formData.append('country', 'United Kingdom');
-         formData.append('city', 'London');
+         var locationCity = document.getElementById('locationCity').value;
+         if (!locationCity) { alert('Please select a location.'); return; }
+         formData.append('city', locationCity);
+         var locationPostcode = document.getElementById('locationPostcode').value;
+         if (locationPostcode) formData.append('postcode', locationPostcode);
+         var locationRegion = document.getElementById('locationRegion').value;
+         if (locationRegion) formData.append('region', locationRegion);
+         var locationLat = document.getElementById('locationLat').value;
+         var locationLng = document.getElementById('locationLng').value;
+         if (locationLat) formData.append('latitude', locationLat);
+         if (locationLng) formData.append('longitude', locationLng);
 
          var bedrooms = getSelectVal('bedroomsSelect');
          if (bedrooms) formData.append('bedrooms', bedrooms === '10 and more' ? 10 : parseInt(bedrooms));
@@ -1797,6 +1822,62 @@
          var first = document.querySelector('#mainCats .cat-item.active');
          if (first) selectCat(first);
       });
+   </script>
+   <script>
+      var _gMapsReady = false;
+      function initGoogleMaps() { _gMapsReady = true; initLocationAutocomplete(); }
+      function initLocationAutocomplete() {
+         if (!_gMapsReady) return;
+         var input = document.getElementById('locationInput');
+         var autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['(regions)'],
+            componentRestrictions: { country: 'gb' },
+            fields: ['address_components', 'geometry', 'place_id', 'formatted_address']
+         });
+         autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            if (!place.geometry) return;
+            var city = '', region = '', postcode = '';
+            place.address_components.forEach(function(c) {
+               if (c.types.includes('postal_town') || c.types.includes('locality')) city = c.long_name;
+               if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) {
+                  if (!region) region = c.long_name;
+               }
+               if (c.types.includes('postal_code')) postcode = c.long_name;
+            });
+            if (!city && place.address_components.length > 0) {
+               city = place.address_components[0].long_name;
+            }
+            document.getElementById('locationCity').value = city;
+            document.getElementById('locationRegion').value = region;
+            document.getElementById('locationPostcode').value = postcode;
+            document.getElementById('locationLat').value = place.geometry.location.lat();
+            document.getElementById('locationLng').value = place.geometry.location.lng();
+            document.getElementById('locationPlaceId').value = place.place_id;
+         });
+         input.addEventListener('input', function() {
+            if (!this.value) {
+               document.getElementById('locationCity').value = '';
+               document.getElementById('locationRegion').value = '';
+               document.getElementById('locationPostcode').value = '';
+               document.getElementById('locationLat').value = '';
+               document.getElementById('locationLng').value = '';
+               document.getElementById('locationPlaceId').value = '';
+            }
+         });
+      }
+      (function loadGoogleMaps() {
+         fetch('/api/config')
+            .then(function(r) { return r.json(); })
+            .then(function(cfg) {
+               if (!cfg.googleMapsApiKey) return;
+               var s = document.createElement('script');
+               s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initGoogleMaps';
+               s.async = true;
+               s.defer = true;
+               document.head.appendChild(s);
+            });
+      })();
    </script>
 </body>
 </html>
