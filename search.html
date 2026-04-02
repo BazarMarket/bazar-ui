@@ -390,6 +390,12 @@
                               Bristol
                            </div>
                         </div>
+                        <script>
+                           function showSearchLocDropdown(){var d=document.getElementById('searchLocDropdown'),i=document.getElementById('searchLocationInput');if(i&&!i.value&&d)d.classList.add('open');}
+                           function onSearchLocInput(){var d=document.getElementById('searchLocDropdown'),i=document.getElementById('searchLocationInput');if(!d||!i)return;var s=d.querySelectorAll('.loc-dropdown__item:not(.loc-dropdown__item--result)');if(i.value.length>0){for(var j=0;j<s.length;j++)s[j].style.display='none';if(typeof LocationAutocomplete!=='undefined')LocationAutocomplete.clearResults('searchLocDropdown');d.classList.remove('open');}else{for(var j=0;j<s.length;j++)s[j].style.display='';if(typeof LocationAutocomplete!=='undefined')LocationAutocomplete.clearResults('searchLocDropdown');d.classList.add('open');}}
+                           function pickSearchLocItem(el){var i=document.getElementById('searchLocationInput'),c=el.dataset.city;i.value=c||'';i.dataset.city=c;i.placeholder=c?c:'All locations';document.getElementById('searchLocDropdown').classList.remove('open');}
+                           document.addEventListener('click',function(e){var d=document.getElementById('searchLocDropdown');if(d&&!d.contains(e.target)&&e.target.id!=='searchLocationInput')d.classList.remove('open');});
+                        </script>
                      </div>
                      <!-- Category custom dropdown -->
                      <div class="cf-cat">
@@ -2088,33 +2094,6 @@
          input.value = city;
          input.dataset.city = city;
       }
-      function showSearchLocDropdown() {
-         var dd = document.getElementById('searchLocDropdown');
-         var input = document.getElementById('searchLocationInput');
-         if (!input.value) { dd.classList.add('open'); }
-      }
-      function onSearchLocInput() {
-         var dd = document.getElementById('searchLocDropdown');
-         var input = document.getElementById('searchLocationInput');
-         var staticItems = dd.querySelectorAll('.loc-dropdown__item:not(.loc-dropdown__item--result)');
-         if (input.value.length > 0) {
-            for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = 'none';
-            LocationAutocomplete.clearResults('searchLocDropdown');
-            dd.classList.remove('open');
-         } else {
-            for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = '';
-            LocationAutocomplete.clearResults('searchLocDropdown');
-            dd.classList.add('open');
-         }
-      }
-      function pickSearchLocItem(el) {
-         var input = document.getElementById('searchLocationInput');
-         var city = el.dataset.city;
-         input.value = city || '';
-         input.dataset.city = city;
-         input.placeholder = city ? city : 'All locations';
-         document.getElementById('searchLocDropdown').classList.remove('open');
-      }
       function useMyLocation(target) {
          var dd = document.getElementById(target === 'search' ? 'searchLocDropdown' : 'headerLocDropdown');
          dd.classList.remove('open');
@@ -2151,10 +2130,6 @@
             });
          }, function() { input.value = ''; alert('Location access denied'); });
       }
-      document.addEventListener('click', function(e) {
-         var dd = document.getElementById('searchLocDropdown');
-         if (dd && !dd.contains(e.target) && e.target.id !== 'searchLocationInput') dd.classList.remove('open');
-      });
       window.initMapsForSearch = function() {
          LocationAutocomplete.init('searchLocationInput', 'searchLocDropdown');
       };
