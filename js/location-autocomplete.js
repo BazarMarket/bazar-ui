@@ -16,7 +16,7 @@ var LocationAutocomplete = {
     input.addEventListener('input', function() {
       clearTimeout(self.debounceTimer);
       var query = input.value.trim();
-      if (query.length < 2) return;
+      if (query.length < 1) return;
 
       self.debounceTimer = setTimeout(function() {
         self.fetchSuggestions(query, inputId, dropdownId);

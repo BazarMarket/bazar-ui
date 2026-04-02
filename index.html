@@ -2594,6 +2594,7 @@
           if (input.value.length > 0) {
              for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = 'none';
              LocationAutocomplete.clearResults('headerLocDropdown');
+             dd.classList.remove('open');
           } else {
              for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = '';
              LocationAutocomplete.clearResults('headerLocDropdown');
