@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Map Search — Bazar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="css/map-search.css">
+  <link rel="icon" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="ms-page">
+
+  <div class="ms-topbar">
+    <a href="index.html" class="ms-topbar-logo"><img src="img/logo.png" alt="Bazar"></a>
+
+    <div class="ms-topbar-controls">
+      <a href="search.html" class="ms-btn ms-btn--back" title="Back to list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </a>
+
+      <input type="text" class="ms-input ms-input--search" placeholder="Search ads...">
+      <input type="text" class="ms-input ms-input--location" id="msLocInput" placeholder="All locations" autocomplete="off">
+
+      <button class="ms-btn" id="msFiltersBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="8" cy="6" r="1.5" fill="currentColor"/><circle cx="16" cy="12" r="1.5" fill="currentColor"/><circle cx="10" cy="18" r="1.5" fill="currentColor"/></svg>
+        Filters
+      </button>
+
+      <div class="ms-radius-wrap">
+        <button class="ms-radius-chip" onclick="MS.setRadius(1,this)">1 km</button>
+        <button class="ms-radius-chip" onclick="MS.setRadius(3,this)">3 km</button>
+        <button class="ms-radius-chip" onclick="MS.setRadius(5,this)">5 km</button>
+        <button class="ms-radius-chip" onclick="MS.setRadius(10,this)">10 km</button>
+        <button class="ms-radius-chip" onclick="MS.setRadius(20,this)">20 km</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ms-body">
+
+    <div class="ms-list-panel">
+      <div class="ms-list-header">
+        <span class="ms-list-count" id="msListCount">0 properties</span>
+        <select class="ms-list-sort">
+          <option>Relevance</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Newest first</option>
+        </select>
+      </div>
+      <div class="ms-list-cards" id="msListCards">
+        <div class="ms-loading"><div class="ms-loading-spinner"></div></div>
+      </div>
+    </div>
+
+    <div class="ms-map-panel">
+      <div id="msMap"></div>
+      <button class="ms-search-area" id="msSearchArea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Search this area
+      </button>
+    </div>
+
+  </div>
+
+  <button class="ms-mobile-toggle" id="msMobileToggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M12 13v4"/></svg>
+    Show map
+  </button>
+
+</div>
+
+<script src="js/map-search.js"></script>
+</body>
+</html>
