@@ -350,13 +350,13 @@
             <div class="cf-block">
                   <!-- Row 1: Search + Location + Category + Property type -->
                   <div class="cf-row1">
-                     <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px;">
+                     <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px; position:relative;">
                         <div class="cf-search-q">
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                            <input type="text" value="" placeholder="Search 297,671 ads">
                         </div>
                         <input type="text" class="cf-search-loc" id="searchLocationInput" placeholder="All locations" autocomplete="off" onfocus="showSearchLocDropdown()" oninput="onSearchLocInput()">
-                        <div class="loc-dropdown" id="searchLocDropdown" style="display:none;position:fixed;z-index:9999">
+                        <div class="loc-dropdown" id="searchLocDropdown">
                            <div class="loc-dropdown__item" onclick="pickSearchLocItem(this)" data-city="">
                               <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="7" r="4" stroke="#888" stroke-width="1.5"/><path d="M8 11v3" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
                               All UK
@@ -2087,31 +2087,18 @@
          input.value = city;
          input.dataset.city = city;
       }
-      (function() {
-         var dd = document.getElementById('searchLocDropdown');
-         if (dd) document.body.appendChild(dd);
-      })();
-      function positionSearchLocDropdown() {
-         var dd = document.getElementById('searchLocDropdown');
-         var input = document.getElementById('searchLocationInput');
-         var rect = input.getBoundingClientRect();
-         dd.style.top = (rect.bottom + 4) + 'px';
-         dd.style.left = rect.left + 'px';
-         dd.style.width = Math.max(rect.width, 220) + 'px';
-      }
       function showSearchLocDropdown() {
          var dd = document.getElementById('searchLocDropdown');
          var input = document.getElementById('searchLocationInput');
-         if (!input.value) { positionSearchLocDropdown(); dd.style.display = 'block'; }
+         if (!input.value) { dd.classList.add('open'); }
       }
       function onSearchLocInput() {
          var dd = document.getElementById('searchLocDropdown');
          var input = document.getElementById('searchLocationInput');
          if (input.value.length > 0) {
-            dd.style.display = 'none';
+            dd.classList.remove('open');
          } else {
-            positionSearchLocDropdown();
-            dd.style.display = 'block';
+            dd.classList.add('open');
          }
       }
       function pickSearchLocItem(el) {
@@ -2120,11 +2107,11 @@
          input.value = city || '';
          input.dataset.city = city;
          input.placeholder = city ? city : 'All locations';
-         document.getElementById('searchLocDropdown').style.display = 'none';
+         document.getElementById('searchLocDropdown').classList.remove('open');
       }
       function useMyLocation(target) {
          var dd = document.getElementById(target === 'search' ? 'searchLocDropdown' : 'headerLocDropdown');
-         if (target === 'search') { dd.style.display = 'none'; } else { dd.classList.remove('open'); }
+         dd.classList.remove('open');
          var input = document.getElementById(target === 'search' ? 'searchLocationInput' : 'headerLocationInput');
          input.value = 'Detecting...';
          if (!navigator.geolocation) { input.value = ''; alert('Geolocation is not supported by your browser'); return; }
@@ -2160,7 +2147,7 @@
       }
       document.addEventListener('click', function(e) {
          var dd = document.getElementById('searchLocDropdown');
-         if (dd && !dd.contains(e.target) && e.target.id !== 'searchLocationInput') dd.style.display = 'none';
+         if (dd && !dd.contains(e.target) && e.target.id !== 'searchLocationInput') dd.classList.remove('open');
       });
       function initSearchLocationAutocomplete() {
          var input = document.getElementById('searchLocationInput');

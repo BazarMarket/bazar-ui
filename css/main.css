@@ -4626,8 +4626,12 @@ p {
 }
 .loc-dropdown {
   display: none;
-  position: fixed;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
   min-width: 220px;
+  width: 100%;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
