@@ -2622,14 +2622,24 @@
              var geocoder = new google.maps.Geocoder();
              geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
                 if (status === 'OK' && results[0]) {
-                   var city = '';
+                   var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
                    for (var i = 0; i < results[0].address_components.length; i++) {
                       var c = results[0].address_components[i];
-                      if (c.types.indexOf('postal_town') !== -1 || c.types.indexOf('locality') !== -1) { city = c.long_name; break; }
+                      if (c.types.indexOf('locality') !== -1) locality = c.long_name;
+                      if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
+                      if (c.types.indexOf('country') !== -1) country = c.short_name;
                    }
-                   if (!city) city = results[0].address_components[0].long_name;
-                   input.value = city;
-                   input.dataset.city = city;
+                   var parts = [];
+                   var mainCity = postalTown || locality || '';
+                   if (mainCity) parts.push(mainCity);
+                   var region = area2 || area1 || '';
+                   if (region && region !== mainCity) parts.push(region);
+                   if (country) parts.push(country);
+                   var label = parts.join(', ') || results[0].formatted_address;
+                   input.value = label;
+                   input.dataset.city = mainCity || label;
                 } else {
                    input.value = '';
                    alert('Could not determine your location');
