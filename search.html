@@ -57,6 +57,11 @@
       .cf-search-q input::placeholder { color: #b0b7c3; }
       .cf-search-loc { border-left: 1.5px solid #e5e7eb; padding: 0 14px; flex-shrink: 0; height: 44px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #444; background: transparent; border-top: none; border-right: none; border-bottom: none; outline: none; cursor: text; -webkit-appearance: none; appearance: none; min-width: 160px; }
       .cf-search-loc::placeholder { color: #444; opacity: 1; }
+      .cf-popular { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; width: 100%; padding: 4px 0 0; }
+      .cf-popular-label { font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 500; color: #999; }
+      .cf-popular-btn { background: none; border: none; font-family: "Poppins", sans-serif; font-size: 11px; font-weight: 500; color: #ff9138; cursor: pointer; padding: 0; }
+      .cf-popular-btn:hover { text-decoration: underline; }
+      .cf-popular-dot { color: #ccc; font-size: 12px; }
       /* Category custom dropdown */
       .cf-cat { position: relative; flex-shrink: 0; }
       .cf-cat-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; }
@@ -351,6 +356,20 @@
                            <input type="text" value="" placeholder="Search 297,671 ads">
                         </div>
                         <input type="text" class="cf-search-loc" id="searchLocationInput" placeholder="All locations" autocomplete="off">
+                     </div>
+                     <div class="cf-popular">
+                        <span class="cf-popular-label">Popular:</span>
+                        <button class="cf-popular-btn" onclick="setSearchLocation('London')">London</button>
+                        <span class="cf-popular-dot">&middot;</span>
+                        <button class="cf-popular-btn" onclick="setSearchLocation('Manchester')">Manchester</button>
+                        <span class="cf-popular-dot">&middot;</span>
+                        <button class="cf-popular-btn" onclick="setSearchLocation('Birmingham')">Birmingham</button>
+                        <span class="cf-popular-dot">&middot;</span>
+                        <button class="cf-popular-btn" onclick="setSearchLocation('Leeds')">Leeds</button>
+                        <span class="cf-popular-dot">&middot;</span>
+                        <button class="cf-popular-btn" onclick="setSearchLocation('Liverpool')">Liverpool</button>
+                        <span class="cf-popular-dot">&middot;</span>
+                        <button class="cf-popular-btn" onclick="setSearchLocation('Bristol')">Bristol</button>
                      </div>
                      <!-- Category custom dropdown -->
                      <div class="cf-cat">
@@ -2043,6 +2062,11 @@
       buildTypePanel();
    </script>
    <script>
+      function setSearchLocation(city) {
+         var input = document.getElementById('searchLocationInput');
+         input.value = city;
+         input.dataset.city = city;
+      }
       function initSearchLocationAutocomplete() {
          var input = document.getElementById('searchLocationInput');
          if (!input) return;

@@ -120,6 +120,20 @@
                     </div>
                     <a href="#" class="btn btn_grad icon-search">Search</a>
                 </div>
+                <div class="search__popular">
+                    <span class="search__popular-label">Popular:</span>
+                    <button class="search__popular-btn" onclick="setHeaderLocation(this)" data-city="London">London</button>
+                    <span class="search__popular-dot">&middot;</span>
+                    <button class="search__popular-btn" onclick="setHeaderLocation(this)" data-city="Manchester">Manchester</button>
+                    <span class="search__popular-dot">&middot;</span>
+                    <button class="search__popular-btn" onclick="setHeaderLocation(this)" data-city="Birmingham">Birmingham</button>
+                    <span class="search__popular-dot">&middot;</span>
+                    <button class="search__popular-btn" onclick="setHeaderLocation(this)" data-city="Leeds">Leeds</button>
+                    <span class="search__popular-dot">&middot;</span>
+                    <button class="search__popular-btn" onclick="setHeaderLocation(this)" data-city="Liverpool">Liverpool</button>
+                    <span class="search__popular-dot">&middot;</span>
+                    <button class="search__popular-btn" onclick="setHeaderLocation(this)" data-city="Bristol">Bristol</button>
+                </div>
             </div>
         </div>
 
@@ -2538,6 +2552,11 @@
     <script type="text/javascript" src="js/script.js"></script>
     <script src="js/firebase-auth.js"></script>
     <script>
+       function setHeaderLocation(btn) {
+          var input = document.getElementById('headerLocationInput');
+          input.value = btn.dataset.city;
+          input.dataset.city = btn.dataset.city;
+       }
        function initHeaderLocationAutocomplete() {
           var input = document.getElementById('headerLocationInput');
           if (!input) return;

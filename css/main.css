@@ -4593,6 +4593,38 @@ p {
   font-size: 16px;
   color: #888;
 }
+.search__popular {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px 0;
+  flex-wrap: wrap;
+}
+.search__popular-label {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,.7);
+}
+.search__popular-btn {
+  background: none;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.search__popular-btn:hover {
+  color: #ffe0b2;
+}
+.search__popular-dot {
+  color: rgba(255,255,255,.5);
+  font-size: 14px;
+}
 
 /* ------- адаптация ------- */
 @media screen and (max-width: 992px) {
