@@ -2575,6 +2575,7 @@
     <script type="text/javascript" src="js/fslightbox.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
     <script src="js/firebase-auth.js"></script>
+    <script src="js/location-autocomplete.js"></script>
     <script>
        function setHeaderLocation(btn) {
           var input = document.getElementById('headerLocationInput');
@@ -2589,9 +2590,13 @@
        function onLocInput() {
           var dd = document.getElementById('headerLocDropdown');
           var input = document.getElementById('headerLocationInput');
+          var staticItems = dd.querySelectorAll('.loc-dropdown__item:not(.loc-dropdown__item--result)');
           if (input.value.length > 0) {
-             dd.classList.remove('open');
+             for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = 'none';
+             LocationAutocomplete.clearResults('headerLocDropdown');
           } else {
+             for (var i = 0; i < staticItems.length; i++) staticItems[i].style.display = '';
+             LocationAutocomplete.clearResults('headerLocDropdown');
              dd.classList.add('open');
           }
        }
@@ -2643,34 +2648,16 @@
           var dd = document.getElementById('headerLocDropdown');
           if (dd && !dd.contains(e.target) && e.target.id !== 'headerLocationInput') dd.classList.remove('open');
        });
-       function initHeaderLocationAutocomplete() {
-          var input = document.getElementById('headerLocationInput');
-          if (!input) return;
-          var autocomplete = new google.maps.places.Autocomplete(input, {
-             types: ['(regions)'],
-             componentRestrictions: { country: 'gb' },
-             fields: ['address_components', 'geometry', 'place_id', 'formatted_address']
-          });
-          autocomplete.addListener('place_changed', function() {
-             var place = autocomplete.getPlace();
-             if (!place.geometry) return;
-             var city = '';
-             place.address_components.forEach(function(c) {
-                if (c.types.includes('postal_town') || c.types.includes('locality')) city = c.long_name;
-             });
-             if (!city && place.address_components.length > 0) city = place.address_components[0].long_name;
-             input.dataset.city = city;
-             input.dataset.lat = place.geometry.location.lat();
-             input.dataset.lng = place.geometry.location.lng();
-          });
-       }
+       window.initMapsForLocation = function() {
+          LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
+       };
        (function() {
           fetch('/api/config')
              .then(function(r) { return r.json(); })
              .then(function(cfg) {
                 if (!cfg.googleMapsApiKey) return;
                 var s = document.createElement('script');
-                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initHeaderLocationAutocomplete';
+                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initMapsForLocation';
                 s.async = true; s.defer = true;
                 document.head.appendChild(s);
              });
