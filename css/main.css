@@ -4656,6 +4656,9 @@ p {
 .loc-dropdown__pin {
   flex-shrink: 0;
 }
+.loc-dropdown__item--myloc {
+  font-weight: 600;
+}
 
 /* ------- адаптация ------- */
 @media screen and (max-width: 992px) {
