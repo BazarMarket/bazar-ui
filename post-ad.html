@@ -626,20 +626,6 @@
                      </div>
                   </div>
 
-                  <div class="pa-field" id="constructionTypeField" style="display:none">
-                     <span class="pa-field__label">Construction type:</span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="constructionTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select construction type</option>
-                           <option>Traditional (Brick / Concrete)</option>
-                           <option>Prefabricated</option>
-                           <option>Modular</option>
-                           <option>Container</option>
-                           <option>Timber Frame</option>
-                        </select>
-                     </div>
-                  </div>
-
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
@@ -692,6 +678,20 @@
                            <option>Semi-detached</option>
                            <option>Terraced</option>
                            <option>End of terrace</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="constructionTypeField" style="display:none">
+                     <span class="pa-field__label pa-field__label--wrap">Construction type <span style="color:#999;font-weight:400;font-size:12px">(optional)</span>:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="constructionTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled selected hidden>Select construction type</option>
+                           <option>Traditional (Brick / Concrete)</option>
+                           <option>Prefabricated</option>
+                           <option>Modular</option>
+                           <option>Container</option>
+                           <option>Timber Frame</option>
                         </select>
                      </div>
                   </div>
