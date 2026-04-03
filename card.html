@@ -95,19 +95,19 @@
                   <div class="card-grid__top">
                      <ul class="bread-custom" id="breadcrumb">
                         <li><a href="index.html">Home</a> <span class="icon-arrow-r"></span> </li>
-                        <li><a href="#" id="bread-category">Real Estate for Sale</a><span class="icon-arrow-r"></span></li>
-                        <li><a href="#" id="bread-type">Apartment</a></li>
+                        <li><a href="#" id="bread-category">Phones</a><span class="icon-arrow-r"></span></li>
+                        <li><a href="#" id="bread-type">Smartphones</a></li>
                      </ul>
                      <div class="card-head card-tile">
                         <div class="card-head__left">
-                           <p class="card-head__title" id="prop-title">Property</p>
+                           <p class="card-head__title" id="prop-title">Apple iPhone XR 128gb</p>
                            <ul class="bread">
-                              <li><a href="#" id="prop-city-link">London</a> <span>/</span></li>
-                              <li><a href="#" id="prop-district-link">District</a></li>
+                              <li><a href="#" id="prop-city-link">Limassol</a> <span>/</span></li>
+                              <li><a href="#" id="prop-district-link">Kapsalos</a></li>
                            </ul>
                            <div class="card-head__mob-price">
-                              <div class="card-head__mob-price-new" id="mob-price-new">£ 0</div>
-                              <div class="card-head__mob-price-old" id="mob-price-old"></div>
+                              <div class="card-head__mob-price-new" id="mob-price-new"> 814,<sup>99</sup>£</div>
+                              <div class="card-head__mob-price-old" id="mob-price-old"> 853,<sup>08</sup>£</div>
                            </div>
                         </div>
                      </div>
@@ -361,7 +361,7 @@
                         </div>
 
                         <div class="card-grid__map-section">
-                           <p class="card-map-label" id="location-label"><b>Location:</b> London — Canary Wharf</p>
+                           <p class="card-map-label" id="location-label"><b>Location:</b> Limassol — Limassol - Agia Napa</p>
                            <div class="card-map-embed">
                               <iframe id="map-inline-iframe"
                                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d18989.386424518565!2d33.36439805884907!3d35.17365468290854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sus!4v1674761810943!5m2!1sru!2sus"
@@ -398,9 +398,9 @@
                                     </ul>
                                     <a href="#" class="stars__link link-hover">(2)</a>
                                  </div>
-                                 <p class="card-name__name" id="seller-name">Andreas Xenofontos Construction & Developers Ltd</p>
+                                 <p class="card-name__name" id="seller-name">Andreas Xenofontos Construction &amp; Developers Ltd</p>
                               </div>
-                              <p class="card-name__text" id="seller-since">Member of Bazar Market</p>
+                              <p class="card-name__text" id="seller-since">2 years with Bazar Market</p>
                               <div class="card-name__links">
                                  <a href="#" class="link-start link-hover">Other Ads from this seller</a>
                               </div>
@@ -409,9 +409,9 @@
                         <div class="card-price card-tile">
                            <div class="card-price__info">
                               <p class="info-icon icon-eye">301</p>
-                              <p class="info-icon  icon-namber" id="prop-id">10</p>
+                              <p class="info-icon  icon-namber" id="prop-id">992301</p>
                               <p class="info-icon icon-truck">Delivery</p>
-                              <p class="info-icon icon-calendar" id="prop-date">01 04 2026 | 10:00</p>
+                              <p class="info-icon icon-calendar" id="prop-date">19 03 2022 | 19:43</p>
                            </div>
                            <div class="card-price__right">
                               <div class="price-last">
@@ -432,8 +432,8 @@
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Show Phone</p>
                                  <span class="btn-phone__namber">
-                                    <span class="phone-masked" id="phone-masked">+44 xxxx xxxxxx</span>
-                                    <a href="tel:+447700900100" class="phone-full" style="display:none" id="phone-full">+44 7700 900100</a>
+                                    <span class="phone-masked" id="phone-masked">+357xxxxxxxx</span>
+                                    <a href="tel:+35796123456" class="phone-full" style="display:none" id="phone-full">+357 96 123456</a>
                                  </span>
                               </div>
                            </div>
@@ -480,9 +480,9 @@
          <div class="mob-contact-popup__overlay" onclick="closeContactPopup()"></div>
          <div class="mob-contact-popup__sheet">
             <div class="mob-contact-popup__handle"></div>
-            <p class="mob-contact-popup__name" id="mob-seller-name">Seller</p>
-            <p class="mob-contact-popup__since" id="mob-seller-since">Member of Bazar Market</p>
-            <a href="tel:+447700900100" class="mob-contact-popup__btn icon-phone" id="mob-call-btn">Call</a>
+            <p class="mob-contact-popup__name" id="mob-seller-name">Andreas Xenofontos</p>
+            <p class="mob-contact-popup__since" id="mob-seller-since">2 years with Bazar Market</p>
+            <a href="tel:+35796123456" class="mob-contact-popup__btn icon-phone" id="mob-call-btn">Call</a>
             <a href="#" class="mob-contact-popup__btn icon-wp">WhatsApp</a>
             <a href="#" class="mob-contact-popup__btn icon-chat">Start Chat</a>
          </div>
@@ -1014,15 +1014,17 @@
       var el = function(s){ return document.getElementById(s); };
 
       el('prop-title').textContent = p.title;
+      el('bread-category').textContent = 'Real Estate for ' + p.listing_type;
       el('bread-type').textContent = p.property_type;
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district;
 
-      el('mob-price-new').textContent = '£ ' + fmt(p.price);
+      var priceStr = '£ ' + fmt(p.price);
+      el('mob-price-new').innerHTML = priceStr;
       el('mob-price-old').style.display = 'none';
 
       var priceNew = el('price-new');
-      if(priceNew) priceNew.innerHTML = '<span> £ ' + fmt(p.price) + '</span>';
+      if(priceNew) priceNew.innerHTML = '<span>' + priceStr + '</span>';
       var priceOld = el('price-old');
       if(priceOld) priceOld.style.display = 'none';
 

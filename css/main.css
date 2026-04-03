@@ -1709,7 +1709,8 @@ body {
 }
 .card-grid__description {
   min-width: 0px;
-  flex: 1 1 auto;
+  flex: 1 1 0;
+  overflow: hidden;
 }
 .card-grid__right {
   flex: 1 1 auto;
