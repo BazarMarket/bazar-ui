@@ -748,6 +748,7 @@
             gym: true,
             seller_name: "James Thompson",
             seller_phone: "+447700900100",
+            seller_registered: "2025-10-01",
             image: "img/properties/apartment-london.jpg",
             negotiable: true,
             is_vip: true,
@@ -783,6 +784,7 @@
             gym: false,
             seller_name: "Sarah Williams",
             seller_phone: "+447700900100",
+            seller_registered: "2024-04-15",
             image: "img/properties/house-manchester.jpg",
             negotiable: true,
             is_vip: true,
@@ -818,6 +820,7 @@
             gym: false,
             seller_name: "David Clark",
             seller_phone: "+447700900100",
+            seller_registered: "2026-04-02",
             image: "img/properties/townhouse-bristol.jpg",
             negotiable: false,
             is_vip: false,
@@ -853,6 +856,7 @@
             gym: true,
             seller_name: "Victoria Edwards",
             seller_phone: "+447700900100",
+            seller_registered: "2023-06-20",
             image: "img/properties/villa-surrey.jpg",
             negotiable: true,
             is_vip: true,
@@ -888,6 +892,7 @@
             gym: false,
             seller_name: "Michael Brown",
             seller_phone: "+447700900100",
+            seller_registered: "2026-03-01",
             image: "img/properties/studio-leeds.jpg",
             negotiable: false,
             is_vip: false,
@@ -923,6 +928,7 @@
             gym: false,
             seller_name: "Priya Patel",
             seller_phone: "+447700900100",
+            seller_registered: "2025-01-10",
             image: "img/properties/maisonette-birmingham.jpg",
             negotiable: true,
             is_vip: false,
@@ -958,6 +964,7 @@
             gym: false,
             seller_name: "Elizabeth Harper",
             seller_phone: "+447700900100",
+            seller_registered: "2024-01-05",
             image: "img/properties/cottage-cotswolds.jpg",
             negotiable: true,
             is_vip: true,
@@ -993,6 +1000,7 @@
             gym: true,
             seller_name: "Robert King",
             seller_phone: "+447700900100",
+            seller_registered: "2022-07-15",
             image: "img/properties/penthouse-liverpool.jpg",
             negotiable: true,
             is_vip: false,
@@ -1099,7 +1107,27 @@
       el('prop-description').textContent = p.description;
 
       el('seller-name').textContent = p.seller_name;
-      el('seller-since').textContent = 'Member of Bazar Market';
+
+      function timeSince(dateStr) {
+         var reg = new Date(dateStr);
+         var now = new Date();
+         var diffMs = now - reg;
+         var diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+         if(diffDays < 1) return '1 day with Bazar Market';
+         if(diffDays === 1) return '1 day with Bazar Market';
+         if(diffDays < 30) return diffDays + ' days with Bazar Market';
+         var months = Math.floor(diffDays / 30);
+         if(months === 1) return '1 month with Bazar Market';
+         if(months < 12) return months + ' months with Bazar Market';
+         var years = Math.floor(months / 12);
+         if(years === 1) return '1 year with Bazar Market';
+         return years + ' years with Bazar Market';
+      }
+
+      var sinceText = p.seller_registered ? timeSince(p.seller_registered) : 'Member of Bazar Market';
+      el('seller-since').textContent = sinceText;
+      var mobSince = el('mob-seller-since');
+      if(mobSince) mobSince.textContent = sinceText;
 
       var phoneMasked = el('phone-masked');
       if(phoneMasked) phoneMasked.textContent = '+44 xxxx xxxxxx';
