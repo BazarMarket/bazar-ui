@@ -1041,17 +1041,18 @@
 
       var specs = '';
       specs += '<caption>Specifications</caption>';
+      specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
       specs += '<tr><th>Country:</th><td>' + p.country + '</td></tr>';
+      specs += '<tr><th>Area:</th><td>' + p.district + '</td></tr>';
       specs += '<tr><th>City:</th><td>' + p.city + '</td></tr>';
-      specs += '<tr><th>District:</th><td>' + p.district + '</td></tr>';
-      specs += '<tr><th>Address:</th><td>' + p.address + '</td></tr>';
-      specs += '<tr><th>Postal Code:</th><td>' + p.postal_code + '</td></tr>';
       specs += '<tr><th>Type:</th><td>' + p.property_type + '</td></tr>';
       specs += '<tr><th>Condition:</th><td>' + p.condition + '</td></tr>';
-      specs += '<tr><th>Bedrooms:</th><td>' + p.bedrooms + '</td></tr>';
-      specs += '<tr><th>Bathrooms:</th><td>' + p.bathrooms + '</td></tr>';
-      specs += '<tr><th>Covered Area:</th><td>' + p.covered_area + ' m\u00B2</td></tr>';
-      if(p.plot_area) specs += '<tr><th>Plot Area:</th><td>' + p.plot_area + ' m\u00B2</td></tr>';
+      specs += '<tr><th>Number of Bedrooms:</th><td>' + p.bedrooms + '</td></tr>';
+      specs += '<tr><th>Number of Bathrooms:</th><td>' + p.bathrooms + '</td></tr>';
+      specs += '<tr><th>Address:</th><td>' + p.address + '</td></tr>';
+      specs += '<tr><th>Postal Code:</th><td>' + p.postal_code + '</td></tr>';
+      specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
+      if(p.plot_area) specs += '<tr><th>Plot area:</th><td>' + p.plot_area + ' m2</td></tr>';
       if(p.floor) specs += '<tr><th>Floor:</th><td>' + p.floor + '</td></tr>';
       if(p.construction_year) specs += '<tr><th>Year Built:</th><td>' + p.construction_year + '</td></tr>';
       specs += '<tr><th>Energy Rating:</th><td>' + p.energy_efficiency + '</td></tr>';
