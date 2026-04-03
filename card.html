@@ -1019,12 +1019,12 @@
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district;
 
-      var priceStr = '£ ' + fmt(p.price);
-      el('mob-price-new').innerHTML = priceStr;
+      var priceStr = fmt(p.price) + '£';
+      el('mob-price-new').innerHTML = ' ' + priceStr;
       el('mob-price-old').style.display = 'none';
 
       var priceNew = el('price-new');
-      if(priceNew) priceNew.innerHTML = '<span>' + priceStr + '</span>';
+      if(priceNew) priceNew.innerHTML = '<span> ' + priceStr + '</span>';
       var priceOld = el('price-old');
       if(priceOld) priceOld.style.display = 'none';
 
@@ -1078,6 +1078,14 @@
       if(phoneMasked) phoneMasked.textContent = '+44 xxxx xxxxxx';
       var phoneFull = el('phone-full');
       if(phoneFull) { phoneFull.textContent = p.seller_phone; phoneFull.href = 'tel:' + p.seller_phone; }
+
+      var cleanPhone = p.seller_phone.replace(/[^0-9]/g, '');
+      var wpLink = document.querySelector('.card-name__bottom .icon-wp');
+      if(wpLink) wpLink.href = 'https://wa.me/' + cleanPhone;
+      var tgLink = document.querySelector('.card-name__bottom .icon-tg');
+      if(tgLink) tgLink.href = 'https://t.me/+' + cleanPhone;
+      var vbLink = document.querySelector('.card-name__bottom .icon-vb');
+      if(vbLink) vbLink.href = 'viber://chat?number=' + cleanPhone;
 
       var mobName = el('mob-seller-name');
       if(mobName) mobName.textContent = p.seller_name;
