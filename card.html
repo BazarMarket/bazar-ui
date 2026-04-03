@@ -93,21 +93,21 @@
             <div class="container-full">
                <div class="card-grid__body">
                   <div class="card-grid__top">
-                     <ul class="bread-custom">
-                        <li><a href="#">Home</a> <span class="icon-arrow-r"></span> </li>
-                        <li><a href="#">Phones</a><span class="icon-arrow-r"></span></li>
-                        <li><a href="#">Smartphones</a></li>
+                     <ul class="bread-custom" id="breadcrumb">
+                        <li><a href="index.html">Home</a> <span class="icon-arrow-r"></span> </li>
+                        <li><a href="#" id="bread-category">Real Estate for Sale</a><span class="icon-arrow-r"></span></li>
+                        <li><a href="#" id="bread-type">Apartment</a></li>
                      </ul>
                      <div class="card-head card-tile">
                         <div class="card-head__left">
-                           <p class="card-head__title">Apple iPhone XR 128gb</p>
+                           <p class="card-head__title" id="prop-title">Property</p>
                            <ul class="bread">
-                              <li><a href="#">Limassol</a> <span>/</span></li>
-                              <li><a href="#">Kapsalos</a></li>
+                              <li><a href="#" id="prop-city-link">London</a> <span>/</span></li>
+                              <li><a href="#" id="prop-district-link">District</a></li>
                            </ul>
                            <div class="card-head__mob-price">
-                              <div class="card-head__mob-price-new"> 814,<sup>99</sup>£</div>
-                              <div class="card-head__mob-price-old"> 853,<sup>08</sup>£</div>
+                              <div class="card-head__mob-price-new" id="mob-price-new">£ 0</div>
+                              <div class="card-head__mob-price-old" id="mob-price-old"></div>
                            </div>
                         </div>
                      </div>
@@ -134,7 +134,7 @@
                               <div class="card-gallery__big">
                                  <div class="slider-gallery-big">
                                     <div class="swiper">
-                                       <div class="swiper-wrapper">
+                                       <div class="swiper-wrapper" id="gallery-big">
                                           <div class="swiper-slide">
                                              <div class="slider-gallery-big__img">
                                                 <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
@@ -169,7 +169,7 @@
                               <div class="card-gallery__mini">
                                  <div class="slider-gallery-mini">
                                     <div class="swiper">
-                                       <div class="swiper-wrapper">
+                                       <div class="swiper-wrapper" id="gallery-mini">
                                           <div class="swiper-slide">
                                              <div class="slider-gallery-mini__img">
                                                 <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
@@ -205,7 +205,7 @@
                         <div class="card-grid__description">
 
                            <div class="card-description">
-                              <table cellpadding="0" cellspacing="0" class="table-custom">
+                              <table cellpadding="0" cellspacing="0" class="table-custom" id="spec-table">
                                  <caption>Specifications</caption>
                                  <tr>
                                     <th>Country:</th>
@@ -265,7 +265,7 @@
                               <div data-tab-content="card-tab1" class="card-tab__item active">
                                  <div class="card-tab__btn-mob">Description </div>
                                  <div class="card-tab__body">
-                                    <p class="card-tab__text">Lorem ipsum, dolor sit amet consectetur adipisicing
+                                    <p class="card-tab__text" id="prop-description">Lorem ipsum, dolor sit amet consectetur adipisicing
                                        elit. Odio, beatae deserunt quos architecto nihil numquam, totam quaerat hic
                                        consequatur unde non dolor magni eius autem voluptate expedita quisquam.
                                        Adipisci hic consequatur maxime! Ipsam unde rem obcaecati quo cupiditate sint
@@ -352,7 +352,7 @@
                            </div>
                         </div>
 
-                        <div class="card-grid__video">
+                        <div class="card-grid__video" id="video-section">
                            <iframe class="img-cover" src="https://www.youtube.com/embed/dIQGI36BxDE"
                               title="God of War Ragnarök - &quot;Father and Son&quot; Cinematic Trailer | PS5 &amp; PS4 Games"
                               frameborder="0"
@@ -361,9 +361,9 @@
                         </div>
 
                         <div class="card-grid__map-section">
-                           <p class="card-map-label"><b>Location:</b> Limassol — Limassol - Agia Napa</p>
+                           <p class="card-map-label" id="location-label"><b>Location:</b> London — Canary Wharf</p>
                            <div class="card-map-embed">
-                              <iframe
+                              <iframe id="map-inline-iframe"
                                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d18989.386424518565!2d33.36439805884907!3d35.17365468290854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sus!4v1674761810943!5m2!1sru!2sus"
                                  width="100%" height="340" style="border:0;" allowfullscreen="" loading="lazy"
                                  referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -398,9 +398,9 @@
                                     </ul>
                                     <a href="#" class="stars__link link-hover">(2)</a>
                                  </div>
-                                 <p class="card-name__name">Andreas Xenofontos Construction & Developers Ltd</p>
+                                 <p class="card-name__name" id="seller-name">Andreas Xenofontos Construction & Developers Ltd</p>
                               </div>
-                              <p class="card-name__text">2 years with Bazar Market</p>
+                              <p class="card-name__text" id="seller-since">Member of Bazar Market</p>
                               <div class="card-name__links">
                                  <a href="#" class="link-start link-hover">Other Ads from this seller</a>
                               </div>
@@ -409,20 +409,20 @@
                         <div class="card-price card-tile">
                            <div class="card-price__info">
                               <p class="info-icon icon-eye">301</p>
-                              <p class="info-icon  icon-namber">992301</p>
+                              <p class="info-icon  icon-namber" id="prop-id">10</p>
                               <p class="info-icon icon-truck">Delivery</p>
-                              <p class="info-icon icon-calendar">19 03 2022 | 19:43</p>
+                              <p class="info-icon icon-calendar" id="prop-date">01 04 2026 | 10:00</p>
                            </div>
                            <div class="card-price__right">
                               <div class="price-last">
-                                 <div class="price-last-old">
+                                 <div class="price-last-old" id="price-old">
                                     <span> 853,<sup>08</sup>£</span>
                                  </div>
-                                 <div class="price-last-new">
+                                 <div class="price-last-new" id="price-new">
                                     <span> 814,<sup>99</sup>£</span>
                                  </div>
                                  <div class="price-last__text">
-                                    <a href="" class="price__link"> Negotiable </a>
+                                    <a href="" class="price__link" id="price-negotiable"> Negotiable </a>
                                  </div>
                               </div>
                            </div>
@@ -432,8 +432,8 @@
                               <div class="btn-phone__body">
                                  <p class="btn-phone__title">Show Phone</p>
                                  <span class="btn-phone__namber">
-                                    <span class="phone-masked">+357xxxxxxxx</span>
-                                    <a href="tel:+35796123456" class="phone-full" style="display:none">+357 96 123456</a>
+                                    <span class="phone-masked" id="phone-masked">+44 xxxx xxxxxx</span>
+                                    <a href="tel:+447700900100" class="phone-full" style="display:none" id="phone-full">+44 7700 900100</a>
                                  </span>
                               </div>
                            </div>
@@ -480,9 +480,9 @@
          <div class="mob-contact-popup__overlay" onclick="closeContactPopup()"></div>
          <div class="mob-contact-popup__sheet">
             <div class="mob-contact-popup__handle"></div>
-            <p class="mob-contact-popup__name">Andreas Xenofontos</p>
-            <p class="mob-contact-popup__since">2 years with Bazar Market</p>
-            <a href="tel:+35796123456" class="mob-contact-popup__btn icon-phone">Call</a>
+            <p class="mob-contact-popup__name" id="mob-seller-name">Seller</p>
+            <p class="mob-contact-popup__since" id="mob-seller-since">Member of Bazar Market</p>
+            <a href="tel:+447700900100" class="mob-contact-popup__btn icon-phone" id="mob-call-btn">Call</a>
             <a href="#" class="mob-contact-popup__btn icon-wp">WhatsApp</a>
             <a href="#" class="mob-contact-popup__btn icon-chat">Start Chat</a>
          </div>
@@ -562,7 +562,7 @@
             </div>
 
             <div class="map-popup">
-               <iframe
+               <iframe id="map-popup-iframe"
                   src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d18989.386424518565!2d33.36439805884907!3d35.17365468290854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sus!4v1674761810943!5m2!1sru!2sus"
                   width="100%" height="400px" style="border:0;" allowfullscreen="" loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -711,10 +711,389 @@
         </footer>
 
 
-   <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
-   <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
-   <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+   <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
+   <script type="text/javascript" src="js/inputmask.min.js"></script>
+   <script type="text/javascript" src="js/fslightbox.js"></script>
    <script type="text/javascript" src="js/script.js"></script>
+
+   <script>
+   (function(){
+      var properties = {
+         10: {
+            title: "2 Bedroom Apartment for Sale",
+            property_type: "Apartment",
+            listing_type: "Sale",
+            description: "Modern 2 bedroom apartment located in Canary Wharf, London. Spacious living area with floor-to-ceiling windows offering stunning views of the Thames. Open-plan kitchen with integrated appliances. One bathroom with modern finishes. Building includes concierge, gym, and secure parking. Close to Canary Wharf tube station and shopping centres.",
+            price: 425000,
+            country: "United Kingdom",
+            city: "London",
+            district: "Canary Wharf",
+            postal_code: "E14 5AB",
+            address: "15 Westferry Road, Canary Wharf",
+            bedrooms: 2,
+            bathrooms: 1,
+            covered_area: 85,
+            plot_area: null,
+            floor: "8",
+            construction_year: 2019,
+            condition: "Resale",
+            energy_efficiency: "B",
+            furnished: true,
+            air_conditioning: true,
+            parking: true,
+            pool: false,
+            garden: false,
+            elevator: true,
+            security: true,
+            gym: true,
+            seller_name: "James Thompson",
+            seller_phone: "+447700900100",
+            image: "img/properties/apartment-london.jpg",
+            negotiable: true,
+            is_vip: true,
+            is_pro: false,
+            map_query: "Canary+Wharf,+London,+UK"
+         },
+         11: {
+            title: "4 Bedroom Detached House",
+            property_type: "House",
+            listing_type: "Sale",
+            description: "Spacious 4 bedroom detached family house in Didsbury, Manchester. Features include a large open-plan kitchen/dining area, separate living room, utility room, and guest WC on the ground floor. Upstairs offers 4 generous bedrooms including master with en-suite. Family bathroom. Large south-facing garden with patio area. Driveway parking for 2 cars. Excellent local schools and transport links.",
+            price: 375000,
+            country: "United Kingdom",
+            city: "Manchester",
+            district: "Didsbury",
+            postal_code: "M20 6RR",
+            address: "42 Barlow Moor Road, Didsbury",
+            bedrooms: 4,
+            bathrooms: 2,
+            covered_area: 180,
+            plot_area: 350,
+            floor: null,
+            construction_year: 2005,
+            condition: "Resale",
+            energy_efficiency: "C",
+            furnished: false,
+            air_conditioning: false,
+            parking: true,
+            pool: false,
+            garden: true,
+            elevator: false,
+            security: false,
+            gym: false,
+            seller_name: "Sarah Williams",
+            seller_phone: "+447700900100",
+            image: "img/properties/house-manchester.jpg",
+            negotiable: true,
+            is_vip: true,
+            is_pro: true,
+            map_query: "Didsbury,+Manchester,+UK"
+         },
+         12: {
+            title: "3 Bedroom Victorian Townhouse",
+            property_type: "House",
+            listing_type: "Sale",
+            description: "Charming 3 bedroom Victorian townhouse in the heart of Clifton, Bristol. Original period features throughout including ornate cornicing, ceiling roses, and sash windows. Ground floor comprises reception hall, living room with feature fireplace, and modern fitted kitchen. First floor has 2 double bedrooms and family bathroom. Second floor has a large bedroom with skylight. Small courtyard garden to the rear.",
+            price: 295000,
+            country: "United Kingdom",
+            city: "Bristol",
+            district: "Clifton",
+            postal_code: "BS8 4HG",
+            address: "7 Royal York Crescent, Clifton",
+            bedrooms: 3,
+            bathrooms: 2,
+            covered_area: 140,
+            plot_area: null,
+            floor: null,
+            construction_year: 1890,
+            condition: "Resale",
+            energy_efficiency: "D",
+            furnished: false,
+            air_conditioning: false,
+            parking: false,
+            pool: false,
+            garden: true,
+            elevator: false,
+            security: false,
+            gym: false,
+            seller_name: "David Clark",
+            seller_phone: "+447700900100",
+            image: "img/properties/townhouse-bristol.jpg",
+            negotiable: false,
+            is_vip: false,
+            is_pro: false,
+            map_query: "Clifton,+Bristol,+UK"
+         },
+         13: {
+            title: "5 Bedroom Luxury Villa with Pool",
+            property_type: "House",
+            listing_type: "Sale",
+            description: "Stunning 5 bedroom luxury villa set in beautiful Surrey countryside. Architecturally designed with high-end finishes throughout. Ground floor features grand entrance hall, formal living room, family room, study, and bespoke kitchen with island. First floor has master suite with walk-in wardrobe and luxury en-suite, plus 4 further bedrooms with 2 additional bathrooms. Heated outdoor pool, landscaped gardens, double garage, and electric gates. Smart home technology throughout.",
+            price: 1250000,
+            country: "United Kingdom",
+            city: "Guildford",
+            district: "Virginia Water",
+            postal_code: "GU25 4QF",
+            address: "The Pines, Wentworth Drive",
+            bedrooms: 5,
+            bathrooms: 3,
+            covered_area: 320,
+            plot_area: 800,
+            floor: null,
+            construction_year: 2018,
+            condition: "Resale",
+            energy_efficiency: "A",
+            furnished: true,
+            air_conditioning: true,
+            parking: true,
+            pool: true,
+            garden: true,
+            elevator: false,
+            security: true,
+            gym: true,
+            seller_name: "Victoria Edwards",
+            seller_phone: "+447700900100",
+            image: "img/properties/villa-surrey.jpg",
+            negotiable: true,
+            is_vip: true,
+            is_pro: true,
+            map_query: "Virginia+Water,+Surrey,+UK"
+         },
+         14: {
+            title: "Studio Apartment, City Centre",
+            property_type: "Apartment",
+            listing_type: "Sale",
+            description: "Well-presented studio apartment in the heart of Leeds city centre. Open-plan living space with modern kitchen area, sleeping area, and stylish shower room. The building offers secure entry, lift access, and on-site management. Walking distance to Leeds train station, shops, restaurants, and the university. Ideal for first-time buyers or buy-to-let investors. Currently achieving \u00a3650pcm rental income.",
+            price: 125000,
+            country: "United Kingdom",
+            city: "Leeds",
+            district: "City Centre",
+            postal_code: "LS1 5PL",
+            address: "Bridgewater Place, Water Lane",
+            bedrooms: 1,
+            bathrooms: 1,
+            covered_area: 42,
+            plot_area: null,
+            floor: "12",
+            construction_year: 2007,
+            condition: "Resale",
+            energy_efficiency: "C",
+            furnished: true,
+            air_conditioning: false,
+            parking: false,
+            pool: false,
+            garden: false,
+            elevator: true,
+            security: true,
+            gym: false,
+            seller_name: "Michael Brown",
+            seller_phone: "+447700900100",
+            image: "img/properties/studio-leeds.jpg",
+            negotiable: false,
+            is_vip: false,
+            is_pro: false,
+            map_query: "Leeds+City+Centre,+UK"
+         },
+         15: {
+            title: "2 Bedroom Maisonette",
+            property_type: "Apartment",
+            listing_type: "Sale",
+            description: "Spacious 2 bedroom maisonette in Edgbaston, Birmingham. Spread over two floors with a private entrance. Ground floor has a large living room and modern fitted kitchen with appliances. Upstairs features 2 double bedrooms and a bathroom with shower over bath. Benefits from double glazing, gas central heating, and allocated parking. Close to Five Ways station and Edgbaston Village with its boutique shops and restaurants.",
+            price: 210000,
+            country: "United Kingdom",
+            city: "Birmingham",
+            district: "Edgbaston",
+            postal_code: "B16 9SA",
+            address: "23 Hagley Road, Edgbaston",
+            bedrooms: 2,
+            bathrooms: 1,
+            covered_area: 95,
+            plot_area: null,
+            floor: null,
+            construction_year: 1975,
+            condition: "Resale",
+            energy_efficiency: "D",
+            furnished: false,
+            air_conditioning: false,
+            parking: true,
+            pool: false,
+            garden: false,
+            elevator: false,
+            security: false,
+            gym: false,
+            seller_name: "Priya Patel",
+            seller_phone: "+447700900100",
+            image: "img/properties/maisonette-birmingham.jpg",
+            negotiable: true,
+            is_vip: false,
+            is_pro: true,
+            map_query: "Edgbaston,+Birmingham,+UK"
+         },
+         16: {
+            title: "3 Bedroom Stone Cottage",
+            property_type: "House",
+            listing_type: "Sale",
+            description: "Beautiful 3 bedroom Cotswold stone cottage in the picturesque village of Bourton-on-the-Water, Gloucestershire. Grade II listed with character features including exposed stone walls, wooden beams, and inglenook fireplace. Country-style kitchen with Aga, separate dining room, and cosy sitting room. Three bedrooms upstairs with family bathroom. Mature cottage garden with views over rolling countryside. Garden shed and off-road parking for 2 cars.",
+            price: 485000,
+            country: "United Kingdom",
+            city: "Bourton-on-the-Water",
+            district: "Cotswolds",
+            postal_code: "GL54 2AN",
+            address: "Rose Cottage, Station Road",
+            bedrooms: 3,
+            bathrooms: 2,
+            covered_area: 150,
+            plot_area: 500,
+            floor: null,
+            construction_year: 1820,
+            condition: "Resale",
+            energy_efficiency: "E",
+            furnished: false,
+            air_conditioning: false,
+            parking: true,
+            pool: false,
+            garden: true,
+            elevator: false,
+            security: false,
+            gym: false,
+            seller_name: "Elizabeth Harper",
+            seller_phone: "+447700900100",
+            image: "img/properties/cottage-cotswolds.jpg",
+            negotiable: true,
+            is_vip: true,
+            is_pro: false,
+            map_query: "Bourton-on-the-Water,+Gloucestershire,+UK"
+         },
+         17: {
+            title: "3 Bedroom Penthouse with City Views",
+            property_type: "Apartment",
+            listing_type: "Sale",
+            description: "Spectacular 3 bedroom penthouse apartment on the Liverpool waterfront. Occupying the entire top floor with panoramic views of the Mersey and city skyline. Floor-to-ceiling windows flood the open-plan living space with natural light. Designer kitchen with Siemens appliances, quartz worktops, and breakfast bar. Master bedroom with en-suite and private balcony. Two further double bedrooms and family bathroom. Secure underground parking for 2 cars. Concierge and gym access included.",
+            price: 550000,
+            country: "United Kingdom",
+            city: "Liverpool",
+            district: "Waterfront",
+            postal_code: "L3 9SJ",
+            address: "Royal Albert Dock, The Strand",
+            bedrooms: 3,
+            bathrooms: 2,
+            covered_area: 200,
+            plot_area: null,
+            floor: "15",
+            construction_year: 2021,
+            condition: "New",
+            energy_efficiency: "A",
+            furnished: true,
+            air_conditioning: true,
+            parking: true,
+            pool: false,
+            garden: false,
+            elevator: true,
+            security: true,
+            gym: true,
+            seller_name: "Robert King",
+            seller_phone: "+447700900100",
+            image: "img/properties/penthouse-liverpool.jpg",
+            negotiable: true,
+            is_vip: false,
+            is_pro: false,
+            map_query: "Albert+Dock,+Liverpool,+UK"
+         }
+      };
+
+      var params = new URLSearchParams(window.location.search);
+      var id = parseInt(params.get('id'));
+      var p = properties[id];
+      if (!p) return;
+
+      function fmt(n) {
+         return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      }
+
+      document.title = p.title + ' — Bazar';
+      var el = function(s){ return document.getElementById(s); };
+
+      el('prop-title').textContent = p.title;
+      el('bread-type').textContent = p.property_type;
+      el('prop-city-link').textContent = p.city;
+      el('prop-district-link').textContent = p.district;
+
+      el('mob-price-new').textContent = '£ ' + fmt(p.price);
+      el('mob-price-old').style.display = 'none';
+
+      var priceNew = el('price-new');
+      if(priceNew) priceNew.innerHTML = '<span> £ ' + fmt(p.price) + '</span>';
+      var priceOld = el('price-old');
+      if(priceOld) priceOld.style.display = 'none';
+
+      var negEl = el('price-negotiable');
+      if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
+
+      el('prop-id').textContent = id;
+      el('prop-date').textContent = '01 04 2026 | 10:00';
+
+      var mainImgs = document.querySelectorAll('#gallery-big .slider-gallery-big__img img');
+      mainImgs.forEach(function(img){ img.src = p.image; img.alt = p.title; });
+      var miniImgs = document.querySelectorAll('#gallery-mini .slider-gallery-mini__img img');
+      miniImgs.forEach(function(img){ img.src = p.image; img.alt = p.title; });
+
+      var specs = '';
+      specs += '<caption>Specifications</caption>';
+      specs += '<tr><th>Country:</th><td>' + p.country + '</td></tr>';
+      specs += '<tr><th>City:</th><td>' + p.city + '</td></tr>';
+      specs += '<tr><th>District:</th><td>' + p.district + '</td></tr>';
+      specs += '<tr><th>Address:</th><td>' + p.address + '</td></tr>';
+      specs += '<tr><th>Postal Code:</th><td>' + p.postal_code + '</td></tr>';
+      specs += '<tr><th>Type:</th><td>' + p.property_type + '</td></tr>';
+      specs += '<tr><th>Condition:</th><td>' + p.condition + '</td></tr>';
+      specs += '<tr><th>Bedrooms:</th><td>' + p.bedrooms + '</td></tr>';
+      specs += '<tr><th>Bathrooms:</th><td>' + p.bathrooms + '</td></tr>';
+      specs += '<tr><th>Covered Area:</th><td>' + p.covered_area + ' m\u00B2</td></tr>';
+      if(p.plot_area) specs += '<tr><th>Plot Area:</th><td>' + p.plot_area + ' m\u00B2</td></tr>';
+      if(p.floor) specs += '<tr><th>Floor:</th><td>' + p.floor + '</td></tr>';
+      if(p.construction_year) specs += '<tr><th>Year Built:</th><td>' + p.construction_year + '</td></tr>';
+      specs += '<tr><th>Energy Rating:</th><td>' + p.energy_efficiency + '</td></tr>';
+
+      var amenities = [];
+      if(p.furnished) amenities.push('Furnished');
+      if(p.air_conditioning) amenities.push('Air Conditioning');
+      if(p.parking) amenities.push('Parking');
+      if(p.pool) amenities.push('Swimming Pool');
+      if(p.garden) amenities.push('Garden');
+      if(p.elevator) amenities.push('Elevator');
+      if(p.security) amenities.push('Security');
+      if(p.gym) amenities.push('Gym');
+      if(amenities.length) specs += '<tr><th>Amenities:</th><td>' + amenities.join(', ') + '</td></tr>';
+
+      el('spec-table').innerHTML = specs;
+
+      el('prop-description').textContent = p.description;
+
+      el('seller-name').textContent = p.seller_name;
+      el('seller-since').textContent = 'Member of Bazar Market';
+
+      var phoneMasked = el('phone-masked');
+      if(phoneMasked) phoneMasked.textContent = '+44 xxxx xxxxxx';
+      var phoneFull = el('phone-full');
+      if(phoneFull) { phoneFull.textContent = p.seller_phone; phoneFull.href = 'tel:' + p.seller_phone; }
+
+      var mobName = el('mob-seller-name');
+      if(mobName) mobName.textContent = p.seller_name;
+      var mobCall = el('mob-call-btn');
+      if(mobCall) mobCall.href = 'tel:' + p.seller_phone;
+
+      el('location-label').innerHTML = '<b>Location:</b> ' + p.city + ' — ' + p.district;
+
+      var mapQ = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=' + p.map_query;
+      var mapInline = el('map-inline-iframe');
+      if(mapInline) mapInline.src = mapQ;
+      var mapPopup = el('map-popup-iframe');
+      if(mapPopup) mapPopup.src = mapQ;
+
+      var videoSection = el('video-section');
+      if(videoSection) videoSection.style.display = 'none';
+   })();
+   </script>
 
 </body>
 
