@@ -1059,6 +1059,15 @@
          }
       }
 
+      var priceLast = document.querySelector('.price-last');
+      if(priceLast) {
+         if(hasOldPrice) {
+            priceLast.classList.remove('price-last--single');
+         } else {
+            priceLast.classList.add('price-last--single');
+         }
+      }
+
       var negEl = el('price-negotiable');
       if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
 
