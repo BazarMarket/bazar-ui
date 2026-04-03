@@ -1,0 +1,50 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "fcTyPGCf1No9o54Jx-tn9"
+uri = "file://attached_assets/stock_images/apartment-london.jpg"
+type = "image"
+title = "modern luxury apartment building exterior London UK"
+
+[[outputs]]
+id = "nFPZmDLRZTiBjqOALGR9C"
+uri = "file://attached_assets/stock_images/house-manchester.jpg"
+type = "image"
+title = "beautiful detached house with garden England UK suburban"
+
+[[outputs]]
+id = "EQqqJclqDJ6ApIBMmdVIE"
+uri = "file://attached_assets/stock_images/townhouse-bristol.jpg"
+type = "image"
+title = "Victorian townhouse terraced street Bristol England"
+
+[[outputs]]
+id = "SxrVWztI4Jk3271I61sTw"
+uri = "file://attached_assets/stock_images/villa-surrey.jpg"
+type = "image"
+title = "luxury villa with pool and garden English countryside"
+
+[[outputs]]
+id = "M2R5Gkpt4L0TX9YQZe5ts"
+uri = "file://attached_assets/stock_images/studio-leeds.jpg"
+type = "image"
+title = "small cozy studio apartment interior modern"
+
+[[outputs]]
+id = "9bDGu3c2cZRUeQHClCwhm"
+uri = "file://attached_assets/stock_images/maisonette-birmingham.jpg"
+type = "image"
+title = "maisonette duplex apartment exterior UK residential"
+
+[[outputs]]
+id = "d8gT2HsMzA2OeO0G7ZfrP"
+uri = "file://attached_assets/stock_images/cottage-cotswolds.jpg"
+type = "image"
+title = "English cottage stone countryside Cotswolds"
+
+[[outputs]]
+id = "Y1_0rGVQRJeO_za8uWc22"
+uri = "file://attached_assets/stock_images/penthouse-liverpool.jpg"
+type = "image"
+title = "modern penthouse apartment city skyline view"
