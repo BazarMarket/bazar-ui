@@ -114,6 +114,14 @@ card.html и index.html (залогиненный, `#header-logged-in`):
 - Файлы с Windows line endings (`\r\n`) — при Python-заменах использовать бинарное чтение/запись
 - Браузерный кеш: версии CSS сбрасывают кеш; при проблемах → Ctrl+Shift+R
 
+## Заголовки объявлений недвижимости — правило по умолчанию
+
+Формат: `[кол-во спален] Bedroom [тип] for Sale` (или for Rent)
+- Примеры: "2 Bedroom Villa for Sale", "3 Bedroom House for Sale", "4 Bedroom Apartment for Sale"
+- Студия: "Studio Apartment for Sale"
+- Тип берётся из property_type: Apartment, House, Villa и т.д.
+- **НЕ использовать** креативные/маркетинговые названия (не "Elegant Country House", не "Modern Penthouse in Edinburgh")
+
 ## Цена (card.html) — правила по умолчанию
 
 - **Одна цена** (нет `old_price`): цвет **чёрный** (`#1d1d1b`), зачёркнутая цена скрыта
