@@ -1019,14 +1019,40 @@
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district;
 
-      var priceStr = fmt(p.price) + '£';
-      el('mob-price-new').innerHTML = ' ' + priceStr;
-      el('mob-price-old').style.display = 'none';
+      function fmtPrice(n) {
+         var s = fmt(n);
+         var comma = s.lastIndexOf(',');
+         if(comma >= 0) {
+            return s.substring(0, comma + 1) + '<sup>' + s.substring(comma + 1) + '</sup>£';
+         }
+         return s + '£';
+      }
+
+      var hasOldPrice = p.old_price && p.old_price > 0;
+      var priceHtml = fmtPrice(p.price);
+
+      el('mob-price-new').innerHTML = ' ' + priceHtml;
+      if(hasOldPrice) {
+         el('mob-price-old').innerHTML = ' ' + fmtPrice(p.old_price);
+         el('mob-price-old').style.display = '';
+      } else {
+         el('mob-price-old').style.display = 'none';
+      }
 
       var priceNew = el('price-new');
-      if(priceNew) priceNew.innerHTML = '<span> ' + priceStr + '</span>';
+      if(priceNew) {
+         priceNew.innerHTML = '<span>' + priceHtml + '</span>';
+         if(!hasOldPrice) priceNew.style.color = '#1d1d1b';
+      }
       var priceOld = el('price-old');
-      if(priceOld) priceOld.style.display = 'none';
+      if(priceOld) {
+         if(hasOldPrice) {
+            priceOld.innerHTML = '<span>' + fmtPrice(p.old_price) + '</span>';
+            priceOld.style.display = '';
+         } else {
+            priceOld.style.display = 'none';
+         }
+      }
 
       var negEl = el('price-negotiable');
       if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
