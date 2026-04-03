@@ -1348,10 +1348,6 @@ body {
   align-items: center;
 }
 
-.price-last:has(#price-old[style*="display: none"]),
-.price-last--single {
-  justify-content: center;
-}
 .price-last__text {
   padding: 5px 0 0 0;
   margin-top: 10px;
@@ -2321,6 +2317,10 @@ body {
   align-items: flex-end;
   justify-content: space-between;
   margin-right: 0;
+}
+
+.card-price.card-price--single-price {
+  align-items: center;
 }
 .card-price__info .info-icon:not(:last-child) {
   margin-bottom: 10px;

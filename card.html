@@ -1059,12 +1059,12 @@
          }
       }
 
-      var priceLast = document.querySelector('.price-last');
-      if(priceLast) {
+      var cardPrice = document.querySelector('.card-price');
+      if(cardPrice) {
          if(hasOldPrice) {
-            priceLast.classList.remove('price-last--single');
+            cardPrice.classList.remove('card-price--single-price');
          } else {
-            priceLast.classList.add('price-last--single');
+            cardPrice.classList.add('card-price--single-price');
          }
       }
 
