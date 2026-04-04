@@ -3710,6 +3710,41 @@ p {
   justify-content: space-between;
   padding: 16px 10px;
 }
+
+.card__heart {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #ccc;
+  opacity: 0;
+  transition: opacity 0.3s, color 0.3s;
+  padding: 8px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card:hover .card__heart {
+  opacity: 1;
+}
+
+.card__heart::before {
+  content: '';
+}
+
+.card__heart.active::before {
+  color: #e31836;
+}
+
+.card__heart.active {
+  opacity: 1;
+  color: #e31836;
+}
 .card.card_orange .card__head {
   background: #ffae49;
 }
