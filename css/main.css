@@ -3719,11 +3719,30 @@ p {
   border: none;
   cursor: pointer;
   font-size: 24px;
-  color: #797979;
+  color: #e31836;
   opacity: 0;
   transition: opacity 0.3s, color 0.3s;
   padding: 8px;
   z-index: 10;
+}
+
+.card__heart::before {
+  position: relative;
+  z-index: 2;
+}
+
+.card__heart::after {
+  content: "\e91c";
+  font-family: "icon";
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.35);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  line-height: 1;
+  z-index: 1;
 }
 
 .card:hover .card__heart {
@@ -3733,6 +3752,10 @@ p {
 .card__heart.active {
   opacity: 1;
   color: #e31836;
+}
+
+.card__heart.active::after {
+  display: none;
 }
 .card.card_orange .card__head {
   background: #ffae49;
