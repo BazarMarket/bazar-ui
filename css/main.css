@@ -3732,7 +3732,7 @@ p {
 
 .card__heart.active {
   opacity: 1;
-  color: #ffae49;
+  color: #e31836;
 }
 .card.card_orange .card__head {
   background: #ffae49;
