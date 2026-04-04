@@ -9,7 +9,7 @@
    <meta name="keywords" content="">
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-   <link rel="stylesheet" href="css/main.css?v=95" type="text/css"> <!-- Основные стили темы  -->
+   <link rel="stylesheet" href="css/main.css?v=97" type="text/css"> <!-- Основные стили темы  -->
    <link rel="icon" href="favicon.svg">
 </head>
 
@@ -131,7 +131,8 @@
 
                         <div class="card-grid__gallery">
                            <div class="card-gallery card-tile">
-                              <div class="card-gallery__big">
+                              <div class="card-gallery__big" style="position:relative;">
+                                 <div id="prop-stiker" class="product__stiker" style="position:absolute;top:16px;left:16px;z-index:10;display:flex;gap:6px;"></div>
                                  <div class="slider-gallery-big">
                                     <div class="swiper">
                                        <div class="swiper-wrapper" id="gallery-big">
@@ -1019,6 +1020,14 @@
       var el = function(s){ return document.getElementById(s); };
 
       el('prop-title').textContent = p.title;
+
+      var stikerEl = el('prop-stiker');
+      if(stikerEl) {
+         var badges = '';
+         if(p.is_vip) badges += '<span class="stiker stiker_vip">VIP</span>';
+         if(p.is_pro) badges += '<span class="stiker stiker_top">PRO</span>';
+         stikerEl.innerHTML = badges;
+      }
       el('bread-category').textContent = 'Real Estate for ' + p.listing_type;
       el('bread-type').textContent = p.property_type;
       el('prop-city-link').textContent = p.city;
