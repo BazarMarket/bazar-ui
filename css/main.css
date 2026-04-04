@@ -3704,6 +3704,12 @@ p {
   align-items: center;
   gap: 4px;
 }
+.card__stikers .stiker {
+  font-size: 10px !important;
+  padding: 4px 8px !important;
+  font-weight: 600;
+  border-radius: 20px;
+}
 .card__down {
   display: flex;
   align-items: center;
