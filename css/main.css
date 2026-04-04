@@ -3801,10 +3801,14 @@ p {
 .stiker_vip {
   background: #d4a017;
   color: #1a1a1a;
+  font-size: 10px;
+  padding: 4px 8px;
 }
 .stiker_top {
   background: #ff9138;
   color: #1a1a1a;
+  font-size: 10px;
+  padding: 4px 8px;
 }
 
 .price-new {
