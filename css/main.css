@@ -3713,30 +3713,26 @@ p {
 
 .card__heart {
   position: absolute;
-  bottom: 16px;
+  top: 16px;
   right: 16px;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 24px;
-  color: #ccc;
+  color: #797979;
   opacity: 0;
   transition: opacity 0.3s, color 0.3s;
   padding: 8px;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .card:hover .card__heart {
   opacity: 1;
 }
 
-
 .card__heart.active {
   opacity: 1;
-  color: #e31836;
+  color: #ffae49;
 }
 .card.card_orange .card__head {
   background: #ffae49;
