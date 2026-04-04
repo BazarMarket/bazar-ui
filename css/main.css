@@ -3718,7 +3718,7 @@ p {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 29px;
   color: #e31836;
   opacity: 0;
   transition: opacity 0.3s, color 0.3s;
@@ -3740,7 +3740,7 @@ p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 24px;
+  font-size: 29px;
   line-height: 1;
   z-index: 1;
 }
