@@ -34,7 +34,7 @@
                         <div class="header-old__cell">
                             <div class="icons-list">
                                 <a href="#" class="icon-item icon-email" onclick="event.preventDefault();switchToTab('messages')"><span class="icon-item__namber">2</span></a>
-                                <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
+                                <a href="cabinet.html#favorites" class="icon-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
                             </div>
                         </div>
                         <div class="header-old__cell">
@@ -611,52 +611,8 @@
                     <h1 class="cab-panel__title">My Favorites</h1>
                 </div>
 
-                <div class="cab-fav-grid">
-                    <div class="cab-fav-card">
-                        <div class="cab-fav-card__img"><img src="img/product.jpg" alt=""></div>
-                        <div class="cab-fav-card__body">
-                            <p class="cab-fav-card__title">Villa for Sale in Tsada</p>
-                            <p class="cab-fav-card__price">£ 1,049.00</p>
-                        </div>
-                        <div class="cab-fav-card__foot">
-                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
-                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
-                        </div>
-                    </div>
-                    <div class="cab-fav-card">
-                        <div class="cab-fav-card__img"><img src="img/phone.jpg" alt=""></div>
-                        <div class="cab-fav-card__body">
-                            <p class="cab-fav-card__title">iPhone 14 Pro Max 256GB</p>
-                            <p class="cab-fav-card__price">£ 750.00</p>
-                        </div>
-                        <div class="cab-fav-card__foot">
-                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
-                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
-                        </div>
-                    </div>
-                    <div class="cab-fav-card">
-                        <div class="cab-fav-card__img"><img src="img/product.jpg" alt=""></div>
-                        <div class="cab-fav-card__body">
-                            <p class="cab-fav-card__title">Luxury Apartment, Limassol</p>
-                            <p class="cab-fav-card__price">£ 320,000</p>
-                        </div>
-                        <div class="cab-fav-card__foot">
-                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
-                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
-                        </div>
-                    </div>
-                    <div class="cab-fav-card">
-                        <div class="cab-fav-card__img"><img src="img/product.jpg" alt=""></div>
-                        <div class="cab-fav-card__body">
-                            <p class="cab-fav-card__title">Mountain Bike Trek 2024</p>
-                            <p class="cab-fav-card__price">£ 420.00</p>
-                        </div>
-                        <div class="cab-fav-card__foot">
-                            <a href="card.html" class="cab-btn-sm cab-btn-sm--primary">View</a>
-                            <button class="cab-btn-sm cab-btn-sm--outline cab-remove-fav">Remove</button>
-                        </div>
-                    </div>
-                </div>
+                <div class="cab-fav-grid" id="cab-fav-grid"></div>
+                <p id="cab-fav-empty" style="display:none;color:#888;margin-top:24px;">No favorites yet.</p>
 
             </div>
 
@@ -1300,13 +1256,85 @@
 <script type="text/javascript" src="js/script.js"></script>
 <script type="text/javascript" src="js/cabinet.js"></script>
 <script>
+    var BAZAR_PRODUCTS = {
+        10: { title: "3 Bedroom Apartment for Sale", price: 520000, image: "img/properties/penthouse-edinburgh.jpg", city: "Edinburgh" },
+        11: { title: "4 Bedroom House for Sale", price: 580000, image: "img/properties/house-hampshire.jpg", city: "Hampshire" },
+        12: { title: "2 Bedroom Apartment for Sale", price: 895000, image: "img/properties/flat-chelsea.jpg", city: "London" },
+        13: { title: "4 Bedroom House for Sale", price: 675000, image: "img/properties/house-oxford.jpg", city: "Oxford" },
+        14: { title: "Studio Apartment for Sale", price: 125000, image: "img/properties/studio-leeds.jpg", city: "Leeds" },
+        15: { title: "2 Bedroom Apartment for Sale", price: 210000, image: "img/properties/maisonette-birmingham.jpg", city: "Birmingham" },
+        16: { title: "3 Bedroom House for Sale", price: 485000, image: "img/properties/cottage-cotswolds.jpg", city: "Cotswolds" },
+        17: { title: "3 Bedroom Apartment for Sale", price: 550000, image: "img/properties/penthouse-liverpool.jpg", city: "Liverpool" }
+    };
+
+    function fmtPrice(n) {
+        return '£ ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function updateFavCount() {
+        var count = 0;
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') count++;
+        }
+        var badge = document.getElementById('fav-count');
+        if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+    }
+
+    function renderFavorites() {
+        var grid = document.getElementById('cab-fav-grid');
+        var empty = document.getElementById('cab-fav-empty');
+        if (!grid) return;
+        var ids = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
+                ids.push(parseInt(k.replace('favorite_', '')));
+            }
+        }
+        grid.innerHTML = '';
+        if (ids.length === 0) {
+            if (empty) empty.style.display = '';
+            return;
+        }
+        if (empty) empty.style.display = 'none';
+        ids.forEach(function(id) {
+            var p = BAZAR_PRODUCTS[id];
+            if (!p) return;
+            var card = document.createElement('div');
+            card.className = 'cab-fav-card';
+            card.innerHTML =
+                '<div class="cab-fav-card__img"><img src="' + p.image + '" alt="' + p.title + '"></div>' +
+                '<div class="cab-fav-card__body">' +
+                    '<p class="cab-fav-card__title">' + p.title + '</p>' +
+                    '<p class="cab-fav-card__price">' + fmtPrice(p.price) + '</p>' +
+                '</div>' +
+                '<div class="cab-fav-card__foot">' +
+                    '<a href="card.html?id=' + id + '" class="cab-btn-sm cab-btn-sm--primary">View</a>' +
+                    '<button class="cab-btn-sm cab-btn-sm--outline" data-fav-remove="' + id + '">Remove</button>' +
+                '</div>';
+            grid.appendChild(card);
+        });
+        grid.querySelectorAll('[data-fav-remove]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = btn.getAttribute('data-fav-remove');
+                localStorage.setItem('favorite_' + id, '0');
+                updateFavCount();
+                renderFavorites();
+            });
+        });
+    }
+
     function switchToTab(tab) {
         var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
         if (item) item.click();
+        if (tab === 'favorites') renderFavorites();
     }
     document.addEventListener('DOMContentLoaded', function () {
+        updateFavCount();
         var hash = window.location.hash.replace('#', '');
         if (hash) switchToTab(hash);
+        else renderFavorites();
         if (hash === 'messages') setTimeout(cabScrollToBottom, 100);
     });
 

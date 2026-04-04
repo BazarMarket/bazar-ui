@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabId === 'messages' && typeof cabScrollToBottom === 'function') {
             setTimeout(cabScrollToBottom, 50);
         }
+        if (tabId === 'favorites' && typeof renderFavorites === 'function') {
+            renderFavorites();
+        }
     }
 
     navItems.forEach(function (item) {
