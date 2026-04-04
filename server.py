@@ -19,6 +19,29 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps({'googleMapsApiKey': GOOGLE_MAPS_API_KEY}).encode())
             return
 
+        if self.path.startswith('/api/products/'):
+            import json
+            product_id = self.path.split('/api/products/')[-1].split('?')[0]
+            try:
+                with open('products.json', 'r') as f:
+                    products = json.load(f)
+                product = products.get(product_id)
+                if product:
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(json.dumps(product).encode())
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+                    self.wfile.write(b'{"error":"not found"}')
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(b'{"error":"server error"}')
+            return
+
         if not is_production and (self.path == '/' or self.path == '/index.html'):
             self.path = '/dev-index.html'
         super().do_GET()
