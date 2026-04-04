@@ -3733,13 +3733,6 @@ p {
   opacity: 1;
 }
 
-.card__heart::before {
-  content: '';
-}
-
-.card__heart.active::before {
-  color: #e31836;
-}
 
 .card__heart.active {
   opacity: 1;
