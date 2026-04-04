@@ -3799,16 +3799,22 @@ p {
   border-radius: 20px;
 }
 .stiker_vip {
-  background: #d4a017;
-  color: #1a1a1a;
-  font-size: 10px;
-  padding: 4px 8px;
+  background: #d4a017 !important;
+  color: #1a1a1a !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  padding: 4px 8px !important;
+  line-height: normal !important;
+  border-radius: 20px !important;
 }
 .stiker_top {
-  background: #ff9138;
-  color: #1a1a1a;
-  font-size: 10px;
-  padding: 4px 8px;
+  background: #ff9138 !important;
+  color: #1a1a1a !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  padding: 4px 8px !important;
+  line-height: normal !important;
+  border-radius: 20px !important;
 }
 
 .price-new {
