@@ -997,11 +997,13 @@
       display: flex;
       flex-direction: column;
       transform: translateX(100%);
-      transition: transform .35s cubic-bezier(.4,0,.2,1);
+      visibility: hidden;
+      transition: transform .35s cubic-bezier(.4,0,.2,1), visibility .35s cubic-bezier(.4,0,.2,1);
       overflow: hidden;
    }
    .ccp-side-panel.is-open {
       transform: translateX(0);
+      visibility: visible;
    }
 
    /* Header */
