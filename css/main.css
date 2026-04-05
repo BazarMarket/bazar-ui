@@ -3945,29 +3945,20 @@ p {
 /* ------- end ------- */
 /* Стили для footer */
 .footer {
-  padding: 0;
+  padding: 64px 0;
   background: #fef6fa;
 }
-.footer .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 20px;
-}
 .footer__body {
-  display: grid;
-  grid-template-columns: 300px 180px 180px 180px 180px;
-  column-gap: 72px;
+  display: flex;
   align-items: start;
-}
-.footer__start {
-  width: 300px;
+  justify-content: space-between;
+  gap: 100px;
 }
 .footer__logo {
-  margin-left: 0;
+  margin-left: -36px;
 }
 .footer__logo img {
-  max-width: 300px;
-  width: 100%;
+  width: 300px;
 }
 .footer__text {
   font-family: "Poppins", sans-serif;
@@ -3975,10 +3966,13 @@ p {
   font-size: 14px;
   color: #808080;
   line-height: normal;
-  max-width: 270px;
+  max-width: 240px;
 }
-.footer__box {
-  width: 180px;
+.footer__center {
+  display: flex;
+  justify-content: space-between;
+  flex: 1 1 100%;
+  gap: 16px;
 }
 .footer__title {
   font-family: "Poppins", sans-serif;
@@ -3986,11 +3980,12 @@ p {
   font-size: 18px;
   color: #1a1a1a;
   line-height: normal;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 }
 .footer__links {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 .footer__links p {
   margin: 0;
@@ -4003,10 +3998,6 @@ p {
   color: #808080;
   line-height: normal;
   white-space: nowrap;
-  margin-bottom: 10px;
-}
-.footer__links a:last-child {
-  margin-bottom: 0;
 }
 .footer__links a:hover {
   color: #1a1a1a;
@@ -4158,13 +4149,14 @@ p {
     overflow: hidden;
   }
   .footer__body {
-    grid-template-columns: 220px 180px 180px;
-    column-gap: 32px;
-    row-gap: 32px;
+    gap: 64px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .footer__start {
-    grid-column: 1 / -1;
+  .footer__center {
+    max-width: 600px;
     width: 100%;
+    order: 3;
   }
 }
 /* ------- end ------- */
