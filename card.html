@@ -435,9 +435,73 @@
                                  </span>
                               </div>
                            </div>
-                           <a href="#" class="btn btn_old icon-chat" onclick="event.preventDefault();openCardChat()">Start Chat</a>
+                           <a href="#" class="btn btn_old icon-chat" id="ccpStartBtn" onclick="event.preventDefault();toggleCardChat()">Start Chat</a>
                            <a href="#" class="btn btn_old icon-email">Email</a>
                         </div>
+
+                        <!-- ── Inline Chat Panel ── -->
+                        <div id="ccpInlineChat" class="ccp-inline-chat">
+
+                           <!-- Header -->
+                           <div class="ccp-inline-head">
+                              <img class="cab-chat-head__avatar" src="icon/man.svg" id="ccpSellerAvatar" alt="">
+                              <div style="flex:1;min-width:0;">
+                                 <div class="cab-chat-head__name" id="ccpSellerName">Seller</div>
+                                 <div class="cab-chat-head__status">Online now</div>
+                              </div>
+                              <button class="ccp-close" onclick="toggleCardChat()">✕</button>
+                           </div>
+
+                           <!-- Messages -->
+                           <div class="cab-chat-body ccp-inline-body" id="ccpChatBody">
+                              <div class="cab-chat-date">Today</div>
+                              <div class="cab-bubble cab-bubble--in">
+                                 <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+                                 <div class="cab-bubble__text" id="ccpWelcomeMsg">Hi! How can I help you?</div>
+                                 <span class="cab-bubble__time" id="ccpWelcomeTime">now</span>
+                              </div>
+                           </div>
+
+                           <!-- Offer panel -->
+                           <div class="cab-offer-panel" id="ccpOfferPanel">
+                              <div class="cab-offer-panel__title">💰 Make an offer</div>
+                              <div class="cab-offer-panel__row">
+                                 <span class="cab-offer-panel__currency">£</span>
+                                 <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
+                                 <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
+                                 <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
+                              </div>
+                           </div>
+
+                           <!-- Schedule panel -->
+                           <div class="cab-schedule-panel" id="ccpSchedulePanel">
+                              <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
+                              <div class="cab-schedule-panel__row">
+                                 <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
+                                 <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
+                                 <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
+                                 <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
+                              </div>
+                           </div>
+
+                           <!-- Quick replies -->
+                           <div class="cab-quick-replies">
+                              <button class="cab-qr-btn" onclick="ccpQuickReply('Is it available?')">Is it available?</button>
+                              <button class="cab-qr-btn" onclick="ccpQuickReply('What is the final price?')">Final price?</button>
+                              <button class="cab-qr-btn" onclick="ccpQuickReply('Can I see it today?')">See it today?</button>
+                              <button class="cab-qr-btn cab-qr-btn--offer" onclick="ccpShowOffer()">💰 Make offer</button>
+                              <button class="cab-qr-btn cab-qr-btn--schedule" onclick="ccpShowSchedule()">📅 Schedule viewing</button>
+                           </div>
+
+                           <!-- Input -->
+                           <div class="cab-chat-input-row">
+                              <button class="cab-chat-attach">📎</button>
+                              <input class="cab-chat-input" type="text" placeholder="Write a message..." id="ccpChatInput">
+                              <button class="cab-chat-emoji">😊</button>
+                              <button class="cab-chat-send" onclick="ccpSendMessage()">&#10148;</button>
+                           </div>
+
+                        </div><!-- /ccpInlineChat -->
                         <div class="card-options card-tile">
                            <div class="card-options__item">
                               <span data-popup="popup-share"
@@ -885,20 +949,14 @@
       var videoSection = el('video-section');
       if(videoSection) videoSection.style.display = 'none';
 
-      /* ── Fill chat popup with product data ── */
+      /* ── Fill inline chat with seller/product data ── */
       var ccpName = document.getElementById('ccpSellerName');
       if(ccpName) ccpName.textContent = p.seller_name;
-      var ccpTitle = document.getElementById('ccpAdTitle');
-      if(ccpTitle) ccpTitle.textContent = p.title;
-      var ccpPrice = document.getElementById('ccpAdPrice');
-      if(ccpPrice) ccpPrice.textContent = '£ ' + fmt(p.price);
-      var ccpThumb = document.getElementById('ccpAdThumb');
-      if(ccpThumb && p.images && p.images.length) ccpThumb.src = p.images[0];
-      var now = new Date();
-      var hh = now.getHours().toString().padStart(2,'0');
-      var mm = now.getMinutes().toString().padStart(2,'0');
+      var now2 = new Date();
+      var hh = now2.getHours().toString().padStart(2,'0');
+      var mm = now2.getMinutes().toString().padStart(2,'0');
       var ccpWelc = document.getElementById('ccpWelcomeMsg');
-      if(ccpWelc) ccpWelc.textContent = 'Hi! I saw your listing "' + p.title + '". Could you tell me more?';
+      if(ccpWelc) ccpWelc.textContent = 'Hi! I\'m ' + p.seller_name + '. How can I help you with "' + p.title + '"?';
       var ccpWT = document.getElementById('ccpWelcomeTime');
       if(ccpWT) ccpWT.textContent = hh + ':' + mm;
 
@@ -906,124 +964,68 @@
    })();
    </script>
 
-   <!-- ═══════════ CHAT POPUP ═══════════ -->
+   <!-- ═══════════ INLINE CHAT STYLES ═══════════ -->
    <style>
-   .ccp-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.35); z-index: 1200;
-      backdrop-filter: blur(2px);
-      animation: ccpFadeIn .2s ease;
+   .ccp-inline-chat {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .38s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+      opacity: 0;
+      border-radius: 14px;
+      margin-top: 10px;
+      background: #fff;
+      border: 1px solid #ebebeb;
+      box-shadow: 0 4px 20px rgba(0,0,0,.09);
+      display: flex;
+      flex-direction: column;
    }
-   .ccp-overlay.is-open { display: block; }
-   @keyframes ccpFadeIn { from{opacity:0} to{opacity:1} }
-   @keyframes ccpSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-   .ccp-popup {
-      display: none; position: fixed; bottom: 28px; right: 28px;
-      width: 400px; max-height: 580px;
-      background: #fff; border-radius: 18px;
-      box-shadow: 0 12px 48px rgba(0,0,0,.22);
-      z-index: 1201; flex-direction: column; overflow: hidden;
-      animation: ccpSlideUp .22s ease;
+   .ccp-inline-chat.is-open {
+      max-height: 520px;
+      opacity: 1;
    }
-   .ccp-popup.is-open { display: flex; }
+   .ccp-inline-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f0f0;
+      flex-shrink: 0;
+   }
+   .ccp-inline-body {
+      height: 220px;
+      min-height: 0;
+      flex-shrink: 0;
+   }
    .ccp-close {
-      background: none; border: none; font-size: 18px; cursor: pointer;
-      color: #bbb; padding: 4px 6px; line-height: 1; margin-left: auto;
+      background: none; border: none; font-size: 17px; cursor: pointer;
+      color: #bbb; padding: 4px 6px; line-height: 1;
       flex-shrink: 0; transition: color .15s;
    }
    .ccp-close:hover { color: #444; }
-   @media (max-width: 480px) {
-      .ccp-popup { bottom:0; right:0; width:100%; max-height:88vh; border-radius:18px 18px 0 0; }
-      .ccp-overlay.is-open { display:block; }
-   }
    </style>
 
-   <div class="ccp-overlay" id="ccpOverlay" onclick="if(event.target===this)closeCardChat()"></div>
-
-   <div class="ccp-popup" id="ccpPopup">
-
-      <!-- Header -->
-      <div class="cab-chat-head">
-         <img class="cab-chat-head__avatar" src="icon/man.svg" id="ccpSellerAvatar" alt="">
-         <div>
-            <div class="cab-chat-head__name" id="ccpSellerName">Seller</div>
-            <div class="cab-chat-head__status">Online now</div>
-         </div>
-         <div class="cab-chat-head__ad" onclick="window.location.href=window.location.href" style="cursor:default;max-width:180px;overflow:hidden;">
-            <img id="ccpAdThumb" src="img/product.jpg" alt="" style="width:38px;height:38px;border-radius:8px;object-fit:cover;display:block;flex-shrink:0;">
-            <div style="min-width:0;">
-               <div id="ccpAdTitle" style="font-size:11px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;"></div>
-               <div id="ccpAdPrice" style="font-size:12px;color:#1a1a1a;font-weight:700;margin-top:1px;"></div>
-            </div>
-         </div>
-         <button class="ccp-close" onclick="closeCardChat()">✕</button>
-      </div>
-
-      <!-- Messages -->
-      <div class="cab-chat-body" id="ccpChatBody">
-         <div class="cab-chat-date">Today</div>
-         <div class="cab-bubble cab-bubble--in">
-            <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
-            <div class="cab-bubble__text" id="ccpWelcomeMsg">Hi! How can I help you?</div>
-            <span class="cab-bubble__time" id="ccpWelcomeTime">now</span>
-         </div>
-      </div>
-
-      <!-- Offer panel -->
-      <div class="cab-offer-panel" id="ccpOfferPanel">
-         <div class="cab-offer-panel__title">💰 Make an offer</div>
-         <div class="cab-offer-panel__row">
-            <span class="cab-offer-panel__currency">£</span>
-            <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
-            <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
-            <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
-         </div>
-      </div>
-
-      <!-- Schedule panel -->
-      <div class="cab-schedule-panel" id="ccpSchedulePanel">
-         <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
-         <div class="cab-schedule-panel__row">
-            <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
-            <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
-            <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
-            <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
-         </div>
-      </div>
-
-      <!-- Quick replies -->
-      <div class="cab-quick-replies">
-         <button class="cab-qr-btn" onclick="ccpQuickReply('Is it available?')">Is it available?</button>
-         <button class="cab-qr-btn" onclick="ccpQuickReply('What is the final price?')">Final price?</button>
-         <button class="cab-qr-btn" onclick="ccpQuickReply('Can I see it today?')">See it today?</button>
-         <button class="cab-qr-btn cab-qr-btn--offer" onclick="ccpShowOffer()">💰 Make offer</button>
-         <button class="cab-qr-btn cab-qr-btn--schedule" onclick="ccpShowSchedule()">📅 Schedule viewing</button>
-      </div>
-
-      <!-- Input -->
-      <div class="cab-chat-input-row">
-         <button class="cab-chat-attach">📎</button>
-         <input class="cab-chat-input" type="text" placeholder="Write a message..." id="ccpChatInput">
-         <button class="cab-chat-emoji">😊</button>
-         <button class="cab-chat-send" onclick="ccpSendMessage()">&#10148;</button>
-      </div>
-
-   </div>
-
    <script>
-   function openCardChat() {
-      document.getElementById('ccpOverlay').classList.add('is-open');
-      document.getElementById('ccpPopup').classList.add('is-open');
-      setTimeout(function(){
-         var body = document.getElementById('ccpChatBody');
-         if(body) body.scrollTop = body.scrollHeight;
-         var inp = document.getElementById('ccpChatInput');
-         if(inp) inp.focus();
-      }, 80);
+   function toggleCardChat() {
+      var panel = document.getElementById('ccpInlineChat');
+      var btn   = document.getElementById('ccpStartBtn');
+      var open  = panel.classList.toggle('is-open');
+      if (btn) btn.textContent = open ? 'Close Chat' : 'Start Chat';
+      if (open) {
+         setTimeout(function(){
+            var body = document.getElementById('ccpChatBody');
+            if(body) body.scrollTop = body.scrollHeight;
+            var inp = document.getElementById('ccpChatInput');
+            if(inp) inp.focus();
+            panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+         }, 80);
+      }
    }
+   function openCardChat() { toggleCardChat(); }
    function closeCardChat() {
-      document.getElementById('ccpOverlay').classList.remove('is-open');
-      document.getElementById('ccpPopup').classList.remove('is-open');
+      var panel = document.getElementById('ccpInlineChat');
+      var btn   = document.getElementById('ccpStartBtn');
+      panel.classList.remove('is-open');
+      if(btn) btn.textContent = 'Start Chat';
    }
    function ccpScrollBottom() {
       var body = document.getElementById('ccpChatBody');
