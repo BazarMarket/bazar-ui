@@ -646,17 +646,17 @@
         }
         currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
         var rect = btn.getBoundingClientRect();
-        var pickerW = 288;
         var pickerH = 210;
         var viewW = window.innerWidth;
-        var viewH = window.innerHeight;
         // Vertical: above button if space, else below
         var top = rect.top - pickerH - 8;
         if (top < 8) top = rect.bottom + 8;
-        // Horizontal: align right edge to button right, clamp to viewport
-        var left = Math.min(Math.max(8, rect.right - pickerW), viewW - pickerW - 8);
+        // Right edge of picker = right edge of button (grows leftward)
+        var rightFromViewport = viewW - rect.right;
+        rightFromViewport = Math.max(8, rightFromViewport);
         picker.style.top = top + 'px';
-        picker.style.left = left + 'px';
+        picker.style.left = '';
+        picker.style.right = rightFromViewport + 'px';
         picker.classList.add('open');
     };
 
