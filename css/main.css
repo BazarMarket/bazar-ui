@@ -3955,11 +3955,12 @@ p {
 }
 .footer__body {
   display: grid;
-  grid-template-columns: 220px 1fr 1fr 1fr 1fr;
+  grid-template-columns: 220px 180px 180px 180px 180px;
   column-gap: 56px;
   align-items: start;
 }
 .footer__start {
+  width: 220px;
 }
 .footer__logo {
   margin-left: 0;
@@ -3975,10 +3976,8 @@ p {
   line-height: normal;
   max-width: 240px;
 }
-.footer__center {
-  display: contents;
-}
 .footer__box {
+  width: 180px;
 }
 .footer__title {
   font-family: "Poppins", sans-serif;
@@ -4158,12 +4157,13 @@ p {
     overflow: hidden;
   }
   .footer__body {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 220px 180px 180px;
     column-gap: 32px;
     row-gap: 32px;
   }
   .footer__start {
     grid-column: 1 / -1;
+    width: 100%;
   }
 }
 /* ------- end ------- */
