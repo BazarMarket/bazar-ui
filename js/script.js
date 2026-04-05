@@ -1129,3 +1129,36 @@ window.onload = function () {
 
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   UNREAD MESSAGES BADGE – synced across pages via localStorage
+   ═══════════════════════════════════════════════════════ */
+;(function () {
+    var KEY = 'bazar_unread_msgs';
+
+    function getCount() {
+        var v = localStorage.getItem(KEY);
+        return v === null ? 2 : Math.max(0, parseInt(v, 10) || 0);
+    }
+
+    function applyBadges(n) {
+        document.querySelectorAll('.icon-email .icon-item__namber').forEach(function (el) {
+            if (n > 0) { el.textContent = n; el.style.display = ''; }
+            else { el.style.display = 'none'; }
+        });
+    }
+
+    window.getBazarUnread = getCount;
+    window.setBazarUnread = function (n) {
+        n = Math.max(0, n);
+        localStorage.setItem(KEY, n);
+        applyBadges(n);
+    };
+    window.decBazarUnread = function (by) {
+        window.setBazarUnread(getCount() - (by || 1));
+    };
+
+    function init() { applyBadges(getCount()); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();

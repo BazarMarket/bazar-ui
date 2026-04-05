@@ -414,6 +414,17 @@
         }
     }
 
+    /* ── localStorage unread counter ── */
+    var UNREAD_KEY = 'bazar_unread_msgs';
+    function getUnread() {
+        var v = localStorage.getItem(UNREAD_KEY);
+        return v === null ? 2 : Math.max(0, parseInt(v, 10) || 0);
+    }
+    function setUnread(n) {
+        n = Math.max(0, n);
+        localStorage.setItem(UNREAD_KEY, n);
+    }
+
     function cabOpenChat(id) {
         document.querySelectorAll('.cab-conv-item').forEach(function(el) { el.classList.remove('active'); });
         var item = document.querySelector('.cab-conv-item[onclick*="' + id + '"]');
@@ -426,8 +437,19 @@
         var empty = document.getElementById('cabMsgEmpty');
         if (empty) empty.style.display = 'none';
 
+        /* Remove unread badge and update localStorage counter */
         var badge = item && item.querySelector('.cab-conv-badge');
-        if (badge) badge.remove();
+        if (badge) {
+            var badgeCount = parseInt(badge.textContent, 10) || 1;
+            badge.remove();
+            setUnread(getUnread() - badgeCount);
+            /* Also hide the envelope badge on this page */
+            document.querySelectorAll('.icon-email .icon-item__namber').forEach(function(el) {
+                var remaining = getUnread();
+                if (remaining > 0) { el.textContent = remaining; el.style.display = ''; }
+                else { el.style.display = 'none'; }
+            });
+        }
 
         setTimeout(cabScrollToBottom, 30);
     }
@@ -546,6 +568,13 @@
         var input = document.getElementById('cabChatInput');
         if (input) input.addEventListener('keydown', function(e) { if (e.key === 'Enter') cabSendMessage(); });
         setTimeout(cabScrollToBottom, 80);
+
+        /* Sync envelope badge with localStorage */
+        var n = getUnread();
+        document.querySelectorAll('.icon-email .icon-item__namber').forEach(function(el) {
+            if (n > 0) { el.textContent = n; el.style.display = ''; }
+            else { el.style.display = 'none'; }
+        });
     });
 </script>
 
