@@ -439,69 +439,6 @@
                            <a href="#" class="btn btn_old icon-email">Email</a>
                         </div>
 
-                        <!-- ── Inline Chat Panel ── -->
-                        <div id="ccpInlineChat" class="ccp-inline-chat">
-
-                           <!-- Header -->
-                           <div class="ccp-inline-head">
-                              <img class="cab-chat-head__avatar" src="icon/man.svg" id="ccpSellerAvatar" alt="">
-                              <div style="flex:1;min-width:0;">
-                                 <div class="cab-chat-head__name" id="ccpSellerName">Seller</div>
-                                 <div class="cab-chat-head__status">Online now</div>
-                              </div>
-                              <button class="ccp-close" onclick="toggleCardChat()">✕</button>
-                           </div>
-
-                           <!-- Messages -->
-                           <div class="cab-chat-body ccp-inline-body" id="ccpChatBody">
-                              <div class="cab-chat-date">Today</div>
-                              <div class="cab-bubble cab-bubble--in">
-                                 <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
-                                 <div class="cab-bubble__text" id="ccpWelcomeMsg">Hi! How can I help you?</div>
-                                 <span class="cab-bubble__time" id="ccpWelcomeTime">now</span>
-                              </div>
-                           </div>
-
-                           <!-- Offer panel -->
-                           <div class="cab-offer-panel" id="ccpOfferPanel">
-                              <div class="cab-offer-panel__title">💰 Make an offer</div>
-                              <div class="cab-offer-panel__row">
-                                 <span class="cab-offer-panel__currency">£</span>
-                                 <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
-                                 <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
-                                 <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
-                              </div>
-                           </div>
-
-                           <!-- Schedule panel -->
-                           <div class="cab-schedule-panel" id="ccpSchedulePanel">
-                              <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
-                              <div class="cab-schedule-panel__row">
-                                 <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
-                                 <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
-                                 <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
-                                 <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
-                              </div>
-                           </div>
-
-                           <!-- Quick replies -->
-                           <div class="cab-quick-replies">
-                              <button class="cab-qr-btn" onclick="ccpQuickReply('Is it available?')">Is it available?</button>
-                              <button class="cab-qr-btn" onclick="ccpQuickReply('What is the final price?')">Final price?</button>
-                              <button class="cab-qr-btn" onclick="ccpQuickReply('Can I see it today?')">See it today?</button>
-                              <button class="cab-qr-btn cab-qr-btn--offer" onclick="ccpShowOffer()">💰 Make offer</button>
-                              <button class="cab-qr-btn cab-qr-btn--schedule" onclick="ccpShowSchedule()">📅 Schedule viewing</button>
-                           </div>
-
-                           <!-- Input -->
-                           <div class="cab-chat-input-row">
-                              <button class="cab-chat-attach">📎</button>
-                              <input class="cab-chat-input" type="text" placeholder="Write a message..." id="ccpChatInput">
-                              <button class="cab-chat-emoji">😊</button>
-                              <button class="cab-chat-send" onclick="ccpSendMessage()">&#10148;</button>
-                           </div>
-
-                        </div><!-- /ccpInlineChat -->
                         <div class="card-options card-tile">
                            <div class="card-options__item">
                               <span data-popup="popup-share"
@@ -536,6 +473,71 @@
       <div class="mob-contact-bar">
          <button class="mob-contact-btn" onclick="openContactPopup()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.338 0-10 1.671-10 5v2h20v-2c0-3.329-6.662-5-10-5z"/></svg> Contact Seller</button>
       </div>
+
+      <!-- ── Side Chat Panel ── -->
+      <div id="ccpOverlay" class="ccp-overlay" onclick="closeCardChat()"></div>
+      <div id="ccpSidePanel" class="ccp-side-panel">
+
+         <!-- Header -->
+         <div class="ccp-inline-head">
+            <img class="cab-chat-head__avatar" src="icon/man.svg" id="ccpSellerAvatar" alt="">
+            <div style="flex:1;min-width:0;">
+               <div class="cab-chat-head__name" id="ccpSellerName">Seller</div>
+               <div class="cab-chat-head__status">Online now</div>
+            </div>
+            <button class="ccp-close-panel" onclick="closeCardChat()">✕ Close</button>
+         </div>
+
+         <!-- Messages -->
+         <div class="cab-chat-body ccp-inline-body" id="ccpChatBody">
+            <div class="cab-chat-date">Today</div>
+            <div class="cab-bubble cab-bubble--in">
+               <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+               <div class="cab-bubble__text" id="ccpWelcomeMsg">Hi! How can I help you?</div>
+               <span class="cab-bubble__time" id="ccpWelcomeTime">now</span>
+            </div>
+         </div>
+
+         <!-- Offer panel -->
+         <div class="cab-offer-panel" id="ccpOfferPanel">
+            <div class="cab-offer-panel__title">💰 Make an offer</div>
+            <div class="cab-offer-panel__row">
+               <span class="cab-offer-panel__currency">£</span>
+               <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
+               <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
+               <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
+            </div>
+         </div>
+
+         <!-- Schedule panel -->
+         <div class="cab-schedule-panel" id="ccpSchedulePanel">
+            <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
+            <div class="cab-schedule-panel__row">
+               <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
+               <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
+               <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
+               <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
+            </div>
+         </div>
+
+         <!-- Quick replies -->
+         <div class="cab-quick-replies">
+            <button class="cab-qr-btn" onclick="ccpQuickReply('Is it available?')">Is it available?</button>
+            <button class="cab-qr-btn" onclick="ccpQuickReply('What is the final price?')">Final price?</button>
+            <button class="cab-qr-btn" onclick="ccpQuickReply('Can I see it today?')">See it today?</button>
+            <button class="cab-qr-btn cab-qr-btn--offer" onclick="ccpShowOffer()">💰 Make offer</button>
+            <button class="cab-qr-btn cab-qr-btn--schedule" onclick="ccpShowSchedule()">📅 Schedule viewing</button>
+         </div>
+
+         <!-- Input -->
+         <div class="cab-chat-input-row">
+            <button class="cab-chat-attach">📎</button>
+            <input class="cab-chat-input" type="text" placeholder="Write a message..." id="ccpChatInput">
+            <button class="cab-chat-emoji">😊</button>
+            <button class="cab-chat-send" onclick="ccpSendMessage()">&#10148;</button>
+         </div>
+
+      </div><!-- /ccpSidePanel -->
 
       <!-- Попап Contact Seller (только мобайл) -->
       <div id="mob-contact-popup" class="mob-contact-popup">
@@ -959,51 +961,93 @@
    })();
    </script>
 
-   <!-- ═══════════ INLINE CHAT STYLES ═══════════ -->
+   <!-- ═══════════ SIDE CHAT PANEL STYLES ═══════════ -->
    <style>
-   .ccp-inline-chat {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .38s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+   /* Overlay */
+   .ccp-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 1100;
       opacity: 0;
-      border-radius: 14px;
-      margin-top: 10px;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .3s ease, visibility .3s ease;
+   }
+   .ccp-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+   }
+
+   /* Side panel */
+   .ccp-side-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 380px;
+      min-width: 320px;
       background: #fff;
-      border: 1px solid #ebebeb;
-      box-shadow: 0 4px 20px rgba(0,0,0,.09);
+      box-shadow: -4px 0 32px rgba(0,0,0,.13);
+      z-index: 1101;
       display: flex;
       flex-direction: column;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
    }
-   .ccp-inline-chat.is-open {
-      max-height: 520px;
-      opacity: 1;
+   .ccp-side-panel.is-open {
+      transform: translateX(0);
    }
+
+   /* Header */
    .ccp-inline-head {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 14px;
+      padding: 14px 16px;
       border-bottom: 1px solid #f0f0f0;
       flex-shrink: 0;
    }
-   .ccp-inline-body {
-      height: 220px;
-      min-height: 0;
+   .ccp-close-panel {
+      background: none;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: Poppins, sans-serif;
+      cursor: pointer;
+      color: #666;
+      padding: 5px 10px;
+      line-height: 1;
       flex-shrink: 0;
+      transition: background .15s, color .15s;
    }
-   .ccp-close {
-      background: none; border: none; font-size: 17px; cursor: pointer;
-      color: #bbb; padding: 4px 6px; line-height: 1;
-      flex-shrink: 0; transition: color .15s;
+   .ccp-close-panel:hover { background: #f5f5f5; color: #222; }
+
+   /* Chat body fills remaining space */
+   .ccp-inline-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
    }
-   .ccp-close:hover { color: #444; }
+
+   /* Mobile: fullscreen */
+   @media (max-width: 767px) {
+      .ccp-side-panel {
+         width: 100vw;
+         min-width: unset;
+      }
+   }
    </style>
 
    <script>
    function toggleCardChat() {
-      var panel = document.getElementById('ccpInlineChat');
-      var btn   = document.getElementById('ccpStartBtn');
-      var open  = panel.classList.toggle('is-open');
+      var panel   = document.getElementById('ccpSidePanel');
+      var overlay = document.getElementById('ccpOverlay');
+      var btn     = document.getElementById('ccpStartBtn');
+      var open    = panel.classList.toggle('is-open');
+      overlay.classList.toggle('is-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
       if (btn) btn.textContent = open ? 'Close Chat' : 'Start Chat';
       if (open) {
          setTimeout(function(){
@@ -1011,17 +1055,36 @@
             if(body) body.scrollTop = body.scrollHeight;
             var inp = document.getElementById('ccpChatInput');
             if(inp) inp.focus();
-            panel.scrollIntoView({behavior:'smooth', block:'nearest'});
          }, 80);
       }
    }
-   function openCardChat() { toggleCardChat(); }
+   function openCardChat() {
+      var panel   = document.getElementById('ccpSidePanel');
+      var overlay = document.getElementById('ccpOverlay');
+      var btn     = document.getElementById('ccpStartBtn');
+      panel.classList.add('is-open');
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      if (btn) btn.textContent = 'Close Chat';
+      setTimeout(function(){
+         var body = document.getElementById('ccpChatBody');
+         if(body) body.scrollTop = body.scrollHeight;
+         var inp = document.getElementById('ccpChatInput');
+         if(inp) inp.focus();
+      }, 80);
+   }
    function closeCardChat() {
-      var panel = document.getElementById('ccpInlineChat');
-      var btn   = document.getElementById('ccpStartBtn');
+      var panel   = document.getElementById('ccpSidePanel');
+      var overlay = document.getElementById('ccpOverlay');
+      var btn     = document.getElementById('ccpStartBtn');
       panel.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
       if(btn) btn.textContent = 'Start Chat';
    }
+   document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeCardChat();
+   });
    function ccpScrollBottom() {
       var body = document.getElementById('ccpChatBody');
       if(body) body.scrollTop = body.scrollHeight;
