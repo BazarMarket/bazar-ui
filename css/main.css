@@ -3404,13 +3404,17 @@ p {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: #fff;
+  color: #1a1a1a;
   line-height: normal;
-  background: green;
+  background: #ff9138;
   border-radius: 4px;
   padding: 4px 8px;
   text-align: center;
   margin: 0;
+}
+.subscription__stiker--vip {
+  background: #d4a017;
+  color: #1a1a1a;
 }
 .subscription__days {
   margin: 0;
