@@ -967,6 +967,33 @@
 
    <!-- ═══════════ SIDE CHAT PANEL STYLES ═══════════ -->
    <style>
+
+        /* Emoji Picker */
+        .emoji-picker {
+            position: fixed;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 8px;
+            z-index: 9999;
+            display: none;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            width: 288px;
+        }
+        .emoji-picker.open { display: grid; }
+        .emoji-picker button {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px 2px;
+            border-radius: 6px;
+            line-height: 1;
+            text-align: center;
+        }
+        .emoji-picker button:hover { background: #f5f5f5; }
    /* Overlay */
    .ccp-overlay {
       position: fixed;
@@ -1228,11 +1255,17 @@
         }
         currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
         var rect = btn.getBoundingClientRect();
-        var top = rect.top - 8;
-        var pickerH = 200;
-        if (top - pickerH < 0) { top = rect.bottom + 8; } else { top = top - pickerH; }
+        var pickerW = 288;
+        var pickerH = 210;
+        var viewW = window.innerWidth;
+        var viewH = window.innerHeight;
+        // Vertical: above button if space, else below
+        var top = rect.top - pickerH - 8;
+        if (top < 8) top = rect.bottom + 8;
+        // Horizontal: align right edge to button right, clamp to viewport
+        var left = Math.min(Math.max(8, rect.right - pickerW), viewW - pickerW - 8);
         picker.style.top = top + 'px';
-        picker.style.left = Math.max(8, rect.right - 288) + 'px';
+        picker.style.left = left + 'px';
         picker.classList.add('open');
     };
 
