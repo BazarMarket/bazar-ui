@@ -3952,7 +3952,7 @@ p {
   display: flex;
   align-items: start;
   justify-content: space-between;
-  gap: 100px;
+  gap: 32px;
 }
 .footer__logo {
   margin-left: -36px;
@@ -3997,6 +3997,7 @@ p {
   font-size: 16px;
   color: #808080;
   line-height: normal;
+  white-space: nowrap;
 }
 .footer__links a:hover {
   color: #1a1a1a;
@@ -4148,7 +4149,7 @@ p {
     overflow: hidden;
   }
   .footer__body {
-    gap: 64px;
+    gap: 32px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -4157,6 +4158,9 @@ p {
     width: 100%;
     order: 3;
   }
+}
+.footer__end {
+  flex-shrink: 0;
 }
 /* ------- end ------- */
 /* Стили для -------- */
