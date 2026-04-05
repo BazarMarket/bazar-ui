@@ -3416,6 +3416,13 @@ p {
   background: #d4a017;
   color: #1a1a1a;
 }
+.subscription__stiker--free {
+  background: #22c55e;
+  color: #fff;
+}
+.subscription__stiker--free ~ .subscription__days {
+  display: none;
+}
 .subscription__days {
   margin: 0;
   font-family: "Poppins", sans-serif;
