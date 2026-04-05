@@ -475,8 +475,8 @@
       </div>
 
       <!-- ── Side Chat Panel ── -->
-      <div id="ccpOverlay" class="ccp-overlay" onclick="closeCardChat()"></div>
-      <div id="ccpSidePanel" class="ccp-side-panel">
+      <div id="ccpOverlay" class="ccp-overlay" onclick="closeCardChat()" style="opacity:0;visibility:hidden;pointer-events:none;"></div>
+      <div id="ccpSidePanel" class="ccp-side-panel" style="transform:translateX(100%);visibility:hidden;">
 
          <!-- Header -->
          <div class="ccp-inline-head">
@@ -975,9 +975,9 @@
       transition: opacity .3s ease, visibility .3s ease;
    }
    .ccp-overlay.is-open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
    }
 
    /* Side panel */
@@ -1002,8 +1002,8 @@
       overflow: hidden;
    }
    .ccp-side-panel.is-open {
-      transform: translateX(0);
-      visibility: visible;
+      transform: translateX(0) !important;
+      visibility: visible !important;
    }
 
    /* Header */
