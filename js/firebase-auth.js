@@ -75,17 +75,38 @@ function toggleSignBtns(checkbox) {
 
 var otpTimerInterval = null;
 
+function showPhoneError(msg) {
+    var input = document.querySelector('.modal-number-input');
+    if (!input) return;
+    var err = document.getElementById('phoneError');
+    if (!err) {
+        err = document.createElement('p');
+        err.id = 'phoneError';
+        err.style.cssText = 'color:#e53935;font-size:13px;margin:4px 0 8px;display:none';
+        var wrap = input.closest('.modal-phone-input');
+        if (wrap && wrap.after) { wrap.after(err); } else { input.parentNode.parentNode.insertBefore(err, input.parentNode.nextSibling); }
+    }
+    err.textContent = msg;
+    err.style.display = 'block';
+}
+
+function clearPhoneError() {
+    var err = document.getElementById('phoneError');
+    if (err) err.style.display = 'none';
+}
+
 function sendSmsCode() {
     if (!document.getElementById('agreeCheckbox').checked) { document.getElementById('agreeError').style.display = 'block'; return; }
     document.getElementById('agreeError').style.display = 'none';
+    clearPhoneError();
     var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
-    if (!rawValue || rawValue.length < 10) { alert('Please enter your phone number'); return; }
+    if (!rawValue || rawValue.length < 10) { showPhoneError('Please enter your phone number'); return; }
     var phoneNumber = '+44' + rawValue;
 
     if (!recaptchaVerifier) {
         setupRecaptcha();
         if (!recaptchaVerifier) {
-            alert('Could not initialize verification. Please reload the page and try again. (Debug: check console for details)');
+            showPhoneError('Could not initialize verification. Please reload the page and try again.');
             return;
         }
     }
@@ -106,11 +127,11 @@ function sendSmsCode() {
             smsBtn.textContent = 'Sign in by an SMS';
             smsBtn.disabled = false;
             if (error.code === 'auth/invalid-phone-number') {
-                alert('Invalid phone number. Please check and try again.');
+                showPhoneError('Invalid phone number. Please check and try again.');
             } else if (error.code === 'auth/too-many-requests') {
-                alert('Too many attempts. Please try again later.');
+                showPhoneError('Too many attempts. Please try again later.');
             } else {
-                alert('Error sending SMS: ' + error.message);
+                showPhoneError('Error sending SMS. Please try again.');
             }
             recaptchaVerifier = null;
             setupRecaptcha();
