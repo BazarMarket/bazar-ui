@@ -3955,18 +3955,18 @@ p {
 }
 .footer__body {
   display: grid;
-  grid-template-columns: 240px 180px 180px 180px 180px;
-  column-gap: 56px;
+  grid-template-columns: 300px 180px 180px 180px 180px;
+  column-gap: 72px;
   align-items: start;
 }
 .footer__start {
-  width: 240px;
+  width: 300px;
 }
 .footer__logo {
   margin-left: 0;
 }
 .footer__logo img {
-  max-width: 210px;
+  max-width: 300px;
   width: 100%;
 }
 .footer__text {
@@ -3975,7 +3975,7 @@ p {
   font-size: 14px;
   color: #808080;
   line-height: normal;
-  max-width: 220px;
+  max-width: 270px;
 }
 .footer__box {
   width: 180px;
