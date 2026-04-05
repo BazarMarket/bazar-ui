@@ -9,81 +9,97 @@
     <meta name="keywords" content="">
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
     <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/choices.min.css" type="text/css"> <!-- Кастомный select -->
-    <link rel="stylesheet" href="css/main.css" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/main.css?v=107" type="text/css"> <!-- Основные стили темы  -->
     <link rel="icon" href="favicon.svg">
 </head>
 
 <body>
 
     <div class="sending-main">
-        <img src="icon/load.gif" alt="">
+        <img loading="lazy" src="icon/load.gif" alt="">
     </div>
 
 
     <div class="wrapper">
 
 
-        <header class="header">
-            <div class="container">
+        <header class="header" id="header-guest">
+            <div class="container-full">
                 <div class="header__body">
                     <div class="logo">
-                        <img src="img/logo.png" alt="">
+                        <img loading="lazy" src="img/logo.png" alt="">
                     </div>
                     <div class="header__btns">
-                        <a href="#" class="btn btn_start">Log in</a>
-                        <div class="btn-down icon">
+                        <a href="#" class="btn btn_start" onclick="doLogin(); return false;">Log in</a>
+                        <div class="btn-down icon" onclick="openCreateAccountModal()">
                             <p class="btn-down__text">Create an account</p>
                             <span class="btn-down__icon icon-arrow-d"></span>
                         </div>
                     </div>
-                    <!-- <div id="burger-body" class="burger-body">
-                        <div class="burger-body__close after992 close-body-js">закрыть</div>
-                        <nav class="navigation">
-                            <ul>
-                                <li><a href="#">Главная</a></li>
-                                <li class="li-sub-menu">
-                                    <a class="icon-down" href="#">О нас</a>
-                                    <ul class="sub-menu">
-                                        <li class="li-sub-menu">
-                                            <a href="#">О нашей компании2</a>
-                                            <ul class="sub-menu">
-                                                <li> <a href="#">Услуги 1</a> </li>
-                                                <li> <a href="#">Услуги 2</a> </li>
-                                            </ul>
-                                        </li>
-                                        <li> <a href="#">Как мы работаем</a> </li>
-                                        <li> <a href="#">Гарантии</a> </li>
-                                        <li> <a href="#">Отзывы</a> </li>
-                                        <li> <a href="#">Награды</a> </li>
-                                        <li> <a href="#">Наши партнёры</a> </li>
-                                        <li> <a href="#">Сотрудничество</a> </li>
-                                    </ul>
-                                </li>
-
-                                <li class="li-sub-menu">
-                                    <a class="icon-down" href="#">Услуги</a>
-                                    <ul class="sub-menu">
-                                        <li> <a href="#">Услуги 1</a> </li>
-                                        <li> <a href="#">Услуги 2</a> </li>
-                                    </ul>
-                                </li>
-
-                                <li><a href="#">Портфолио</a> </li>
-                                <li><a href="#">Блог</a> </li>
-                                <li><a href="#">Контакты</a> </li>
-                            </ul>
-                        </nav>
-                    </div> -->
-
-                    <!-- <div data-open="burger-body" class="burger after992">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div> -->
                 </div>
             </div>
         </header>
+
+        <header class="header-old" id="header-logged-in" style="display:none;">
+           <div class="container-full">
+              <div class="header-old__body">
+                 <a href="index.html" class="logo">
+                    <img src="img/logo.png" alt="">
+                 </a>
+                 <div class="burger-body">
+                    <div class="header-old__right">
+                       <div class="header-old__vsep"></div>
+                       <div class="header-old__cell">
+                          <a href="cabinet.html#payments" class="wallet-widget icon-win-wallet">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></a>
+                       </div>
+                       <div class="header-old__cell">
+                          <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="icons-list">
+                             <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                             <a href="cabinet.html#favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
+                          </div>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="user-link">
+                             <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo">
+                                <img loading="lazy" class="img-cover" id="header-avatar" src="icon/man.svg" alt="">
+                             </div>
+                             <div class="user-link__title" id="header-username">Andreas Xenofontos</div></a>
+                             <div class="user-menu">
+                                <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                                <hr class="user-menu__hr">
+                                <a href="cabinet.html#settings" class="user-menu-item icon-win-user">My Profile</a>
+                                <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
+                                <a href="cabinet.html#payments" class="user-menu-item icon-win-wallet">My Payments</a>
+                                <a href="cabinet.html#favorites" class="user-menu-item icon-heart">Favorites</a>
+
+                                <a href="cabinet.html#subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
+                                   <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
+                                   <span class="subscription__stiker">PRO</span>
+                                   <span class="subscription__days">382дн</span>
+                                </div></a>
+                                <hr class="user-menu__hr">
+                                <a href="cabinet.html#support" class="user-menu-item icon-win-faq">Support</a>
+                                <a href="cabinet.html#settings" class="user-menu-item icon-win-setting">My Settings</a>
+                                <hr class="user-menu__hr">
+                                <a href="#" class="user-logout icon-win-logout" onclick="doLogout(); return false;">Log out</a>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="burger-old">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                 </div>
+              </div>
+           </div>
+        </header>
+
+
 
         <main class="main">
 
@@ -185,13 +201,13 @@
 
         </main>
 
-        <footer>
+                <footer>
             <div class="footer before992">
                 <div class="container">
                     <div class="footer__body">
                         <div class="footer__start">
                             <a href="#" class="footer__logo">
-                                <img src="img/logo.png" alt="">
+                                <img loading="lazy" src="img/logo.png" alt="">
                             </a>
                             <p class="footer__text">
                                 Welcome to our marketplace, where products find their buyers.
@@ -210,9 +226,9 @@
                             <div class="footer__box">
                                 <h3 class="footer__title">Important Links</h3>
                                 <div class="footer__links">
-                                    <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
                                     <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
                                     <a href="advertising-policy.html" target="_blank">Advertising Policy</a>
+                                    <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
                                 </div>
                             </div>
                             <div class="footer__box">
@@ -223,20 +239,13 @@
                                     <a href="terms-of-service.html" target="_blank">Terms of Service</a>
                                 </div>
                             </div>
-
-                        </div>
-                        <div class="footer__end">
                             <div class="footer__box">
-                                <h3 class="footer__title">Newsletter</h3>
+                                <h3 class="footer__title">Payments</h3>
                                 <div class="footer__links">
-                                    <p>Subscribe our latest update</p>
+                                    <a href="withdrawals.html" target="_blank">Withdrawals</a>
+                                    <a href="#">Refund Policy</a>
+                                    <a href="#">Payment Methods</a>
                                 </div>
-                                <form action="">
-                                    <div class="subform">
-                                        <input type="text" placeholder="Email">
-                                        <button type="submit" class="subform__btn icon-telega"></button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -258,8 +267,8 @@
                         <div class="payment">
                             <p class="payment__title">Payment Accepted:</p>
                             <div class="payment__list">
-                                <div class="payment__item"><img src="icon/visa.jpg" alt=""></div>
-                                <div class="payment__item"><img src="icon/mscsrd.jpg" alt=""></div>
+                                <div class="payment__item"><img loading="lazy" src="icon/visa.jpg" alt=""></div>
+                                <div class="payment__item"><img loading="lazy" src="icon/mscsrd.jpg" alt=""></div>
                             </div>
                         </div>
                     </div>
@@ -286,9 +295,9 @@
                                 <div class="accordion__content">
                                     <div class="accordion__body">
                                         <div class="footer__links">
-                                            <a href="#">Conditions</a>
-                                            <a href="#">Privacy Policy</a>
-                                            <a href="#">Advertising Policy</a>
+                                            <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
+                                            <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                            <a href="advertising-policy.html" target="_blank">Advertising Policy</a>
                                         </div>
                                     </div>
                                 </div>
@@ -298,9 +307,9 @@
                                 <div class="accordion__content">
                                     <div class="accordion__body">
                                         <div class="footer__links">
-                                            <a href="#">Cookie Policy</a>
-                                            <a href="#">Privacy Policy</a>
-                                            <a href="#">Terms of Service</a>
+                                            <a href="cookie-policy.html" target="_blank">Cookie Policy</a>
+                                            <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                            <a href="terms-of-service.html" target="_blank">Terms of Service</a>
                                         </div>
                                     </div>
                                 </div>
@@ -327,10 +336,195 @@
 
 
 
-    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script> <!-- Слайдер свайпер -->
-    <script type="text/javascript" src="js/inputmask.min.js"></script> <!-- Маска для инпутов  -->
-    <script type="text/javascript" src="js/fslightbox.js"></script> <!-- Галирея  -->
+    <!-- OTP Code Modal -->
+    <div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
+        <div class="modal-card modal-card--otp">
+            <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
+
+            <div class="otp-icon">
+                <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
+            </div>
+
+            <h2 class="modal-title otp-title">Enter the code</h2>
+            <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
+
+            <div class="otp-inputs">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            </div>
+            <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
+
+            <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
+            <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
+        </div>
+    </div>
+
+    <!-- Profile Setup Modal (Step 3) -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-card modal-card--profile">
+            <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
+
+            <div class="profile-avatar-wrap">
+                <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
+            </div>
+
+            <h2 class="modal-title profile-modal-title">Almost there!</h2>
+            <p class="profile-modal-subtitle">Just a few details</p>
+
+            <div class="profile-gender-btns">
+                <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+                <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
+            </div>
+
+            <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
+
+            <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
+        </div>
+    </div>
+
+    <!-- Create Account Modal -->
+    <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
+            <h2 class="modal-title">Create an account</h2>
+
+            <div class="modal-phone-input">
+                <div class="modal-country-select">
+                    <span class="modal-country-code">+44</span>
+                </div>
+                <input class="modal-number-input" type="tel" placeholder="Phone number">
+            </div>
+
+            <label class="modal-checkbox-label">
+                <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
+                <span>I agree to the <a href="terms-of-service.html" target="_blank">Terms of Service</a> and the <a href="privacy-policy.html" target="_blank">Privacy Policy</a></span>
+            </label>
+
+            <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
+
+            <div class="modal-btns" id="modalSignBtns">
+                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
+                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="recaptcha-container"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+
+    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
+    <script type="text/javascript" src="js/inputmask.min.js"></script>
+    <script type="text/javascript" src="js/fslightbox.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
+    <script src="js/firebase-auth.js"></script>
+    <script src="js/location-autocomplete.js"></script>
+    <script>
+       function setHeaderLocation(btn) {
+          var input = document.getElementById('headerLocationInput');
+          input.value = btn.dataset.city;
+          input.dataset.city = btn.dataset.city;
+       }
+       function useMyLocation(target) {
+          var dd = document.getElementById(target === 'header' ? 'headerLocDropdown' : 'searchLocDropdown');
+          dd.classList.remove('open');
+          var input = document.getElementById(target === 'header' ? 'headerLocationInput' : 'searchLocationInput');
+          input.value = 'Detecting...';
+          if (!navigator.geolocation) { input.value = ''; alert('Geolocation is not supported by your browser'); return; }
+          navigator.geolocation.getCurrentPosition(function(pos) {
+             var lat = pos.coords.latitude, lng = pos.coords.longitude;
+             var geocoder = new google.maps.Geocoder();
+             geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                   var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
+                   for (var i = 0; i < results[0].address_components.length; i++) {
+                      var c = results[0].address_components[i];
+                      if (c.types.indexOf('locality') !== -1) locality = c.long_name;
+                      if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
+                      if (c.types.indexOf('country') !== -1) country = c.short_name;
+                   }
+                   var parts = [];
+                   var mainCity = postalTown || locality || '';
+                   if (mainCity) parts.push(mainCity);
+                   var region = area2 || area1 || '';
+                   if (region && region !== mainCity) parts.push(region);
+                   if (country) parts.push(country);
+                   var label = parts.join(', ') || results[0].formatted_address;
+                   input.value = label;
+                   input.dataset.city = mainCity || label;
+                } else {
+                   input.value = '';
+                   alert('Could not determine your location');
+                }
+             });
+          }, function() { input.value = ''; alert('Location access denied'); });
+       }
+       window.initMapsForLocation = function() {
+          LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
+       };
+       (function() {
+          fetch('/api/config')
+             .then(function(r) { return r.json(); })
+             .then(function(cfg) {
+                if (!cfg.googleMapsApiKey) return;
+                var s = document.createElement('script');
+                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initMapsForLocation';
+                s.async = true; s.defer = true;
+                document.head.appendChild(s);
+             });
+       })();
+
+       // Heart favorites functionality
+       function updateFavCount() {
+          var count = 0;
+          for(var i = 0; i < localStorage.length; i++) {
+             var key = localStorage.key(i);
+             if(key && key.indexOf('favorite_') === 0 && localStorage.getItem(key) === '1') count++;
+          }
+          var badge = document.getElementById('fav-count');
+          if(badge) {
+             badge.textContent = count;
+             badge.style.display = count > 0 ? 'flex' : 'none';
+          }
+       }
+       (function() {
+          var hearts = document.querySelectorAll('.card__heart');
+          hearts.forEach(function(heart) {
+             var cardId = heart.closest('.card').querySelector('[href*="id="]') ? 
+                         heart.closest('.card').querySelector('[href*="id="]').href.split('id=')[1] : null;
+             
+             if(cardId) {
+                var stored = localStorage.getItem('favorite_' + cardId);
+                if(stored === '1') {
+                   heart.classList.add('active');
+                   heart.classList.remove('icon-heart');
+                   heart.classList.add('icon-heart-full');
+                }
+             }
+             
+             heart.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                heart.classList.toggle('active');
+                var isActive = heart.classList.contains('active');
+                heart.classList.toggle('icon-heart', !isActive);
+                heart.classList.toggle('icon-heart-full', isActive);
+                if(cardId) {
+                   localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
+                }
+                updateFavCount();
+             });
+          });
+          updateFavCount();
+       })();
+    </script>
 
 </body>
 
