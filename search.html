@@ -30,9 +30,10 @@
       .sr-view-sidebar { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; padding-top: 4px; flex-shrink: 0; }
       .sr-results-main { flex: 1; min-width: 0; }
       .sr-view-btn { width: 41px; height: 41px; border: 1px solid #e8e8e8; border-radius: 8px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
-      .sr-view-btn:hover { border-color: #ff9138; }
-      .sr-view-btn.active { border-color: #ff9138; background: #fff3e8; }
+      .sr-view-btn:hover { border-color: #555; }
+      .sr-view-btn.active { border-color: #3d3d3d; background: #3d3d3d; }
       .sr-view-btn svg { display: block; }
+      .sr-view-btn.active svg rect { fill: #ffffff; }
       .sr-grid-view { display: none; }
       .sr-grid-view.active { display: block; }
       .sr-grid-view .cards__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
