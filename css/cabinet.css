@@ -1952,18 +1952,20 @@
 /* ── Make an offer panel ── */
 .cab-offer-panel {
     display: none;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
     padding: 10px 14px;
     background: #fff8f2;
     border-top: 1px solid #ffe0c0;
 }
 .cab-offer-panel.is-open { display: flex; }
-.cab-offer-panel__title { font-size: 13px; font-weight: 600; color: #ff9138; white-space: nowrap; }
-.cab-offer-panel__row { display: flex; align-items: center; gap: 6px; flex: 1; }
-.cab-offer-panel__currency { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+.cab-offer-panel__header { display: flex; align-items: center; justify-content: space-between; }
+.cab-offer-panel__title { font-size: 13px; font-weight: 600; color: #ff9138; }
+.cab-offer-panel__row { display: flex; align-items: center; gap: 6px; }
+.cab-offer-panel__currency { font-size: 15px; font-weight: 700; color: #1a1a1a; flex-shrink: 0; }
 .cab-offer-panel__input {
     flex: 1;
+    min-width: 0;
     border: 1px solid #ffd0a0;
     border-radius: 10px;
     padding: 7px 12px;
@@ -1984,6 +1986,7 @@
     cursor: pointer;
     transition: background .2s;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 .cab-offer-panel__send:hover { background: #e07d2a; }
 .cab-offer-panel__cancel {
@@ -2000,16 +2003,19 @@
 /* ── Schedule viewing panel ── */
 .cab-schedule-panel {
     display: none;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
     padding: 10px 14px;
     background: #f0f4ff;
     border-top: 1px solid #c8d8ff;
 }
 .cab-schedule-panel.is-open { display: flex; }
-.cab-schedule-panel__title { font-size: 13px; font-weight: 600; color: #5b8dee; white-space: nowrap; }
-.cab-schedule-panel__row { display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; }
+.cab-schedule-panel__header { display: flex; align-items: center; justify-content: space-between; }
+.cab-schedule-panel__title { font-size: 13px; font-weight: 600; color: #5b8dee; }
+.cab-schedule-panel__row { display: flex; align-items: center; gap: 6px; }
 .cab-schedule-panel__input {
+    flex: 1;
+    min-width: 0;
     border: 1px solid #c8d8ff;
     border-radius: 10px;
     padding: 7px 12px;
@@ -2030,6 +2036,8 @@
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     transition: background .2s;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 .cab-schedule-panel__send:hover { background: #3d6fd4; }
 .cab-schedule-panel__cancel {

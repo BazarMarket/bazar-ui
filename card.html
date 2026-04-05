@@ -500,23 +500,27 @@
 
          <!-- Offer panel -->
          <div class="cab-offer-panel" id="ccpOfferPanel">
-            <div class="cab-offer-panel__title">💰 Make an offer</div>
+            <div class="cab-offer-panel__header">
+               <span class="cab-offer-panel__title">💰 Make an offer</span>
+               <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
+            </div>
             <div class="cab-offer-panel__row">
                <span class="cab-offer-panel__currency">£</span>
                <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
                <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
-               <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
             </div>
          </div>
 
          <!-- Schedule panel -->
          <div class="cab-schedule-panel" id="ccpSchedulePanel">
-            <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
+            <div class="cab-schedule-panel__header">
+               <span class="cab-schedule-panel__title">📅 Schedule a viewing</span>
+               <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
+            </div>
             <div class="cab-schedule-panel__row">
                <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
                <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
                <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
-               <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
             </div>
          </div>
 
