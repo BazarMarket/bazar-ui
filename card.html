@@ -967,7 +967,7 @@
    .ccp-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.15);
+      background: rgba(0,0,0,.2);
       z-index: 1100;
       opacity: 0;
       visibility: hidden;
@@ -983,19 +983,22 @@
    /* Side panel */
    .ccp-side-panel {
       position: fixed;
-      top: 0;
-      right: 0;
-      height: 100vh;
+      top: 16px;
+      right: 16px;
+      bottom: 16px;
+      height: auto;
       width: 380px;
-      max-width: 40vw;
+      max-width: calc(100vw - 32px);
       min-width: 320px;
+      border-radius: 16px;
       background: #fff;
-      box-shadow: -4px 0 32px rgba(0,0,0,.13);
+      box-shadow: -4px 0 32px rgba(0,0,0,.15);
       z-index: 1101;
       display: flex;
       flex-direction: column;
-      transform: translateX(100%);
+      transform: translateX(calc(100% + 20px));
       transition: transform .35s cubic-bezier(.4,0,.2,1);
+      overflow: hidden;
    }
    .ccp-side-panel.is-open {
       transform: translateX(0);
@@ -1036,8 +1039,13 @@
    /* Mobile: fullscreen */
    @media (max-width: 767px) {
       .ccp-side-panel {
+         top: 0;
+         right: 0;
+         bottom: 0;
          width: 100vw;
+         max-width: 100vw;
          min-width: unset;
+         border-radius: 0;
       }
    }
    </style>
