@@ -494,7 +494,7 @@
                      </div>
                      <div class="cf-cat" id="cfConstructionTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfConstructionTypeBtn" onclick="toggleConstructionTypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfConstructionTypeLabel">Construction type (optional)</span>
+                           <span class="cf-cat-btn-label" id="cfConstructionTypeLabel">Construction type</span>
                            <span class="cf-type-clear" id="cfConstructionTypeClear" onclick="clearConstructionType(event)" style="display:none;">&times;</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -1793,7 +1793,7 @@
          var clearBtn = document.getElementById('cfConstructionTypeClear');
          var btn = document.getElementById('cfConstructionTypeBtn');
          if (checks.length === 0) {
-            label.textContent = 'Construction type (optional)';
+            label.textContent = 'Construction type';
             clearBtn.style.display = 'none';
             btn.classList.remove('has-selection');
          } else if (checks.length === 1) {
