@@ -969,17 +969,15 @@
    <style>
 
         /* Emoji Picker */
-        .cab-chat-input-row { position: relative; }
         .emoji-picker {
-            position: absolute;
-            bottom: calc(100% + 6px);
-            right: 0;
+            position: fixed;
+            right: 8px;
             background: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             padding: 8px;
-            z-index: 9999;
+            z-index: 99999;
             display: none;
             grid-template-columns: repeat(8, 1fr);
             gap: 2px;
@@ -1222,46 +1220,54 @@
         '👏','🤝','✌️','🤞','❤️','🧡','💛','💚','💙','💜','🔥','✨',
         '💯','🎉','🌟','🏠','🏡','💰','🔑','📞','📱','📅','👀','💼'
     ];
+    var picker = null;
+    var currentInput = null;
 
-    function buildPicker(row, inp) {
+    function buildPicker() {
         var d = document.createElement('div');
         d.className = 'emoji-picker';
+        d.id = 'bazarEmojiPicker';
         EMOJIS.forEach(function(em) {
             var b = document.createElement('button');
             b.type = 'button';
             b.textContent = em;
             b.addEventListener('click', function(e) {
                 e.stopPropagation();
-                var s = inp.selectionStart || inp.value.length;
-                var v = inp.value;
-                inp.value = v.slice(0, s) + em + v.slice(s);
-                inp.selectionStart = inp.selectionEnd = s + em.length;
-                inp.focus();
+                if (currentInput) {
+                    var s = currentInput.selectionStart || currentInput.value.length;
+                    var v = currentInput.value;
+                    currentInput.value = v.slice(0, s) + em + v.slice(s);
+                    currentInput.selectionStart = currentInput.selectionEnd = s + em.length;
+                    currentInput.focus();
+                }
                 d.classList.remove('open');
             });
             d.appendChild(b);
         });
-        row.appendChild(d);
+        document.body.appendChild(d);
         return d;
     }
 
     window.toggleEmojiPicker = function(btn) {
-        var row = btn.closest('.cab-chat-input-row');
-        var inp = row.querySelector('.cab-chat-input');
-        var picker = row.querySelector('.emoji-picker');
-        if (!picker) picker = buildPicker(row, inp);
-        // Close any other open pickers
-        document.querySelectorAll('.emoji-picker.open').forEach(function(p) {
-            if (p !== picker) p.classList.remove('open');
-        });
-        picker.classList.toggle('open');
+        if (!picker) picker = buildPicker();
+        if (picker.classList.contains('open')) {
+            picker.classList.remove('open');
+            return;
+        }
+        currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
+        var rect = btn.getBoundingClientRect();
+        // Position above the button, fixed to right:8px
+        var top = rect.top - 218;
+        if (top < 8) top = rect.bottom + 8;
+        picker.style.top = top + 'px';
+        picker.classList.add('open');
     };
 
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.cab-chat-input-row')) {
-            document.querySelectorAll('.emoji-picker.open').forEach(function(p) {
-                p.classList.remove('open');
-            });
+        if (picker && picker.classList.contains('open')
+            && !picker.contains(e.target)
+            && !e.target.classList.contains('cab-chat-emoji')) {
+            picker.classList.remove('open');
         }
     });
 })();
