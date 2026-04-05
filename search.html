@@ -1347,9 +1347,7 @@
             updateSubtypeLabel();
          }
          var ctWrap = document.getElementById('cfConstructionTypeWrap');
-         if (houseChecked) {
-            ctWrap.style.display = '';
-         } else {
+         if (!houseChecked) {
             ctWrap.style.display = 'none';
             document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateConstructionTypeLabel();
@@ -1407,6 +1405,14 @@
             label.textContent = checks.length + ' selected';
             clearBtn.style.display = '';
             btn.classList.add('has-selection');
+         }
+         var ctWrap = document.getElementById('cfConstructionTypeWrap');
+         if (checks.length > 0) {
+            ctWrap.style.display = '';
+         } else {
+            ctWrap.style.display = 'none';
+            document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+            updateConstructionTypeLabel();
          }
       }
       function clearHouseType(e) {
