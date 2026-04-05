@@ -10,6 +10,7 @@
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
    <link rel="stylesheet" href="css/main.css?v=97" type="text/css"> <!-- Основные стили темы  -->
+   <link rel="stylesheet" href="css/cabinet.css" type="text/css">
    <link rel="icon" href="favicon.svg">
 </head>
 
@@ -434,7 +435,7 @@
                                  </span>
                               </div>
                            </div>
-                           <a href="#" class="btn btn_old icon-chat">Start Chat</a>
+                           <a href="#" class="btn btn_old icon-chat" onclick="event.preventDefault();openCardChat()">Start Chat</a>
                            <a href="#" class="btn btn_old icon-email">Email</a>
                         </div>
                         <div class="card-options card-tile">
@@ -481,7 +482,7 @@
             <p class="mob-contact-popup__since" id="mob-seller-since">2 years with Bazar Market</p>
             <a href="tel:+35796123456" class="mob-contact-popup__btn icon-phone" id="mob-call-btn">Call</a>
             <a href="#" class="mob-contact-popup__btn icon-wp">WhatsApp</a>
-            <a href="#" class="mob-contact-popup__btn icon-chat">Start Chat</a>
+            <a href="#" class="mob-contact-popup__btn icon-chat" onclick="event.preventDefault();openCardChat()">Start Chat</a>
          </div>
       </div>
 
@@ -883,8 +884,230 @@
 
       var videoSection = el('video-section');
       if(videoSection) videoSection.style.display = 'none';
+
+      /* ── Fill chat popup with product data ── */
+      var ccpName = document.getElementById('ccpSellerName');
+      if(ccpName) ccpName.textContent = p.seller_name;
+      var ccpTitle = document.getElementById('ccpAdTitle');
+      if(ccpTitle) ccpTitle.textContent = p.title;
+      var ccpPrice = document.getElementById('ccpAdPrice');
+      if(ccpPrice) ccpPrice.textContent = '£ ' + fmt(p.price);
+      var ccpThumb = document.getElementById('ccpAdThumb');
+      if(ccpThumb && p.images && p.images.length) ccpThumb.src = p.images[0];
+      var now = new Date();
+      var hh = now.getHours().toString().padStart(2,'0');
+      var mm = now.getMinutes().toString().padStart(2,'0');
+      var ccpWelc = document.getElementById('ccpWelcomeMsg');
+      if(ccpWelc) ccpWelc.textContent = 'Hi! I saw your listing "' + p.title + '". Could you tell me more?';
+      var ccpWT = document.getElementById('ccpWelcomeTime');
+      if(ccpWT) ccpWT.textContent = hh + ':' + mm;
+
          }); // end fetch
    })();
+   </script>
+
+   <!-- ═══════════ CHAT POPUP ═══════════ -->
+   <style>
+   .ccp-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.35); z-index: 1200;
+      backdrop-filter: blur(2px);
+      animation: ccpFadeIn .2s ease;
+   }
+   .ccp-overlay.is-open { display: block; }
+   @keyframes ccpFadeIn { from{opacity:0} to{opacity:1} }
+   @keyframes ccpSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+   .ccp-popup {
+      display: none; position: fixed; bottom: 28px; right: 28px;
+      width: 400px; max-height: 580px;
+      background: #fff; border-radius: 18px;
+      box-shadow: 0 12px 48px rgba(0,0,0,.22);
+      z-index: 1201; flex-direction: column; overflow: hidden;
+      animation: ccpSlideUp .22s ease;
+   }
+   .ccp-popup.is-open { display: flex; }
+   .ccp-close {
+      background: none; border: none; font-size: 18px; cursor: pointer;
+      color: #bbb; padding: 4px 6px; line-height: 1; margin-left: auto;
+      flex-shrink: 0; transition: color .15s;
+   }
+   .ccp-close:hover { color: #444; }
+   @media (max-width: 480px) {
+      .ccp-popup { bottom:0; right:0; width:100%; max-height:88vh; border-radius:18px 18px 0 0; }
+      .ccp-overlay.is-open { display:block; }
+   }
+   </style>
+
+   <div class="ccp-overlay" id="ccpOverlay" onclick="if(event.target===this)closeCardChat()"></div>
+
+   <div class="ccp-popup" id="ccpPopup">
+
+      <!-- Header -->
+      <div class="cab-chat-head">
+         <img class="cab-chat-head__avatar" src="icon/man.svg" id="ccpSellerAvatar" alt="">
+         <div>
+            <div class="cab-chat-head__name" id="ccpSellerName">Seller</div>
+            <div class="cab-chat-head__status">Online now</div>
+         </div>
+         <div class="cab-chat-head__ad" onclick="window.location.href=window.location.href" style="cursor:default;max-width:180px;overflow:hidden;">
+            <img id="ccpAdThumb" src="img/product.jpg" alt="" style="width:38px;height:38px;border-radius:8px;object-fit:cover;display:block;flex-shrink:0;">
+            <div style="min-width:0;">
+               <div id="ccpAdTitle" style="font-size:11px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;"></div>
+               <div id="ccpAdPrice" style="font-size:12px;color:#1a1a1a;font-weight:700;margin-top:1px;"></div>
+            </div>
+         </div>
+         <button class="ccp-close" onclick="closeCardChat()">✕</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="cab-chat-body" id="ccpChatBody">
+         <div class="cab-chat-date">Today</div>
+         <div class="cab-bubble cab-bubble--in">
+            <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
+            <div class="cab-bubble__text" id="ccpWelcomeMsg">Hi! How can I help you?</div>
+            <span class="cab-bubble__time" id="ccpWelcomeTime">now</span>
+         </div>
+      </div>
+
+      <!-- Offer panel -->
+      <div class="cab-offer-panel" id="ccpOfferPanel">
+         <div class="cab-offer-panel__title">💰 Make an offer</div>
+         <div class="cab-offer-panel__row">
+            <span class="cab-offer-panel__currency">£</span>
+            <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
+            <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
+            <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
+         </div>
+      </div>
+
+      <!-- Schedule panel -->
+      <div class="cab-schedule-panel" id="ccpSchedulePanel">
+         <div class="cab-schedule-panel__title">📅 Schedule a viewing</div>
+         <div class="cab-schedule-panel__row">
+            <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
+            <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
+            <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
+            <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
+         </div>
+      </div>
+
+      <!-- Quick replies -->
+      <div class="cab-quick-replies">
+         <button class="cab-qr-btn" onclick="ccpQuickReply('Is it available?')">Is it available?</button>
+         <button class="cab-qr-btn" onclick="ccpQuickReply('What is the final price?')">Final price?</button>
+         <button class="cab-qr-btn" onclick="ccpQuickReply('Can I see it today?')">See it today?</button>
+         <button class="cab-qr-btn cab-qr-btn--offer" onclick="ccpShowOffer()">💰 Make offer</button>
+         <button class="cab-qr-btn cab-qr-btn--schedule" onclick="ccpShowSchedule()">📅 Schedule viewing</button>
+      </div>
+
+      <!-- Input -->
+      <div class="cab-chat-input-row">
+         <button class="cab-chat-attach">📎</button>
+         <input class="cab-chat-input" type="text" placeholder="Write a message..." id="ccpChatInput">
+         <button class="cab-chat-emoji">😊</button>
+         <button class="cab-chat-send" onclick="ccpSendMessage()">&#10148;</button>
+      </div>
+
+   </div>
+
+   <script>
+   function openCardChat() {
+      document.getElementById('ccpOverlay').classList.add('is-open');
+      document.getElementById('ccpPopup').classList.add('is-open');
+      setTimeout(function(){
+         var body = document.getElementById('ccpChatBody');
+         if(body) body.scrollTop = body.scrollHeight;
+         var inp = document.getElementById('ccpChatInput');
+         if(inp) inp.focus();
+      }, 80);
+   }
+   function closeCardChat() {
+      document.getElementById('ccpOverlay').classList.remove('is-open');
+      document.getElementById('ccpPopup').classList.remove('is-open');
+   }
+   function ccpScrollBottom() {
+      var body = document.getElementById('ccpChatBody');
+      if(body) body.scrollTop = body.scrollHeight;
+   }
+   function ccpPostBubble(text, extraClass) {
+      var body = document.getElementById('ccpChatBody');
+      if(!body) return;
+      var now = new Date();
+      var h = now.getHours().toString().padStart(2,'0');
+      var m = now.getMinutes().toString().padStart(2,'0');
+      var div = document.createElement('div');
+      div.className = 'cab-bubble cab-bubble--out' + (extraClass ? ' '+extraClass : '');
+      div.innerHTML = '<div class="cab-bubble__text">' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
+      body.appendChild(div);
+      body.scrollTop = body.scrollHeight;
+   }
+   function ccpSendMessage() {
+      var inp = document.getElementById('ccpChatInput');
+      if(!inp || !inp.value.trim()) return;
+      ccpPostBubble(inp.value.trim());
+      inp.value = '';
+   }
+   function ccpQuickReply(text) { ccpPostBubble(text); }
+
+   function ccpShowOffer() {
+      document.getElementById('ccpOfferPanel').classList.add('is-open');
+      document.getElementById('ccpSchedulePanel').classList.remove('is-open');
+      setTimeout(function(){ var el=document.getElementById('ccpOfferInput'); if(el) el.focus(); }, 80);
+   }
+   function ccpHideOffer() { document.getElementById('ccpOfferPanel').classList.remove('is-open'); }
+   function ccpSendOffer() {
+      var val = document.getElementById('ccpOfferInput').value;
+      if(!val || isNaN(val) || +val <= 0) return;
+      var formatted = '£ ' + (+val).toLocaleString('en-GB');
+      ccpPostBubble('💰 Offer: <strong>' + formatted + '</strong>', 'cab-bubble--offer');
+      document.getElementById('ccpOfferInput').value = '';
+      ccpHideOffer();
+      setTimeout(function() {
+         var body = document.getElementById('ccpChatBody');
+         var resp = document.createElement('div');
+         resp.className = 'cab-bubble cab-bubble--in';
+         resp.innerHTML = '<img class="cab-bubble__avatar" src="icon/man.svg" alt=""><div class="cab-bubble__text cab-bubble__text--offer-resp"><span style="font-weight:600;">Offer received!</span> I\'ll get back to you shortly.<div class="cab-offer-actions"><button class="cab-offer-btn cab-offer-btn--accept" onclick="ccpOfferReply(\'accept\',this)">✓ Accept</button><button class="cab-offer-btn cab-offer-btn--counter" onclick="ccpOfferReply(\'counter\',this)">Counter</button><button class="cab-offer-btn cab-offer-btn--reject" onclick="ccpOfferReply(\'reject\',this)">✕ Reject</button></div></div><span class="cab-bubble__time">now</span>';
+         body.appendChild(resp);
+         body.scrollTop = body.scrollHeight;
+      }, 900);
+   }
+   function ccpOfferReply(action, btn) {
+      var msgs = { accept: '✅ Offer accepted! Let\'s proceed.', counter: '🔄 How about a counter-offer?', reject: '❌ Sorry, the price is firm.' };
+      var actions = btn.closest('.cab-offer-actions');
+      if(actions) actions.remove();
+      setTimeout(function(){ ccpPostBubble(msgs[action]); }, 200);
+   }
+
+   function ccpShowSchedule() {
+      document.getElementById('ccpSchedulePanel').classList.add('is-open');
+      document.getElementById('ccpOfferPanel').classList.remove('is-open');
+      var today = new Date().toISOString().split('T')[0];
+      document.getElementById('ccpScheduleDate').min = today;
+      if(!document.getElementById('ccpScheduleDate').value) document.getElementById('ccpScheduleDate').value = today;
+   }
+   function ccpHideSchedule() { document.getElementById('ccpSchedulePanel').classList.remove('is-open'); }
+   function ccpSendSchedule() {
+      var d = document.getElementById('ccpScheduleDate').value;
+      var t = document.getElementById('ccpScheduleTime').value;
+      if(!d || !t) return;
+      var dateStr = new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+      ccpPostBubble('📅 Viewing request: <strong>' + dateStr + ' at ' + t + '</strong>');
+      ccpHideSchedule();
+      setTimeout(function() {
+         var body = document.getElementById('ccpChatBody');
+         var resp = document.createElement('div');
+         resp.className = 'cab-bubble cab-bubble--in';
+         resp.innerHTML = '<img class="cab-bubble__avatar" src="icon/man.svg" alt=""><div class="cab-bubble__text">✅ Confirmed! I\'ll see you on <strong>' + dateStr + ' at ' + t + '</strong>. I\'ll send the address shortly.</div><span class="cab-bubble__time">now</span>';
+         body.appendChild(resp);
+         body.scrollTop = body.scrollHeight;
+      }, 800);
+   }
+
+   document.addEventListener('DOMContentLoaded', function() {
+      var inp = document.getElementById('ccpChatInput');
+      if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') ccpSendMessage(); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCardChat(); });
+   });
    </script>
 
 </body>
