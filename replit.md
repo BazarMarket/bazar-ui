@@ -97,28 +97,67 @@ card.html и index.html (залогиненный, `#header-logged-in`):
    - Get started (серая пока не заполнено имя → оранжевая после заполнения)
    - При завершении: имя → `#header-username`, аватар → `#header-avatar`, вызов `doLogin()`
 
-## Login toggle — логика по средам
+## Login toggle — логика по средам (ЗАФИКСИРОВАНО, НЕ МЕНЯТЬ)
 
-### Кнопка "Log in" в хедере
-Везде вызывает `handleLogin()` (js/firebase-auth.js), которая проверяет hostname:
-- **www.bazar.uk / bazar.uk** → открывает `openLoginModal()` (форма с телефоном, заголовок "Log in")
-- **Replit / DEV / всё остальное** → вызывает `doLogin()` напрямую (без формы)
+### Три среды — три разных поведения
 
-### Кнопка "Create an account" в хедере
-Везде открывает `openCreateAccountModal()` — форма с телефоном, заголовок "Create an account".
+| Среда | Hostname | При нажатии "Log in" | При загрузке страницы |
+|---|---|---|---|
+| **Production** | www.bazar.uk, bazar.uk | Открывает форму (телефон + OTP) | Ничего (гость) |
+| **DEV** | dev.bazar.uk | Автологин без формы | Автологин (Andreas Xenofontos) |
+| **Replit** | *.replit.dev, localhost | Автологин без формы | Автологин (Andreas Xenofontos) |
 
-### Функции:
-- `handleLogin()` — роутер по hostname (см. выше)
-- `openLoginModal()` — ставит заголовок "Log in" и открывает createAccountModal
-- `openCreateAccountModal()` — ставит заголовок "Create an account" и открывает тот же модал
-- `doLogin()` — скрывает `#header-guest`, показывает `#header-logged-in`, ставит имя из localStorage или "Andreas Xenofontos" (fallback для DEV/Replit)
-- `doLogout()` — обратно, очищает localStorage (bazar_username, bazar_phone, bazar_gender, bazar_plan), вызывает auth.signOut()
+### Автологин на DEV/Replit (DOMContentLoaded в firebase-auth.js)
+```js
+if (!isProduction) {
+    if (!localStorage.getItem('bazar_username')) {
+        localStorage.setItem('bazar_username',     'Andreas Xenofontos');
+        localStorage.setItem('bazar_gender',       'male');
+        localStorage.setItem('bazar_firebase_uid', 'test_uid_123');
+        if (!localStorage.getItem('bazar_plan')) localStorage.setItem('bazar_plan', 'free');
+    }
+    doLogin();
+}
+```
+- Если `bazar_username` уже есть в localStorage — НЕ перезаписывает, берёт существующее
+- `doLogin()` ВСЕГДА вызывается на DEV/Replit при загрузке
+
+### Повторный вход (Log out → Log in) на Production
+После OTP верификации — проверяем API: `GET /api/customers/{firebase_uid}`
+- **Аккаунт найден** → данные из БД → `doLogin()` (форма не показывается)
+- **Новый пользователь** → `openProfileModal()` (форма "Almost there!" показывается один раз)
+
+### Кнопка "Log in" → `handleLogin()` (js/firebase-auth.js)
+```js
+if (www.bazar.uk || bazar.uk) → openLoginModal()   // форма телефона
+else → doLogin()                                    // DEV/Replit: прямой вход
+```
+
+### Кнопка "Create an account" → `openCreateAccountModal()`
+Всегда открывает форму с телефоном (одна форма, разный заголовок).
+
+### Ключевые функции:
+- `handleLogin()` — роутер по hostname
+- `openLoginModal()` — заголовок "Log in" + открывает createAccountModal
+- `openCreateAccountModal()` — заголовок "Create an account" + открывает тот же модал
+- `doLogin()` — скрывает `#header-guest`, показывает `#header-logged-in`, имя из localStorage
+- `doLogout()` — обратно, очищает localStorage: `bazar_username`, `bazar_phone`, `bazar_gender`, `bazar_plan`, `bazar_firebase_uid`
+
+### localStorage ключи пользователя:
+- `bazar_username` — полное имя
+- `bazar_phone` — телефон
+- `bazar_gender` — male / female
+- `bazar_plan` — free / pro / vip
+- `bazar_firebase_uid` — Firebase UID (test_uid_123 для DEV/Replit)
 
 ### ESC закрывает модалы
 В firebase-auth.js на `document keydown` — закрывает createAccountModal, otpModal, profileModal.
 
 ### ⚠️ НЕЛЬЗЯ добавлять onAuthStateChanged
 Вызывает бесконечный цикл на production: null user → doLogout() → auth.signOut() → снова onAuthStateChanged.
+
+### ⚠️ НЕ добавлять иконки/SVG в кнопку "Log in" (.btn_start)
+Кнопка должна содержать только текст "Log in". Была ошибка с `addPhoneIcon()` — удалена.
 
 ## Выравнивание контента
 
