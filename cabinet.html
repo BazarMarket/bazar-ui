@@ -42,9 +42,9 @@
                                 <div class="user-link__photo" id="header-avatar">
                                     <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
                                 </div>
-                                <div class="user-link__title" id="header-username">Andreas</div>
+                                <div class="user-link__title" id="header-username"></div>
                                 <div class="user-menu">
-                                    <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                                    <a href="#" class="user-menu-tel icon-tel-full" id="header-phone"></a>
                                     <hr class="user-menu__hr">
                                     <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('settings')">My Profile</a>
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
@@ -123,7 +123,7 @@
 
                 <div class="cab-panel__top">
                     <h1 class="cab-panel__title">Balance</h1>
-                    <p class="cab-panel__welcome">Welcome back, <strong>Andreas</strong>!</p>
+                    <p class="cab-panel__welcome">Welcome back, <strong id="cabWelcomeName"></strong>!</p>
                 </div>
 
                 <!-- Stat cards -->
@@ -1066,19 +1066,19 @@
                             <div class="cab-form-grid">
                                 <div class="input-custom">
                                     <label>First Name</label>
-                                    <input id="fieldFirstName" type="text" placeholder="First name" value="Andreas">
+                                    <input id="fieldFirstName" type="text" placeholder="First name" value="">
                                 </div>
                                 <div class="input-custom">
                                     <label>Last Name</label>
-                                    <input id="fieldLastName" type="text" placeholder="Last name" value="Karafouni">
+                                    <input id="fieldLastName" type="text" placeholder="Last name" value="">
                                 </div>
                                 <div class="input-custom">
                                     <label>Email</label>
-                                    <input id="fieldEmail" type="email" placeholder="your@email.com" value="andreas@email.com">
+                                    <input id="fieldEmail" type="email" placeholder="your@email.com" value="">
                                 </div>
                                 <div class="input-custom">
                                     <label>Phone</label>
-                                    <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="+44 712 345 678">
+                                    <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="">
                                 </div>
                                 <div class="input-custom">
                                     <label>City</label>
@@ -1317,7 +1317,43 @@
         }
     }
 
+    function populateUserData() {
+        var name    = localStorage.getItem('bazar_username') || '';
+        var phone   = localStorage.getItem('bazar_phone')   || '';
+        var gender  = localStorage.getItem('bazar_gender')  || 'male';
+        var parts   = name.trim().split(' ');
+        var first   = parts[0] || '';
+        var last    = parts.slice(1).join(' ') || '';
+
+        var elName    = document.getElementById('header-username');
+        var elPhone   = document.getElementById('header-phone');
+        var elWelcome = document.getElementById('cabWelcomeName');
+        var elAvatar  = document.getElementById('header-avatar');
+        var elFirst   = document.getElementById('fieldFirstName');
+        var elLast    = document.getElementById('fieldLastName');
+        var elPh      = document.getElementById('fieldPhone');
+
+        if (elName)    elName.textContent    = name;
+        if (elPhone)   elPhone.textContent   = phone;
+        if (elWelcome) elWelcome.textContent = name;
+        if (elFirst)   elFirst.value         = first;
+        if (elLast)    elLast.value          = last;
+        if (elPh)      elPh.value            = phone;
+
+        if (elAvatar) {
+            var img = elAvatar.querySelector('img');
+            if (img) img.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+        }
+
+        var planBadge = document.getElementById('subPlanBadge');
+        if (planBadge) {
+            var plan = localStorage.getItem('bazar_plan') || 'free';
+            planBadge.textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        populateUserData();
         updateFavCount();
         var params = new URLSearchParams(window.location.search);
         if (params.get('payment') === 'success') {

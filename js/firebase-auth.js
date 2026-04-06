@@ -56,7 +56,13 @@ function switchRentType(type, btn) {
 
 function doLogin() {
     var nameEl = document.getElementById('header-username');
-    if (nameEl) nameEl.textContent = localStorage.getItem('bazar_username') || 'Andreas Xenofontos';
+    if (nameEl) nameEl.textContent = localStorage.getItem('bazar_username') || '';
+    var gender = localStorage.getItem('bazar_gender') || 'male';
+    var avatarEl = document.getElementById('header-avatar');
+    if (avatarEl) {
+        var avatarImg = avatarEl.querySelector('img') || avatarEl;
+        if (avatarImg && avatarImg.tagName === 'IMG') avatarImg.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+    }
     document.getElementById('header-guest').style.display = 'none';
     document.getElementById('header-logged-in').style.display = '';
 }
@@ -211,13 +217,38 @@ function verifyOtpCode() {
     confirmationResult.confirm(code)
         .then(function(result) {
             document.getElementById('otpError').style.display = 'none';
-            if (result.user && result.user.phoneNumber) {
-                localStorage.setItem('bazar_phone', result.user.phoneNumber);
-            }
-            if (result.user && result.user.uid) {
-                localStorage.setItem('bazar_firebase_uid', result.user.uid);
-            }
-            openProfileModal();
+            var uid = result.user ? result.user.uid : null;
+            var phone = result.user ? result.user.phoneNumber : null;
+
+            // Очищаем старые данные другого пользователя
+            localStorage.removeItem('bazar_username');
+            localStorage.removeItem('bazar_gender');
+            localStorage.removeItem('bazar_plan');
+            localStorage.removeItem('bazar_firebase_uid');
+
+            if (phone) localStorage.setItem('bazar_phone', phone);
+            if (uid)   localStorage.setItem('bazar_firebase_uid', uid);
+
+            // Проверяем: есть ли аккаунт в базе?
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.exists) {
+                        // Аккаунт найден — загружаем данные и входим без формы
+                        localStorage.setItem('bazar_username', data.name);
+                        localStorage.setItem('bazar_gender',   data.gender);
+                        localStorage.setItem('bazar_plan',     data.plan || 'free');
+                        closeOtpModal();
+                        doLogin();
+                    } else {
+                        // Новый пользователь — показываем форму профиля
+                        openProfileModal();
+                    }
+                })
+                .catch(function() {
+                    // Ошибка сети — показываем форму на всякий случай
+                    openProfileModal();
+                });
         })
         .catch(function(error) {
             console.error('Verify error:', error);
