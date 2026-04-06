@@ -10,6 +10,7 @@ firebase.initializeApp(firebaseConfig);
 var auth = firebase.auth();
 var confirmationResult = null;
 var recaptchaVerifier = null;
+var modalMode = 'create'; // 'create' | 'login'
 
 var _isTestEnv = (window.location.hostname === 'localhost' ||
     window.location.hostname.endsWith('.replit.dev') ||
@@ -85,6 +86,7 @@ function doLogout() {
 }
 
 function openLoginModal() {
+    modalMode = 'login';
     document.querySelector('#createAccountModal .modal-title').textContent = 'Log in';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
@@ -100,9 +102,17 @@ function handleLogin() {
 }
 
 function openCreateAccountModal() {
+    modalMode = 'create';
     document.querySelector('#createAccountModal .modal-title').textContent = 'Create an account';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
+}
+
+function switchToLogin() {
+    closeOtpModal();
+    var errEl = document.getElementById('otpError');
+    if (errEl) { errEl.style.display = 'none'; errEl.innerHTML = ''; }
+    openLoginModal();
 }
 
 function closeCreateAccountModal() {
@@ -236,12 +246,19 @@ function verifyOtpCode() {
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.exists) {
-                        // Аккаунт найден — загружаем данные и входим без формы
-                        localStorage.setItem('bazar_username', data.name);
-                        localStorage.setItem('bazar_gender',   data.gender);
-                        localStorage.setItem('bazar_plan',     data.plan || 'free');
-                        closeOtpModal();
-                        doLogin();
+                        if (modalMode === 'create') {
+                            // Create Account + телефон уже зарегистрирован — показываем ошибку
+                            var errEl = document.getElementById('otpError');
+                            errEl.innerHTML = 'An account with this number already exists. <a href="#" onclick="switchToLogin();return false;" style="color:#ff9138;text-decoration:underline;">Log in instead</a>';
+                            errEl.style.display = 'block';
+                        } else {
+                            // Log in — загружаем данные и входим
+                            localStorage.setItem('bazar_username', data.name);
+                            localStorage.setItem('bazar_gender',   data.gender);
+                            localStorage.setItem('bazar_plan',     data.plan || 'free');
+                            closeOtpModal();
+                            doLogin();
+                        }
                     } else {
                         // Новый пользователь — показываем форму профиля
                         openProfileModal();
