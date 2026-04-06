@@ -1179,3 +1179,18 @@ window.onload = function () {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updatePlanBadge);
     else updatePlanBadge();
 })();
+
+// Production-only: phone icon on Log In button
+(function() {
+    var h = window.location.hostname;
+    if (h === 'www.bazar.uk' || h === 'bazar.uk') {
+        function addPhoneIcon() {
+            var btn = document.querySelector('.btn_start');
+            if (btn) {
+                btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px;margin-bottom:2px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 13 19.79 19.79 0 0 1 1.81 4.36 2 2 0 0 1 3.8 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.29 6.29l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>Log in';
+            }
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addPhoneIcon);
+        else addPhoneIcon();
+    }
+})();
