@@ -979,9 +979,9 @@
             padding: 8px;
             z-index: 99999;
             display: none;
-            grid-template-columns: repeat(8, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 2px;
-            width: 288px;
+            width: 224px;
             box-sizing: border-box;
         }
         .emoji-picker.open { display: grid; }
@@ -1257,15 +1257,15 @@
         }
         currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
         var rect = btn.getBoundingClientRect();
-        var pickerW = 288;
+        var pickerW = 224;
         var pickerH = 218;
-        var viewW = window.innerWidth;
+        var viewW = document.documentElement.clientWidth; // excludes scrollbar
         // Vertical: above button if room, else below
         var top = rect.top - pickerH - 6;
         if (top < 8) top = rect.bottom + 6;
         // Horizontal: right-align to button, ensure fully in viewport
         var left = rect.right - pickerW;
-        if (left + pickerW > viewW - 4) left = viewW - pickerW - 4;
+        if (left + pickerW > viewW - 20) left = viewW - pickerW - 20;
         if (left < 4) left = 4;
         picker.style.top  = top  + 'px';
         picker.style.left = left + 'px';
