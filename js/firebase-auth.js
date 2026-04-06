@@ -22,8 +22,14 @@ if (_isTestEnv) {
 function setupRecaptcha() {
     if (recaptchaVerifier) return;
     if (_isTestEnv) {
-        // In test environments use a mock verifier — avoids domain-blocked reCAPTCHA API calls
-        recaptchaVerifier = { type: 'recaptcha', verify: function() { return Promise.resolve('test-token'); } };
+        // Mock verifier for test env — avoids reCAPTCHA API calls entirely
+        recaptchaVerifier = {
+            type: 'recaptcha',
+            verify: function() { return Promise.resolve('test-token'); },
+            render: function() { return Promise.resolve(0); },
+            _reset: function() {},
+            clear: function() {}
+        };
         return;
     }
     try {
