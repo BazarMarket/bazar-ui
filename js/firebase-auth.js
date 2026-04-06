@@ -307,6 +307,21 @@ function finishRegistration() {
     document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
     closeProfileModal();
     doLogin();
+
+    var firebaseUser = auth.currentUser;
+    if (firebaseUser) {
+        fetch('https://admin.bazar.uk/api/customers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                firebase_uid: firebaseUser.uid,
+                phone: localStorage.getItem('bazar_phone') || firebaseUser.phoneNumber || '',
+                name: name,
+                gender: selectedGender,
+                plan: localStorage.getItem('bazar_plan') || 'free',
+            })
+        }).catch(function() {});
+    }
 }
 
 
