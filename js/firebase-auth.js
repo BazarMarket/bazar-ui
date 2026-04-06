@@ -63,6 +63,8 @@ function doLogin() {
         var avatarImg = avatarEl.querySelector('img') || avatarEl;
         if (avatarImg && avatarImg.tagName === 'IMG') avatarImg.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
     }
+    var phoneMenuEl = document.getElementById('header-menu-phone');
+    if (phoneMenuEl) phoneMenuEl.textContent = localStorage.getItem('bazar_phone') || '';
     document.getElementById('header-guest').style.display = 'none';
     document.getElementById('header-logged-in').style.display = '';
 }
