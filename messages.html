@@ -10,6 +10,16 @@
     <link rel="icon" type="image/png" href="favicon.png?v=12">
     <style>
 
+
+        /* Emoji-only messages */
+        .cab-bubble--emoji-only .cab-bubble__text {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 2px 4px !important;
+            font-size: 40px !important;
+            line-height: 1.15 !important;
+        }
         /* Emoji Picker */
         .emoji-picker {
             position: fixed;
@@ -513,8 +523,9 @@
         var h = now.getHours().toString().padStart(2,'0');
         var m = now.getMinutes().toString().padStart(2,'0');
         var bubble = document.createElement('div');
-        bubble.className = 'cab-bubble cab-bubble--out';
-        bubble.innerHTML = '<div class="cab-bubble__text">' + input.value.trim() + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
+        var msgText = input.value.trim();
+        bubble.className = 'cab-bubble cab-bubble--out' + (isEmojiOnly(msgText) ? ' cab-bubble--emoji-only' : '');
+        bubble.innerHTML = '<div class="cab-bubble__text">' + msgText + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
         body.appendChild(bubble);
         body.scrollTop = body.scrollHeight;
         input.value = '';
@@ -638,6 +649,12 @@
         });
         document.body.appendChild(d);
         return d;
+    }
+
+    function isEmojiOnly(str) {
+        var s = str.trim();
+        if (!s) return false;
+        return /^(\p{Emoji_Presentation}|\p{Extended_Pictographic}|[\u200d\ufe0f\u20e3])+$/u.test(s);
     }
 
     window.toggleEmojiPicker = function(btn) {
