@@ -11,6 +11,13 @@ var auth = firebase.auth();
 var confirmationResult = null;
 var recaptchaVerifier = null;
 
+// Disable reCAPTCHA for Replit/localhost dev environments (test phone numbers only)
+if (window.location.hostname === 'localhost' ||
+    window.location.hostname.endsWith('.replit.dev') ||
+    window.location.hostname.endsWith('.repl.co')) {
+    auth.settings.appVerificationDisabledForTesting = true;
+}
+
 function setupRecaptcha() {
     if (recaptchaVerifier) return;
     try {
