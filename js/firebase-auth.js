@@ -278,7 +278,7 @@ function finishRegistration() {
     document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
     closeProfileModal();
     doLogin();
-    window.location.href = 'cabinet.html#subscriptions';
+    window.location.href = 'publish-options.html';
 }
 
 document.addEventListener('DOMContentLoaded', function() {

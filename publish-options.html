@@ -873,7 +873,9 @@
       }
 
       function publishAd(plan) {
-         alert('Ad published! Plan: ' + plan.toUpperCase());
+         localStorage.setItem('bazar_plan', plan);
+         if (window.updatePlanBadge) updatePlanBadge();
+         window.location.href = 'index.html';
       }
 
       document.addEventListener('DOMContentLoaded', function() {
