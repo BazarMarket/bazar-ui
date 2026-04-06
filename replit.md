@@ -97,10 +97,28 @@ card.html и index.html (залогиненный, `#header-logged-in`):
    - Get started (серая пока не заполнено имя → оранжевая после заполнения)
    - При завершении: имя → `#header-username`, аватар → `#header-avatar`, вызов `doLogin()`
 
-## Login toggle (index.html)
+## Login toggle — логика по средам
 
-- `doLogin()` — скрывает `#header-guest`, показывает `#header-logged-in`
-- `doLogout()` — обратно
+### Кнопка "Log in" в хедере
+Везде вызывает `handleLogin()` (js/firebase-auth.js), которая проверяет hostname:
+- **www.bazar.uk / bazar.uk** → открывает `openLoginModal()` (форма с телефоном, заголовок "Log in")
+- **Replit / DEV / всё остальное** → вызывает `doLogin()` напрямую (без формы)
+
+### Кнопка "Create an account" в хедере
+Везде открывает `openCreateAccountModal()` — форма с телефоном, заголовок "Create an account".
+
+### Функции:
+- `handleLogin()` — роутер по hostname (см. выше)
+- `openLoginModal()` — ставит заголовок "Log in" и открывает createAccountModal
+- `openCreateAccountModal()` — ставит заголовок "Create an account" и открывает тот же модал
+- `doLogin()` — скрывает `#header-guest`, показывает `#header-logged-in`, ставит имя из localStorage или "Andreas Xenofontos" (fallback для DEV/Replit)
+- `doLogout()` — обратно, очищает localStorage (bazar_username, bazar_phone, bazar_gender, bazar_plan), вызывает auth.signOut()
+
+### ESC закрывает модалы
+В firebase-auth.js на `document keydown` — закрывает createAccountModal, otpModal, profileModal.
+
+### ⚠️ НЕЛЬЗЯ добавлять onAuthStateChanged
+Вызывает бесконечный цикл на production: null user → doLogout() → auth.signOut() → снова onAuthStateChanged.
 
 ## Выравнивание контента
 
