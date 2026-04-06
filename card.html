@@ -971,7 +971,7 @@
         /* Emoji Picker */
         .emoji-picker {
             position: fixed;
-            right: 24px;
+            right: auto;
             background: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 12px;
@@ -1256,10 +1256,19 @@
         }
         currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
         var rect = btn.getBoundingClientRect();
-        // Position above the button, fixed to right:8px
-        var top = rect.top - 218;
-        if (top < 8) top = rect.bottom + 8;
-        picker.style.top = top + 'px';
+        var pickerW = 288;
+        var pickerH = 218;
+        var viewW = window.innerWidth;
+        // Vertical: above button if room, else below
+        var top = rect.top - pickerH - 6;
+        if (top < 8) top = rect.bottom + 6;
+        // Horizontal: right-align to button, ensure fully in viewport
+        var left = rect.right - pickerW;
+        if (left + pickerW > viewW - 4) left = viewW - pickerW - 4;
+        if (left < 4) left = 4;
+        picker.style.top  = top  + 'px';
+        picker.style.left = left + 'px';
+        picker.style.right = 'auto';
         picker.classList.add('open');
     };
 
