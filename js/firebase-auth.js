@@ -299,6 +299,14 @@ function finishRegistration() {
 }
 
 
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeCreateAccountModal();
+        closeOtpModal();
+        closeProfileModal();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     setupRecaptcha();
     var otpInputs = document.querySelectorAll('.otp-input');
