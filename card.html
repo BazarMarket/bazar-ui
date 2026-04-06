@@ -1217,9 +1217,9 @@
 ;(function(){
     var EMOJIS = [
         '😊','😂','😍','😭','😘','🥰','😁','😎','🤔','😉','😢','😅',
-        '😆','🤗','😏','🥳','😴','🤩','😤','🤑','👍','🙏','👋','💪',
-        '👏','🤝','✌️','🤞','❤️','🧡','💛','💚','💙','💜','🔥','✨',
-        '💯','🎉','🌟','🏠','🏡','💰','🔑','📞','📱','📅','👀','💼'
+        '😆','🤗','😏','🥳','👍','🙏','👋','💪','👏','🤝',
+        '❤️','🧡','💛','💚','💙','💜','🔥','✨','💯','🎉',
+        '🏠','💰','🔑','📞','📱','📅'
     ];
     var picker = null;
     var currentInput = null;
@@ -1258,16 +1258,16 @@
         currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
         var rect = btn.getBoundingClientRect();
         var pickerW = 224;
-        var pickerH = 218;
         var viewW = document.documentElement.clientWidth; // excludes scrollbar
-        // Vertical: above button if room, else below
-        var top = rect.top - pickerH - 6;
-        if (top < 8) top = rect.bottom + 6;
+        var viewH = window.innerHeight;
         // Horizontal: right-align to button, ensure fully in viewport
         var left = rect.right - pickerW;
         if (left + pickerW > viewW - 20) left = viewW - pickerW - 20;
         if (left < 4) left = 4;
-        picker.style.top  = top  + 'px';
+        // Vertical: pin picker BOTTOM to button TOP (always shows button below)
+        var bottomOffset = viewH - rect.top + 6;
+        picker.style.bottom = bottomOffset + 'px';
+        picker.style.top  = 'auto';
         picker.style.left = left + 'px';
         picker.style.right = 'auto';
         picker.classList.add('open');
