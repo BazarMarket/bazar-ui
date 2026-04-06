@@ -486,16 +486,16 @@
                 <!-- Stat cards -->
                 <div class="cab-payments-top">
                     <div class="cab-stat-card cab-stat-card--accent">
-                        <p class="cab-stat-card__label icon-win-wallet">Balance</p>
-                        <p class="cab-stat-card__value">1 060.56 <span>£</span></p>
+                        <p class="cab-stat-card__label icon-win-wallet">Total spent</p>
+                        <p class="cab-stat-card__value" id="payStatSpent">— <span>£</span></p>
                     </div>
                     <div class="cab-stat-card">
-                        <p class="cab-stat-card__label icon-win-down">Total withdrawn</p>
-                        <p class="cab-stat-card__value">2 334.55 <span>£</span></p>
+                        <p class="cab-stat-card__label icon-win-down">Paid transactions</p>
+                        <p class="cab-stat-card__value" id="payStatPaid">—</p>
                     </div>
                     <div class="cab-stat-card">
-                        <p class="cab-stat-card__label icon-win-plus">Total deposited</p>
-                        <p class="cab-stat-card__value">3 395.11 <span>£</span></p>
+                        <p class="cab-stat-card__label icon-win-plus">All transactions</p>
+                        <p class="cab-stat-card__value" id="payStatAll">—</p>
                     </div>
                 </div>
 
@@ -555,42 +555,8 @@
                                         <th>Amount</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="cab-table__date">28 Feb 2026</td>
-                                        <td>Top-up — Visa ****4242</td>
-                                        <td class="cab-table__amount--plus">+ £ 50.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">25 Feb 2026</td>
-                                        <td>VIP — Villa for Sale in Tsada</td>
-                                        <td class="cab-table__amount--minus">− £ 15.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">20 Feb 2026</td>
-                                        <td>TOP — iPhone 14 Pro Max</td>
-                                        <td class="cab-table__amount--minus">− £ 10.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">15 Feb 2026</td>
-                                        <td>Top-up — Visa ****4242</td>
-                                        <td class="cab-table__amount--plus">+ £ 100.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">10 Feb 2026</td>
-                                        <td>Subscription — Basic plan</td>
-                                        <td class="cab-table__amount--minus">− £ 9.99</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">02 Feb 2026</td>
-                                        <td>Top-up — Mastercard</td>
-                                        <td class="cab-table__amount--plus">+ £ 200.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">01 Feb 2026</td>
-                                        <td>VIP — Apartment Paphos</td>
-                                        <td class="cab-table__amount--minus">− £ 15.00</td>
-                                    </tr>
+                                <tbody id="txnTableBody">
+                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Loading…</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1320,6 +1286,7 @@
         var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
         if (item) item.click();
         if (tab === 'favorites') renderFavorites();
+        if (tab === 'payments') loadPayments();
     }
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';
@@ -1385,6 +1352,53 @@
         var card = btn.closest('.po-card');
         var isActive = card && card.classList.contains('po-card--active');
         if (btnEl) btnEl.textContent = (isActive ? 'Extend ' : 'Upgrade to ') + plan.toUpperCase() + ' \u2014 \u00A3' + price;
+    }
+
+    function loadPayments() {
+        var uid = localStorage.getItem('bazar_firebase_uid') || localStorage.getItem('bazar_uid');
+        if (!uid) {
+            var tbody = document.getElementById('txnTableBody');
+            if (tbody) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No data</td></tr>';
+            return;
+        }
+        var apiBase = (window.location.hostname === 'www.bazar.uk' || window.location.hostname === 'bazar.uk')
+            ? 'https://admin.bazar.uk'
+            : 'https://admin.bazar.uk';
+        fetch(apiBase + '/api/customers/' + encodeURIComponent(uid) + '/payments')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var tbody = document.getElementById('txnTableBody');
+                var txns = data.transactions || [];
+                if (!tbody) return;
+                if (txns.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
+                } else {
+                    tbody.innerHTML = txns.map(function(t) {
+                        var isPlus = t.type === 'credit';
+                        var amtClass = isPlus ? 'cab-table__amount--plus' : 'cab-table__amount--minus';
+                        var sign = isPlus ? '+ ' : '− ';
+                        var statusBadge = t.status === 'pending'
+                            ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
+                            : '';
+                        return '<tr>' +
+                            '<td class="cab-table__date">' + t.date + '</td>' +
+                            '<td>' + t.description + statusBadge + '</td>' +
+                            '<td class="' + amtClass + '">' + sign + '£ ' + t.amount + '</td>' +
+                        '</tr>';
+                    }).join('');
+                }
+                var paidCount = txns.filter(function(t){ return t.status === 'paid'; }).length;
+                var spentEl = document.getElementById('payStatSpent');
+                var paidEl = document.getElementById('payStatPaid');
+                var allEl = document.getElementById('payStatAll');
+                if (spentEl) spentEl.innerHTML = '£ ' + (data.total_spent || '0.00') + ' <span>spent</span>';
+                if (paidEl) paidEl.textContent = paidCount;
+                if (allEl) allEl.textContent = txns.length;
+            })
+            .catch(function() {
+                var tbody = document.getElementById('txnTableBody');
+                if (tbody) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Failed to load</td></tr>';
+            });
     }
 
     function cabToggleSearch() {

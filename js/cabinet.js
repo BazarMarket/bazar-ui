@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabId === 'favorites' && typeof renderFavorites === 'function') {
             renderFavorites();
         }
+        if (tabId === 'payments' && typeof loadPayments === 'function') {
+            loadPayments();
+        }
     }
 
     navItems.forEach(function (item) {
