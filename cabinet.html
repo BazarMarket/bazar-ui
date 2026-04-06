@@ -52,7 +52,7 @@
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">Favorites</a>
                                     <a href="#" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                        <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
-                                       <span class="subscription__stiker">PRO</span>
+                                       <span class="subscription__stiker" id="subPlanBadge">Free</span>
                                        <span class="subscription__days">382d</span>
                                     </div></a>
                                     <hr class="user-menu__hr">
@@ -1321,8 +1321,16 @@
         if (item) item.click();
         if (tab === 'favorites') renderFavorites();
     }
+    function highlightCurrentPlan() {
+        var plan = localStorage.getItem('bazar_plan') || 'free';
+        document.querySelectorAll('.po-card').forEach(function(c) { c.classList.remove('is-selected'); });
+        var sel = document.querySelector('.po-card--' + plan);
+        if (sel) sel.classList.add('is-selected');
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         updateFavCount();
+        highlightCurrentPlan();
         var hash = window.location.hash.replace('#', '');
         if (hash) switchToTab(hash);
         else renderFavorites();
@@ -1332,6 +1340,8 @@
     function cabSelectPlan(card, plan) {
         document.querySelectorAll('.po-card').forEach(function(c) { c.classList.remove('is-selected'); });
         card.classList.add('is-selected');
+        localStorage.setItem('bazar_plan', plan);
+        if (window.updatePlanBadge) updatePlanBadge();
     }
     function cabSetDur(plan, days, price, btn) {
         var prefix = plan === 'pro' ? 'cabPro' : 'cabVip';

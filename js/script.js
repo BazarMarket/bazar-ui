@@ -1162,3 +1162,20 @@ window.onload = function () {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 })();
+
+// ── Plan Badge ─────────────────────────────────────────────
+(function() {
+    function updatePlanBadge() {
+        var plan = localStorage.getItem('bazar_plan') || 'free';
+        var badge = document.getElementById('subPlanBadge');
+        if (!badge) return;
+        var labels = { free: 'Free', pro: 'PRO', vip: 'VIP' };
+        badge.textContent = labels[plan] || 'Free';
+        badge.className = 'subscription__stiker';
+        if (plan === 'vip') badge.className += ' subscription__stiker--vip';
+        if (plan === 'free') badge.className += ' subscription__stiker--free';
+    }
+    window.updatePlanBadge = updatePlanBadge;
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updatePlanBadge);
+    else updatePlanBadge();
+})();

@@ -271,10 +271,14 @@ function closeProfileModal() {
 function finishRegistration() {
     var name = document.getElementById('profileFullName').value.trim();
     if (!name || !selectedGender) return;
+    localStorage.setItem('bazar_username', name);
+    localStorage.setItem('bazar_gender', selectedGender);
+    if (!localStorage.getItem('bazar_plan')) localStorage.setItem('bazar_plan', 'free');
     document.getElementById('header-username').textContent = name;
     document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
     closeProfileModal();
     doLogin();
+    window.location.href = 'cabinet.html#subscriptions';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
