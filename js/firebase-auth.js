@@ -79,6 +79,15 @@ function openLoginModal() {
     document.body.style.overflow = 'hidden';
 }
 
+function handleLogin() {
+    var h = window.location.hostname;
+    if (h === 'www.bazar.uk' || h === 'bazar.uk') {
+        openLoginModal();
+    } else {
+        doLogin();
+    }
+}
+
 function openCreateAccountModal() {
     document.querySelector('#createAccountModal .modal-title').textContent = 'Create an account';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
