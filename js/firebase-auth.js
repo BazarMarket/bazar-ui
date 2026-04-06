@@ -64,11 +64,13 @@ function doLogout() {
     localStorage.removeItem('bazar_phone');
     localStorage.removeItem('bazar_gender');
     localStorage.removeItem('bazar_plan');
-    auth.signOut().then(function() {
-        window.location.href = 'index.html';
-    }).catch(function() {
-        window.location.href = 'index.html';
-    });
+    auth.signOut();
+    var nameEl = document.getElementById('header-username');
+    if (nameEl) nameEl.textContent = '';
+    var guestEl = document.getElementById('header-guest');
+    var loggedEl = document.getElementById('header-logged-in');
+    if (loggedEl) loggedEl.style.display = 'none';
+    if (guestEl) guestEl.style.display = '';
 }
 
 function openCreateAccountModal() {
