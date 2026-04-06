@@ -55,6 +55,8 @@ function switchRentType(type, btn) {
 }
 
 function doLogin() {
+    var nameEl = document.getElementById('header-username');
+    if (nameEl) nameEl.textContent = localStorage.getItem('bazar_username') || 'Andreas Xenofontos';
     document.getElementById('header-guest').style.display = 'none';
     document.getElementById('header-logged-in').style.display = '';
 }
