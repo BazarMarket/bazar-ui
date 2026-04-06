@@ -11,15 +11,21 @@ var auth = firebase.auth();
 var confirmationResult = null;
 var recaptchaVerifier = null;
 
-// Disable reCAPTCHA for Replit/localhost dev environments (test phone numbers only)
-if (window.location.hostname === 'localhost' ||
+var _isTestEnv = (window.location.hostname === 'localhost' ||
     window.location.hostname.endsWith('.replit.dev') ||
-    window.location.hostname.endsWith('.repl.co')) {
+    window.location.hostname.endsWith('.repl.co'));
+
+if (_isTestEnv) {
     auth.settings.appVerificationDisabledForTesting = true;
 }
 
 function setupRecaptcha() {
     if (recaptchaVerifier) return;
+    if (_isTestEnv) {
+        // In test environments use a mock verifier — avoids domain-blocked reCAPTCHA API calls
+        recaptchaVerifier = { type: 'recaptcha', verify: function() { return Promise.resolve('test-token'); } };
+        return;
+    }
     try {
         var container = document.getElementById('recaptcha-container');
         if (container) container.innerHTML = '';
