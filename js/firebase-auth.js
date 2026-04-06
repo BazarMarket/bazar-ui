@@ -73,7 +73,14 @@ function doLogout() {
     if (guestEl) guestEl.style.display = '';
 }
 
+function openLoginModal() {
+    document.querySelector('#createAccountModal .modal-title').textContent = 'Log in';
+    document.getElementById('createAccountModal').classList.add('modal-overlay--active');
+    document.body.style.overflow = 'hidden';
+}
+
 function openCreateAccountModal() {
+    document.querySelector('#createAccountModal .modal-title').textContent = 'Create an account';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
 }
