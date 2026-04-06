@@ -291,30 +291,6 @@ function finishRegistration() {
     doLogin();
 }
 
-// Restore session for returning users
-auth.onAuthStateChanged(function(user) {
-    if (user) {
-        // Save phone number to localStorage
-        if (user.phoneNumber) localStorage.setItem('bazar_phone', user.phoneNumber);
-        // Set default plan if not set
-        if (!localStorage.getItem('bazar_plan')) localStorage.setItem('bazar_plan', 'free');
-        // Restore header UI
-        var savedName = localStorage.getItem('bazar_username');
-        var savedGender = localStorage.getItem('bazar_gender');
-        if (savedName) {
-            var nameEl = document.getElementById('header-username');
-            if (nameEl) nameEl.textContent = savedName;
-        }
-        var avatarEl = document.getElementById('header-avatar');
-        if (avatarEl && savedGender) {
-            avatarEl.src = savedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-        }
-        doLogin();
-        if (window.updatePlanBadge) updatePlanBadge();
-    } else {
-        doLogout();
-    }
-});
 
 document.addEventListener('DOMContentLoaded', function() {
     setupRecaptcha();
