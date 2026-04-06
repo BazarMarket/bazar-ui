@@ -61,6 +61,12 @@ function doLogin() {
 
 function doLogout() {
     auth.signOut();
+    localStorage.removeItem('bazar_username');
+    localStorage.removeItem('bazar_phone');
+    localStorage.removeItem('bazar_gender');
+    localStorage.removeItem('bazar_plan');
+    var nameEl = document.getElementById('header-username');
+    if (nameEl) nameEl.textContent = '';
     document.getElementById('header-logged-in').style.display = 'none';
     document.getElementById('header-guest').style.display = '';
 }
