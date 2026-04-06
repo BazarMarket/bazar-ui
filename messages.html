@@ -524,8 +524,10 @@
         var m = now.getMinutes().toString().padStart(2,'0');
         var bubble = document.createElement('div');
         var msgText = input.value.trim();
-        bubble.className = 'cab-bubble cab-bubble--out' + (isEmojiOnly(msgText) ? ' cab-bubble--emoji-only' : '');
-        bubble.innerHTML = '<div class="cab-bubble__text">' + msgText + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
+        var isEmoji = window.isEmojiOnly && isEmojiOnly(msgText);
+        bubble.className = 'cab-bubble cab-bubble--out';
+        var textStyle = isEmoji ? ' style="background:none;border:none;box-shadow:none;padding:0;font-size:42px;line-height:1.2"' : '';
+        bubble.innerHTML = '<div class="cab-bubble__text"' + textStyle + '>' + msgText + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
         body.appendChild(bubble);
         body.scrollTop = body.scrollHeight;
         input.value = '';
@@ -538,8 +540,10 @@
         var h = now.getHours().toString().padStart(2,'0');
         var m = now.getMinutes().toString().padStart(2,'0');
         var bubble = document.createElement('div');
+        var isEmoji = !extraClass && window.isEmojiOnly && isEmojiOnly(text);
         bubble.className = 'cab-bubble cab-bubble--out' + (extraClass ? ' ' + extraClass : '');
-        bubble.innerHTML = '<div class="cab-bubble__text">' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
+        var textStyle = isEmoji ? ' style="background:none;border:none;box-shadow:none;padding:0;font-size:42px;line-height:1.2"' : '';
+        bubble.innerHTML = '<div class="cab-bubble__text"' + textStyle + '>' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
         body.appendChild(bubble);
         body.scrollTop = body.scrollHeight;
     }
@@ -654,20 +658,9 @@
     window.isEmojiOnly = function(str) {
         var s = str.trim();
         if (!s) return false;
-        for (var i = 0; i < s.length; ) {
-            var cp = s.codePointAt(i);
-            i += cp > 0xFFFF ? 2 : 1;
-            if (cp === 0x200D || cp === 0xFE0F || cp === 0xFE0E || cp === 0x20E3 || cp === 0x200B) continue;
-            if ((cp >= 0x1F000 && cp <= 0x1FFFF) ||
-                (cp >= 0x1FA00 && cp <= 0x1FAFF) ||
-                (cp >= 0x2600  && cp <= 0x27FF)  ||
-                (cp >= 0x2300  && cp <= 0x23FF)  ||
-                (cp >= 0x2B00  && cp <= 0x2BFF)  ||
-                (cp >= 0x1F900 && cp <= 0x1F9FF) ||
-                (cp >= 0x1FA70 && cp <= 0x1FAFF)) continue;
-            return false;
-        }
-        return true;
+        // Remove all emoji-range chars; if nothing printable remains → emoji-only
+        var cleaned = s.replace(/[\u00A9\u00AE\u203C-\u3299\uD800-\uDFFF\uFE0F\u20E3\u200D]/g, '');
+        return cleaned.trim().length === 0;
     };
 
     window.toggleEmojiPicker = function(btn) {
