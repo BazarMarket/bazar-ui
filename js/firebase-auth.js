@@ -123,17 +123,24 @@ function sendSmsCode() {
             openOtpModal(phoneNumber);
         })
         .catch(function(error) {
-            console.error('SMS error:', error);
+            console.error('SMS error code:', error.code, 'message:', error.message);
             smsBtn.textContent = 'Sign in by an SMS';
             smsBtn.disabled = false;
             if (error.code === 'auth/invalid-phone-number') {
                 showPhoneError('Invalid phone number. Please check and try again.');
             } else if (error.code === 'auth/too-many-requests') {
                 showPhoneError('Too many attempts. Please try again later.');
+            } else if (error.code === 'auth/captcha-check-failed') {
+                showPhoneError('reCAPTCHA failed. Please reload the page and try again.');
+            } else if (error.code === 'auth/quota-exceeded') {
+                showPhoneError('SMS quota exceeded. Please try again tomorrow.');
             } else {
-                showPhoneError('Error sending SMS. Please try again.');
+                showPhoneError('Error (' + (error.code || 'unknown') + '). Please reload and try again.');
             }
+            try { if (recaptchaVerifier) { recaptchaVerifier.clear(); } } catch(e) {}
             recaptchaVerifier = null;
+            var c = document.getElementById('recaptcha-container');
+            if (c) c.innerHTML = '';
             setupRecaptcha();
         });
 }
