@@ -1260,11 +1260,24 @@
         return d;
     }
 
-    function isEmojiOnly(str) {
+    window.isEmojiOnly = function(str) {
         var s = str.trim();
         if (!s) return false;
-        return /^(\p{Emoji_Presentation}|\p{Extended_Pictographic}|[\u200d\ufe0f\u20e3])+$/u.test(s);
-    }
+        for (var i = 0; i < s.length; ) {
+            var cp = s.codePointAt(i);
+            i += cp > 0xFFFF ? 2 : 1;
+            if (cp === 0x200D || cp === 0xFE0F || cp === 0xFE0E || cp === 0x20E3 || cp === 0x200B) continue;
+            if ((cp >= 0x1F000 && cp <= 0x1FFFF) ||
+                (cp >= 0x1FA00 && cp <= 0x1FAFF) ||
+                (cp >= 0x2600  && cp <= 0x27FF)  ||
+                (cp >= 0x2300  && cp <= 0x23FF)  ||
+                (cp >= 0x2B00  && cp <= 0x2BFF)  ||
+                (cp >= 0x1F900 && cp <= 0x1F9FF) ||
+                (cp >= 0x1FA70 && cp <= 0x1FAFF)) continue;
+            return false;
+        }
+        return true;
+    };
 
     window.toggleEmojiPicker = function(btn) {
         if (!picker) picker = buildPicker();
