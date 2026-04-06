@@ -378,6 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var isProduction = (h === 'www.bazar.uk' || h === 'bazar.uk');
 
     if (!isProduction) {
+        // DEV / Replit — автологин с дефолтными данными
         if (!localStorage.getItem('bazar_username')) {
             localStorage.setItem('bazar_username',    'Andreas Xenofontos');
             localStorage.setItem('bazar_gender',      'male');
@@ -385,6 +386,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!localStorage.getItem('bazar_plan'))  localStorage.setItem('bazar_plan', 'free');
         }
         doLogin();
+    } else {
+        // Production — восстанавливаем сессию если пользователь уже логинился
+        if (localStorage.getItem('bazar_username')) {
+            doLogin();
+        }
     }
 
     setupRecaptcha();
