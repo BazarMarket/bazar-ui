@@ -374,6 +374,19 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    var h = window.location.hostname;
+    var isProduction = (h === 'www.bazar.uk' || h === 'bazar.uk');
+
+    if (!isProduction) {
+        if (!localStorage.getItem('bazar_username')) {
+            localStorage.setItem('bazar_username',    'Andreas Xenofontos');
+            localStorage.setItem('bazar_gender',      'male');
+            localStorage.setItem('bazar_firebase_uid','test_uid_123');
+            if (!localStorage.getItem('bazar_plan'))  localStorage.setItem('bazar_plan', 'free');
+        }
+        doLogin();
+    }
+
     setupRecaptcha();
     var otpInputs = document.querySelectorAll('.otp-input');
     otpInputs.forEach(function(input, index) {
