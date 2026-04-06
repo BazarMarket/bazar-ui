@@ -103,13 +103,14 @@ card.html и index.html (залогиненный, `#header-logged-in`):
 
 | Среда | Hostname | При нажатии "Log in" | При загрузке страницы |
 |---|---|---|---|
-| **Production** | www.bazar.uk, bazar.uk | Открывает форму (телефон + OTP) | Ничего (гость) |
+| **Production** | www.bazar.uk, bazar.uk | Открывает форму (телефон + OTP) | Если есть `bazar_username` в localStorage → `doLogin()` (восстановление сессии) |
 | **DEV** | dev.bazar.uk | Автологин без формы | Автологин (Andreas Xenofontos) |
 | **Replit** | *.replit.dev, localhost | Автологин без формы | Автологин (Andreas Xenofontos) |
 
-### Автологин на DEV/Replit (DOMContentLoaded в firebase-auth.js)
+### Автологин / восстановление сессии (DOMContentLoaded в firebase-auth.js)
 ```js
 if (!isProduction) {
+    // DEV / Replit — автологин с дефолтными данными
     if (!localStorage.getItem('bazar_username')) {
         localStorage.setItem('bazar_username',     'Andreas Xenofontos');
         localStorage.setItem('bazar_gender',       'male');
@@ -117,10 +118,21 @@ if (!isProduction) {
         if (!localStorage.getItem('bazar_plan')) localStorage.setItem('bazar_plan', 'free');
     }
     doLogin();
+} else {
+    // Production — восстанавливаем сессию если пользователь уже логинился
+    if (localStorage.getItem('bazar_username')) {
+        doLogin();
+    }
 }
 ```
-- Если `bazar_username` уже есть в localStorage — НЕ перезаписывает, берёт существующее
-- `doLogin()` ВСЕГДА вызывается на DEV/Replit при загрузке
+- DEV/Replit: `doLogin()` ВСЕГДА при загрузке, дефолты ставятся только если нет в localStorage
+- Production: `doLogin()` только если `bazar_username` уже есть в localStorage (сессия восстанавливается при переходе между страницами)
+- Без этого при переходе cabinet → index пользователь видит форму "Log in" вместо своего аккаунта
+
+### ⚠️ cabinet.html — НЕЛЬЗЯ хардкодить имена/данные
+- `#header-username` — всегда пустой в HTML, заполняется через `doLogin()` → `localStorage`
+- Приветствие, settings форма — заполняются через `populateUserData()` из localStorage
+- НЕ писать "Andreas", "Karafouni", "+44 791..." или любые другие данные прямо в HTML
 
 ### Повторный вход (Log out → Log in) на Production
 После OTP верификации — проверяем API: `GET /api/customers/{firebase_uid}`
