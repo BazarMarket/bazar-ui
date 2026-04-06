@@ -184,6 +184,9 @@ function verifyOtpCode() {
     confirmationResult.confirm(code)
         .then(function(result) {
             document.getElementById('otpError').style.display = 'none';
+            if (result.user && result.user.phoneNumber) {
+                localStorage.setItem('bazar_phone', result.user.phoneNumber);
+            }
             openProfileModal();
         })
         .catch(function(error) {

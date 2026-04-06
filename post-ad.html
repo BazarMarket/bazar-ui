@@ -1821,6 +1821,18 @@
       window.addEventListener('DOMContentLoaded', function() {
          var first = document.querySelector('#mainCats .cat-item.active');
          if (first) selectCat(first);
+
+         // Auto-fill contact details from user profile
+         var name = localStorage.getItem('bazar_username');
+         var phone = localStorage.getItem('bazar_phone');
+         if (name) {
+            var nameEl = document.getElementById('sellerNameInput');
+            if (nameEl && !nameEl.value) nameEl.value = name;
+         }
+         if (phone) {
+            var phoneEl = document.getElementById('sellerPhoneInput');
+            if (phoneEl && !phoneEl.value) phoneEl.value = phone;
+         }
       });
    </script>
    <script>
