@@ -160,6 +160,40 @@ card.html и index.html (залогиненный, `#header-logged-in`):
 - Цена: чёрная (одна цена) или красная (две цены) — см. раздел "Цена"
 - Telegram синий: `#2aabee`
 
+## Stripe Integration (Laravel на admin.bazar.uk)
+
+### Архитектура
+- `config/stripe.php` — все настройки (ключи, планы, URLs)
+- `app/Services/Stripe/StripeConnectService.php` — Connect аккаунты продавцов
+- `app/Services/Stripe/StripeCheckoutService.php` — Checkout для PRO/VIP
+- `app/Services/Stripe/StripeWebhookService.php` — обработка событий
+- Controllers: StripeConnectController, StripeCheckoutController, StripeWebhookController
+- Request validation: ConnectAccountRequest, CheckoutPlanRequest
+
+### API endpoints
+- `POST /api/stripe/connect/account/create` — создать Connect аккаунт продавца
+- `POST /api/stripe/connect/account/onboarding-link` — ссылка на Stripe onboarding
+- `GET  /seller/stripe/refresh?uid=` — обновить onboarding ссылку
+- `GET  /seller/stripe/return?uid=` — синхронизировать статус аккаунта
+- `POST /api/stripe/checkout/plan` — Checkout сессия для PRO/VIP
+- `POST /api/stripe/webhook` — webhook от Stripe
+
+### Планы (config/stripe.php)
+- PRO: £7.00 / 30 дней
+- VIP: £14.00 / 30 дней
+
+### Таблицы БД
+- `customers` — добавлены: stripe_connected_account_id, stripe_onboarding_completed, stripe_details_submitted, stripe_charges_enabled, stripe_payouts_enabled, bazar_plan, bazar_plan_expires_at
+- `payments` — все транзакции: customer_id, stripe_checkout_session_id, stripe_payment_intent_id, amount, currency, status, payment_type, metadata, paid_at
+
+### Webhook events
+- `checkout.session.completed` → активирует plan в customers
+- `account.updated` → обновляет статус Connect аккаунта
+- `payment_intent.succeeded` → логирует платёж
+
+### STRIPE_WEBHOOK_SECRET
+После регистрации webhook в Stripe Dashboard добавить в .env на сервере.
+
 ## Tech Stack
 
 HTML/CSS/JS → future migration to Laravel + Blade + PostgreSQL + Filament admin (Hetzner CX22)
