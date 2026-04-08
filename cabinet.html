@@ -1242,20 +1242,13 @@
             var depositAmt = parseFloat(params.get('amount') || '0');
             var sessionId2 = params.get('session_id');
             if (depositAmt > 0) {
-                var verifyDeposit = function(amt) {
-                    var cur = parseFloat(localStorage.getItem('bazar_balance') || '0');
-                    localStorage.setItem('bazar_balance', (cur + amt).toString());
-                    updateWalletDisplay();
-                };
+                var cur = parseFloat(localStorage.getItem('bazar_balance') || '0');
+                localStorage.setItem('bazar_balance', (cur + depositAmt).toString());
+                updateWalletDisplay();
                 if (sessionId2) {
                     fetch('https://admin.bazar.uk/api/stripe/checkout/verify-deposit/' + sessionId2, {
                         headers: { 'Accept': 'application/json' }
-                    })
-                    .then(function(r) { return r.json(); })
-                    .then(function(d) { if (d.success) verifyDeposit(depositAmt); })
-                    .catch(function() { verifyDeposit(depositAmt); });
-                } else {
-                    verifyDeposit(depositAmt);
+                    }).catch(function() {});
                 }
             }
             history.replaceState(null, '', window.location.pathname + '#payments');
