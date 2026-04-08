@@ -883,10 +883,20 @@
                                     <label>Phone</label>
                                     <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="">
                                 </div>
-                                <div class="input-custom">
+                                <div class="input-custom" style="position:relative;">
                                     <label>My Address</label>
-                                    <input id="fieldAddress" type="text" placeholder="Enter your city or address..." value="">
-                                    <button type="button" id="myLocationBtn" onclick="detectMyLocation()" style="display:flex;align-items:center;gap:6px;margin-top:7px;background:none;border:none;padding:0;font-family:Poppins,sans-serif;font-size:13px;font-weight:600;color:#e87722;cursor:pointer;">📍 My Location</button>
+                                    <input id="fieldAddress" type="text" placeholder="Enter your city or address..." value="" autocomplete="off" onfocus="showAddressDropdown()" oninput="showAddressDropdown()">
+                                    <div id="addressDropdown" style="display:none;position:absolute;left:0;right:0;background:#fff;border:1.5px solid #e0e0e0;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.10);z-index:200;margin-top:4px;overflow:hidden;">
+                                        <div onclick="detectMyLocation()" id="myLocationBtn" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-family:Poppins,sans-serif;font-size:13px;font-weight:700;color:#e87722;" onmouseover="this.style.background='#fff8f2'" onmouseout="this.style.background=''">
+                                            <span style="font-size:16px;">📍</span> My Location
+                                        </div>
+                                        <div onclick="pickCity('London')"      style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> London</div>
+                                        <div onclick="pickCity('Manchester')"  style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> Manchester</div>
+                                        <div onclick="pickCity('Birmingham')"  style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> Birmingham</div>
+                                        <div onclick="pickCity('Leeds')"       style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> Leeds</div>
+                                        <div onclick="pickCity('Liverpool')"   style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> Liverpool</div>
+                                        <div onclick="pickCity('Bristol')"     style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> Bristol</div>
+                                    </div>
                                     <p id="locationStatus" style="font-size:12px;color:#808080;margin:4px 0 0;display:none;"></p>
                                 </div>
                             </div>
@@ -1177,6 +1187,27 @@
         });
     }
 
+    function showAddressDropdown() {
+        var dd = document.getElementById('addressDropdown');
+        if (dd) dd.style.display = 'block';
+    }
+    function hideAddressDropdown() {
+        var dd = document.getElementById('addressDropdown');
+        if (dd) dd.style.display = 'none';
+    }
+    function pickCity(city) {
+        var f = document.getElementById('fieldAddress');
+        if (f) f.value = city;
+        hideAddressDropdown();
+        var st = document.getElementById('locationStatus');
+        if (st) st.style.display = 'none';
+    }
+    document.addEventListener('click', function(e) {
+        var wrap = document.getElementById('fieldAddress');
+        var dd = document.getElementById('addressDropdown');
+        if (dd && wrap && !wrap.contains(e.target) && !dd.contains(e.target)) hideAddressDropdown();
+    });
+
     function detectMyLocation() {
         var btn = document.getElementById('myLocationBtn');
         var statusEl = document.getElementById('locationStatus');
@@ -1192,6 +1223,7 @@
         if (!navigator.geolocation) { setStatus('Geolocation is not supported by your browser.', '#e53935'); return; }
         if (btn) { btn.textContent = '⏳ Detecting...'; btn.disabled = true; }
         if (statusEl) statusEl.style.display = 'none';
+        hideAddressDropdown();
 
         navigator.geolocation.getCurrentPosition(
             function(pos) {
