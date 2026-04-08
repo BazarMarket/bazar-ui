@@ -200,8 +200,86 @@
                     </div>
                 </div>
 
-                <!-- Recent Transactions preview -->
-                <div class="cab-box" style="margin-top:8px">
+                <!-- DEV: deposit/withdraw activity + forms (hidden on production) -->
+                <div id="devDashSections">
+
+                    <div class="cab-two-col">
+                        <div class="cab-box">
+                            <div class="cab-box__head">
+                                <p class="cab-box__title">Recent deposit activity</p>
+                                <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
+                            </div>
+                            <div class="cab-box__body">
+                                <table class="cab-table">
+                                    <thead><tr><th>Date</th><th>Method</th><th>Amount</th></tr></thead>
+                                    <tbody><tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No deposit activity yet</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="cab-box">
+                            <div class="cab-box__head">
+                                <p class="cab-box__title">Recent withdraw activity</p>
+                                <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
+                            </div>
+                            <div class="cab-box__body">
+                                <table class="cab-table">
+                                    <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                                    <tbody><tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No activity yet</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cab-two-col">
+                        <div class="cab-form-box">
+                            <div class="cab-form-box__tabs">
+                                <div class="cab-form-box__tab active" data-tab="deposit">Deposit</div>
+                                <div class="cab-form-box__tab" data-tab="withdraw-form">Withdraw</div>
+                            </div>
+                            <div class="cab-form-box__body">
+                                <div class="cab-form-box__sub active" data-sub="deposit">
+                                    <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
+                                    <div class="cab-amount-btns" id="dashDepAmountBtns">
+                                        <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                        <button class="cab-amount-btn active" data-amount="25">£ 25</button>
+                                        <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                        <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                    </div>
+                                    <div class="input-custom" style="margin:10px 0;">
+                                        <input id="depositAmount" type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                    </div>
+                                    <button id="dashTopUpBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount', 'dashTopUpBtn')">Top Up</button>
+                                </div>
+                                <div class="cab-form-box__sub" data-sub="withdraw-form">
+                                    <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
+                                    <div class="cab-amount-btns" id="dashWdAmountBtns">
+                                        <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                        <button class="cab-amount-btn active" data-amount="50">£ 50</button>
+                                        <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                        <button class="cab-amount-btn" data-amount="200">£ 200</button>
+                                    </div>
+                                    <div class="input-custom" style="margin:10px 0;">
+                                        <input id="withdrawAmount" type="number" min="1" placeholder="Amount to withdraw (£)" value="50">
+                                    </div>
+                                    <button id="dashWithdrawBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount', 'dashWithdrawBtn')">Withdrawal</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cab-box">
+                            <div class="cab-box__head"><p class="cab-box__title">Upcoming bills</p></div>
+                            <div class="cab-box__body">
+                                <table class="cab-table">
+                                    <thead><tr><th>Description</th><th>Due date</th><th>Amount</th></tr></thead>
+                                    <tbody><tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No upcoming bills</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PROD: Recent Transactions preview (shown only on www.bazar.uk) -->
+                <div id="prodDashRecentTxn" class="cab-box" style="margin-top:8px;display:none">
                     <div class="cab-box__head">
                         <p class="cab-box__title">Recent Transactions</p>
                         <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
@@ -209,13 +287,7 @@
                     <div class="cab-box__body">
                         <table class="cab-table cab-table--payments">
                             <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Operation</th>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                </tr>
+                                <tr><th>Date</th><th>Type</th><th>Operation</th><th>Description</th><th>Amount</th></tr>
                             </thead>
                             <tbody id="dashTxnBody">
                                 <tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>
@@ -272,8 +344,55 @@
                     </div>
                 </div>
 
-                <!-- Full transaction history -->
-                <div class="cab-box" style="margin-top:20px">
+                <!-- DEV: Deposit/Withdraw forms (hidden on production) -->
+                <div id="devPayForm" class="cab-two-col" style="margin-top:20px">
+                    <div class="cab-form-box">
+                        <div class="cab-form-box__tabs">
+                            <div class="cab-form-box__tab active" data-tab="deposit2">Deposit</div>
+                            <div class="cab-form-box__tab" data-tab="withdraw2">Withdraw</div>
+                        </div>
+                        <div class="cab-form-box__body">
+                            <div class="cab-form-box__sub active" data-sub="deposit2">
+                                <div class="cab-amount-btns" id="payDepAmountBtns">
+                                    <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                    <button class="cab-amount-btn active" data-amount="25">£ 25</button>
+                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                    <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input id="depositAmount2" type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                </div>
+                                <button id="payTopUpBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount2', 'payTopUpBtn')">Top Up</button>
+                            </div>
+                            <div class="cab-form-box__sub" data-sub="withdraw2">
+                                <div class="cab-amount-btns" id="payWdAmountBtns">
+                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                    <button class="cab-amount-btn active" data-amount="100">£ 100</button>
+                                    <button class="cab-amount-btn" data-amount="200">£ 200</button>
+                                    <button class="cab-amount-btn" data-amount="500">£ 500</button>
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input id="withdrawAmount2" type="number" min="1" placeholder="Amount to withdraw (£)" value="100">
+                                </div>
+                                <button id="payWithdrawBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount2', 'payWithdrawBtn')">Withdrawal</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cab-box" id="devTxnCompact">
+                        <div class="cab-box__head"><p class="cab-box__title">Transaction History</p></div>
+                        <div class="cab-box__body">
+                            <table class="cab-table">
+                                <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                                <tbody id="txnTableBodyDev">
+                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Loading…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROD: Full transaction history with filters (shown only on www.bazar.uk) -->
+                <div id="prodTxnFull" class="cab-box" style="margin-top:20px;display:none">
                     <div class="cab-box__head">
                         <p class="cab-box__title">Transaction History</p>
                     </div>
@@ -1496,9 +1615,26 @@
         var uid = localStorage.getItem('bazar_firebase_uid') || localStorage.getItem('bazar_uid');
         var localTxns = JSON.parse(localStorage.getItem('bazar_local_txns') || '[]');
 
+        function renderSimpleRow(t) {
+            var isPlus = t.type === 'credit';
+            var amtClass = isPlus ? 'cab-table__amount--plus' : 'cab-table__amount--minus';
+            var sign = isPlus ? '+ £' : '− £';
+            var statusBadge = t.status === 'pending'
+                ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
+                : '';
+            return '<tr><td class="cab-table__date">' + (t.date||'—') + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
+        }
+
         function renderAll(allTxns, totalSpent) {
             _allTxns = allTxns;
             applyTxnFilters();
+
+            var devBody = document.getElementById('txnTableBodyDev');
+            if (devBody) {
+                devBody.innerHTML = allTxns.length
+                    ? allTxns.map(renderSimpleRow).join('')
+                    : '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
+            }
             var dashBody = document.getElementById('dashTxnBody');
             if (dashBody) {
                 var recent = allTxns.slice(0, 5);
@@ -1714,13 +1850,24 @@
 </script>
 
 <script>
-    /* ── Production-only: hide Wallet widget & My Payments ── */
+    /* ── Production-only: hide Wallet, My Payments nav + swap DEV→PROD sections ── */
     if (window.location.hostname === 'www.bazar.uk') {
         document.addEventListener('DOMContentLoaded', function() {
+            /* Hide wallet widget + My Payments nav items */
             ['walletWidgetCell','walletSep','menuMyPayments','navMyPayments'].forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
+            /* Dashboard: hide DEV sections, show PROD Recent Transactions */
+            var devDash  = document.getElementById('devDashSections');
+            var prodDash = document.getElementById('prodDashRecentTxn');
+            if (devDash)  devDash.style.display  = 'none';
+            if (prodDash) prodDash.style.display = '';
+            /* Payments panel: hide DEV Deposit/Withdraw, show PROD full Transaction History */
+            var devPay  = document.getElementById('devPayForm');
+            var prodPay = document.getElementById('prodTxnFull');
+            if (devPay)  devPay.style.display  = 'none';
+            if (prodPay) prodPay.style.display = '';
         });
     }
 </script>
