@@ -3109,10 +3109,7 @@ p {
   display: none;
 }
 .header-old__vsep {
-  width: 2px;
-  height: 40px;
-  background: #e7e7e7;
-  flex-shrink: 0;
+  display: none;
 }
 .header-old .burger-old {
   display: none;
