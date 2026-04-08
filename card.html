@@ -867,8 +867,13 @@
       var mainWrap = document.getElementById('gallery-big');
       if (mainWrap && allImgs.length) {
          mainWrap.innerHTML = allImgs.map(function(src) {
-            return '<div class="swiper-slide slider-gallery-big__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover"></div>';
+            return '<div class="swiper-slide slider-gallery-big__img">' +
+               '<img src="' + src + '" alt="' + p.title + '" class="img-cover">' +
+               '<a href="' + src + '" data-fslightbox="product-gallery" class="gallery-zoom-overlay" aria-label="Enlarge photo"></a>' +
+               '<span class="gallery-zoom-hint" title="Enlarge">⤢</span>' +
+               '</div>';
          }).join('');
+         if (typeof refreshFsLightbox === 'function') refreshFsLightbox();
       }
       var miniWrap = document.getElementById('gallery-mini');
       if (miniWrap && allImgs.length) {
@@ -980,6 +985,24 @@
          }); // end fetch
    })();
    </script>
+
+   <!-- ═══════════ GALLERY LIGHTBOX STYLES ═══════════ -->
+   <style>
+      .slider-gallery-big__img { position: relative; overflow: hidden; }
+      .gallery-zoom-overlay {
+         display: block; position: absolute; inset: 0; z-index: 2;
+         cursor: zoom-in; background: transparent;
+      }
+      .gallery-zoom-hint {
+         position: absolute; bottom: 10px; right: 10px; z-index: 3;
+         width: 32px; height: 32px; border-radius: 50%;
+         background: rgba(0,0,0,.45); color: #fff;
+         font-size: 17px; line-height: 32px; text-align: center;
+         pointer-events: none; opacity: .7; transition: opacity .2s;
+         user-select: none;
+      }
+      .slider-gallery-big__img:hover .gallery-zoom-hint { opacity: 1; }
+   </style>
 
    <!-- ═══════════ SIDE CHAT PANEL STYLES ═══════════ -->
    <style>
