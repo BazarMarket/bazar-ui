@@ -1173,20 +1173,6 @@
                 })
                 .catch(function() {});
         }
-    })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            if (data.success && data.url) {
-                window.location.href = data.url;
-            } else {
-                alert('Error: ' + (data.error || 'Please try again.'));
-                if (btn) { btn.textContent = orig; btn.disabled = false; }
-            }
-        })
-        .catch(function() {
-            alert('Connection error. Please try again.');
-            if (btn) { btn.textContent = orig; btn.disabled = false; }
-        });
     }
 
     function showAddressDropdown() {
@@ -1293,7 +1279,6 @@
         var isoDate = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
         txns.unshift({ date: dateStr, isoDate: isoDate, operation: operation || 'Payment', description: description, type: type, amount: parseFloat(amount).toFixed(2), status: status });
         localStorage.setItem('bazar_local_txns', JSON.stringify(txns));
-    }, 800);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
