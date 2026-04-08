@@ -955,6 +955,26 @@
       var vbLink = document.querySelector('.card-name__bottom .icon-vb');
       if(vbLink) vbLink.href = 'viber://chat?number=' + cleanPhone;
 
+      /* Show only selected messengers.
+         Priority: API fields → localStorage bazar_my_ads → show all (fallback) */
+      var msgWa = p.has_whatsapp, msgTg = p.has_telegram, msgVb = p.has_viber;
+      var apiHasMessenger = (msgWa !== null && msgWa !== undefined);
+      if (!apiHasMessenger) {
+         var storedAds = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+         var matchAd = storedAds.filter(function(a){ return String(a.id) === String(id); })[0];
+         if (matchAd && matchAd.messengers) {
+            msgWa = matchAd.messengers.wa;
+            msgTg = matchAd.messengers.tg;
+            msgVb = matchAd.messengers.vb;
+            apiHasMessenger = true;
+         }
+      }
+      if (apiHasMessenger) {
+         if(wpLink) wpLink.style.display = msgWa ? '' : 'none';
+         if(tgLink) tgLink.style.display = msgTg ? '' : 'none';
+         if(vbLink) vbLink.style.display = msgVb ? '' : 'none';
+      }
+
       var mobName = el('mob-seller-name');
       if(mobName) mobName.textContent = p.seller_name;
       var mobCall = el('mob-call-btn');

@@ -1765,6 +1765,12 @@
          if (locationLat) formData.append('latitude', locationLat);
          if (locationLng) formData.append('longitude', locationLng);
 
+         var condition = getSelectVal('conditionSelect');
+         if (condition) formData.append('condition', condition);
+
+         var floor = getSelectVal('floorSelect');
+         if (floor) formData.append('floor', parseInt(floor));
+
          var bedrooms = getSelectVal('bedroomsSelect');
          if (bedrooms) formData.append('bedrooms', bedrooms === '10 and more' ? 10 : parseInt(bedrooms));
 
@@ -1809,6 +1815,13 @@
          var sellerEmail = getInputVal('sellerEmailInput');
          if (sellerEmail) formData.append('seller_email', sellerEmail);
 
+         var hasWhatsapp = document.getElementById('whatsappCheck');
+         var hasTelegram = document.getElementById('telegramCheck');
+         var hasViber    = document.getElementById('viberCheck');
+         formData.append('has_whatsapp', (hasWhatsapp && hasWhatsapp.checked) ? '1' : '0');
+         formData.append('has_telegram', (hasTelegram && hasTelegram.checked) ? '1' : '0');
+         formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
+
          var youtube = getInputVal('youtubeInput');
          if (youtube) formData.append('video_url', youtube);
 
@@ -1846,6 +1859,9 @@
             var photoDataUrl = rawBg ? rawBg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '') : '';
 
             function saveAndRedirect(thumb) {
+               var waEl = document.getElementById('whatsappCheck');
+               var tgEl = document.getElementById('telegramCheck');
+               var vbEl = document.getElementById('viberCheck');
                var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
                ads.unshift({
                   id: data.property_id,
@@ -1856,7 +1872,12 @@
                   propType: propertyType,
                   date: new Date().toISOString().split('T')[0],
                   status: 'pending',
-                  photo: thumb || ''
+                  photo: thumb || '',
+                  messengers: {
+                     wa: !!(waEl && waEl.checked),
+                     tg: !!(tgEl && tgEl.checked),
+                     vb: !!(vbEl && vbEl.checked)
+                  }
                });
                try {
                   localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
