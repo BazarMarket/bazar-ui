@@ -883,13 +883,11 @@
                                     <label>Phone</label>
                                     <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="">
                                 </div>
-                                <div class="input-custom cab-form-full">
+                                <div class="input-custom">
                                     <label>My Address</label>
-                                    <div style="display:flex;gap:8px;align-items:center;">
-                                        <input id="fieldAddress" type="text" placeholder="Enter your city or address..." value="" style="flex:1;">
-                                        <button type="button" id="myLocationBtn" onclick="detectMyLocation()" style="white-space:nowrap;padding:0 14px;height:44px;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;font-family:Poppins,sans-serif;font-size:13px;font-weight:600;color:#e87722;cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0;">
-                                            📍 My Location
-                                        </button>
+                                    <div style="position:relative;">
+                                        <input id="fieldAddress" type="text" placeholder="Enter your city or address..." value="" style="padding-right:120px;">
+                                        <button type="button" id="myLocationBtn" onclick="detectMyLocation()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:0 10px;height:30px;border:none;border-radius:6px;background:#fff3e8;font-family:Poppins,sans-serif;font-size:12px;font-weight:600;color:#e87722;cursor:pointer;">📍 My Location</button>
                                     </div>
                                     <p id="locationStatus" style="font-size:12px;color:#808080;margin:4px 0 0;display:none;"></p>
                                 </div>
