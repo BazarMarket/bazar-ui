@@ -1144,14 +1144,32 @@
         }
 
         var uid = localStorage.getItem('bazar_firebase_uid');
-        if (uid && (!email || !address)) {
+        if (uid) {
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
-                    if (d.exists) {
-                        if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
-                        if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
+                    if (!d.exists) return;
+                    if (d.name && !localStorage.getItem('bazar_username')) {
+                        localStorage.setItem('bazar_username', d.name);
+                        if (elName)    elName.textContent    = d.name;
+                        if (elWelcome) elWelcome.textContent = d.name;
+                        var pts = d.name.trim().split(' ');
+                        if (elFirst) elFirst.value = pts[0] || '';
+                        if (elLast)  elLast.value  = pts.slice(1).join(' ') || '';
+                    } else if (d.name && !name) {
+                        localStorage.setItem('bazar_username', d.name);
+                        if (elName)    elName.textContent    = d.name;
+                        if (elWelcome) elWelcome.textContent = d.name;
                     }
+                    if (d.phone && !localStorage.getItem('bazar_phone')) {
+                        localStorage.setItem('bazar_phone', d.phone);
+                        if (elPhone) elPhone.textContent = d.phone;
+                        if (elPh)    elPh.value          = d.phone;
+                    }
+                    if (d.gender) { localStorage.setItem('bazar_gender', d.gender); }
+                    if (d.plan)   { localStorage.setItem('bazar_plan',   d.plan); }
+                    if (d.email)   { localStorage.setItem('bazar_email',   d.email);   if (elEmail) elEmail.value = d.email; }
+                    if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
                 })
                 .catch(function() {});
         }
