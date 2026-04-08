@@ -203,8 +203,20 @@ function sendSmsCode() {
     if (!document.getElementById('agreeCheckbox').checked) { document.getElementById('agreeError').style.display = 'block'; return; }
     document.getElementById('agreeError').style.display = 'none';
     clearPhoneError();
-    var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
-    if (!rawValue || rawValue.length < 10) { showPhoneError('Please enter your phone number'); return; }
+    var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_\.]/g, '');
+    if (rawValue.startsWith('+44')) {
+        rawValue = rawValue.slice(3);
+    } else if (rawValue.startsWith('0044')) {
+        rawValue = rawValue.slice(4);
+    } else if (rawValue.startsWith('44') && rawValue.length >= 12) {
+        rawValue = rawValue.slice(2);
+    } else if (rawValue.startsWith('0')) {
+        rawValue = rawValue.slice(1);
+    }
+    if (!rawValue || rawValue.length < 9 || rawValue.length > 11) {
+        showPhoneError('Please enter a valid UK phone number');
+        return;
+    }
     var phoneNumber = '+44' + rawValue;
 
     var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
