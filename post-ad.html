@@ -1807,8 +1807,7 @@
          .then(function(data) {
             btn.textContent = 'Publish Ad';
             btn.disabled = false;
-            alert('Your ad has been submitted successfully! It will appear after review. (ID: ' + data.property_id + ')');
-            window.location.href = 'index.html';
+            window.location.href = 'publish-options.html?ad_id=' + (data.property_id || '');
          })
          .catch(function(error) {
             btn.textContent = 'Publish Ad';
