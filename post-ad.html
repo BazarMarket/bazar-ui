@@ -1868,15 +1868,19 @@
             }
 
             if (photoDataUrl && photoDataUrl.indexOf('data:') === 0) {
-               var tmpImg = new Image();
-               tmpImg.onload = function() {
-                  var canvas = document.createElement('canvas');
-                  canvas.width = 400; canvas.height = 300;
-                  canvas.getContext('2d').drawImage(tmpImg, 0, 0, 400, 300);
-                  saveAndRedirect(canvas.toDataURL('image/jpeg', 0.7));
-               };
-               tmpImg.onerror = function() { saveAndRedirect(''); };
-               tmpImg.src = photoDataUrl;
+               try {
+                  var tmpImg = new Image();
+                  tmpImg.onload = function() {
+                     try {
+                        var canvas = document.createElement('canvas');
+                        canvas.width = 400; canvas.height = 300;
+                        canvas.getContext('2d').drawImage(tmpImg, 0, 0, 400, 300);
+                        saveAndRedirect(canvas.toDataURL('image/jpeg', 0.7));
+                     } catch(e) { saveAndRedirect(''); }
+                  };
+                  tmpImg.onerror = function() { saveAndRedirect(''); };
+                  tmpImg.src = photoDataUrl;
+               } catch(e) { saveAndRedirect(''); }
             } else {
                saveAndRedirect('');
             }

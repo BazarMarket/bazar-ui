@@ -1138,7 +1138,12 @@
             if (map[i] === filter) btn.classList.add('active');
             btn.onclick = function() { loadMyAds(map[i]); };
         });
-        if (ads.length === 0) return;
+        if (ads.length === 0) {
+            table.innerHTML = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
+                '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
+                '</tr></thead><tbody><tr><td colspan="6" style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></td></tr></tbody></table>';
+            return;
+        }
         var filtered = filter === 'all' ? ads :
                        filter === 'active'   ? ads.filter(function(a){ return a.status === 'active'; }) :
                        filter === 'inactive' ? ads.filter(function(a){ return a.status === 'rejected'; }) :
@@ -1458,11 +1463,15 @@
                     headers: { 'Accept': 'application/json' }
                 })
                 .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (data.success && data.plan) {
-                        localStorage.setItem('bazar_plan', data.plan);
+                .then(function(verData) {
+                    if (verData.success && verData.plan) {
+                        localStorage.setItem('bazar_plan', verData.plan);
                         if (window.updatePlanBadge) updatePlanBadge();
                         highlightCurrentPlan();
+                    }
+                    var verAdId = verData.ad_id || verData.property_id;
+                    if (verAdId) {
+                        window.location.href = 'card.html?id=' + verAdId;
                     }
                 })
                 .catch(function() {});
@@ -1812,10 +1821,5 @@
     });
 </script>
 
-<script>
-    /* ── Production-only: hide Wallet, My Payments nav + swap DEV→PROD sections ── */
-    if (window.location.hostname === 'www.bazar.uk') {
-        document.addEventListener('DOMContentLoaded', function() {
-</script>
 
 </body></html>
