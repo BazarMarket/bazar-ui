@@ -1195,6 +1195,14 @@
         });
     }
 
+    function saveLocalTxn(type, description, amount, status) {
+        var txns = JSON.parse(localStorage.getItem('bazar_local_txns') || '[]');
+        var d = new Date();
+        var dateStr = d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getFullYear();
+        txns.unshift({ date: dateStr, description: description, type: type, amount: amount.toFixed(2), status: status });
+        localStorage.setItem('bazar_local_txns', JSON.stringify(txns));
+    }
+
     function startWithdraw(inputId, btnId) {
         var amount = parseFloat(document.getElementById(inputId).value);
         if (!amount || amount < 1) { alert('Enter an amount to withdraw.'); return; }
@@ -1207,9 +1215,11 @@
             var withdrew = parseFloat(localStorage.getItem('bazar_withdrew') || '0') + amount;
             localStorage.setItem('bazar_balance', newBalance.toString());
             localStorage.setItem('bazar_withdrew', withdrew.toString());
+            saveLocalTxn('debit', 'Withdrawal', amount, 'paid');
             updateWalletDisplay();
             if (btn) { btn.textContent = 'Withdrawal'; btn.disabled = false; }
             alert('Withdrawal request for £' + amount.toFixed(2) + ' submitted successfully.');
+            loadPayments();
         }, 800);
     }
 
@@ -1244,6 +1254,7 @@
             if (depositAmt > 0) {
                 var cur = parseFloat(localStorage.getItem('bazar_balance') || '0');
                 localStorage.setItem('bazar_balance', (cur + depositAmt).toString());
+                saveLocalTxn('credit', 'Wallet Top-Up', depositAmt, 'paid');
                 updateWalletDisplay();
                 if (sessionId2) {
                     fetch('https://admin.bazar.uk/api/stripe/checkout/verify-deposit/' + sessionId2, {
@@ -1338,50 +1349,63 @@
         });
     }
 
+    function renderTxnRow(t) {
+        var isPlus = t.type === 'credit';
+        var amtClass = isPlus ? 'cab-table__amount--plus' : 'cab-table__amount--minus';
+        var sign = isPlus ? '+ ' : '− ';
+        var statusBadge = t.status === 'pending'
+            ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
+            : '';
+        return '<tr>' +
+            '<td class="cab-table__date">' + t.date + '</td>' +
+            '<td>' + t.description + statusBadge + '</td>' +
+            '<td class="' + amtClass + '">' + sign + '£ ' + t.amount + '</td>' +
+        '</tr>';
+    }
+
     function loadPayments() {
         var uid = localStorage.getItem('bazar_firebase_uid') || localStorage.getItem('bazar_uid');
+        var localTxns = JSON.parse(localStorage.getItem('bazar_local_txns') || '[]');
+        var tbody = document.getElementById('txnTableBody');
+
         if (!uid) {
-            var tbody = document.getElementById('txnTableBody');
-            if (tbody) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No data</td></tr>';
+            if (tbody) {
+                if (localTxns.length > 0) {
+                    tbody.innerHTML = localTxns.map(renderTxnRow).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
+                }
+            }
             return;
         }
-        var apiBase = (window.location.hostname === 'www.bazar.uk' || window.location.hostname === 'bazar.uk')
-            ? 'https://admin.bazar.uk'
-            : 'https://admin.bazar.uk';
-        fetch(apiBase + '/api/customers/' + encodeURIComponent(uid) + '/payments')
+
+        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/payments')
             .then(function(r) { return r.json(); })
             .then(function(data) {
-                var tbody = document.getElementById('txnTableBody');
-                var txns = data.transactions || [];
+                tbody = document.getElementById('txnTableBody');
+                var apiTxns = data.transactions || [];
+                var allTxns = localTxns.concat(apiTxns);
                 if (!tbody) return;
-                if (txns.length === 0) {
+                if (allTxns.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
                 } else {
-                    tbody.innerHTML = txns.map(function(t) {
-                        var isPlus = t.type === 'credit';
-                        var amtClass = isPlus ? 'cab-table__amount--plus' : 'cab-table__amount--minus';
-                        var sign = isPlus ? '+ ' : '− ';
-                        var statusBadge = t.status === 'pending'
-                            ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
-                            : '';
-                        return '<tr>' +
-                            '<td class="cab-table__date">' + t.date + '</td>' +
-                            '<td>' + t.description + statusBadge + '</td>' +
-                            '<td class="' + amtClass + '">' + sign + '£ ' + t.amount + '</td>' +
-                        '</tr>';
-                    }).join('');
+                    tbody.innerHTML = allTxns.map(renderTxnRow).join('');
                 }
-                var paidCount = txns.filter(function(t){ return t.status === 'paid'; }).length;
+                var paidCount = allTxns.filter(function(t){ return t.status === 'paid'; }).length;
                 var spentEl = document.getElementById('payStatSpent');
                 var paidEl = document.getElementById('payStatPaid');
                 var allEl = document.getElementById('payStatAll');
                 if (spentEl) spentEl.innerHTML = '£ ' + (data.total_spent || '0.00') + ' <span>spent</span>';
                 if (paidEl) paidEl.textContent = paidCount;
-                if (allEl) allEl.textContent = txns.length;
+                if (allEl) allEl.textContent = allTxns.length;
             })
             .catch(function() {
-                var tbody = document.getElementById('txnTableBody');
-                if (tbody) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Failed to load</td></tr>';
+                if (!tbody) return;
+                if (localTxns.length > 0) {
+                    tbody.innerHTML = localTxns.map(renderTxnRow).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Failed to load</td></tr>';
+                }
             });
     }
 
