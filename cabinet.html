@@ -869,11 +869,11 @@
                             <div class="cab-form-grid">
                                 <div class="input-custom">
                                     <label>First Name</label>
-                                    <input id="fieldFirstName" type="text" placeholder="First name" value="">
+                                    <input id="fieldFirstName" type="text" placeholder="First name" value="" readonly style="background:#f5f5f5;color:#888;cursor:default;">
                                 </div>
                                 <div class="input-custom">
                                     <label>Last Name</label>
-                                    <input id="fieldLastName" type="text" placeholder="Last name" value="">
+                                    <input id="fieldLastName" type="text" placeholder="Last name" value="" readonly style="background:#f5f5f5;color:#888;cursor:default;">
                                 </div>
                                 <div class="input-custom">
                                     <label>Email</label>
@@ -881,7 +881,7 @@
                                 </div>
                                 <div class="input-custom">
                                     <label>Phone</label>
-                                    <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="">
+                                    <input id="fieldPhone" type="tel" placeholder="+44 000 000 000" value="" readonly style="background:#f5f5f5;color:#888;cursor:default;">
                                 </div>
                                 <div class="input-custom" style="position:relative;">
                                     <label>My Address</label>
@@ -1116,6 +1116,8 @@
         var name    = localStorage.getItem('bazar_username') || '';
         var phone   = localStorage.getItem('bazar_phone')   || '';
         var gender  = localStorage.getItem('bazar_gender')  || 'male';
+        var email   = localStorage.getItem('bazar_email')   || '';
+        var address = localStorage.getItem('bazar_address') || '';
         var parts   = name.trim().split(' ');
         var first   = parts[0] || '';
         var last    = parts.slice(1).join(' ') || '';
@@ -1127,6 +1129,8 @@
         var elFirst   = document.getElementById('fieldFirstName');
         var elLast    = document.getElementById('fieldLastName');
         var elPh      = document.getElementById('fieldPhone');
+        var elEmail   = document.getElementById('fieldEmail');
+        var elAddr    = document.getElementById('fieldAddress');
 
         if (elName)    elName.textContent    = name;
         if (elPhone)   elPhone.textContent   = phone;
@@ -1134,6 +1138,8 @@
         if (elFirst)   elFirst.value         = first;
         if (elLast)    elLast.value          = last;
         if (elPh)      elPh.value            = phone;
+        if (elEmail)   elEmail.value         = email;
+        if (elAddr)    elAddr.value          = address;
 
         if (elAvatar) {
             var img = elAvatar.querySelector('img');
@@ -1144,6 +1150,19 @@
         if (planBadge) {
             var plan = localStorage.getItem('bazar_plan') || 'free';
             planBadge.textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+        }
+
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (uid && (!email || !address)) {
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    if (d.exists) {
+                        if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
+                        if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
+                    }
+                })
+                .catch(function() {});
         }
     }
 
@@ -1314,6 +1333,41 @@
         populateUserData();
         updateFavCount();
         updateWalletDisplay();
+
+        var profileForm = document.getElementById('profileForm');
+        if (profileForm) {
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var uid     = localStorage.getItem('bazar_firebase_uid');
+                var email   = (document.getElementById('fieldEmail')   || {}).value || '';
+                var address = (document.getElementById('fieldAddress') || {}).value || '';
+                var saveBtn = profileForm.querySelector('button[type="submit"]');
+                var orig    = saveBtn ? saveBtn.textContent : 'Save Changes';
+                if (saveBtn) { saveBtn.textContent = 'Saving...'; saveBtn.disabled = true; }
+
+                localStorage.setItem('bazar_email',   email);
+                localStorage.setItem('bazar_address', address);
+
+                if (uid) {
+                    fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ email: email, address: address })
+                    })
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        if (saveBtn) { saveBtn.textContent = '✓ Saved'; saveBtn.disabled = false; }
+                        setTimeout(function() { if (saveBtn) saveBtn.textContent = orig; }, 2000);
+                    })
+                    .catch(function() {
+                        if (saveBtn) { saveBtn.textContent = orig; saveBtn.disabled = false; }
+                    });
+                } else {
+                    if (saveBtn) { saveBtn.textContent = '✓ Saved'; saveBtn.disabled = false; }
+                    setTimeout(function() { if (saveBtn) saveBtn.textContent = orig; }, 2000);
+                }
+            });
+        }
 
         document.querySelectorAll('.cab-amount-btns').forEach(function(group) {
             group.addEventListener('click', function(e) {
