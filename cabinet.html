@@ -1149,6 +1149,49 @@
         if (item) item.click();
         if (tab === 'favorites') renderFavorites();
         if (tab === 'payments') loadPayments();
+        if (tab === 'my-ads') loadMyAds();
+    }
+
+    function loadMyAds() {
+        var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+        var table = document.getElementById('myAdsTable');
+        var filterBtn = document.querySelector('.cab-ads-filter .cab-filter-btn');
+        if (!table) return;
+        if (filterBtn) filterBtn.textContent = 'All (' + ads.length + ')';
+        if (ads.length === 0) {
+            table.innerHTML = '<div style="text-align:center;padding:48px 20px;color:#aaa;">' +
+                '<div style="font-size:48px;margin-bottom:12px;">📋</div>' +
+                '<div style="font-size:16px;font-weight:600;color:#666;margin-bottom:8px;">No ads yet</div>' +
+                '<div style="font-size:14px;margin-bottom:20px;">Post your first ad and it will appear here</div>' +
+                '<button class="btn btn_grad" onclick="window.location.href=\'post-ad.html\'" style="padding:10px 28px;">+ Post an Ad</button>' +
+                '</div>';
+            return;
+        }
+        var statusLabel = { pending: 'Under review', active: 'Active', rejected: 'Rejected' };
+        var statusColor = { pending: '#ff9138', active: '#3ecb60', rejected: '#e53935' };
+        var html = '<table style="width:100%;border-collapse:collapse;">' +
+            '<thead><tr style="border-bottom:2px solid #f0f0f0;font-size:12px;color:#aaa;text-align:left;">' +
+            '<th style="padding:8px 12px;">Title</th>' +
+            '<th style="padding:8px 12px;">Type</th>' +
+            '<th style="padding:8px 12px;">Price</th>' +
+            '<th style="padding:8px 12px;">City</th>' +
+            '<th style="padding:8px 12px;">Date</th>' +
+            '<th style="padding:8px 12px;">Status</th>' +
+            '</tr></thead><tbody>';
+        ads.forEach(function(ad) {
+            var sl = statusLabel[ad.status] || ad.status;
+            var sc = statusColor[ad.status] || '#aaa';
+            html += '<tr style="border-bottom:1px solid #f5f5f5;">' +
+                '<td style="padding:10px 12px;font-weight:600;font-size:14px;">' + (ad.title || '—') + '</td>' +
+                '<td style="padding:10px 12px;font-size:13px;color:#888;">' + (ad.type || '—') + '</td>' +
+                '<td style="padding:10px 12px;font-size:13px;">£ ' + (ad.price ? ad.price.toLocaleString() : '—') + '</td>' +
+                '<td style="padding:10px 12px;font-size:13px;">' + (ad.city || '—') + '</td>' +
+                '<td style="padding:10px 12px;font-size:13px;color:#aaa;">' + (ad.date || '—') + '</td>' +
+                '<td style="padding:10px 12px;"><span style="font-size:12px;font-weight:600;color:' + sc + ';background:' + sc + '18;border-radius:4px;padding:2px 8px;">' + sl + '</span></td>' +
+                '</tr>';
+        });
+        html += '</tbody></table>';
+        table.innerHTML = html;
     }
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';

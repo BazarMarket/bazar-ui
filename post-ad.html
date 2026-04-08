@@ -1716,6 +1716,8 @@
 
          var formData = new FormData();
          formData.append('title', title);
+         var firebaseUid = localStorage.getItem('bazar_firebase_uid');
+         if (firebaseUid) formData.append('firebase_uid', firebaseUid);
          formData.append('description', getInputVal('descriptionInput'));
          formData.append('listing_type', listingType);
          formData.append('property_type', propertyType);
@@ -1807,6 +1809,19 @@
          .then(function(data) {
             btn.textContent = 'Publish Ad';
             btn.disabled = false;
+            var cityVal = document.getElementById('locationCity').value;
+            var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+            ads.unshift({
+               id: data.property_id,
+               title: title,
+               price: parseInt(price),
+               city: cityVal,
+               type: listingType,
+               propType: propertyType,
+               date: new Date().toISOString().split('T')[0],
+               status: 'pending'
+            });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
             window.location.href = 'publish-options.html?ad_id=' + (data.property_id || '');
          })
          .catch(function(error) {

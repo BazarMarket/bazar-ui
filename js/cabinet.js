@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabId === 'payments' && typeof loadPayments === 'function') {
             loadPayments();
         }
+        if (tabId === 'my-ads' && typeof loadMyAds === 'function') {
+            loadMyAds();
+        }
     }
 
     navItems.forEach(function (item) {

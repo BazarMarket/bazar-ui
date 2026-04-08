@@ -873,9 +873,38 @@
       }
 
       function publishAd(plan) {
-         localStorage.setItem('bazar_plan', plan);
-         if (window.updatePlanBadge) updatePlanBadge();
-         window.location.href = 'index.html';
+         if (plan === 'free') {
+            window.location.href = 'cabinet.html#my-ads';
+            return;
+         }
+         var uid = localStorage.getItem('bazar_firebase_uid');
+         if (!uid) {
+            alert('Please log in to continue.');
+            return;
+         }
+         var adId = (new URLSearchParams(window.location.search)).get('ad_id') || '';
+         var btnId = plan === 'pro' ? 'proBtn' : 'vipBtn';
+         var btn = document.getElementById(btnId);
+         var origText = btn ? btn.textContent : '';
+         if (btn) { btn.textContent = 'Redirecting…'; btn.disabled = true; }
+         fetch('https://admin.bazar.uk/api/stripe/checkout/plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ firebase_uid: uid, plan: plan, ad_id: adId })
+         })
+         .then(function(r) { return r.json(); })
+         .then(function(data) {
+            if (data.success && data.url) {
+               window.location.href = data.url;
+            } else {
+               alert('Payment error: ' + (data.error || 'Please try again.'));
+               if (btn) { btn.textContent = origText; btn.disabled = false; }
+            }
+         })
+         .catch(function() {
+            alert('Connection error. Please try again.');
+            if (btn) { btn.textContent = origText; btn.disabled = false; }
+         });
       }
 
       document.addEventListener('DOMContentLoaded', function() {
