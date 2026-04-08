@@ -298,7 +298,32 @@ if (window.location.hostname === 'www.bazar.uk') {
 Stripe проверяет сайт и не должен видеть Deposit/Withdraw (это не seller flow).
 Когда Stripe-проверка пройдёт и карты подключат нормально — удалим продакшн-скрипт и всё вернётся.
 
-### Правило при добавлении нового функционала
+### Wallet-виджет скрыт на продакшне через script.js
+
+В конце `js/script.js` добавлен блок:
+```javascript
+(function() {
+    if (window.location.hostname !== 'www.bazar.uk') return;
+    function hideWallet() {
+        document.querySelectorAll('.wallet-widget').forEach(function(el) {
+            var cell = el.closest('.header-old__cell') || el.parentElement;
+            if (cell) {
+                cell.style.display = 'none';
+                var prev = cell.previousElementSibling;
+                if (prev && prev.classList.contains('header-old__vsep')) prev.style.display = 'none';
+            } else { el.style.display = 'none'; }
+        });
+        document.querySelectorAll('a.user-menu-item.icon-win-wallet').forEach(function(el) { el.style.display = 'none'; });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hideWallet);
+    else hideWallet();
+})();
+```
+`messages.html` не подключает `script.js`, поэтому аналогичный minified-блок добавлен в конце этого файла напрямую.
+
+**При деплое script.js на продакшн** — этот блок должен сохраняться. **НЕ УДАЛЯТЬ**.
+
+### Правило при добавлении нового функционала в cabinet.html
 
 - Если функционал **только для DEV** — оборачивай в `<div id="devXxx">`, скрывай через продакшн-скрипт
 - Если функционал **только для PROD** — оборачивай в `<div id="prodXxx" style="display:none">`, показывай через продакшн-скрипт
