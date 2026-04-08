@@ -959,7 +959,7 @@
                             <li>Highlighted in search results</li>
                             <li>Contact form &amp; phone visible</li>
                         </ul>
-                        <button class="po-btn po-btn--pro" id="cabProBtn" onclick="event.stopPropagation()">Extend PRO — £7.00</button>
+                        <button class="po-btn po-btn--pro" id="cabProBtn" onclick="event.stopPropagation();startCheckout('pro')">Upgrade to PRO — £7.00</button>
                     </div>
 
                     <!-- VIP -->
@@ -1002,7 +1002,7 @@
                             <li>Featured on homepage</li>
                             <li>Priority in search &amp; filters</li>
                         </ul>
-                        <button class="po-btn po-btn--vip" id="cabVipBtn" onclick="event.stopPropagation()">Extend VIP — £14.00</button>
+                        <button class="po-btn po-btn--vip" id="cabVipBtn" onclick="event.stopPropagation();startCheckout('vip')">Upgrade to VIP — £14.00</button>
                     </div>
 
                 </div>
@@ -1388,6 +1388,37 @@
         var card = btn.closest('.po-card');
         var isActive = card && card.classList.contains('po-card--active');
         if (btnEl) btnEl.textContent = (isActive ? 'Extend ' : 'Upgrade to ') + plan.toUpperCase() + ' \u2014 \u00A3' + price;
+    }
+
+    function startCheckout(plan) {
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid || uid === 'test_uid_123') {
+            alert('Please log in to upgrade your plan.');
+            return;
+        }
+        var btnId = plan === 'pro' ? 'cabProBtn' : 'cabVipBtn';
+        var btn = document.getElementById(btnId);
+        var origText = btn ? btn.textContent : '';
+        if (btn) { btn.textContent = 'Redirecting...'; btn.disabled = true; }
+
+        fetch('https://admin.bazar.uk/api/stripe/checkout/plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ firebase_uid: uid, plan: plan })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success && data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Payment error: ' + (data.error || 'Please try again.'));
+                if (btn) { btn.textContent = origText; btn.disabled = false; }
+            }
+        })
+        .catch(function() {
+            alert('Connection error. Please try again.');
+            if (btn) { btn.textContent = origText; btn.disabled = false; }
+        });
     }
 
     function loadPayments() {
