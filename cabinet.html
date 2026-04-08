@@ -1153,6 +1153,7 @@
     }
 
     function loadMyAds() {
+        if (window.location.hostname !== 'www.bazar.uk') return;
         var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
         var table = document.getElementById('myAdsTable');
         var filterBtn = document.querySelector('.cab-ads-filter .cab-filter-btn');
