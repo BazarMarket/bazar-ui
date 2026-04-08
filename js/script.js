@@ -1197,9 +1197,6 @@ window.onload = function () {
                 el.style.display = 'none';
             }
         });
-        document.querySelectorAll('a.user-menu-item.icon-win-wallet').forEach(function(el) {
-            el.style.display = 'none';
-        });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hideWallet);
     else hideWallet();

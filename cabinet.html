@@ -1853,8 +1853,8 @@
     /* ── Production-only: hide Wallet, My Payments nav + swap DEV→PROD sections ── */
     if (window.location.hostname === 'www.bazar.uk') {
         document.addEventListener('DOMContentLoaded', function() {
-            /* Hide wallet widget + My Payments nav items */
-            ['walletWidgetCell','walletSep','menuMyPayments','navMyPayments'].forEach(function(id) {
+            /* Hide wallet widget (balance/deposit/withdraw) only */
+            ['walletWidgetCell','walletSep'].forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
