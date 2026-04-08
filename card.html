@@ -785,7 +785,11 @@
       var id = params.get('id');
       if (!id) return;
 
-      fetch('/api/products/' + id)
+      var apiUrl = (window.location.hostname === 'www.bazar.uk')
+         ? 'https://admin.bazar.uk/api/properties/' + id
+         : '/api/products/' + id;
+
+      fetch(apiUrl)
          .then(function(r) { if (!r.ok) return null; return r.json(); })
          .then(function(p) {
             if (!p) return;
@@ -861,27 +865,41 @@
       el('prop-id').textContent = id;
       el('prop-date').textContent = '01 04 2026 | 10:00';
 
-      var mainImgs = document.querySelectorAll('#gallery-big .slider-gallery-big__img img');
-      mainImgs.forEach(function(img){ img.src = p.image; img.alt = p.title; });
-      var miniImgs = document.querySelectorAll('#gallery-mini .slider-gallery-mini__img img');
-      miniImgs.forEach(function(img){ img.src = p.image; img.alt = p.title; });
+      var allImgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+      var mainWrap = document.getElementById('gallery-big');
+      if (mainWrap && allImgs.length) {
+         mainWrap.innerHTML = allImgs.map(function(src) {
+            return '<div class="swiper-slide slider-gallery-big__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover"></div>';
+         }).join('');
+      }
+      var miniWrap = document.getElementById('gallery-mini');
+      if (miniWrap && allImgs.length) {
+         miniWrap.innerHTML = allImgs.map(function(src) {
+            return '<div class="swiper-slide slider-gallery-mini__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover"></div>';
+         }).join('');
+      }
 
+      function specRow(label, val) {
+         if (val === null || val === undefined || val === '' || val === 0) return '';
+         return '<tr><th>' + label + ':</th><td>' + val + '</td></tr>';
+      }
       var specs = '';
       specs += '<caption>Specifications</caption>';
       specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
-      specs += '<tr><th>City:</th><td>' + p.city + '</td></tr>';
-      specs += '<tr><th>Area:</th><td>' + p.district + '</td></tr>';
-      specs += '<tr><th>Type:</th><td>' + p.property_type + '</td></tr>';
-      specs += '<tr><th>Condition:</th><td>' + p.condition + '</td></tr>';
-      specs += '<tr><th>Number of Bedrooms:</th><td>' + p.bedrooms + '</td></tr>';
-      specs += '<tr><th>Number of Bathrooms:</th><td>' + p.bathrooms + '</td></tr>';
-      specs += '<tr><th>Address:</th><td>' + p.address + '</td></tr>';
-      specs += '<tr><th>Postal Code:</th><td>' + p.postal_code + '</td></tr>';
-      specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
-      if(p.plot_area) specs += '<tr><th>Plot area:</th><td>' + p.plot_area + ' m2</td></tr>';
-      if(p.floor) specs += '<tr><th>Floor:</th><td>' + p.floor + '</td></tr>';
-      if(p.construction_year) specs += '<tr><th>Year Built:</th><td>' + p.construction_year + '</td></tr>';
-      specs += '<tr><th>Energy Rating:</th><td>' + p.energy_efficiency + '</td></tr>';
+      specs += specRow('City', p.city);
+      specs += specRow('Area', p.district);
+      specs += specRow('Type', p.property_type);
+      specs += specRow('Listing', p.listing_type);
+      specs += specRow('Condition', p.condition);
+      specs += specRow('Number of Bedrooms', p.bedrooms);
+      specs += specRow('Number of Bathrooms', p.bathrooms);
+      specs += specRow('Address', p.address);
+      specs += specRow('Postal Code', p.postal_code);
+      if (p.covered_area) specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
+      if (p.plot_area) specs += '<tr><th>Plot area:</th><td>' + p.plot_area + ' m2</td></tr>';
+      specs += specRow('Floor', p.floor);
+      specs += specRow('Year Built', p.construction_year);
+      specs += specRow('Energy Rating', p.energy_efficiency);
 
       var amenities = [];
       if(p.furnished) amenities.push('Furnished');
