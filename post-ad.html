@@ -415,6 +415,10 @@
          overflow: hidden;
       }
       .pa-photo-box:hover { border-color: #ff9138; }
+      .pa-photo-box[draggable="true"] { cursor: grab; }
+      .pa-photo-box[draggable="true"]:active { cursor: grabbing; }
+      .pa-photo-box--dragging { opacity: .35; }
+      .pa-photo-box--over { border-color: #ff9138; box-shadow: 0 0 0 3px rgba(255,145,56,.4); }
       .pa-photo-box input[type="file"] {
          position: absolute;
          inset: 0;
@@ -1646,6 +1650,32 @@
                box.style.backgroundSize = 'cover';
                box.style.backgroundPosition = 'center';
                box.style.border = '2px solid #e4e4e4';
+               box.setAttribute('draggable', 'true');
+               box.addEventListener('dragstart', function(ev) {
+                  ev.dataTransfer.effectAllowed = 'move';
+                  ev.dataTransfer.setData('text/plain', '');
+                  window._paDragSrc = box;
+                  setTimeout(function() { box.classList.add('pa-photo-box--dragging'); }, 0);
+               });
+               box.addEventListener('dragend', function() {
+                  box.classList.remove('pa-photo-box--dragging');
+                  document.querySelectorAll('.pa-photo-box--over').forEach(function(el) { el.classList.remove('pa-photo-box--over'); });
+               });
+               box.addEventListener('dragover', function(ev) { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; });
+               box.addEventListener('dragenter', function() { if (window._paDragSrc !== box) box.classList.add('pa-photo-box--over'); });
+               box.addEventListener('dragleave', function() { box.classList.remove('pa-photo-box--over'); });
+               box.addEventListener('drop', function(ev) {
+                  ev.preventDefault();
+                  box.classList.remove('pa-photo-box--over');
+                  var src = window._paDragSrc;
+                  if (!src || src === box) return;
+                  var parent = box.parentNode;
+                  var allBoxes = Array.from(parent.querySelectorAll('.pa-photo-box'));
+                  var srcIdx = allBoxes.indexOf(src);
+                  var tgtIdx = allBoxes.indexOf(box);
+                  if (srcIdx < tgtIdx) parent.insertBefore(src, box.nextSibling);
+                  else parent.insertBefore(src, box);
+               });
                var rm = document.createElement('span');
                rm.textContent = '×';
                rm.style.cssText = 'position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#e53935;color:#fff;font-size:18px;font-weight:700;line-height:24px;text-align:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:10;user-select:none;';
