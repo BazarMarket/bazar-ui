@@ -101,11 +101,39 @@ function handleLogin() {
     }
 }
 
+function normalizeUkPhoneRealtime(e) {
+    var input = e.target;
+    var pos = input.selectionStart;
+    var raw = input.value.replace(/[^\d+]/g, '');
+    if (raw.startsWith('+44')) raw = raw.slice(3);
+    else if (raw.startsWith('0044')) raw = raw.slice(4);
+    else if (raw.startsWith('44') && raw.length >= 12) raw = raw.slice(2);
+    else if (raw.startsWith('0')) raw = raw.slice(1);
+    raw = raw.slice(0, 10);
+    var formatted = raw;
+    if (raw.length > 7) formatted = raw.slice(0, 4) + ' ' + raw.slice(4, 7) + ' ' + raw.slice(7);
+    else if (raw.length > 4) formatted = raw.slice(0, 4) + ' ' + raw.slice(4);
+    var oldLen = input.value.length;
+    input.value = formatted;
+    var newLen = formatted.length;
+    var newPos = pos + (newLen - oldLen);
+    if (newPos < 0) newPos = 0;
+    if (newPos > newLen) newPos = newLen;
+    try { input.setSelectionRange(newPos, newPos); } catch(err) {}
+}
+
 function openCreateAccountModal() {
     modalMode = 'create';
     document.querySelector('#createAccountModal .modal-title').textContent = 'Create an account';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
+    var inp = document.querySelector('.modal-number-input');
+    if (inp) {
+        inp.value = '';
+        inp.removeEventListener('input', normalizeUkPhoneRealtime);
+        inp.addEventListener('input', normalizeUkPhoneRealtime);
+        setTimeout(function() { inp.focus(); }, 100);
+    }
 }
 
 function switchToLogin() {
