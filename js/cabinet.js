@@ -35,28 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ── Deposit/Withdraw inner tabs ── */
-    document.querySelectorAll('.cab-form-box__tab').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            var box = tab.closest('.cab-form-box');
-            box.querySelectorAll('.cab-form-box__tab').forEach(function (t) { t.classList.remove('active'); });
-            box.querySelectorAll('.cab-form-box__sub').forEach(function (s) { s.classList.remove('active'); });
-            tab.classList.add('active');
-            var target = box.querySelector('.cab-form-box__sub[data-sub="' + tab.dataset.tab + '"]');
-            if (target) target.classList.add('active');
-        });
-    });
-
-    /* ── Amount quick-select ── */
-    document.querySelectorAll('.cab-amount-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var group = btn.closest('.cab-amount-btns');
-            group.querySelectorAll('.cab-amount-btn').forEach(function (b) { b.classList.remove('active'); });
-            btn.classList.add('active');
-            var input = btn.closest('.cab-form-box__sub').querySelector('input[type="number"]');
-            if (input) input.value = btn.dataset.amount;
-        });
-    });
 
     /* ── Ads filter tabs ── */
     document.querySelectorAll('.cab-filter-btn').forEach(function (btn) {
@@ -115,27 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ── Deposit form ── */
-    var depositForm = document.getElementById('depositForm');
-    if (depositForm) {
-        depositForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            var amount = document.getElementById('depositAmount');
-            if (!amount || !parseFloat(amount.value)) { showToast('Enter a valid amount', 'error'); return; }
-            showToast('Top-up of £' + parseFloat(amount.value).toFixed(2) + ' initiated!');
-        });
-    }
-
-    /* ── Withdraw form ── */
-    var withdrawForm = document.getElementById('withdrawForm');
-    if (withdrawForm) {
-        withdrawForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            var amount = document.getElementById('withdrawAmount');
-            if (!amount || !parseFloat(amount.value)) { showToast('Enter a valid amount', 'error'); return; }
-            showToast('Withdrawal request sent!');
-        });
-    }
 
     /* ── Delete ad row ── */
     document.querySelectorAll('.cab-delete-ad').forEach(function (btn) {
