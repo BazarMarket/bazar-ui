@@ -1167,27 +1167,29 @@
                 '</div>';
             return;
         }
+        var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
         var statusLabel = { pending: 'Under review', active: 'Active', rejected: 'Rejected' };
-        var statusColor = { pending: '#ff9138', active: '#3ecb60', rejected: '#e53935' };
-        var html = '<table style="width:100%;border-collapse:collapse;">' +
-            '<thead><tr style="border-bottom:2px solid #f0f0f0;font-size:12px;color:#aaa;text-align:left;">' +
-            '<th style="padding:8px 12px;">Title</th>' +
-            '<th style="padding:8px 12px;">Type</th>' +
-            '<th style="padding:8px 12px;">Price</th>' +
-            '<th style="padding:8px 12px;">City</th>' +
-            '<th style="padding:8px 12px;">Date</th>' +
-            '<th style="padding:8px 12px;">Status</th>' +
+        var html = '<table class="cab-table">' +
+            '<thead><tr>' +
+            '<th>Ad</th>' +
+            '<th>Price</th>' +
+            '<th>City</th>' +
+            '<th>Date</th>' +
+            '<th>Status</th>' +
             '</tr></thead><tbody>';
         ads.forEach(function(ad) {
+            var sc = statusClass[ad.status] || 'cab-status--inactive';
             var sl = statusLabel[ad.status] || ad.status;
-            var sc = statusColor[ad.status] || '#aaa';
-            html += '<tr style="border-bottom:1px solid #f5f5f5;">' +
-                '<td style="padding:10px 12px;font-weight:600;font-size:14px;">' + (ad.title || '—') + '</td>' +
-                '<td style="padding:10px 12px;font-size:13px;color:#888;">' + (ad.type || '—') + '</td>' +
-                '<td style="padding:10px 12px;font-size:13px;">£ ' + (ad.price ? ad.price.toLocaleString() : '—') + '</td>' +
-                '<td style="padding:10px 12px;font-size:13px;">' + (ad.city || '—') + '</td>' +
-                '<td style="padding:10px 12px;font-size:13px;color:#aaa;">' + (ad.date || '—') + '</td>' +
-                '<td style="padding:10px 12px;"><span style="font-size:12px;font-weight:600;color:' + sc + ';background:' + sc + '18;border-radius:4px;padding:2px 8px;">' + sl + '</span></td>' +
+            html += '<tr>' +
+                '<td><img class="cab-ads-table-img" src="icon/man.svg" alt="" style="background:#f5f5f5;">' +
+                '<div class="cab-ads-table-info">' +
+                '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span>' +
+                '<span style="font-size:12px;color:#808080;">' + (ad.type || '') + (ad.propType ? ' · ' + ad.propType : '') + '</span>' +
+                '</div></td>' +
+                '<td>£ ' + (ad.price ? ad.price.toLocaleString() : '—') + '</td>' +
+                '<td>' + (ad.city || '—') + '</td>' +
+                '<td style="color:#808080;">' + (ad.date || '—') + '</td>' +
+                '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
                 '</tr>';
         });
         html += '</tbody></table>';
