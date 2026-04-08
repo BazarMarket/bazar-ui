@@ -874,7 +874,8 @@
 
       function publishAd(plan) {
          if (plan === 'free') {
-            window.location.href = 'cabinet.html#my-ads';
+            var adId = (new URLSearchParams(window.location.search)).get('ad_id') || '';
+            window.location.href = adId ? 'card.html?id=' + adId : 'cabinet.html#my-ads';
             return;
          }
          var uid = localStorage.getItem('bazar_firebase_uid');

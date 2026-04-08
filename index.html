@@ -1459,6 +1459,44 @@
           updateFavCount();
        })();
     </script>
+    <script>
+    (function() {
+        var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+        if (!ads.length) return;
+        var titles = document.querySelectorAll('.cards__title');
+        var grid = null;
+        for (var i = 0; i < titles.length; i++) {
+            if (titles[i].textContent.trim().toLowerCase() === 'latest updates') {
+                var sec = titles[i].closest('.cards');
+                if (sec) { grid = sec.querySelector('.cards__grid'); break; }
+            }
+        }
+        if (!grid) return;
+        var plan = localStorage.getItem('bazar_plan') || 'free';
+        var stikerClass = plan === 'vip' ? 'stiker_vip' : plan === 'pro' ? 'stiker_top' : '';
+        var stikerLabel = plan === 'vip' ? 'VIP' : plan === 'pro' ? 'PRO' : '';
+        var html = '';
+        ads.slice(0, 4).forEach(function(ad) {
+            var imgSrc = ad.photo || 'img/product.jpg';
+            var cardCls = stikerLabel ? 'card card_orange' : 'card';
+            var stiker = stikerLabel
+                ? '<div class="card__stikers"><span class="stiker ' + stikerClass + '">' + stikerLabel + '</span></div>'
+                : '<div class="card__stikers"></div>';
+            html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer">' +
+                '<a href="card.html?id=' + ad.id + '" class="card-link" aria-label="View listing"></a>' +
+                '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
+                '<div class="card__info"><p class="card__name">' + (ad.title || 'My Ad') + '</p>' +
+                '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
+                '<div class="card__img">' + stiker +
+                '<img src="' + imgSrc + '" alt="" class="img-cover">' +
+                '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
+                '<div class="card__down"><div class="card__prices">' +
+                '<span class="price-new">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
+                '</div></div></div>';
+        });
+        grid.insertAdjacentHTML('afterbegin', html);
+    })();
+    </script>
 
 </body>
 

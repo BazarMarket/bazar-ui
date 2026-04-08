@@ -1280,7 +1280,7 @@
             var sl = statusLabel[ad.status] || ad.status;
             var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
             html += '<tr>' +
-                '<td>' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></td>' +
+                '<td><a href="card.html?id=' + ad.id + '" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></a></td>' +
                 '<td>' + (ad.propType || ad.type || '—') + '</td>' +
                 '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td>—</td>' +
@@ -1627,6 +1627,7 @@
         if (params.get('payment') === 'success') {
             var paidPlan = params.get('plan');
             var sessionId = params.get('session_id');
+            var paidAdId = params.get('ad_id');
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
                 var planPrice = paidPlan === 'pro' ? 7 : 14;
@@ -1634,6 +1635,14 @@
                 saveLocalTxn('debit', 'Subscription', 'Subscription ' + planLabel, planPrice, 'paid');
             }
             if (window.updatePlanBadge) updatePlanBadge();
+            if (!paidAdId) {
+                var myAds = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+                if (myAds.length) paidAdId = myAds[0].id;
+            }
+            if (paidAdId) {
+                window.location.href = 'card.html?id=' + paidAdId;
+                return;
+            }
             history.replaceState(null, '', window.location.pathname + '#subscriptions');
             switchToTab('subscriptions');
             if (sessionId) {
