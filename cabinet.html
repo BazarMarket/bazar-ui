@@ -9,6 +9,63 @@
     <link rel="stylesheet" href="css/main.css" type="text/css">
     <link rel="stylesheet" href="css/cabinet.css" type="text/css">
     <link rel="icon" type="image/png" href="favicon.png?v=12">
+    <style>
+        /* Transaction filters */
+        .txn-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            padding: 14px 20px 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .txn-filters__dates {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .txn-filters__icon { font-size: 15px; }
+        .txn-filters__sep { color: #aaa; font-size: 13px; }
+        .txn-filter-input {
+            height: 34px;
+            padding: 0 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #333;
+            background: #fafafa;
+            outline: none;
+            transition: border .2s;
+        }
+        .txn-filter-input:focus { border-color: #f76b1c; background: #fff; }
+        input[type="date"].txn-filter-input { width: 130px; }
+        input[type="text"].txn-filter-input { width: 160px; }
+        .txn-filter-select {
+            height: 34px;
+            padding: 0 28px 0 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #333;
+            background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 10px center;
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+        .txn-filter-select:focus { border-color: #f76b1c; }
+        .txn-filters__search { display: flex; align-items: center; gap: 4px; }
+        .txn-filters__search-icon { font-size: 14px; color: #aaa; }
+        /* Payments table column widths */
+        .cab-table--payments th:nth-child(1),
+        .cab-table--payments td:nth-child(1) { width: 110px; white-space: nowrap; }
+        .cab-table--payments th:nth-child(2),
+        .cab-table--payments td:nth-child(2) { width: 50px; text-align: center; }
+        .cab-table--payments th:nth-child(3),
+        .cab-table--payments td:nth-child(3) { width: 140px; font-weight: 600; }
+        .cab-table--payments th:nth-child(5),
+        .cab-table--payments td:nth-child(5) { width: 110px; text-align: right; }
+    </style>
 </head>
 
 <body>
@@ -24,8 +81,8 @@
                 </a>
                 <div class="burger-body">
                     <div class="header-old__right">
-                        <div class="header-old__vsep"></div>
-                        <div class="header-old__cell">
+                        <div class="header-old__vsep" id="walletSep"></div>
+                        <div class="header-old__cell" id="walletWidgetCell">
                             <div class="wallet-widget icon-win-wallet" onclick="switchToTab('payments')">£ <span id="walletBalance">0</span> <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
                         </div>
                         <div class="header-old__cell">
@@ -48,7 +105,7 @@
                                     <hr class="user-menu__hr">
                                     <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('settings')">My Profile</a>
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
-                                    <a href="#" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
+                                    <a href="#" id="menuMyPayments" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">Favorites</a>
                                     <a href="#" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                        <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
@@ -92,7 +149,7 @@
 
                 <p class="cab-nav__group-label">Account</p>
                 <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Subscriptions</div>
-                <div class="cab-nav__item icon-win-wallet" data-tab="payments">My Payments</div>
+                <div id="navMyPayments" class="cab-nav__item icon-win-wallet" data-tab="payments">My Payments</div>
 
                 <p class="cab-nav__group-label">System</p>
                 <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
@@ -126,12 +183,12 @@
                 <!-- Stat cards -->
                 <div class="cab-stat-cards">
                     <div class="cab-stat-card cab-stat-card--accent">
-                        <p class="cab-stat-card__label icon-win-wallet">Balance on account</p>
+                        <p class="cab-stat-card__label icon-win-wallet">Total spent</p>
                         <p class="cab-stat-card__value"><span id="dashBalance">0.00</span> <span>£</span></p>
                     </div>
                     <div class="cab-stat-card">
-                        <p class="cab-stat-card__label icon-win-down">Still withdrew</p>
-                        <p class="cab-stat-card__value"><span id="dashWithdrew">0.00</span> <span>£</span></p>
+                        <p class="cab-stat-card__label icon-win-down">Paid transactions</p>
+                        <p class="cab-stat-card__value"><span id="dashWithdrew">0</span></p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-win-ad">Active ads</p>
@@ -143,122 +200,28 @@
                     </div>
                 </div>
 
-                <!-- Activity tables -->
-                <div class="cab-two-col">
-
-                    <!-- Recent deposit activity -->
-                    <div class="cab-box">
-                        <div class="cab-box__head">
-                            <p class="cab-box__title">Recent deposit activity</p>
-                            <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
-                        </div>
-                        <div class="cab-box__body">
-                            <table class="cab-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Method</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No deposit activity yet</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <!-- Recent Transactions preview -->
+                <div class="cab-box" style="margin-top:8px">
+                    <div class="cab-box__head">
+                        <p class="cab-box__title">Recent Transactions</p>
+                        <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
                     </div>
-
-                    <!-- Recent withdraw activity -->
-                    <div class="cab-box">
-                        <div class="cab-box__head">
-                            <p class="cab-box__title">Recent withdraw activity</p>
-                            <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
-                        </div>
-                        <div class="cab-box__body">
-                            <table class="cab-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No activity yet</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="cab-box__body">
+                        <table class="cab-table cab-table--payments">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Operation</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashTxnBody">
+                                <tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-
-                </div>
-
-                <!-- Deposit / Withdraw forms -->
-                <div class="cab-two-col">
-
-                    <!-- Deposit -->
-                    <div class="cab-form-box">
-                        <div class="cab-form-box__tabs">
-                            <div class="cab-form-box__tab active" data-tab="deposit">Deposit</div>
-                            <div class="cab-form-box__tab" data-tab="withdraw-form">Withdraw</div>
-                        </div>
-                        <div class="cab-form-box__body">
-                            <!-- Deposit sub -->
-                            <div class="cab-form-box__sub active" data-sub="deposit">
-                                <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
-                                <div class="cab-amount-btns" id="dashDepAmountBtns">
-                                    <button class="cab-amount-btn" data-amount="10">£ 10</button>
-                                    <button class="cab-amount-btn active" data-amount="25">£ 25</button>
-                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
-                                    <button class="cab-amount-btn" data-amount="100">£ 100</button>
-                                </div>
-                                <div class="input-custom" style="margin:10px 0;">
-                                    <input id="depositAmount" type="number" min="1" placeholder="Custom amount (£)" value="25">
-                                </div>
-                                <button id="dashTopUpBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount', 'dashTopUpBtn')">Top Up</button>
-                            </div>
-                            <!-- Withdraw sub -->
-                            <div class="cab-form-box__sub" data-sub="withdraw-form">
-                                <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
-                                <div class="cab-amount-btns" id="dashWdAmountBtns">
-                                    <button class="cab-amount-btn" data-amount="10">£ 10</button>
-                                    <button class="cab-amount-btn active" data-amount="50">£ 50</button>
-                                    <button class="cab-amount-btn" data-amount="100">£ 100</button>
-                                    <button class="cab-amount-btn" data-amount="200">£ 200</button>
-                                </div>
-                                <div class="input-custom" style="margin:10px 0;">
-                                    <input id="withdrawAmount" type="number" min="1" placeholder="Amount to withdraw (£)" value="50">
-                                </div>
-                                <button id="dashWithdrawBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount', 'dashWithdrawBtn')">Withdrawal</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Upcoming bills -->
-                    <div class="cab-box">
-                        <div class="cab-box__head">
-                            <p class="cab-box__title">Upcoming bills</p>
-                        </div>
-                        <div class="cab-box__body">
-                            <table class="cab-table">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Due date</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No upcoming bills</td></tr>
-                                    <tr style="display:none">
-                                        <td>—</td>
-                                        <td class="cab-table__date">—</td>
-                                        <td style="font-weight:600;color:#1a1a1a">—</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -309,60 +272,45 @@
                     </div>
                 </div>
 
-                <div class="cab-two-col">
-                    <!-- Deposit/Withdraw forms -->
-                    <div class="cab-form-box">
-                        <div class="cab-form-box__tabs">
-                            <div class="cab-form-box__tab active" data-tab="deposit2">Deposit</div>
-                            <div class="cab-form-box__tab" data-tab="withdraw2">Withdraw</div>
+                <!-- Full transaction history -->
+                <div class="cab-box" style="margin-top:20px">
+                    <div class="cab-box__head">
+                        <p class="cab-box__title">Transaction History</p>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="txn-filters">
+                        <div class="txn-filters__dates">
+                            <span class="txn-filters__icon">📅</span>
+                            <input type="date" id="txnDateFrom" class="txn-filter-input" title="From date">
+                            <span class="txn-filters__sep">—</span>
+                            <input type="date" id="txnDateTo" class="txn-filter-input" title="To date">
                         </div>
-                        <div class="cab-form-box__body">
-                            <div class="cab-form-box__sub active" data-sub="deposit2">
-                                <div class="cab-amount-btns" id="payDepAmountBtns">
-                                    <button class="cab-amount-btn" data-amount="10">£ 10</button>
-                                    <button class="cab-amount-btn active" data-amount="25">£ 25</button>
-                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
-                                    <button class="cab-amount-btn" data-amount="100">£ 100</button>
-                                </div>
-                                <div class="input-custom" style="margin:10px 0;">
-                                    <input id="depositAmount2" type="number" min="1" placeholder="Custom amount (£)" value="25">
-                                </div>
-                                <button id="payTopUpBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount2', 'payTopUpBtn')">Top Up</button>
-                            </div>
-                            <div class="cab-form-box__sub" data-sub="withdraw2">
-                                <div class="cab-amount-btns" id="payWdAmountBtns">
-                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
-                                    <button class="cab-amount-btn active" data-amount="100">£ 100</button>
-                                    <button class="cab-amount-btn" data-amount="200">£ 200</button>
-                                    <button class="cab-amount-btn" data-amount="500">£ 500</button>
-                                </div>
-                                <div class="input-custom" style="margin:10px 0;">
-                                    <input id="withdrawAmount2" type="number" min="1" placeholder="Amount to withdraw (£)" value="100">
-                                </div>
-                                <button id="payWithdrawBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount2', 'payWithdrawBtn')">Withdrawal</button>
-                            </div>
+                        <select id="txnOpFilter" class="txn-filter-select">
+                            <option value="">All operations</option>
+                            <option value="Subscription">Subscription</option>
+                        </select>
+                        <div class="txn-filters__search">
+                            <span class="txn-filters__search-icon">🔍</span>
+                            <input type="text" id="txnSearch" class="txn-filter-input" placeholder="Search...">
                         </div>
                     </div>
 
-                    <!-- Full transaction history -->
-                    <div class="cab-box">
-                        <div class="cab-box__head">
-                            <p class="cab-box__title">Transaction History</p>
-                        </div>
-                        <div class="cab-box__body">
-                            <table class="cab-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="txnTableBody">
-                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Loading…</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="cab-box__body">
+                        <table class="cab-table cab-table--payments">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Operation</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txnTableBody">
+                                <tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px">Loading…</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -1301,11 +1249,14 @@
         );
     }
 
-    function saveLocalTxn(type, description, amount, status) {
+    function saveLocalTxn(type, operation, description, amount, status) {
         var txns = JSON.parse(localStorage.getItem('bazar_local_txns') || '[]');
         var d = new Date();
-        var dateStr = d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getFullYear();
-        txns.unshift({ date: dateStr, description: description, type: type, amount: amount.toFixed(2), status: status });
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var pad = function(n) { return n < 10 ? '0' + n : n; };
+        var dateStr = pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        var isoDate = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+        txns.unshift({ date: dateStr, isoDate: isoDate, operation: operation || 'Payment', description: description, type: type, amount: parseFloat(amount).toFixed(2), status: status });
         localStorage.setItem('bazar_local_txns', JSON.stringify(txns));
     }
 
@@ -1321,7 +1272,7 @@
             var withdrew = parseFloat(localStorage.getItem('bazar_withdrew') || '0') + amount;
             localStorage.setItem('bazar_balance', newBalance.toString());
             localStorage.setItem('bazar_withdrew', withdrew.toString());
-            saveLocalTxn('debit', 'Withdrawal', amount, 'paid');
+            saveLocalTxn('debit', 'Withdrawal', 'Withdrawal request', amount, 'paid');
             updateWalletDisplay();
             if (btn) { btn.textContent = 'Withdrawal'; btn.disabled = false; }
             alert('Withdrawal request for £' + amount.toFixed(2) + ' submitted successfully.');
@@ -1395,7 +1346,7 @@
             if (depositAmt > 0) {
                 var cur = parseFloat(localStorage.getItem('bazar_balance') || '0');
                 localStorage.setItem('bazar_balance', (cur + depositAmt).toString());
-                saveLocalTxn('credit', 'Wallet Top-Up', depositAmt, 'paid');
+                saveLocalTxn('credit', 'Deposit', 'Wallet Top-Up', depositAmt, 'paid');
                 updateWalletDisplay();
                 if (sessionId2) {
                     fetch('https://admin.bazar.uk/api/stripe/checkout/verify-deposit/' + sessionId2, {
@@ -1412,6 +1363,9 @@
             var sessionId = params.get('session_id');
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
+                var planPrice = paidPlan === 'pro' ? 7 : 14;
+                var planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
+                saveLocalTxn('debit', 'Subscription', 'Subscription ' + planLabel, planPrice, 'paid');
             }
             if (window.updatePlanBadge) updatePlanBadge();
             history.replaceState(null, '', window.location.pathname + '#subscriptions');
@@ -1490,64 +1444,104 @@
         });
     }
 
+    var _allTxns = [];
+
     function renderTxnRow(t) {
         var isPlus = t.type === 'credit';
         var amtClass = isPlus ? 'cab-table__amount--plus' : 'cab-table__amount--minus';
-        var sign = isPlus ? '+ ' : '− ';
+        var sign = isPlus ? '+' : '−';
+        var typeIcon = isPlus
+            ? '<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#e8f5e9;color:#2e7d32;font-weight:700;font-size:13px">+</span>'
+            : '<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#fce4ec;color:#c62828;font-weight:700;font-size:13px">−</span>';
         var statusBadge = t.status === 'pending'
             ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
             : '';
+        var op = t.operation || (isPlus ? 'Credit' : 'Payment');
+        var desc = t.description || '—';
         return '<tr>' +
-            '<td class="cab-table__date">' + t.date + '</td>' +
-            '<td>' + t.description + statusBadge + '</td>' +
-            '<td class="' + amtClass + '">' + sign + '£ ' + t.amount + '</td>' +
+            '<td class="cab-table__date">' + (t.date || '—') + '</td>' +
+            '<td style="text-align:center">' + typeIcon + '</td>' +
+            '<td>' + op + '</td>' +
+            '<td>' + desc + statusBadge + '</td>' +
+            '<td class="' + amtClass + '">' + sign + ' £' + t.amount + '</td>' +
         '</tr>';
+    }
+
+    function applyTxnFilters() {
+        var dateFrom = document.getElementById('txnDateFrom') ? document.getElementById('txnDateFrom').value : '';
+        var dateTo   = document.getElementById('txnDateTo')   ? document.getElementById('txnDateTo').value   : '';
+        var opVal    = document.getElementById('txnOpFilter') ? document.getElementById('txnOpFilter').value.toLowerCase() : '';
+        var search   = document.getElementById('txnSearch')   ? document.getElementById('txnSearch').value.toLowerCase()   : '';
+        var tbody = document.getElementById('txnTableBody');
+        if (!tbody) return;
+        var filtered = _allTxns.filter(function(t) {
+            if (dateFrom && t.isoDate && t.isoDate < dateFrom) return false;
+            if (dateTo   && t.isoDate && t.isoDate > dateTo)   return false;
+            if (opVal && !(t.operation || '').toLowerCase().includes(opVal)) return false;
+            if (search) {
+                var haystack = ((t.date || '') + ' ' + (t.operation || '') + ' ' + (t.description || '') + ' ' + (t.amount || '')).toLowerCase();
+                if (!haystack.includes(search)) return false;
+            }
+            return true;
+        });
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px">No transactions found</td></tr>';
+        } else {
+            tbody.innerHTML = filtered.map(renderTxnRow).join('');
+        }
     }
 
     function loadPayments() {
         var uid = localStorage.getItem('bazar_firebase_uid') || localStorage.getItem('bazar_uid');
         var localTxns = JSON.parse(localStorage.getItem('bazar_local_txns') || '[]');
-        var tbody = document.getElementById('txnTableBody');
+
+        function renderAll(allTxns, totalSpent) {
+            _allTxns = allTxns;
+            applyTxnFilters();
+            var dashBody = document.getElementById('dashTxnBody');
+            if (dashBody) {
+                var recent = allTxns.slice(0, 5);
+                dashBody.innerHTML = recent.length
+                    ? recent.map(renderTxnRow).join('')
+                    : '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
+            }
+            var paidCount = allTxns.filter(function(t){ return t.status === 'paid'; }).length;
+            var spentEl = document.getElementById('payStatSpent');
+            var paidEl  = document.getElementById('payStatPaid');
+            var allEl   = document.getElementById('payStatAll');
+            var dashBal = document.getElementById('dashBalance');
+            var dashWd  = document.getElementById('dashWithdrew');
+            if (spentEl) spentEl.innerHTML = totalSpent + ' <span>£</span>';
+            if (paidEl)  paidEl.textContent  = paidCount;
+            if (allEl)   allEl.textContent   = allTxns.length;
+            if (dashBal) dashBal.textContent = totalSpent;
+            if (dashWd)  dashWd.textContent  = paidCount;
+        }
 
         if (!uid) {
-            if (tbody) {
-                if (localTxns.length > 0) {
-                    tbody.innerHTML = localTxns.map(renderTxnRow).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
-                }
-            }
+            renderAll(localTxns, localTxns.reduce(function(s,t){ return s + parseFloat(t.amount||0); }, 0).toFixed(2));
             return;
         }
 
         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/payments')
             .then(function(r) { return r.json(); })
             .then(function(data) {
-                tbody = document.getElementById('txnTableBody');
                 var apiTxns = data.transactions || [];
                 var allTxns = localTxns.concat(apiTxns);
-                if (!tbody) return;
-                if (allTxns.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">No transactions yet</td></tr>';
-                } else {
-                    tbody.innerHTML = allTxns.map(renderTxnRow).join('');
-                }
-                var paidCount = allTxns.filter(function(t){ return t.status === 'paid'; }).length;
-                var spentEl = document.getElementById('payStatSpent');
-                var paidEl = document.getElementById('payStatPaid');
-                var allEl = document.getElementById('payStatAll');
-                if (spentEl) spentEl.innerHTML = '£ ' + (data.total_spent || '0.00') + ' <span>spent</span>';
-                if (paidEl) paidEl.textContent = paidCount;
-                if (allEl) allEl.textContent = allTxns.length;
+                renderAll(allTxns, data.total_spent || '0.00');
             })
             .catch(function() {
-                if (!tbody) return;
-                if (localTxns.length > 0) {
-                    tbody.innerHTML = localTxns.map(renderTxnRow).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Failed to load</td></tr>';
-                }
+                renderAll(localTxns, localTxns.reduce(function(s,t){ return s + parseFloat(t.amount||0); }, 0).toFixed(2));
             });
+
+        var ff = document.getElementById('txnDateFrom');
+        var ft = document.getElementById('txnDateTo');
+        var fo = document.getElementById('txnOpFilter');
+        var fs = document.getElementById('txnSearch');
+        if (ff && !ff._bound) { ff._bound = true; ff.addEventListener('input', applyTxnFilters); }
+        if (ft && !ft._bound) { ft._bound = true; ft.addEventListener('input', applyTxnFilters); }
+        if (fo && !fo._bound) { fo._bound = true; fo.addEventListener('change', applyTxnFilters); }
+        if (fs && !fs._bound) { fs._bound = true; fs.addEventListener('input', applyTxnFilters); }
     }
 
     function cabToggleSearch() {
@@ -1716,6 +1710,18 @@
             }
         });
     });
+</script>
+
+<script>
+    /* ── Production-only: hide Wallet widget & My Payments ── */
+    if (window.location.hostname === 'www.bazar.uk') {
+        document.addEventListener('DOMContentLoaded', function() {
+            ['walletWidgetCell','walletSep','menuMyPayments','navMyPayments'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        });
+    }
 </script>
 
 </body></html>
