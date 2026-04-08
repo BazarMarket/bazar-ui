@@ -1840,19 +1840,46 @@
             btn.textContent = 'Publish Ad';
             btn.disabled = false;
             var cityVal = document.getElementById('locationCity').value;
-            var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
-            ads.unshift({
-               id: data.property_id,
-               title: title,
-               price: parseInt(price),
-               city: cityVal,
-               type: listingType,
-               propType: propertyType,
-               date: new Date().toISOString().split('T')[0],
-               status: 'pending'
-            });
-            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            window.location.href = 'publish-options.html?ad_id=' + (data.property_id || '');
+
+            var firstBox = photoGrid ? photoGrid.querySelector('.pa-photo-box') : null;
+            var rawBg = firstBox ? firstBox.style.backgroundImage : '';
+            var photoDataUrl = rawBg ? rawBg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '') : '';
+
+            function saveAndRedirect(thumb) {
+               var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+               ads.unshift({
+                  id: data.property_id,
+                  title: title,
+                  price: parseInt(price),
+                  city: cityVal,
+                  type: listingType,
+                  propType: propertyType,
+                  date: new Date().toISOString().split('T')[0],
+                  status: 'pending',
+                  photo: thumb || ''
+               });
+               try {
+                  localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+               } catch(e) {
+                  ads[0].photo = '';
+                  localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+               }
+               window.location.href = 'publish-options.html?ad_id=' + (data.property_id || '');
+            }
+
+            if (photoDataUrl && photoDataUrl.indexOf('data:') === 0) {
+               var tmpImg = new Image();
+               tmpImg.onload = function() {
+                  var canvas = document.createElement('canvas');
+                  canvas.width = 400; canvas.height = 300;
+                  canvas.getContext('2d').drawImage(tmpImg, 0, 0, 400, 300);
+                  saveAndRedirect(canvas.toDataURL('image/jpeg', 0.7));
+               };
+               tmpImg.onerror = function() { saveAndRedirect(''); };
+               tmpImg.src = photoDataUrl;
+            } else {
+               saveAndRedirect('');
+            }
          })
          .catch(function(error) {
             btn.textContent = 'Publish Ad';

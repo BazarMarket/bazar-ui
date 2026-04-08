@@ -1474,8 +1474,11 @@
         var stikerClass = plan === 'vip' ? 'stiker_vip' : plan === 'pro' ? 'stiker_top' : '';
         var stikerLabel = plan === 'vip' ? 'VIP' : plan === 'pro' ? 'PRO' : '';
         var html = '';
+        var needsApiPhoto = [];
         ads.slice(0, 4).forEach(function(ad) {
             var imgSrc = ad.photo || 'img/product.jpg';
+            var needsFetch = !ad.photo && ad.id;
+            var imgId = needsFetch ? 'luImg_' + ad.id : '';
             var cardCls = stikerLabel ? 'card card_orange' : 'card';
             var stiker = stikerLabel
                 ? '<div class="card__stikers"><span class="stiker ' + stikerClass + '">' + stikerLabel + '</span></div>'
@@ -1486,13 +1489,34 @@
                 '<div class="card__info"><p class="card__name">' + (ad.title || 'My Ad') + '</p>' +
                 '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                 '<div class="card__img">' + stiker +
-                '<img src="' + imgSrc + '" alt="" class="img-cover">' +
+                '<img ' + (imgId ? 'id="' + imgId + '" ' : '') + 'src="' + imgSrc + '" alt="" class="img-cover">' +
                 '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
                 '<div class="card__down"><div class="card__prices">' +
                 '<span class="price-new">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
                 '</div></div></div>';
+            if (needsFetch) needsApiPhoto.push(ad.id);
         });
         grid.insertAdjacentHTML('afterbegin', html);
+
+        /* Async: load photo from API for ads that don't have a cached thumbnail */
+        needsApiPhoto.forEach(function(adId) {
+            fetch('https://admin.bazar.uk/api/properties/' + adId, { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(d) {
+                    if (!d) return;
+                    var firstImg = (d.images && d.images[0]) ? d.images[0] : (d.image || '');
+                    if (!firstImg) return;
+                    var el = document.getElementById('luImg_' + adId);
+                    if (el) el.src = firstImg;
+                    /* Cache into localStorage so next load is instant */
+                    try {
+                        var stored = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+                        stored.forEach(function(a) { if (String(a.id) === String(adId) && !a.photo) a.photo = firstImg; });
+                        localStorage.setItem('bazar_my_ads', JSON.stringify(stored));
+                    } catch(e) {}
+                })
+                .catch(function() {});
+        });
     })();
     </script>
 
