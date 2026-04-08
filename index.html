@@ -1393,7 +1393,7 @@
           }, function(err) {
              input.value = '';
              var msg = err.code === 1
-                ? 'Location access denied. To use this feature, allow location access in your browser settings.'
+                ? 'Location access denied. Click the 🔒 lock icon in the address bar → Location → Allow.'
                 : err.code === 2 ? 'Location unavailable. Please select a city from the list.'
                 : 'Location request timed out. Please try again.';
              if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }

@@ -124,6 +124,7 @@
                                     <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="#e8873a"/><circle cx="8" cy="8" r="6.5" stroke="#e8873a" stroke-width="1.3"/><path d="M8 0v3M8 13v3M0 8h3M13 8h3" stroke="#e8873a" stroke-width="1.3"/></svg>
                                     My location
                                 </div>
+                                <div id="headerLocError" style="display:none;padding:6px 16px 8px;font-size:11.5px;color:#e53935;line-height:1.4;"></div>
                                 <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="London">
                                     <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
                                     London
@@ -1337,39 +1338,66 @@
        }
        function useMyLocation(target) {
           var dd = document.getElementById(target === 'header' ? 'headerLocDropdown' : 'searchLocDropdown');
-          dd.classList.remove('open');
+          var errEl = document.getElementById(target === 'header' ? 'headerLocError' : 'headerLocError');
           var input = document.getElementById(target === 'header' ? 'headerLocationInput' : 'searchLocationInput');
+          if (errEl) errEl.style.display = 'none';
           input.value = 'Detecting...';
-          if (!navigator.geolocation) { input.value = ''; alert('Geolocation is not supported by your browser'); return; }
+          if (!navigator.geolocation) {
+             input.value = '';
+             if (errEl) { errEl.textContent = 'Geolocation is not supported by your browser.'; errEl.style.display = 'block'; }
+             return;
+          }
           navigator.geolocation.getCurrentPosition(function(pos) {
              var lat = pos.coords.latitude, lng = pos.coords.longitude;
-             var geocoder = new google.maps.Geocoder();
-             geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
-                if (status === 'OK' && results[0]) {
-                   var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
-                   for (var i = 0; i < results[0].address_components.length; i++) {
-                      var c = results[0].address_components[i];
-                      if (c.types.indexOf('locality') !== -1) locality = c.long_name;
-                      if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
-                      if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
-                      if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
-                      if (c.types.indexOf('country') !== -1) country = c.short_name;
+             dd.classList.remove('open');
+             if (typeof google !== 'undefined' && google.maps) {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
+                   if (status === 'OK' && results[0]) {
+                      var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
+                      for (var i = 0; i < results[0].address_components.length; i++) {
+                         var c = results[0].address_components[i];
+                         if (c.types.indexOf('locality') !== -1) locality = c.long_name;
+                         if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
+                         if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
+                         if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
+                         if (c.types.indexOf('country') !== -1) country = c.short_name;
+                      }
+                      var parts = [];
+                      var mainCity = postalTown || locality || '';
+                      if (mainCity) parts.push(mainCity);
+                      var region = area2 || area1 || '';
+                      if (region && region !== mainCity) parts.push(region);
+                      if (country) parts.push(country);
+                      var label = parts.join(', ') || results[0].formatted_address;
+                      input.value = label;
+                      input.dataset.city = mainCity || label;
+                   } else {
+                      input.value = '';
+                      if (errEl) { errEl.textContent = 'Could not determine your location.'; errEl.style.display = 'block'; }
                    }
-                   var parts = [];
-                   var mainCity = postalTown || locality || '';
-                   if (mainCity) parts.push(mainCity);
-                   var region = area2 || area1 || '';
-                   if (region && region !== mainCity) parts.push(region);
-                   if (country) parts.push(country);
-                   var label = parts.join(', ') || results[0].formatted_address;
-                   input.value = label;
-                   input.dataset.city = mainCity || label;
-                } else {
-                   input.value = '';
-                   alert('Could not determine your location');
-                }
-             });
-          }, function() { input.value = ''; alert('Location access denied'); });
+                });
+             } else {
+                fetch('/api/config').then(function(r){return r.json();}).then(function(cfg){
+                   return fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key='+(cfg.googleMapsApiKey||''));
+                }).then(function(r){return r.json();}).then(function(data){
+                   if (data.results && data.results.length > 0) {
+                      var c = data.results[0].address_components || [];
+                      var postalTown = '', locality = '', postcode = '';
+                      c.forEach(function(x){ if(x.types.includes('postal_town')||x.types.includes('locality')) postalTown=x.long_name; if(x.types.includes('postal_code')) postcode=x.long_name; });
+                      var label = [postalTown, postcode].filter(Boolean).join(', ') || data.results[0].formatted_address;
+                      input.value = label; input.dataset.city = postalTown || label;
+                   } else { input.value = ''; }
+                }).catch(function(){ input.value = ''; });
+             }
+          }, function(err) {
+             input.value = '';
+             var msg = err.code === 1
+                ? 'Location access denied. To enable, click the 🔒 lock icon in the address bar → Location → Allow.'
+                : err.code === 2 ? 'Location unavailable. Please select a city from the list.'
+                : 'Location request timed out. Please try again.';
+             if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+          }, {timeout: 10000});
        }
        window.initMapsForLocation = function() {
           LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
