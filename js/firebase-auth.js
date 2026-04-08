@@ -139,7 +139,7 @@ function toggleSignBtns(checkbox) {
 
 var otpTimerInterval = null;
 
-function showPhoneError(msg) {
+function showPhoneError(msg, isHtml) {
     var input = document.querySelector('.modal-number-input');
     if (!input) return;
     var err = document.getElementById('phoneError');
@@ -150,7 +150,7 @@ function showPhoneError(msg) {
         var wrap = input.closest('.modal-phone-input');
         if (wrap && wrap.after) { wrap.after(err); } else { input.parentNode.parentNode.insertBefore(err, input.parentNode.nextSibling); }
     }
-    err.textContent = msg;
+    if (isHtml) { err.innerHTML = msg; } else { err.textContent = msg; }
     err.style.display = 'block';
 }
 
@@ -159,26 +159,16 @@ function clearPhoneError() {
     if (err) err.style.display = 'none';
 }
 
-function sendSmsCode() {
-    if (!document.getElementById('agreeCheckbox').checked) { document.getElementById('agreeError').style.display = 'block'; return; }
-    document.getElementById('agreeError').style.display = 'none';
-    clearPhoneError();
-    var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
-    if (!rawValue || rawValue.length < 10) { showPhoneError('Please enter your phone number'); return; }
-    var phoneNumber = '+44' + rawValue;
-
+function doSendFirebaseSms(phoneNumber, smsBtn) {
     if (!recaptchaVerifier) {
         setupRecaptcha();
         if (!recaptchaVerifier) {
             showPhoneError('Could not initialize verification. Please reload the page and try again.');
+            smsBtn.textContent = 'Sign in by an SMS';
+            smsBtn.disabled = false;
             return;
         }
     }
-
-    var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
-    smsBtn.textContent = 'Sending...';
-    smsBtn.disabled = true;
-
     auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
         .then(function(result) {
             confirmationResult = result;
@@ -207,6 +197,47 @@ function sendSmsCode() {
             if (c) c.innerHTML = '';
             setupRecaptcha();
         });
+}
+
+function sendSmsCode() {
+    if (!document.getElementById('agreeCheckbox').checked) { document.getElementById('agreeError').style.display = 'block'; return; }
+    document.getElementById('agreeError').style.display = 'none';
+    clearPhoneError();
+    var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_]/g, '');
+    if (!rawValue || rawValue.length < 10) { showPhoneError('Please enter your phone number'); return; }
+    var phoneNumber = '+44' + rawValue;
+
+    var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
+    smsBtn.textContent = 'Checking...';
+    smsBtn.disabled = true;
+
+    if (modalMode === 'create') {
+        // Проверяем телефон ДО отправки SMS — экономим деньги и время
+        fetch('https://admin.bazar.uk/api/customers/phone/' + encodeURIComponent(phoneNumber))
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.exists) {
+                    smsBtn.textContent = 'Sign in by an SMS';
+                    smsBtn.disabled = false;
+                    showPhoneError(
+                        'An account with this number already exists. <a href="#" onclick="openLoginModal();return false;" style="color:#ff9138;text-decoration:underline;">Log in instead</a>',
+                        true
+                    );
+                } else {
+                    smsBtn.textContent = 'Sending...';
+                    doSendFirebaseSms(phoneNumber, smsBtn);
+                }
+            })
+            .catch(function() {
+                // API недоступен — отправляем SMS как обычно
+                smsBtn.textContent = 'Sending...';
+                doSendFirebaseSms(phoneNumber, smsBtn);
+            });
+    } else {
+        // Режим Log in — сразу отправляем SMS без проверки
+        smsBtn.textContent = 'Sending...';
+        doSendFirebaseSms(phoneNumber, smsBtn);
+    }
 }
 
 function openOtpModal(phoneNumber) {
