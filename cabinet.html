@@ -306,17 +306,112 @@
                 </div>
 
                 <div class="cab-ads-filter">
-                    <button class="cab-filter-btn active">All (0)</button>
-                    <button class="cab-add-btn icon-win-plus" onclick="window.location.href='index.html#post-ad'">New Ad</button>
+                    <button class="cab-filter-btn active">All (5)</button>
+                    <button class="cab-filter-btn">Active (3)</button>
+                    <button class="cab-filter-btn">Inactive (1)</button>
+                    <button class="cab-filter-btn">Pending (1)</button>
+                    <button class="cab-add-btn icon-win-plus" onclick="window.location.href='post-ad.html'">New Ad</button>
                 </div>
 
                 <div class="cab-ads-table" id="myAdsTable">
-                    <div style="text-align:center;padding:48px 20px;color:#aaa;">
-                        <div style="font-size:48px;margin-bottom:12px;">📋</div>
-                        <div style="font-size:16px;font-weight:600;color:#666;margin-bottom:8px;">No ads yet</div>
-                        <div style="font-size:14px;margin-bottom:20px;">Post your first ad and it will appear here</div>
-                        <button class="btn btn_grad" onclick="window.location.href='index.html#post-ad'" style="padding:10px 28px;">+ Post an Ad</button>
-                    </div>
+                    <table class="cab-table" style="min-width:600px;">
+                        <thead>
+                            <tr>
+                                <th style="width:40%">Ad</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Views</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="">
+                                    <span class="cab-ads-table-title">Villa for Sale in Tsada</span>
+                                </td>
+                                <td>Real Estate</td>
+                                <td>£ 1,049</td>
+                                <td>142</td>
+                                <td><span class="cab-status cab-status--active">Active</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/phone.jpg" alt="">
+                                    <span class="cab-ads-table-title">iPhone 14 Pro Max 256GB</span>
+                                </td>
+                                <td>Mobile phones</td>
+                                <td>£ 750</td>
+                                <td>389</td>
+                                <td><span class="cab-status cab-status--active">Active</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="">
+                                    <span class="cab-ads-table-title">2-Bed Apartment, Paphos</span>
+                                </td>
+                                <td>Real Estate</td>
+                                <td>£ 650/mo</td>
+                                <td>218</td>
+                                <td><span class="cab-status cab-status--active">Active</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.5">
+                                    <span class="cab-ads-table-title">Sony PlayStation 5</span>
+                                </td>
+                                <td>Electronics</td>
+                                <td>£ 380</td>
+                                <td>56</td>
+                                <td><span class="cab-status cab-status--inactive">Inactive</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Reactivate"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.6">
+                                    <span class="cab-ads-table-title">Mountain Bike Trek X-Caliber</span>
+                                </td>
+                                <td>Sports</td>
+                                <td>£ 420</td>
+                                <td>—</td>
+                                <td><span class="cab-status cab-status--pending">Pending</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
