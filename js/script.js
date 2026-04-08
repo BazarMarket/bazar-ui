@@ -1180,3 +1180,27 @@ window.onload = function () {
     else updatePlanBadge();
 })();
 
+
+// ── Production-only: hide Wallet widget on www.bazar.uk ─────────────────────
+(function() {
+    if (window.location.hostname !== 'www.bazar.uk') return;
+    function hideWallet() {
+        document.querySelectorAll('.wallet-widget').forEach(function(el) {
+            var cell = el.closest('.header-old__cell') || el.parentElement;
+            if (cell) {
+                cell.style.display = 'none';
+                var prev = cell.previousElementSibling;
+                if (prev && prev.classList.contains('header-old__vsep')) {
+                    prev.style.display = 'none';
+                }
+            } else {
+                el.style.display = 'none';
+            }
+        });
+        document.querySelectorAll('a.user-menu-item.icon-win-wallet').forEach(function(el) {
+            el.style.display = 'none';
+        });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hideWallet);
+    else hideWallet();
+})();
