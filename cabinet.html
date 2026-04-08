@@ -165,31 +165,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="cab-table__date">28 Feb 2026</td>
-                                        <td><span class="cab-table__method">Visa ****4242</span></td>
-                                        <td class="cab-table__amount--plus">+ £ 50.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">15 Feb 2026</td>
-                                        <td><span class="cab-table__method">Visa ****4242</span></td>
-                                        <td class="cab-table__amount--plus">+ £ 100.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">02 Feb 2026</td>
-                                        <td><span class="cab-table__method">Mastercard</span></td>
-                                        <td class="cab-table__amount--plus">+ £ 200.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">20 Jan 2026</td>
-                                        <td><span class="cab-table__method">Visa ****4242</span></td>
-                                        <td class="cab-table__amount--plus">+ £ 75.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">05 Jan 2026</td>
-                                        <td><span class="cab-table__method">Mastercard</span></td>
-                                        <td class="cab-table__amount--plus">+ £ 500.00</td>
-                                    </tr>
+                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No deposit activity yet</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -211,31 +187,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="cab-table__date">25 Feb 2026</td>
-                                        <td>VIP — Villa Tsada</td>
-                                        <td class="cab-table__amount--minus">− £ 15.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">20 Feb 2026</td>
-                                        <td>TOP — iPhone 14</td>
-                                        <td class="cab-table__amount--minus">− £ 10.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">10 Feb 2026</td>
-                                        <td>Subscription — Basic</td>
-                                        <td class="cab-table__amount--minus">− £ 9.99</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">01 Feb 2026</td>
-                                        <td>VIP — Apartment</td>
-                                        <td class="cab-table__amount--minus">− £ 15.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cab-table__date">15 Jan 2026</td>
-                                        <td>Subscription — Basic</td>
-                                        <td class="cab-table__amount--minus">− £ 9.99</td>
-                                    </tr>
+                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No activity yet</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -266,15 +218,8 @@
                                     <div class="input-custom" style="margin:10px 0;">
                                         <input id="depositAmount" type="number" min="1" placeholder="Custom amount (£)" value="25">
                                     </div>
-                                    <div class="cab-method-select">
-                                        <label class="cab-method-item">
-                                            <input type="radio" name="dep-method" checked>
-                                            <span class="cab-method-item__label">Visa ****4242</span>
-                                        </label>
-                                        <label class="cab-method-item">
-                                            <input type="radio" name="dep-method">
-                                            <span class="cab-method-item__label">Mastercard ****8811</span>
-                                        </label>
+                                    <div class="cab-method-select" id="dashboardCardList">
+                                        <div style="color:#aaa;font-size:13px;padding:8px 0;">No saved cards — you will enter card details at checkout</div>
                                     </div>
                                     <button type="submit" class="btn btn_grad" style="width:100%;margin-top:4px;">Top Up</button>
                                 </form>
@@ -316,20 +261,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Basic Subscription</td>
-                                        <td class="cab-table__date">10 Mar 2026</td>
-                                        <td style="font-weight:600;color:#1a1a1a">£ 9.99</td>
-                                    </tr>
-                                    <tr>
-                                        <td>VIP — Villa Tsada renewal</td>
-                                        <td class="cab-table__date">14 Mar 2026</td>
-                                        <td style="font-weight:600;color:#1a1a1a">£ 15.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>TOP — iPhone 14 renewal</td>
-                                        <td class="cab-table__date">20 Mar 2026</td>
-                                        <td style="font-weight:600;color:#1a1a1a">£ 10.00</td>
+                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No upcoming bills</td></tr>
+                                    <tr style="display:none">
+                                        <td>—</td>
+                                        <td class="cab-table__date">—</td>
+                                        <td style="font-weight:600;color:#1a1a1a">—</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -348,130 +284,17 @@
                 </div>
 
                 <div class="cab-ads-filter">
-                    <button class="cab-filter-btn active">All (5)</button>
-                    <button class="cab-filter-btn">Active (3)</button>
-                    <button class="cab-filter-btn">Inactive (1)</button>
-                    <button class="cab-filter-btn">Pending (1)</button>
-                    <button class="cab-add-btn icon-win-plus">New Ad</button>
+                    <button class="cab-filter-btn active">All (0)</button>
+                    <button class="cab-add-btn icon-win-plus" onclick="window.location.href='index.html#post-ad'">New Ad</button>
                 </div>
 
-                <div class="cab-ads-table">
-                    <table class="cab-table" style="min-width:600px;">
-                        <thead>
-                            <tr>
-                                <th style="width:40%">Ad</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Views</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- VIP ad -->
-                            <tr>
-                                <td>
-                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="">
-                                    <div class="cab-ads-table-info">
-                                        <span class="cab-ads-table-title">Villa for Sale in Tsada</span>
-                                        <span class="cab-promo-badge cab-promo-badge--vip">👑 VIP · 25 days left</span>
-                                    </div>
-                                </td>
-                                <td>Real Estate</td>
-                                <td>£ 1,049</td>
-                                <td>142</td>
-                                <td><span class="cab-status cab-status--active">Active</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <button class="cab-extend-btn cab-extend-btn--vip" onclick="switchToTab('subscriptions')" title="Extend VIP">Extend</button>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- PRO ad -->
-                            <tr>
-                                <td>
-                                    <img class="cab-ads-table-img" src="img/phone.jpg" alt="">
-                                    <div class="cab-ads-table-info">
-                                        <span class="cab-ads-table-title">iPhone 14 Pro Max 256GB</span>
-                                        <span class="cab-promo-badge cab-promo-badge--pro">⭐ PRO · 14 days left</span>
-                                    </div>
-                                </td>
-                                <td>Mobile phones</td>
-                                <td>£ 750</td>
-                                <td>389</td>
-                                <td><span class="cab-status cab-status--active">Active</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <button class="cab-extend-btn cab-extend-btn--pro" onclick="switchToTab('subscriptions')" title="Extend PRO">Extend</button>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Free active ad -->
-                            <tr>
-                                <td>
-                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="">
-                                    <div class="cab-ads-table-info">
-                                        <span class="cab-ads-table-title">2-Bed Apartment, Paphos</span>
-                                        <button class="cab-boost-btn" onclick="switchToTab('subscriptions')">⭐ Boost listing</button>
-                                    </div>
-                                </td>
-                                <td>Real Estate</td>
-                                <td>£ 650/mo</td>
-                                <td>218</td>
-                                <td><span class="cab-status cab-status--active">Active</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Inactive ad -->
-                            <tr>
-                                <td>
-                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.5">
-                                    <div class="cab-ads-table-info">
-                                        <span class="cab-ads-table-title">Sony PlayStation 5</span>
-                                    </div>
-                                </td>
-                                <td>Electronics</td>
-                                <td>£ 380</td>
-                                <td>56</td>
-                                <td><span class="cab-status cab-status--inactive">Inactive</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Reactivate"></div>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Pending ad -->
-                            <tr>
-                                <td>
-                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.6">
-                                    <div class="cab-ads-table-info">
-                                        <span class="cab-ads-table-title">Mountain Bike Trek X-Caliber</span>
-                                    </div>
-                                </td>
-                                <td>Sports</td>
-                                <td>£ 420</td>
-                                <td>—</td>
-                                <td><span class="cab-status cab-status--pending">Pending</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="cab-ads-table" id="myAdsTable">
+                    <div style="text-align:center;padding:48px 20px;color:#aaa;">
+                        <div style="font-size:48px;margin-bottom:12px;">📋</div>
+                        <div style="font-size:16px;font-weight:600;color:#666;margin-bottom:8px;">No ads yet</div>
+                        <div style="font-size:14px;margin-bottom:20px;">Post your first ad and it will appear here</div>
+                        <button class="btn btn_grad" onclick="window.location.href='index.html#post-ad'" style="padding:10px 28px;">+ Post an Ad</button>
+                    </div>
                 </div>
 
             </div>
@@ -517,9 +340,8 @@
                                 <div class="input-custom" style="margin:10px 0;">
                                     <input type="number" min="1" placeholder="Custom amount (£)" value="25">
                                 </div>
-                                <div class="cab-method-select">
-                                    <label class="cab-method-item"><input type="radio" name="dep2" checked><span class="cab-method-item__label">Visa ****4242</span></label>
-                                    <label class="cab-method-item"><input type="radio" name="dep2"><span class="cab-method-item__label">Mastercard ****8811</span></label>
+                                <div class="cab-method-select" id="depositCardList">
+                                    <div style="color:#aaa;font-size:13px;padding:8px 0;">No saved cards — you will enter card details at checkout</div>
                                 </div>
                                 <button class="btn btn_grad" style="width:100%">Top Up</button>
                             </div>
@@ -1358,11 +1180,27 @@
         var params = new URLSearchParams(window.location.search);
         if (params.get('payment') === 'success') {
             var paidPlan = params.get('plan');
+            var sessionId = params.get('session_id');
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
             }
+            if (window.updatePlanBadge) updatePlanBadge();
             history.replaceState(null, '', window.location.pathname + '#subscriptions');
             switchToTab('subscriptions');
+            if (sessionId) {
+                fetch('https://admin.bazar.uk/api/stripe/checkout/verify/' + sessionId, {
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success && data.plan) {
+                        localStorage.setItem('bazar_plan', data.plan);
+                        if (window.updatePlanBadge) updatePlanBadge();
+                        highlightCurrentPlan();
+                    }
+                })
+                .catch(function() {});
+            }
         }
         highlightCurrentPlan();
         var hash = window.location.hash.replace('#', '');
