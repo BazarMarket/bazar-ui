@@ -1216,50 +1216,60 @@
         function setStatus(msg, color) {
             if (statusEl) { statusEl.textContent = msg; statusEl.style.color = color || '#808080'; statusEl.style.display = 'block'; }
         }
-        function resetBtn() {
-            if (btn) { btn.innerHTML = '📍 My Location'; btn.disabled = false; }
-        }
 
         if (!navigator.geolocation) { setStatus('Geolocation is not supported by your browser.', '#e53935'); return; }
         if (btn) { btn.textContent = '⏳ Detecting...'; btn.disabled = true; }
         if (statusEl) statusEl.style.display = 'none';
         hideAddressDropdown();
 
+        function doGeocode(lat, lng) {
+            if (btn) { btn.innerHTML = '📍 My Location'; btn.disabled = false; }
+            if (typeof google !== 'undefined' && google.maps) {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        var locality = '', postalTown = '', area2 = '', area1 = '', postcode = '';
+                        results[0].address_components.forEach(function(c) {
+                            if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
+                            if (c.types.indexOf('locality') !== -1) locality = c.long_name;
+                            if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
+                            if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
+                            if (c.types.indexOf('postal_code') !== -1) postcode = c.long_name;
+                        });
+                        var mainCity = postalTown || locality || area2 || area1 || '';
+                        var parts = [mainCity, postcode].filter(Boolean);
+                        var address = parts.length > 0 ? parts.join(', ') : results[0].formatted_address;
+                        if (field) field.value = address;
+                        setStatus('✓ Location found', '#4caf50');
+                    } else {
+                        setStatus('Could not determine address. Please enter manually.', '#808080');
+                    }
+                });
+            } else {
+                setStatus('Maps not loaded. Please enter manually.', '#808080');
+            }
+        }
+
+        function loadMapsAndGeocode(lat, lng) {
+            if (typeof google !== 'undefined' && google.maps) { doGeocode(lat, lng); return; }
+            fetch('/api/config').then(function(r) { return r.json(); }).then(function(cfg) {
+                if (!cfg.googleMapsApiKey) { doGeocode(lat, lng); return; }
+                window._cabinetGeocodePending = function() { doGeocode(lat, lng); };
+                var s = document.createElement('script');
+                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=_cabinetGeocodePending';
+                s.async = true; s.defer = true;
+                document.head.appendChild(s);
+            }).catch(function() {
+                if (btn) { btn.innerHTML = '📍 My Location'; btn.disabled = false; }
+                setStatus('Failed to load maps. Please enter manually.', '#e53935');
+            });
+        }
+
         navigator.geolocation.getCurrentPosition(
-            function(pos) {
-                var lat = pos.coords.latitude;
-                var lng = pos.coords.longitude;
-                fetch('/api/config')
-                    .then(function(r) { return r.json(); })
-                    .then(function(cfg) {
-                        var key = cfg.googleMapsApiKey || '';
-                        return fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + key);
-                    })
-                    .then(function(r) { return r.json(); })
-                    .then(function(data) {
-                        resetBtn();
-                        if (data.results && data.results.length > 0) {
-                            var components = data.results[0].address_components || [];
-                            var neighbourhood = '', locality = '', area = '', postcode = '';
-                            components.forEach(function(c) {
-                                if (c.types.includes('neighborhood') || c.types.includes('sublocality_level_2')) neighbourhood = c.long_name;
-                                else if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality')) area = c.long_name;
-                                if (c.types.includes('postal_town') || c.types.includes('locality')) locality = c.long_name;
-                                if (c.types.includes('postal_code')) postcode = c.long_name;
-                            });
-                            var parts = [neighbourhood || area, locality, postcode].filter(Boolean);
-                            var address = parts.length > 0 ? parts.join(', ') : data.results[0].formatted_address;
-                            if (field) field.value = address;
-                            setStatus('✓ Location found', '#4caf50');
-                        } else {
-                            setStatus('Could not determine address. Please enter manually.', '#808080');
-                        }
-                    })
-                    .catch(function() { resetBtn(); setStatus('Failed to get address. Please enter manually.', '#e53935'); });
-            },
+            function(pos) { loadMapsAndGeocode(pos.coords.latitude, pos.coords.longitude); },
             function(err) {
-                resetBtn();
-                var msg = err.code === 1 ? 'Location access denied. Please allow location in browser settings.'
+                if (btn) { btn.innerHTML = '📍 My Location'; btn.disabled = false; }
+                var msg = err.code === 1 ? 'Location access denied. Click 🔒 in address bar → Location → Allow.'
                         : err.code === 2 ? 'Location unavailable. Please enter manually.'
                         : 'Location request timed out. Please enter manually.';
                 setStatus(msg, '#e53935');
