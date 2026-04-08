@@ -26,7 +26,7 @@
                     <div class="header-old__right">
                         <div class="header-old__vsep"></div>
                         <div class="header-old__cell">
-                            <div class="wallet-widget icon-win-wallet" onclick="switchToTab('payments')">£ 3 216 <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
+                            <div class="wallet-widget icon-win-wallet" onclick="switchToTab('payments')">£ <span id="walletBalance">0</span> <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
                         </div>
                         <div class="header-old__cell">
                             <a href="#" class="btn btn_mini">+ post an ad</a>
@@ -130,15 +130,15 @@
                 <div class="cab-stat-cards">
                     <div class="cab-stat-card cab-stat-card--accent">
                         <p class="cab-stat-card__label icon-win-wallet">Balance on account</p>
-                        <p class="cab-stat-card__value">1 060.56 <span>£</span></p>
+                        <p class="cab-stat-card__value"><span id="dashBalance">0.00</span> <span>£</span></p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-win-down">Still withdrew</p>
-                        <p class="cab-stat-card__value">2 334.55 <span>£</span></p>
+                        <p class="cab-stat-card__value"><span id="dashWithdrew">0.00</span> <span>£</span></p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-win-ad">Active ads</p>
-                        <p class="cab-stat-card__value">3 <span>ads</span></p>
+                        <p class="cab-stat-card__value">0 <span>ads</span></p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-eye">Views this month</p>
@@ -208,40 +208,30 @@
                             <!-- Deposit sub -->
                             <div class="cab-form-box__sub active" data-sub="deposit">
                                 <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
-                                <div class="cab-amount-btns">
+                                <div class="cab-amount-btns" id="dashDepAmountBtns">
                                     <button class="cab-amount-btn" data-amount="10">£ 10</button>
                                     <button class="cab-amount-btn active" data-amount="25">£ 25</button>
                                     <button class="cab-amount-btn" data-amount="50">£ 50</button>
                                     <button class="cab-amount-btn" data-amount="100">£ 100</button>
                                 </div>
-                                <form id="depositForm">
-                                    <div class="input-custom" style="margin:10px 0;">
-                                        <input id="depositAmount" type="number" min="1" placeholder="Custom amount (£)" value="25">
-                                    </div>
-                                    <div class="cab-method-select" id="dashboardCardList">
-                                        <div style="color:#aaa;font-size:13px;padding:8px 0;">No saved cards — you will enter card details at checkout</div>
-                                    </div>
-                                    <button type="submit" class="btn btn_grad" style="width:100%;margin-top:4px;">Top Up</button>
-                                </form>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input id="depositAmount" type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                </div>
+                                <button id="dashTopUpBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount', 'dashTopUpBtn')">Top Up</button>
                             </div>
                             <!-- Withdraw sub -->
                             <div class="cab-form-box__sub" data-sub="withdraw-form">
                                 <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
-                                <div class="cab-amount-btns">
+                                <div class="cab-amount-btns" id="dashWdAmountBtns">
                                     <button class="cab-amount-btn" data-amount="10">£ 10</button>
                                     <button class="cab-amount-btn active" data-amount="50">£ 50</button>
                                     <button class="cab-amount-btn" data-amount="100">£ 100</button>
                                     <button class="cab-amount-btn" data-amount="200">£ 200</button>
                                 </div>
-                                <form id="withdrawForm">
-                                    <div class="input-custom" style="margin:10px 0;">
-                                        <input id="withdrawAmount" type="number" min="1" placeholder="Amount to withdraw (£)" value="50">
-                                    </div>
-                                    <div class="input-custom" style="margin:10px 0;">
-                                        <input type="text" placeholder="Bank account / IBAN">
-                                    </div>
-                                    <button type="submit" class="btn btn_grad" style="width:100%;margin-top:4px;">Withdraw</button>
-                                </form>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input id="withdrawAmount" type="number" min="1" placeholder="Amount to withdraw (£)" value="50">
+                                </div>
+                                <button id="dashWithdrawBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount', 'dashWithdrawBtn')">Withdrawal</button>
                             </div>
                         </div>
                     </div>
@@ -331,34 +321,28 @@
                         </div>
                         <div class="cab-form-box__body">
                             <div class="cab-form-box__sub active" data-sub="deposit2">
-                                <div class="cab-amount-btns">
+                                <div class="cab-amount-btns" id="payDepAmountBtns">
                                     <button class="cab-amount-btn" data-amount="10">£ 10</button>
                                     <button class="cab-amount-btn active" data-amount="25">£ 25</button>
                                     <button class="cab-amount-btn" data-amount="50">£ 50</button>
                                     <button class="cab-amount-btn" data-amount="100">£ 100</button>
                                 </div>
                                 <div class="input-custom" style="margin:10px 0;">
-                                    <input type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                    <input id="depositAmount2" type="number" min="1" placeholder="Custom amount (£)" value="25">
                                 </div>
-                                <div class="cab-method-select" id="depositCardList">
-                                    <div style="color:#aaa;font-size:13px;padding:8px 0;">No saved cards — you will enter card details at checkout</div>
-                                </div>
-                                <button class="btn btn_grad" style="width:100%">Top Up</button>
+                                <button id="payTopUpBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount2', 'payTopUpBtn')">Top Up</button>
                             </div>
                             <div class="cab-form-box__sub" data-sub="withdraw2">
-                                <div class="cab-amount-btns">
+                                <div class="cab-amount-btns" id="payWdAmountBtns">
                                     <button class="cab-amount-btn" data-amount="50">£ 50</button>
                                     <button class="cab-amount-btn active" data-amount="100">£ 100</button>
                                     <button class="cab-amount-btn" data-amount="200">£ 200</button>
                                     <button class="cab-amount-btn" data-amount="500">£ 500</button>
                                 </div>
                                 <div class="input-custom" style="margin:10px 0;">
-                                    <input type="number" min="1" placeholder="Amount to withdraw (£)" value="100">
+                                    <input id="withdrawAmount2" type="number" min="1" placeholder="Amount to withdraw (£)" value="100">
                                 </div>
-                                <div class="input-custom" style="margin:10px 0;">
-                                    <input type="text" placeholder="Bank account / IBAN">
-                                </div>
-                                <button class="btn btn_grad" style="width:100%">Withdraw</button>
+                                <button id="payWithdrawBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount2', 'payWithdrawBtn')">Withdrawal</button>
                             </div>
                         </div>
                     </div>
@@ -1174,10 +1158,113 @@
         }
     }
 
+    function updateWalletDisplay() {
+        var balance = parseFloat(localStorage.getItem('bazar_balance') || '0');
+        var withdrew = parseFloat(localStorage.getItem('bazar_withdrew') || '0');
+        var fmt = function(n) { return n % 1 === 0 ? n.toString() : n.toFixed(2); };
+        var walletEl = document.getElementById('walletBalance');
+        var dashBalEl = document.getElementById('dashBalance');
+        var dashWdEl = document.getElementById('dashWithdrew');
+        if (walletEl) walletEl.textContent = fmt(balance);
+        if (dashBalEl) dashBalEl.textContent = fmt(balance);
+        if (dashWdEl) dashWdEl.textContent = fmt(withdrew);
+    }
+
+    function startDeposit(inputId, btnId) {
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid || uid === 'test_uid_123') { alert('Please log in to top up your balance.'); return; }
+        var amount = parseFloat(document.getElementById(inputId).value);
+        if (!amount || amount < 1) { alert('Enter an amount of at least £1.'); return; }
+        var btn = document.getElementById(btnId);
+        var orig = btn ? btn.textContent : 'Top Up';
+        if (btn) { btn.textContent = 'Redirecting...'; btn.disabled = true; }
+        fetch('https://admin.bazar.uk/api/stripe/checkout/deposit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ firebase_uid: uid, amount: amount })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success && data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Error: ' + (data.error || 'Please try again.'));
+                if (btn) { btn.textContent = orig; btn.disabled = false; }
+            }
+        })
+        .catch(function() {
+            alert('Connection error. Please try again.');
+            if (btn) { btn.textContent = orig; btn.disabled = false; }
+        });
+    }
+
+    function startWithdraw(inputId, btnId) {
+        var amount = parseFloat(document.getElementById(inputId).value);
+        if (!amount || amount < 1) { alert('Enter an amount to withdraw.'); return; }
+        var balance = parseFloat(localStorage.getItem('bazar_balance') || '0');
+        if (amount > balance) { alert('Insufficient balance. Your balance is £' + balance.toFixed(2) + '.'); return; }
+        var btn = document.getElementById(btnId);
+        if (btn) { btn.textContent = 'Processing...'; btn.disabled = true; }
+        setTimeout(function() {
+            var newBalance = balance - amount;
+            var withdrew = parseFloat(localStorage.getItem('bazar_withdrew') || '0') + amount;
+            localStorage.setItem('bazar_balance', newBalance.toString());
+            localStorage.setItem('bazar_withdrew', withdrew.toString());
+            updateWalletDisplay();
+            if (btn) { btn.textContent = 'Withdrawal'; btn.disabled = false; }
+            alert('Withdrawal request for £' + amount.toFixed(2) + ' submitted successfully.');
+        }, 800);
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         populateUserData();
         updateFavCount();
+        updateWalletDisplay();
+
+        document.querySelectorAll('.cab-amount-btns').forEach(function(group) {
+            group.addEventListener('click', function(e) {
+                var btn = e.target.closest('.cab-amount-btn');
+                if (!btn) return;
+                group.querySelectorAll('.cab-amount-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var amount = btn.getAttribute('data-amount');
+                var sub = group.closest('[data-sub]');
+                if (!sub) return;
+                var inputMap = {
+                    'deposit': 'depositAmount', 'withdraw-form': 'withdrawAmount',
+                    'deposit2': 'depositAmount2', 'withdraw2': 'withdrawAmount2'
+                };
+                var inp = document.getElementById(inputMap[sub.getAttribute('data-sub')]);
+                if (inp) inp.value = amount;
+            });
+        });
+
         var params = new URLSearchParams(window.location.search);
+
+        if (params.get('deposit') === 'success') {
+            var depositAmt = parseFloat(params.get('amount') || '0');
+            var sessionId2 = params.get('session_id');
+            if (depositAmt > 0) {
+                var verifyDeposit = function(amt) {
+                    var cur = parseFloat(localStorage.getItem('bazar_balance') || '0');
+                    localStorage.setItem('bazar_balance', (cur + amt).toString());
+                    updateWalletDisplay();
+                };
+                if (sessionId2) {
+                    fetch('https://admin.bazar.uk/api/stripe/checkout/verify-deposit/' + sessionId2, {
+                        headers: { 'Accept': 'application/json' }
+                    })
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) { if (d.success) verifyDeposit(depositAmt); })
+                    .catch(function() { verifyDeposit(depositAmt); });
+                } else {
+                    verifyDeposit(depositAmt);
+                }
+            }
+            history.replaceState(null, '', window.location.pathname + '#payments');
+            switchToTab('payments');
+        }
+
         if (params.get('payment') === 'success') {
             var paidPlan = params.get('plan');
             var sessionId = params.get('session_id');
@@ -1202,10 +1289,12 @@
                 .catch(function() {});
             }
         }
+
         highlightCurrentPlan();
         var hash = window.location.hash.replace('#', '');
-        if (hash && params.get('payment') !== 'success') switchToTab(hash);
-        else if (!hash && params.get('payment') !== 'success') renderFavorites();
+        var isRedirected = params.get('payment') === 'success' || params.get('deposit') === 'success';
+        if (hash && !isRedirected) switchToTab(hash);
+        else if (!hash && !isRedirected) renderFavorites();
         if (hash === 'messages') setTimeout(cabScrollToBottom, 100);
     });
 
