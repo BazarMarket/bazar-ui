@@ -1256,20 +1256,25 @@
         if (filterBtn) filterBtn.textContent = 'All (' + ads.length + ')';
         if (ads.length === 0) return;
         var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
-        var statusLabel = { pending: 'Under review', active: 'Active', rejected: 'Rejected' };
-        var html = '<table class="cab-table"><thead><tr>' +
-            '<th>Title</th><th>Type</th><th>Price</th><th>City</th><th>Date</th><th>Status</th>' +
+        var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
+        var html = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
+            '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
             '</tr></thead><tbody>';
         ads.forEach(function(ad) {
-            var sc = statusClass[ad.status] || 'cab-status--inactive';
+            var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
+            var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
             html += '<tr>' +
-                '<td><span class="cab-ads-table-title">' + (ad.title || '—') + '</span></td>' +
-                '<td>' + (ad.type || '—') + '</td>' +
-                '<td>£ ' + (ad.price ? ad.price.toLocaleString() : '—') + '</td>' +
-                '<td>' + (ad.city || '—') + '</td>' +
-                '<td>' + (ad.date || '—') + '</td>' +
+                '<td>' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></td>' +
+                '<td>' + (ad.propType || ad.type || '—') + '</td>' +
+                '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
+                '<td>—</td>' +
                 '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
+                '<td><div class="cab-table-actions">' +
+                '<div class="cab-icon-btn icon-refresh" title="Renew"></div>' +
+                '<div class="cab-icon-btn icon-update" title="Edit"></div>' +
+                '<div class="cab-icon-btn icon-del cab-icon-btn--danger" title="Delete"></div>' +
+                '</div></td>' +
                 '</tr>';
         });
         html += '</tbody></table>';
