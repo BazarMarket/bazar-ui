@@ -1480,23 +1480,28 @@
 
       var conditionHiddenFor = ['Land'];
 
+      /* API accepts: new | resale | under_construction */
       var conditionOptions = {
-         'Cars':            ['New', 'Used', 'Classic'],
-         'Motorbikes':      ['New', 'Used', 'Classic'],
-         'Trucks':          ['New', 'Used', 'Classic'],
-         'Boats & marine':  ['New', 'Used', 'Classic'],
-         'Auto parts':      ['New', 'Used'],
-         'Accessories':     ['New', 'Used']
+         'Cars':            [{v:'new',label:'New'},{v:'resale',label:'Used'},{v:'resale',label:'Classic'}],
+         'Motorbikes':      [{v:'new',label:'New'},{v:'resale',label:'Used'},{v:'resale',label:'Classic'}],
+         'Trucks':          [{v:'new',label:'New'},{v:'resale',label:'Used'},{v:'resale',label:'Classic'}],
+         'Boats & marine':  [{v:'new',label:'New'},{v:'resale',label:'Used'},{v:'resale',label:'Classic'}],
+         'Auto parts':      [{v:'new',label:'New'},{v:'resale',label:'Used'}],
+         'Accessories':     [{v:'new',label:'New'},{v:'resale',label:'Used'}]
       };
 
-      var conditionDefault = ['New', 'Like new', 'Good', 'Fair'];
+      var conditionDefault = [
+         {v:'new',            label:'New build'},
+         {v:'resale',         label:'Resale'},
+         {v:'under_construction', label:'Under construction'}
+      ];
 
       function setConditionOptions(propType) {
          var sel = document.getElementById('conditionSelect');
          if (!sel) return;
          var opts = conditionOptions[propType] || conditionDefault;
          sel.innerHTML = '<option value="">Select condition</option>' +
-            opts.map(function(o) { return '<option>' + o + '</option>'; }).join('');
+            opts.map(function(o) { return '<option value="' + o.v + '">' + o.label + '</option>'; }).join('');
       }
 
       var bedroomsHiddenFor = ['Land', 'Commercial property', 'Studio', 'Building'];

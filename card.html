@@ -893,7 +893,8 @@
       specs += specRow('Area', p.district);
       specs += specRow('Type', p.property_type);
       specs += specRow('Listing', p.listing_type);
-      specs += specRow('Condition', p.condition);
+      var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
+      specs += specRow('Condition', condLabel[p.condition] || p.condition);
       specs += specRow('Number of Bedrooms', p.bedrooms);
       specs += specRow('Number of Bathrooms', p.bathrooms);
       specs += specRow('Address', p.address);
