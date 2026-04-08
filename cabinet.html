@@ -1228,16 +1228,20 @@
                 var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
                     if (status === 'OK' && results[0]) {
-                        var locality = '', postalTown = '', area2 = '', area1 = '', postcode = '';
+                        var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
                         results[0].address_components.forEach(function(c) {
                             if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
                             if (c.types.indexOf('locality') !== -1) locality = c.long_name;
                             if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
                             if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
-                            if (c.types.indexOf('postal_code') !== -1) postcode = c.long_name;
+                            if (c.types.indexOf('country') !== -1) country = c.short_name;
                         });
-                        var mainCity = postalTown || locality || area2 || area1 || '';
-                        var parts = [mainCity, postcode].filter(Boolean);
+                        var parts = [];
+                        var mainCity = postalTown || locality || '';
+                        if (mainCity) parts.push(mainCity);
+                        var region = area2 || area1 || '';
+                        if (region && region !== mainCity) parts.push(region);
+                        if (country) parts.push(country);
                         var address = parts.length > 0 ? parts.join(', ') : results[0].formatted_address;
                         if (field) field.value = address;
                         setStatus('✓ Location found', '#4caf50');
