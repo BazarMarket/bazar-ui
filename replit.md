@@ -249,6 +249,61 @@ else → doLogin()                                    // DEV/Replit: прямо�
 
 HTML/CSS/JS → future migration to Laravel + Blade + PostgreSQL + Filament admin (Hetzner CX22)
 
+## ⚠️ КРИТИЧНО: DEV vs PRODUCTION — cabinet.html
+
+У нас **один файл `cabinet.html`** для всех сред. Разделение реализовано через `window.location.hostname`.
+
+### Правило при деплое
+
+**НИКОГДА не менять логику ниже при переносе кода DEV → PROD.**
+Продакшн-скрипт в конце `cabinet.html` (тег `<script>` перед `</body>`) — **неприкосновенный блок**.
+
+### Что скрывается на www.bazar.uk (и только там)
+
+| Элемент | ID | На DEV/Replit | На prod (www.bazar.uk) |
+|---|---|---|---|
+| Wallet виджет в шапке | `walletWidgetCell`, `walletSep` | ✅ виден | ❌ скрыт |
+| My Payments в меню пользователя | `menuMyPayments` | ✅ виден | ❌ скрыт |
+| My Payments в сайдбаре | `navMyPayments` | ✅ виден | ❌ скрыт |
+| Deposit/Withdraw формы на Dashboard | `devDashSections` | ✅ видны | ❌ скрыты |
+| Recent Transactions на Dashboard | `prodDashRecentTxn` | ❌ скрыт | ✅ виден |
+| Deposit/Withdraw в My Payments | `devPayForm` | ✅ видны | ❌ скрыты |
+| Transaction History с фильтрами | `prodTxnFull` | ❌ скрыт | ✅ виден |
+
+### Продакшн-скрипт (в конце cabinet.html, НЕ УДАЛЯТЬ)
+
+```javascript
+if (window.location.hostname === 'www.bazar.uk') {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Скрыть wallet + My Payments nav
+        ['walletWidgetCell','walletSep','menuMyPayments','navMyPayments'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+        });
+        // Dashboard: скрыть DEV, показать PROD
+        var devDash  = document.getElementById('devDashSections');
+        var prodDash = document.getElementById('prodDashRecentTxn');
+        if (devDash)  devDash.style.display  = 'none';
+        if (prodDash) prodDash.style.display = '';
+        // Payments: скрыть Deposit/Withdraw, показать Transaction History
+        var devPay  = document.getElementById('devPayForm');
+        var prodPay = document.getElementById('prodTxnFull');
+        if (devPay)  devPay.style.display  = 'none';
+        if (prodPay) prodPay.style.display = '';
+    });
+}
+```
+
+### Почему так сделано
+
+Stripe проверяет сайт и не должен видеть Deposit/Withdraw (это не seller flow).
+Когда Stripe-проверка пройдёт и карты подключат нормально — удалим продакшн-скрипт и всё вернётся.
+
+### Правило при добавлении нового функционала
+
+- Если функционал **только для DEV** — оборачивай в `<div id="devXxx">`, скрывай через продакшн-скрипт
+- Если функционал **только для PROD** — оборачивай в `<div id="prodXxx" style="display:none">`, показывай через продакшн-скрипт
+- Продакшн-скрипт всегда в самом конце перед `</body>`
+
 ## Коммуникация
 
 Общаться с пользователем на русском языке.
