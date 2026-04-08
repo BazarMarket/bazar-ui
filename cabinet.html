@@ -1740,5 +1740,52 @@
     });
 </script>
 
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+<script>
+(function() {
+    var cfg = {
+        apiKey: "AIzaSyDoE8UOGnc4IXprZG-TEce514JI1cwo0Z4",
+        authDomain: "bazar-code-auth.firebaseapp.com",
+        projectId: "bazar-code-auth",
+        storageBucket: "bazar-code-auth.firebasestorage.app",
+        messagingSenderId: "1065826568544",
+        appId: "1:1065826568544:web:f573e9e85dd9fab9483605"
+    };
+    var app;
+    try { app = firebase.app(); } catch(e) { app = firebase.initializeApp(cfg); }
+    var auth = firebase.auth(app);
+
+    auth.onAuthStateChanged(function(user) {
+        if (!user) return;
+        var uid = user.uid;
+        localStorage.setItem('bazar_firebase_uid', uid);
+
+        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            if (!d.exists || !d.name) return;
+            localStorage.setItem('bazar_username', d.name);
+            localStorage.setItem('bazar_gender',   d.gender  || 'male');
+            localStorage.setItem('bazar_plan',     d.plan    || 'free');
+            if (d.phone)   localStorage.setItem('bazar_phone',   d.phone);
+            if (d.email)   localStorage.setItem('bazar_email',   d.email);
+            if (d.address) localStorage.setItem('bazar_address', d.address);
+
+            var nameEl    = document.getElementById('header-username');
+            var welcomeEl = document.getElementById('cabWelcomeName');
+            var phoneEl   = document.getElementById('header-phone');
+            if (nameEl)    nameEl.textContent    = d.name;
+            if (welcomeEl) welcomeEl.textContent = d.name;
+            if (phoneEl && d.phone) phoneEl.textContent = d.phone;
+
+            if (typeof highlightCurrentPlan === 'function') highlightCurrentPlan();
+        })
+        .catch(function() {});
+    });
+})();
+</script>
 
 </body></html>
