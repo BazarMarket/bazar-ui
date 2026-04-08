@@ -1247,20 +1247,35 @@
         if (tab === 'my-ads') loadMyAds();
     }
 
-    function loadMyAds() {
+    function loadMyAds(filter) {
         if (window.location.hostname !== 'www.bazar.uk') return;
+        filter = filter || 'all';
         var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
         var table = document.getElementById('myAdsTable');
-        var filterBtn = document.querySelector('.cab-ads-filter .cab-filter-btn');
         if (!table) return;
-        if (filterBtn) filterBtn.textContent = 'All (' + ads.length + ')';
+        var nActive  = ads.filter(function(a){ return a.status === 'active'; }).length;
+        var nInactive= ads.filter(function(a){ return a.status === 'rejected'; }).length;
+        var nPending = ads.filter(function(a){ return a.status === 'pending'; }).length;
+        var filterBtns = document.querySelectorAll('.cab-ads-filter .cab-filter-btn');
+        var labels = ['All (' + ads.length + ')', 'Active (' + nActive + ')', 'Inactive (' + nInactive + ')', 'Pending (' + nPending + ')'];
+        filterBtns.forEach(function(btn, i) {
+            if (labels[i]) btn.textContent = labels[i];
+            btn.classList.remove('active');
+            var map = ['all','active','inactive','pending'];
+            if (map[i] === filter) btn.classList.add('active');
+            btn.onclick = function() { loadMyAds(map[i]); };
+        });
         if (ads.length === 0) return;
+        var filtered = filter === 'all' ? ads :
+                       filter === 'active'   ? ads.filter(function(a){ return a.status === 'active'; }) :
+                       filter === 'inactive' ? ads.filter(function(a){ return a.status === 'rejected'; }) :
+                       filter === 'pending'  ? ads.filter(function(a){ return a.status === 'pending'; }) : ads;
         var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
         var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
         var html = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
             '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
             '</tr></thead><tbody>';
-        ads.forEach(function(ad) {
+        filtered.forEach(function(ad) {
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
             var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
@@ -1277,6 +1292,7 @@
                 '</div></td>' +
                 '</tr>';
         });
+        if (filtered.length === 0) html += '<tr><td colspan="6" style="text-align:center;padding:32px;color:#aaa;">No ads in this category</td></tr>';
         html += '</tbody></table>';
         table.innerHTML = html;
     }
