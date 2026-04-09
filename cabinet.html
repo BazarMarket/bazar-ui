@@ -1275,12 +1275,14 @@
             var deactLbl = ad.status === 'rejected' ? 'Activate' : 'Deactivate';
             html += '<tr>' +
                 '<td>' +
-                  '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></div>' +
-                  '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">' +
-                    '<button class="cab-row-btn cab-row-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">Update</button>' +
-                    '<button class="cab-row-btn" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                    '<button class="cab-row-btn" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
-                    '<button class="cab-row-btn cab-row-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                  '<div style="display:flex;flex-direction:column;gap:8px;">' +
+                    '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></div>' +
+                    '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+                      '<button class="cab-row-btn cab-row-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">Update</button>' +
+                      '<button class="cab-row-btn" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
+                      '<button class="cab-row-btn" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
+                      '<button class="cab-row-btn cab-row-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                    '</div>' +
                   '</div>' +
                 '</td>' +
                 '<td>' + (ad.propType || ad.type || '—') + '</td>' +
