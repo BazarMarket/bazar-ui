@@ -1279,9 +1279,9 @@
                     '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></div>' +
                     '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">' +
                       '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#ff6a00;color:#fff;cursor:pointer;" onclick="adAction(\'update\',\'' + ad.id + '\')">Update</button>' +
-                      '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#ff6a00;color:#fff;cursor:pointer;" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                      '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#333;cursor:pointer;" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
-                      '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e74c3c;color:#fff;cursor:pointer;" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                      '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
+                      '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
+                      '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
                     '</div>' +
                   '</div>' +
                 '</td>' +
