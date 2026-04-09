@@ -2191,7 +2191,7 @@
         var _demo = new URLSearchParams(window.location.search).get('boost_demo');
         var showBoost = (currentUser && currentPlan === 'free' && item.s === currentUser) || (_demo === '1' && item.stk && item.stk.length === 0 && !item.cc);
         var boostBtn = showBoost
-          ? '<button style="position:absolute;top:16px;right:16px;z-index:3;padding:6px 16px;font-size:13px;font-weight:600;border-radius:8px;border:1.5px solid #ffb87a;background:#fff;color:#e55a00;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.10);" onmouseover="this.style.boxShadow=\'0 2px 10px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'0 1px 6px rgba(0,0,0,0.10)\'">Boost to Top</button>'
+          ? '<button style="position:absolute;top:16px;right:16px;z-index:3;padding:6px 16px;font-size:13px;font-weight:600;border-radius:8px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.10);" onmouseover="this.style.boxShadow=\'0 2px 10px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'0 1px 6px rgba(0,0,0,0.10)\'">Boost to Top</button>'
           : '';
         return '<div class="product" style="position:relative;">'+boostBtn+
           '<div class="product__left"><div class="product__gallery"><div class="product-gallery">'+
