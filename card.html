@@ -123,7 +123,7 @@
                         </div>
                         <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
                            <div id="boost-top-nav-item" style="display:none;">
-                              <a href="#" class="card-head__boost" onclick="return false;">Boost to Top</a>
+                              <a href="#" class="card-head__boost" onclick="bazarBoostPay(window.location.href,''); return false;">Boost to Top</a>
                            </div>
                            <a href="#" class="card-head__edit">&#9998; Edit Ad</a>
                         </div>
@@ -1022,6 +1022,34 @@
 
          }); // end fetch
    })();
+   </script>
+
+   <script>
+   function bazarBoostPay(returnUrl, listingId) {
+     var uid = localStorage.getItem('bazar_firebase_uid') || '';
+     var apiBase = (window.location.hostname === 'www.bazar.uk')
+       ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
+       : '/api/boost-checkout';
+     var btn = document.querySelector('.card-head__boost');
+     if (btn) { btn.textContent = 'Processing…'; btn.style.pointerEvents = 'none'; }
+     fetch(apiBase, {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid })
+     })
+     .then(function(r){ return r.json(); })
+     .then(function(d){
+       if (d.success && d.url) { window.location.href = d.url; }
+       else {
+         alert('Payment error: ' + (d.error || 'Unknown error'));
+         if (btn) { btn.textContent = 'Boost to Top'; btn.style.pointerEvents = ''; }
+       }
+     })
+     .catch(function(){
+       alert('Could not connect to payment server. Please try again.');
+       if (btn) { btn.textContent = 'Boost to Top'; btn.style.pointerEvents = ''; }
+     });
+   }
    </script>
 
    <!-- ═══════════ GALLERY LIGHTBOX STYLES ═══════════ -->
