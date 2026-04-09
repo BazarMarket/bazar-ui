@@ -1039,9 +1039,7 @@
             btn.onclick = function() { loadMyAds(map[i]); };
         });
         if (ads.length === 0) {
-            table.innerHTML = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
-                '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
-                '</tr></thead><tbody><tr><td colspan="6" style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></td></tr></tbody></table>';
+            table.innerHTML = '<div style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></div>';
             return;
         }
         var filtered = filter === 'all' ? ads :
@@ -1050,36 +1048,45 @@
                        filter === 'pending'  ? ads.filter(function(a){ return a.status === 'pending'; }) : ads;
         var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
         var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
-        var html = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
-            '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
-            '</tr></thead><tbody>';
+        var html = '<div class="cab-ad-list">';
         filtered.forEach(function(ad) {
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
-            var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
+            var imgSrc = ad.photo || 'img/product.jpg';
             var isActive   = ad.status === 'active';
             var isInactive = ad.status === 'rejected';
             var deactBtn = isActive
                 ? '<button class="cab-act-btn cab-act-btn--pause" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">Deactivate</button>'
                 : isInactive
                     ? '<button class="cab-act-btn cab-act-btn--activate" onclick="adAction(\'activate\',\'' + ad.id + '\')">Activate</button>'
-                    : '<button class="cab-act-btn cab-act-btn--pause" disabled style="opacity:.4;cursor:default">Deactivate</button>';
-            html += '<tr>' +
-                '<td><a href="card.html?id=' + ad.id + '" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></a></td>' +
-                '<td>' + (ad.propType || ad.type || '—') + '</td>' +
-                '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
-                '<td>—</td>' +
-                '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
-                '<td><div class="cab-ad-btns">' +
-                '<button class="cab-act-btn cab-act-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">↑ Update</button>' +
-                '<button class="cab-act-btn cab-act-btn--edit" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                deactBtn +
-                '<button class="cab-act-btn cab-act-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
-                '</div></td>' +
-                '</tr>';
+                    : '';
+            var dateStr = ad.date ? new Date(ad.date).toLocaleDateString('en-GB') : '';
+            html +=
+                '<div class="cab-ad-card">' +
+                  '<a href="card.html?id=' + ad.id + '" class="cab-ad-card-thumb">' +
+                    '<img src="' + imgSrc + '" alt="">' +
+                  '</a>' +
+                  '<div class="cab-ad-card-body">' +
+                    '<div class="cab-ad-card-top">' +
+                      '<a href="card.html?id=' + ad.id + '" class="cab-ad-card-title">' + (ad.title || '—') + '</a>' +
+                      '<span class="cab-ad-card-price">£\u00a0' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
+                    '</div>' +
+                    '<div class="cab-ad-card-meta">' +
+                      '<span class="cab-ad-card-type">' + (ad.propType || ad.type || '—') + '</span>' +
+                      '<span class="cab-status ' + sc + '">' + sl + '</span>' +
+                    '</div>' +
+                    (dateStr ? '<div class="cab-ad-card-date">Posted: ' + dateStr + '</div>' : '') +
+                    '<div class="cab-ad-card-actions">' +
+                      '<button class="cab-act-btn cab-act-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">↑ Update</button>' +
+                      '<button class="cab-act-btn cab-act-btn--edit" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
+                      deactBtn +
+                      '<button class="cab-act-btn cab-act-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>';
         });
-        if (filtered.length === 0) html += '<tr><td colspan="6" style="text-align:center;padding:32px;color:#aaa;">No ads in this category</td></tr>';
-        html += '</tbody></table>';
+        if (filtered.length === 0) html += '<div style="text-align:center;padding:32px;color:#aaa;">No ads in this category</div>';
+        html += '</div>';
         table.innerHTML = html;
     }
 
