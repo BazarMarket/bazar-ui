@@ -211,6 +211,41 @@ else → doLogin()                                    // DEV/Replit: прямо�
 - Цена: чёрная (одна цена) или красная (две цены) — см. раздел "Цена"
 - Telegram синий: `#2aabee`
 
+## Boost to Top — логика и подключение
+
+### Где показывается кнопка
+| Страница | Место | Условие показа |
+|---|---|---|
+| `search.html` List View | Абсолютно сверху-справа карточки | Free plan + `item.s === bazar_username` |
+| `search.html` Grid View | В `.card__stikers` (top-left), видна при hover | Free plan + `item.s === bazar_username` |
+| `card.html` | Слева от кнопки Edit Ad в navbar | Free plan + `p.seller_name === bazar_username` + `!p.is_vip && !p.is_pro` |
+| `cabinet.html` My Ads | В строке действий с объявлением | Всегда (только Free-план пользователи видят свои объявления) |
+
+### Demo-режим (для тестирования)
+- URL-параметр `?boost_demo=1` показывает кнопку на объявлениях с `stk:[]` и `cc:''`
+- List View: `search.html?cat=sale&type=House&boost_demo=1`
+- Grid View: переключиться на Grid после перехода по ссылке выше
+- Card page: `card.html?id=10&boost_demo=1`
+
+### CSS классы
+- `.card__boost-btn` — Grid View (hover-кнопка в `.card__stikers`)
+- `.card-head__boost` — Card page navbar (красная #ff0000, hover #cc0000)
+
+### JS функция bazarBoostPay(returnUrl, listingId)
+Определена в `card.html`, `search.html`, `cabinet.html`. Логика:
+1. Берёт `bazar_firebase_uid` из localStorage
+2. Определяет API URL (prod vs dev/Replit)
+3. POST-запрос на сервер → получает Stripe Checkout URL
+4. Редиректит на Stripe. Success → `returnUrl?boosted=1`
+
+### API URL по средам
+- **www.bazar.uk**: `https://admin.bazar.uk/api/stripe/checkout/boost`
+- **Replit/dev**: `/api/boost-checkout` (server.py)
+
+### server.py (Replit dev)
+- `do_POST /api/boost-checkout` — создаёт Stripe Checkout Session £1 через `stripe` Python SDK
+- `STRIPE_SECRET_KEY` из env vars
+
 ## Stripe Integration (Laravel на admin.bazar.uk)
 
 ### Архитектура
@@ -227,11 +262,13 @@ else → doLogin()                                    // DEV/Replit: прямо�
 - `GET  /seller/stripe/refresh?uid=` — обновить onboarding ссылку
 - `GET  /seller/stripe/return?uid=` — синхронизировать статус аккаунта
 - `POST /api/stripe/checkout/plan` — Checkout сессия для PRO/VIP
+- `POST /api/stripe/checkout/boost` — Checkout сессия £1 для Boost to Top ← НОВЫЙ
 - `POST /api/stripe/webhook` — webhook от Stripe
 
 ### Планы (config/stripe.php)
 - PRO: £7.00 / 30 дней
 - VIP: £14.00 / 30 дней
+- Boost to Top: £1.00 / разовый платёж (metadata: source=boost_to_top)
 
 ### Таблицы БД
 - `customers` — добавлены: stripe_connected_account_id, stripe_onboarding_completed, stripe_details_submitted, stripe_charges_enabled, stripe_payouts_enabled, bazar_plan, bazar_plan_expires_at
