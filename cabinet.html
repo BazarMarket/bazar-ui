@@ -322,7 +322,6 @@
                                 <th>Price</th>
                                 <th>Views</th>
                                 <th>Status</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -335,13 +334,6 @@
                                 <td>£ 1,049</td>
                                 <td>142</td>
                                 <td><span class="cab-status cab-status--active">Active</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -352,13 +344,6 @@
                                 <td>£ 750</td>
                                 <td>389</td>
                                 <td><span class="cab-status cab-status--active">Active</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -369,13 +354,6 @@
                                 <td>£ 650/mo</td>
                                 <td>218</td>
                                 <td><span class="cab-status cab-status--active">Active</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -386,13 +364,6 @@
                                 <td>£ 380</td>
                                 <td>56</td>
                                 <td><span class="cab-status cab-status--inactive">Inactive</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-refresh" title="Reactivate"></div>
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -403,12 +374,6 @@
                                 <td>£ 420</td>
                                 <td>—</td>
                                 <td><span class="cab-status cab-status--pending">Pending</span></td>
-                                <td>
-                                    <div class="cab-table-actions">
-                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
-                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
-                                    </div>
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -1266,7 +1231,7 @@
         var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
         var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
         var html = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
-            '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
+            '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th>' +
             '</tr></thead><tbody>';
         ads.forEach(function(ad) {
             var sc = statusClass[ad.status] || 'cab-status--pending';
@@ -1289,11 +1254,7 @@
                 '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td>—</td>' +
                 '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
-                '<td><div class="cab-table-actions">' +
-                '<div class="cab-icon-btn icon-refresh" title="Renew"></div>' +
-                '<div class="cab-icon-btn icon-update" title="Edit"></div>' +
-                '<div class="cab-icon-btn icon-del cab-icon-btn--danger" title="Delete"></div>' +
-                '</div></td>' +
+                '' +
                 '</tr>';
         });
         html += '</tbody></table>';
