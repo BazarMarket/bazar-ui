@@ -471,6 +471,7 @@
     text-align: left;
     background: #fafafa;
     border-bottom: 1px solid #f0f0f0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 .cab-table td {
