@@ -1809,6 +1809,22 @@ body {
   background: #e07d28;
   color: #fff;
 }
+.card-head__boost {
+  display: inline-block;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+  text-decoration: none;
+  background: #e31836;
+  border-radius: 20px;
+  padding: 4px 14px;
+  transition: 0.3s;
+}
+.card-head__boost:hover {
+  background: #b8102a;
+  color: #fff;
+}
 .card-head__favorites::before {
   color: #ff9138;
   font-size: 40px;

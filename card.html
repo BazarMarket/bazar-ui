@@ -121,8 +121,13 @@
                         <div class="card-nav__item">
                            <a href="#" class="link-icon icon-fb">Sign for news</a>
                         </div>
-                        <div class="card-nav__item card-nav__item--edit">
-                           <a href="#" class="card-head__edit">&#9998; Edit Ad</a>
+                        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+                           <div id="boost-top-nav-item" style="display:none;">
+                              <a href="#" class="card-head__boost" onclick="return false;">Boost to Top</a>
+                           </div>
+                           <div class="card-nav__item">
+                              <a href="#" class="card-head__edit">&#9998; Edit Ad</a>
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -921,6 +926,19 @@
       el('prop-description').textContent = p.description;
 
       el('seller-name').textContent = p.seller_name;
+
+      /* ── Boost to Top button: Free plan owner only ── */
+      (function() {
+        var boostWrap = document.getElementById('boost-top-nav-item');
+        if (!boostWrap) return;
+        var curUser = localStorage.getItem('bazar_username') || '';
+        var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var isFree  = !p.is_vip && !p.is_pro;
+        var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
+        if (isFree && isOwner && curPlan === 'free') {
+          boostWrap.style.display = '';
+        }
+      })();
 
       function timeSince(dateStr) {
          var reg = new Date(dateStr);
