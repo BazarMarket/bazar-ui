@@ -2100,6 +2100,7 @@
         'House': [
           {s:'James Mitchell',t:'4-bedroom House in Alresford, Hampshire',imgs:['img/properties/house-hampshire.jpg','img/properties/house-oxford.jpg'],info:[['icon-bead','4 beds'],['icon-bath','3 bath'],['icon-house-area','210 m²'],['icon-Plot','0.4 acres']],p:'£650,000',l:'Alresford, Hampshire, UK',d:'Detached family home in a highly desirable village. Large landscaped garden, double garage, converted loft room.',dt:'03 04 2026 | 09:30',n:'115210',v:623,stk:['VIP','PRO'],cc:'card_orange',cy:'HAMPSHIRE'},
           {s:'Sarah Collins',t:'3-bedroom House in Didsbury, Manchester',imgs:['img/properties/house-manchester.jpg','img/properties/house-hampshire.jpg'],info:[['icon-bead','3 beds'],['icon-bath','2 bath'],['icon-house-area','148 m²'],['icon-Plot','0.2 acres']],p:'£310,000',l:'Didsbury, Manchester, UK',d:'Victorian semi-detached house on a popular tree-lined street. Bay windows, original features, modern fitted kitchen.',dt:'01 04 2026 | 14:10',n:'115205',v:489,stk:['PRO'],cc:'card_red',cy:'MANCHESTER'},
+          {s:'Alex Carter',t:'2-bedroom Bungalow in Headington, Oxford',imgs:['img/properties/house-oxford.jpg','img/properties/house-hampshire.jpg'],info:[['icon-bead','2 beds'],['icon-bath','1 bath'],['icon-house-area','95 m²'],['icon-Plot','0.15 acres']],p:'£290,000',l:'Headington, Oxford, UK',d:'Charming bungalow in a quiet residential area. Recently refurbished kitchen and bathroom, large garden.',dt:'09 04 2026 | 10:00',n:'115221',v:34,stk:[],cc:'',cy:'OXFORD'},
           {s:'Tom Harper',t:'5-bedroom House in Summertown, Oxford',imgs:['img/properties/house-oxford.jpg','img/properties/house-manchester.jpg'],info:[['icon-bead','5 beds'],['icon-bath','3 bath'],['icon-house-area','295 m²'],['icon-Plot','0.5 acres']],p:'£875,000',l:'Summertown, Oxford, UK',d:"Impressive detached home in one of Oxford's most sought-after areas. Mature garden, home office, close to top schools.",dt:'30 03 2026 | 11:45',n:'115198',v:741,stk:['VIP'],cc:'',cy:'OXFORD'},
           {s:'Emily Ward',t:'3-bedroom Cottage in Bathampton, Bath',imgs:['img/properties/cottage-bath.jpg','img/properties/cottage-cotswolds.jpg'],info:[['icon-bead','3 beds'],['icon-bath','2 bath'],['icon-house-area','132 m²'],['icon-Plot','0.3 acres']],p:'£485,000',l:'Bathampton, Bath, UK',d:'Charming stone cottage with original fireplaces and exposed beams. South-facing garden, new bathroom, walking distance from Bath.',dt:'28 03 2026 | 16:00',n:'115185',v:554,stk:['PRO'],cc:'card_orange',cy:'BATH'},
           {s:'Daniel Brooks',t:'4-bedroom Cottage in Bourton-on-the-Water, Cotswolds',imgs:['img/properties/cottage-cotswolds.jpg','img/properties/cottage-bath.jpg'],info:[['icon-bead','4 beds'],['icon-bath','2 bath'],['icon-house-area','175 m²'],['icon-Plot','0.6 acres']],p:'£595,000',l:'Bourton-on-the-Water, Cotswolds, UK',d:'Quintessential Cotswold stone cottage in an idyllic village. Original sash windows, AGA kitchen, large private garden.',dt:'26 03 2026 | 10:20',n:'115161',v:687,stk:['VIP','PRO'],cc:'card_red',cy:'COTSWOLDS'}
@@ -2213,11 +2214,16 @@
       }
       function buildGridCard(item) {
         var shortT = item.t.length > 38 ? item.t.substring(0,38)+'…' : item.t;
+        var _cu = localStorage.getItem('bazar_username') || '';
+        var _cp = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var _dg = new URLSearchParams(window.location.search).get('boost_demo');
+        var _showBoostG = (_cu && _cp === 'free' && item.s === _cu) || (_dg === '1' && item.stk && item.stk.length === 0 && !item.cc);
+        var boostBtnG = _showBoostG ? '<button class="card__boost-btn" onclick="event.stopPropagation();event.preventDefault();">Boost to Top</button>' : '';
         return '<div class="card '+(item.cc||'')+'" style="position:relative;cursor:pointer">'+
           '<a href="card.html" class="card-link" aria-label="View listing"></a>'+
           '<div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div>'+
           '<div class="card__info"><p class="card__name">'+shortT+'</p><p class="card__label">'+item.cy+'</p></div></div>'+
-          '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+'</div>'+
+          '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
           '<div class="card__down"><div class="card__prices"><span class="price-new">'+item.p+'</span></div>'+
