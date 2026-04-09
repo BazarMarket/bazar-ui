@@ -1021,13 +1021,34 @@
         if (tab === 'my-ads') loadMyAds();
     }
 
+    var _cachedAds = null;
     function loadMyAds(filter) {
         filter = filter || 'all';
-        var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+        var table = document.getElementById('myAdsTable');
+        if (!table) return;
+        if (_cachedAds) { renderAds(_cachedAds, filter); return; }
+        table.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;">Loading...</div>';
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid) {
+            table.innerHTML = '<div style="text-align:center;padding:48px;color:#aaa;">Please log in to see your ads.</div>';
+            return;
+        }
+        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                _cachedAds = d.data || [];
+                renderAds(_cachedAds, filter);
+            })
+            .catch(function() {
+                table.innerHTML = '<div style="text-align:center;padding:48px;color:#e53935;">Failed to load ads. Please try again.</div>';
+            });
+    }
+
+    function renderAds(ads, filter) {
         var table = document.getElementById('myAdsTable');
         if (!table) return;
         var nActive  = ads.filter(function(a){ return a.status === 'active'; }).length;
-        var nInactive= ads.filter(function(a){ return a.status === 'rejected'; }).length;
+        var nInactive= ads.filter(function(a){ return a.status === 'inactive' || a.status === 'rejected'; }).length;
         var nPending = ads.filter(function(a){ return a.status === 'pending'; }).length;
         var filterBtns = document.querySelectorAll('.cab-ads-filter .cab-filter-btn');
         var labels = ['All (' + ads.length + ')', 'Active (' + nActive + ')', 'Inactive (' + nInactive + ')', 'Pending (' + nPending + ')'];
@@ -1036,7 +1057,7 @@
             btn.classList.remove('active');
             var map = ['all','active','inactive','pending'];
             if (map[i] === filter) btn.classList.add('active');
-            btn.onclick = function() { loadMyAds(map[i]); };
+            btn.onclick = function() { renderAds(ads, map[i]); };
         });
         if (ads.length === 0) {
             table.innerHTML = '<div style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></div>';
@@ -1044,17 +1065,17 @@
         }
         var filtered = filter === 'all' ? ads :
                        filter === 'active'   ? ads.filter(function(a){ return a.status === 'active'; }) :
-                       filter === 'inactive' ? ads.filter(function(a){ return a.status === 'rejected'; }) :
+                       filter === 'inactive' ? ads.filter(function(a){ return a.status === 'inactive' || a.status === 'rejected'; }) :
                        filter === 'pending'  ? ads.filter(function(a){ return a.status === 'pending'; }) : ads;
-        var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
-        var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
+        var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive', inactive: 'cab-status--inactive' };
+        var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive', inactive: 'Inactive' };
         var html = '<div class="cab-ad-list">';
         filtered.forEach(function(ad) {
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
             var imgSrc = ad.photo || 'img/product.jpg';
             var isActive   = ad.status === 'active';
-            var isInactive = ad.status === 'rejected';
+            var isInactive = ad.status === 'inactive' || ad.status === 'rejected';
             var deactBtn = isActive
                 ? '<button class="cab-act-btn cab-act-btn--pause" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">Deactivate</button>'
                 : isInactive
@@ -1091,47 +1112,39 @@
     }
 
     function adAction(action, adId) {
-        var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+        if (action === 'edit') {
+            window.location.href = 'post-ad.html?edit=' + adId;
+            return;
+        }
         if (action === 'delete') {
             if (!confirm('Delete this ad? This cannot be undone.')) return;
-            ads = ads.filter(function(a) { return String(a.id) !== String(adId); });
-            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            loadMyAds();
+            if (_cachedAds) _cachedAds = _cachedAds.filter(function(a) { return String(a.id) !== String(adId); });
+            renderAds(_cachedAds || [], 'all');
             return;
         }
         if (action === 'deactivate') {
-            ads = ads.map(function(a) {
-                if (String(a.id) === String(adId)) a.status = 'rejected';
+            if (_cachedAds) _cachedAds = _cachedAds.map(function(a) {
+                if (String(a.id) === String(adId)) a.status = 'inactive';
                 return a;
             });
-            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            loadMyAds();
+            renderAds(_cachedAds || [], 'all');
             return;
         }
         if (action === 'activate') {
-            ads = ads.map(function(a) {
+            if (_cachedAds) _cachedAds = _cachedAds.map(function(a) {
                 if (String(a.id) === String(adId)) a.status = 'active';
                 return a;
             });
-            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            loadMyAds();
+            renderAds(_cachedAds || [], 'all');
             return;
         }
         if (action === 'update') {
-            ads = ads.map(function(a) {
-                if (String(a.id) === String(adId)) {
-                    var d = new Date();
-                    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                    a.date = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-                }
+            if (_cachedAds) _cachedAds = _cachedAds.map(function(a) {
+                if (String(a.id) === String(adId)) a.date = new Date().toISOString().slice(0,10);
                 return a;
             });
-            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            loadMyAds();
+            renderAds(_cachedAds || [], 'all');
             return;
-        }
-        if (action === 'edit') {
-            window.location.href = 'post-ad.html?edit=' + adId;
         }
     }
 
@@ -1806,6 +1819,8 @@
         if (!user) return;
         var uid = user.uid;
         localStorage.setItem('bazar_firebase_uid', uid);
+        _cachedAds = null;
+        if (typeof loadMyAds === 'function') loadMyAds();
 
         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
             headers: { 'Accept': 'application/json' }
