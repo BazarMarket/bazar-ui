@@ -2182,6 +2182,9 @@
         var slides = item.imgs.map(function(src){
           return '<div class="swiper-slide"><a href="card.html" class="product-gallery__img"><img src="'+src+'" alt="" class="img-cover"></a></div>';
         }).join('');
+        var sellerBg = item.cc === 'card_red' ? '#e31836' : item.cc === 'card_orange' ? '#ffae49' : '';
+        var sellerNameColor = sellerBg ? 'color:#fff;' : '';
+        var sellerStyle = sellerBg ? 'background:'+sellerBg+';padding:8px 14px;border-radius:6px 6px 0 0;margin:0 -24px 8px -24px;' : '';
         return '<div class="product">'+
           '<div class="product__left"><div class="product__gallery"><div class="product-gallery">'+
           '<div class="swiper"><div class="swiper-wrapper">'+slides+'</div>'+
@@ -2190,7 +2193,7 @@
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button>'+
           '</div></div>'+
           '<div class="product__center">'+
-          '<div class="product__seller"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name">'+item.s+'</span></div>'+
+          '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span></div>'+
           '<a href="card.html" class="product__title">'+item.t+'</a>'+
           '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
           '<div class="product__price-row"><span class="price-start">'+item.p+'</span></div>'+
