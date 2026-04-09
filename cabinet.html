@@ -1021,34 +1021,25 @@
         if (tab === 'my-ads') loadMyAds();
     }
 
-    var _cachedAds = null;
+    var _adsCache = null;
     function loadMyAds(filter) {
         filter = filter || 'all';
         var table = document.getElementById('myAdsTable');
         if (!table) return;
-        if (_cachedAds) { renderAds(_cachedAds, filter); return; }
-        table.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;">Loading...</div>';
+        if (_adsCache) { _renderMyAds(_adsCache, filter); return; }
         var uid = localStorage.getItem('bazar_firebase_uid');
-        if (!uid) {
-            table.innerHTML = '<div style="text-align:center;padding:48px;color:#aaa;">Please log in to see your ads.</div>';
-            return;
-        }
+        if (!uid) { _renderMyAds([], filter); return; }
+        table.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;">Loading...</div>';
         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
-            .then(function(d) {
-                _cachedAds = d.data || [];
-                renderAds(_cachedAds, filter);
-            })
-            .catch(function() {
-                table.innerHTML = '<div style="text-align:center;padding:48px;color:#e53935;">Failed to load ads. Please try again.</div>';
-            });
+            .then(function(d) { _adsCache = d.data || []; _renderMyAds(_adsCache, filter); })
+            .catch(function() { _renderMyAds([], filter); });
     }
-
-    function renderAds(ads, filter) {
+    function _renderMyAds(ads, filter) {
         var table = document.getElementById('myAdsTable');
         if (!table) return;
         var nActive  = ads.filter(function(a){ return a.status === 'active'; }).length;
-        var nInactive= ads.filter(function(a){ return a.status === 'inactive' || a.status === 'rejected'; }).length;
+        var nInactive= ads.filter(function(a){ return a.status === 'rejected' || a.status === 'inactive'; }).length;
         var nPending = ads.filter(function(a){ return a.status === 'pending'; }).length;
         var filterBtns = document.querySelectorAll('.cab-ads-filter .cab-filter-btn');
         var labels = ['All (' + ads.length + ')', 'Active (' + nActive + ')', 'Inactive (' + nInactive + ')', 'Pending (' + nPending + ')'];
@@ -1057,95 +1048,67 @@
             btn.classList.remove('active');
             var map = ['all','active','inactive','pending'];
             if (map[i] === filter) btn.classList.add('active');
-            btn.onclick = function() { renderAds(ads, map[i]); };
+            btn.onclick = function() { loadMyAds(map[i]); };
         });
         if (ads.length === 0) {
-            table.innerHTML = '<div style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></div>';
+            table.innerHTML = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
+                '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
+                '</tr></thead><tbody><tr><td colspan="6" style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></td></tr></tbody></table>';
             return;
         }
         var filtered = filter === 'all' ? ads :
                        filter === 'active'   ? ads.filter(function(a){ return a.status === 'active'; }) :
-                       filter === 'inactive' ? ads.filter(function(a){ return a.status === 'inactive' || a.status === 'rejected'; }) :
+                       filter === 'inactive' ? ads.filter(function(a){ return a.status === 'rejected'; }) :
                        filter === 'pending'  ? ads.filter(function(a){ return a.status === 'pending'; }) : ads;
-        var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive', inactive: 'cab-status--inactive' };
-        var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive', inactive: 'Inactive' };
-        var html = '<div class="cab-ad-list">';
+        var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
+        var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
+        var html = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
+            '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
+            '</tr></thead><tbody>';
         filtered.forEach(function(ad) {
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
-            var imgSrc = ad.photo || 'img/product.jpg';
+            var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
             var isActive   = ad.status === 'active';
-            var isInactive = ad.status === 'inactive' || ad.status === 'rejected';
+            var isInactive = ad.status === 'rejected';
             var deactBtn = isActive
                 ? '<button class="cab-act-btn cab-act-btn--pause" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">Deactivate</button>'
                 : isInactive
                     ? '<button class="cab-act-btn cab-act-btn--activate" onclick="adAction(\'activate\',\'' + ad.id + '\')">Activate</button>'
-                    : '';
-            var dateStr = ad.date ? new Date(ad.date).toLocaleDateString('en-GB') : '';
-            html +=
-                '<div style="display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid #f0f0f0;">' +
-                  '<a href="card.html?id=' + ad.id + '" style="flex-shrink:0;display:block;width:130px;height:100px;border-radius:8px;overflow:hidden;background:#f5f5f5;">' +
-                    '<img src="' + imgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' +
-                  '</a>' +
-                  '<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;">' +
-                    '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;">' +
-                      '<a href="card.html?id=' + ad.id + '" style="font-size:15px;font-weight:600;color:#1a1a1a;text-decoration:none;line-height:1.35;">' + (ad.title || '—') + '</a>' +
-                      '<span style="font-size:15px;font-weight:700;color:#1a1a1a;white-space:nowrap;">£\u00a0' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
-                    '</div>' +
-                    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
-                      '<span style="font-size:13px;color:#888;text-transform:capitalize;">' + (ad.propType || ad.type || '—') + '</span>' +
-                      '<span class="cab-status ' + sc + '">' + sl + '</span>' +
-                    '</div>' +
-                    (dateStr ? '<div style="font-size:12px;color:#aaa;">Posted: ' + dateStr + '</div>' : '') +
-                    '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">' +
-                      '<button class="cab-act-btn cab-act-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">↑ Update</button>' +
-                      '<button class="cab-act-btn cab-act-btn--edit" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                      deactBtn +
-                      '<button class="cab-act-btn cab-act-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
-                    '</div>' +
-                  '</div>' +
-                '</div>';
+                    : '<button class="cab-act-btn cab-act-btn--pause" disabled style="opacity:.4;cursor:default">Deactivate</button>';
+            html += '<tr>' +
+                '<td><a href="card.html?id=' + ad.id + '" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></a></td>' +
+                '<td>' + (ad.propType || ad.type || '—') + '</td>' +
+                '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
+                '<td>—</td>' +
+                '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
+                '<td><div class="cab-ad-btns">' +
+                '<button class="cab-act-btn cab-act-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">↑ Update</button>' +
+                '<button class="cab-act-btn cab-act-btn--edit" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
+                deactBtn +
+                '<button class="cab-act-btn cab-act-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                '</div></td>' +
+                '</tr>';
         });
-        if (filtered.length === 0) html += '<div style="text-align:center;padding:32px;color:#aaa;">No ads in this category</div>';
-        html += '</div>';
+        if (filtered.length === 0) html += '<tr><td colspan="6" style="text-align:center;padding:32px;color:#aaa;">No ads in this category</td></tr>';
+        html += '</tbody></table>';
         table.innerHTML = html;
     }
 
     function adAction(action, adId) {
-        if (action === 'edit') {
-            window.location.href = 'post-ad.html?edit=' + adId;
-            return;
-        }
+        if (action === 'edit') { window.location.href = 'post-ad.html?edit=' + adId; return; }
+        if (!_adsCache) return;
         if (action === 'delete') {
             if (!confirm('Delete this ad? This cannot be undone.')) return;
-            if (_cachedAds) _cachedAds = _cachedAds.filter(function(a) { return String(a.id) !== String(adId); });
-            renderAds(_cachedAds || [], 'all');
-            return;
+            _adsCache = _adsCache.filter(function(a) { return String(a.id) !== String(adId); });
+        } else if (action === 'deactivate') {
+            _adsCache = _adsCache.map(function(a) { if (String(a.id) === String(adId)) a.status = 'rejected'; return a; });
+        } else if (action === 'activate') {
+            _adsCache = _adsCache.map(function(a) { if (String(a.id) === String(adId)) a.status = 'active'; return a; });
+        } else if (action === 'update') {
+            _adsCache = _adsCache.map(function(a) { if (String(a.id) === String(adId)) a.date = new Date().toISOString().slice(0,10); return a; });
         }
-        if (action === 'deactivate') {
-            if (_cachedAds) _cachedAds = _cachedAds.map(function(a) {
-                if (String(a.id) === String(adId)) a.status = 'inactive';
-                return a;
-            });
-            renderAds(_cachedAds || [], 'all');
-            return;
-        }
-        if (action === 'activate') {
-            if (_cachedAds) _cachedAds = _cachedAds.map(function(a) {
-                if (String(a.id) === String(adId)) a.status = 'active';
-                return a;
-            });
-            renderAds(_cachedAds || [], 'all');
-            return;
-        }
-        if (action === 'update') {
-            if (_cachedAds) _cachedAds = _cachedAds.map(function(a) {
-                if (String(a.id) === String(adId)) a.date = new Date().toISOString().slice(0,10);
-                return a;
-            });
-            renderAds(_cachedAds || [], 'all');
-            return;
-        }
+        _renderMyAds(_adsCache, 'all');
     }
 
     function highlightCurrentPlan() {
@@ -1819,8 +1782,6 @@
         if (!user) return;
         var uid = user.uid;
         localStorage.setItem('bazar_firebase_uid', uid);
-        _cachedAds = null;
-        if (typeof loadMyAds === 'function') loadMyAds();
 
         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
             headers: { 'Accept': 'application/json' }
