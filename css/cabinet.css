@@ -750,16 +750,16 @@
 }
 
 .cab-ads-table-img {
-    width: 54px;
-    height: 42px;
+    width: 68px;
+    height: 54px;
     border-radius: 6px;
     object-fit: cover;
     flex-shrink: 0;
 }
 
 .cab-ads-table-title {
-    font-weight: 500;
-    color: #1a1a1a;
+    font-weight: 600;
+    color: #111;
 }
 
 .cab-status {
