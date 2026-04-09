@@ -933,9 +933,10 @@
         if (!boostWrap) return;
         var curUser = localStorage.getItem('bazar_username') || '';
         var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var _demoCard = new URLSearchParams(window.location.search).get('boost_demo');
         var isFree  = !p.is_vip && !p.is_pro;
         var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
-        if (isFree && isOwner && curPlan === 'free') {
+        if ((_demoCard === '1') || (isFree && isOwner && curPlan === 'free')) {
           boostWrap.style.display = '';
         }
       })();
