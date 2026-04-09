@@ -81,8 +81,12 @@
                 </a>
                 <div class="burger-body">
                     <div class="header-old__right">
+                        <div class="header-old__vsep" id="walletSep"></div>
+                        <div class="header-old__cell" id="walletWidgetCell">
+                            <div class="wallet-widget icon-win-wallet" onclick="switchToTab('payments')">£ <span id="walletBalance">0</span> <span class="wallet-plus"><span class="wallet-plus__icon">+</span></span></div>
+                        </div>
                         <div class="header-old__cell">
-                            <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                            <a href="#" class="btn btn_mini">+ post an ad</a>
                         </div>
                         <div class="header-old__cell">
                             <div class="icons-list">
@@ -102,7 +106,7 @@
                                     <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('settings')">My Profile</a>
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
                                     <a href="#" id="menuMyPayments" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
-                                    <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">My Favorites</a>
+                                    <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">Favorites</a>
                                     <a href="#" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                        <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
                                        <span class="subscription__stiker" id="subPlanBadge">Free</span>
@@ -172,14 +176,14 @@
             <div class="cab-panel active" data-panel="dashboard">
 
                 <div class="cab-panel__top">
-                    <h1 class="cab-panel__title">Dashboard</h1>
+                    <h1 class="cab-panel__title">Balance</h1>
                     <p class="cab-panel__welcome">Welcome back, <strong id="cabWelcomeName"></strong>!</p>
                 </div>
 
                 <!-- Stat cards -->
                 <div class="cab-stat-cards">
                     <div class="cab-stat-card cab-stat-card--accent">
-                        <p class="cab-stat-card__label">Total spent</p>
+                        <p class="cab-stat-card__label icon-win-wallet">Total spent</p>
                         <p class="cab-stat-card__value"><span id="dashBalance">0.00</span> <span>£</span></p>
                     </div>
                     <div class="cab-stat-card">
@@ -196,9 +200,86 @@
                     </div>
                 </div>
 
+                <!-- DEV: deposit/withdraw activity + forms (hidden on production) -->
+                <div id="devDashSections">
+
+                    <div class="cab-two-col">
+                        <div class="cab-box">
+                            <div class="cab-box__head">
+                                <p class="cab-box__title">Recent deposit activity</p>
+                                <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
+                            </div>
+                            <div class="cab-box__body">
+                                <table class="cab-table">
+                                    <thead><tr><th>Date</th><th>Method</th><th>Amount</th></tr></thead>
+                                    <tbody><tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No deposit activity yet</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="cab-box">
+                            <div class="cab-box__head">
+                                <p class="cab-box__title">Recent withdraw activity</p>
+                                <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
+                            </div>
+                            <div class="cab-box__body">
+                                <table class="cab-table">
+                                    <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                                    <tbody><tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No activity yet</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cab-two-col">
+                        <div class="cab-form-box">
+                            <div class="cab-form-box__tabs">
+                                <div class="cab-form-box__tab active" data-tab="deposit">Deposit</div>
+                                <div class="cab-form-box__tab" data-tab="withdraw-form">Withdraw</div>
+                            </div>
+                            <div class="cab-form-box__body">
+                                <div class="cab-form-box__sub active" data-sub="deposit">
+                                    <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
+                                    <div class="cab-amount-btns" id="dashDepAmountBtns">
+                                        <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                        <button class="cab-amount-btn active" data-amount="25">£ 25</button>
+                                        <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                        <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                    </div>
+                                    <div class="input-custom" style="margin:10px 0;">
+                                        <input id="depositAmount" type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                    </div>
+                                    <button id="dashTopUpBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount', 'dashTopUpBtn')">Top Up</button>
+                                </div>
+                                <div class="cab-form-box__sub" data-sub="withdraw-form">
+                                    <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:0 0 14px;">Enter the amount</p>
+                                    <div class="cab-amount-btns" id="dashWdAmountBtns">
+                                        <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                        <button class="cab-amount-btn active" data-amount="50">£ 50</button>
+                                        <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                        <button class="cab-amount-btn" data-amount="200">£ 200</button>
+                                    </div>
+                                    <div class="input-custom" style="margin:10px 0;">
+                                        <input id="withdrawAmount" type="number" min="1" placeholder="Amount to withdraw (£)" value="50">
+                                    </div>
+                                    <button id="dashWithdrawBtn" class="btn btn_grad" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount', 'dashWithdrawBtn')">Withdrawal</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cab-box">
+                            <div class="cab-box__head"><p class="cab-box__title">Upcoming bills</p></div>
+                            <div class="cab-box__body">
+                                <table class="cab-table">
+                                    <thead><tr><th>Description</th><th>Due date</th><th>Amount</th></tr></thead>
+                                    <tbody><tr><td colspan="3" style="text-align:center;color:#aaa;padding:16px">No upcoming bills</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
                 <!-- PROD: Recent Transactions preview (shown only on www.bazar.uk) -->
-                <div id="prodDashRecentTxn" class="cab-box" style="margin-top:8px;display:block">
+                <div id="prodDashRecentTxn" class="cab-box" style="margin-top:8px;display:none">
                     <div class="cab-box__head">
                         <p class="cab-box__title">Recent Transactions</p>
                         <span class="cab-box__link" onclick="switchToTab('payments')">See all</span>
@@ -232,7 +313,106 @@
                     <button class="cab-add-btn icon-win-plus" onclick="window.location.href='post-ad.html'">New Ad</button>
                 </div>
 
-                <div class="cab-ads-table" id="myAdsTable"></div>
+                <div class="cab-ads-table" id="myAdsTable">
+                    <table class="cab-table" style="min-width:600px;">
+                        <thead>
+                            <tr>
+                                <th style="width:40%">Ad</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Views</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="">
+                                    <span class="cab-ads-table-title">Villa for Sale in Tsada</span>
+                                </td>
+                                <td>Real Estate</td>
+                                <td>£ 1,049</td>
+                                <td>142</td>
+                                <td><span class="cab-status cab-status--active">Active</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/phone.jpg" alt="">
+                                    <span class="cab-ads-table-title">iPhone 14 Pro Max 256GB</span>
+                                </td>
+                                <td>Mobile phones</td>
+                                <td>£ 750</td>
+                                <td>389</td>
+                                <td><span class="cab-status cab-status--active">Active</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="">
+                                    <span class="cab-ads-table-title">2-Bed Apartment, Paphos</span>
+                                </td>
+                                <td>Real Estate</td>
+                                <td>£ 650/mo</td>
+                                <td>218</td>
+                                <td><span class="cab-status cab-status--active">Active</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Renew"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.5">
+                                    <span class="cab-ads-table-title">Sony PlayStation 5</span>
+                                </td>
+                                <td>Electronics</td>
+                                <td>£ 380</td>
+                                <td>56</td>
+                                <td><span class="cab-status cab-status--inactive">Inactive</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-refresh" title="Reactivate"></div>
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img class="cab-ads-table-img" src="img/product.jpg" alt="" style="opacity:.6">
+                                    <span class="cab-ads-table-title">Mountain Bike Trek X-Caliber</span>
+                                </td>
+                                <td>Sports</td>
+                                <td>£ 420</td>
+                                <td>—</td>
+                                <td><span class="cab-status cab-status--pending">Pending</span></td>
+                                <td>
+                                    <div class="cab-table-actions">
+                                        <div class="cab-icon-btn icon-update" title="Edit"></div>
+                                        <div class="cab-icon-btn icon-del cab-icon-btn--danger cab-delete-ad" title="Delete"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
 
@@ -246,7 +426,7 @@
                 <!-- Stat cards -->
                 <div class="cab-payments-top">
                     <div class="cab-stat-card cab-stat-card--accent">
-                        <p class="cab-stat-card__label">Total spent</p>
+                        <p class="cab-stat-card__label icon-win-wallet">Total spent</p>
                         <p class="cab-stat-card__value" id="payStatSpent">— <span>£</span></p>
                     </div>
                     <div class="cab-stat-card">
@@ -259,9 +439,55 @@
                     </div>
                 </div>
 
+                <!-- DEV: Deposit/Withdraw forms (hidden on production) -->
+                <div id="devPayForm" class="cab-two-col" style="margin-top:20px">
+                    <div class="cab-form-box">
+                        <div class="cab-form-box__tabs">
+                            <div class="cab-form-box__tab active" data-tab="deposit2">Deposit</div>
+                            <div class="cab-form-box__tab" data-tab="withdraw2">Withdraw</div>
+                        </div>
+                        <div class="cab-form-box__body">
+                            <div class="cab-form-box__sub active" data-sub="deposit2">
+                                <div class="cab-amount-btns" id="payDepAmountBtns">
+                                    <button class="cab-amount-btn" data-amount="10">£ 10</button>
+                                    <button class="cab-amount-btn active" data-amount="25">£ 25</button>
+                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                    <button class="cab-amount-btn" data-amount="100">£ 100</button>
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input id="depositAmount2" type="number" min="1" placeholder="Custom amount (£)" value="25">
+                                </div>
+                                <button id="payTopUpBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startDeposit('depositAmount2', 'payTopUpBtn')">Top Up</button>
+                            </div>
+                            <div class="cab-form-box__sub" data-sub="withdraw2">
+                                <div class="cab-amount-btns" id="payWdAmountBtns">
+                                    <button class="cab-amount-btn" data-amount="50">£ 50</button>
+                                    <button class="cab-amount-btn active" data-amount="100">£ 100</button>
+                                    <button class="cab-amount-btn" data-amount="200">£ 200</button>
+                                    <button class="cab-amount-btn" data-amount="500">£ 500</button>
+                                </div>
+                                <div class="input-custom" style="margin:10px 0;">
+                                    <input id="withdrawAmount2" type="number" min="1" placeholder="Amount to withdraw (£)" value="100">
+                                </div>
+                                <button id="payWithdrawBtn" class="btn btn_grad" style="width:100%;display:flex;align-items:center;justify-content:center;" onclick="startWithdraw('withdrawAmount2', 'payWithdrawBtn')">Withdrawal</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cab-box" id="devTxnCompact">
+                        <div class="cab-box__head"><p class="cab-box__title">Transaction History</p></div>
+                        <div class="cab-box__body">
+                            <table class="cab-table">
+                                <thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead>
+                                <tbody id="txnTableBodyDev">
+                                    <tr><td colspan="3" style="text-align:center;color:#aaa;padding:20px">Loading…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- PROD: Full transaction history with filters (shown only on www.bazar.uk) -->
-                <div id="prodTxnFull" class="cab-box" style="margin-top:20px;display:block">
+                <div id="prodTxnFull" class="cab-box" style="margin-top:20px;display:none">
                     <div class="cab-box__head">
                         <p class="cab-box__title">Transaction History</p>
                     </div>
@@ -904,16 +1130,16 @@
                         <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Ads" and click "+ New Ad". Fill in the category, title, description, price, and photos, then submit. Your ad will be reviewed and go live within a few hours.</p></div>
                     </div>
                     <div class="cab-faq-item">
-                        <div class="cab-faq-head"><p class="cab-faq-question">How do subscription plans work?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
-                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Subscriptions" and choose a PRO or VIP plan to upgrade your listing visibility.</p></div>
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I top up my balance?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Payments", choose a preset amount or enter a custom one, select your card, and click "Top Up". Funds appear instantly.</p></div>
                     </div>
                     <div class="cab-faq-item">
                         <div class="cab-faq-head"><p class="cab-faq-question">What is VIP / TOP promotion?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
-                        <div class="cab-faq-body"><p class="cab-faq-answer">VIP and TOP promotions put your ad at the top of search results and category pages. Both are paid from your subscription plan.</p></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">VIP and TOP promotions put your ad at the top of search results and category pages. Both are paid from your wallet balance and renew monthly.</p></div>
                     </div>
                     <div class="cab-faq-item">
-                        <div class="cab-faq-head"><p class="cab-faq-question">How do I manage my subscription?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
-                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Subscriptions" to view your current plan, upgrade from PRO to VIP, or renew your subscription.</p></div>
+                        <div class="cab-faq-head"><p class="cab-faq-question">How do I withdraw funds?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
+                        <div class="cab-faq-body"><p class="cab-faq-answer">Go to "My Payments", switch to the Withdraw tab, enter the amount and your bank details, then click "Withdraw". Processing takes 1–3 business days.</p></div>
                     </div>
                     <div class="cab-faq-item">
                         <div class="cab-faq-head"><p class="cab-faq-question">Is posting an ad free?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
@@ -1021,96 +1247,47 @@
         if (tab === 'my-ads') loadMyAds();
     }
 
-    var _adsCache = null;
-    function loadMyAds(filter) {
-        filter = filter || 'all';
+    function loadMyAds() {
         var table = document.getElementById('myAdsTable');
         if (!table) return;
-        if (_adsCache) { _renderMyAds(_adsCache, filter); return; }
         var uid = localStorage.getItem('bazar_firebase_uid');
-        if (!uid) { _renderMyAds([], filter); return; }
-        table.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;">Loading...</div>';
+        if (!uid) return;
         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
-            .then(function(d) { _adsCache = d.data || []; _renderMyAds(_adsCache, filter); })
-            .catch(function() { _renderMyAds([], filter); });
+            .then(function(d) { _doRenderAds(d.data || []); })
+            .catch(function() {});
     }
-    function _renderMyAds(ads, filter) {
+    function _doRenderAds(ads) {
         var table = document.getElementById('myAdsTable');
+        var filterBtn = document.querySelector('.cab-ads-filter .cab-filter-btn');
         if (!table) return;
-        var nActive  = ads.filter(function(a){ return a.status === 'active'; }).length;
-        var nInactive= ads.filter(function(a){ return a.status === 'rejected' || a.status === 'inactive'; }).length;
-        var nPending = ads.filter(function(a){ return a.status === 'pending'; }).length;
-        var filterBtns = document.querySelectorAll('.cab-ads-filter .cab-filter-btn');
-        var labels = ['All (' + ads.length + ')', 'Active (' + nActive + ')', 'Inactive (' + nInactive + ')', 'Pending (' + nPending + ')'];
-        filterBtns.forEach(function(btn, i) {
-            if (labels[i]) btn.textContent = labels[i];
-            btn.classList.remove('active');
-            var map = ['all','active','inactive','pending'];
-            if (map[i] === filter) btn.classList.add('active');
-            btn.onclick = function() { loadMyAds(map[i]); };
-        });
-        if (ads.length === 0) {
-            table.innerHTML = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
-                '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
-                '</tr></thead><tbody><tr><td colspan="6" style="text-align:center;padding:48px;color:#aaa;">You have no ads yet. <a href="post-ad.html" style="color:#ff6a00;">Post your first ad →</a></td></tr></tbody></table>';
-            return;
-        }
-        var filtered = filter === 'all' ? ads :
-                       filter === 'active'   ? ads.filter(function(a){ return a.status === 'active'; }) :
-                       filter === 'inactive' ? ads.filter(function(a){ return a.status === 'rejected'; }) :
-                       filter === 'pending'  ? ads.filter(function(a){ return a.status === 'pending'; }) : ads;
+        if (filterBtn) filterBtn.textContent = 'All (' + ads.length + ')';
+        if (ads.length === 0) return;
         var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
         var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
         var html = '<table class="cab-table" style="min-width:600px;"><thead><tr>' +
             '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th><th>Actions</th>' +
             '</tr></thead><tbody>';
-        filtered.forEach(function(ad) {
+        ads.forEach(function(ad) {
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
             var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
-            var isActive   = ad.status === 'active';
-            var isInactive = ad.status === 'rejected';
-            var deactBtn = isActive
-                ? '<button class="cab-act-btn cab-act-btn--pause" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">Deactivate</button>'
-                : isInactive
-                    ? '<button class="cab-act-btn cab-act-btn--activate" onclick="adAction(\'activate\',\'' + ad.id + '\')">Activate</button>'
-                    : '<button class="cab-act-btn cab-act-btn--pause" disabled style="opacity:.4;cursor:default">Deactivate</button>';
             html += '<tr>' +
-                '<td><a href="card.html?id=' + ad.id + '" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></a></td>' +
+                '<td>' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></td>' +
                 '<td>' + (ad.propType || ad.type || '—') + '</td>' +
                 '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td>—</td>' +
                 '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
-                '<td><div class="cab-ad-btns">' +
-                '<button class="cab-act-btn cab-act-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">↑ Update</button>' +
-                '<button class="cab-act-btn cab-act-btn--edit" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                deactBtn +
-                '<button class="cab-act-btn cab-act-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                '<td><div class="cab-table-actions">' +
+                '<div class="cab-icon-btn icon-refresh" title="Renew"></div>' +
+                '<div class="cab-icon-btn icon-update" title="Edit"></div>' +
+                '<div class="cab-icon-btn icon-del cab-icon-btn--danger" title="Delete"></div>' +
                 '</div></td>' +
                 '</tr>';
         });
-        if (filtered.length === 0) html += '<tr><td colspan="6" style="text-align:center;padding:32px;color:#aaa;">No ads in this category</td></tr>';
         html += '</tbody></table>';
         table.innerHTML = html;
     }
-
-    function adAction(action, adId) {
-        if (action === 'edit') { window.location.href = 'post-ad.html?edit=' + adId; return; }
-        if (!_adsCache) return;
-        if (action === 'delete') {
-            if (!confirm('Delete this ad? This cannot be undone.')) return;
-            _adsCache = _adsCache.filter(function(a) { return String(a.id) !== String(adId); });
-        } else if (action === 'deactivate') {
-            _adsCache = _adsCache.map(function(a) { if (String(a.id) === String(adId)) a.status = 'rejected'; return a; });
-        } else if (action === 'activate') {
-            _adsCache = _adsCache.map(function(a) { if (String(a.id) === String(adId)) a.status = 'active'; return a; });
-        } else if (action === 'update') {
-            _adsCache = _adsCache.map(function(a) { if (String(a.id) === String(adId)) a.date = new Date().toISOString().slice(0,10); return a; });
-        }
-        _renderMyAds(_adsCache, 'all');
-    }
-
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';
         document.querySelectorAll('.po-card').forEach(function(c) {
@@ -1181,35 +1358,57 @@
         }
 
         var uid = localStorage.getItem('bazar_firebase_uid');
-        if (uid) {
+        if (uid && (!email || !address)) {
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
-                    if (!d.exists) return;
-                    if (d.name && !localStorage.getItem('bazar_username')) {
-                        localStorage.setItem('bazar_username', d.name);
-                        if (elName)    elName.textContent    = d.name;
-                        if (elWelcome) elWelcome.textContent = d.name;
-                        var pts = d.name.trim().split(' ');
-                        if (elFirst) elFirst.value = pts[0] || '';
-                        if (elLast)  elLast.value  = pts.slice(1).join(' ') || '';
-                    } else if (d.name && !name) {
-                        localStorage.setItem('bazar_username', d.name);
-                        if (elName)    elName.textContent    = d.name;
-                        if (elWelcome) elWelcome.textContent = d.name;
+                    if (d.exists) {
+                        if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
+                        if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
                     }
-                    if (d.phone && !localStorage.getItem('bazar_phone')) {
-                        localStorage.setItem('bazar_phone', d.phone);
-                        if (elPhone) elPhone.textContent = d.phone;
-                        if (elPh)    elPh.value          = d.phone;
-                    }
-                    if (d.gender) { localStorage.setItem('bazar_gender', d.gender); }
-                    if (d.plan)   { localStorage.setItem('bazar_plan',   d.plan); }
-                    if (d.email)   { localStorage.setItem('bazar_email',   d.email);   if (elEmail) elEmail.value = d.email; }
-                    if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
                 })
                 .catch(function() {});
         }
+    }
+
+    function updateWalletDisplay() {
+        var balance = parseFloat(localStorage.getItem('bazar_balance') || '0');
+        var withdrew = parseFloat(localStorage.getItem('bazar_withdrew') || '0');
+        var fmt = function(n) { return n % 1 === 0 ? n.toString() : n.toFixed(2); };
+        var walletEl = document.getElementById('walletBalance');
+        var dashBalEl = document.getElementById('dashBalance');
+        var dashWdEl = document.getElementById('dashWithdrew');
+        if (walletEl) walletEl.textContent = fmt(balance);
+        if (dashBalEl) dashBalEl.textContent = fmt(balance);
+        if (dashWdEl) dashWdEl.textContent = fmt(withdrew);
+    }
+
+    function startDeposit(inputId, btnId) {
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid || uid === 'test_uid_123') { alert('Please log in to top up your balance.'); return; }
+        var amount = parseFloat(document.getElementById(inputId).value);
+        if (!amount || amount < 1) { alert('Enter an amount of at least £1.'); return; }
+        var btn = document.getElementById(btnId);
+        var orig = btn ? btn.textContent : 'Top Up';
+        if (btn) { btn.textContent = 'Redirecting...'; btn.disabled = true; }
+        fetch('https://admin.bazar.uk/api/stripe/checkout/deposit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ firebase_uid: uid, amount: amount })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success && data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Error: ' + (data.error || 'Please try again.'));
+                if (btn) { btn.textContent = orig; btn.disabled = false; }
+            }
+        })
+        .catch(function() {
+            alert('Connection error. Please try again.');
+            if (btn) { btn.textContent = orig; btn.disabled = false; }
+        });
     }
 
     function showAddressDropdown() {
@@ -1318,11 +1517,31 @@
         localStorage.setItem('bazar_local_txns', JSON.stringify(txns));
     }
 
+    function startWithdraw(inputId, btnId) {
+        var amount = parseFloat(document.getElementById(inputId).value);
+        if (!amount || amount < 1) { alert('Enter an amount to withdraw.'); return; }
+        var balance = parseFloat(localStorage.getItem('bazar_balance') || '0');
+        if (amount > balance) { alert('Insufficient balance. Your balance is £' + balance.toFixed(2) + '.'); return; }
+        var btn = document.getElementById(btnId);
+        if (btn) { btn.textContent = 'Processing...'; btn.disabled = true; }
+        setTimeout(function() {
+            var newBalance = balance - amount;
+            var withdrew = parseFloat(localStorage.getItem('bazar_withdrew') || '0') + amount;
+            localStorage.setItem('bazar_balance', newBalance.toString());
+            localStorage.setItem('bazar_withdrew', withdrew.toString());
+            saveLocalTxn('debit', 'Withdrawal', 'Withdrawal request', amount, 'paid');
+            updateWalletDisplay();
+            if (btn) { btn.textContent = 'Withdrawal'; btn.disabled = false; }
+            alert('Withdrawal request for £' + amount.toFixed(2) + ' submitted successfully.');
+            loadPayments();
+        }, 800);
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         populateUserData();
         updateFavCount();
+        updateWalletDisplay();
         loadPayments();
-        loadMyAds();
 
         var profileForm = document.getElementById('profileForm');
         if (profileForm) {
@@ -1369,6 +1588,8 @@
                 var sub = group.closest('[data-sub]');
                 if (!sub) return;
                 var inputMap = {
+                    'deposit': 'depositAmount', 'withdraw-form': 'withdrawAmount',
+                    'deposit2': 'depositAmount2', 'withdraw2': 'withdrawAmount2'
                 };
                 var inp = document.getElementById(inputMap[sub.getAttribute('data-sub')]);
                 if (inp) inp.value = amount;
@@ -1377,11 +1598,27 @@
 
         var params = new URLSearchParams(window.location.search);
 
+        if (params.get('deposit') === 'success') {
+            var depositAmt = parseFloat(params.get('amount') || '0');
+            var sessionId2 = params.get('session_id');
+            if (depositAmt > 0) {
+                var cur = parseFloat(localStorage.getItem('bazar_balance') || '0');
+                localStorage.setItem('bazar_balance', (cur + depositAmt).toString());
+                saveLocalTxn('credit', 'Deposit', 'Wallet Top-Up', depositAmt, 'paid');
+                updateWalletDisplay();
+                if (sessionId2) {
+                    fetch('https://admin.bazar.uk/api/stripe/checkout/verify-deposit/' + sessionId2, {
+                        headers: { 'Accept': 'application/json' }
+                    }).catch(function() {});
+                }
+            }
+            history.replaceState(null, '', window.location.pathname + '#payments');
+            switchToTab('payments');
+        }
 
         if (params.get('payment') === 'success') {
             var paidPlan = params.get('plan');
             var sessionId = params.get('session_id');
-            var paidAdId = params.get('ad_id');
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
                 var planPrice = paidPlan === 'pro' ? 7 : 14;
@@ -1389,14 +1626,6 @@
                 saveLocalTxn('debit', 'Subscription', 'Subscription ' + planLabel, planPrice, 'paid');
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            if (!paidAdId) {
-                var myAds = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
-                if (myAds.length) paidAdId = myAds[0].id;
-            }
-            if (paidAdId) {
-                window.location.href = 'card.html?id=' + paidAdId;
-                return;
-            }
             history.replaceState(null, '', window.location.pathname + '#subscriptions');
             switchToTab('subscriptions');
             if (sessionId) {
@@ -1404,15 +1633,11 @@
                     headers: { 'Accept': 'application/json' }
                 })
                 .then(function(r) { return r.json(); })
-                .then(function(verData) {
-                    if (verData.success && verData.plan) {
-                        localStorage.setItem('bazar_plan', verData.plan);
+                .then(function(data) {
+                    if (data.success && data.plan) {
+                        localStorage.setItem('bazar_plan', data.plan);
                         if (window.updatePlanBadge) updatePlanBadge();
                         highlightCurrentPlan();
-                    }
-                    var verAdId = verData.ad_id || verData.property_id;
-                    if (verAdId) {
-                        window.location.href = 'card.html?id=' + verAdId;
                     }
                 })
                 .catch(function() {});
@@ -1421,7 +1646,7 @@
 
         highlightCurrentPlan();
         var hash = window.location.hash.replace('#', '');
-        var isRedirected = params.get('payment') === 'success';
+        var isRedirected = params.get('payment') === 'success' || params.get('deposit') === 'success';
         if (hash && !isRedirected) switchToTab(hash);
         else if (!hash && !isRedirected) renderFavorites();
         if (hash === 'messages') setTimeout(cabScrollToBottom, 100);
@@ -1762,52 +1987,27 @@
     });
 </script>
 
-<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
 <script>
-(function() {
-    var cfg = {
-        apiKey: "AIzaSyDoE8UOGnc4IXprZG-TEce514JI1cwo0Z4",
-        authDomain: "bazar-code-auth.firebaseapp.com",
-        projectId: "bazar-code-auth",
-        storageBucket: "bazar-code-auth.firebasestorage.app",
-        messagingSenderId: "1065826568544",
-        appId: "1:1065826568544:web:f573e9e85dd9fab9483605"
-    };
-    var app;
-    try { app = firebase.app(); } catch(e) { app = firebase.initializeApp(cfg); }
-    var auth = firebase.auth(app);
-
-    auth.onAuthStateChanged(function(user) {
-        if (!user) return;
-        var uid = user.uid;
-        localStorage.setItem('bazar_firebase_uid', uid);
-
-        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
-            headers: { 'Accept': 'application/json' }
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-            if (!d.exists || !d.name) return;
-            localStorage.setItem('bazar_username', d.name);
-            localStorage.setItem('bazar_gender',   d.gender  || 'male');
-            localStorage.setItem('bazar_plan',     d.plan    || 'free');
-            if (d.phone)   localStorage.setItem('bazar_phone',   d.phone);
-            if (d.email)   localStorage.setItem('bazar_email',   d.email);
-            if (d.address) localStorage.setItem('bazar_address', d.address);
-
-            var nameEl    = document.getElementById('header-username');
-            var welcomeEl = document.getElementById('cabWelcomeName');
-            var phoneEl   = document.getElementById('header-phone');
-            if (nameEl)    nameEl.textContent    = d.name;
-            if (welcomeEl) welcomeEl.textContent = d.name;
-            if (phoneEl && d.phone) phoneEl.textContent = d.phone;
-
-            if (typeof highlightCurrentPlan === 'function') highlightCurrentPlan();
-        })
-        .catch(function() {});
-    });
-})();
+    /* ── Production-only: hide Wallet, My Payments nav + swap DEV→PROD sections ── */
+    if (window.location.hostname === 'www.bazar.uk') {
+        document.addEventListener('DOMContentLoaded', function() {
+            /* Hide wallet widget (balance/deposit/withdraw) only */
+            ['walletWidgetCell','walletSep'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            /* Dashboard: hide DEV sections, show PROD Recent Transactions */
+            var devDash  = document.getElementById('devDashSections');
+            var prodDash = document.getElementById('prodDashRecentTxn');
+            if (devDash)  devDash.style.display  = 'none';
+            if (prodDash) prodDash.style.display = '';
+            /* Payments panel: hide DEV Deposit/Withdraw, show PROD full Transaction History */
+            var devPay  = document.getElementById('devPayForm');
+            var prodPay = document.getElementById('prodTxnFull');
+            if (devPay)  devPay.style.display  = 'none';
+            if (prodPay) prodPay.style.display = '';
+        });
+    }
 </script>
 
 </body></html>
