@@ -1228,13 +1228,25 @@
         if (!table) return;
         if (filterBtn) filterBtn.textContent = 'All (' + ads.length + ')';
         if (ads.length === 0) return;
-        var statusClass = { pending: 'cab-status--pending', active: 'cab-status--active', rejected: 'cab-status--inactive' };
-        var statusLabel = { pending: 'Under Review', active: 'Active', rejected: 'Inactive' };
+        var statusBadge = {
+            active:       'background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;',
+            rejected:     'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db;',
+            inactive:     'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db;',
+            pending:      'background:#fef3c7;color:#92400e;border:1px solid #fcd34d;',
+            under_review: 'background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;'
+        };
+        var statusLabel = {
+            active:       'Active',
+            rejected:     'Inactive',
+            inactive:     'Inactive',
+            pending:      'Pending',
+            under_review: 'Under Review'
+        };
         var html = '<table class="cab-table" style="min-width:600px;border-collapse:separate;border-spacing:0 8px;"><thead><tr>' +
             '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th>' +
             '</tr></thead><tbody>';
         ads.forEach(function(ad) {
-            var sc = statusClass[ad.status] || 'cab-status--pending';
+            var sb = statusBadge[ad.status] || statusBadge['pending'];
             var sl = statusLabel[ad.status] || ad.status;
             var imgStyle = 'style="width:90px;height:72px;border-radius:6px;object-fit:cover;flex-shrink:0;"';
             var titleStyle = 'style="font-weight:600;color:#111;"';
@@ -1255,7 +1267,7 @@
                 '<td>' + (ad.propType || ad.type || '—') + '</td>' +
                 '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td>—</td>' +
-                '<td style="border-radius:0 8px 8px 0;"><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
+                '<td style="border-radius:0 8px 8px 0;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '' +
                 '</tr>';
         });
