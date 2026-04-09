@@ -1254,7 +1254,7 @@
             var img = ad.photo ? '<img class="cab-ads-table-img" ' + imgStyle + ' src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" ' + imgStyle + ' src="img/product.jpg" alt="">';
             var deactLbl = ad.status === 'rejected' ? 'Activate' : 'Deactivate';
             if (i > 0) html += '<tr><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
-            html += '<tr style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="window.location.href=\'card.html?id=' + ad.id + '\'">' +
+            html += '<tr style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="history.replaceState(null,\'\',location.pathname+\'#my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
