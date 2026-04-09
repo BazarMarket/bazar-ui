@@ -2188,7 +2188,7 @@
         var sellerStyle = sellerBg ? 'background:'+sellerBg+';padding:8px 14px;border-radius:6px 6px 0 0;margin:0 -24px 8px -24px;' : '';
         var currentUser = localStorage.getItem('bazar_username') || '';
         var currentPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-        var showBoost = currentUser && currentPlan === 'free' && item.s === currentUser;
+        var showBoost = currentUser && (currentPlan === 'free' || currentPlan === 'pro') && item.s === currentUser && !item.stk.includes('VIP');
         var boostBtn = showBoost
           ? '<button style="position:absolute;top:16px;right:16px;z-index:3;padding:6px 16px;font-size:13px;font-weight:600;border-radius:8px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.10);" onmouseover="this.style.boxShadow=\'0 2px 10px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'0 1px 6px rgba(0,0,0,0.10)\'" onclick="bazarBoostPay(window.location.href,\''+item.n+'\');event.stopPropagation();">Boost to Top</button>'
           : '';
@@ -2217,7 +2217,7 @@
         var _cu = localStorage.getItem('bazar_username') || '';
         var _cp = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
         var _dg = new URLSearchParams(window.location.search).get('boost_demo');
-        var _showBoostG = (_cu && _cp === 'free' && item.s === _cu) || (_dg === '1' && item.stk && item.stk.length === 0 && !item.cc);
+        var _showBoostG = (_cu && (_cp === 'free' || _cp === 'pro') && item.s === _cu && !item.stk.includes('VIP')) || (_dg === '1' && item.stk && !item.stk.includes('VIP'));
         var boostBtnG = _showBoostG ? '<button class="card__boost-btn" onclick="event.stopPropagation();event.preventDefault();bazarBoostPay(window.location.href,\''+item.n+'\');">Boost to Top</button>' : '';
         return '<div class="card '+(item.cc||'')+'" style="position:relative;cursor:pointer">'+
           '<a href="card.html" class="card-link" aria-label="View listing"></a>'+
@@ -2308,14 +2308,15 @@
 
    <script>
    function bazarBoostPay(returnUrl, listingId) {
-     var uid = localStorage.getItem('bazar_firebase_uid') || '';
+     var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+     var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
      var apiBase = (window.location.hostname === 'www.bazar.uk')
        ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
        : '/api/boost-checkout';
      fetch(apiBase, {
        method: 'POST',
        headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid })
+       body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid, plan: plan })
      })
      .then(function(r){ return r.json(); })
      .then(function(d){

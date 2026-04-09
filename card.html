@@ -932,9 +932,10 @@
         var curUser = localStorage.getItem('bazar_username') || '';
         var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
         var _demoCard = new URLSearchParams(window.location.search).get('boost_demo');
-        var isFree  = !p.is_vip && !p.is_pro;
-        var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
-        if ((_demoCard === '1') || (isFree && isOwner && curPlan === 'free')) {
+        var canBoost = !p.is_vip;
+        var isOwner  = curUser && p.seller_name && (curUser === p.seller_name);
+        var planOk   = curPlan === 'free' || curPlan === 'pro';
+        if ((_demoCard === '1') || (canBoost && isOwner && planOk)) {
           boostWrap.style.display = '';
         }
       })();
@@ -1026,7 +1027,8 @@
 
    <script>
    function bazarBoostPay(returnUrl, listingId) {
-     var uid = localStorage.getItem('bazar_firebase_uid') || '';
+     var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+     var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
      var apiBase = (window.location.hostname === 'www.bazar.uk')
        ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
        : '/api/boost-checkout';
@@ -1035,7 +1037,7 @@
      fetch(apiBase, {
        method: 'POST',
        headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid })
+       body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid, plan: plan })
      })
      .then(function(r){ return r.json(); })
      .then(function(d){

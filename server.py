@@ -26,9 +26,14 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
             except Exception:
                 data = {}
 
-            return_url  = data.get('return_url', 'http://localhost:5000')
-            listing_id  = data.get('listing_id', '')
+            return_url   = data.get('return_url', 'http://localhost:5000')
+            listing_id   = data.get('listing_id', '')
             firebase_uid = data.get('firebase_uid', '')
+            plan         = data.get('plan', 'free').lower()
+
+            # Plan-based pricing: PRO £0.80, everyone else £1.00
+            amount_pence = 80 if plan == 'pro' else 100
+            price_label  = 'Boost to Top — PRO (£0.80)' if plan == 'pro' else 'Boost to Top (£1.00)'
 
             sep = '&' if '?' in return_url else '?'
             success_url = return_url + sep + 'boosted=1&session_id={CHECKOUT_SESSION_ID}'
@@ -42,8 +47,8 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
                     line_items=[{
                         'price_data': {
                             'currency': 'gbp',
-                            'unit_amount': 100,
-                            'product_data': {'name': 'Boost to Top'},
+                            'unit_amount': amount_pence,
+                            'product_data': {'name': price_label},
                         },
                         'quantity': 1,
                     }],
