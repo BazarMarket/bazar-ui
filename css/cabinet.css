@@ -2374,18 +2374,14 @@
 
 /* Row action buttons */
 .cab-row-btn {
-    padding: 4px 10px;
+    padding: 5px 12px;
     font-size: 12px;
     font-weight: 600;
-    border-radius: 5px;
-    border: 1px solid #d0d0d0;
-    background: #fff;
-    color: #444;
+    border-radius: 6px;
+    border: none;
+    background: #6abf3a;
+    color: #fff;
     cursor: pointer;
-    transition: background .15s, color .15s;
+    transition: background .15s;
 }
-.cab-row-btn:hover { background: #f0f0f0; }
-.cab-row-btn--update { background: #ff6a00; color: #fff; border-color: #ff6a00; }
-.cab-row-btn--update:hover { background: #e55e00; }
-.cab-row-btn--del { color: #c0392b; border-color: #e0b0b0; }
-.cab-row-btn--del:hover { background: #fff0f0; }
+.cab-row-btn:hover { background: #58a82e; }
