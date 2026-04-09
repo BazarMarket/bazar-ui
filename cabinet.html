@@ -1057,16 +1057,24 @@
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
             var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
+            var isActive   = ad.status === 'active';
+            var isInactive = ad.status === 'rejected';
+            var deactBtn = isActive
+                ? '<button class="cab-act-btn cab-act-btn--pause" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">Deactivate</button>'
+                : isInactive
+                    ? '<button class="cab-act-btn cab-act-btn--activate" onclick="adAction(\'activate\',\'' + ad.id + '\')">Activate</button>'
+                    : '<button class="cab-act-btn cab-act-btn--pause" disabled style="opacity:.4;cursor:default">Deactivate</button>';
             html += '<tr>' +
                 '<td><a href="card.html?id=' + ad.id + '" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></a></td>' +
                 '<td>' + (ad.propType || ad.type || '—') + '</td>' +
                 '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td>—</td>' +
                 '<td><span class="cab-status ' + sc + '">' + sl + '</span></td>' +
-                '<td><div class="cab-table-actions">' +
-                '<div class="cab-icon-btn icon-refresh" title="Renew"></div>' +
-                '<div class="cab-icon-btn icon-update" title="Edit"></div>' +
-                '<div class="cab-icon-btn icon-del cab-icon-btn--danger" title="Delete"></div>' +
+                '<td><div class="cab-ad-btns">' +
+                '<button class="cab-act-btn cab-act-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">↑ Update</button>' +
+                '<button class="cab-act-btn cab-act-btn--edit" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
+                deactBtn +
+                '<button class="cab-act-btn cab-act-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
                 '</div></td>' +
                 '</tr>';
         });
@@ -1074,6 +1082,52 @@
         html += '</tbody></table>';
         table.innerHTML = html;
     }
+
+    function adAction(action, adId) {
+        var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+        if (action === 'delete') {
+            if (!confirm('Delete this ad? This cannot be undone.')) return;
+            ads = ads.filter(function(a) { return String(a.id) !== String(adId); });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            loadMyAds();
+            return;
+        }
+        if (action === 'deactivate') {
+            ads = ads.map(function(a) {
+                if (String(a.id) === String(adId)) a.status = 'rejected';
+                return a;
+            });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            loadMyAds();
+            return;
+        }
+        if (action === 'activate') {
+            ads = ads.map(function(a) {
+                if (String(a.id) === String(adId)) a.status = 'active';
+                return a;
+            });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            loadMyAds();
+            return;
+        }
+        if (action === 'update') {
+            ads = ads.map(function(a) {
+                if (String(a.id) === String(adId)) {
+                    var d = new Date();
+                    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                    a.date = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+                }
+                return a;
+            });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            loadMyAds();
+            return;
+        }
+        if (action === 'edit') {
+            window.location.href = 'post-ad.html?edit=' + adId;
+        }
+    }
+
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';
         document.querySelectorAll('.po-card').forEach(function(c) {
