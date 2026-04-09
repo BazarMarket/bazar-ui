@@ -2371,3 +2371,21 @@
 .po-active-meta--urgent:hover::after {
     opacity: 1;
 }
+
+/* Row action buttons */
+.cab-row-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid #d0d0d0;
+    background: #fff;
+    color: #444;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.cab-row-btn:hover { background: #f0f0f0; }
+.cab-row-btn--update { background: #ff6a00; color: #fff; border-color: #ff6a00; }
+.cab-row-btn--update:hover { background: #e55e00; }
+.cab-row-btn--del { color: #c0392b; border-color: #e0b0b0; }
+.cab-row-btn--del:hover { background: #fff0f0; }

@@ -1272,8 +1272,17 @@
             var sc = statusClass[ad.status] || 'cab-status--pending';
             var sl = statusLabel[ad.status] || ad.status;
             var img = ad.photo ? '<img class="cab-ads-table-img" src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" src="img/product.jpg" alt="">';
+            var deactLbl = ad.status === 'rejected' ? 'Activate' : 'Deactivate';
             html += '<tr>' +
-                '<td>' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></td>' +
+                '<td>' +
+                  '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title">' + (ad.title || '—') + '</span></div>' +
+                  '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">' +
+                    '<button class="cab-row-btn cab-row-btn--update" onclick="adAction(\'update\',\'' + ad.id + '\')">Update</button>' +
+                    '<button class="cab-row-btn" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
+                    '<button class="cab-row-btn" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
+                    '<button class="cab-row-btn cab-row-btn--del" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                  '</div>' +
+                '</td>' +
                 '<td>' + (ad.propType || ad.type || '—') + '</td>' +
                 '<td>£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td>—</td>' +
@@ -1288,6 +1297,12 @@
         html += '</tbody></table>';
         table.innerHTML = html;
     }
+    function adAction(action, adId) {
+        if (action === 'edit') { window.location.href = 'post-ad.html?edit=' + adId; return; }
+        if (action === 'delete') { if (!confirm('Delete this ad? This cannot be undone.')) return; }
+        alert('Action "' + action + '" for ad #' + adId);
+    }
+
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';
         document.querySelectorAll('.po-card').forEach(function(c) {
