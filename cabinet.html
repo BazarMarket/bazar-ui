@@ -1253,7 +1253,7 @@
             var titleStyle = 'style="font-weight:600;color:#111;"';
             var img = ad.photo ? '<img class="cab-ads-table-img" ' + imgStyle + ' src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" ' + imgStyle + ' src="img/product.jpg" alt="">';
             var deactLbl = ad.status === 'rejected' ? 'Activate' : 'Deactivate';
-            if (i > 0) html += '<tr><td colspan="5" style="height:8px;background:transparent;border:none;padding:0;"></td></tr>';
+            if (i > 0) html += '<tr><td colspan="5" style="height:16px;background:transparent;border:none;padding:0;"></td></tr>';
             html += '<tr style="' + cardStyle + '">' +
                 '<td style="border-radius:8px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
