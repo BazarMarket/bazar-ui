@@ -1736,7 +1736,7 @@
             ? '<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#e8f5e9;color:#2e7d32;font-weight:700;font-size:13px">+</span>'
             : '<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#fce4ec;color:#c62828;font-weight:700;font-size:13px">−</span>';
         var statusBadge = t.status === 'pending'
-            ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
+            ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">Processing</span>'
             : '';
         var op = t.operation || (isPlus ? 'Credit' : 'Payment');
         var desc = t.description || '—';
@@ -1782,7 +1782,7 @@
             var amtClass = isPlus ? 'cab-table__amount--plus' : 'cab-table__amount--minus';
             var sign = isPlus ? '+ £' : '− £';
             var statusBadge = t.status === 'pending'
-                ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">pending</span>'
+                ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">Processing</span>'
                 : '';
             return '<tr><td class="cab-table__date">' + (t.date||'—') + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
         }
