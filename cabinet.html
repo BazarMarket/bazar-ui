@@ -1242,8 +1242,7 @@
             pending:      'Pending',
             under_review: 'Under Review'
         };
-        var trShadow = 'box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
-        var tdW = 'background:#fff;vertical-align:middle;';
+        var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
         var html = '<table class="cab-table" style="min-width:600px;border-collapse:separate;border-spacing:0 0;"><thead><tr>' +
             '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th>' +
             '</tr></thead><tbody>';
@@ -1255,16 +1254,16 @@
             var img = ad.photo ? '<img class="cab-ads-table-img" ' + imgStyle + ' src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" ' + imgStyle + ' src="img/product.jpg" alt="">';
             var deactLbl = ad.status === 'rejected' ? 'Activate' : 'Deactivate';
             if (i > 0) html += '<tr><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
-            html += '<tr style="' + trShadow + '">' +
-                '<td style="' + tdW + 'border-radius:10px 0 0 0;">' +
+            html += '<tr style="' + cardStyle + 'border-radius:10px 10px 0 0;">' +
+                '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
-                '<td style="' + tdW + '">' + (ad.propType || ad.type || '—') + '</td>' +
-                '<td style="' + tdW + '">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
-                '<td style="' + tdW + '">—</td>' +
-                '<td style="' + tdW + 'border-radius:0 10px 0 0;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
+                '<td style="vertical-align:middle;">' + (ad.propType || ad.type || '—') + '</td>' +
+                '<td style="vertical-align:middle;">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
+                '<td style="vertical-align:middle;">—</td>' +
+                '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
-                '<tr>' +
+                '<tr style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
                 '<td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
                   '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
                     '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onclick="adAction(\'update\',\'' + ad.id + '\')">Update</button>' +
