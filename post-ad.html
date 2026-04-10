@@ -330,11 +330,17 @@
          box-shadow: 0 20px 60px rgba(0,0,0,.2);
          width: 100%;
          max-width: 760px;
-         overflow: hidden;
          display: flex;
          flex-direction: column;
          max-height: 90vh;
       }
+      #locMapModal .lm-header,
+      #locMapModal .lm-search,
+      #locMapModal .lm-hint,
+      #locMapModal .lm-footer { border-radius: 0; }
+      #locMapModal .lm-header { border-radius: 16px 16px 0 0; overflow: hidden; }
+      #locMapModal .lm-footer { border-radius: 0 0 16px 16px; overflow: hidden; }
+      #locMapContainer { overflow: hidden; }
       .lm-header {
          display: flex;
          align-items: center;
@@ -434,6 +440,8 @@
          .lm-footer { flex-wrap: wrap; }
          .lm-btn-myloc { width: 100%; text-align: center; }
       }
+      /* Google autocomplete dropdown must appear above the modal overlay (z-index:9999) */
+      .pac-container { z-index: 10000 !important; }
       .pa-checkboxes {
          display: grid;
          grid-template-columns: repeat(3, 1fr);
