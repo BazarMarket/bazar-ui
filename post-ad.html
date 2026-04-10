@@ -271,6 +271,169 @@
          background: #f0f0f0;
          margin: 20px 0;
       }
+      .pa-loc-hint {
+         margin: 6px 0 10px;
+         font-size: 12px;
+         color: #9ca3af;
+         line-height: 1.4;
+      }
+      .pa-map-trigger {
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         padding: 7px 14px;
+         border: 1px solid #e0e0e0;
+         border-radius: 8px;
+         background: #fafafa;
+         color: #555;
+         font-size: 13px;
+         font-family: "Poppins", sans-serif;
+         cursor: pointer;
+         transition: border-color .2s, background .2s;
+      }
+      .pa-map-trigger:hover {
+         border-color: #ff9138;
+         background: #fff8f3;
+         color: #ff7a00;
+      }
+      .pa-map-trigger__icon { font-style: normal; }
+      .pa-loc-status {
+         display: flex;
+         align-items: center;
+         gap: 6px;
+         margin-top: 8px;
+         font-size: 12px;
+         color: #16a34a;
+      }
+      .pa-loc-status__dot {
+         width: 7px;
+         height: 7px;
+         border-radius: 50%;
+         background: #16a34a;
+         flex-shrink: 0;
+      }
+      /* Map modal */
+      #locMapOverlay {
+         display: none;
+         position: fixed;
+         inset: 0;
+         background: rgba(0,0,0,.45);
+         z-index: 9999;
+         align-items: center;
+         justify-content: center;
+         padding: 16px;
+      }
+      #locMapOverlay.open { display: flex; }
+      #locMapModal {
+         background: #fff;
+         border-radius: 16px;
+         box-shadow: 0 20px 60px rgba(0,0,0,.2);
+         width: 100%;
+         max-width: 760px;
+         overflow: hidden;
+         display: flex;
+         flex-direction: column;
+         max-height: 90vh;
+      }
+      .lm-header {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         padding: 16px 20px;
+         border-bottom: 1px solid #f0f0f0;
+      }
+      .lm-header h3 {
+         margin: 0;
+         font-size: 16px;
+         font-weight: 600;
+         color: #1a1a1a;
+      }
+      .lm-close {
+         background: none;
+         border: none;
+         font-size: 20px;
+         color: #999;
+         cursor: pointer;
+         line-height: 1;
+         padding: 0;
+      }
+      .lm-close:hover { color: #333; }
+      .lm-search {
+         padding: 12px 20px;
+         border-bottom: 1px solid #f0f0f0;
+      }
+      .lm-search input {
+         width: 100%;
+         padding: 9px 14px;
+         border: 1px solid #e0e0e0;
+         border-radius: 8px;
+         font-size: 14px;
+         font-family: "Poppins", sans-serif;
+         box-sizing: border-box;
+         outline: none;
+      }
+      .lm-search input:focus { border-color: #ff9138; }
+      .lm-hint {
+         padding: 6px 20px;
+         font-size: 11.5px;
+         color: #aaa;
+         text-align: center;
+      }
+      #locMapContainer {
+         flex: 1;
+         min-height: 340px;
+         position: relative;
+      }
+      .lm-footer {
+         display: flex;
+         gap: 10px;
+         padding: 14px 20px;
+         border-top: 1px solid #f0f0f0;
+         justify-content: flex-end;
+      }
+      .lm-btn-cancel {
+         padding: 9px 20px;
+         border: 1px solid #e0e0e0;
+         border-radius: 8px;
+         background: #fff;
+         color: #666;
+         font-size: 14px;
+         font-family: "Poppins", sans-serif;
+         cursor: pointer;
+         transition: border-color .2s;
+      }
+      .lm-btn-cancel:hover { border-color: #bbb; }
+      .lm-btn-confirm {
+         padding: 9px 24px;
+         border: none;
+         border-radius: 8px;
+         background: #ff9138;
+         color: #fff;
+         font-size: 14px;
+         font-weight: 600;
+         font-family: "Poppins", sans-serif;
+         cursor: pointer;
+         transition: background .2s;
+      }
+      .lm-btn-confirm:hover { background: #e07a20; }
+      .lm-btn-myloc {
+         padding: 9px 16px;
+         border: none;
+         border-radius: 8px;
+         background: #f5f5f5;
+         color: #555;
+         font-size: 13px;
+         font-family: "Poppins", sans-serif;
+         cursor: pointer;
+         margin-right: auto;
+      }
+      .lm-btn-myloc:hover { background: #ececec; }
+      @media (max-width: 600px) {
+         #locMapModal { border-radius: 12px; max-height: 95vh; }
+         #locMapContainer { min-height: 260px; }
+         .lm-footer { flex-wrap: wrap; }
+         .lm-btn-myloc { width: 100%; text-align: center; }
+      }
       .pa-checkboxes {
          display: grid;
          grid-template-columns: repeat(3, 1fr);
@@ -957,7 +1120,17 @@
                            <input type="hidden" id="locationLat">
                            <input type="hidden" id="locationLng">
                            <input type="hidden" id="locationPlaceId">
+                           <input type="hidden" id="exactLat">
+                           <input type="hidden" id="exactLng">
                         </div>
+                        <p class="pa-loc-hint">City or area is required. Exact map pin is optional.</p>
+                        <button type="button" class="pa-map-trigger" id="openMapBtn" onclick="openLocationMap()">
+                           <span class="pa-map-trigger__icon">📍</span> Choose exact location on map
+                        </button>
+                        <p class="pa-loc-status" id="locationStatus" style="display:none">
+                           <span class="pa-loc-status__dot"></span>
+                           <span id="locationStatusText">Exact location selected</span>
+                        </p>
                      </div>
                   </div>
 
@@ -1769,6 +1942,10 @@
          var locationLng = document.getElementById('locationLng').value;
          if (locationLat) formData.append('latitude', locationLat);
          if (locationLng) formData.append('longitude', locationLng);
+         var exactLat = document.getElementById('exactLat').value;
+         var exactLng = document.getElementById('exactLng').value;
+         if (exactLat) formData.append('exact_latitude', exactLat);
+         if (exactLng) formData.append('exact_longitude', exactLng);
 
          var condition = getSelectVal('conditionSelect');
          if (condition) formData.append('condition', condition);
@@ -1991,6 +2168,119 @@
                document.head.appendChild(s);
             });
       })();
+   </script>
+
+   <!-- Location Map Modal -->
+   <div id="locMapOverlay" onclick="if(event.target===this)closeLocationMap()">
+      <div id="locMapModal">
+         <div class="lm-header">
+            <h3>Choose exact location</h3>
+            <button class="lm-close" onclick="closeLocationMap()" aria-label="Close">&#x2715;</button>
+         </div>
+         <div class="lm-search">
+            <input id="lmSearchInput" type="text" placeholder="Search for a street, area or landmark…" autocomplete="off">
+         </div>
+         <p class="lm-hint">Drag the pin to set the exact location</p>
+         <div id="locMapContainer"></div>
+         <div class="lm-footer">
+            <button class="lm-btn-myloc" onclick="useMyExactLocation()">📡 Use my location</button>
+            <button class="lm-btn-cancel" onclick="closeLocationMap()">Cancel</button>
+            <button class="lm-btn-confirm" onclick="confirmLocationMap()">Use selected location</button>
+         </div>
+      </div>
+   </div>
+
+   <script>
+      var _locMap = null, _locMarker = null, _locMapInited = false;
+
+      function openLocationMap() {
+         var overlay = document.getElementById('locMapOverlay');
+         overlay.classList.add('open');
+         document.body.style.overflow = 'hidden';
+
+         if (!_gMapsReady) {
+            setTimeout(openLocationMap, 400);
+            return;
+         }
+         if (!_locMapInited) {
+            _locMapInited = true;
+
+            var startLat = 51.5074, startLng = -0.1278;
+            var lat = parseFloat(document.getElementById('exactLat').value || document.getElementById('locationLat').value);
+            var lng = parseFloat(document.getElementById('exactLng').value || document.getElementById('locationLng').value);
+            if (!isNaN(lat) && !isNaN(lng)) { startLat = lat; startLng = lng; }
+
+            _locMap = new google.maps.Map(document.getElementById('locMapContainer'), {
+               center: { lat: startLat, lng: startLng },
+               zoom: 13,
+               mapTypeControl: false,
+               streetViewControl: false,
+               fullscreenControl: false,
+               gestureHandling: 'greedy'
+            });
+            _locMarker = new google.maps.Marker({
+               position: { lat: startLat, lng: startLng },
+               map: _locMap,
+               draggable: true,
+               animation: google.maps.Animation.DROP,
+               title: 'Drag to adjust location'
+            });
+
+            var lmSearch = new google.maps.places.Autocomplete(document.getElementById('lmSearchInput'), {
+               componentRestrictions: { country: 'gb' },
+               fields: ['geometry', 'formatted_address']
+            });
+            lmSearch.addListener('place_changed', function() {
+               var place = lmSearch.getPlace();
+               if (!place.geometry) return;
+               var pos = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
+               _locMap.setCenter(pos);
+               _locMap.setZoom(15);
+               _locMarker.setPosition(pos);
+            });
+         } else {
+            var lat2 = parseFloat(document.getElementById('exactLat').value || document.getElementById('locationLat').value);
+            var lng2 = parseFloat(document.getElementById('exactLng').value || document.getElementById('locationLng').value);
+            if (!isNaN(lat2) && !isNaN(lng2)) {
+               var newPos = { lat: lat2, lng: lng2 };
+               _locMap.setCenter(newPos);
+               _locMarker.setPosition(newPos);
+            }
+            google.maps.event.trigger(_locMap, 'resize');
+         }
+      }
+
+      function closeLocationMap() {
+         document.getElementById('locMapOverlay').classList.remove('open');
+         document.body.style.overflow = '';
+      }
+
+      function confirmLocationMap() {
+         if (!_locMarker) return;
+         var pos = _locMarker.getPosition();
+         var lat = pos.lat(), lng = pos.lng();
+         document.getElementById('exactLat').value = lat;
+         document.getElementById('exactLng').value = lng;
+
+         var statusEl = document.getElementById('locationStatus');
+         statusEl.style.display = 'flex';
+         document.getElementById('locationStatusText').textContent = 'Exact location selected';
+
+         closeLocationMap();
+      }
+
+      function useMyExactLocation() {
+         if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); return; }
+         navigator.geolocation.getCurrentPosition(function(pos) {
+            var lat = pos.coords.latitude, lng = pos.coords.longitude;
+            var newPos = { lat: lat, lng: lng };
+            _locMap.setCenter(newPos);
+            _locMap.setZoom(15);
+            _locMarker.setPosition(newPos);
+         }, function() {
+            alert('Could not get your location. Please allow location access.');
+         });
+      }
    </script>
 </body>
 </html>
