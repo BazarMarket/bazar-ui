@@ -2300,6 +2300,13 @@
             _locMap.setCenter(newPos);
             _locMap.setZoom(15);
             _locMarker.setPosition(newPos);
+
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: newPos }, function(results, status) {
+               if (status === 'OK' && results[0]) {
+                  document.getElementById('lmSearchInput').value = results[0].formatted_address;
+               }
+            });
          }, function() {
             alert('Could not get your location. Please allow location access.');
          });
