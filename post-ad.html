@@ -1112,8 +1112,11 @@
                   <div class="pa-field" id="locationField">
                      <span class="pa-field__label">Location:<span>*</span></span>
                      <div class="pa-field__control">
-                        <div style="position:relative">
-                           <input class="pa-input" id="locationInput" type="text" placeholder="Enter city or postcode" autocomplete="off">
+                        <div style="display:flex;gap:8px;align-items:center">
+                           <input class="pa-input" id="locationInput" type="text" placeholder="Enter city or postcode" autocomplete="off" style="flex:1;min-width:0">
+                           <button type="button" class="pa-map-trigger" id="openMapBtn" onclick="openLocationMap()" style="flex-shrink:0;white-space:nowrap">
+                              Show Map
+                           </button>
                            <input type="hidden" id="locationCity">
                            <input type="hidden" id="locationRegion">
                            <input type="hidden" id="locationPostcode">
@@ -1123,10 +1126,6 @@
                            <input type="hidden" id="exactLat">
                            <input type="hidden" id="exactLng">
                         </div>
-                        <p class="pa-loc-hint">City or area is required. Exact map pin is optional.</p>
-                        <button type="button" class="pa-map-trigger" id="openMapBtn" onclick="openLocationMap()">
-                           <span class="pa-map-trigger__icon">📍</span> Choose exact location on map
-                        </button>
                         <p class="pa-loc-status" id="locationStatus" style="display:none">
                            <span class="pa-loc-status__dot"></span>
                            <span id="locationStatusText">Exact location selected</span>
