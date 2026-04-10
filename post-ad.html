@@ -2178,7 +2178,7 @@
    </script>
 
    <!-- Location Map Modal -->
-   <div id="locMapOverlay" onclick="if(event.target===this)closeLocationMap()">
+   <div id="locMapOverlay">
       <div id="locMapModal">
          <div class="lm-header">
             <h3>Choose exact location</h3>
@@ -2199,6 +2199,20 @@
 
    <script>
       var _locMap = null, _locMarker = null, _locMapInited = false;
+      var _overlayMousedownTarget = null;
+
+      (function() {
+         var overlay = document.getElementById('locMapOverlay');
+         overlay.addEventListener('mousedown', function(e) {
+            _overlayMousedownTarget = e.target;
+         });
+         overlay.addEventListener('mouseup', function(e) {
+            if (_overlayMousedownTarget === overlay && e.target === overlay) {
+               closeLocationMap();
+            }
+            _overlayMousedownTarget = null;
+         });
+      })();
 
       function openLocationMap() {
          var overlay = document.getElementById('locMapOverlay');
