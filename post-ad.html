@@ -2177,7 +2177,7 @@
             <button class="lm-close" onclick="closeLocationMap()" aria-label="Close">&#x2715;</button>
          </div>
          <div class="lm-search">
-            <input id="lmSearchInput" type="text" placeholder="Search for a street, area or landmark…" autocomplete="off">
+            <input id="lmSearchInput" type="text" placeholder="Search by postcode, street or area (e.g. WC2, Baker Street)…" autocomplete="off">
          </div>
          <p class="lm-hint">Drag the pin to set the exact location</p>
          <div id="locMapContainer"></div>
@@ -2227,7 +2227,8 @@
 
             var lmSearch = new google.maps.places.Autocomplete(document.getElementById('lmSearchInput'), {
                componentRestrictions: { country: 'gb' },
-               fields: ['geometry', 'formatted_address']
+               types: ['geocode'],
+               fields: ['geometry', 'formatted_address', 'name']
             });
             lmSearch.addListener('place_changed', function() {
                var place = lmSearch.getPlace();
