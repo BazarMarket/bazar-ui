@@ -465,7 +465,7 @@ _RE_JSON_LD    = re.compile(
     re.I | re.S
 )
 _RE_HEAD_OPEN   = re.compile(r'(<head[^>]*>)', re.I)
-_RE_PROP_TITLE  = re.compile(r'(id="prop-title"[^>]*>)[^<]*(</)', re.I)
+_RE_PROP_TITLE  = re.compile(r'<p([^>]*id="prop-title"[^>]*)>[^<]*</p>', re.I)
 _RE_BREADCRUMB  = re.compile(r'(<ul[^>]+id="breadcrumb"[^>]*>).*?(</ul>)', re.I | re.S)
 
 def inject_seo(html: str, seo_head: str) -> str:
@@ -496,7 +496,8 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
     if prop_title:
         m = _RE_PROP_TITLE.search(html)
         if m:
-            html = html[:m.start()] + m.group(1) + _esc(prop_title) + m.group(2) + html[m.end():]
+            # m.group(1) = attributes string e.g. ' class="card-head__title" id="prop-title"'
+            html = html[:m.start()] + f'<h1{m.group(1)}>{_esc(prop_title)}</h1>' + html[m.end():]
 
     # ── Replace breadcrumb list in #breadcrumb ────────────────────────────────
     breadcrumbs = ssr.get('breadcrumbs', [])
