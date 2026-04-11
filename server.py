@@ -941,6 +941,14 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
         seo_data = fetch_seo_data(page_type, params)
         seo_head = build_seo_head(seo_data)
+
+        # card.html uses relative asset paths (css/, img/, js/).
+        # When served at /listing/{id} the browser would resolve them as
+        # /listing/css/… which doesn't exist.  <base href="/"> fixes all paths
+        # at once without touching card.html.
+        if page_type == 'listing':
+            seo_head = '<base href="/">\n    ' + seo_head
+
         html     = inject_seo(html, seo_head)
 
         # Inject visible server-rendered body content (H1, breadcrumbs, intro)
