@@ -2293,6 +2293,15 @@
          statusEl.style.display = 'flex';
          document.getElementById('locationStatusText').textContent = 'Exact location selected';
 
+         var geocoder = new google.maps.Geocoder();
+         geocoder.geocode({ location: { lat: lat, lng: lng } }, function(results, status) {
+            if (status === 'OK' && results[0]) {
+               var addr = results[0].formatted_address;
+               var locInput = document.getElementById('locationInput') || document.querySelector('input[name="location"]');
+               if (locInput) locInput.value = addr;
+            }
+         });
+
          closeLocationMap();
       }
 
