@@ -21,7 +21,7 @@
       <header class="header-old">
          <div class="container-full">
             <div class="header-old__body">
-               <a href="index.html" class="logo">
+               <a href="/" class="logo">
                   <img src="img/logo.png" alt="">
                </a>
                <div class="burger-body">
@@ -94,7 +94,7 @@
                <div class="card-grid__body">
                   <div class="card-grid__top">
                      <ul class="bread-custom" id="breadcrumb">
-                        <li><a href="index.html">Home</a> <span class="icon-arrow-r"></span> </li>
+                        <li><a href="/">Home</a> <span class="icon-arrow-r"></span> </li>
                         <li><a href="#" id="bread-category">Phones</a><span class="icon-arrow-r"></span></li>
                         <li><a href="#" id="bread-type">Smartphones</a></li>
                      </ul>
@@ -649,7 +649,7 @@
                 <div class="container">
                     <div class="footer__body">
                         <div class="footer__start">
-                            <a href="index.html" class="footer__logo">
+                            <a href="/" class="footer__logo">
                                 <img src="img/logo.png" alt="">
                             </a>
                             <p class="footer__text">
@@ -785,6 +785,10 @@
    (function(){
       var params = new URLSearchParams(window.location.search);
       var id = params.get('id');
+      if (!id) {
+         var _m = window.location.pathname.match(/\/listing\/(\d+)/);
+         id = _m ? _m[1] : null;
+      }
       if (!id) return;
 
       var apiUrl = (window.location.hostname === 'www.bazar.uk')

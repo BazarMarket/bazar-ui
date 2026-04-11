@@ -285,7 +285,7 @@
       <header class="header-old">
          <div class="container-full">
             <div class="header-old__body">
-               <a href="index.html" class="logo">
+               <a href="/" class="logo">
                   <img src="img/logo.png" alt="">
                </a>
                <div class="burger-body">
@@ -759,7 +759,7 @@
 
                <div class="sr-bread-sort">
                   <ul class="bread-custom" id="srBreadcrumb">
-                     <li><a href="index.html">Home</a><span class="icon-arrow-r"></span></li>
+                     <li><a href="/">Home</a><span class="icon-arrow-r"></span></li>
                      <li><a href="#" id="breadCrumbCat"></a><span class="icon-arrow-r" id="breadCrumbCatArrow"></span></li>
                      <li id="breadCrumbType">Search results</li>
                   </ul>
@@ -1094,7 +1094,7 @@
          <div class="container">
             <div class="footer__body">
                <div class="footer__start">
-                  <a href="index.html" class="footer__logo">
+                  <a href="/" class="footer__logo">
                      <img src="img/logo.png" alt="">
                   </a>
                   <p class="footer__text">Welcome to our marketplace, where products find their buyers.</p>
@@ -2257,9 +2257,9 @@
          var type = params.get('type');
 
          var catMap = {
-            'sale':       { label: 'Real Estate for sale',       img: 'img/cat/image1.png', mode: 'sale',       catLabel: 'Real Estate for sale' },
-            'rent':       { label: 'Real Estate for Rent',       img: 'img/cat/image2.png', mode: 'rent',       catLabel: 'Real Estate for Rent' },
-            'short-rent': { label: 'Real Estate for short rent', img: 'img/cat/image2.png', mode: 'short-rent', catLabel: 'Real Estate for short rent' }
+            'sale':       { label: 'Real Estate for sale',       img: 'img/cat/image1.png', mode: 'sale',       catLabel: 'Real Estate for sale',       catUrl: '/property' },
+            'rent':       { label: 'Real Estate for Rent',       img: 'img/cat/image2.png', mode: 'rent',       catLabel: 'Real Estate for Rent',       catUrl: '/property' },
+            'short-rent': { label: 'Real Estate for short rent', img: 'img/cat/image2.png', mode: 'short-rent', catLabel: 'Real Estate for short rent', catUrl: '/property' }
          };
 
          var catLink = document.getElementById('breadCrumbCat');
@@ -2280,7 +2280,7 @@
             buildTypePanel();
             if (catLink) {
                catLink.textContent = info.catLabel;
-               catLink.href = 'search.html?cat=' + cat;
+               catLink.href = info.catUrl || '/property';
             }
          } else {
             if (catLink) { catLink.parentNode.style.display = 'none'; }
