@@ -905,10 +905,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             return super().do_GET()
 
         # Determine page type for SEO injection
+        p_clean = path.lstrip('/')
         page_type, params = resolve_page_type(path, qs)
 
         if page_type in ('homepage', 'listing', 'category', 'category_city',
-                         'category_city_district', 'search', 'internal'):
+                         'category_city_district', 'search'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
@@ -924,6 +925,15 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             html_file = os.path.join(SITE_ROOT, html_filename)
             if os.path.isfile(html_file):
                 self._serve_seo_page(html_file, page_type, params)
+                return
+
+        # internal pages (cabinet, post-ad, messages, policy pages, etc.):
+        # serve the actual .html file directly — no SEO injection needed
+        # since these are noindex pages served at their root-level URL.
+        if page_type == 'internal':
+            actual = os.path.join(SITE_ROOT, p_clean)
+            if os.path.isfile(actual):
+                super().do_GET()
                 return
 
         # Fallback: let SimpleHTTPRequestHandler serve the file normally
