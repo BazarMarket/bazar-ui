@@ -712,18 +712,35 @@ CANONICAL_CATEGORIES = [
     'pets', 'sports', 'kids', 'garden', 'tools',
 ]
 
+# Major UK cities — curated, stable list.
+# Phase 3 will extend this dynamically from the listing API.
+SITEMAP_CITIES = [
+    'london', 'manchester', 'birmingham', 'leeds', 'glasgow',
+    'sheffield', 'liverpool', 'edinburgh', 'bristol', 'cardiff',
+    'leicester', 'coventry', 'bradford', 'nottingham', 'hull',
+    'plymouth', 'stoke-on-trent', 'southampton', 'reading', 'derby',
+    'wolverhampton', 'belfast', 'swansea', 'oxford', 'cambridge',
+]
+
 def build_sitemap() -> str:
     now = time.time()
     if _sitemap_cache['xml'] and now - _sitemap_cache['ts'] < SITEMAP_TTL:
         return _sitemap_cache['xml']
 
     urls = [PUBLIC_DOMAIN + '/']
+
+    # /{category} — all canonical categories
     for cat in CANONICAL_CATEGORIES:
         urls.append(f'{PUBLIC_DOMAIN}/{cat}')
 
-    # TODO (Phase 3): add listing URLs from DB API
+    # /{category}/{city} — canonical city pages for all categories
+    for cat in CANONICAL_CATEGORIES:
+        for city in SITEMAP_CITIES:
+            urls.append(f'{PUBLIC_DOMAIN}/{cat}/{city}')
+
+    # Phase 3: add individual listing URLs from active DB records
     # listings = _api_get('/properties?status=active&per_page=10000', 'sitemap_listings')
-    # if listings: ...
+    # if listings: for item in listings: urls.append(...)
 
     items = '\n'.join(
         f'  <url><loc>{u}</loc></url>' for u in urls
