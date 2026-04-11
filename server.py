@@ -749,7 +749,7 @@ def build_sitemap() -> str:
         for item in listings:
             lid = item.get('id')
             updated = item.get('updated_at', '')
-            lastmod = updated[:10] if updated else None  # YYYY-MM-DD
+            lastmod = updated if updated else None  # ISO 8601: YYYY-MM-DDTHH:MM:SS+00:00
             if lid:
                 entries.append((f'{PUBLIC_DOMAIN}/listing/{lid}', lastmod))
 
