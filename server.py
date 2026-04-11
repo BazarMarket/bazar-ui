@@ -110,14 +110,46 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
 # Layer 2 – SEO data fetcher
 # ══════════════════════════════════════════════════════════════════════════════
 CATEGORY_LABELS = {
-    'property': 'Property',    'real-estate': 'Property',
-    'cars': 'Cars',            'motors': 'Motors',
-    'vehicles': 'Vehicles',    'rooms': 'Rooms',
-    'jobs': 'Jobs',            'electronics': 'Electronics',
-    'furniture': 'Furniture',  'fashion': 'Fashion',
-    'services': 'Services',    'pets': 'Pets',
-    'sports': 'Sports',        'kids': 'Kids',
-    'garden': 'Garden',        'tools': 'Tools',
+    'property':    'Property',    'real-estate': 'Property',
+    'cars':        'Cars',        'motors':      'Motors',
+    'vehicles':    'Vehicles',    'rooms':       'Rooms to Rent',
+    'jobs':        'Jobs',        'electronics': 'Electronics',
+    'furniture':   'Furniture',   'fashion':     'Fashion',
+    'services':    'Services',    'pets':        'Pets',
+    'sports':      'Sports',      'kids':        'Kids',
+    'garden':      'Garden',      'tools':       'Tools',
+}
+
+# Verb phrase used in title/H1: "Cars for sale" / "Rooms to rent" / "Jobs"
+CATEGORY_ACTION = {
+    'property':  'for sale',   'real-estate': 'for sale',
+    'cars':      'for sale',   'motors':      'for sale',
+    'vehicles':  'for sale',   'rooms':       'to rent',
+    'jobs':      '',           'electronics': 'for sale',
+    'furniture': 'for sale',   'fashion':     'for sale',
+    'services':  '',           'pets':        'for sale',
+    'sports':    'for sale',   'kids':        'for sale',
+    'garden':    'for sale',   'tools':       'for sale',
+}
+
+# Base intro sentence per category (UK-level)
+CATEGORY_INTROS = {
+    'property':    'Browse property listings across the UK — apartments, houses, villas and more.',
+    'real-estate': 'Browse property listings across the UK — apartments, houses, villas and more.',
+    'cars':        'Browse new and used car listings across the UK from private sellers and dealers.',
+    'motors':      'Browse motors and vehicles for sale across the UK on Bazar.',
+    'vehicles':    'Browse vehicles for sale across the UK — cars, vans, bikes and more.',
+    'rooms':       'Find rooms to rent across the UK. Short-term and long-term rentals available.',
+    'jobs':        'Browse job listings across the UK. Find local opportunities on Bazar.',
+    'electronics': 'Buy and sell electronics across the UK — phones, laptops, TVs and more.',
+    'furniture':   'Browse furniture listings across the UK. New and second-hand pieces from local sellers.',
+    'fashion':     'Buy and sell fashion across the UK — clothing, shoes, accessories and more.',
+    'services':    'Find local services across the UK. Tradespeople, cleaners, tutors and more.',
+    'pets':        'Find pets for sale and adoption across the UK on Bazar.',
+    'sports':      'Buy and sell sports equipment across the UK on Bazar.',
+    'kids':        'Buy and sell kids items across the UK — toys, clothes, prams and more.',
+    'garden':      'Browse garden items for sale across the UK on Bazar.',
+    'tools':       'Buy and sell tools across the UK. Power tools, hand tools and more.',
 }
 
 CURRENCY_SYMBOL = {'GBP': '£', 'USD': '$', 'EUR': '€'}
@@ -332,23 +364,61 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
     elif page_type == 'category':
         cat       = params.get('category', '')
         cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
+        action    = CATEGORY_ACTION.get(cat, 'for sale')
+        intro     = CATEGORY_INTROS.get(cat,
+                        f'Browse {cat_label.lower()} listings across the UK on Bazar.')
         canonical = f'{PUBLIC_DOMAIN}/{cat}'
+
+        # H1: "Cars for sale UK" / "Jobs UK" / "Rooms to Rent UK"
+        h1_phrase = f'{cat_label} {action}'.strip()
+        h1 = f'{h1_phrase} UK'
+
+        # Title (max ~65 chars)
+        raw_title = f'{h1} | Bazar'
+        seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
+
+        desc = f'{intro} Find great deals on Bazar UK classifieds.'
+        if len(desc) > 160:
+            desc = desc[:157] + '…'
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": h1_phrase, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": seo_title,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+
         seo.update({
-            'title':       f'{cat_label} for sale UK | Bazar',
-            'description': f'Browse {cat_label.lower()} listings across the UK. '
-                           f'Find great deals on Bazar UK classifieds.',
+            'title':       seo_title,
+            'description': desc,
             'canonical':   canonical,
-            'json_ld':     json.dumps({
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {"@type": "ListItem", "position": 1,
-                     "name": "Home", "item": PUBLIC_DOMAIN},
-                    {"@type": "ListItem", "position": 2,
-                     "name": cat_label, "item": canonical},
-                ]
-            }),
+            'json_ld':     json.dumps(schema),
         })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (h1_phrase, None),
+            ],
+            'type': 'category',
+        }
         return seo
 
     # ── Category + city ───────────────────────────────────────────────────────
@@ -357,41 +427,102 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         city_slug = params.get('city', '')
         city      = city_slug.replace('-', ' ').title()
         cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
+        action    = CATEGORY_ACTION.get(cat, 'for sale')
         canonical = f'{PUBLIC_DOMAIN}/{cat}/{city_slug}'
+        cat_url   = f'{PUBLIC_DOMAIN}/{cat}'
+
+        # H1 phrases
+        h1_phrase_cat  = f'{cat_label} {action}'.strip()   # "Cars for sale"
+        h1_phrase_city = f'{h1_phrase_cat} in {city}'      # "Cars for sale in London"
+        h1 = h1_phrase_city
+
+        raw_title = f'{h1_phrase_city} | Bazar'
+        seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
+
+        base_intro = CATEGORY_INTROS.get(cat,
+                         f'Browse {cat_label.lower()} listings on Bazar.')
+        city_intro = (f'Browse {cat_label.lower()} {action} in {city}. '
+                      f'Find local deals from sellers in {city} on Bazar UK.')
+
+        desc = city_intro
+        if len(desc) > 160:
+            desc = desc[:157] + '…'
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": h1_phrase_cat, "item": cat_url},
+                {"@type": "ListItem", "position": 3,
+                 "name": city, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": seo_title,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+
         seo.update({
-            'title':       f'{cat_label} for sale in {city} | Bazar',
-            'description': f'Browse {cat_label.lower()} listings in {city}. '
-                           f'Find great local deals on Bazar UK classifieds.',
+            'title':       seo_title,
+            'description': desc,
             'canonical':   canonical,
-            'json_ld':     json.dumps({
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {"@type": "ListItem", "position": 1,
-                     "name": "Home", "item": PUBLIC_DOMAIN},
-                    {"@type": "ListItem", "position": 2,
-                     "name": cat_label, "item": f"{PUBLIC_DOMAIN}/{cat}"},
-                    {"@type": "ListItem", "position": 3,
-                     "name": city, "item": canonical},
-                ]
-            }),
+            'json_ld':     json.dumps(schema),
         })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       city_intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (h1_phrase_cat, f'/{cat}'),
+                (city, None),
+            ],
+            'type': 'category',
+        }
         return seo
 
-    # ── Category + city + district (noindex by default) ───────────────────────
+    # ── Category + city + district (noindex, architecture supported) ──────────
     elif page_type == 'category_city_district':
-        cat      = params.get('category', '')
-        city     = params.get('city', '').replace('-', ' ').title()
-        district = params.get('district', '').replace('-', ' ').title()
-        cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
-        canonical = (f'{PUBLIC_DOMAIN}/{params["category"]}/'
-                     f'{params["city"]}/{params["district"]}')
+        cat          = params.get('category', '')
+        city_slug    = params.get('city', '')
+        district_slug= params.get('district', '')
+        city         = city_slug.replace('-', ' ').title()
+        district     = district_slug.replace('-', ' ').title()
+        cat_label    = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
+        action       = CATEGORY_ACTION.get(cat, 'for sale')
+        canonical    = f'{PUBLIC_DOMAIN}/{cat}/{city_slug}/{district_slug}'
+        h1_phrase_cat= f'{cat_label} {action}'.strip()
+        h1 = f'{h1_phrase_cat} in {district}, {city}'
+
         seo.update({
-            'title':       f'{cat_label} in {district}, {city} | Bazar',
-            'description': f'Browse {cat_label.lower()} in {district}, {city}.',
+            'title':       f'{h1} | Bazar',
+            'description': (f'Browse {cat_label.lower()} {action} in {district}, {city}. '
+                            f'Find local listings on Bazar UK.'),
             'canonical':   canonical,
-            'robots':      'noindex, follow',   # activate per district later
+            'robots':      'noindex, follow',
         })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       (f'Browse {cat_label.lower()} {action} in {district}, {city} '
+                            f'on Bazar UK classifieds.'),
+            'breadcrumbs': [
+                ('Home', '/'),
+                (h1_phrase_cat, f'/{cat}'),
+                (city, f'/{cat}/{city_slug}'),
+                (district, None),
+            ],
+            'type': 'category',
+        }
         return seo
 
     # ── Search (noindex always) ───────────────────────────────────────────────
@@ -464,9 +595,11 @@ _RE_JSON_LD    = re.compile(
     r'<script\s[^>]*type=["\']application/ld\+json["\'][^>]*>.*?</script>',
     re.I | re.S
 )
-_RE_HEAD_OPEN   = re.compile(r'(<head[^>]*>)', re.I)
-_RE_PROP_TITLE  = re.compile(r'<p([^>]*id="prop-title"[^>]*)>[^<]*</p>', re.I)
-_RE_BREADCRUMB  = re.compile(r'(<ul[^>]+id="breadcrumb"[^>]*>).*?(</ul>)', re.I | re.S)
+_RE_HEAD_OPEN      = re.compile(r'(<head[^>]*>)', re.I)
+_RE_PROP_TITLE     = re.compile(r'<p([^>]*id="prop-title"[^>]*)>[^<]*</p>', re.I)
+_RE_BREADCRUMB     = re.compile(r'(<ul[^>]+id="breadcrumb"[^>]*>).*?(</ul>)', re.I | re.S)
+_RE_SR_BREADCRUMB  = re.compile(r'<ul[^>]+id="srBreadcrumb"[^>]*>.*?</ul>', re.I | re.S)
+_RE_SR_RESULTS_DIV = re.compile(r'(<div\s+class="sr-results">)', re.I)
 
 def inject_seo(html: str, seo_head: str) -> str:
     """Strip old SEO tags, inject fresh ones right after <head>."""
@@ -521,11 +654,63 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
     return html
 
 
+def inject_ssr_category(html: str, ssr: dict) -> str:
+    """Inject visible H1, intro text and breadcrumbs into search.html
+    for category and category+city pages."""
+
+    h1    = ssr.get('h1', '')
+    intro = ssr.get('intro', '')
+    breadcrumbs = ssr.get('breadcrumbs', [])
+
+    # ── Build replacement srBreadcrumb ────────────────────────────────────────
+    if breadcrumbs:
+        items = []
+        for i, (label, href) in enumerate(breadcrumbs):
+            is_last = (i == len(breadcrumbs) - 1)
+            safe_label = _esc(label)
+            if not is_last:
+                items.append(
+                    f'<li><a href="{_attr(href)}">{safe_label}</a>'
+                    f'<span class="icon-arrow-r"></span></li>'
+                )
+            else:
+                items.append(f'<li>{safe_label}</li>')
+        new_ul = ('<ul class="bread-custom" id="srBreadcrumb">' +
+                  ''.join(items) + '</ul>')
+        m = _RE_SR_BREADCRUMB.search(html)
+        if m:
+            html = html[:m.start()] + new_ul + html[m.end():]
+
+    # ── Inject H1 + intro paragraph after <div class="sr-results"> ───────────
+    if h1:
+        hero_html = (
+            f'\n               <div class="sr-cat-hero" id="srCatHero">'
+            f'<h1 class="sr-cat-h1" id="srCatH1">{_esc(h1)}</h1>'
+        )
+        if intro:
+            hero_html += f'<p class="sr-cat-intro" id="srCatIntro">{_esc(intro)}</p>'
+        hero_html += '</div>'
+
+        m = _RE_SR_RESULTS_DIV.search(html)
+        if m:
+            insert_at = m.end()
+            html = html[:insert_at] + hero_html + html[insert_at:]
+
+    return html
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Sitemap (Phase 3 – DB-driven, cached)
 # ══════════════════════════════════════════════════════════════════════════════
 _sitemap_cache = {'xml': None, 'ts': 0}
 SITEMAP_TTL = 3600  # 1 hour
+
+# Only the canonical category slugs (no aliases like 'real-estate', 'motors')
+CANONICAL_CATEGORIES = [
+    'property', 'cars', 'vehicles', 'rooms', 'jobs',
+    'electronics', 'furniture', 'fashion', 'services',
+    'pets', 'sports', 'kids', 'garden', 'tools',
+]
 
 def build_sitemap() -> str:
     now = time.time()
@@ -533,7 +718,7 @@ def build_sitemap() -> str:
         return _sitemap_cache['xml']
 
     urls = [PUBLIC_DOMAIN + '/']
-    for cat in CATEGORY_LABELS:
+    for cat in CANONICAL_CATEGORIES:
         urls.append(f'{PUBLIC_DOMAIN}/{cat}')
 
     # TODO (Phase 3): add listing URLs from DB API
@@ -727,10 +912,13 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         seo_head = build_seo_head(seo_data)
         html     = inject_seo(html, seo_head)
 
-        # Inject visible H1 / breadcrumbs for listing pages (server-rendered body)
+        # Inject visible server-rendered body content (H1, breadcrumbs, intro)
         ssr = seo_data.get('ssr')
         if ssr:
-            html = inject_ssr_body(html, ssr)
+            if ssr.get('type') == 'category':
+                html = inject_ssr_category(html, ssr)
+            else:
+                html = inject_ssr_body(html, ssr)
 
         body = html.encode('utf-8')
         self.send_response(200)
