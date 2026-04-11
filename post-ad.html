@@ -2248,6 +2248,10 @@
                title: 'Drag to adjust location'
             });
 
+            _locMap.addListener('center_changed', function() {
+               _locMarker.setPosition(_locMap.getCenter());
+            });
+
             var lmSearch = new google.maps.places.Autocomplete(document.getElementById('lmSearchInput'), {
                componentRestrictions: { country: 'gb' },
                types: ['geocode'],
