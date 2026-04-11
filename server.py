@@ -189,25 +189,31 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         listing = _api_get(f'/properties/{lid}', f'listing_{lid}')
 
         if not listing:
-            # fallback – generic title, listing still renders via JS
+            # API returned nothing – noindex, let JS handle it
             seo['canonical'] = f'{PUBLIC_DOMAIN}/listing/{lid}'
             seo['robots'] = 'noindex, follow'
             return seo
 
-        title       = listing.get('title') or 'Listing'
-        city        = listing.get('city') or ''
-        district    = listing.get('district') or ''
-        price       = listing.get('price') or ''
-        currency    = listing.get('currency') or 'GBP'
-        prop_type   = listing.get('property_type') or ''
-        description = listing.get('description') or ''
-        images      = listing.get('images') or []
+        # ── Status check: only active listings are indexable ──────────────────
+        status = listing.get('status', 'active')
+        if status != 'active':
+            seo['canonical'] = f'{PUBLIC_DOMAIN}/listing/{lid}'
+            seo['robots'] = 'noindex, follow'
+            # Still return partial data so H1/breadcrumbs render server-side
+            # (page will still load for logged-in users via JS)
+
+        title        = listing.get('title') or 'Listing'
+        city         = listing.get('city') or ''
+        district     = listing.get('district') or ''
+        price        = listing.get('price') or ''
+        currency     = listing.get('currency') or 'GBP'
+        prop_type    = listing.get('property_type') or ''
+        listing_type = listing.get('listing_type') or 'sale'
+        description  = listing.get('description') or ''
+        images       = listing.get('images') or []
+        bedrooms     = listing.get('bedrooms')
 
         symbol = CURRENCY_SYMBOL.get(currency, currency)
-
-        # Location string: "Croydon, London" or "London"
-        location_parts = [x for x in [district, city] if x]
-        location_str   = ', '.join(location_parts) or 'UK'
 
         # Price string
         try:
@@ -215,23 +221,29 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         except (ValueError, TypeError):
             price_str = ''
 
-        # Build SEO title (max ~65 chars)
-        raw_title = f'{title}, {location_str}'
+        # ── Title formula ─────────────────────────────────────────────────────
+        # With district:    "{title} in {district}, {city} – £{price} | Bazar"
+        # Without district: "{title} in {city} – £{price} | Bazar"
+        if district and city:
+            location_str = f'{district}, {city}'
+        elif city:
+            location_str = city
+        else:
+            location_str = 'UK'
+
+        raw_title = f'{title} in {location_str}'
         if price_str:
             raw_title += f' – {price_str}'
         raw_title += ' | Bazar'
         seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
 
-        # Meta description
+        # ── Meta description ──────────────────────────────────────────────────
         if description and len(description) > 20:
             desc = description[:155] + '…' if len(description) > 158 else description
         else:
-            parts = [title]
-            if location_str != 'UK':
-                parts.append(f'in {location_str}')
-            if price_str:
-                parts.append(price_str)
-            desc = ' '.join(parts) + ' – listed on Bazar UK classifieds.'
+            loc_phrase = f'in {location_str}' if location_str != 'UK' else 'in the UK'
+            price_phrase = f'Price: {price_str}. ' if price_str else ''
+            desc = f'{title} {loc_phrase}. {price_phrase}Browse this listing on Bazar UK classifieds.'
             if len(desc) > 160:
                 desc = desc[:157] + '…'
 
@@ -243,27 +255,40 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             img = images[0]
             og_image = img if img.startswith('http') else f'{PUBLIC_DOMAIN}/storage/{img}'
 
-        # JSON-LD – real estate uses WebPage+Breadcrumb, goods use Product
+        # ── Breadcrumb labels ─────────────────────────────────────────────────
+        action_label = {
+            'sale': 'for sale', 'long_rent': 'to rent',
+            'short_rent': 'to rent', 'Sale': 'for sale',
+            'Long_rent': 'to rent', 'Short_rent': 'to rent',
+        }.get(listing_type, 'for sale')
+        cat_label  = f'Property {action_label}'
+        type_label = prop_type.replace('_', ' ').title() if prop_type else 'Property'
+
+        # ── JSON-LD ───────────────────────────────────────────────────────────
         real_estate_types = {'apartment', 'house', 'flat', 'room', 'villa',
                              'studio', 'bungalow', 'maisonette', 'cottage'}
-        if prop_type.lower() in real_estate_types:
+        is_real_estate = prop_type.lower() in real_estate_types
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": cat_label, "item": f"{PUBLIC_DOMAIN}/property"},
+                {"@type": "ListItem", "position": 3,
+                 "name": title, "item": canonical},
+            ]
+        }
+
+        if is_real_estate:
             schema = {
                 "@context": "https://schema.org",
                 "@type": "WebPage",
                 "name": seo_title,
                 "description": desc,
                 "url": canonical,
-                "breadcrumb": {
-                    "@type": "BreadcrumbList",
-                    "itemListElement": [
-                        {"@type": "ListItem", "position": 1,
-                         "name": "Home", "item": PUBLIC_DOMAIN},
-                        {"@type": "ListItem", "position": 2,
-                         "name": "Property", "item": f"{PUBLIC_DOMAIN}/property"},
-                        {"@type": "ListItem", "position": 3,
-                         "name": title, "item": canonical},
-                    ]
-                }
+                "breadcrumb": breadcrumb_schema,
             }
         else:
             schema = {
@@ -283,13 +308,24 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 }
             }
 
-        seo.update({
-            'title':       seo_title,
-            'description': desc,
-            'canonical':   canonical,
-            'og_image':    og_image,
-            'json_ld':     json.dumps(schema),
-        })
+        # ── SSR blocks: visible H1 + breadcrumbs injected into body ──────────
+        seo['ssr'] = {
+            'prop_title':  title,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (cat_label, '/property'),
+                (type_label, None),
+            ],
+        }
+
+        if status == 'active':
+            seo.update({
+                'title':       seo_title,
+                'description': desc,
+                'canonical':   canonical,
+                'og_image':    og_image,
+                'json_ld':     json.dumps(schema),
+            })
         return seo
 
     # ── Category ──────────────────────────────────────────────────────────────
@@ -428,7 +464,9 @@ _RE_JSON_LD    = re.compile(
     r'<script\s[^>]*type=["\']application/ld\+json["\'][^>]*>.*?</script>',
     re.I | re.S
 )
-_RE_HEAD_OPEN  = re.compile(r'(<head[^>]*>)', re.I)
+_RE_HEAD_OPEN   = re.compile(r'(<head[^>]*>)', re.I)
+_RE_PROP_TITLE  = re.compile(r'(id="prop-title"[^>]*>)[^<]*(</)', re.I)
+_RE_BREADCRUMB  = re.compile(r'(<ul[^>]+id="breadcrumb"[^>]*>).*?(</ul>)', re.I | re.S)
 
 def inject_seo(html: str, seo_head: str) -> str:
     """Strip old SEO tags, inject fresh ones right after <head>."""
@@ -446,6 +484,39 @@ def inject_seo(html: str, seo_head: str) -> str:
     if m:
         insert_at = m.end()
         html = html[:insert_at] + '\n    ' + seo_head + html[insert_at:]
+    return html
+
+
+def inject_ssr_body(html: str, ssr: dict) -> str:
+    """Inject visible H1 and breadcrumbs into the body so Googlebot
+    sees real content without waiting for JavaScript."""
+
+    # ── Replace placeholder title in #prop-title ──────────────────────────────
+    prop_title = ssr.get('prop_title', '')
+    if prop_title:
+        m = _RE_PROP_TITLE.search(html)
+        if m:
+            html = html[:m.start()] + m.group(1) + _esc(prop_title) + m.group(2) + html[m.end():]
+
+    # ── Replace breadcrumb list in #breadcrumb ────────────────────────────────
+    breadcrumbs = ssr.get('breadcrumbs', [])
+    if breadcrumbs:
+        items = []
+        for i, (label, href) in enumerate(breadcrumbs):
+            is_last = (i == len(breadcrumbs) - 1)
+            safe_label = _esc(label)
+            if not is_last:
+                link = f'<a href="{href}">{safe_label}</a>'
+                items.append(f'<li>{link}<span class="icon-arrow-r"></span></li>')
+            else:
+                items.append(f'<li><span>{safe_label}</span></li>')
+        new_ul = '<ul class="bread-custom" id="breadcrumb">\n' + \
+                 '\n'.join(f'                        {li}' for li in items) + \
+                 '\n                     </ul>'
+        m = _RE_BREADCRUMB.search(html)
+        if m:
+            html = html[:m.start()] + new_ul + html[m.end():]
+
     return html
 
 
@@ -593,6 +664,16 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(xml)
             return
 
+        # 301 redirect: card.html?id=123 → /listing/123
+        if path == '/card.html':
+            qp = urllib.parse.parse_qs(qs)
+            lid = qp.get('id', [None])[0]
+            if lid and lid.isdigit():
+                self.send_response(301)
+                self.send_header('Location', f'/listing/{lid}')
+                self.end_headers()
+                return
+
         # /listing/{id} → serve card.html content with SEO
         m = re.match(r'^/listing/(\d+)$', path)
         if m:
@@ -644,6 +725,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         seo_data = fetch_seo_data(page_type, params)
         seo_head = build_seo_head(seo_data)
         html     = inject_seo(html, seo_head)
+
+        # Inject visible H1 / breadcrumbs for listing pages (server-rendered body)
+        ssr = seo_data.get('ssr')
+        if ssr:
+            html = inject_ssr_body(html, ssr)
 
         body = html.encode('utf-8')
         self.send_response(200)
