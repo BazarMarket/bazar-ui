@@ -942,12 +942,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         seo_data = fetch_seo_data(page_type, params)
         seo_head = build_seo_head(seo_data)
 
-        # card.html uses relative asset paths (css/, img/, js/).
-        # When served at /listing/{id} the browser would resolve them as
-        # /listing/css/… which doesn't exist.  <base href="/"> fixes all paths
-        # at once without touching card.html.
-        if page_type == 'listing':
-            seo_head = '<base href="/">\n    ' + seo_head
+        # All HTML files use relative asset paths (css/, img/, js/, post-ad.html…).
+        # When Python serves them at deep URLs like /listing/11 or /property/london,
+        # the browser would resolve relative paths against the wrong directory.
+        # <base href="/"> fixes all paths globally without touching any HTML file.
+        seo_head = '<base href="/">\n    ' + seo_head
 
         html     = inject_seo(html, seo_head)
 
