@@ -721,11 +721,12 @@ def build_sitemap() -> str:
     if _sitemap_cache['xml'] and now - _sitemap_cache['ts'] < SITEMAP_TTL:
         return _sitemap_cache['xml']
 
-    urls = [PUBLIC_DOMAIN + '/']
+    # Each entry: (loc_url, lastmod_str_or_None)
+    entries = [(PUBLIC_DOMAIN + '/', None)]
 
     # /{category} — all canonical categories (always included)
     for cat in CANONICAL_CATEGORIES:
-        urls.append(f'{PUBLIC_DOMAIN}/{cat}')
+        entries.append((f'{PUBLIC_DOMAIN}/{cat}', None))
 
     # /{category}/{city} — only cities with real inventory.
     # Fetches from the Laravel API: returns city slugs per category
@@ -739,15 +740,25 @@ def build_sitemap() -> str:
             if cat in CANONICAL_CATEGORIES and isinstance(cities, list):
                 for city_slug in cities:
                     if city_slug:
-                        urls.append(f'{PUBLIC_DOMAIN}/{cat}/{city_slug}')
+                        entries.append((f'{PUBLIC_DOMAIN}/{cat}/{city_slug}', None))
 
-    # Individual listing URLs (Phase 3 — add active listings from DB)
-    # listings = _api_get('/sitemap-listings', 'sitemap_listings')
-    # if listings: for lid in listings: urls.append(f'{PUBLIC_DOMAIN}/listing/{lid}')
+    # Individual listing URLs — only active listings, with lastmod.
+    # noindex listings are already excluded because endpoint filters status=active.
+    listings = _api_get('/sitemap-listings', 'sitemap_listings')
+    if listings and isinstance(listings, list):
+        for item in listings:
+            lid = item.get('id')
+            updated = item.get('updated_at', '')
+            lastmod = updated[:10] if updated else None  # YYYY-MM-DD
+            if lid:
+                entries.append((f'{PUBLIC_DOMAIN}/listing/{lid}', lastmod))
 
-    items = '\n'.join(
-        f'  <url><loc>{u}</loc></url>' for u in urls
-    )
+    def _url_tag(loc, lastmod):
+        if lastmod:
+            return f'  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod></url>'
+        return f'  <url><loc>{loc}</loc></url>'
+
+    items = '\n'.join(_url_tag(loc, lm) for loc, lm in entries)
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
