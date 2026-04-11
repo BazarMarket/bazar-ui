@@ -712,15 +712,9 @@ CANONICAL_CATEGORIES = [
     'pets', 'sports', 'kids', 'garden', 'tools',
 ]
 
-# Major UK cities — curated, stable list.
-# Phase 3 will extend this dynamically from the listing API.
-SITEMAP_CITIES = [
-    'london', 'manchester', 'birmingham', 'leeds', 'glasgow',
-    'sheffield', 'liverpool', 'edinburgh', 'bristol', 'cardiff',
-    'leicester', 'coventry', 'bradford', 'nottingham', 'hull',
-    'plymouth', 'stoke-on-trent', 'southampton', 'reading', 'derby',
-    'wolverhampton', 'belfast', 'swansea', 'oxford', 'cambridge',
-]
+# Minimum active listing count for a city page to appear in sitemap.
+# Prevents thin/empty pages from being submitted to Google.
+SITEMAP_CITY_MIN_COUNT = 3
 
 def build_sitemap() -> str:
     now = time.time()
@@ -729,18 +723,27 @@ def build_sitemap() -> str:
 
     urls = [PUBLIC_DOMAIN + '/']
 
-    # /{category} — all canonical categories
+    # /{category} — all canonical categories (always included)
     for cat in CANONICAL_CATEGORIES:
         urls.append(f'{PUBLIC_DOMAIN}/{cat}')
 
-    # /{category}/{city} — canonical city pages for all categories
-    for cat in CANONICAL_CATEGORIES:
-        for city in SITEMAP_CITIES:
-            urls.append(f'{PUBLIC_DOMAIN}/{cat}/{city}')
+    # /{category}/{city} — only cities with real inventory.
+    # Fetches from the Laravel API: returns city slugs per category
+    # grouped by actual active listing count >= SITEMAP_CITY_MIN_COUNT.
+    inventory = _api_get(
+        f'/sitemap-inventory?min={SITEMAP_CITY_MIN_COUNT}',
+        'sitemap_inventory'
+    )
+    if inventory:
+        for cat, cities in inventory.items():
+            if cat in CANONICAL_CATEGORIES and isinstance(cities, list):
+                for city_slug in cities:
+                    if city_slug:
+                        urls.append(f'{PUBLIC_DOMAIN}/{cat}/{city_slug}')
 
-    # Phase 3: add individual listing URLs from active DB records
-    # listings = _api_get('/properties?status=active&per_page=10000', 'sitemap_listings')
-    # if listings: for item in listings: urls.append(...)
+    # Individual listing URLs (Phase 3 — add active listings from DB)
+    # listings = _api_get('/sitemap-listings', 'sitemap_listings')
+    # if listings: for lid in listings: urls.append(f'{PUBLIC_DOMAIN}/listing/{lid}')
 
     items = '\n'.join(
         f'  <url><loc>{u}</loc></url>' for u in urls
