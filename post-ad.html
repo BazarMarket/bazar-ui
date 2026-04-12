@@ -1122,7 +1122,7 @@
                      <span class="pa-field__label">Location:<span>*</span></span>
                      <div class="pa-field__control">
                         <div style="display:flex;gap:8px;align-items:center">
-                           <input class="pa-input" id="locationInput" type="text" placeholder="Enter city or postcode" autocomplete="off" style="flex:1;min-width:0">
+                           <input class="pa-input" id="locationInput" type="text" placeholder="Search area or city (e.g. Canary Wharf London)" autocomplete="off" style="flex:1;min-width:0">
                            <button type="button" class="pa-map-trigger" id="openMapBtn" onclick="openLocationMap()" style="flex-shrink:0;white-space:nowrap">
                               Show Map
                            </button>
@@ -2138,21 +2138,19 @@
          autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             if (!place.geometry) return;
-            var city = '', district = '', region = '', postcode = '';
-            place.address_components.forEach(function(c) {
-               if (c.types.includes('postal_town') || c.types.includes('locality')) { if (!city) city = c.long_name; }
-               if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') || c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
-               if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
-               if (c.types.includes('postal_code')) postcode = c.long_name;
-            });
-            if (!city) {
-               place.address_components.forEach(function(c) {
-                  if (c.types.includes('administrative_area_level_2') && !city) city = c.long_name;
+            var comps = place.address_components;
+               var city = '', locality = '', district = '', region = '', postcode = '';
+               comps.forEach(function(c) {
+                  if (c.types.includes('postal_town')) { if (!city) city = c.long_name; }
+                  if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
+                  if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
+                      c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
+                  if (c.types.includes('postal_code')) postcode = c.long_name;
                });
-            }
-            if (!city && place.address_components.length > 0) {
-               city = place.address_components[0].long_name;
-            }
+               // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
+               if (locality && city && locality !== city && !district) district = locality;
+               if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
             document.getElementById('locationCity').value = city;
             document.getElementById('locationDistrict').value = district;
             document.getElementById('locationRegion').value = region;
@@ -2308,15 +2306,19 @@
                var addr = results[0].formatted_address;
                var locInput = document.getElementById('locationInput') || document.querySelector('input[name="location"]');
                if (locInput) locInput.value = addr;
-               var city = '', district = '';
-               results[0].address_components.forEach(function(c) {
-                  if (c.types.includes('postal_town') || c.types.includes('locality')) { if (!city) city = c.long_name; }
-                  if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') || c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
-                  if (c.types.includes('administrative_area_level_2') && !city) city = c.long_name;
+               var comps = results[0].address_components;
+               var city = '', locality = '', district = '', region = '', postcode = '';
+               comps.forEach(function(c) {
+                  if (c.types.includes('postal_town')) { if (!city) city = c.long_name; }
+                  if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
+                  if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
+                      c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
+                  if (c.types.includes('postal_code')) postcode = c.long_name;
                });
-               if (!city && results[0].address_components.length > 0) {
-                  city = results[0].address_components[0].long_name;
-               }
+               // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
+               if (locality && city && locality !== city && !district) district = locality;
+               if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
                if (city) document.getElementById('locationCity').value = city;
                if (district) document.getElementById('locationDistrict').value = district;
             }
