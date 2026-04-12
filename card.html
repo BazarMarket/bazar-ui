@@ -816,10 +816,10 @@
          if(p.is_pro) badges += '<span class="stiker stiker_top">PRO</span>';
          stikerEl.innerHTML = badges;
       }
-      el('bread-category').textContent = 'Real Estate for ' + p.listing_type;
-      el('bread-type').textContent = p.property_type;
+      if (el('bread-category')) el('bread-category').textContent = 'Real Estate for ' + (p.listing_type || '');
+      if (el('bread-type')) el('bread-type').textContent = p.property_type || '';
       el('prop-city-link').textContent = p.city;
-      el('prop-district-link').textContent = p.district;
+      el('prop-district-link').textContent = p.district || '';
 
       function fmtPrice(n) {
          var s = fmt(n);
@@ -881,6 +881,8 @@
                '<span class="gallery-zoom-hint" title="Enlarge">⤢</span>' +
                '</div>';
          }).join('');
+         var _swiperBigEl = mainWrap.closest('.swiper');
+         if (_swiperBigEl && _swiperBigEl.swiper) { _swiperBigEl.swiper.update(); }
          if (typeof refreshFsLightbox === 'function') refreshFsLightbox();
       }
       var miniWrap = document.getElementById('gallery-mini');
@@ -888,6 +890,8 @@
          miniWrap.innerHTML = allImgs.map(function(src) {
             return '<div class="swiper-slide slider-gallery-mini__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover"></div>';
          }).join('');
+         var _swiperMiniEl = miniWrap.closest('.swiper');
+         if (_swiperMiniEl && _swiperMiniEl.swiper) { _swiperMiniEl.swiper.update(); }
       }
 
       function specRow(label, val) {
@@ -926,7 +930,7 @@
 
       el('spec-table').innerHTML = specs;
 
-      el('prop-description').textContent = p.description;
+      el('prop-description').textContent = p.description || '';
 
       el('seller-name').textContent = p.seller_name;
 
@@ -1004,7 +1008,8 @@
       var mobCall = el('mob-call-btn');
       if(mobCall) mobCall.href = 'tel:' + p.seller_phone;
 
-      el('location-label').innerHTML = '<b>Location:</b> ' + p.city + ' — ' + p.district;
+      var _locLabel = el('location-label');
+      if (_locLabel) _locLabel.innerHTML = '<b>Location:</b> ' + (p.city || '') + (p.district ? ' — ' + p.district : '');
 
       var mapQ = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=' + p.map_query;
       var mapInline = el('map-inline-iframe');
