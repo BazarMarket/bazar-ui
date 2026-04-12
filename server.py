@@ -26,7 +26,7 @@ import threading
 PORT               = 5000
 PUBLIC_DOMAIN      = 'https://www.bazar.uk'
 LARAVEL_API_HOST   = 'admin.bazar.uk'
-LARAVEL_API_BASE   = 'http://localhost/api'
+LARAVEL_API_BASE   = 'https://admin.bazar.uk/api'
 SITE_ROOT          = os.environ.get('BAZAR_SITE_ROOT', os.path.dirname(os.path.abspath(__file__)))
 SEO_CACHE_TTL      = 300  # seconds (5 min)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
@@ -161,10 +161,8 @@ def _api_get(path: str, cache_key: str = None):
         if cached:
             return cached
 
-    # Try internal (same-server) request first
     for url, headers in [
-        (f'{LARAVEL_API_BASE}{path}', {'Host': LARAVEL_API_HOST}),
-        (f'https://{LARAVEL_API_HOST}/api{path}', {}),
+        (f'{LARAVEL_API_BASE}{path}', {}),
     ]:
         try:
             req = urllib.request.Request(url, headers=headers)
@@ -351,14 +349,13 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             ],
         }
 
-        if status == 'active':
-            seo.update({
-                'title':       seo_title,
-                'description': desc,
-                'canonical':   canonical,
-                'og_image':    og_image,
-                'json_ld':     json.dumps(schema),
-            })
+        seo.update({
+            'title':       seo_title,
+            'description': desc,
+            'canonical':   canonical,
+            'og_image':    og_image,
+            'json_ld':     json.dumps(schema),
+        })
         return seo
 
     # ── Category ──────────────────────────────────────────────────────────────
