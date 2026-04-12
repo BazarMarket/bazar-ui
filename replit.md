@@ -366,6 +366,102 @@ Stripe проверяет сайт и не должен видеть Deposit/Wit
 - Если функционал **только для PROD** — оборачивай в `<div id="prodXxx" style="display:none">`, показывай через продакшн-скрипт
 - Продакшн-скрипт всегда в самом конце перед `</body>`
 
+---
+
+## 📍 РАЙОН (DISTRICT) — логика сохранения и отображения
+
+> **ЗАФИКСИРОВАНО.** Если районы перестали отображаться — читать этот раздел первым.
+
+### Как район попадает в БД
+
+Путь: пользователь выбирает адрес/точку → JS → Google API → hidden inputs → FormData → Laravel → DB
+
+#### Шаг 1 — Основной автокомплит (`initLocationAutocomplete` в `post-ad.html`)
+
+Когда пользователь выбирает адрес из выпадающего списка, срабатывает `place_changed`. Из компонентов адреса (`address_components`) последовательно извлекаются:
+
+1. `postal_town` → `city` (для UK почтовый город)
+2. `sublocality_level_1`, `sublocality`, `neighborhood` → `district`
+3. `administrative_area_level_3` → `district` (fallback)
+4. **Greater London fix**: если `administrative_area_level_2 === "Greater London"` И `city !== "London"` → `district = city`, `city = "London"`. Так Wembley, Croydon, Harrow становятся районами, а не городами.
+5. Если `locality !== city` → `locality` становится `district` (e.g. Canary Wharf vs London)
+6. **formatted_address fallback**: `extractDistrictFromFormatted(formatted, city)` — парсит район из текста: `"13 Cleveland Sq, Bayswater, London W2 → Bayswater"`
+
+#### Шаг 2 — Карта (`confirmLocationMap` в `post-ad.html`)
+
+Когда пользователь тыкает на карту и нажимает "Use selected location":
+
+1. Координаты пишутся в **ОБА** поля: `locationLat/locationLng` И `exactLat/exactLng`  
+   ⚠️ Раньше писалось только в exactLat — и latitude оставалась NULL в DB.
+
+2. Запускается `geocoder.geocode({ location: { lat, lng } })` — возвращает **массив результатов**.
+
+3. **4-проходный алгоритм** по всем результатам:
+   - **Pass 1** — из `results[0]`: city, postcode, region, adminL2. Greater London fix.
+   - **Pass 2** — перебрать **все** results в поиске `neighborhood`, `sublocality_level_1`, `sublocality`, `sublocality_level_2`, `administrative_area_level_3`. Район часто лежит в `results[3-5]`, а не в `results[0]`!
+   - **Pass 3** — перебрать **все** results в поиске `locality !== city && locality !== "London"`.
+   - **Pass 4** — `extractDistrictFromFormatted()` применяется к `formatted_address` каждого из всех results по очереди, пока не найдёт непустой результат.
+
+   Пример: для точки в Peckham `results[0]` = "19 Waghorn St, London SE15 4LA" (без района), но `results[4]` = "Peckham, London SE15" → Pass 4 → `extractDistrictFromFormatted("Peckham, London SE15, UK", "London")` → **"Peckham"**.
+
+#### Функция `extractDistrictFromFormatted(formatted, city)`
+
+```javascript
+// Алгоритм:
+// 1. Split по запятой → parts
+// 2. Найти индекс части, начинающейся с city ("London") → cityIdx
+// 3. Если cityIdx < 1 → нет что парсить, return ''
+// 4. Идти назад от cityIdx-1 до 0:
+//    - Пропустить если начинается с цифры (номер дома)
+//    - Пропустить если matches /^[A-Z]{1,2}\d/ (UK postcode fragment)
+//    - Пропустить если j===0 и содержит слова Street/Road/Lane/... (это улица)
+//    - Первое подходящее слово = район
+// Примеры:
+//   "13 Cleveland Sq, Bayswater, London W2 → Bayswater ✓
+//   "Belgravia, London, UK"               → Belgravia ✓
+//   "Peckham, London SE15, UK"            → Peckham ✓
+//   "Fann St, Barbican, London EC2Y"      → Barbican ✓
+//   "19 Waghorn St, London SE15 4LA"      → '' (нет промежуточной части)
+//   "London SW1W 9QJ, UK"                 → '' (cityIdx=0)
+```
+
+#### Шаг 3 — Map search внутри карты (`lmSearchInput`)
+
+Поиск внутри модалки карты тоже получает `address_components` (добавлено в `fields`). При выборе из дропдауна применяется тот же алгоритм (Greater London fix + locality + extractDistrictFromFormatted) + сразу пишет `locationLat/locationLng`.
+
+### Куда пишутся данные — hidden inputs в post-ad.html
+
+| Поле | ID | FormData key |
+|---|---|---|
+| Город | `locationCity` | `city` |
+| Район | `locationDistrict` | `district` |
+| Регион | `locationRegion` | `region` |
+| Почтовый индекс | `locationPostcode` | `postal_code` |
+| Координаты (общие) | `locationLat` / `locationLng` | `latitude` / `longitude` |
+| Координаты (точные) | `exactLat` / `exactLng` | `exact_latitude` / `exact_longitude` |
+
+### Laravel-контроллер (`PropertyApiController.php`)
+
+`store()` принимает и сохраняет `latitude`, `longitude`, `district`, `postal_code` (все в `$validated` и `Property::create()`).  
+Раньше latitude/longitude не были в validation → молча игнорировались → NULL в DB.
+
+### Отображение в card.html
+
+- Оранжевый subtitle: `prop-city-link` / `prop-district-link`
+- Строка Area в SPECIFICATIONS: `specRow('Area', p.district)`
+- Если `p.district` пустой → `<li>` с районом скрывается автоматически
+
+### ⚠️ Что НЕ работает (ограничения Google API)
+
+- Поиск по **только почтовому индексу** (напр. "SW1W 9QJ") → Google не возвращает район ни в компонентах, ни в formatted_address. Для точного района нужно вводить название района ("Belgravia") или конкретную улицу.
+- API ключ ограничен по домену (browser only) → сервер-сайд reverse geocoding недоступен.
+
+### Существующие объявления с NULL district
+
+Объявления, созданные **до** этих фиксов (approx. до апреля 2026, ID < 35) имеют `district=NULL`. Исправить можно только пересоздав объявление. Или вручную через MySQL: `UPDATE properties SET district='Peckham' WHERE id=33;`
+
+---
+
 ## Коммуникация
 
 Общаться с пользователем на русском языке.
