@@ -978,7 +978,7 @@
                   </div>
 
                   <div class="pa-field" id="propertyAreaField" style="display:none">
-                     <span class="pa-field__label">Property area:</span>
+                     <span class="pa-field__label">Covered area:</span>
                      <div class="pa-field__control">
                         <div class="pa-area-wrap">
                            <input class="pa-input" id="propertyAreaInput" type="text" inputmode="numeric" placeholder="">
@@ -1937,6 +1937,8 @@
          formData.append('listing_type', listingType);
          formData.append('property_type', propertyType);
          formData.append('sub_type', getSelectVal('houseTypeSelect'));
+         var buildingTypeVal = getSelectVal('buildingTypeSelect');
+         if (buildingTypeVal) formData.append('building_type', buildingTypeVal);
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
@@ -1981,13 +1983,19 @@
          if (energy) formData.append('energy_efficiency', energy);
 
          var parking = getSelectVal('parkingSelect');
-         formData.append('parking', (parking === 'Yes' || parking === 'Covered parking' || parking === 'Underground parking') ? '1' : '0');
+         var hasParking = parking && parking !== 'No' && parking !== 'None' ? '1' : '0';
+         formData.append('parking', hasParking);
+         if (parking && parking !== 'No' && parking !== 'None') formData.append('parking_type', parking);
 
          var furnishing = getSelectVal('furnishingSelect');
-         formData.append('furnished', furnishing === 'Furnished' ? '1' : '0');
+         var hasFurnished = furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None' ? '1' : '0';
+         formData.append('furnished', hasFurnished);
+         if (furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None') formData.append('furnishing_type', furnishing);
 
          var airCon = getSelectVal('airConSelect');
-         formData.append('air_conditioning', (airCon === 'Yes' || airCon === 'Central A/C' || airCon === 'Split A/C') ? '1' : '0');
+         var hasAC = airCon && airCon !== 'No' && airCon !== 'None' ? '1' : '0';
+         formData.append('air_conditioning', hasAC);
+         if (airCon && airCon !== 'No' && airCon !== 'None') formData.append('ac_type', airCon);
 
          var features = document.querySelectorAll('#includedField input[type="checkbox"]');
          var featureMap = {

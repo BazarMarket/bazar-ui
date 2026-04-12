@@ -220,7 +220,7 @@
                                     <td>Kissonerga</td>
                                  </tr>
                                  <tr>
-                                    <th>Type:</th>
+                                    <th>House type:</th>
                                     <td>Villa</td>
                                  </tr>
                                  <tr>
@@ -248,7 +248,7 @@
                                     <td>219 m2</td>
                                  </tr>
                                  <tr>
-                                    <th>Type:</th>
+                                    <th>Building type:</th>
                                     <td>Residential</td>
                                  </tr>
                               </table>
@@ -914,9 +914,8 @@
       specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
       specs += specRow('City', p.city);
       specs += specRow('Area', p.district);
-      specs += specRow('Type', p.property_type);
-      specs += specRow('Building type', p.sub_type);
-      specs += specRow('Listing', p.listing_type);
+      specs += specRow('House type', p.sub_type);
+      if (p.building_type) specs += specRow('Building type', p.building_type);
       var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
       specs += specRow('Condition', condLabel[p.condition] || p.condition);
       specs += specRow('Number of Bedrooms', p.bedrooms);
@@ -928,6 +927,9 @@
       specs += specRow('Floor', p.floor);
       specs += specRow('Year Built', p.construction_year);
       specs += specRow('Energy Rating', p.energy_efficiency);
+      if (p.parking_type) specs += specRow('Parking', p.parking_type);
+      if (p.furnishing_type) specs += specRow('Furnishing', p.furnishing_type);
+      if (p.ac_type) specs += specRow('Air conditioning', p.ac_type);
 
       var amenities = [];
       if(p.furnished) amenities.push('Furnished');
