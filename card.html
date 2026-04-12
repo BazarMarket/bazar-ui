@@ -778,7 +778,7 @@
 
    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
    <script type="text/javascript" src="js/inputmask.min.js"></script>
-   <script type="text/javascript" src="js/fslightbox.js"></script>
+   <!-- fslightbox removed: replaced with custom lightbox below -->
    <script type="text/javascript" src="js/script.js?v=2"></script>
 
    <script>
@@ -884,16 +884,17 @@
       var allImgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
       var mainWrap = document.getElementById('gallery-big');
       if (mainWrap && allImgs.length) {
-         mainWrap.innerHTML = allImgs.map(function(src) {
+         mainWrap.innerHTML = allImgs.map(function(src, idx) {
             return '<div class="swiper-slide slider-gallery-big__img">' +
                '<img src="' + src + '" alt="' + p.title + '" class="img-cover">' +
-               '<a href="' + src + '" data-fslightbox="product-gallery" class="gallery-zoom-overlay" aria-label="Enlarge photo"></a>' +
+               '<a href="#" onclick="openGalleryLightbox(' + idx + ');return false;" class="gallery-zoom-overlay" aria-label="Enlarge photo"></a>' +
                '<span class="gallery-zoom-hint" title="Enlarge">⤢</span>' +
                '</div>';
          }).join('');
          var _swiperBigEl = mainWrap.closest('.swiper');
          if (_swiperBigEl && _swiperBigEl.swiper) { _swiperBigEl.swiper.update(); }
-         if (typeof refreshFsLightbox === 'function') refreshFsLightbox();
+         // Store images for lightbox
+         window._galleryImages = allImgs;
       }
       var miniWrap = document.getElementById('gallery-mini');
       if (miniWrap && allImgs.length) {
@@ -1582,6 +1583,50 @@ function submitEmailForm(e) {
    document.getElementById('email-popup-form').style.display = 'none';
    document.getElementById('email-popup-success').style.display = '';
    setTimeout(closeEmailPopup, 3000);
+}
+</script>
+
+<!-- Custom Gallery Lightbox -->
+<div id="galleryLightbox" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;" onclick="closeGalleryLightbox()">
+   <button id="glbClose" onclick="closeGalleryLightbox()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:34px;cursor:pointer;z-index:2;line-height:1;">&times;</button>
+   <button id="glbPrev" onclick="event.stopPropagation();galleryLightboxMove(-1)" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:32px;width:50px;height:50px;border-radius:50%;cursor:pointer;z-index:2;line-height:1;">&#8249;</button>
+   <img id="glbImg" src="" alt="" style="max-width:94vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 40px rgba(0,0,0,.6);" onclick="event.stopPropagation()">
+   <div id="glbCounter" style="color:rgba(255,255,255,.7);margin-top:12px;font-size:15px;"></div>
+   <button id="glbNext" onclick="event.stopPropagation();galleryLightboxMove(1)" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:32px;width:50px;height:50px;border-radius:50%;cursor:pointer;z-index:2;line-height:1;">&#8250;</button>
+</div>
+<script>
+var _glbIndex = 0;
+function openGalleryLightbox(idx) {
+   var imgs = window._galleryImages || [];
+   if (!imgs.length) return;
+   _glbIndex = idx || 0;
+   var lb = document.getElementById('galleryLightbox');
+   lb.style.display = 'flex';
+   document.body.style.overflow = 'hidden';
+   _glbRender();
+   document.addEventListener('keydown', _glbKey);
+}
+function _glbRender() {
+   var imgs = window._galleryImages || [];
+   document.getElementById('glbImg').src = imgs[_glbIndex] || '';
+   document.getElementById('glbCounter').textContent = imgs.length > 1 ? (_glbIndex + 1) + ' / ' + imgs.length : '';
+   document.getElementById('glbPrev').style.display = imgs.length > 1 ? '' : 'none';
+   document.getElementById('glbNext').style.display = imgs.length > 1 ? '' : 'none';
+}
+function galleryLightboxMove(dir) {
+   var imgs = window._galleryImages || [];
+   _glbIndex = (_glbIndex + dir + imgs.length) % imgs.length;
+   _glbRender();
+}
+function closeGalleryLightbox() {
+   document.getElementById('galleryLightbox').style.display = 'none';
+   document.body.style.overflow = '';
+   document.removeEventListener('keydown', _glbKey);
+}
+function _glbKey(e) {
+   if (e.key === 'Escape') closeGalleryLightbox();
+   if (e.key === 'ArrowRight') galleryLightboxMove(1);
+   if (e.key === 'ArrowLeft') galleryLightboxMove(-1);
 }
 </script>
 
