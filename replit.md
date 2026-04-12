@@ -36,6 +36,36 @@ Workflow: "Start application" on port 5000 (webview)
 - GitHub: BazarMarket/bazar-ui
 - Push: `bash push.sh` — **НЕ пушить автоматически!** Пользователь сам пушит через консоль когда нужно.
 
+### ⚠️ Правильные пути деплоя на сервер (49.13.231.137)
+
+```bash
+# server.py — деплой В КОРЕНЬ (НЕ в public/!)
+scp -i .local/ssh/bazar_deploy server.py root@49.13.231.137:/var/www/bazar-prod/server.py
+
+# HTML файлы — деплой в public/
+scp -i .local/ssh/bazar_deploy card.html root@49.13.231.137:/var/www/bazar-prod/public/card.html
+scp -i .local/ssh/bazar_deploy post-ad.html root@49.13.231.137:/var/www/bazar-prod/public/post-ad.html
+
+# Перезапуск SEO сервера
+ssh -i .local/ssh/bazar_deploy root@49.13.231.137 "systemctl restart bazar-seo"
+```
+
+## SEO URL структура (реализовано)
+
+Формат: `/{id}-{slug}` — ID в начале, slug из title+district+city
+
+| Запрос | Ответ |
+|---|---|
+| `/39-2-bedroom-house-for-sale-chelsea-london` | 200 — страница объявления |
+| `/39` | 301 → `/39-2-bedroom-house-for-sale-chelsea-london` |
+| `/listing/39` | 301 → `/39-2-bedroom-house-for-sale-chelsea-london` |
+| `/card.html?id=39` | 301 → `/39-2-bedroom-house-for-sale-chelsea-london` |
+
+- Canonical: `https://www.bazar.uk/{id}-{slug}`
+- Sitemap: только slug URLs
+- Slug-функция: `_make_slug(title, district, city)` в server.py
+- Правило роутинга: путь начинается с **цифры** = объявление; с **буквы** = категория/страница
+
 ## CSS Versioning
 
 **Текущая версия: main.css?v=95** (обновлять при каждом изменении CSS)

@@ -786,7 +786,8 @@
       var params = new URLSearchParams(window.location.search);
       var id = params.get('id');
       if (!id) {
-         var _m = window.location.pathname.match(/\/listing\/(\d+)/);
+         var _m = window.location.pathname.match(/^\/(\d+)(?:-[^/]+)?$/)
+                || window.location.pathname.match(/\/listing\/(\d+)/);
          id = _m ? _m[1] : null;
       }
       if (!id) return;

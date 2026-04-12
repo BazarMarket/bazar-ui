@@ -57,6 +57,18 @@ INTERNAL_PAGES = {
     'privacy-policy.html', 'cookie-policy.html', 'terms.html',
 }
 
+
+def _make_slug(title: str = '', district: str = '', city: str = '') -> str:
+    """Generate a URL-safe slug: {title}-{district}-{city}, lowercase, hyphens."""
+    parts = [title or '', district or '', city or '']
+    text = ' '.join(p for p in parts if p)
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9\s]', ' ', text)
+    text = re.sub(r'\s+', '-', text.strip())
+    text = re.sub(r'-+', '-', text)
+    return text[:80].rstrip('-')
+
+
 def resolve_page_type(path: str, qs: str = '') -> tuple:
     """
     Returns (page_type, params_dict).
@@ -68,7 +80,7 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     if p in ('', 'index.html'):
         return 'homepage', {}
 
-    # card.html?id=123  (current listing URL)
+    # card.html?id=123  (legacy URL – redirected in do_GET)
     if p == 'card.html':
         qp = urllib.parse.parse_qs(qs)
         lid = qp.get('id', [None])[0]
@@ -76,8 +88,13 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'listing', {'id': lid}
         return 'other', {}
 
-    # /listing/{id}  (clean SEO URL – served as card.html content)
-    m = re.match(r'^listing/(\d+)$', p)
+    # /listing/{id} or /listing/{id}-{slug}  (legacy – redirected in do_GET)
+    m = re.match(r'^listing/(\d+)', p)
+    if m:
+        return 'listing', {'id': m.group(1)}
+
+    # /{id}-{slug} or /{id}  — new canonical listing URL (ID-first)
+    m = re.match(r'^(\d+)(-[a-z0-9-]+)?$', p)
     if m:
         return 'listing', {'id': m.group(1)}
 
@@ -220,17 +237,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
         if not listing:
             # API returned nothing – noindex, let JS handle it
-            seo['canonical'] = f'{PUBLIC_DOMAIN}/listing/{lid}'
+            seo['canonical'] = f'{PUBLIC_DOMAIN}/{lid}'
             seo['robots'] = 'noindex, follow'
             return seo
 
         # ── Status check: only active listings are indexable ──────────────────
         status = listing.get('status', 'active')
-        if status != 'active':
-            seo['canonical'] = f'{PUBLIC_DOMAIN}/listing/{lid}'
-            seo['robots'] = 'noindex, follow'
-            # Still return partial data so H1/breadcrumbs render server-side
-            # (page will still load for logged-in users via JS)
 
         title        = listing.get('title') or 'Listing'
         city         = listing.get('city') or ''
@@ -278,7 +290,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             if len(desc) > 160:
                 desc = desc[:157] + '…'
 
-        canonical = f'{PUBLIC_DOMAIN}/listing/{lid}'
+        slug = _make_slug(title, district, city)
+        canonical = f'{PUBLIC_DOMAIN}/{lid}-{slug}' if slug else f'{PUBLIC_DOMAIN}/{lid}'
+
+        if status != 'active':
+            seo['canonical'] = canonical
+            seo['robots'] = 'noindex, follow'
 
         # OG image
         og_image = seo['og_image']
@@ -749,7 +766,13 @@ def build_sitemap() -> str:
             updated = item.get('updated_at', '')
             lastmod = updated if updated else None  # ISO 8601: YYYY-MM-DDTHH:MM:SS+00:00
             if lid:
-                entries.append((f'{PUBLIC_DOMAIN}/listing/{lid}', lastmod))
+                slug = _make_slug(
+                    item.get('title', ''),
+                    item.get('district', ''),
+                    item.get('city', ''),
+                )
+                url = f'{PUBLIC_DOMAIN}/{lid}-{slug}' if slug else f'{PUBLIC_DOMAIN}/{lid}'
+                entries.append((url, lastmod))
 
     def _url_tag(loc, lastmod):
         if lastmod:
@@ -879,22 +902,68 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(xml)
             return
 
-        # 301 redirect: card.html?id=123 → /listing/123
+        # 301 redirect: card.html?id=123 → /{id}-{slug}
         if path == '/card.html':
             qp = urllib.parse.parse_qs(qs)
             lid = qp.get('id', [None])[0]
             if lid and lid.isdigit():
+                listing = _api_get(f'/properties/{lid}', f'listing_{lid}')
+                if listing:
+                    slug = _make_slug(
+                        listing.get('title', ''),
+                        listing.get('district', ''),
+                        listing.get('city', ''),
+                    )
+                    dest = f'/{lid}-{slug}' if slug else f'/{lid}'
+                else:
+                    dest = f'/{lid}'
                 self.send_response(301)
-                self.send_header('Location', f'/listing/{lid}')
+                self.send_header('Location', dest)
                 self.end_headers()
                 return
 
-        # /listing/{id} → serve card.html content with SEO
-        m = re.match(r'^/listing/(\d+)$', path)
+        # 301 redirect: /listing/{id} or /listing/{id}-{slug} → /{id}-{slug}
+        m = re.match(r'^/listing/(\d+)', path)
         if m:
+            lid = m.group(1)
+            listing = _api_get(f'/properties/{lid}', f'listing_{lid}')
+            if listing:
+                slug = _make_slug(
+                    listing.get('title', ''),
+                    listing.get('district', ''),
+                    listing.get('city', ''),
+                )
+                dest = f'/{lid}-{slug}' if slug else f'/{lid}'
+            else:
+                dest = f'/{lid}'
+            self.send_response(301)
+            self.send_header('Location', dest)
+            self.end_headers()
+            return
+
+        # /{id}-{slug} → serve card.html with SEO
+        # /{id}        → 301 redirect to /{id}-{slug}
+        m = re.match(r'^/(\d+)(-.+)?$', path)
+        if m:
+            lid = m.group(1)
+            has_slug = bool(m.group(2))
+            if not has_slug:
+                listing = _api_get(f'/properties/{lid}', f'listing_{lid}')
+                if listing:
+                    slug = _make_slug(
+                        listing.get('title', ''),
+                        listing.get('district', ''),
+                        listing.get('city', ''),
+                    )
+                    dest = f'/{lid}-{slug}' if slug else f'/{lid}'
+                    if dest != path:
+                        self.send_response(301)
+                        self.send_header('Location', dest)
+                        self.end_headers()
+                        return
             html_file = os.path.join(SITE_ROOT, 'card.html')
             if os.path.isfile(html_file):
-                self._serve_seo_page(html_file, 'listing', {'id': m.group(1)})
+                self._serve_seo_page(html_file, 'listing', {'id': lid})
                 return
 
         # Dev homepage redirect
