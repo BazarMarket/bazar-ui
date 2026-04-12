@@ -2240,6 +2240,7 @@
          if (lt === 'For Sale') return 'sale';
          if (lt === 'For Long-term Rent') return 'long_rent';
          if (lt === 'For Short-term Rent') return 'short_rent';
+         if (lt === 'For Rent') return 'rent';
          return 'sale';
       }
 
@@ -2256,8 +2257,12 @@
       }
 
       function submitProperty() {
+         if (reState.cat === 'motors' && isCarSubtype) {
+            submitCar();
+            return;
+         }
          if (reState.cat !== 'real-estate') {
-            alert('Only Real Estate listings are supported for submission at the moment.');
+            alert('Only Real Estate and Motors → Cars listings are supported for submission at the moment.');
             return;
          }
 
@@ -2462,6 +2467,144 @@
             btn.disabled = false;
             alert('Error submitting ad: ' + error.message);
             console.error('Submit error:', error);
+         });
+      }
+
+      function submitCar() {
+         var title = getInputVal('titleInput');
+         var price = getInputVal('priceInput').replace(/\./g, '');
+         var sellerName = getInputVal('sellerNameInput');
+         var sellerPhone = getInputVal('sellerPhoneInput');
+         var make = getSelectVal('carMakeSelect');
+         var modelSel = document.getElementById('carModelSelect');
+         var model = modelSel ? modelSel.value : '';
+         if (model === 'Other') model = getInputVal('carModelOtherInput');
+         var carYear = getSelectVal('carYearSelect');
+
+         if (!title) { alert('Please enter the Ad Title.'); return; }
+         if (!make) { alert('Please select the car Make.'); return; }
+         if (!model) { alert('Please select the car Model.'); return; }
+         if (!carYear) { alert('Please select the Year.'); return; }
+         if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
+         if (!sellerName) { alert('Please enter your Name.'); return; }
+         if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+
+         var locationCity = document.getElementById('locationCity').value;
+         if (!locationCity) { alert('Please select a location.'); return; }
+
+         var listingType = reState.listingType === 'For Rent' ? 'rent' : 'sale';
+
+         var formData = new FormData();
+         formData.append('title', title);
+         var firebaseUid = localStorage.getItem('bazar_firebase_uid');
+         if (firebaseUid) formData.append('firebase_uid', firebaseUid);
+         formData.append('listing_type', listingType);
+         formData.append('property_type', 'car');
+         formData.append('price', price);
+         formData.append('currency', 'GBP');
+         formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         formData.append('country', 'United Kingdom');
+         formData.append('city', locationCity);
+         var locationPostcode = document.getElementById('locationPostcode').value;
+         if (locationPostcode) formData.append('postal_code', locationPostcode);
+         var locationDistrict = document.getElementById('locationDistrict').value;
+         if (locationDistrict) formData.append('district', locationDistrict);
+         var locationRegion = document.getElementById('locationRegion').value;
+         if (locationRegion) formData.append('region', locationRegion);
+         var locationLat = document.getElementById('locationLat').value;
+         var locationLng = document.getElementById('locationLng').value;
+         if (locationLat) formData.append('latitude', locationLat);
+         if (locationLng) formData.append('longitude', locationLng);
+         var exactLat = document.getElementById('exactLat').value;
+         var exactLng = document.getElementById('exactLng').value;
+         if (exactLat) formData.append('exact_latitude', exactLat);
+         if (exactLng) formData.append('exact_longitude', exactLng);
+         formData.append('description', getInputVal('descriptionInput'));
+
+         var condition = getSelectVal('conditionSelect');
+         if (condition) formData.append('condition', condition);
+
+         formData.append('car_make', make);
+         formData.append('car_model', model);
+         formData.append('car_year', carYear);
+         var mileage = getInputVal('carMileageInput');
+         if (mileage) formData.append('mileage', mileage.replace(/,/g,''));
+         var fuel = getSelectVal('carFuelSelect');
+         if (fuel) formData.append('fuel_type', fuel);
+         var transmission = getSelectVal('carTransmissionSelect');
+         if (transmission) formData.append('transmission', transmission);
+         var bodyType = getSelectVal('carBodyTypeSelect');
+         if (bodyType) formData.append('body_type', bodyType);
+         var colour = getSelectVal('carColourSelect');
+         if (colour) formData.append('colour', colour);
+         var doors = getSelectVal('carDoorsSelect');
+         if (doors) formData.append('doors', doors);
+         var seats = getSelectVal('carSeatsSelect');
+         if (seats) formData.append('seats', seats);
+         var driveType = getSelectVal('carDriveTypeSelect');
+         if (driveType) formData.append('drive_type', driveType);
+         var steering = getSelectVal('carSteeringSelect');
+         if (steering) formData.append('steering_side', steering);
+         var engine = getSelectVal('carEngineSelect');
+         if (engine) formData.append('engine_size', engine);
+         var prevOwners = getInputVal('carPrevOwnersInput');
+         if (prevOwners) formData.append('previous_owners', prevOwners);
+         var serviceHistory = getSelectVal('carServiceHistorySelect');
+         if (serviceHistory) formData.append('service_history', serviceHistory);
+         var mot = getSelectVal('carMotSelect');
+         if (mot) formData.append('mot_status', mot);
+
+         formData.append('seller_name', sellerName);
+         formData.append('seller_phone', sellerPhone);
+         var sellerEmail = getInputVal('sellerEmailInput');
+         if (sellerEmail) formData.append('seller_email', sellerEmail);
+         var hasWhatsapp = document.getElementById('whatsappCheck');
+         var hasTelegram = document.getElementById('telegramCheck');
+         var hasViber    = document.getElementById('viberCheck');
+         var hasEmail    = document.getElementById('emailCheck');
+         formData.append('has_whatsapp', (hasWhatsapp && hasWhatsapp.checked) ? '1' : '0');
+         formData.append('has_telegram', (hasTelegram && hasTelegram.checked) ? '1' : '0');
+         formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
+         formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
+         var youtube = getInputVal('youtubeInput');
+         if (youtube) formData.append('video_url', youtube);
+
+         var photoGrid = document.getElementById('photoPreviewGrid');
+         if (photoGrid) {
+            Array.from(photoGrid.children).forEach(function(box) {
+               if (box._paFile) formData.append('images[]', box._paFile);
+            });
+         }
+
+         var btn = document.querySelector('.pa-btn-submit');
+         btn.textContent = 'Submitting...';
+         btn.disabled = true;
+
+         fetch(API_URL, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+         })
+         .then(function(r) { return r.json(); })
+         .then(function(data) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            if (data.errors || data.message && !data.property_id) {
+               var msg = data.message || JSON.stringify(data.errors);
+               alert('Error: ' + msg);
+               return;
+            }
+            var adId = data.property_id || '';
+            var ads = [];
+            try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
+            ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'car', status: 'pending' });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            window.location.href = 'publish-options.html?ad_id=' + adId;
+         })
+         .catch(function(err) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            alert('Error submitting ad: ' + err.message);
          });
       }
 
