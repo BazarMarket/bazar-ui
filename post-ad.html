@@ -1148,6 +1148,170 @@
                      </div>
                   </div>
 
+                  <!-- Phone-specific fields (Mobile phones, communication → Mobile phones) -->
+                  <div id="phoneSpecificSection" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">Brand:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneBrandSelect" onchange="onPhoneBrandChange(this)">
+                              <option value="" disabled selected hidden>Select brand</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Model:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneModelSelect" onchange="onPhoneModelChange(this)">
+                              <option value="" disabled selected hidden>Select brand first</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field" id="phoneModelOtherField" style="display:none">
+                        <span class="pa-field__label">Model name:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="phoneModelOtherInput" type="text" placeholder="Enter model name" oninput="updatePhoneTitle()">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Storage:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneStorageSelect" onchange="updatePhoneTitle(); this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select storage</option>
+                              <option>32GB</option>
+                              <option>64GB</option>
+                              <option>128GB</option>
+                              <option>256GB</option>
+                              <option>512GB</option>
+                              <option>1TB</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Colour:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="phoneColourInput" type="text" placeholder="e.g. Midnight Black">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Unlock status:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneUnlockSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select unlock status</option>
+                              <option>Unlocked</option>
+                              <option>Locked to network</option>
+                              <option>Unknown</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">RAM:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneRamSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select RAM</option>
+                              <option>2GB</option>
+                              <option>3GB</option>
+                              <option>4GB</option>
+                              <option>6GB</option>
+                              <option>8GB</option>
+                              <option>12GB</option>
+                              <option>16GB</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">SIM type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneSimSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select SIM type</option>
+                              <option>Single SIM</option>
+                              <option>Dual SIM</option>
+                              <option>eSIM</option>
+                              <option>eSIM + SIM</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Network:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneNetworkSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select network</option>
+                              <option>5G</option>
+                              <option>4G</option>
+                              <option>Wi-Fi only</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Battery health:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneBatterySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select battery health</option>
+                              <option>100%</option>
+                              <option>95–99%</option>
+                              <option>90–94%</option>
+                              <option>85–89%</option>
+                              <option>Below 85%</option>
+                              <option>Unknown</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Operating system:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneOsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select OS</option>
+                              <option>iOS</option>
+                              <option>Android</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Warranty:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneWarrantySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select warranty</option>
+                              <option>No warranty</option>
+                              <option>Manufacturer warranty</option>
+                              <option>Shop warranty</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Original box:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneBoxSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select</option>
+                              <option>Yes</option>
+                              <option>No</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Charger included:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneChargerSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select</option>
+                              <option>Yes</option>
+                              <option>No</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Seller type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneSellerTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select seller type</option>
+                              <option>Private</option>
+                              <option>Dealer / Shop</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="storageField" style="display:none">
                      <span class="pa-field__label">Storage:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -1597,6 +1761,109 @@
          'Other':         []
       };
       var isCarSubtype = false;
+      var isPhoneSubtype = false;
+
+      var phoneModels = {
+         'Apple':    ['iPhone 11','iPhone 11 Pro','iPhone 12','iPhone 12 Pro','iPhone 12 Pro Max','iPhone 13','iPhone 13 Pro','iPhone 13 Pro Max','iPhone 14','iPhone 14 Plus','iPhone 14 Pro','iPhone 14 Pro Max','iPhone 15','iPhone 15 Plus','iPhone 15 Pro','iPhone 15 Pro Max','iPhone 16','iPhone 16 Plus','iPhone 16 Pro','iPhone 16 Pro Max','iPhone SE (2020)','iPhone SE (2022)','Other'],
+         'Samsung':  ['Galaxy S21','Galaxy S21+','Galaxy S21 Ultra','Galaxy S22','Galaxy S22+','Galaxy S22 Ultra','Galaxy S23','Galaxy S23+','Galaxy S23 Ultra','Galaxy S24','Galaxy S24+','Galaxy S24 Ultra','Galaxy A54','Galaxy A55','Galaxy A35','Galaxy A25','Galaxy Z Flip 5','Galaxy Z Flip 6','Galaxy Z Fold 5','Galaxy Z Fold 6','Other'],
+         'Xiaomi':   ['Redmi Note 12','Redmi Note 13','Redmi Note 13 Pro','Xiaomi 13','Xiaomi 13T','Xiaomi 13T Pro','Xiaomi 14','Poco X6','Poco F5','Other'],
+         'Huawei':   ['P30','P30 Pro','P40','P40 Pro','P50','P50 Pro','Mate 40','Mate 40 Pro','Mate 50','Mate 50 Pro','Nova 12','Other'],
+         'Google':   ['Pixel 7','Pixel 7a','Pixel 7 Pro','Pixel 8','Pixel 8a','Pixel 8 Pro','Pixel 9','Pixel 9 Pro','Pixel 9 Pro XL','Pixel 9 Pro Fold','Other'],
+         'OnePlus':  ['OnePlus 10 Pro','OnePlus 11','OnePlus 12','OnePlus Nord 3','OnePlus Nord CE 3','OnePlus Nord 4','Other'],
+         'Sony':     ['Xperia 1 V','Xperia 5 V','Xperia 10 V','Xperia 1 VI','Other'],
+         'Nokia':    ['Nokia G42','Nokia G60','Nokia X30','Nokia XR21','Other'],
+         'Motorola': ['Moto G84','Moto G54','Edge 40','Edge 40 Pro','Edge 50','Edge 50 Pro','Other'],
+         'Oppo':     ['Oppo Find X6','Oppo Find X7','Oppo Reno 10','Oppo Reno 11','Other'],
+         'Vivo':     ['Vivo X90','Vivo X100','Vivo V29','Vivo V30','Other'],
+         'Honor':    ['Honor Magic 5','Honor Magic 6','Honor 90','Honor 90 Pro','Other'],
+         'Realme':   ['Realme GT 5','Realme 12 Pro','Realme 12 Pro+','Realme 11 Pro','Other'],
+         'Nothing':  ['Phone (1)','Phone (2)','Phone (2a)','Phone (2a) Plus','Other'],
+         'Other':    []
+      };
+
+      function initPhoneBrandSelect() {
+         var sel = document.getElementById('phoneBrandSelect');
+         if (!sel) return;
+         var html = '<option value="" disabled selected hidden>Select brand</option>';
+         Object.keys(phoneModels).forEach(function(b) { html += '<option>' + b + '</option>'; });
+         sel.innerHTML = html;
+         sel.classList.add('pa-empty');
+      }
+
+      function onPhoneBrandChange(sel) {
+         sel.classList.toggle('pa-empty', !sel.value);
+         var brand = sel.value;
+         var modelSel = document.getElementById('phoneModelSelect');
+         var otherField = document.getElementById('phoneModelOtherField');
+         var models = phoneModels[brand] || [];
+         if (brand === 'Other' || !models.length) {
+            modelSel.innerHTML = '';
+            modelSel.style.display = 'none';
+            if (otherField) otherField.style.display = 'flex';
+         } else {
+            var html = '<option value="" disabled selected hidden>Select model</option>';
+            models.forEach(function(m) { html += '<option>' + m + '</option>'; });
+            modelSel.innerHTML = html;
+            modelSel.classList.add('pa-empty');
+            modelSel.style.display = '';
+            if (otherField) otherField.style.display = 'none';
+         }
+         updatePhoneTitle();
+      }
+
+      function onPhoneModelChange(sel) {
+         sel.classList.toggle('pa-empty', !sel.value);
+         var otherField = document.getElementById('phoneModelOtherField');
+         if (sel.value === 'Other') {
+            if (otherField) otherField.style.display = 'flex';
+         } else {
+            if (otherField) otherField.style.display = 'none';
+         }
+         updatePhoneTitle();
+      }
+
+      function updatePhoneTitle() {
+         var titleInput = document.getElementById('titleInput');
+         if (!titleInput) return;
+         var brand = (document.getElementById('phoneBrandSelect') || {}).value || '';
+         var modelSel = document.getElementById('phoneModelSelect');
+         var model = modelSel && modelSel.style.display !== 'none' ? (modelSel.value || '') : '';
+         if (!model || model === 'Other') model = getInputVal('phoneModelOtherInput');
+         var storage = (document.getElementById('phoneStorageSelect') || {}).value || '';
+         var parts = [brand, model, storage].filter(Boolean);
+         if (parts.length) titleInput.value = parts.join(' ');
+      }
+
+      function activatePhoneFields() {
+         isPhoneSubtype = true;
+         var phoneSec = document.getElementById('phoneSpecificSection');
+         if (phoneSec) phoneSec.style.display = '';
+         initPhoneBrandSelect();
+         var condSel = document.getElementById('conditionSelect');
+         if (condSel) {
+            condSel.innerHTML = '<option value="">Select condition</option>' +
+               '<option value="new">New</option>' +
+               '<option value="resale">Like new</option>' +
+               '<option value="resale">Used</option>' +
+               '<option value="resale">Refurbished</option>' +
+               '<option value="resale">For parts / not working</option>';
+         }
+         var condField = document.getElementById('conditionField');
+         if (condField) condField.style.display = 'flex';
+         var bedroomsField = document.getElementById('bedroomsField');
+         if (bedroomsField) bedroomsField.style.display = 'none';
+         var titleInput = document.getElementById('titleInput');
+         if (titleInput) {
+            titleInput.removeAttribute('readonly');
+            titleInput.placeholder = 'e.g. Apple iPhone 15 Pro 256GB';
+         }
+      }
+
+      function deactivatePhoneFields() {
+         isPhoneSubtype = false;
+         var phoneSec = document.getElementById('phoneSpecificSection');
+         if (phoneSec) phoneSec.style.display = 'none';
+      }
 
       function initCarMakeSelect() {
          var sel = document.getElementById('carMakeSelect');
@@ -1846,11 +2113,12 @@
             'Other':       []
          },
          'phones': {
-            'Smartphones':  ['Apple iPhone', 'Samsung', 'Xiaomi', 'Other Android', 'Other'],
-            'Tablets':      ['iPad', 'Android tablet', 'Other'],
-            'Accessories':  ['Cases', 'Chargers', 'Headphones', 'Other'],
-            'SIM cards':    [],
-            'Other':        []
+            'Mobile phones':           [],
+            'Phone parts, tools':      [],
+            'Phones, answering mach.': [],
+            'Wearables':               [],
+            'Accessories':             [],
+            'Other':                   []
          },
          'free': {
             'Free Items': [],
@@ -2029,6 +2297,7 @@
          reState.subtype = '';
 
          if (reState.cat === 'motors' && propType === 'Cars') {
+            deactivatePhoneFields();
             activateCarFields();
             document.getElementById('houseTypeField').style.display = 'none';
             document.getElementById('buildingTypeField').style.display = 'none';
@@ -2037,7 +2306,18 @@
             document.getElementById('paForm').classList.add('visible');
             return;
          }
+         if (reState.cat === 'phones' && propType === 'Mobile phones') {
+            deactivateCarFields();
+            activatePhoneFields();
+            document.getElementById('houseTypeField').style.display = 'none';
+            document.getElementById('buildingTypeField').style.display = 'none';
+            document.getElementById('constructionTypeField').style.display = 'none';
+            document.getElementById('subtypeField').style.display = 'none';
+            document.getElementById('paForm').classList.add('visible');
+            return;
+         }
          deactivateCarFields();
+         deactivatePhoneFields();
 
          var houseTypeField = document.getElementById('houseTypeField');
          var houseTypeSelect = document.getElementById('houseTypeSelect');
@@ -2261,8 +2541,12 @@
             submitCar();
             return;
          }
+         if (reState.cat === 'phones' && isPhoneSubtype) {
+            submitPhone();
+            return;
+         }
          if (reState.cat !== 'real-estate') {
-            alert('Only Real Estate and Motors → Cars listings are supported for submission at the moment.');
+            alert('Only Real Estate, Motors → Cars and Mobile phones listings are supported for submission at the moment.');
             return;
          }
 
@@ -2595,6 +2879,131 @@
             var ads = [];
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'car', status: 'pending' });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            window.location.href = 'publish-options.html?ad_id=' + adId;
+         })
+         .catch(function(err) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            alert('Error submitting ad: ' + err.message);
+         });
+      }
+
+      function submitPhone() {
+         var title = getInputVal('titleInput');
+         var price = getInputVal('priceInput').replace(/\./g, '');
+         var sellerName = getInputVal('sellerNameInput');
+         var sellerPhone = getInputVal('sellerPhoneInput');
+
+         if (!title) { alert('Please enter the Ad Title.'); return; }
+         if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
+         if (!sellerName) { alert('Please enter your Name.'); return; }
+         if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+
+         var locationCity = document.getElementById('locationCity').value;
+         if (!locationCity) { alert('Please select a location.'); return; }
+
+         var brand = getSelectVal('phoneBrandSelect');
+         var modelSel = document.getElementById('phoneModelSelect');
+         var model = modelSel && modelSel.style.display !== 'none' ? (modelSel.value || '') : '';
+         if (!model || model === 'Other') model = getInputVal('phoneModelOtherInput');
+
+         var formData = new FormData();
+         formData.append('title', title);
+         var firebaseUid = localStorage.getItem('bazar_firebase_uid');
+         if (firebaseUid) formData.append('firebase_uid', firebaseUid);
+         formData.append('listing_type', 'sale');
+         formData.append('property_type', 'mobile_phone');
+         formData.append('price', price);
+         formData.append('currency', 'GBP');
+         formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         formData.append('country', 'United Kingdom');
+         formData.append('city', locationCity);
+         var locationPostcode = document.getElementById('locationPostcode').value;
+         if (locationPostcode) formData.append('postal_code', locationPostcode);
+         var locationDistrict = document.getElementById('locationDistrict').value;
+         if (locationDistrict) formData.append('district', locationDistrict);
+         var locationRegion = document.getElementById('locationRegion').value;
+         if (locationRegion) formData.append('region', locationRegion);
+         var locationLat = document.getElementById('locationLat').value;
+         var locationLng = document.getElementById('locationLng').value;
+         if (locationLat) formData.append('latitude', locationLat);
+         if (locationLng) formData.append('longitude', locationLng);
+         formData.append('description', getInputVal('descriptionInput'));
+
+         var condition = getSelectVal('conditionSelect');
+         if (condition) formData.append('condition', condition);
+
+         if (brand) formData.append('phone_brand', brand);
+         if (model) formData.append('phone_model', model);
+         var storage = getSelectVal('phoneStorageSelect');
+         if (storage) formData.append('phone_storage', storage);
+         var colour = getInputVal('phoneColourInput');
+         if (colour) formData.append('colour', colour);
+         var unlock = getSelectVal('phoneUnlockSelect');
+         if (unlock) formData.append('unlock_status', unlock);
+         var ram = getSelectVal('phoneRamSelect');
+         if (ram) formData.append('phone_ram', ram);
+         var sim = getSelectVal('phoneSimSelect');
+         if (sim) formData.append('sim_type', sim);
+         var network = getSelectVal('phoneNetworkSelect');
+         if (network) formData.append('network', network);
+         var battery = getSelectVal('phoneBatterySelect');
+         if (battery) formData.append('battery_health', battery);
+         var os = getSelectVal('phoneOsSelect');
+         if (os) formData.append('operating_system', os);
+         var warranty = getSelectVal('phoneWarrantySelect');
+         if (warranty) formData.append('warranty', warranty);
+         var box = getSelectVal('phoneBoxSelect');
+         if (box) formData.append('original_box', box);
+         var charger = getSelectVal('phoneChargerSelect');
+         if (charger) formData.append('charger_included', charger);
+         var sellerType = getSelectVal('phoneSellerTypeSelect');
+         if (sellerType) formData.append('seller_type', sellerType);
+
+         formData.append('seller_name', sellerName);
+         formData.append('seller_phone', sellerPhone);
+         var sellerEmail = getInputVal('sellerEmailInput');
+         if (sellerEmail) formData.append('seller_email', sellerEmail);
+         var hasWhatsapp = document.getElementById('whatsappCheck');
+         var hasTelegram = document.getElementById('telegramCheck');
+         var hasViber    = document.getElementById('viberCheck');
+         var hasEmail    = document.getElementById('emailCheck');
+         formData.append('has_whatsapp', (hasWhatsapp && hasWhatsapp.checked) ? '1' : '0');
+         formData.append('has_telegram', (hasTelegram && hasTelegram.checked) ? '1' : '0');
+         formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
+         formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
+         var youtube = getInputVal('youtubeInput');
+         if (youtube) formData.append('video_url', youtube);
+
+         var photoGrid = document.getElementById('photoPreviewGrid');
+         if (photoGrid) {
+            Array.from(photoGrid.children).forEach(function(box) {
+               if (box._paFile) formData.append('images[]', box._paFile);
+            });
+         }
+
+         var btn = document.querySelector('.pa-btn-submit');
+         btn.textContent = 'Submitting...';
+         btn.disabled = true;
+
+         fetch(API_URL, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+         })
+         .then(function(r) { return r.json(); })
+         .then(function(data) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            if (data.errors || (data.message && !data.property_id)) {
+               alert('Error: ' + (data.message || JSON.stringify(data.errors)));
+               return;
+            }
+            var adId = data.property_id || '';
+            var ads = [];
+            try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
+            ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'phone', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
             window.location.href = 'publish-options.html?ad_id=' + adId;
          })
