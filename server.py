@@ -262,10 +262,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         else:
             location_str = 'UK'
 
-        raw_title = title
+        raw_title = title + f' in {location_str}'
         if price_str:
             raw_title += f' – {price_str}'
-        raw_title += f' in {location_str} | Bazar UK'
+        raw_title += ' | Bazar UK'
         seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
 
         # ── Meta description ──────────────────────────────────────────────────
