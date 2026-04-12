@@ -1491,8 +1491,9 @@
         var html = '';
         var needsApiPhoto = [];
         ads.slice(0, 4).forEach(function(ad) {
-            var imgSrc = ad.photo || 'img/product.jpg';
-            var needsFetch = !ad.photo && ad.id;
+            var badPhoto = ad.photo && ad.photo.indexOf('dev.bazar.uk') !== -1;
+            var imgSrc = (ad.photo && !badPhoto) ? ad.photo : 'img/product.jpg';
+            var needsFetch = (!ad.photo || badPhoto) && ad.id;
             var imgId = needsFetch ? 'luImg_' + ad.id : '';
             var cardCls = stikerLabel ? 'card card_orange' : 'card';
             var stiker = stikerLabel
@@ -1526,7 +1527,7 @@
                     /* Cache into localStorage so next load is instant */
                     try {
                         var stored = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
-                        stored.forEach(function(a) { if (String(a.id) === String(adId) && !a.photo) a.photo = firstImg; });
+                        stored.forEach(function(a) { if (String(a.id) === String(adId) && (!a.photo || a.photo.indexOf('dev.bazar.uk') !== -1)) a.photo = firstImg; });
                         localStorage.setItem('bazar_my_ads', JSON.stringify(stored));
                     } catch(e) {}
                 })
