@@ -1963,7 +1963,7 @@
          if (condition) formData.append('condition', condition);
 
          var floor = getSelectVal('floorSelect');
-         if (floor) formData.append('floor', parseInt(floor));
+         if (floor) formData.append('floor', floor === 'Ground floor' ? '0' : floor);
 
          var bedrooms = getSelectVal('bedroomsSelect');
          if (bedrooms) formData.append('bedrooms', bedrooms === '10 and more' ? 10 : parseInt(bedrooms));
@@ -2374,37 +2374,68 @@
 
          var geocoder = new google.maps.Geocoder();
          geocoder.geocode({ location: { lat: lat, lng: lng } }, function(results, status) {
-            if (status === 'OK' && results[0]) {
+            if (status === 'OK' && results && results.length > 0) {
                var addr = results[0].formatted_address;
                var locInput = document.getElementById('locationInput') || document.querySelector('input[name="location"]');
                if (locInput) locInput.value = addr;
-               var comps = results[0].address_components;
+
+               // --- Pass 1: city / postcode / region / adminL2 from result[0] ---
                var city = '', locality = '', district = '', region = '', postcode = '', adminL2 = '';
-               comps.forEach(function(c) {
-                  if (c.types.includes('postal_town')) { if (!city) city = c.long_name; }
-                  if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
-                  if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
-                      c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
-                  if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
-                  if (c.types.includes('administrative_area_level_3')) { if (!district) district = c.long_name; }
+               results[0].address_components.forEach(function(c) {
+                  if (c.types.includes('postal_town'))             { if (!city)    city    = c.long_name; }
+                  if (c.types.includes('locality'))                { if (!locality) locality = c.long_name; }
                   if (c.types.includes('administrative_area_level_2')) adminL2 = c.long_name;
                   if (c.types.includes('administrative_area_level_1')) { if (!region) region = c.long_name; }
-                  if (c.types.includes('postal_code')) postcode = c.long_name;
+                  if (c.types.includes('postal_code'))             postcode = c.long_name;
                });
-               // Greater London fix: postal_town like "Wembley" is actually a district, city = "London"
+               // Greater London: postal_town like "Wembley" → district, city = "London"
                if (adminL2 === 'Greater London' && city && city !== 'London') {
-                  if (!district) district = city;
+                  district = city;
                   city = 'London';
                }
-               // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
-               if (locality && city && locality !== city && !district) district = locality;
-               if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
-               // Fallback: parse district from formatted_address
-               if (!district && results[0].formatted_address && city) {
-                  district = extractDistrictFromFormatted(results[0].formatted_address, city);
+               if (!city) city = locality;
+
+               // --- Pass 2: scan ALL results for neighborhood / sublocality ---
+               if (!district) {
+                  var districtTypes = ['neighborhood','sublocality_level_1','sublocality','sublocality_level_2','administrative_area_level_3'];
+                  outer: for (var ri = 0; ri < results.length; ri++) {
+                     var comps = results[ri].address_components;
+                     for (var ci = 0; ci < comps.length; ci++) {
+                        var c = comps[ci];
+                        for (var ti = 0; ti < districtTypes.length; ti++) {
+                           if (c.types.includes(districtTypes[ti]) && c.long_name !== city) {
+                              district = c.long_name;
+                              break outer;
+                           }
+                        }
+                     }
+                  }
                }
-               if (city) document.getElementById('locationCity').value = city;
+
+               // --- Pass 3: locality ≠ city across all results ---
+               if (!district) {
+                  outer2: for (var ri2 = 0; ri2 < results.length; ri2++) {
+                     var comps2 = results[ri2].address_components;
+                     for (var ci2 = 0; ci2 < comps2.length; ci2++) {
+                        var c2 = comps2[ci2];
+                        if (c2.types.includes('locality') && c2.long_name && c2.long_name !== city && c2.long_name !== 'London') {
+                           district = c2.long_name;
+                           break outer2;
+                        }
+                     }
+                  }
+               }
+
+               // --- Pass 4: formatted_address parsing across ALL results ---
+               if (!district && city) {
+                  for (var ri3 = 0; ri3 < results.length && !district; ri3++) {
+                     district = extractDistrictFromFormatted(results[ri3].formatted_address, city);
+                  }
+               }
+
+               if (city)     document.getElementById('locationCity').value     = city;
                if (district) document.getElementById('locationDistrict').value = district;
+               if (region)   document.getElementById('locationRegion').value   = region;
                if (postcode) document.getElementById('locationPostcode').value = postcode;
             }
          });
