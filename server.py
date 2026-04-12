@@ -606,6 +606,7 @@ def build_seo_head(seo: dict) -> str:
 
     lines = [
         f'<title>{title}</title>',
+        f'<meta name="google-site-verification" content="Tw8NlNC_J7btA3jopUVmkaAIfZrinCVS9mPlFH1UWWY">',
         f'<meta name="description" content="{desc}">',
         f'<link rel="canonical" href="{canon}">',
         f'<meta name="robots" content="{robots}">',
