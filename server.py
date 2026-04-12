@@ -331,17 +331,18 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                              'studio', 'bungalow', 'maisonette', 'cottage'}
         is_real_estate = prop_type.lower() in real_estate_types
 
-        breadcrumb_schema = {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1,
-                 "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2,
-                 "name": cat_label, "item": f"{PUBLIC_DOMAIN}/property"},
-                {"@type": "ListItem", "position": 3,
-                 "name": title, "item": canonical},
-            ]
-        }
+        city_slug_url = re.sub(r'[^a-z0-9]+', '-', city.lower()).strip('-') if city else ''
+        city_url = f'{PUBLIC_DOMAIN}/property/{city_slug_url}' if city_slug_url else ''
+
+        bc_items = [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
+            {"@type": "ListItem", "position": 2, "name": cat_label, "item": f"{PUBLIC_DOMAIN}/property"},
+        ]
+        if city_url:
+            bc_items.append({"@type": "ListItem", "position": 3, "name": city, "item": city_url})
+        bc_items.append({"@type": "ListItem", "position": len(bc_items) + 1, "name": title, "item": canonical})
+
+        breadcrumb_schema = {"@type": "BreadcrumbList", "itemListElement": bc_items}
 
         if is_real_estate:
             schema = {
@@ -371,13 +372,17 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             }
 
         # ── SSR blocks: visible H1 + breadcrumbs injected into body ──────────
+        listing_breadcrumbs = [
+            ('Home', '/'),
+            (cat_label, '/property'),
+        ]
+        if city and city_slug_url:
+            listing_breadcrumbs.append((city, f'/property/{city_slug_url}'))
+        listing_breadcrumbs.append((type_label, None))
+
         seo['ssr'] = {
             'prop_title':  title,
-            'breadcrumbs': [
-                ('Home', '/'),
-                (cat_label, '/property'),
-                (type_label, None),
-            ],
+            'breadcrumbs': listing_breadcrumbs,
         }
 
         seo.update({
@@ -439,6 +444,14 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+
+        inventory = _api_get('/sitemap-inventory?min=1', 'sitemap_inventory')
+        city_slugs = (inventory or {}).get(cat, [])
+        city_links = [
+            (slug.replace('-', ' ').title(), f'/{cat}/{slug}')
+            for slug in city_slugs[:12] if slug
+        ]
+
         seo['ssr'] = {
             'h1':          h1,
             'intro':       intro,
@@ -446,7 +459,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 ('Home', '/'),
                 (h1_phrase, None),
             ],
-            'type': 'category',
+            'city_links':  city_links,
+            'cat_label':   h1_phrase,
+            'type':        'category',
         }
         return seo
 
@@ -684,12 +699,14 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
 
 
 def inject_ssr_category(html: str, ssr: dict) -> str:
-    """Inject visible H1, intro text and breadcrumbs into search.html
+    """Inject visible H1, intro text, breadcrumbs, and city links into search.html
     for category and category+city pages."""
 
-    h1    = ssr.get('h1', '')
-    intro = ssr.get('intro', '')
+    h1          = ssr.get('h1', '')
+    intro       = ssr.get('intro', '')
     breadcrumbs = ssr.get('breadcrumbs', [])
+    city_links  = ssr.get('city_links', [])
+    cat_label   = ssr.get('cat_label', '')
 
     # ── Build replacement srBreadcrumb ────────────────────────────────────────
     if breadcrumbs:
@@ -724,6 +741,22 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         if m:
             insert_at = m.end()
             html = html[:insert_at] + hero_html + html[insert_at:]
+
+    # ── Inject city links nav before </body> ─────────────────────────────────
+    if city_links:
+        links_html = ''.join(
+            f'<a href="{_attr(href)}" style="color:#888;margin-right:12px;white-space:nowrap">'
+            f'{_esc(label)}</a>'
+            for label, href in city_links
+        )
+        label_text = _esc(f'{cat_label} in:') if cat_label else 'Browse:'
+        nav = (
+            f'\n<nav aria-label="Browse by city" style="font-size:13px;padding:10px 16px 16px;'
+            f'line-height:2;">'
+            f'<span style="color:#aaa;margin-right:6px">{label_text}</span>'
+            f'{links_html}</nav>'
+        )
+        html = html.replace('</body>', nav + '\n</body>', 1)
 
     return html
 
