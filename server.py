@@ -182,7 +182,7 @@ def _api_get(path: str, cache_key: str = None):
 
 def _default_seo():
     return {
-        'title':       'Free UK Classifieds – Buy & Sell | Bazar',
+        'title':       'Free UK Classifieds – Buy & Sell | Bazar UK',
         'description': 'Post free ads in the UK. Buy and sell property, cars, '
                        'electronics and more on Bazar.',
         'canonical':   PUBLIC_DOMAIN + '/',
@@ -254,8 +254,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             price_str = ''
 
         # ── Title formula ─────────────────────────────────────────────────────
-        # With district:    "{title} in {district}, {city} – £{price} | Bazar"
-        # Without district: "{title} in {city} – £{price} | Bazar"
+        # With district:    "{title} – £{price} in {district}, {city} | Bazar UK"
+        # Without district: "{title} – £{price} in {city} | Bazar UK"
+        # District is MANDATORY when present (critical for SEO long-tail)
         if district and city:
             location_str = f'{district}, {city}'
         elif city:
@@ -263,10 +264,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         else:
             location_str = 'UK'
 
-        raw_title = f'{title} in {location_str}'
+        raw_title = title
         if price_str:
             raw_title += f' – {price_str}'
-        raw_title += ' | Bazar'
+        raw_title += f' in {location_str} | Bazar UK'
         seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
 
         # ── Meta description ──────────────────────────────────────────────────
@@ -374,7 +375,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         h1 = f'{h1_phrase} UK'
 
         # Title (max ~65 chars)
-        raw_title = f'{h1} | Bazar'
+        raw_title = f'{h1} | Bazar UK'
         seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
 
         desc = f'{intro} Find great deals on Bazar UK classifieds.'
@@ -436,7 +437,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         h1_phrase_city = f'{h1_phrase_cat} in {city}'      # "Cars for sale in London"
         h1 = h1_phrase_city
 
-        raw_title = f'{h1_phrase_city} | Bazar'
+        raw_title = f'{h1_phrase_city} | Bazar UK'
         seo_title = raw_title[:65] + '…' if len(raw_title) > 68 else raw_title
 
         base_intro = CATEGORY_INTROS.get(cat,
@@ -505,7 +506,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         h1 = f'{h1_phrase_cat} in {district}, {city}'
 
         seo.update({
-            'title':       f'{h1} | Bazar',
+            'title':       f'{h1} | Bazar UK',
             'description': (f'Browse {cat_label.lower()} {action} in {district}, {city}. '
                             f'Find local listings on Bazar UK.'),
             'canonical':   canonical,
@@ -528,7 +529,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
     # ── Search (noindex always) ───────────────────────────────────────────────
     elif page_type == 'search':
         seo.update({
-            'title':   'Search | Bazar',
+            'title':   'Search | Bazar UK',
             'robots':  'noindex, follow',
         })
         return seo
