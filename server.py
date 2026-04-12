@@ -745,15 +745,13 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
     # ── Inject city links nav before </body> ─────────────────────────────────
     if city_links:
         links_html = ''.join(
-            f'<a href="{_attr(href)}" style="color:#888;margin-right:12px;white-space:nowrap">'
-            f'{_esc(label)}</a>'
+            f'<a href="{_attr(href)}" style="color:#888;display:block;padding:2px 0">'
+            f'{_esc(f"{cat_label} in {label}" if cat_label else label)}</a>'
             for label, href in city_links
         )
-        label_text = _esc(f'{cat_label} in:') if cat_label else 'Browse:'
         nav = (
-            f'\n<nav aria-label="Browse by city" style="font-size:13px;padding:10px 16px 16px;'
-            f'line-height:2;">'
-            f'<span style="color:#aaa;margin-right:6px">{label_text}</span>'
+            f'\n<nav aria-label="Browse by city" style="font-size:13px;padding:10px 16px 20px;">'
+            f'<span style="color:#aaa;display:block;margin-bottom:4px">Popular cities:</span>'
             f'{links_html}</nav>'
         )
         html = html.replace('</body>', nav + '\n</body>', 1)
