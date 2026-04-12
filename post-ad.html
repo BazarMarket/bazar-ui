@@ -1143,13 +1143,6 @@
                      </div>
                   </div>
 
-                  <div class="pa-field" id="districtField">
-                     <span class="pa-field__label">District / Area:</span>
-                     <div class="pa-field__control">
-                        <input class="pa-input" id="districtInput" type="text" placeholder="e.g. Canary Wharf, Kensington, Didsbury" autocomplete="off">
-                     </div>
-                  </div>
-
                   <div class="pa-field" id="deliveryField">
                      <span class="pa-field__label">Delivery:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -1952,8 +1945,7 @@
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
          if (locationPostcode) formData.append('postcode', locationPostcode);
-         var locationDistrict = document.getElementById('locationDistrict').value ||
-                            (document.getElementById('districtInput') ? document.getElementById('districtInput').value : '');
+         var locationDistrict = document.getElementById('locationDistrict').value;
          if (locationDistrict) formData.append('district', locationDistrict);
          var locationRegion = document.getElementById('locationRegion').value;
          if (locationRegion) formData.append('region', locationRegion);
@@ -2153,6 +2145,11 @@
                if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
                if (c.types.includes('postal_code')) postcode = c.long_name;
             });
+            if (!city) {
+               place.address_components.forEach(function(c) {
+                  if (c.types.includes('administrative_area_level_2') && !city) city = c.long_name;
+               });
+            }
             if (!city && place.address_components.length > 0) {
                city = place.address_components[0].long_name;
             }
@@ -2311,6 +2308,17 @@
                var addr = results[0].formatted_address;
                var locInput = document.getElementById('locationInput') || document.querySelector('input[name="location"]');
                if (locInput) locInput.value = addr;
+               var city = '', district = '';
+               results[0].address_components.forEach(function(c) {
+                  if (c.types.includes('postal_town') || c.types.includes('locality')) { if (!city) city = c.long_name; }
+                  if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') || c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_2') && !city) city = c.long_name;
+               });
+               if (!city && results[0].address_components.length > 0) {
+                  city = results[0].address_components[0].long_name;
+               }
+               if (city) document.getElementById('locationCity').value = city;
+               if (district) document.getElementById('locationDistrict').value = district;
             }
          });
 
