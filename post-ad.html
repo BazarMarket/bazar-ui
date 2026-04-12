@@ -2138,18 +2138,19 @@
       function extractDistrictFromFormatted(formatted, city) {
          if (!formatted || !city) return '';
          var parts = formatted.split(',').map(function(p) { return p.trim(); });
-         // Find the index of the part that starts with the city name
          var cityIdx = -1;
          for (var i = 0; i < parts.length; i++) {
             if (parts[i].toLowerCase().indexOf(city.toLowerCase()) === 0) { cityIdx = i; break; }
          }
-         if (cityIdx < 2) return ''; // Need at least: [street, district, city...]
-         // Walk backwards from cityIdx-1 to find a non-numeric, non-postcode part
-         for (var j = cityIdx - 1; j >= 1; j--) {
+         if (cityIdx < 1) return '';
+         var streetWords = /\b(Street|St|Road|Rd|Lane|Ln|Avenue|Ave|Drive|Dr|Way|Close|Cl|Place|Pl|Square|Sq|Gardens|Gdns|Terrace|Terr|Court|Ct|Crescent|Cres|Row|Walk|Hill|Grove|Mews|Boulevard|Blvd)\b/i;
+         for (var j = cityIdx - 1; j >= 0; j--) {
             var part = parts[j];
-            if (part && !/^\d/.test(part) && !/^[A-Z]{1,2}\d/.test(part) && part.length > 2) {
-               return part;
-            }
+            if (!part || part.length < 3) continue;
+            if (/^\d/.test(part)) continue;         // starts with number (house no.)
+            if (/^[A-Z]{1,2}\d/.test(part)) continue; // UK postcode (e.g. SW1W, W2)
+            if (j === 0 && streetWords.test(part)) continue; // first segment looks like a street
+            return part;
          }
          return '';
       }
