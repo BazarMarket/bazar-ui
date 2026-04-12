@@ -438,7 +438,7 @@
                                  </span>
                               </div>
                            </div>
-                           <a href="#" class="btn btn_old icon-email">Email</a>
+                           <a href="#" class="btn btn_old icon-email" onclick="event.preventDefault();openEmailPopup()">Email</a>
                         </div>
 
                         <div class="card-options card-tile">
@@ -1431,6 +1431,144 @@
     });
 })();
 
+</script>
+
+<!-- ── Email popup ── -->
+<div id="popup-email" class="popup" onclick="if(event.target===this)closeEmailPopup()">
+   <div class="popup__wraper" style="max-width:540px">
+      <div class="popup-body popup__body">
+         <div class="popup-head">
+            <p class="popup-head__title icon-email">Contact Seller</p>
+            <div class="popup-head__close icon-close" onclick="closeEmailPopup()"></div>
+         </div>
+         <h3 class="email-popup__title">Request information from seller</h3>
+         <form id="email-popup-form" onsubmit="submitEmailForm(event)" novalidate>
+            <div class="input-custom">
+               <label>Your name <span class="email-popup__req">*</span></label>
+               <input type="text" id="ep-name" placeholder="Your name">
+               <p class="input-custom__error">Please enter your name</p>
+            </div>
+            <div class="input-custom">
+               <label>Your phone <span class="email-popup__req">*</span></label>
+               <input type="tel" id="ep-phone" placeholder="+44 xxxx xxxxxx">
+               <p class="input-custom__error">Please enter your phone</p>
+            </div>
+            <div class="input-custom">
+               <label>Your email</label>
+               <input type="email" id="ep-email" placeholder="your@email.com">
+            </div>
+            <div class="input-custom">
+               <label>Your message</label>
+               <textarea id="ep-message" rows="4" placeholder="I'm interested in this listing…"></textarea>
+            </div>
+            <div class="email-popup__footer">
+               <button type="submit" class="email-popup__send">Send</button>
+            </div>
+         </form>
+         <div id="email-popup-success" class="email-popup__success">
+            <div class="email-popup__success-icon">✓</div>
+            <p class="email-popup__success-title">Message sent!</p>
+            <p class="email-popup__success-sub">The seller will get back to you soon.</p>
+         </div>
+      </div>
+   </div>
+</div>
+
+<style>
+.email-popup__title {
+   font-family: "Poppins", sans-serif;
+   font-weight: 700;
+   font-size: 20px;
+   color: #1d1d1b;
+   line-height: 130%;
+   margin: 0 0 20px 0;
+}
+.email-popup__req { color: #e53935; }
+.email-popup__footer {
+   display: flex;
+   justify-content: flex-end;
+   margin-top: 18px;
+}
+.email-popup__send {
+   background: #ff9138;
+   color: #fff;
+   border: none;
+   border-radius: 10px;
+   font-family: "Poppins", sans-serif;
+   font-weight: 700;
+   font-size: 16px;
+   padding: 12px 34px;
+   cursor: pointer;
+   transition: background 0.25s;
+}
+.email-popup__send:hover { background: #fe7653; }
+.email-popup__success {
+   display: none;
+   text-align: center;
+   padding: 30px 10px 20px;
+}
+.email-popup__success-icon {
+   font-size: 52px;
+   color: #3ecb60;
+   line-height: 1;
+   margin-bottom: 12px;
+}
+.email-popup__success-title {
+   font-family: "Poppins", sans-serif;
+   font-weight: 700;
+   font-size: 20px;
+   color: #1d1d1b;
+   margin: 0 0 8px;
+}
+.email-popup__success-sub {
+   font-family: "Poppins", sans-serif;
+   font-size: 15px;
+   color: #797979;
+   margin: 0;
+}
+</style>
+
+<script>
+function openEmailPopup() {
+   var popup = document.getElementById('popup-email');
+   var form  = document.getElementById('email-popup-form');
+   var succ  = document.getElementById('email-popup-success');
+   form.style.display = '';
+   succ.style.display = 'none';
+   /* remove any validation errors */
+   form.querySelectorAll('.input-custom').forEach(function(el){ el.classList.remove('error'); });
+   /* pre-fill from Firebase if logged in */
+   try {
+      var u = firebase.auth().currentUser;
+      if (u) {
+         if (u.displayName) document.getElementById('ep-name').value = u.displayName;
+         if (u.phoneNumber)  document.getElementById('ep-phone').value = u.phoneNumber;
+         if (u.email)        document.getElementById('ep-email').value = u.email;
+      }
+   } catch(e) {}
+   popup.classList.add('active');
+   document.body.style.overflow = 'hidden';
+}
+function closeEmailPopup() {
+   document.getElementById('popup-email').classList.remove('active');
+   document.body.style.overflow = '';
+}
+function submitEmailForm(e) {
+   e.preventDefault();
+   var nameEl  = document.getElementById('ep-name');
+   var phoneEl = document.getElementById('ep-phone');
+   var ok = true;
+   [nameEl, phoneEl].forEach(function(el) {
+      var wrap = el.closest('.input-custom');
+      if (!el.value.trim()) { wrap.classList.add('error'); ok = false; }
+      else wrap.classList.remove('error');
+   });
+   if (!ok) return;
+   /* Show success */
+   document.getElementById('email-popup-form').style.display = 'none';
+   document.getElementById('email-popup-success').style.display = '';
+   setTimeout(closeEmailPopup, 3000);
+}
 </script>
 
 </body>
