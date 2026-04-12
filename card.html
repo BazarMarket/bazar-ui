@@ -820,6 +820,16 @@
       if (el('bread-type')) el('bread-type').textContent = p.property_type || '';
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district || '';
+      // Hide slash and district li when no district
+      var _districtLi = el('prop-district-link') ? el('prop-district-link').parentElement : null;
+      var _slashSpan = el('prop-city-link') ? el('prop-city-link').parentElement.querySelector('span') : null;
+      if (p.district) {
+         if (_districtLi) _districtLi.style.display = '';
+         if (_slashSpan) _slashSpan.style.display = '';
+      } else {
+         if (_districtLi) _districtLi.style.display = 'none';
+         if (_slashSpan) _slashSpan.style.display = 'none';
+      }
 
       function fmtPrice(n) {
          var s = fmt(n);

@@ -1128,6 +1128,7 @@
                            </button>
                            <input type="hidden" id="locationCity">
                            <input type="hidden" id="locationRegion">
+                           <input type="hidden" id="locationDistrict">
                            <input type="hidden" id="locationPostcode">
                            <input type="hidden" id="locationLat">
                            <input type="hidden" id="locationLng">
@@ -1139,6 +1140,13 @@
                            <span class="pa-loc-status__dot"></span>
                            <span id="locationStatusText">Exact location selected</span>
                         </p>
+                     </div>
+                  </div>
+
+                  <div class="pa-field" id="districtField">
+                     <span class="pa-field__label">District / Area:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="districtInput" type="text" placeholder="e.g. Canary Wharf, Kensington, Didsbury" autocomplete="off">
                      </div>
                   </div>
 
@@ -1944,6 +1952,9 @@
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
          if (locationPostcode) formData.append('postcode', locationPostcode);
+         var locationDistrict = document.getElementById('locationDistrict').value ||
+                            (document.getElementById('districtInput') ? document.getElementById('districtInput').value : '');
+         if (locationDistrict) formData.append('district', locationDistrict);
          var locationRegion = document.getElementById('locationRegion').value;
          if (locationRegion) formData.append('region', locationRegion);
          var locationLat = document.getElementById('locationLat').value;
@@ -2128,25 +2139,25 @@
          if (!_gMapsReady) return;
          var input = document.getElementById('locationInput');
          var autocomplete = new google.maps.places.Autocomplete(input, {
-            types: ['(regions)'],
+            types: ['geocode'],
             componentRestrictions: { country: 'gb' },
             fields: ['address_components', 'geometry', 'place_id', 'formatted_address']
          });
          autocomplete.addListener('place_changed', function() {
             var place = autocomplete.getPlace();
             if (!place.geometry) return;
-            var city = '', region = '', postcode = '';
+            var city = '', district = '', region = '', postcode = '';
             place.address_components.forEach(function(c) {
-               if (c.types.includes('postal_town') || c.types.includes('locality')) city = c.long_name;
-               if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) {
-                  if (!region) region = c.long_name;
-               }
+               if (c.types.includes('postal_town') || c.types.includes('locality')) { if (!city) city = c.long_name; }
+               if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') || c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+               if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
                if (c.types.includes('postal_code')) postcode = c.long_name;
             });
             if (!city && place.address_components.length > 0) {
                city = place.address_components[0].long_name;
             }
             document.getElementById('locationCity').value = city;
+            document.getElementById('locationDistrict').value = district;
             document.getElementById('locationRegion').value = region;
             document.getElementById('locationPostcode').value = postcode;
             document.getElementById('locationLat').value = place.geometry.location.lat();
@@ -2156,6 +2167,7 @@
          input.addEventListener('input', function() {
             if (!this.value) {
                document.getElementById('locationCity').value = '';
+               document.getElementById('locationDistrict').value = '';
                document.getElementById('locationRegion').value = '';
                document.getElementById('locationPostcode').value = '';
                document.getElementById('locationLat').value = '';
