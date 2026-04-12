@@ -2166,7 +2166,7 @@
             var place = autocomplete.getPlace();
             if (!place.geometry) return;
             var comps = place.address_components;
-               var city = '', locality = '', district = '', region = '', postcode = '';
+               var city = '', locality = '', district = '', region = '', postcode = '', adminL2 = '';
                comps.forEach(function(c) {
                   if (c.types.includes('postal_town')) { if (!city) city = c.long_name; }
                   if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
@@ -2174,9 +2174,15 @@
                       c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
                   if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
                   if (c.types.includes('administrative_area_level_3')) { if (!district) district = c.long_name; }
-                  if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
+                  if (c.types.includes('administrative_area_level_2')) adminL2 = c.long_name;
+                  if (c.types.includes('administrative_area_level_1')) { if (!region) region = c.long_name; }
                   if (c.types.includes('postal_code')) postcode = c.long_name;
                });
+               // Greater London fix: postal_town like "Wembley" is actually a district, city = "London"
+               if (adminL2 === 'Greater London' && city && city !== 'London') {
+                  if (!district) district = city;
+                  city = 'London';
+               }
                // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
                if (locality && city && locality !== city && !district) district = locality;
                if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
@@ -2341,7 +2347,7 @@
                var locInput = document.getElementById('locationInput') || document.querySelector('input[name="location"]');
                if (locInput) locInput.value = addr;
                var comps = results[0].address_components;
-               var city = '', locality = '', district = '', region = '', postcode = '';
+               var city = '', locality = '', district = '', region = '', postcode = '', adminL2 = '';
                comps.forEach(function(c) {
                   if (c.types.includes('postal_town')) { if (!city) city = c.long_name; }
                   if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
@@ -2349,9 +2355,15 @@
                       c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
                   if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
                   if (c.types.includes('administrative_area_level_3')) { if (!district) district = c.long_name; }
-                  if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
+                  if (c.types.includes('administrative_area_level_2')) adminL2 = c.long_name;
+                  if (c.types.includes('administrative_area_level_1')) { if (!region) region = c.long_name; }
                   if (c.types.includes('postal_code')) postcode = c.long_name;
                });
+               // Greater London fix: postal_town like "Wembley" is actually a district, city = "London"
+               if (adminL2 === 'Greater London' && city && city !== 'London') {
+                  if (!district) district = city;
+                  city = 'London';
+               }
                // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
                if (locality && city && locality !== city && !district) district = locality;
                if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
