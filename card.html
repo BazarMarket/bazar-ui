@@ -805,7 +805,7 @@
       }
 
       (function(){
-         var sym = p.currency === 'GBP' ? '£' : (p.currency === 'EUR' ? '€' : '$');
+         var sym = p.currency === 'EUR' ? '€' : (p.currency === 'USD' ? '$' : '£');
          var priceStr = p.price ? sym + fmt(Math.round(p.price)) : '';
          var loc = (p.district && p.city) ? p.district + ', ' + p.city : (p.city || 'UK');
          var rawTitle = p.title + (priceStr ? ' – ' + priceStr : '') + ' in ' + loc + ' | Bazar UK';
