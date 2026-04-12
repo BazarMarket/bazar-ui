@@ -2482,9 +2482,6 @@
          var carYear = getSelectVal('carYearSelect');
 
          if (!title) { alert('Please enter the Ad Title.'); return; }
-         if (!make) { alert('Please select the car Make.'); return; }
-         if (!model) { alert('Please select the car Model.'); return; }
-         if (!carYear) { alert('Please select the Year.'); return; }
          if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
          if (!sellerName) { alert('Please enter your Name.'); return; }
          if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
@@ -2524,9 +2521,9 @@
          var condition = getSelectVal('conditionSelect');
          if (condition) formData.append('condition', condition);
 
-         formData.append('car_make', make);
-         formData.append('car_model', model);
-         formData.append('car_year', carYear);
+         if (make) formData.append('car_make', make);
+         if (model) formData.append('car_model', model);
+         if (carYear) formData.append('car_year', carYear);
          var mileage = getInputVal('carMileageInput');
          if (mileage) formData.append('mileage', mileage.replace(/,/g,''));
          var fuel = getSelectVal('carFuelSelect');
