@@ -1530,6 +1530,11 @@
 
 <script>
 function openEmailPopup() {
+   /* If not logged in — open Create account modal instead */
+   if (!localStorage.getItem('bazar_firebase_uid')) {
+      openCreateAccountModal();
+      return;
+   }
    var popup = document.getElementById('popup-email');
    var form  = document.getElementById('email-popup-form');
    var succ  = document.getElementById('email-popup-success');
@@ -1537,15 +1542,11 @@ function openEmailPopup() {
    succ.style.display = 'none';
    /* remove any validation errors */
    form.querySelectorAll('.input-custom').forEach(function(el){ el.classList.remove('error'); });
-   /* pre-fill from Firebase if logged in */
-   try {
-      var u = firebase.auth().currentUser;
-      if (u) {
-         if (u.displayName) document.getElementById('ep-name').value = u.displayName;
-         if (u.phoneNumber)  document.getElementById('ep-phone').value = u.phoneNumber;
-         if (u.email)        document.getElementById('ep-email').value = u.email;
-      }
-   } catch(e) {}
+   /* pre-fill from localStorage */
+   var savedName  = localStorage.getItem('bazar_username') || '';
+   var savedPhone = localStorage.getItem('bazar_phone') || '';
+   document.getElementById('ep-name').value  = savedName;
+   document.getElementById('ep-phone').value = savedPhone;
    popup.classList.add('active');
    document.body.style.overflow = 'hidden';
 }
