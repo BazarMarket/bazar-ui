@@ -1836,6 +1836,10 @@
 
       function activatePhoneFields() {
          isPhoneSubtype = true;
+         ['brandField','modelField','yearField','storageField','bedroomsField','constructionYearField','energyField','parkingField','furnishingField','airConField','includedField','floorField','bathroomsField','areaField'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+         });
          var phoneSec = document.getElementById('phoneSpecificSection');
          if (phoneSec) phoneSec.style.display = '';
          initPhoneBrandSelect();
@@ -1850,8 +1854,6 @@
          }
          var condField = document.getElementById('conditionField');
          if (condField) condField.style.display = 'flex';
-         var bedroomsField = document.getElementById('bedroomsField');
-         if (bedroomsField) bedroomsField.style.display = 'none';
          var titleInput = document.getElementById('titleInput');
          if (titleInput) {
             titleInput.removeAttribute('readonly');
@@ -2237,12 +2239,22 @@
          el.classList.add('active');
          var sub = el.dataset.subcat;
          reState.listingType = sub;
-         reState.propType = '';
+         reState.propType = sub;
          reState.subtype = '';
          document.getElementById('houseTypeField').style.display = 'none';
          document.getElementById('buildingTypeField').style.display = 'none';
          document.getElementById('constructionTypeField').style.display = 'none';
          updateRealEstateTitle();
+
+         if (cat === 'phones' && sub === 'Mobile phones') {
+            deactivateCarFields();
+            activatePhoneFields();
+            document.getElementById('subtypeField').style.display = 'none';
+            document.getElementById('paForm').classList.add('visible');
+            return;
+         }
+         deactivatePhoneFields();
+
          fillSubSub(cat, sub);
          var subSubList = (catData[cat] && catData[cat][sub]) || [];
          if (subSubList.length > 0) {
