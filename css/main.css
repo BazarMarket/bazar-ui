@@ -1816,13 +1816,13 @@ body {
   font-size: 13px;
   color: #fff;
   text-decoration: none;
-  background: #ff0000;
+  background: #3ecb60;
   border-radius: 20px;
   padding: 4px 14px;
   transition: 0.3s;
 }
 .card-head__boost:hover {
-  background: #cc0000;
+  background: #2fb84f;
   color: #fff;
 }
 .card-head__favorites::before {
