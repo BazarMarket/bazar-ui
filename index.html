@@ -296,11 +296,25 @@
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
                                             <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
-                                        <div class="menu-sub__body">
+                                        <div class="rent-toggle">
+                                            <div class="rent-toggle__btns">
+                                                <button class="rent-toggle__btn active" onclick="switchMotorsRentType('long', this)">Long-term</button>
+                                                <button class="rent-toggle__btn" onclick="switchMotorsRentType('short', this)">Short-term</button>
+                                            </div>
+                                        </div>
+                                        <div class="menu-sub__body" id="motors-rent-long">
                                             <a href="#" class="menu-sub__links">Cars</a>
                                             <a href="#" class="menu-sub__links">Motorbikes</a>
-                                            <a href="#" class="menu-sub__links">Boats & marine</a>
+                                            <a href="#" class="menu-sub__links">Vans</a>
                                             <a href="#" class="menu-sub__links">Trucks</a>
+                                            <a href="#" class="menu-sub__links">Boats & marine</a>
+                                            <a href="#" class="menu-sub__links">Caravans</a>
+                                        </div>
+                                        <div class="menu-sub__body" id="motors-rent-short" style="display:none">
+                                            <a href="#" class="menu-sub__links">Cars</a>
+                                            <a href="#" class="menu-sub__links">Motorbikes</a>
+                                            <a href="#" class="menu-sub__links">Vans</a>
+                                            <a href="#" class="menu-sub__links">Boats & marine</a>
                                         </div>
                                     </div>
                                 </div>

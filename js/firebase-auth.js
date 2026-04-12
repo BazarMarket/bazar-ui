@@ -55,6 +55,15 @@ function switchRentType(type, btn) {
     document.getElementById('rent-short').style.display = type === 'short' ? '' : 'none';
 }
 
+function switchMotorsRentType(type, btn) {
+    btn.closest('.rent-toggle__btns').querySelectorAll('.rent-toggle__btn').forEach(function(b) {
+        b.classList.remove('active');
+    });
+    btn.classList.add('active');
+    document.getElementById('motors-rent-long').style.display = type === 'long' ? '' : 'none';
+    document.getElementById('motors-rent-short').style.display = type === 'short' ? '' : 'none';
+}
+
 function doLogin() {
     var nameEl = document.getElementById('header-username');
     if (nameEl) nameEl.textContent = localStorage.getItem('bazar_username') || '';
