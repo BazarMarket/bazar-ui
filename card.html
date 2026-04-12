@@ -804,7 +804,13 @@
          return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       }
 
-      document.title = p.title + ' — Bazar';
+      (function(){
+         var sym = p.currency === 'GBP' ? '£' : (p.currency === 'EUR' ? '€' : '$');
+         var priceStr = p.price ? sym + fmt(Math.round(p.price)) : '';
+         var loc = (p.district && p.city) ? p.district + ', ' + p.city : (p.city || 'UK');
+         var rawTitle = p.title + (priceStr ? ' – ' + priceStr : '') + ' in ' + loc + ' | Bazar UK';
+         document.title = rawTitle.length > 68 ? rawTitle.substring(0, 65) + '…' : rawTitle;
+      })();
       var el = function(s){ return document.getElementById(s); };
 
       el('prop-title').textContent = p.title;
