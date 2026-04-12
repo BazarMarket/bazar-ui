@@ -1945,7 +1945,7 @@
          if (!locationCity) { alert('Please select a location.'); return; }
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
-         if (locationPostcode) formData.append('postcode', locationPostcode);
+         if (locationPostcode) formData.append('postal_code', locationPostcode);
          var locationDistrict = document.getElementById('locationDistrict').value;
          if (locationDistrict) formData.append('district', locationDistrict);
          var locationRegion = document.getElementById('locationRegion').value;
@@ -2133,6 +2133,27 @@
    <script>
       var _gMapsReady = false;
       function initGoogleMaps() { _gMapsReady = true; initLocationAutocomplete(); }
+      /* Extract district name from Google formatted_address when API components fail.
+         e.g. "13 Cleveland Square, Bayswater, London W2 6DH, UK" → "Bayswater" */
+      function extractDistrictFromFormatted(formatted, city) {
+         if (!formatted || !city) return '';
+         var parts = formatted.split(',').map(function(p) { return p.trim(); });
+         // Find the index of the part that starts with the city name
+         var cityIdx = -1;
+         for (var i = 0; i < parts.length; i++) {
+            if (parts[i].toLowerCase().indexOf(city.toLowerCase()) === 0) { cityIdx = i; break; }
+         }
+         if (cityIdx < 2) return ''; // Need at least: [street, district, city...]
+         // Walk backwards from cityIdx-1 to find a non-numeric, non-postcode part
+         for (var j = cityIdx - 1; j >= 1; j--) {
+            var part = parts[j];
+            if (part && !/^\d/.test(part) && !/^[A-Z]{1,2}\d/.test(part) && part.length > 2) {
+               return part;
+            }
+         }
+         return '';
+      }
+
       function initLocationAutocomplete() {
          if (!_gMapsReady) return;
          var input = document.getElementById('locationInput');
@@ -2152,12 +2173,18 @@
                   if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
                       c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
                   if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_3')) { if (!district) district = c.long_name; }
                   if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
                   if (c.types.includes('postal_code')) postcode = c.long_name;
                });
                // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
                if (locality && city && locality !== city && !district) district = locality;
                if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
+               // Fallback: parse district from formatted_address
+               // e.g. "13 Cleveland Square, Bayswater, London W2 6DH, UK" → "Bayswater"
+               if (!district && place.formatted_address && city) {
+                  district = extractDistrictFromFormatted(place.formatted_address, city);
+               }
             document.getElementById('locationCity').value = city;
             document.getElementById('locationDistrict').value = district;
             document.getElementById('locationRegion').value = region;
@@ -2321,14 +2348,20 @@
                   if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
                       c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
                   if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_3')) { if (!district) district = c.long_name; }
                   if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
                   if (c.types.includes('postal_code')) postcode = c.long_name;
                });
                // locality different from city = it's a district/area (e.g. "Canary Wharf" vs "London")
                if (locality && city && locality !== city && !district) district = locality;
                if (!city) city = locality || (comps.length > 0 ? comps[0].long_name : '');
+               // Fallback: parse district from formatted_address
+               if (!district && results[0].formatted_address && city) {
+                  district = extractDistrictFromFormatted(results[0].formatted_address, city);
+               }
                if (city) document.getElementById('locationCity').value = city;
                if (district) document.getElementById('locationDistrict').value = district;
+               if (postcode) document.getElementById('locationPostcode').value = postcode;
             }
          });
 
