@@ -1992,9 +1992,10 @@
          var features = document.querySelectorAll('#includedField input[type="checkbox"]');
          var featureMap = {
             'Garden': 'garden', 'Elevator': 'elevator', 'Security system': 'security',
-            'Swimming pool': 'pool', 'Veranda': 'veranda', 'Gym': 'gym', 'Solar panel': 'solar_panels'
+            'Swimming pool': 'pool', 'Veranda': 'veranda', 'Gym': 'gym', 'Solar panel': 'solar_panels',
+            'Balcony': 'balcony', 'Terrace': 'terrace', 'Central heating': 'central_heating', 'Storage room': 'storage_room'
          };
-         var boolFields = ['pool','garden','veranda','gym','elevator','security','solar_panels'];
+         var boolFields = ['pool','garden','veranda','gym','elevator','security','solar_panels','balcony','terrace','central_heating','storage_room'];
          boolFields.forEach(function(f) { formData.append(f, '0'); });
          features.forEach(function(cb) {
             if (cb.checked) {
@@ -2150,6 +2151,7 @@
                   if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
                   if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
                       c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
                   if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
                   if (c.types.includes('postal_code')) postcode = c.long_name;
                });
@@ -2318,6 +2320,7 @@
                   if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
                   if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
                       c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
                   if (c.types.includes('administrative_area_level_1') || c.types.includes('administrative_area_level_2')) { if (!region) region = c.long_name; }
                   if (c.types.includes('postal_code')) postcode = c.long_name;
                });

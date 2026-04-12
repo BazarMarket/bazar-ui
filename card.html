@@ -914,6 +914,7 @@
       specs += specRow('City', p.city);
       specs += specRow('Area', p.district);
       specs += specRow('Type', p.property_type);
+      specs += specRow('Building type', p.sub_type);
       specs += specRow('Listing', p.listing_type);
       var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
       specs += specRow('Condition', condLabel[p.condition] || p.condition);
@@ -936,6 +937,12 @@
       if(p.elevator) amenities.push('Elevator');
       if(p.security) amenities.push('Security');
       if(p.gym) amenities.push('Gym');
+      if(p.veranda) amenities.push('Veranda');
+      if(p.balcony) amenities.push('Balcony');
+      if(p.terrace) amenities.push('Terrace');
+      if(p.central_heating) amenities.push('Central Heating');
+      if(p.storage_room) amenities.push('Storage Room');
+      if(p.solar_panels) amenities.push('Solar Panels');
       if(amenities.length) specs += '<tr><th>Amenities:</th><td>' + amenities.join(', ') + '</td></tr>';
 
       el('spec-table').innerHTML = specs;
