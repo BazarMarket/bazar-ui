@@ -1262,6 +1262,7 @@
                            <label><input type="checkbox" id="whatsappCheck"> WhatsApp</label>
                            <label><input type="checkbox" id="telegramCheck"> Telegram</label>
                            <label><input type="checkbox" id="viberCheck"> Viber</label>
+                           <label><input type="checkbox" id="emailCheck"> Email</label>
                         </div>
                      </div>
                   </div>
@@ -2011,9 +2012,11 @@
          var hasWhatsapp = document.getElementById('whatsappCheck');
          var hasTelegram = document.getElementById('telegramCheck');
          var hasViber    = document.getElementById('viberCheck');
+         var hasEmail    = document.getElementById('emailCheck');
          formData.append('has_whatsapp', (hasWhatsapp && hasWhatsapp.checked) ? '1' : '0');
          formData.append('has_telegram', (hasTelegram && hasTelegram.checked) ? '1' : '0');
          formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
+         formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
 
          var youtube = getInputVal('youtubeInput');
          if (youtube) formData.append('video_url', youtube);
@@ -2055,6 +2058,7 @@
                var waEl = document.getElementById('whatsappCheck');
                var tgEl = document.getElementById('telegramCheck');
                var vbEl = document.getElementById('viberCheck');
+               var emEl = document.getElementById('emailCheck');
                var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
                ads.unshift({
                   id: data.property_id,
@@ -2069,7 +2073,8 @@
                   messengers: {
                      wa: !!(waEl && waEl.checked),
                      tg: !!(tgEl && tgEl.checked),
-                     vb: !!(vbEl && vbEl.checked)
+                     vb: !!(vbEl && vbEl.checked),
+                     em: !!(emEl && emEl.checked)
                   }
                });
                try {

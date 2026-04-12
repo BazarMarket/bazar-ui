@@ -438,7 +438,7 @@
                                  </span>
                               </div>
                            </div>
-                           <a href="#" class="btn btn_old icon-email" onclick="event.preventDefault();openEmailPopup()">Email</a>
+                           <a href="#" id="emailContactBtn" class="btn btn_old icon-email" onclick="event.preventDefault();openEmailPopup()" style="display:none">Email</a>
                         </div>
 
                         <div class="card-options card-tile">
@@ -993,9 +993,9 @@
       var vbLink = document.querySelector('.card-name__bottom .icon-vb');
       if(vbLink) vbLink.href = 'viber://chat?number=' + cleanPhone;
 
-      /* Show only selected messengers.
+      /* Show only selected messengers + Email.
          Priority: API fields → localStorage bazar_my_ads → show all (fallback) */
-      var msgWa = p.has_whatsapp, msgTg = p.has_telegram, msgVb = p.has_viber;
+      var msgWa = p.has_whatsapp, msgTg = p.has_telegram, msgVb = p.has_viber, msgEm = p.has_email;
       var apiHasMessenger = (msgWa !== null && msgWa !== undefined);
       if (!apiHasMessenger) {
          var storedAds = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
@@ -1004,13 +1004,19 @@
             msgWa = matchAd.messengers.wa;
             msgTg = matchAd.messengers.tg;
             msgVb = matchAd.messengers.vb;
+            msgEm = matchAd.messengers.em;
             apiHasMessenger = true;
          }
       }
+      var emailBtn = document.getElementById('emailContactBtn');
       if (apiHasMessenger) {
-         if(wpLink) wpLink.style.display = msgWa ? '' : 'none';
-         if(tgLink) tgLink.style.display = msgTg ? '' : 'none';
-         if(vbLink) vbLink.style.display = msgVb ? '' : 'none';
+         if(wpLink)   wpLink.style.display   = msgWa ? '' : 'none';
+         if(tgLink)   tgLink.style.display   = msgTg ? '' : 'none';
+         if(vbLink)   vbLink.style.display   = msgVb ? '' : 'none';
+         if(emailBtn) emailBtn.style.display = msgEm ? '' : 'none';
+      } else {
+         /* fallback: hide email button (no data) */
+         if(emailBtn) emailBtn.style.display = 'none';
       }
 
       var mobName = el('mob-seller-name');
