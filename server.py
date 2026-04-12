@@ -59,11 +59,25 @@ INTERNAL_PAGES = {
 
 
 def _make_slug(title: str = '', district: str = '', city: str = '') -> str:
-    """Generate a URL-safe slug: {title}-{district}-{city}, lowercase, hyphens."""
-    parts = [title or '', district or '', city or '']
-    text = ' '.join(p for p in parts if p)
-    text = text.lower()
-    text = re.sub(r'[^a-z0-9\s]', ' ', text)
+    """Generate a URL-safe slug: {title}-{district}-{city}, lowercase, hyphens.
+    District and city are only appended if they are not already present in the title.
+    """
+    def _norm(s: str) -> str:
+        s = (s or '').lower()
+        s = re.sub(r'[^a-z0-9\s]', ' ', s)
+        return re.sub(r'\s+', ' ', s).strip()
+
+    t = _norm(title)
+    d = _norm(district)
+    c = _norm(city)
+
+    parts = [t] if t else []
+    if d and d not in t:
+        parts.append(d)
+    if c and c not in t and c not in d:
+        parts.append(c)
+
+    text = ' '.join(parts)
     text = re.sub(r'\s+', '-', text.strip())
     text = re.sub(r'-+', '-', text)
     return text[:80].rstrip('-')
