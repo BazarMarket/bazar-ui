@@ -629,6 +629,51 @@
                         </div>
                      </div>
                   </div>
+                  <!-- Motors filter row (visible when Motors category selected) -->
+                  <div class="cf-row" id="cfMotorsRow" style="display:none">
+                     <select class="cf-ctrl" id="cfMotorsMake" onchange="onCfMotorsMakeChange(this)">
+                        <option value="">Any make</option>
+                        <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option>
+                        <option>Volkswagen</option><option>Ford</option><option>Toyota</option>
+                        <option>Nissan</option><option>Honda</option><option>Kia</option>
+                        <option>Hyundai</option><option>Peugeot</option><option>Renault</option>
+                        <option>Skoda</option><option>Vauxhall</option><option>Land Rover</option>
+                        <option>Jaguar</option><option>Mini</option><option>Tesla</option>
+                        <option>Volvo</option><option>Lexus</option><option>Porsche</option>
+                        <option>SEAT</option><option>Other</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsModel">
+                        <option value="">Any model</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsFuel">
+                        <option value="">Any fuel</option>
+                        <option>Petrol</option><option>Diesel</option><option>Hybrid</option>
+                        <option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsTransmission">
+                        <option value="">Any transmission</option>
+                        <option>Automatic</option><option>Manual</option><option>Semi-automatic</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsBodyType">
+                        <option value="">Any body type</option>
+                        <option>Saloon</option><option>Hatchback</option><option>SUV</option>
+                        <option>Coupe</option><option>Convertible</option><option>Estate</option>
+                        <option>MPV</option><option>Pickup</option><option>Van</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsYearFrom">
+                        <option value="">Year from</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsYearTo">
+                        <option value="">Year to</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsMileage">
+                        <option value="">Max mileage</option>
+                        <option value="5000">5,000</option><option value="10000">10,000</option>
+                        <option value="20000">20,000</option><option value="30000">30,000</option>
+                        <option value="50000">50,000</option><option value="75000">75,000</option>
+                        <option value="100000">100,000</option><option value="150000">150,000+</option>
+                     </select>
+                  </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
                   <div class="cf-row">
                      <div class="cf-price-joined">
@@ -1283,6 +1328,10 @@
             document.getElementById('cfConstructionTypeWrap').style.display = 'none';
             updateDynamicRowVisibility();
          }
+         var l = label.toLowerCase();
+         var isMotors = l.indexOf('motors') !== -1;
+         var motorsRow = document.getElementById('cfMotorsRow');
+         if (motorsRow) motorsRow.style.display = isMotors ? '' : 'none';
       }
 
       function toggleTypePanel(e) {
@@ -2250,6 +2299,58 @@
       }
 
       buildTypePanel();
+
+      /* ── Motors filter helpers ──────────────────────────────────── */
+      var cfMotorsMakeModels = {
+         'BMW':           ['1 Series','2 Series','3 Series','4 Series','5 Series','7 Series','X1','X2','X3','X4','X5','X6','X7','Z4','M3','M5','Other'],
+         'Mercedes-Benz': ['A-Class','B-Class','C-Class','E-Class','S-Class','CLA','GLC','GLE','GLS','Other'],
+         'Audi':          ['A1','A3','A4','A5','A6','Q3','Q5','Q7','TT','Other'],
+         'Volkswagen':    ['Golf','Polo','Passat','Tiguan','T-Roc','ID.3','ID.4','Other'],
+         'Ford':          ['Fiesta','Focus','Mondeo','Kuga','Puma','Mustang','Transit','Ranger','Other'],
+         'Toyota':        ['Yaris','Corolla','RAV4','C-HR','Land Cruiser','Prius','Other'],
+         'Nissan':        ['Micra','Juke','Qashqai','X-Trail','Leaf','Other'],
+         'Honda':         ['Civic','Jazz','CR-V','HR-V','Other'],
+         'Kia':           ['Picanto','Ceed','Sportage','Sorento','Niro','EV6','Other'],
+         'Hyundai':       ['i10','i20','i30','Tucson','Santa Fe','Kona','Other'],
+         'Peugeot':       ['208','308','2008','3008','5008','Other'],
+         'Renault':       ['Clio','Megane','Captur','Zoe','Other'],
+         'Skoda':         ['Fabia','Octavia','Superb','Kodiaq','Karoq','Other'],
+         'Vauxhall':      ['Corsa','Astra','Insignia','Mokka','Other'],
+         'Land Rover':    ['Defender','Discovery','Range Rover','Range Rover Sport','Range Rover Evoque','Other'],
+         'Jaguar':        ['XE','XF','F-Type','F-Pace','I-Pace','Other'],
+         'Mini':          ['One','Cooper','Clubman','Countryman','Other'],
+         'Tesla':         ['Model S','Model 3','Model X','Model Y','Other'],
+         'Volvo':         ['XC40','XC60','XC90','V60','V90','Other'],
+         'Lexus':         ['IS','ES','NX','RX','UX','Other'],
+         'Porsche':       ['911','Cayenne','Macan','Taycan','Other'],
+         'SEAT':          ['Ibiza','Leon','Arona','Ateca','Other'],
+         'Other':         []
+      };
+
+      function onCfMotorsMakeChange(sel) {
+         var make = sel.value;
+         var modelSel = document.getElementById('cfMotorsModel');
+         if (!modelSel) return;
+         var models = cfMotorsMakeModels[make] || [];
+         var html = '<option value="">Any model</option>';
+         models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
+         modelSel.innerHTML = html;
+      }
+
+      (function initMotorsYearSelects() {
+         var curYear = new Date().getFullYear();
+         var fromSel = document.getElementById('cfMotorsYearFrom');
+         var toSel   = document.getElementById('cfMotorsYearTo');
+         if (!fromSel || !toSel) return;
+         var htmlF = '<option value="">Year from</option>';
+         var htmlT = '<option value="">Year to</option>';
+         for (var y = curYear + 1; y >= 1970; y--) {
+            htmlF += '<option value="' + y + '">' + y + '</option>';
+            htmlT += '<option value="' + y + '">' + y + '</option>';
+         }
+         fromSel.innerHTML = htmlF;
+         toSel.innerHTML   = htmlT;
+      })();
 
       (function initFromUrl() {
          var params = new URLSearchParams(window.location.search);

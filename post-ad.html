@@ -947,6 +947,207 @@
                      </div>
                   </div>
 
+                  <!-- Car-specific fields (Motors → Cars) -->
+                  <div id="carSpecificSection" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">Make:<span>*</span></span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carMakeSelect" onchange="onCarMakeChange(this)">
+                              <option value="" disabled selected hidden>Select make</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Model:<span>*</span></span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carModelSelect" onchange="onCarModelChange(this)">
+                              <option value="" disabled selected hidden>Select make first</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field" id="carModelOtherField" style="display:none">
+                        <span class="pa-field__label">Model name:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carModelOtherInput" type="text" placeholder="Enter model name" oninput="updateCarTitle()">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Year:<span>*</span></span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carYearSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select year</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Mileage (miles):<span>*</span></span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carMileageInput" type="text" inputmode="numeric" placeholder="e.g. 45000">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Fuel type:<span>*</span></span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carFuelSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select fuel type</option>
+                              <option>Petrol</option>
+                              <option>Diesel</option>
+                              <option>Hybrid</option>
+                              <option>Plug-in Hybrid</option>
+                              <option>Electric</option>
+                              <option>LPG</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Transmission:<span>*</span></span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carTransmissionSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select transmission</option>
+                              <option>Automatic</option>
+                              <option>Manual</option>
+                              <option>Semi-automatic</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Body type:<span>*</span></span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carBodyTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select body type</option>
+                              <option>Saloon</option>
+                              <option>Hatchback</option>
+                              <option>SUV</option>
+                              <option>Coupe</option>
+                              <option>Convertible</option>
+                              <option>Estate</option>
+                              <option>MPV</option>
+                              <option>Pickup</option>
+                              <option>Van</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Colour:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carColourSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select colour</option>
+                              <option>Black</option>
+                              <option>White</option>
+                              <option>Silver</option>
+                              <option>Grey</option>
+                              <option>Blue</option>
+                              <option>Red</option>
+                              <option>Green</option>
+                              <option>Brown</option>
+                              <option>Orange</option>
+                              <option>Yellow</option>
+                              <option>Purple</option>
+                              <option>Gold</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Doors:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carDoorsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select doors</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Seats:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carSeatsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select seats</option>
+                              <option>2</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>7</option>
+                              <option>8+</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Drive type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carDriveTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select drive type</option>
+                              <option>FWD (Front-wheel drive)</option>
+                              <option>RWD (Rear-wheel drive)</option>
+                              <option>AWD / 4WD</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Steering side:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carSteeringSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select steering side</option>
+                              <option value="RHD">Right-hand drive</option>
+                              <option value="LHD">Left-hand drive</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Engine size (L):</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select engine size</option>
+                              <option>1.0</option>
+                              <option>1.2</option>
+                              <option>1.4</option>
+                              <option>1.5</option>
+                              <option>1.6</option>
+                              <option>1.8</option>
+                              <option>2.0</option>
+                              <option>2.5</option>
+                              <option>3.0</option>
+                              <option>3.5</option>
+                              <option>4.0+</option>
+                              <option>Electric (N/A)</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Previous owners:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carPrevOwnersInput" type="text" inputmode="numeric" placeholder="e.g. 2">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Service history:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carServiceHistorySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select service history</option>
+                              <option>Full service history</option>
+                              <option>Partial service history</option>
+                              <option>No service history</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">MOT status:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carMotSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select MOT status</option>
+                              <option>MOT valid</option>
+                              <option>MOT expired</option>
+                              <option>Not applicable</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="storageField" style="display:none">
                      <span class="pa-field__label">Storage:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -1357,6 +1558,7 @@
          }
          var hint = document.getElementById('suggestedHint');
          if (hint) hint.style.display = 'none';
+         deactivateCarFields();
 
          var isRE = cat === 'real-estate';
          var reOnlyFields = ['bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','propertyAreaField','includedField','onlineViewingField','energyField','regBlockField','regNumField'];
@@ -1366,6 +1568,136 @@
          });
          var deliveryEl = document.getElementById('deliveryField');
          if (deliveryEl) deliveryEl.style.display = isRE ? 'none' : 'flex';
+      }
+
+      /* ── Car Make / Model data ──────────────────────────────────────── */
+      var carMakeModels = {
+         'BMW':           ['1 Series','2 Series','3 Series','4 Series','5 Series','7 Series','X1','X2','X3','X4','X5','X6','X7','Z4','M2','M3','M4','M5','Other'],
+         'Mercedes-Benz': ['A-Class','B-Class','C-Class','E-Class','S-Class','CLA','CLS','GLA','GLB','GLC','GLE','GLS','SL','AMG GT','Other'],
+         'Audi':          ['A1','A3','A4','A5','A6','A7','A8','Q2','Q3','Q5','Q7','Q8','TT','R8','e-tron','Other'],
+         'Volkswagen':    ['Golf','Polo','Passat','Tiguan','Touareg','T-Roc','T-Cross','ID.3','ID.4','Caddy','Transporter','Other'],
+         'Ford':          ['Fiesta','Focus','Mondeo','Kuga','Puma','EcoSport','Mustang','Transit','Ranger','Other'],
+         'Toyota':        ['Yaris','Corolla','Camry','RAV4','C-HR','Land Cruiser','Prius','Aygo','Hilux','Supra','Other'],
+         'Nissan':        ['Micra','Juke','Qashqai','X-Trail','Leaf','Navara','GT-R','Other'],
+         'Honda':         ['Civic','Jazz','Accord','CR-V','HR-V','e','NSX','Other'],
+         'Kia':           ['Picanto','Rio','Ceed','Sportage','Sorento','Stinger','Niro','EV6','Other'],
+         'Hyundai':       ['i10','i20','i30','Tucson','Santa Fe','IONIQ','Kona','Bayon','Other'],
+         'Peugeot':       ['108','208','308','408','508','2008','3008','5008','Other'],
+         'Renault':       ['Clio','Megane','Captur','Kadjar','Zoe','Twingo','Laguna','Other'],
+         'Skoda':         ['Fabia','Octavia','Superb','Kodiaq','Karoq','Kamiq','Enyaq','Other'],
+         'Vauxhall':      ['Corsa','Astra','Insignia','Mokka','Crossland','Grandland','Zafira','Other'],
+         'Land Rover':    ['Defender','Discovery','Discovery Sport','Range Rover','Range Rover Sport','Range Rover Evoque','Range Rover Velar','Other'],
+         'Jaguar':        ['XE','XF','XJ','F-Type','E-Pace','F-Pace','I-Pace','Other'],
+         'Mini':          ['One','Cooper','Cooper S','Clubman','Countryman','Convertible','Other'],
+         'Tesla':         ['Model S','Model 3','Model X','Model Y','Cybertruck','Other'],
+         'Volvo':         ['S60','S90','V40','V60','V90','XC40','XC60','XC90','Other'],
+         'Lexus':         ['IS','ES','GS','LS','UX','NX','RX','GX','LX','LC','RC','Other'],
+         'Porsche':       ['911','Cayenne','Macan','Panamera','Taycan','Boxster','Cayman','Other'],
+         'SEAT':          ['Ibiza','Leon','Arona','Ateca','Tarraco','Other'],
+         'Other':         []
+      };
+      var isCarSubtype = false;
+
+      function initCarMakeSelect() {
+         var sel = document.getElementById('carMakeSelect');
+         if (!sel) return;
+         var html = '<option value="" disabled selected hidden>Select make</option>';
+         Object.keys(carMakeModels).forEach(function(make) {
+            html += '<option value="' + make + '">' + make + '</option>';
+         });
+         sel.innerHTML = html;
+      }
+
+      function initCarYearSelect() {
+         var sel = document.getElementById('carYearSelect');
+         if (!sel) return;
+         var html = '<option value="" disabled selected hidden>Select year</option>';
+         var currentYear = new Date().getFullYear();
+         for (var y = currentYear + 1; y >= 1970; y--) {
+            html += '<option value="' + y + '">' + y + '</option>';
+         }
+         sel.innerHTML = html;
+      }
+
+      function onCarMakeChange(sel) {
+         sel.classList.toggle('pa-empty', !sel.value);
+         var make = sel.value;
+         var modelSel = document.getElementById('carModelSelect');
+         var models = carMakeModels[make] || [];
+         if (models.length) {
+            var html = '<option value="" disabled selected hidden>Select model</option>';
+            models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
+            modelSel.innerHTML = html;
+         } else {
+            modelSel.innerHTML = '<option value="" disabled selected hidden>Enter model below</option>';
+         }
+         modelSel.classList.add('pa-empty');
+         var otherField = document.getElementById('carModelOtherField');
+         if (otherField) otherField.style.display = (make === 'Other') ? 'flex' : 'none';
+         updateCarTitle();
+      }
+
+      function onCarModelChange(sel) {
+         sel.classList.toggle('pa-empty', !sel.value);
+         var otherField = document.getElementById('carModelOtherField');
+         if (otherField) otherField.style.display = (sel.value === 'Other') ? 'flex' : 'none';
+         updateCarTitle();
+      }
+
+      function updateCarTitle() {
+         if (userEditedTitle) return;
+         var make = (document.getElementById('carMakeSelect') || {}).value || '';
+         var modelSel = document.getElementById('carModelSelect');
+         var model = modelSel ? modelSel.value : '';
+         if (model === 'Other') {
+            model = (document.getElementById('carModelOtherInput') || {}).value || '';
+         }
+         var year = (document.getElementById('carYearSelect') || {}).value || '';
+         var parts = [];
+         if (make && make !== 'Other') parts.push(make);
+         if (model) parts.push(model);
+         if (year) parts.push(year);
+         var suggested = parts.join(' ');
+         var hint  = document.getElementById('suggestedHint');
+         var textEl = document.getElementById('suggestedText');
+         if (!hint || !textEl) return;
+         if (suggested) {
+            textEl.textContent = suggested;
+            hint.style.display = 'flex';
+         } else {
+            hint.style.display = 'none';
+         }
+      }
+
+      function activateCarFields() {
+         isCarSubtype = true;
+         ['brandField','modelField','yearField'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+         });
+         var carSec = document.getElementById('carSpecificSection');
+         if (carSec) carSec.style.display = '';
+         initCarMakeSelect();
+         initCarYearSelect();
+         var condSel = document.getElementById('conditionSelect');
+         if (condSel) {
+            condSel.innerHTML = '<option value="">Select condition</option>' +
+               '<option value="resale">Used</option>' +
+               '<option value="new">New</option>' +
+               '<option value="resale">Damaged</option>' +
+               '<option value="resale">For parts</option>';
+         }
+         var condField = document.getElementById('conditionField');
+         if (condField) condField.style.display = 'flex';
+         var bedroomsField = document.getElementById('bedroomsField');
+         if (bedroomsField) bedroomsField.style.display = 'none';
+         updateCarTitle();
+      }
+
+      function deactivateCarFields() {
+         isCarSubtype = false;
+         var carSec = document.getElementById('carSpecificSection');
+         if (carSec) carSec.style.display = 'none';
       }
 
       function computeSuggested() {
@@ -1695,6 +2027,18 @@
          var propType = el.textContent.trim();
          reState.propType = propType;
          reState.subtype = '';
+
+         if (reState.cat === 'motors' && propType === 'Cars') {
+            activateCarFields();
+            document.getElementById('houseTypeField').style.display = 'none';
+            document.getElementById('buildingTypeField').style.display = 'none';
+            document.getElementById('constructionTypeField').style.display = 'none';
+            document.getElementById('subtypeField').style.display = 'none';
+            document.getElementById('paForm').classList.add('visible');
+            return;
+         }
+         deactivateCarFields();
+
          var houseTypeField = document.getElementById('houseTypeField');
          var houseTypeSelect = document.getElementById('houseTypeSelect');
          var buildingTypeField = document.getElementById('buildingTypeField');
