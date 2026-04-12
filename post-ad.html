@@ -2302,7 +2302,7 @@
             var lmSearch = new google.maps.places.Autocomplete(document.getElementById('lmSearchInput'), {
                componentRestrictions: { country: 'gb' },
                types: ['geocode'],
-               fields: ['geometry', 'formatted_address', 'name']
+               fields: ['geometry', 'formatted_address', 'address_components', 'name']
             });
             lmSearch.addListener('place_changed', function() {
                var place = lmSearch.getPlace();
@@ -2311,6 +2311,35 @@
                _locMap.setCenter(pos);
                _locMap.setZoom(15);
                _locMarker.setPosition(pos);
+               // Also update the hidden location fields from map search selection
+               var comps = place.address_components || [];
+               var city = '', locality = '', district = '', region = '', postcode = '', adminL2 = '';
+               comps.forEach(function(c) {
+                  if (c.types.includes('postal_town')) { if (!city) city = c.long_name; }
+                  if (c.types.includes('locality')) { if (!locality) locality = c.long_name; }
+                  if (c.types.includes('sublocality_level_1') || c.types.includes('sublocality') ||
+                      c.types.includes('neighborhood')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('sublocality_level_2') || c.types.includes('sublocality_level_3')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_3')) { if (!district) district = c.long_name; }
+                  if (c.types.includes('administrative_area_level_2')) adminL2 = c.long_name;
+                  if (c.types.includes('administrative_area_level_1')) { if (!region) region = c.long_name; }
+                  if (c.types.includes('postal_code')) postcode = c.long_name;
+               });
+               if (adminL2 === 'Greater London' && city && city !== 'London') {
+                  if (!district) district = city;
+                  city = 'London';
+               }
+               if (locality && city && locality !== city && !district) district = locality;
+               if (!city) city = locality;
+               if (!district && place.formatted_address && city) {
+                  district = extractDistrictFromFormatted(place.formatted_address, city);
+               }
+               if (city) document.getElementById('locationCity').value = city;
+               if (district) document.getElementById('locationDistrict').value = district;
+               if (region) document.getElementById('locationRegion').value = region;
+               if (postcode) document.getElementById('locationPostcode').value = postcode;
+               document.getElementById('locationLat').value = pos.lat;
+               document.getElementById('locationLng').value = pos.lng;
             });
          } else {
             var lat2 = parseFloat(document.getElementById('exactLat').value || document.getElementById('locationLat').value);
@@ -2335,6 +2364,8 @@
          var lat = pos.lat(), lng = pos.lng();
          document.getElementById('exactLat').value = lat;
          document.getElementById('exactLng').value = lng;
+         document.getElementById('locationLat').value = lat;
+         document.getElementById('locationLng').value = lng;
 
          var statusEl = document.getElementById('locationStatus');
          statusEl.style.display = 'flex';
