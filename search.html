@@ -416,7 +416,7 @@
                            <div class="cf-cat-divider"></div>
                            <div class="cf-cat-item active" onclick="selectCat(this, 'img/cat/image1.png', 'image1', 'Real Estate for sale')"><img src="img/cat/image1.png" alt="">Real Estate for sale</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for Rent')"><img src="img/cat/image2.png" alt="">Real Estate for Rent</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for short rent')"><img src="img/cat/image2.png" alt="">Real Estate for short rent</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for short-term rent')"><img src="img/cat/image2.png" alt="">Real Estate for short-term rent</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image3.png', 'image3', 'Motors')"><img src="img/cat/image3.png" alt="">Motors</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image4.png', 'image4', 'Motors for rent')"><img src="img/cat/image4.png" alt="">Motors for rent</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image5.png', 'image5', 'Mobile phones, communication')"><img src="img/cat/image5.png" alt="">Mobile phones, communication</div>
@@ -1295,7 +1295,7 @@
 
       function detectMode(catLabel) {
          var l = catLabel.toLowerCase();
-         if (l.indexOf('short rent') !== -1 || l.indexOf('short-term') !== -1) return 'short-rent';
+         if (l.indexOf('short rent') !== -1 || l.indexOf('short-term rent') !== -1 || l.indexOf('short-term') !== -1) return 'short-rent';
          if (l.indexOf('rent') !== -1) return 'rent';
          return 'sale';
       }
@@ -2366,7 +2366,7 @@
          var catMap = {
             'sale':       { label: 'Real Estate for sale',       img: 'img/cat/image1.png', mode: 'sale',       catLabel: 'Real Estate for sale',       catUrl: '/property' },
             'rent':       { label: 'Real Estate for Rent',       img: 'img/cat/image2.png', mode: 'rent',       catLabel: 'Real Estate for Rent',       catUrl: '/property' },
-            'short-rent': { label: 'Real Estate for short rent', img: 'img/cat/image2.png', mode: 'short-rent', catLabel: 'Real Estate for short rent', catUrl: '/property' }
+            'short-rent': { label: 'Real Estate for short-term rent', img: 'img/cat/image2.png', mode: 'short-rent', catLabel: 'Real Estate for short-term rent', catUrl: '/property' }
          };
 
          var catLink = document.getElementById('breadCrumbCat');
