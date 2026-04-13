@@ -413,9 +413,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                         f'Browse {cat_label.lower()} listings across the UK on Bazar.')
         canonical = f'{PUBLIC_DOMAIN}/{cat}'
 
-        # H1: "Cars for sale UK" / "Jobs UK" / "Rooms to Rent UK"
+        # H1: "Cars for sale in the UK" / "Jobs in the UK" / "Rooms to Rent in the UK"
         h1_phrase = f'{cat_label} {action}'.strip()
-        h1 = f'{h1_phrase} UK'
+        h1 = f'{h1_phrase} in the UK'
 
         # Title (max ~65 chars)
         raw_title = f'{h1} | Bazar UK'
