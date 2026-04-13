@@ -495,3 +495,9 @@ Stripe проверяет сайт и не должен видеть Deposit/Wit
 ## Коммуникация
 
 Общаться с пользователем на русском языке.
+
+## Production Deployment Notes
+- **Correct deploy path**: `scp search.html → /var/www/bazar-prod/public/search.html`
+- **Correct server restart**: `ssh root@49.13.231.137 "systemctl restart bazar-seo"`
+- **NOT**: `/var/www/bazar-prod/search.html` (wrong directory, server ignores it)
+- **Systemd service**: `bazar-seo.service`, WorkingDirectory=`/var/www/bazar-prod/public`
