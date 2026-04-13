@@ -143,7 +143,7 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
 CATEGORY_LABELS = {
     'property':    'Property',    'real-estate': 'Property',
     'cars':        'Cars',        'motors':      'Motors',
-    'vehicles':    'Vehicles',    'rooms':       'Rooms to Rent',
+    'vehicles':    'Vehicles',    'rooms':       'Rooms',
     'jobs':        'Jobs',        'electronics': 'Electronics',
     'furniture':   'Furniture',   'fashion':     'Fashion',
     'services':    'Services',    'pets':        'Pets',
@@ -457,7 +457,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                (h1_phrase, None),
+                (cat_label, None),
             ],
             'city_links':  city_links,
             'cat_label':   h1_phrase,
