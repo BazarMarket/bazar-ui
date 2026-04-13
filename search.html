@@ -2373,6 +2373,14 @@
          var catArrow = document.getElementById('breadCrumbCatArrow');
          var typeEl = document.getElementById('breadCrumbType');
 
+         // Path-based category map: detects category from URL pathname
+         var pathParts = window.location.pathname.replace(/^\//, '').split('/');
+         var pathCat   = pathParts[0];
+         var pathLast  = pathParts[pathParts.length - 1];
+         var pathCatMap = {
+            'rooms': pathLast === 'short-term' ? 'short-rent' : 'rent'
+         };
+
          if (cat && catMap[cat]) {
             var info = catMap[cat];
             document.getElementById('cfCatLabel').textContent = info.label;
@@ -2389,6 +2397,20 @@
                catLink.textContent = info.catLabel;
                catLink.href = info.catUrl || '/property';
             }
+         } else if (pathCatMap[pathCat]) {
+            var info = catMap[pathCatMap[pathCat]];
+            document.getElementById('cfCatLabel').textContent = info.label;
+            var imgEl = document.getElementById('cfCatImg');
+            imgEl.src = info.img;
+            imgEl.style.display = '';
+            document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i) {
+               i.classList.remove('active');
+               if (i.textContent.trim() === info.label) i.classList.add('active');
+            });
+            currentMode = info.mode;
+            buildTypePanel();
+            if (catLink) { catLink.parentNode.style.display = 'none'; }
+            if (catArrow) { catArrow.style.display = 'none'; }
          } else {
             if (catLink) { catLink.parentNode.style.display = 'none'; }
             if (catArrow) { catArrow.style.display = 'none'; }

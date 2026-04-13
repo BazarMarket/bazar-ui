@@ -483,8 +483,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         canonical = f'{PUBLIC_DOMAIN}/{cat}/short-term'
 
         h1    = f'Short-Term {cat_label} to Rent in the UK'
-        intro = (f'Find short-term {cat_label.lower()} to rent across the UK. '
-                 f'Ideal for temporary stays and flexible rentals.')
+        if cat == 'rooms':
+            intro = ('Find short-term rooms to rent across the UK. '
+                     'Perfect for temporary stays, students, and flexible living.')
+        else:
+            intro = (f'Find short-term {cat_label.lower()} to rent across the UK. '
+                     f'Ideal for temporary stays and flexible rentals.')
         desc  = intro[:160]
 
         breadcrumb_schema = {
