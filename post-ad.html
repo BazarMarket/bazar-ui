@@ -2051,7 +2051,7 @@
             'Studio':              'studio',
             'Building':            'building',
             'Land':                'plot of land',
-            'Room':                'room',
+            'Rooms':               'rooms',
             'Commercial property': 'commercial property',
             'Holiday home':        'holiday home',
             'Other':               'property'
@@ -2100,8 +2100,8 @@
       var catData = {
          'real-estate': {
             'For Sale':            ['Apartment', 'Studio', 'House', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment', 'Land', 'Building'],
-            'For Long-term Rent':  ['Apartment', 'Studio', 'House', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial'],
-            'For Short-term Rent': ['Apartment', 'Studio', 'House', 'Maisonette', 'Room', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
+            'For Long-term Rent':  ['Apartment', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial'],
+            'For Short-term Rent': ['Apartment', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
          },
          'motors': {
             'For Sale': ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
@@ -2269,7 +2269,7 @@
          'Apartment':     ['Apartment', 'Penthouse', 'Studio', 'Duplex'],
          'Commercial property':  ['Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial', 'Warehouse', 'Business or Investment'],
          'Land':                 ['Residential plot', 'Agricultural land', 'Commercial plot'],
-         'Room':                 ['Private', 'Shared', 'Ensuite', 'Bills included', 'Bills excluded', 'Couples allowed', 'Furnished'],
+         'Rooms':                ['Private', 'Shared', 'Ensuite', 'Bills included', 'Bills excluded', 'Couples allowed', 'Furnished'],
          'Holiday home':         ['Cottage', 'Chalet', 'Beach house', 'Farmhouse', 'Cabin']
       };
 
@@ -2404,7 +2404,7 @@
       };
       var reCommercial = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var reLand = ['Land', 'Building'];
-      var reOther = ['Room'];
+      var reOther = ['Rooms'];
 
       function fillSubSub(cat, sub) {
          var subSubCats = document.getElementById('subSubCats');
@@ -2541,7 +2541,7 @@
             'Apartment': 'apartment', 'Studio': 'studio', 'House': 'house',
             'Maisonette': 'maisonette', 'Townhouse': 'townhouse', 'Penthouse': 'penthouse',
             'Duplex': 'duplex', 'Bungalow': 'bungalow', 'Cottage': 'cottage',
-            'Room': 'room', 'Office': 'office', 'Shop': 'shop',
+            'Rooms': 'room', 'Office': 'office', 'Shop': 'shop',
             'Restaurant': 'restaurant', 'Industrial': 'industrial', 'Hotel': 'hotel',
             'Business or Investment': 'business', 'Land': 'land', 'Building': 'building'
          };

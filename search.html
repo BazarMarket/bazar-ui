@@ -1220,14 +1220,14 @@
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
       var typesRent = [
-         'Apartment', 'House', 'Room',
+         'Apartment', 'House', 'Rooms',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel'
       ];
       var typesShortRent = [
-         'Apartment', 'House', 'Room'
+         'Apartment', 'House', 'Rooms'
       ];
       var baseOrder = [
-         'Apartment', 'House', 'Room', 'Building', 'Land',
+         'Apartment', 'House', 'Rooms', 'Building', 'Land',
          'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'
       ];
 
@@ -1254,7 +1254,7 @@
          return list;
       }
 
-      var residentialTypes = ['Apartment', 'House', 'Room'];
+      var residentialTypes = ['Apartment', 'House', 'Rooms'];
       var commercialTypes = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var landTypes = ['Building', 'Land'];
 
@@ -1394,7 +1394,7 @@
             document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateConstructionTypeLabel();
          }
-         var roomEl = document.querySelector('#cfTypePanel input[value="Room"]');
+         var roomEl = document.querySelector('#cfTypePanel input[value="Rooms"]');
          var roomChecked = roomEl ? roomEl.checked : false;
          var roomtypeWrap = document.getElementById('cfRoomtypeWrap');
          if (roomChecked) {
@@ -2155,7 +2155,7 @@
           {s:'Emily Ward',t:'3-bedroom Cottage in Bathampton, Bath',imgs:['img/properties/cottage-bath.jpg','img/properties/cottage-cotswolds.jpg'],info:[['icon-bead','3 beds'],['icon-bath','2 bath'],['icon-house-area','132 m²'],['icon-Plot','0.3 acres']],p:'£485,000',l:'Bathampton, Bath, UK',d:'Charming stone cottage with original fireplaces and exposed beams. South-facing garden, new bathroom, walking distance from Bath.',dt:'28 03 2026 | 16:00',n:'115185',v:554,stk:['PRO'],cc:'card_orange',cy:'BATH'},
           {s:'Daniel Brooks',t:'4-bedroom Cottage in Bourton-on-the-Water, Cotswolds',imgs:['img/properties/cottage-cotswolds.jpg','img/properties/cottage-bath.jpg'],info:[['icon-bead','4 beds'],['icon-bath','2 bath'],['icon-house-area','175 m²'],['icon-Plot','0.6 acres']],p:'£595,000',l:'Bourton-on-the-Water, Cotswolds, UK',d:'Quintessential Cotswold stone cottage in an idyllic village. Original sash windows, AGA kitchen, large private garden.',dt:'26 03 2026 | 10:20',n:'115161',v:687,stk:['VIP','PRO'],cc:'card_red',cy:'COTSWOLDS'}
         ],
-        'Room': [
+        'Rooms': [
           {s:'James Mitchell',t:'1-bedroom Room in Hyde Park, Leeds',imgs:['img/properties/studio-leeds.jpg','img/properties/apartment-london.jpg'],info:[['icon-bead','1 bed'],['icon-bath','1 bath'],['icon-house-area','22 m²']],p:'£850/mo',l:'Hyde Park, Leeds, UK',d:'Bright en-suite room in a shared house. Bills included, high-speed WiFi, fully furnished. Close to University of Leeds.',dt:'04 04 2026 | 08:30',n:'115220',v:312,stk:['PRO'],cc:'card_orange',cy:'LEEDS'},
           {s:'Sarah Collins',t:'1-bedroom Room in Shoreditch, London',imgs:['img/properties/flat-chelsea.jpg','img/properties/studio-leeds.jpg'],info:[['icon-bead','1 bed'],['icon-bath','1 bath'],['icon-house-area','18 m²']],p:'£1,150/mo',l:'Shoreditch, London, UK',d:'Contemporary room in a stylish flat share. All bills included, furnished, close to transport links and vibrant nightlife.',dt:'03 04 2026 | 12:15',n:'115218',v:487,stk:['VIP','PRO'],cc:'card_red',cy:'LONDON'},
           {s:'Tom Harper',t:'1-bedroom Room in Northern Quarter, Manchester',imgs:['img/properties/apartment-london.jpg','img/properties/studio-leeds.jpg'],info:[['icon-bead','1 bed'],['icon-bath','1 bath'],['icon-house-area','20 m²']],p:'£750/mo',l:'Northern Quarter, Manchester, UK',d:'Double room with en-suite in a modern flat. Fully furnished, all bills included, 5 minutes walk to city centre.',dt:'02 04 2026 | 15:40',n:'115214',v:278,stk:['PRO'],cc:'',cy:'MANCHESTER'},
