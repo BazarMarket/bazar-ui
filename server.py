@@ -126,10 +126,20 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
 
     parts = [x for x in p.split('/') if x]
     if len(parts) == 3:
+        # /rooms/london/short-term  →  category_city_modifier
+        if parts[2] == 'short-term':
+            return 'category_city_modifier', {
+                'category': parts[0], 'city': parts[1], 'modifier': 'short-term'
+            }
         return 'category_city_district', {
             'category': parts[0], 'city': parts[1], 'district': parts[2]
         }
     if len(parts) == 2:
+        # /rooms/short-term  →  category_modifier
+        if parts[1] == 'short-term':
+            return 'category_modifier', {
+                'category': parts[0], 'modifier': 'short-term'
+            }
         return 'category_city', {'category': parts[0], 'city': parts[1]}
     if len(parts) == 1:
         return 'category', {'category': parts[0]}
@@ -462,6 +472,119 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'city_links':  city_links,
             'cat_label':   h1_phrase,
             'type':        'category',
+        }
+        return seo
+
+    # ── Category + modifier (e.g. /rooms/short-term) ──────────────────────────
+    elif page_type == 'category_modifier':
+        cat       = params.get('category', '')
+        modifier  = params.get('modifier', '')
+        cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
+        canonical = f'{PUBLIC_DOMAIN}/{cat}/short-term'
+
+        h1    = f'Short-Term {cat_label} to Rent in the UK'
+        intro = (f'Find short-term {cat_label.lower()} to rent across the UK. '
+                 f'Ideal for temporary stays and flexible rentals.')
+        desc  = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": cat_label, "item": f'{PUBLIC_DOMAIN}/{cat}'},
+                {"@type": "ListItem", "position": 3,
+                 "name": "Short-Term", "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (cat_label, f'/{cat}'),
+                ('Short-Term', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    # ── Category + city + modifier (e.g. /rooms/london/short-term) ────────────
+    elif page_type == 'category_city_modifier':
+        cat       = params.get('category', '')
+        city_slug = params.get('city', '')
+        city      = city_slug.replace('-', ' ').title()
+        cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
+        canonical = f'{PUBLIC_DOMAIN}/{cat}/{city_slug}/short-term'
+        cat_url   = f'{PUBLIC_DOMAIN}/{cat}'
+
+        h1    = f'Short-Term {cat_label} to Rent in {city}'
+        intro = (f'Find short-term {cat_label.lower()} to rent in {city}. '
+                 f'Ideal for temporary stays and flexible rentals.')
+        desc  = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": cat_label, "item": cat_url},
+                {"@type": "ListItem", "position": 3,
+                 "name": city, "item": f'{PUBLIC_DOMAIN}/{cat}/{city_slug}'},
+                {"@type": "ListItem", "position": 4,
+                 "name": "Short-Term", "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (cat_label, f'/{cat}'),
+                (city, f'/{cat}/{city_slug}'),
+                ('Short-Term', None),
+            ],
+            'type': 'category',
         }
         return seo
 
@@ -1021,7 +1144,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         p_clean = path.lstrip('/')
         page_type, params = resolve_page_type(path, qs)
 
-        if page_type in ('homepage', 'listing', 'category', 'category_city',
+        if page_type in ('homepage', 'listing', 'category', 'category_modifier',
+                         'category_city', 'category_city_modifier',
                          'category_city_district', 'search'):
             # Determine which HTML file to serve
             html_filename = {
