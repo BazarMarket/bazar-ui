@@ -15,14 +15,16 @@
       /* ── Page layout ── */
       .sr-wrap { max-width: 1440px; margin: 0 auto; padding: 0 6%; }
       .sr-results { width: 100%; }
-      .sr-bread-sort { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 12px; }
-      .sr-bread-sort .bread-custom { margin: 0 !important; font-size: 13px; }
-      .sr-bread-sort .bread-custom li,
-      .sr-bread-sort .bread-custom li a { font-size: 14px; font-weight: 400; color: #6b7280; }
-      .sr-bread-sort .bread-custom li a:hover { color: #ffae49; }
-      .sr-bread-sort .bread-custom li:last-child { color: #111827; font-weight: 500; }
-      .sr-bread-sort .bread-custom li span:before { color: #6b7280; }
-      .sr-sort { display: flex; align-items: center; gap: 8px; }
+      .sr-breadcrumbs { margin: 10px 0 0; }
+      .sr-breadcrumbs .bread-custom { margin: 0 !important; font-size: 13px; }
+      .sr-breadcrumbs .bread-custom li,
+      .sr-breadcrumbs .bread-custom li a { font-size: 14px; font-weight: 400; color: #6b7280; }
+      .sr-breadcrumbs .bread-custom li a:hover { color: #ffae49; }
+      .sr-breadcrumbs .bread-custom li:last-child { color: #111827; font-weight: 500; }
+      .sr-breadcrumbs .bread-custom li span:before { color: #6b7280; }
+      .sr-hero-sort { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 8px 0 16px; }
+      .sr-cat-hero { flex: 1; min-width: 0; }
+      .sr-sort { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
       .sr-sort label { font-family: "Poppins", sans-serif; font-size: 13px; color: #999; white-space: nowrap; }
       .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 5px 10px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
       .sr-sort select:focus { border-color: #ff9138; }
@@ -210,7 +212,7 @@
          .product__price-row .price-start { font-size: 18px; }
          .product__seller-avatar { width: 36px; height: 36px; }
          .product__seller-name { font-size: 14px; }
-         .sr-bread-sort { flex-direction: column; align-items: flex-start; gap: 8px; }
+         .sr-hero-sort { flex-direction: column; align-items: flex-start; gap: 8px; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       }
 
@@ -255,8 +257,8 @@
          .product__text { font-size: 12px !important; }
          .product__info { flex-wrap: wrap; gap: 6px; }
          .product__info .details-item { font-size: 11px !important; }
-         .sr-bread-sort .bread-custom li,
-         .sr-bread-sort .bread-custom li a { font-size: 12px; }
+         .sr-breadcrumbs .bread-custom li,
+         .sr-breadcrumbs .bread-custom li a { font-size: 12px; }
          .sr-sort label { font-size: 12px; }
          .sr-sort select { font-size: 12px; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
@@ -802,12 +804,15 @@
          <div class="sr-wrap">
             <div class="sr-results">
 
-               <div class="sr-bread-sort">
+               <div class="sr-breadcrumbs">
                   <ul class="bread-custom" id="srBreadcrumb">
                      <li><a href="/">Home</a><span class="icon-arrow-r"></span></li>
                      <li><a href="#" id="breadCrumbCat"></a><span class="icon-arrow-r" id="breadCrumbCatArrow"></span></li>
                      <li id="breadCrumbType">Search results</li>
                   </ul>
+               </div>
+               <div class="sr-hero-sort">
+                  <!-- SR_CAT_HERO -->
                   <div class="sr-sort">
                      <label>Sort by:</label>
                      <select>
@@ -819,7 +824,6 @@
                      </select>
                   </div>
                </div>
-               <!-- SR_CAT_HERO -->
 
                <div class="sr-results-wrap">
                   <div class="sr-view-sidebar">
