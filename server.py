@@ -644,7 +644,8 @@ _RE_HEAD_OPEN      = re.compile(r'(<head[^>]*>)', re.I)
 _RE_PROP_TITLE     = re.compile(r'<p([^>]*id="prop-title"[^>]*)>[^<]*</p>', re.I)
 _RE_BREADCRUMB     = re.compile(r'(<ul[^>]+id="breadcrumb"[^>]*>).*?(</ul>)', re.I | re.S)
 _RE_SR_BREADCRUMB  = re.compile(r'<ul[^>]+id="srBreadcrumb"[^>]*>.*?</ul>', re.I | re.S)
-_RE_SR_RESULTS_DIV = re.compile(r'(<div\s+class="sr-results">)', re.I)
+_RE_SR_RESULTS_DIV    = re.compile(r'(<div\s+class="sr-results">)', re.I)
+_RE_SR_HERO_SLOT      = re.compile(r'<!--\s*SR_CAT_HERO\s*-->', re.I)
 
 def inject_seo(html: str, seo_head: str) -> str:
     """Strip old SEO tags, inject fresh ones right after <head>."""
@@ -728,7 +729,7 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         if m:
             html = html[:m.start()] + new_ul + html[m.end():]
 
-    # ── Inject H1 + intro paragraph after <div class="sr-results"> ───────────
+    # ── Inject H1 + intro paragraph after breadcrumbs (SR_CAT_HERO slot) ───────
     if h1:
         hero_html = (
             f'\n               <div class="sr-cat-hero" id="srCatHero">'
@@ -738,10 +739,9 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
             hero_html += f'<p class="sr-cat-intro" id="srCatIntro">{_esc(intro)}</p>'
         hero_html += '</div>'
 
-        m = _RE_SR_RESULTS_DIV.search(html)
+        m = _RE_SR_HERO_SLOT.search(html)
         if m:
-            insert_at = m.end()
-            html = html[:insert_at] + hero_html + html[insert_at:]
+            html = html[:m.start()] + hero_html + html[m.end():]
 
     # ── Inject city links nav before </body> ─────────────────────────────────
     if city_links:
