@@ -126,6 +126,11 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
 
     parts = [x for x in p.split('/') if x]
     if len(parts) == 3:
+        # /property/for-rent/short-term  →  property_transaction_modifier
+        if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale') and parts[2] == 'short-term':
+            return 'property_transaction_modifier', {
+                'transaction': parts[1], 'modifier': 'short-term'
+            }
         # /rooms/london/short-term  →  category_city_modifier
         if parts[2] == 'short-term':
             return 'category_city_modifier', {
@@ -135,6 +140,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             'category': parts[0], 'city': parts[1], 'district': parts[2]
         }
     if len(parts) == 2:
+        # /property/for-rent or /property/for-sale  →  property_transaction
+        if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
+            return 'property_transaction', {'transaction': parts[1]}
         # /rooms/short-term  →  category_modifier
         if parts[1] == 'short-term':
             return 'category_modifier', {
@@ -527,6 +535,114 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'breadcrumbs': [
                 ('Home', '/'),
                 (cat_label, f'/{cat}'),
+                ('Short-Term', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    # ── /property/for-rent or /property/for-sale ──────────────────────────────
+    elif page_type == 'property_transaction':
+        transaction = params.get('transaction', 'for-rent')
+        is_rent     = (transaction == 'for-rent')
+        verb        = 'for Rent' if is_rent else 'for Sale'
+        canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}'
+
+        h1    = f'Real Estate {verb} in the UK'
+        intro = (
+            f'Browse thousands of properties {verb.lower()} across the UK. '
+            f'Apartments, houses, rooms, commercial properties and more.'
+        )
+        desc  = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": f'Real Estate {verb}', "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (f'Real Estate {verb}', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    # ── /property/for-rent/short-term ─────────────────────────────────────────
+    elif page_type == 'property_transaction_modifier':
+        transaction = params.get('transaction', 'for-rent')
+        canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/short-term'
+        parent_url  = f'{PUBLIC_DOMAIN}/property/{transaction}'
+
+        h1    = 'Short-Term Real Estate for Rent in the UK'
+        intro = (
+            'Find short-term properties for rent across the UK. '
+            'Ideal for temporary stays, corporate lets, and flexible rentals.'
+        )
+        desc  = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": "Real Estate for Rent", "item": parent_url},
+                {"@type": "ListItem", "position": 3,
+                 "name": "Short-Term", "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Real Estate for Rent', f'/property/for-rent'),
                 ('Short-Term', None),
             ],
             'type': 'category',
@@ -1150,7 +1266,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
         if page_type in ('homepage', 'listing', 'category', 'category_modifier',
                          'category_city', 'category_city_modifier',
-                         'category_city_district', 'search'):
+                         'category_city_district', 'search',
+                         'property_transaction', 'property_transaction_modifier'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
