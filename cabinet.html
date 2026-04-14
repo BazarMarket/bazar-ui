@@ -1326,8 +1326,12 @@
             var img = elAvatar.querySelector('img');
             var savedAv = localStorage.getItem('bazar_avatar');
             if (img) {
-                if (savedAv) { img.src = savedAv; img.style.display = 'block'; }
-                else img.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                if (savedAv) {
+                    img.src = savedAv;
+                    img.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;';
+                } else {
+                    img.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                }
             }
         }
 
@@ -1573,7 +1577,10 @@
             var headerAvatar = document.getElementById('header-avatar');
             if (headerAvatar) {
                 var hImg = headerAvatar.querySelector('img');
-                if (hImg) { hImg.src = dataUrl; hImg.style.display = 'block'; }
+                if (hImg) {
+                    hImg.src = dataUrl;
+                    hImg.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;';
+                }
             }
         }
 

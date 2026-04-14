@@ -16,7 +16,16 @@
                        document.querySelector('.user-link__photo');
         if (avatarEl) {
             var img = avatarEl.querySelector('img') || (avatarEl.tagName === 'IMG' ? avatarEl : null);
-            if (img) img.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+            if (img) {
+                var savedAv = localStorage.getItem('bazar_avatar');
+                if (savedAv) {
+                    img.src = savedAv;
+                    img.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;';
+                } else {
+                    img.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                    img.style.cssText = '';
+                }
+            }
         }
     }
 
