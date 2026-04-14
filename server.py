@@ -162,6 +162,7 @@ CATEGORY_LABELS = {
     'property':    'Property',    'real-estate': 'Property',
     'cars':        'Cars',        'motors':      'Motors',
     'vehicles':    'Vehicles',    'rooms':       'Rooms',
+    'flats':       'Flats',
     'jobs':        'Jobs',        'electronics': 'Electronics',
     'furniture':   'Furniture',   'fashion':     'Fashion',
     'services':    'Services',    'pets':        'Pets',
@@ -174,6 +175,7 @@ CATEGORY_ACTION = {
     'property':  'for sale',   'real-estate': 'for sale',
     'cars':      'for sale',   'motors':      'for sale',
     'vehicles':  'for sale',   'rooms':       'to rent',
+    'flats':     'to rent',
     'jobs':      '',           'electronics': 'for sale',
     'furniture': 'for sale',   'fashion':     'for sale',
     'services':  '',           'pets':        'for sale',
@@ -189,6 +191,7 @@ CATEGORY_INTROS = {
     'motors':      'Browse motors and vehicles for sale across the UK on Bazar.',
     'vehicles':    'Browse vehicles for sale across the UK — cars, vans, bikes and more.',
     'rooms':       'Find rooms to rent across the UK. Short-term and long-term rentals available.',
+    'flats':       'Find flats to rent across the UK. Short-term and long-term rentals available.',
     'jobs':        'Browse job listings across the UK. Find local opportunities on Bazar.',
     'electronics': 'Buy and sell electronics across the UK — phones, laptops, TVs and more.',
     'furniture':   'Browse furniture listings across the UK. New and second-hand pieces from local sellers.',
@@ -494,6 +497,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         if cat == 'rooms':
             intro = ('Find short-term rooms to rent across the UK. '
                      'Perfect for temporary stays, students, and flexible living.')
+        elif cat == 'flats':
+            intro = ('Find short-term flats to rent across the UK. '
+                     'Perfect for temporary stays, relocations, and flexible living.')
         else:
             intro = (f'Find short-term {cat_label.lower()} to rent across the UK. '
                      f'Ideal for temporary stays and flexible rentals.')
@@ -1011,7 +1017,7 @@ SITEMAP_TTL = 3600  # 1 hour
 
 # Only the canonical category slugs (no aliases like 'real-estate', 'motors')
 CANONICAL_CATEGORIES = [
-    'property', 'cars', 'vehicles', 'rooms', 'jobs',
+    'property', 'cars', 'vehicles', 'rooms', 'flats', 'jobs',
     'electronics', 'furniture', 'fashion', 'services',
     'pets', 'sports', 'kids', 'garden', 'tools',
 ]
