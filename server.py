@@ -183,8 +183,8 @@ CATEGORY_ACTION = {
 
 # Base intro sentence per category (UK-level)
 CATEGORY_INTROS = {
-    'property':    'Browse property listings across the UK — apartments, houses, villas and more.',
-    'real-estate': 'Browse property listings across the UK — apartments, houses, villas and more.',
+    'property':    'Browse property listings across the UK — flats, houses, villas and more.',
+    'real-estate': 'Browse property listings across the UK — flats, houses, villas and more.',
     'cars':        'Browse new and used car listings across the UK from private sellers and dealers.',
     'motors':      'Browse motors and vehicles for sale across the UK on Bazar.',
     'vehicles':    'Browse vehicles for sale across the UK — cars, vans, bikes and more.',
@@ -551,7 +551,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         h1    = f'Real Estate {verb} in the UK'
         intro = (
             f'Browse thousands of properties {verb.lower()} across the UK. '
-            f'Apartments, houses, rooms, commercial properties and more.'
+            f'Flats, houses, rooms, commercial properties and more.'
         )
         desc  = intro[:160]
 

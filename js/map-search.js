@@ -12,7 +12,7 @@ var MS = {
   mobileView: 'list',
 
   LISTINGS: [
-    {id:1,title:"Modern 2-Bed Apartment in Canary Wharf",price:2200,currency:"£",period:"/mo",lat:51.5054,lng:-0.0235,city:"London",area:"Canary Wharf",img:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop",beds:2,baths:1,sqm:75,type:"Flat",vip:true,pro:false},
+    {id:1,title:"Modern 2-Bed Flats in Canary Wharf",price:2200,currency:"£",period:"/mo",lat:51.5054,lng:-0.0235,city:"London",area:"Canary Wharf",img:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop",beds:2,baths:1,sqm:75,type:"Flat",vip:true,pro:false},
     {id:2,title:"Spacious Victorian House, 4 Bedrooms",price:650000,currency:"£",period:"",lat:51.5362,lng:-0.1033,city:"London",area:"Islington",img:"https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop",beds:4,baths:2,sqm:180,type:"House",vip:false,pro:true},
     {id:3,title:"Cozy Studio Near Tower Bridge",price:1450,currency:"£",period:"/mo",lat:51.5055,lng:-0.0754,city:"London",area:"Tower Bridge",img:"https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop",beds:0,baths:1,sqm:32,type:"Studio",vip:false,pro:false},
     {id:4,title:"Penthouse with Thames View",price:1250000,currency:"£",period:"",lat:51.5074,lng:-0.0160,city:"London",area:"Wapping",img:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop",beds:3,baths:2,sqm:145,type:"Penthouse",vip:true,pro:true},
@@ -24,9 +24,9 @@ var MS = {
     {id:10,title:"Bright Corner Flat, Battersea",price:1650,currency:"£",period:"/mo",lat:51.4763,lng:-0.1483,city:"London",area:"Battersea",img:"https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop",beds:1,baths:1,sqm:52,type:"Flat",vip:false,pro:false},
     {id:11,title:"Elegant Townhouse, Chelsea",price:1950000,currency:"£",period:"",lat:51.4875,lng:-0.1687,city:"London",area:"Chelsea",img:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop",beds:4,baths:3,sqm:200,type:"Townhouse",vip:true,pro:true},
     {id:12,title:"Modern Studio, Stratford",price:1100,currency:"£",period:"/mo",lat:51.5430,lng:-0.0005,city:"London",area:"Stratford",img:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop",beds:0,baths:1,sqm:28,type:"Studio",vip:false,pro:false},
-    {id:13,title:"3-Bed Apartment, Manchester City Centre",price:1400,currency:"£",period:"/mo",lat:53.4808,lng:-2.2426,city:"Manchester",area:"City Centre",img:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",beds:3,baths:1,sqm:90,type:"Flat",vip:false,pro:false},
+    {id:13,title:"3-Bed Flats, Manchester City Centre",price:1400,currency:"£",period:"/mo",lat:53.4808,lng:-2.2426,city:"Manchester",area:"City Centre",img:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",beds:3,baths:1,sqm:90,type:"Flat",vip:false,pro:false},
     {id:14,title:"Victorian Terrace, Birmingham",price:320000,currency:"£",period:"",lat:52.4862,lng:-1.8904,city:"Birmingham",area:"Edgbaston",img:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&h=300&fit=crop",beds:3,baths:1,sqm:95,type:"House",vip:false,pro:false},
-    {id:15,title:"Waterfront Apartment, Liverpool",price:950,currency:"£",period:"/mo",lat:53.4010,lng:-2.9946,city:"Liverpool",area:"Albert Dock",img:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",beds:1,baths:1,sqm:45,type:"Flat",vip:false,pro:false},
+    {id:15,title:"Waterfront Flats, Liverpool",price:950,currency:"£",period:"/mo",lat:53.4010,lng:-2.9946,city:"Liverpool",area:"Albert Dock",img:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",beds:1,baths:1,sqm:45,type:"Flat",vip:false,pro:false},
     {id:16,title:"Detached Family Home, Leeds",price:410000,currency:"£",period:"",lat:53.8008,lng:-1.5491,city:"Leeds",area:"Roundhay",img:"https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=400&h=300&fit=crop",beds:4,baths:2,sqm:160,type:"House",vip:true,pro:false}
   ],
 
