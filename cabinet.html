@@ -1648,16 +1648,12 @@
         }
 
         if (avatarInput) {
-            avatarInput.addEventListener('click', function(e) { e.stopPropagation(); });
             avatarInput.addEventListener('change', function() {
                 if (avatarInput.files && avatarInput.files[0]) {
                     compressAndSaveAvatar(avatarInput.files[0]);
                     avatarInput.value = '';
                 }
             });
-        }
-        if (avatarBox) {
-            avatarBox.addEventListener('click', function() { if (avatarInput) avatarInput.click(); });
         }
 
         var savedAvatar = localStorage.getItem('bazar_avatar');
