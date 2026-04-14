@@ -1563,7 +1563,6 @@
         var avatarInput   = document.getElementById('avatarInput');
         var avatarPreview = document.getElementById('avatarPreview');
         var removeBtn     = document.getElementById('removeAvatarBtn');
-        var prevAvatarSrc = null; // сохраняем фото ДО загрузки новой
 
         function setHeaderAvatar(src) {
             var hImg = document.querySelector('#header-avatar img');
@@ -1574,17 +1573,17 @@
             if (avatarPreview) { avatarPreview.src = dataUrl; avatarPreview.classList.add('loaded'); }
             var iconEl = avatarBox ? avatarBox.querySelector('.cab-avatar-upload__icon') : null;
             if (iconEl) iconEl.style.display = 'none';
+            if (removeBtn) removeBtn.style.display = 'block';
         }
 
         function clearAvatarPreview() {
-            var gender = localStorage.getItem('bazar_gender') || 'male';
             if (avatarPreview) { avatarPreview.src = ''; avatarPreview.classList.remove('loaded'); }
             var iconEl = avatarBox ? avatarBox.querySelector('.cab-avatar-upload__icon') : null;
             if (iconEl) iconEl.style.display = '';
-            return gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+            if (removeBtn) removeBtn.style.display = 'none';
         }
 
-        // Загружает сохранённый аватар при открытии страницы (без кнопки Remove)
+        // При загрузке страницы восстанавливаем фото и показываем Remove
         var savedAvatar = localStorage.getItem('bazar_avatar');
         if (savedAvatar) {
             showAvatarPreview(savedAvatar);
@@ -1592,28 +1591,29 @@
         }
 
         window.removeAvatar = function() {
-            if (prevAvatarSrc) {
-                localStorage.setItem('bazar_avatar', prevAvatarSrc);
-                showAvatarPreview(prevAvatarSrc);
-                setHeaderAvatar(prevAvatarSrc);
-            } else {
-                localStorage.removeItem('bazar_avatar');
-                var gender = localStorage.getItem('bazar_gender') || 'male';
-                var defSrc = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-                clearAvatarPreview();
-                setHeaderAvatar(defSrc);
-            }
-            prevAvatarSrc = null;
-            if (removeBtn) removeBtn.style.display = 'none';
+            localStorage.removeItem('bazar_avatar');
+            var gender = localStorage.getItem('bazar_gender') || 'male';
+            var defSrc = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+            clearAvatarPreview();
+            setHeaderAvatar(defSrc);
             if (avatarInput) avatarInput.value = '';
+            var uid = localStorage.getItem('bazar_firebase_uid');
+            if (uid) {
+                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ avatar: null })
+                }).catch(function() {});
+            }
         };
 
         if (avatarInput) {
             avatarInput.addEventListener('change', function() {
                 var file = avatarInput.files && avatarInput.files[0];
-                if (!file || !file.type.match(/image\/.*/)) return;
-                // Запоминаем текущее фото перед заменой
-                prevAvatarSrc = localStorage.getItem('bazar_avatar') || null;
+                if (!file) return;
+                var isImage = file.type.match(/image\/.*/) ||
+                              file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                if (!isImage) return;
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     var img = new Image();
@@ -1631,7 +1631,6 @@
                         localStorage.setItem('bazar_avatar', dataUrl);
                         showAvatarPreview(dataUrl);
                         setHeaderAvatar(dataUrl);
-                        if (removeBtn) removeBtn.style.display = 'block';
                         var uid = localStorage.getItem('bazar_firebase_uid');
                         if (uid) {
                             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
