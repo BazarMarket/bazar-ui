@@ -30,10 +30,10 @@
                         <img loading="lazy" src="img/logo.png" alt="">
                     </a>
                     <div class="header__btns">
-                        <a href="#" class="btn btn_start" onclick="handleLogin(); return false;">Log in</a>
+                        <a href="post-ad.html" class="btn btn_mini" onclick="return handlePostAd(event)">+ Post an Ad</a>
+                        <div style="width:1px;background:#e0e0e0;height:28px;align-self:center;margin:0 8px;flex-shrink:0;"></div>
                         <div class="btn-down icon" onclick="openCreateAccountModal()">
-                            <p class="btn-down__text">Create an account</p>
-                            <span class="btn-down__icon icon-arrow-d"></span>
+                            <p class="btn-down__text" style="padding:0 18px 0 18px;">Log in / Register</p>
                         </div>
                     </div>
                 </div>
@@ -192,19 +192,19 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property/for-sale" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
-                                            <a href="/property?type=Flats" class="menu-sub__links">Flats</a>
-                                            <a href="/property?type=House" class="menu-sub__links">House</a>
-                                            <a href="/property?type=Office" class="menu-sub__links">Office</a>
-                                            <a href="/property?type=Shop" class="menu-sub__links">Shop</a>
-                                            <a href="/property?type=Restaurant" class="menu-sub__links">Restaurant</a>
-                                            <a href="/property?type=Industrial" class="menu-sub__links">Industrial</a>
-                                            <a href="/property?type=Hotel" class="menu-sub__links">Hotel</a>
-                                            <a href="/property?type=Business+or+Investment" class="menu-sub__links">Business or Investment</a>
-                                            <a href="/property?type=Land" class="menu-sub__links">Land</a>
-                                            <a href="/property?type=Building" class="menu-sub__links">Building</a>
+                                            <a href="/flats/for-sale" class="menu-sub__links">Flats</a>
+                                            <a href="/property/for-sale?type=House" class="menu-sub__links">House</a>
+                                            <a href="/property/office/for-sale" class="menu-sub__links">Office</a>
+                                            <a href="/property/shop/for-sale" class="menu-sub__links">Shop</a>
+                                            <a href="/property/restaurant/for-sale" class="menu-sub__links">Restaurant</a>
+                                            <a href="/property/industrial/for-sale" class="menu-sub__links">Industrial</a>
+                                            <a href="/property/hotel/for-sale" class="menu-sub__links">Hotel</a>
+                                            <a href="/property/for-sale?type=Business+or+Investment" class="menu-sub__links">Business or Investment</a>
+                                            <a href="/property/for-sale?type=Land" class="menu-sub__links">Land</a>
+                                            <a href="/property/for-sale?type=Building" class="menu-sub__links">Building</a>
                                         </div>
                                     </div>
                                 </div>
@@ -220,7 +220,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4,531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property/for-rent" id="rent-show-all" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="rent-toggle">
                                             <div class="rent-toggle__btns">
@@ -229,19 +229,19 @@
                                             </div>
                                         </div>
                                         <div class="menu-sub__body" id="rent-long">
-                                            <a href="/property?type=Flats" class="menu-sub__links">Flats</a>
-                                            <a href="/property?type=House" class="menu-sub__links">House</a>
-                                            <a href="/property?type=Room" class="menu-sub__links">Room</a>
-                                            <a href="/property?type=Office" class="menu-sub__links">Office</a>
-                                            <a href="/property?type=Shop" class="menu-sub__links">Shop</a>
-                                            <a href="/property?type=Restaurant" class="menu-sub__links">Restaurant</a>
-                                            <a href="/property?type=Industrial" class="menu-sub__links">Industrial</a>
-                                            <a href="/property?type=Hotel" class="menu-sub__links">Hotel</a>
+                                            <a href="/flats" class="menu-sub__links">Flats</a>
+                                            <a href="/property/for-rent?type=House" class="menu-sub__links">House</a>
+                                            <a href="/rooms" class="menu-sub__links">Rooms</a>
+                                            <a href="/property/office" class="menu-sub__links">Office</a>
+                                            <a href="/property/shop" class="menu-sub__links">Shop</a>
+                                            <a href="/property/restaurant" class="menu-sub__links">Restaurant</a>
+                                            <a href="/property/industrial" class="menu-sub__links">Industrial</a>
+                                            <a href="/property/hotel" class="menu-sub__links">Hotel</a>
                                         </div>
                                         <div class="menu-sub__body" id="rent-short" style="display:none">
-                                            <a href="/property?type=Flats" class="menu-sub__links">Flats</a>
-                                            <a href="/property?type=House" class="menu-sub__links">House</a>
-                                            <a href="/property?type=Room" class="menu-sub__links">Room</a>
+                                            <a href="/flats/short-term" class="menu-sub__links">Flats</a>
+                                            <a href="/property/for-rent/short-term?type=House" class="menu-sub__links">House</a>
+                                            <a href="/rooms/short-term" class="menu-sub__links">Rooms</a>
                                         </div>
                                     </div>
                                 </div>
@@ -257,27 +257,27 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Cars</a>
-                                            <a href="#" class="menu-sub__links">Car rentals</a>
-                                            <a href="#" class="menu-sub__links">Motorbikes</a>
-                                            <a href="#" class="menu-sub__links">Auto parts</a>
-                                            <a href="#" class="menu-sub__links">Auto accessories</a>
-                                            <a href="#" class="menu-sub__links">Motorbike parts, accessories</a>
-                                            <a href="#" class="menu-sub__links">Tractors, parts</a>
-                                            <a href="#" class="menu-sub__links">Trucks, truck parts</a>
-                                            <a href="#" class="menu-sub__links">Boats, sailing, marine equipment</a>
-                                            <a href="#" class="menu-sub__links">Buses</a>
-                                            <a href="#" class="menu-sub__links">Vans</a>
-                                            <a href="#" class="menu-sub__links">Tools, equipment</a>
-                                            <a href="#" class="menu-sub__links">Lifts, cranes</a>
-                                            <a href="#" class="menu-sub__links">Trailers</a>
-                                            <a href="#" class="menu-sub__links">Caravans</a>
-                                            <a href="#" class="menu-sub__links">Quads, ATV, buggy</a>
-                                            <a href="#" class="menu-sub__links">Go-karts</a>
-                                            <a href="#" class="menu-sub__links">Aircraft</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Car rentals</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbikes</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Auto parts</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Auto accessories</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbike parts, accessories</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Tractors, parts</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Trucks, truck parts</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Boats, sailing, marine equipment</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Buses</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Vans</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Tools, equipment</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Lifts, cranes</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Trailers</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Caravans</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Quads, ATV, buggy</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Go-karts</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Aircraft</a>
 
                                         </div>
                                     </div>
@@ -294,13 +294,27 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
-                                        <div class="menu-sub__body">
+                                        <div class="rent-toggle">
+                                            <div class="rent-toggle__btns">
+                                                <button class="rent-toggle__btn active" onclick="switchMotorsRentType('long', this)">Long-term</button>
+                                                <button class="rent-toggle__btn" onclick="switchMotorsRentType('short', this)">Short-term</button>
+                                            </div>
+                                        </div>
+                                        <div class="menu-sub__body" id="motors-rent-long">
                                             <a href="#" class="menu-sub__links">Cars</a>
-                                            <a href="#" class="menu-sub__links">Motorbikes</a>
-                                            <a href="#" class="menu-sub__links">Boats & marine</a>
-                                            <a href="#" class="menu-sub__links">Trucks</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbikes</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Vans</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Trucks</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Boats & marine</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Caravans</a>
+                                        </div>
+                                        <div class="menu-sub__body" id="motors-rent-short" style="display:none">
+                                            <a href="#" class="menu-sub__links">Cars</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbikes</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Vans</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Boats & marine</a>
                                         </div>
                                     </div>
                                 </div>
@@ -318,21 +332,21 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Accessories</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Accessories</a>
                                             <a href="#" class="menu-sub__links">Mobile phones</a>
-                                            <a href="#" class="menu-sub__links">Phones, answering machines</a>
-                                            <a href="#" class="menu-sub__links">Wearables, accessories</a>
-                                            <a href="#" class="menu-sub__links">Phone parts, tools</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Phones, answering machines</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Wearables, accessories</a>
+                                            <a href="#" class="menu-sub__links" data-admin-only="1">Phone parts, tools</a>
 
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image6.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Computers, gaming
@@ -343,7 +357,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">PC, Laptop accessories</a>
@@ -364,7 +378,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image7.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Clothes, footwear, accessories
@@ -375,7 +389,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Accessories</a>
@@ -393,7 +407,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image8.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Sports, Hobbies </p>
@@ -403,7 +417,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Bicycles, bicycle accessories</a>
@@ -417,7 +431,7 @@
                             </div>
                         </div>
 
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image9.png" alt="" class="category-item__img">
                                 <p class="category-item__title">Electronics, appliances
@@ -428,7 +442,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Audio, stereo</a>
@@ -447,7 +461,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image10.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Home, garden, pool
@@ -458,7 +472,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Building materials</a>
@@ -478,7 +492,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image11.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Jobs
@@ -489,7 +503,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Administration</a>
@@ -522,7 +536,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image12.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Animals, pets
@@ -533,7 +547,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Dogs</a>
@@ -548,7 +562,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image13.png" alt="" class="category-item__img">
                                 <p class="category-item__title">Health, beauty
@@ -559,7 +573,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Contact lenses, accessories</a>
@@ -580,7 +594,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image14.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Services
@@ -591,7 +605,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Beauty Services</a>
@@ -618,7 +632,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image15.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Business
@@ -629,7 +643,7 @@
                                     <div class="menu-sub">
                                         <div class="menu-sub__head">
                                             <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <div class="btn btn_small">Show all</div>
+                                            <a href="/property" class="btn btn_small">Show all</a>
                                         </div>
                                         <div class="menu-sub__body">
                                             <a href="#" class="menu-sub__links">Businesses for sale</a>
@@ -646,7 +660,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="category-box">
+                        <div class="category-box" data-admin-only="1">
                             <a href="#" class="unfolding category-item">
                                 <img loading="lazy" src="img/cat/image16.png" alt="" class="category-item__img">
                                 <p class="category-item__title"> Free stuff </p>
@@ -664,52 +678,52 @@
                             <div class="swiper">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                        <a href="/property" class="category-item">
                                             <img loading="lazy" src="img/cat/image1.png" alt="" class="category-item__img">
                                             <p class="category-item__title">Real Estate for sale</p>
                                         </a>
                                     </div>
                                     <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                        <a href="/property" class="category-item">
                                             <img loading="lazy" src="img/cat/image2.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Real Estate for Rent </p>
                                         </a>
                                     </div>
                                     <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                        <a href="/cars" class="category-item">
                                             <img loading="lazy" src="img/cat/image3.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Motors </p>
                                         </a>
                                     </div>
                                     <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                        <a href="/cars" class="category-item">
                                             <img loading="lazy" src="img/cat/image4.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Motors for rent </p>
                                         </a>
                                     </div>
                                     <div class="swiper-slide">
 
-                                        <a href="#" class="category-item">
+                                        <a href="/electronics" class="category-item">
                                             <img loading="lazy" src="img/cat/image5.png" alt="" class="category-item__img">
                                             <p class="category-item__title">Mobile phones, communication
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                    <div class="swiper-slide" data-admin-only="1">
+                                        <a href="/electronics" class="category-item">
                                             <img loading="lazy" src="img/cat/image6.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Computers, gaming
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                    <div class="swiper-slide" data-admin-only="1">
+                                        <a href="/fashion" class="category-item">
                                             <img loading="lazy" src="img/cat/image7.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Clothes, footwear, accessories
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide" data-admin-only="1">
                                         <a href="#" class="category-item">
                                             <img loading="lazy" src="img/cat/image8.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Sports, Hobbies </p>
@@ -724,35 +738,35 @@
                                 <div class="swiper-wrapper">
 
 
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide" data-admin-only="1">
                                         <a href="#" class="category-item">
                                             <img loading="lazy" src="img/cat/image9.png" alt="" class="category-item__img">
                                             <p class="category-item__title">Electronics, appliances
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide" data-admin-only="1">
                                         <a href="#" class="category-item">
                                             <img loading="lazy" src="img/cat/image10.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Home, garden, pool
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                    <div class="swiper-slide" data-admin-only="1">
+                                        <a href="/jobs" class="category-item">
                                             <img loading="lazy" src="img/cat/image11.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Jobs
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                    <div class="swiper-slide" data-admin-only="1">
+                                        <a href="/pets" class="category-item">
                                             <img loading="lazy" src="img/cat/image12.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Animals, pets
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide" data-admin-only="1">
 
                                         <a href="#" class="category-item">
                                             <img loading="lazy" src="img/cat/image13.png" alt="" class="category-item__img">
@@ -760,21 +774,21 @@
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
-                                        <a href="#" class="category-item">
+                                    <div class="swiper-slide" data-admin-only="1">
+                                        <a href="/services" class="category-item">
                                             <img loading="lazy" src="img/cat/image14.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Services
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide" data-admin-only="1">
                                         <a href="#" class="category-item">
                                             <img loading="lazy" src="img/cat/image15.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Business
                                             </p>
                                         </a>
                                     </div>
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide" data-admin-only="1">
                                         <a href="#" class="category-item">
                                             <img loading="lazy" src="img/cat/image16.png" alt="" class="category-item__img">
                                             <p class="category-item__title"> Free stuff </p>
@@ -1140,7 +1154,7 @@
                                 <h3 class="footer__title">Company Links</h3>
                                 <div class="footer__links">
                                     <a href="cookie-policy.html" target="_blank">Cookie Policy </a>
-                                    <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                    <a href="payments-policy.html" target="_blank">Payments Policy</a>
                                     <a href="terms-of-service.html" target="_blank">Terms of Service</a>
                                 </div>
                             </div>
@@ -1213,7 +1227,7 @@
                                     <div class="accordion__body">
                                         <div class="footer__links">
                                             <a href="cookie-policy.html" target="_blank">Cookie Policy</a>
-                                            <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                                            <a href="payments-policy.html" target="_blank">Payments Policy</a>
                                             <a href="terms-of-service.html" target="_blank">Terms of Service</a>
                                         </div>
                                     </div>
@@ -1296,13 +1310,13 @@
     <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
         <div class="modal-card">
             <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
-            <h2 class="modal-title">Create an account</h2>
+            <h2 class="modal-title">Login / Register</h2>
 
             <div class="modal-phone-input">
                 <div class="modal-country-select">
                     <span class="modal-country-code">+44</span>
                 </div>
-                <input class="modal-number-input" type="tel" placeholder="Phone number">
+                <input class="modal-number-input" type="tel" placeholder="7XXX XXX XXX" inputmode="tel">
             </div>
 
             <label class="modal-checkbox-label">
@@ -1383,7 +1397,7 @@
                 }).then(function(r){return r.json();}).then(function(data){
                    if (data.results && data.results.length > 0) {
                       var c = data.results[0].address_components || [];
-                      var postalTown = '', locality = '', postcode = '';
+                      var postalTown = '', locality = '', area = '', postcode = '';
                       c.forEach(function(x){ if(x.types.includes('postal_town')||x.types.includes('locality')) postalTown=x.long_name; if(x.types.includes('postal_code')) postcode=x.long_name; });
                       var label = [postalTown, postcode].filter(Boolean).join(', ') || data.results[0].formatted_address;
                       input.value = label; input.dataset.city = postalTown || label;
@@ -1393,7 +1407,7 @@
           }, function(err) {
              input.value = '';
              var msg = err.code === 1
-                ? 'Location access denied. To enable, click the 🔒 lock icon in the address bar → Location → Allow.'
+                ? 'Location access denied. Click the 🔒 lock icon in the address bar → Location → Allow.'
                 : err.code === 2 ? 'Location unavailable. Please select a city from the list.'
                 : 'Location request timed out. Please try again.';
              if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
@@ -1475,8 +1489,12 @@
         var stikerClass = plan === 'vip' ? 'stiker_vip' : plan === 'pro' ? 'stiker_top' : '';
         var stikerLabel = plan === 'vip' ? 'VIP' : plan === 'pro' ? 'PRO' : '';
         var html = '';
+        var needsApiPhoto = [];
         ads.slice(0, 4).forEach(function(ad) {
-            var imgSrc = ad.photo || 'img/product.jpg';
+            var badPhoto = ad.photo && ad.photo.indexOf('dev.bazar.uk') !== -1;
+            var imgSrc = (ad.photo && !badPhoto) ? ad.photo : 'img/product.jpg';
+            var needsFetch = (!ad.photo || badPhoto) && ad.id;
+            var imgId = needsFetch ? 'luImg_' + ad.id : '';
             var cardCls = stikerLabel ? 'card card_orange' : 'card';
             var stiker = stikerLabel
                 ? '<div class="card__stikers"><span class="stiker ' + stikerClass + '">' + stikerLabel + '</span></div>'
@@ -1487,13 +1505,53 @@
                 '<div class="card__info"><p class="card__name">' + (ad.title || 'My Ad') + '</p>' +
                 '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                 '<div class="card__img">' + stiker +
-                '<img src="' + imgSrc + '" alt="" class="img-cover">' +
+                '<img ' + (imgId ? 'id="' + imgId + '" ' : '') + 'src="' + imgSrc + '" alt="" class="img-cover">' +
                 '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
                 '<div class="card__down"><div class="card__prices">' +
                 '<span class="price-new">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
                 '</div></div></div>';
+            if (needsFetch) needsApiPhoto.push(ad.id);
         });
         grid.insertAdjacentHTML('afterbegin', html);
+
+        /* Async: load photo from API for ads that don't have a cached thumbnail */
+        needsApiPhoto.forEach(function(adId) {
+            fetch('https://admin.bazar.uk/api/properties/' + adId, { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(d) {
+                    if (!d) return;
+                    var firstImg = (d.images && d.images[0]) ? d.images[0] : (d.image || '');
+                    if (!firstImg) return;
+                    var el = document.getElementById('luImg_' + adId);
+                    if (el) el.src = firstImg;
+                    /* Cache into localStorage so next load is instant */
+                    try {
+                        var stored = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+                        stored.forEach(function(a) { if (String(a.id) === String(adId) && (!a.photo || a.photo.indexOf('dev.bazar.uk') !== -1)) a.photo = firstImg; });
+                        localStorage.setItem('bazar_my_ads', JSON.stringify(stored));
+                    } catch(e) {}
+                })
+                .catch(function() {});
+        });
+    })();
+    </script>
+
+    <script>
+    (function() {
+        if (window.location.hostname !== 'www.bazar.uk') return;
+        var style = document.createElement('style');
+        style.id = 'admin-only-hide';
+        style.textContent = '[data-admin-only]{display:none!important}';
+        document.head.appendChild(style);
+        fetch('https://admin.bazar.uk/api/is-admin', {credentials: 'include'})
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d.admin) {
+                    var s = document.getElementById('admin-only-hide');
+                    if (s) s.parentNode.removeChild(s);
+                }
+            })
+            .catch(function() {});
     })();
     </script>
 
