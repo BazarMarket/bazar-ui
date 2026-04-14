@@ -509,7 +509,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 (cat_label, None),
             ],
             'city_links':    city_links,
-            'cat_label':     h1_phrase,
+            'cat_label':     cat_label,
             'related_links': related_links,
             'type':          'category',
         }
@@ -623,6 +623,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        city_links = [
+            (label, f'/property/{transaction}/{slug}')
+            for label, slug in FLATS_POPULAR_CITIES
+        ]
         related_links = []
         if is_rent:
             related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]
@@ -634,6 +638,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 ('Home', '/'),
                 (f'Real Estate {verb}', None),
             ],
+            'city_links':    city_links,
+            'cat_label':     f'Property {verb}',
             'related_links': related_links,
             'type':          'category',
         }
