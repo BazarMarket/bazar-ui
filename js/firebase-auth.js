@@ -126,13 +126,9 @@ function normalizeUkPhoneRealtime(e) {
     var formatted = raw;
     if (raw.length > 7) formatted = raw.slice(0, 4) + ' ' + raw.slice(4, 7) + ' ' + raw.slice(7);
     else if (raw.length > 4) formatted = raw.slice(0, 4) + ' ' + raw.slice(4);
-    var oldLen = input.value.length;
     input.value = formatted;
     var newLen = formatted.length;
-    var newPos = pos + (newLen - oldLen);
-    if (newPos < 0) newPos = 0;
-    if (newPos > newLen) newPos = newLen;
-    try { input.setSelectionRange(newPos, newPos); } catch(err) {}
+    try { input.setSelectionRange(newLen, newLen); } catch(err) {}
 }
 
 function openCreateAccountModal() {
