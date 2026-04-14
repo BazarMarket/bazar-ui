@@ -12,14 +12,30 @@
    <link rel="stylesheet" href="css/main.css?v=107" type="text/css"> <!-- Основные стили темы  -->
    <link rel="stylesheet" href="css/cabinet.css" type="text/css">
    <link rel="icon" type="image/png" href="favicon.png?v=12">
-   <style>#header-logged-in{display:flex;align-items:center;}</style>
 </head>
 
 
 <body>
    <div class="wrapper">
 
-      <header class="header-old">
+      <header class="header" id="header-guest">
+         <div class="container-full">
+            <div class="header__body">
+               <a href="/" class="logo">
+                  <img loading="lazy" src="img/logo.png" alt="">
+               </a>
+               <div class="header__btns">
+                  <a href="#" class="btn btn_start" onclick="handleLogin(); return false;">Log in</a>
+                  <div class="btn-down icon" onclick="openCreateAccountModal()">
+                     <p class="btn-down__text">Create an account</p>
+                     <span class="btn-down__icon icon-arrow-d"></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </header>
+
+      <header class="header-old" id="header-logged-in" style="display:none;">
          <div class="container-full">
             <div class="header-old__body">
                <a href="/" class="logo">
@@ -31,26 +47,20 @@
                      <div class="header-old__cell">
                      </div>
                      <div class="header-old__cell">
-                        <a href="post-ad.html" class="btn btn_mini ">+ post an ad</a>
+                        <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
                      </div>
-                     <div class="header-old__cell" id="header-guest" style="display:flex;align-items:center;gap:8px;">
-                        <a href="#" class="btn btn_mini" onclick="openCreateAccountModal();return false;" style="background:#fff;color:#ff9138;border:1px solid #ff9138;">Create an account</a>
-                        <a href="#" class="btn btn_mini" onclick="handleLogin();return false;" style="background:#ff9138;color:#fff;border:none;">Log in</a>
-                     </div>
-                     <div id="header-logged-in" style="display:none;align-items:center;">
-                        <div class="header-old__cell">
-                           <div class="icons-list">
-                              <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
-                              <a href="cabinet.html#favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
-                           </div>
+                     <div class="header-old__cell">
+                        <div class="icons-list">
+                           <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                           <a href="cabinet.html#favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
                         </div>
-                        <div class="header-old__cell">
+                     </div>
+                     <div class="header-old__cell">
                         <div class="user-link">
-                           <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo" id="header-avatar">
-                              <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
+                           <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo">
+                              <img loading="lazy" class="img-cover" id="header-avatar" src="icon/man.svg" alt="">
                            </div>
                            <div class="user-link__title" id="header-username"></div></a>
-
                            <div class="user-menu">
                               <a href="#" class="user-menu-tel icon-tel-full" id="header-menu-phone"></a>
                               <hr class="user-menu__hr">
@@ -58,13 +68,11 @@
                               <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
                               <a href="cabinet.html#payments" class="user-menu-item icon-win-wallet">My Payments</a>
                               <a href="cabinet.html#favorites" class="user-menu-item icon-heart">My Favorites</a>
-
                               <a href="cabinet.html#subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                  <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
                                  <span class="subscription__stiker">PRO</span>
                                  <span class="subscription__days">382d</span>
                               </div></a>
-
                               <hr class="user-menu__hr">
                               <div class="dark-mode">
                                  <div class="user-menu-item icon-win-sun">Dark Mode</div>
@@ -73,11 +81,10 @@
                                     <span class="toggle__slider"></span>
                                  </label>
                               </div>
-
                               <a href="cabinet.html#support" class="user-menu-item icon-win-faq">Support</a>
                               <a href="cabinet.html#settings" class="user-menu-item icon-win-setting">My Settings</a>
                               <hr class="user-menu__hr">
-                              <a href="#" onclick="doLogout();return false;" class="user-logout icon-win-logout">Log out</a>
+                              <a href="#" class="user-logout icon-win-logout" onclick="doLogout(); return false;">Log out</a>
                            </div>
                         </div>
                      </div>
