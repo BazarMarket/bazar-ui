@@ -2740,8 +2740,11 @@
                   ads[0].photo = '';
                   localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                }
-               if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
-               window.location.href = 'publish-options.html?ad_id=' + (data.property_id || '');
+               var _redir1 = 'publish-options.html?ad_id=' + (data.property_id || '');
+               if (typeof gtag === 'function') {
+                  gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ window.location.href = _redir1; }});
+                  setTimeout(function(){ window.location.href = _redir1; }, 1500);
+               } else { window.location.href = _redir1; }
             }
 
             if (photoDataUrl && photoDataUrl.indexOf('data:') === 0) {
@@ -2896,8 +2899,11 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'car', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
-            window.location.href = 'publish-options.html?ad_id=' + adId;
+            var _redir2 = 'publish-options.html?ad_id=' + adId;
+            if (typeof gtag === 'function') {
+               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ window.location.href = _redir2; }});
+               setTimeout(function(){ window.location.href = _redir2; }, 1500);
+            } else { window.location.href = _redir2; }
          })
          .catch(function(err) {
             btn.textContent = 'Publish Ad';
@@ -3022,8 +3028,11 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'phone', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
-            window.location.href = 'publish-options.html?ad_id=' + adId;
+            var _redir3 = 'publish-options.html?ad_id=' + adId;
+            if (typeof gtag === 'function') {
+               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ window.location.href = _redir3; }});
+               setTimeout(function(){ window.location.href = _redir3; }, 1500);
+            } else { window.location.href = _redir3; }
          })
          .catch(function(err) {
             btn.textContent = 'Publish Ad';
