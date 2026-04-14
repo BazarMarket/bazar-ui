@@ -10,7 +10,7 @@ firebase.initializeApp(firebaseConfig);
 var auth = firebase.auth();
 var confirmationResult = null;
 var recaptchaVerifier = null;
-var modalMode = 'create'; // 'create' | 'login'
+var modalMode = 'create'; // 'create' | 'login' | 'post-ad'
 
 var _isTestEnv = (window.location.hostname === 'localhost' ||
     window.location.hostname.endsWith('.replit.dev') ||
@@ -147,6 +147,29 @@ function openCreateAccountModal() {
         inp.addEventListener('input', normalizeUkPhoneRealtime);
         setTimeout(function() { inp.focus(); }, 100);
     }
+}
+
+function openPostAdModal() {
+    modalMode = 'post-ad';
+    document.querySelector('#createAccountModal .modal-title').textContent = 'Post an Ad';
+    document.getElementById('createAccountModal').classList.add('modal-overlay--active');
+    document.body.style.overflow = 'hidden';
+    var inp = document.querySelector('.modal-number-input');
+    if (inp) {
+        inp.value = '';
+        inp.removeEventListener('input', normalizeUkPhoneRealtime);
+        inp.addEventListener('input', normalizeUkPhoneRealtime);
+        setTimeout(function() { inp.focus(); }, 100);
+    }
+}
+
+function handlePostAd(e) {
+    if (localStorage.getItem('bazar_username')) {
+        return true;
+    }
+    if (e) e.preventDefault();
+    openPostAdModal();
+    return false;
 }
 
 function switchToLogin() {
@@ -287,7 +310,7 @@ function sendSmsCode() {
                 doSendFirebaseSms(phoneNumber, smsBtn);
             });
     } else {
-        // Режим Log in — сразу отправляем SMS без проверки
+        // Режим Log in и Post an Ad — сразу отправляем SMS без проверки
         smsBtn.textContent = 'Sending...';
         doSendFirebaseSms(phoneNumber, smsBtn);
     }
@@ -335,6 +358,14 @@ function verifyOtpCode() {
                             var errEl = document.getElementById('otpError');
                             errEl.innerHTML = 'An account with this number already exists. <a href="#" onclick="switchToLogin();return false;" style="color:#ff9138;text-decoration:underline;">Log in instead</a>';
                             errEl.style.display = 'block';
+                        } else if (modalMode === 'post-ad') {
+                            // Post an Ad + уже зарегистрирован — логиним и сразу переходим
+                            localStorage.setItem('bazar_username', data.name);
+                            localStorage.setItem('bazar_gender',   data.gender);
+                            localStorage.setItem('bazar_plan',     data.plan || 'free');
+                            closeOtpModal();
+                            doLogin();
+                            window.location.href = 'post-ad.html';
                         } else {
                             // Log in — загружаем данные и входим
                             localStorage.setItem('bazar_username', data.name);
@@ -441,8 +472,7 @@ function finishRegistration() {
     localStorage.setItem('bazar_username', name);
     localStorage.setItem('bazar_gender', selectedGender);
     if (!localStorage.getItem('bazar_plan')) localStorage.setItem('bazar_plan', 'free');
-    document.getElementById('header-username').textContent = name;
-    document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+    var isPostAd = (modalMode === 'post-ad');
     closeProfileModal();
     doLogin();
     if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
@@ -465,6 +495,10 @@ function finishRegistration() {
         if (!localStorage.getItem('bazar_firebase_uid')) {
             localStorage.setItem('bazar_firebase_uid', 'test_uid_123');
         }
+    }
+
+    if (isPostAd) {
+        window.location.href = 'post-ad.html';
     }
 }
 
