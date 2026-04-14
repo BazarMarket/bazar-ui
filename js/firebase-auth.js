@@ -290,36 +290,9 @@ function sendSmsCode() {
     var phoneNumber = '+44' + rawValue;
 
     var smsBtn = document.querySelector('#modalSignBtns .modal-btn:first-child');
-    smsBtn.textContent = 'Checking...';
+    smsBtn.textContent = 'Sending...';
     smsBtn.disabled = true;
-
-    if (modalMode === 'create') {
-        // Проверяем телефон ДО отправки SMS — экономим деньги и время
-        fetch('https://admin.bazar.uk/api/customers/phone/' + encodeURIComponent(phoneNumber))
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.exists) {
-                    smsBtn.textContent = 'Sign in by an SMS';
-                    smsBtn.disabled = false;
-                    showPhoneError(
-                        'An account with this number already exists. <a href="#" onclick="openLoginModal();return false;" style="color:#ff9138;text-decoration:underline;">Log in instead</a>',
-                        true
-                    );
-                } else {
-                    smsBtn.textContent = 'Sending...';
-                    doSendFirebaseSms(phoneNumber, smsBtn);
-                }
-            })
-            .catch(function() {
-                // API недоступен — отправляем SMS как обычно
-                smsBtn.textContent = 'Sending...';
-                doSendFirebaseSms(phoneNumber, smsBtn);
-            });
-    } else {
-        // Режим Log in и Post an Ad — сразу отправляем SMS без проверки
-        smsBtn.textContent = 'Sending...';
-        doSendFirebaseSms(phoneNumber, smsBtn);
-    }
+    doSendFirebaseSms(phoneNumber, smsBtn);
 }
 
 function openOtpModal(phoneNumber) {
@@ -356,12 +329,7 @@ function verifyOtpCode() {
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.exists) {
-                        if (modalMode === 'create') {
-                            // Create Account + телефон уже зарегистрирован — показываем ошибку
-                            var errEl = document.getElementById('otpError');
-                            errEl.innerHTML = 'An account with this number already exists. <a href="#" onclick="switchToLogin();return false;" style="color:#ff9138;text-decoration:underline;">Log in instead</a>';
-                            errEl.style.display = 'block';
-                        } else if (modalMode === 'post-ad') {
+                        if (modalMode === 'post-ad') {
                             // Post an Ad + уже зарегистрирован — логиним и сразу переходим
                             localStorage.setItem('bazar_username', data.name);
                             localStorage.setItem('bazar_gender',   data.gender);
