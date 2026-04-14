@@ -1327,8 +1327,8 @@ def build_seo_head(seo: dict) -> str:
 
     lines = [
         '<!-- Google tag (gtag.js) -->',
-        '<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1808636054"></script>',
-        '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'AW-1808636054\');</script>',
+        '<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18086360543"></script>',
+        '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'AW-18086360543\');</script>',
         f'<title>{title}</title>',
         f'<meta name="google-site-verification" content="Tw8NlNC_J7btA3jopUVmkaAIfZrinCVS9mPlFH1UWWY">',
         f'<meta name="description" content="{desc}">',
