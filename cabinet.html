@@ -1614,6 +1614,9 @@
                 var isImage = file.type.match(/image\/.*/) ||
                               file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i);
                 if (!isImage) return;
+                // Блокируем input сразу — iOS после закрытия диалога
+                // синтезирует повторный tap, что переоткрывает диалог
+                avatarInput.style.pointerEvents = 'none';
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     var img = new Image();
@@ -1631,6 +1634,11 @@
                         localStorage.setItem('bazar_avatar', dataUrl);
                         showAvatarPreview(dataUrl);
                         setHeaderAvatar(dataUrl);
+                        // Разблокируем через 800мс — достаточно чтобы iOS
+                        // отработал все синтетические события
+                        setTimeout(function() {
+                            avatarInput.style.pointerEvents = '';
+                        }, 800);
                         var uid = localStorage.getItem('bazar_firebase_uid');
                         if (uid) {
                             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
