@@ -306,10 +306,10 @@
                 </div>
 
                 <div class="cab-ads-filter">
-                    <button class="cab-filter-btn active">All (5)</button>
-                    <button class="cab-filter-btn">Active (3)</button>
-                    <button class="cab-filter-btn">Inactive (1)</button>
-                    <button class="cab-filter-btn">Pending (1)</button>
+                    <button class="cab-filter-btn active" id="adsFilterAll">All (0)</button>
+                    <button class="cab-filter-btn" id="adsFilterActive">Active (0)</button>
+                    <button class="cab-filter-btn" id="adsFilterInactive">Inactive (0)</button>
+                    <button class="cab-filter-btn" id="adsFilterPending">Pending (0)</button>
                     <button class="cab-add-btn icon-win-plus" onclick="window.location.href='post-ad.html'">New Ad</button>
                 </div>
 
@@ -324,66 +324,7 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Card 1 -->
-                            <tr style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;">
-                                <td style="border-radius:10px 0 0 0;vertical-align:middle;"><div style="display:flex;align-items:center;gap:10px;"><img class="cab-ads-table-img" style="width:90px;height:72px;border-radius:6px;object-fit:cover;flex-shrink:0;" src="img/product.jpg" alt=""><span style="font-weight:600;color:#111;">Villa for Sale in Tsada</span></div></td>
-                                <td style="vertical-align:middle;">Real Estate</td>
-                                <td style="vertical-align:middle;">£ 1,049</td>
-                                <td style="vertical-align:middle;">142</td>
-                                <td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;">Active</span></td>
-                            </tr>
-                            <tr style="background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);border-radius:0 0 10px 10px;">
-                                <td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">
-                                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.18)'" onmouseout="this.style.boxShadow=''" onclick="bazarBoostPay(window.location.href,'')">Boost to Top</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:10px;" onmouseover="this.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)'" onmouseout="this.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0.18)'">Edit</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.18)'" onmouseout="this.style.boxShadow=''">Deactivate</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background='#ffeaea';this.style.color='#c0392b';this.style.borderColor='#e0b0b0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.18)';" onmouseout="this.style.background='#fff';this.style.color='#555';this.style.borderColor='#d0d0d0';this.style.boxShadow='';">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Spacer -->
-                            <tr><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;padding:0;box-shadow:none;"></td></tr>
-                            <!-- Card 2 -->
-                            <tr style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;">
-                                <td style="border-radius:10px 0 0 0;vertical-align:middle;"><div style="display:flex;align-items:center;gap:10px;"><img class="cab-ads-table-img" style="width:90px;height:72px;border-radius:6px;object-fit:cover;flex-shrink:0;" src="img/phone.jpg" alt=""><span style="font-weight:600;color:#111;">iPhone 14 Pro Max 256GB</span></div></td>
-                                <td style="vertical-align:middle;">Mobile phones</td>
-                                <td style="vertical-align:middle;">£ 750</td>
-                                <td style="vertical-align:middle;">389</td>
-                                <td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;">Active</span></td>
-                            </tr>
-                            <tr style="background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);border-radius:0 0 10px 10px;">
-                                <td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">
-                                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.18)'" onmouseout="this.style.boxShadow=''" onclick="bazarBoostPay(window.location.href,'')">Boost to Top</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:10px;" onmouseover="this.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)'" onmouseout="this.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0.18)'">Edit</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.18)'" onmouseout="this.style.boxShadow=''">Deactivate</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background='#ffeaea';this.style.color='#c0392b';this.style.borderColor='#e0b0b0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.18)';" onmouseout="this.style.background='#fff';this.style.color='#555';this.style.borderColor='#d0d0d0';this.style.boxShadow='';">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Spacer -->
-                            <tr><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;padding:0;box-shadow:none;"></td></tr>
-                            <!-- Card 3 -->
-                            <tr style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;">
-                                <td style="border-radius:10px 0 0 0;vertical-align:middle;"><div style="display:flex;align-items:center;gap:10px;"><img class="cab-ads-table-img" style="width:90px;height:72px;border-radius:6px;object-fit:cover;flex-shrink:0;" src="img/product.jpg" alt=""><span style="font-weight:600;color:#111;">Sony PlayStation 5</span></div></td>
-                                <td style="vertical-align:middle;">Electronics</td>
-                                <td style="vertical-align:middle;">£ 380</td>
-                                <td style="vertical-align:middle;">56</td>
-                                <td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db;">Inactive</span></td>
-                            </tr>
-                            <tr style="background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);border-radius:0 0 10px 10px;">
-                                <td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">
-                                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;">Update</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);">Edit</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;">Activate</button>
-                                        <button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="myAdsTbody"></tbody>
                     </table>
                 </div>
 
@@ -1231,11 +1172,27 @@
             .catch(function() {});
     }
     function _doRenderAds(ads) {
-        var table = document.getElementById('myAdsTable');
-        var filterBtn = document.querySelector('.cab-ads-filter .cab-filter-btn');
+        var table   = document.getElementById('myAdsTable');
+        var tbody   = document.getElementById('myAdsTbody');
         if (!table) return;
-        if (filterBtn) filterBtn.textContent = 'All (' + ads.length + ')';
-        if (ads.length === 0) return;
+
+        // Обновляем счётчики фильтров
+        var nActive   = ads.filter(function(a){ return a.status === 'active'; }).length;
+        var nInactive = ads.filter(function(a){ return a.status === 'inactive' || a.status === 'rejected'; }).length;
+        var nPending  = ads.filter(function(a){ return a.status === 'pending' || a.status === 'under_review'; }).length;
+        var allBtn = document.getElementById('adsFilterAll');
+        var actBtn = document.getElementById('adsFilterActive');
+        var inactBtn = document.getElementById('adsFilterInactive');
+        var pendBtn = document.getElementById('adsFilterPending');
+        if (allBtn)  allBtn.textContent  = 'All (' + ads.length + ')';
+        if (actBtn)  actBtn.textContent  = 'Active (' + nActive + ')';
+        if (inactBtn) inactBtn.textContent = 'Inactive (' + nInactive + ')';
+        if (pendBtn) pendBtn.textContent = 'Pending (' + nPending + ')';
+
+        if (ads.length === 0) {
+            if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px 0;color:#aaa;font-size:15px;">You have no ads yet. <a href="post-ad.html" style="color:#ff9138;text-decoration:underline;">Post your first ad</a></td></tr>';
+            return;
+        }
         var statusBadge = {
             active:       'background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;',
             rejected:     'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db;',
@@ -1251,9 +1208,7 @@
             under_review: 'Under Review'
         };
         var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
-        var html = '<table class="cab-table" style="min-width:600px;border-collapse:separate;border-spacing:0 0;"><thead><tr>' +
-            '<th style="width:40%">Ad</th><th>Category</th><th>Price</th><th>Views</th><th>Status</th>' +
-            '</tr></thead><tbody>';
+        var html = '';
         ads.forEach(function(ad, i) {
             var sb = statusBadge[ad.status] || statusBadge['pending'];
             var sl = statusLabel[ad.status] || ad.status;
@@ -1282,8 +1237,7 @@
                 '</td>' +
                 '</tr>';
         });
-        html += '</tbody></table>';
-        table.innerHTML = html;
+        if (tbody) tbody.innerHTML = html;
     }
     function bazarBoostPay(returnUrl, listingId) {
         var uid  = localStorage.getItem('bazar_firebase_uid') || '';
