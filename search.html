@@ -306,14 +306,17 @@
                            <a href="cabinet.html#favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
                         </div>
                      </div>
-                     <div class="header-old__cell">
+                     <div class="header-old__cell" id="header-guest">
+                        <button class="btn btn_mini" onclick="handleLogin()" style="background:#ff9138;color:#fff;border:none;cursor:pointer;">Log in</button>
+                     </div>
+                     <div class="header-old__cell" id="header-logged-in" style="display:none">
                         <div class="user-link">
-                           <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo">
+                           <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo" id="header-avatar">
                               <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
                            </div>
-                           <div class="user-link__title">Alexey</div></a>
+                           <div class="user-link__title" id="header-username"></div></a>
                            <div class="user-menu">
-                              <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                              <a href="#" class="user-menu-tel icon-tel-full" id="header-menu-phone"></a>
                               <hr class="user-menu__hr">
                               <a href="cabinet.html#settings" class="user-menu-item icon-win-user">My Profile</a>
                               <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
@@ -335,7 +338,7 @@
                               <a href="cabinet.html#support" class="user-menu-item icon-win-faq">Support</a>
                               <a href="cabinet.html#settings" class="user-menu-item icon-win-setting">My Settings</a>
                               <hr class="user-menu__hr">
-                              <a href="cabinet.html#logout" class="user-logout icon-win-logout">Log out</a>
+                              <a href="#" onclick="doLogout();return false;" class="user-logout icon-win-logout">Log out</a>
                            </div>
                         </div>
                      </div>
