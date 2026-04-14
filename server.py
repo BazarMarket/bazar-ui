@@ -131,6 +131,11 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'property_transaction_modifier', {
                 'transaction': parts[1], 'modifier': 'short-term'
             }
+        # /property/for-rent/{city} or /property/for-sale/{city}  →  property_transaction_city
+        if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
+            return 'property_transaction_city', {
+                'transaction': parts[1], 'city': parts[2]
+            }
         # /rooms/london/short-term  →  category_city_modifier
         if parts[2] == 'short-term':
             return 'category_city_modifier', {
@@ -655,6 +660,65 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         }
         return seo
 
+    # ── /property/for-rent/{city} or /property/for-sale/{city} ───────────────
+    elif page_type == 'property_transaction_city':
+        transaction = params.get('transaction', 'for-rent')
+        city_slug   = params.get('city', '')
+        city        = city_slug.replace('-', ' ').title()
+        is_rent     = (transaction == 'for-rent')
+        verb        = 'for Rent' if is_rent else 'for Sale'
+        parent_url  = f'{PUBLIC_DOMAIN}/property/{transaction}'
+        canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/{city_slug}'
+
+        h1    = f'Real Estate {verb} in {city}'
+        intro = (
+            f'Browse properties {verb.lower()} in {city}. '
+            f'Flats, houses, rooms and commercial properties in {city} on Bazar UK.'
+        )
+        desc  = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": f'Real Estate {verb}', "item": parent_url},
+                {"@type": "ListItem", "position": 3,
+                 "name": city, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (f'Real Estate {verb}', f'/property/{transaction}'),
+                (city, None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
     # ── Category + city + modifier (e.g. /rooms/london/short-term) ────────────
     elif page_type == 'category_city_modifier':
         cat       = params.get('category', '')
@@ -664,8 +728,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         canonical = f'{PUBLIC_DOMAIN}/{cat}/{city_slug}/short-term'
         cat_url   = f'{PUBLIC_DOMAIN}/{cat}'
 
-        h1    = f'Short-Term {cat_label} to Rent in {city}'
-        intro = (f'Find short-term {cat_label.lower()} to rent in {city}. '
+        verb  = 'for Rent' if cat == 'flats' else 'to Rent'
+        h1    = f'Short-Term {cat_label} {verb} in {city}'
+        intro = (f'Find short-term {cat_label.lower()} for rent in {city}. '
                  f'Ideal for temporary stays and flexible rentals.')
         desc  = intro[:160]
 
@@ -1273,7 +1338,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         if page_type in ('homepage', 'listing', 'category', 'category_modifier',
                          'category_city', 'category_city_modifier',
                          'category_city_district', 'search',
-                         'property_transaction', 'property_transaction_modifier'):
+                         'property_transaction', 'property_transaction_modifier',
+                         'property_transaction_city'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
