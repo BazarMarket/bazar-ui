@@ -110,7 +110,7 @@ function doLogout() {
 
 function openLoginModal() {
     modalMode = 'login';
-    document.querySelector('#createAccountModal .modal-title').textContent = 'Log in';
+    document.querySelector('#createAccountModal .modal-title').textContent = 'Login / Register';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
 }
@@ -143,7 +143,7 @@ function normalizeUkPhoneRealtime(e) {
 
 function openCreateAccountModal() {
     modalMode = 'create';
-    document.querySelector('#createAccountModal .modal-title').textContent = 'Create an account';
+    document.querySelector('#createAccountModal .modal-title').textContent = 'Login / Register';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
     var inp = document.querySelector('.modal-number-input');
