@@ -906,7 +906,7 @@
                             <input type="file" id="avatarInput" accept=".jpg,.jpeg,.png,.gif">
                         </div>
                         <p class="cab-avatar-hint">Click to upload photo<br>JPG, PNG — auto-compressed</p>
-                        <p id="removeAvatarBtn" style="display:block;margin:6px 0 0;font-size:12px;color:#e55a00;cursor:pointer;font-family:Poppins,sans-serif;text-decoration:underline;" onclick="removeAvatar()">Remove photo</p>
+                        <p id="removeAvatarBtn" style="display:none;margin:6px 0 0;font-size:12px;color:#e55a00;cursor:pointer;font-family:Poppins,sans-serif;text-decoration:underline;" onclick="removeAvatar()">Remove photo</p>
                         <div style="margin-top:16px;">
                             <p style="font-family:Poppins,sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;margin:0 0 10px;">Rating</p>
                             <div class="cab-user-card__stars" style="justify-content:center;gap:6px;">
@@ -1325,14 +1325,9 @@
 
         if (elAvatar) {
             var img = elAvatar.querySelector('img');
-            var savedAv = localStorage.getItem('bazar_avatar');
             if (img) {
-                if (savedAv) {
-                    img.src = savedAv;
-                    img.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;';
-                } else {
-                    img.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-                }
+                var savedAv = localStorage.getItem('bazar_avatar');
+                img.src = savedAv || (gender === 'female' ? 'icon/woman.png' : 'icon/man.svg');
             }
         }
 
@@ -1564,100 +1559,94 @@
         }
 
         // ── Avatar upload with client-side compression ──────────────────────
-        var avatarBox   = document.getElementById('avatarUploadBox');
-        var avatarInput = document.getElementById('avatarInput');
+        var avatarBox     = document.getElementById('avatarUploadBox');
+        var avatarInput   = document.getElementById('avatarInput');
         var avatarPreview = document.getElementById('avatarPreview');
+        var removeBtn     = document.getElementById('removeAvatarBtn');
+        var prevAvatarSrc = null; // сохраняем фото ДО загрузки новой
 
-        function applyAvatar(dataUrl) {
-            if (avatarPreview) {
-                avatarPreview.src = dataUrl;
-                avatarPreview.classList.add('loaded');
-            }
+        function setHeaderAvatar(src) {
+            var hImg = document.querySelector('#header-avatar img');
+            if (hImg) hImg.src = src;
+        }
+
+        function showAvatarPreview(dataUrl) {
+            if (avatarPreview) { avatarPreview.src = dataUrl; avatarPreview.classList.add('loaded'); }
             var iconEl = avatarBox ? avatarBox.querySelector('.cab-avatar-upload__icon') : null;
             if (iconEl) iconEl.style.display = 'none';
-            var headerAvatar = document.getElementById('header-avatar');
-            if (headerAvatar) {
-                var hImg = headerAvatar.querySelector('img');
-                if (hImg) {
-                    hImg.src = dataUrl;
-                    hImg.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;';
-                }
-            }
-            var removeBtn = document.getElementById('removeAvatarBtn');
-            if (removeBtn) removeBtn.style.display = 'block';
         }
 
-        window.removeAvatar = function removeAvatar() {
-            localStorage.removeItem('bazar_avatar');
+        function clearAvatarPreview() {
             var gender = localStorage.getItem('bazar_gender') || 'male';
-            var defaultSrc = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-            if (avatarPreview) {
-                avatarPreview.src = '';
-                avatarPreview.classList.remove('loaded');
-            }
+            if (avatarPreview) { avatarPreview.src = ''; avatarPreview.classList.remove('loaded'); }
             var iconEl = avatarBox ? avatarBox.querySelector('.cab-avatar-upload__icon') : null;
             if (iconEl) iconEl.style.display = '';
-            var headerAvatar = document.getElementById('header-avatar');
-            if (headerAvatar) {
-                var hImg = headerAvatar.querySelector('img');
-                if (hImg) { hImg.src = defaultSrc; hImg.style.cssText = ''; }
-            }
-            var removeBtn = document.getElementById('removeAvatarBtn');
-            if (removeBtn) removeBtn.style.display = 'none';
-            if (avatarInput) avatarInput.value = '';
-            var uid = localStorage.getItem('bazar_firebase_uid');
-            if (uid) {
-                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ avatar: null })
-                }).catch(function() {});
-            }
+            return gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
         }
 
-        function compressAndSaveAvatar(file) {
-            if (!file || !file.type.match(/image\/.*/)) return;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img = new Image();
-                img.onload = function() {
-                    var MAX = 400;
-                    var w = img.width, h = img.height;
-                    if (w > MAX || h > MAX) {
-                        if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
-                        else        { w = Math.round(w * MAX / h); h = MAX; }
-                    }
-                    var canvas = document.createElement('canvas');
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    var dataUrl = canvas.toDataURL('image/jpeg', 0.80);
-                    localStorage.setItem('bazar_avatar', dataUrl);
-                    applyAvatar(dataUrl);
-                    var uid = localStorage.getItem('bazar_firebase_uid');
-                    if (uid) {
-                        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            body: JSON.stringify({ avatar: dataUrl })
-                        }).catch(function() {});
-                    }
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+        // Загружает сохранённый аватар при открытии страницы (без кнопки Remove)
+        var savedAvatar = localStorage.getItem('bazar_avatar');
+        if (savedAvatar) {
+            showAvatarPreview(savedAvatar);
+            setHeaderAvatar(savedAvatar);
         }
+
+        window.removeAvatar = function() {
+            if (prevAvatarSrc) {
+                localStorage.setItem('bazar_avatar', prevAvatarSrc);
+                showAvatarPreview(prevAvatarSrc);
+                setHeaderAvatar(prevAvatarSrc);
+            } else {
+                localStorage.removeItem('bazar_avatar');
+                var gender = localStorage.getItem('bazar_gender') || 'male';
+                var defSrc = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                clearAvatarPreview();
+                setHeaderAvatar(defSrc);
+            }
+            prevAvatarSrc = null;
+            if (removeBtn) removeBtn.style.display = 'none';
+            if (avatarInput) avatarInput.value = '';
+        };
 
         if (avatarInput) {
             avatarInput.addEventListener('change', function() {
-                if (avatarInput.files && avatarInput.files[0]) {
-                    compressAndSaveAvatar(avatarInput.files[0]);
-                    avatarInput.value = '';
-                }
+                var file = avatarInput.files && avatarInput.files[0];
+                if (!file || !file.type.match(/image\/.*/)) return;
+                avatarInput.value = '';
+                // Запоминаем текущее фото перед заменой
+                prevAvatarSrc = localStorage.getItem('bazar_avatar') || null;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = new Image();
+                    img.onload = function() {
+                        var MAX = 400;
+                        var w = img.width, h = img.height;
+                        if (w > MAX || h > MAX) {
+                            if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
+                            else        { w = Math.round(w * MAX / h); h = MAX; }
+                        }
+                        var canvas = document.createElement('canvas');
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        var dataUrl = canvas.toDataURL('image/jpeg', 0.80);
+                        localStorage.setItem('bazar_avatar', dataUrl);
+                        showAvatarPreview(dataUrl);
+                        setHeaderAvatar(dataUrl);
+                        if (removeBtn) removeBtn.style.display = 'block';
+                        var uid = localStorage.getItem('bazar_firebase_uid');
+                        if (uid) {
+                            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                body: JSON.stringify({ avatar: dataUrl })
+                            }).catch(function() {});
+                        }
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             });
         }
-
-        var savedAvatar = localStorage.getItem('bazar_avatar');
-        if (savedAvatar) applyAvatar(savedAvatar);
         // ────────────────────────────────────────────────────────────────────
 
         document.querySelectorAll('.cab-amount-btns').forEach(function(group) {
