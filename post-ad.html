@@ -714,12 +714,12 @@
                      <div class="header-old__cell">
                         <div class="user-link">
                            <a href="cabinet.html" style="display:contents;text-decoration:none;color:inherit;">
-                           <div class="user-link__photo">
+                           <div class="user-link__photo" id="header-avatar">
                               <img loading="lazy" class="img-cover" src="icon/man.svg" alt="">
                            </div>
-                           <div class="user-link__title">Alexey</div></a>
+                           <div class="user-link__title" id="header-username"></div></a>
                            <div class="user-menu" onclick="event.stopPropagation()">
-                              <a href="#" class="user-menu-tel icon-tel-full">+44 791 112 4456</a>
+                              <a href="#" class="user-menu-tel icon-tel-full" id="header-menu-phone"></a>
                               <hr class="user-menu__hr">
                               <a href="cabinet.html#settings" class="user-menu-item icon-win-user">My Profile</a>
                               <a href="cabinet.html#my-ads" class="user-menu-item icon-win-ad">My Ads</a>
@@ -3045,9 +3045,21 @@
          var first = document.querySelector('#mainCats .cat-item.active');
          if (first) selectCat(first);
 
+         // Update header from localStorage
+         var name   = localStorage.getItem('bazar_username');
+         var phone  = localStorage.getItem('bazar_phone');
+         var gender = localStorage.getItem('bazar_gender') || 'male';
+         var nameHeaderEl = document.getElementById('header-username');
+         if (nameHeaderEl) nameHeaderEl.textContent = name || '';
+         var phoneHeaderEl = document.getElementById('header-menu-phone');
+         if (phoneHeaderEl) phoneHeaderEl.textContent = phone || '';
+         var avatarEl = document.getElementById('header-avatar');
+         if (avatarEl) {
+            var avatarImg = avatarEl.querySelector('img');
+            if (avatarImg) avatarImg.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+         }
+
          // Auto-fill contact details from user profile
-         var name = localStorage.getItem('bazar_username');
-         var phone = localStorage.getItem('bazar_phone');
          if (name) {
             var nameEl = document.getElementById('sellerNameInput');
             if (nameEl && !nameEl.value) nameEl.value = name;
