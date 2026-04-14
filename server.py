@@ -1672,6 +1672,17 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         path          = parsed.path
         qs            = parsed.query
 
+        # /admin/* → redirect to admin.bazar.uk
+        if path == '/admin' or path.startswith('/admin/'):
+            dest = 'https://admin.bazar.uk' + path
+            if qs:
+                dest += '?' + qs
+            self.send_response(301)
+            self.send_header('Location', dest)
+            self.send_header('Content-Length', '0')
+            self.end_headers()
+            return
+
         # API: config
         if path == '/api/config':
             self._send_json(200, {'googleMapsApiKey': GOOGLE_MAPS_API_KEY})
