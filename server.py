@@ -211,6 +211,21 @@ CATEGORY_INTROS = {
 
 CURRENCY_SYMBOL = {'GBP': '£', 'USD': '$', 'EUR': '€'}
 
+FLATS_POPULAR_CITIES = [
+    ('London',       'london'),
+    ('Manchester',   'manchester'),
+    ('Birmingham',   'birmingham'),
+    ('Leeds',        'leeds'),
+    ('Liverpool',    'liverpool'),
+    ('Bristol',      'bristol'),
+    ('Sheffield',    'sheffield'),
+    ('Edinburgh',    'edinburgh'),
+    ('Glasgow',      'glasgow'),
+    ('Nottingham',   'nottingham'),
+    ('Leicester',    'leicester'),
+    ('Cardiff',      'cardiff'),
+]
+
 def _api_get(path: str, cache_key: str = None):
     """HTTP GET to the Laravel API with caching."""
     if cache_key:
@@ -477,10 +492,14 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             (slug.replace('-', ' ').title(), f'/{cat}/{slug}')
             for slug in city_slugs[:12] if slug
         ]
+        if cat == 'flats' and not city_links:
+            city_links = [
+                (label, f'/flats/{slug}') for label, slug in FLATS_POPULAR_CITIES
+            ]
 
         related_links = []
         if cat == 'flats':
-            related_links = [('Looking for short-term rentals?', 'View short-term flats', '/flats/short-term')]
+            related_links = [('Looking for short-term rentals?', 'Browse short-term flats across the UK', '/flats/short-term')]
 
         seo['ssr'] = {
             'h1':            h1,
@@ -547,7 +566,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         })
         related_links = []
         if cat == 'flats':
-            related_links = [('Looking for long-term rentals?', 'View long-term flats', '/flats')]
+            related_links = [('Looking for long-term rentals?', 'Browse long-term flats across the UK', '/flats')]
 
         seo['ssr'] = {
             'h1':            h1,
@@ -606,7 +625,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         })
         related_links = []
         if is_rent:
-            related_links = [('Looking for short-term rentals?', 'View short-term properties', '/property/for-rent/short-term')]
+            related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]
 
         seo['ssr'] = {
             'h1':            h1,
@@ -671,7 +690,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 ('Real Estate for Rent', f'/property/for-rent'),
                 ('Short-Term', None),
             ],
-            'related_links': [('Looking for long-term rentals?', 'View all properties for rent', '/property/for-rent')],
+            'related_links': [('Looking for long-term rentals?', 'Browse all properties for long-term rent', '/property/for-rent')],
             'type':          'category',
         }
         return seo
@@ -784,7 +803,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         })
         related_links = []
         if cat == 'flats':
-            related_links = [('Looking for long-term rentals?', f'View long-term flats in {city}', f'/flats/{city_slug}')]
+            related_links = [('Looking for long-term rentals?', f'Browse long-term flats in {city}', f'/flats/{city_slug}')]
 
         seo['ssr'] = {
             'h1':            h1,
@@ -860,7 +879,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         })
         related_links = []
         if cat == 'flats':
-            related_links = [('Looking for short-term rentals?', f'View short-term flats in {city}', f'/flats/{city_slug}/short-term')]
+            related_links = [('Looking for short-term rentals?', f'Browse short-term flats in {city}', f'/flats/{city_slug}/short-term')]
 
         seo['ssr'] = {
             'h1':            h1,
