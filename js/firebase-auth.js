@@ -83,12 +83,22 @@ function doLogin() {
     document.getElementById('header-logged-in').style.display = '';
 }
 
-function doLogout() {
+function clearUserLocalData() {
     localStorage.removeItem('bazar_username');
     localStorage.removeItem('bazar_phone');
     localStorage.removeItem('bazar_gender');
     localStorage.removeItem('bazar_plan');
     localStorage.removeItem('bazar_firebase_uid');
+    var favKeys = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('favorite_') === 0) favKeys.push(k);
+    }
+    favKeys.forEach(function(k) { localStorage.removeItem(k); });
+}
+
+function doLogout() {
+    clearUserLocalData();
     auth.signOut();
     var nameEl = document.getElementById('header-username');
     if (nameEl) nameEl.textContent = '';
@@ -335,11 +345,8 @@ function verifyOtpCode() {
             var uid = result.user ? result.user.uid : null;
             var phone = result.user ? result.user.phoneNumber : null;
 
-            // Очищаем старые данные другого пользователя
-            localStorage.removeItem('bazar_username');
-            localStorage.removeItem('bazar_gender');
-            localStorage.removeItem('bazar_plan');
-            localStorage.removeItem('bazar_firebase_uid');
+            // Очищаем старые данные другого пользователя (включая favorites)
+            clearUserLocalData();
 
             if (phone) localStorage.setItem('bazar_phone', phone);
             if (uid)   localStorage.setItem('bazar_firebase_uid', uid);
