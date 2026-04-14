@@ -1630,6 +1630,9 @@
                 var dataUrl = canvas.toDataURL('image/jpeg', 0.80);
                 try { localStorage.setItem('bazar_avatar', dataUrl); } catch(e) {}
                 applyAvatar(dataUrl);
+                // Сбрасываем флаг через 1с после успешного показа фото —
+                // ghost click от iOS к этому моменту уже отработал вхолостую
+                setTimeout(function() { avatarBusy = false; }, 1000);
                 var uid = localStorage.getItem('bazar_firebase_uid');
                 if (uid) {
                     fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
@@ -1646,7 +1649,9 @@
                 reader.onload = function(e) {
                     try { localStorage.setItem('bazar_avatar', e.target.result); } catch(ex) {}
                     applyAvatar(e.target.result);
+                    setTimeout(function() { avatarBusy = false; }, 1000);
                 };
+                reader.onerror = function() { avatarBusy = false; };
                 reader.readAsDataURL(file);
             };
             img.src = objectUrl;
@@ -1654,9 +1659,13 @@
 
         if (avatarInput) {
             avatarInput.addEventListener('change', function() {
-                avatarBusy = false; // сбрасываем флаг — файл выбран
                 if (avatarInput.files && avatarInput.files[0]) {
+                    // avatarBusy остаётся true — ghost click от iOS придёт
+                    // после change и не должен снова открыть диалог
                     compressAndSaveAvatar(avatarInput.files[0]);
+                } else {
+                    // Пользователь отменил — освобождаем через паузу
+                    setTimeout(function() { avatarBusy = false; }, 1000);
                 }
             });
         }
