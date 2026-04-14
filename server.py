@@ -131,6 +131,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'property_transaction_modifier', {
                 'transaction': parts[1], 'modifier': 'short-term'
             }
+        # /property/shop/for-sale  →  property_subtype_sale
+        if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-sale':
+            return 'property_subtype_sale', {'subtype': parts[1]}
         # /property/shop/short-term  →  property_subtype_modifier
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'short-term':
             return 'property_subtype_modifier', {'subtype': parts[1]}
@@ -154,6 +157,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/shop, /property/office, etc.  →  property_subtype
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES:
             return 'property_subtype', {'subtype': parts[1]}
+        # /flats/for-sale, /rooms/for-sale  →  category_transaction
+        if parts[1] == 'for-sale' and parts[0] in CATEGORY_LABELS:
+            return 'category_transaction', {'category': parts[0], 'transaction': 'for-sale'}
         # /rooms/short-term  →  category_modifier
         if parts[1] == 'short-term':
             return 'category_modifier', {
@@ -292,6 +298,39 @@ PROPERTY_TYPE_NAV = [
     ('Restaurants', '/property/restaurant'),
     ('Hotels',      '/property/hotel'),
 ]
+
+PROPERTY_SUBTYPE_SALE_SEO = {
+    'shop': {
+        'label':  'Shops',
+        'h1':     'Shops for Sale in the UK',
+        'intro':  ('Browse shops and retail properties for sale across the UK. '
+                   'Find freehold and leasehold retail units in prime locations.'),
+    },
+    'restaurant': {
+        'label':  'Restaurants',
+        'h1':     'Restaurants for Sale in the UK',
+        'intro':  ('Explore restaurants and food businesses for sale across the UK. '
+                   'Find fully equipped premises for cafes, takeaways, and dining establishments.'),
+    },
+    'industrial': {
+        'label':  'Industrial Property',
+        'h1':     'Industrial Property for Sale in the UK',
+        'intro':  ('Browse industrial properties for sale across the UK, '
+                   'including warehouses, factories, and storage units.'),
+    },
+    'office': {
+        'label':  'Offices',
+        'h1':     'Offices for Sale in the UK',
+        'intro':  ('Find office buildings and commercial workspaces for sale across the UK. '
+                   'Investment and owner-occupier opportunities in all major business locations.'),
+    },
+    'hotel': {
+        'label':  'Hotels',
+        'h1':     'Hotels for Sale in the UK',
+        'intro':  ('Browse hotels and hospitality businesses for sale across the UK. '
+                   'Ideal for investors and operators in the hospitality industry.'),
+    },
+}
 
 def _api_get(path: str, cache_key: str = None):
     """HTTP GET to the Laravel API with caching."""
@@ -953,6 +992,120 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         }
         return seo
 
+    # ── /flats/for-sale, /rooms/for-sale etc. ─────────────────────────────────
+    elif page_type == 'category_transaction':
+        cat         = params.get('category', '')
+        cat_label   = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
+        canonical   = f'{PUBLIC_DOMAIN}/{cat}/for-sale'
+        cat_url     = f'{PUBLIC_DOMAIN}/{cat}'
+
+        h1    = f'{cat_label} for Sale in the UK'
+        intro = (f'Browse {cat_label.lower()} for sale across the UK. '
+                 f'Find the best deals on {cat_label.lower()} from private sellers and agents nationwide.')
+        desc  = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": f'Property for Sale', "item": f'{PUBLIC_DOMAIN}/property/for-sale'},
+                {"@type": "ListItem", "position": 3,
+                 "name": h1, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Sale', '/property/for-sale'),
+                (h1, None),
+            ],
+            'related_links': [(f'Looking to rent instead?', f'Browse {cat_label.lower()} for rent', f'/{cat}')],
+            'type':        'category',
+        }
+        return seo
+
+    # ── /property/{subtype}/for-sale ──────────────────────────────────────────
+    elif page_type == 'property_subtype_sale':
+        subtype   = params.get('subtype', '')
+        data      = PROPERTY_SUBTYPE_SALE_SEO.get(subtype, {})
+        label     = data.get('label', subtype.title())
+        h1        = data.get('h1', f'{label} for Sale in the UK')
+        intro     = data.get('intro', f'Browse {label.lower()} for sale across the UK on Bazar.')
+        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}/for-sale'
+        desc      = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": "Property for Sale", "item": f'{PUBLIC_DOMAIN}/property/for-sale'},
+                {"@type": "ListItem", "position": 3,
+                 "name": h1, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        city_links = [
+            (lbl, f'/property/{subtype}/for-sale/{slug}')
+            for lbl, slug in FLATS_POPULAR_CITIES
+        ]
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Sale', '/property/for-sale'),
+                (h1, None),
+            ],
+            'city_links':  city_links,
+            'cat_label':   label,
+            'related_links': [(f'Looking to rent instead?', f'Browse {label.lower()} for rent', f'/property/{subtype}')],
+            'type':        'category',
+        }
+        return seo
+
     # ── Category + city + modifier (e.g. /rooms/london/short-term) ────────────
     elif page_type == 'category_city_modifier':
         cat       = params.get('category', '')
@@ -1608,7 +1761,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'category_city_district', 'search',
                          'property_transaction', 'property_transaction_modifier',
                          'property_transaction_city',
-                         'property_subtype', 'property_subtype_modifier'):
+                         'property_subtype', 'property_subtype_modifier',
+                         'property_subtype_sale', 'category_transaction'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
