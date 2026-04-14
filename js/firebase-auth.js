@@ -53,6 +53,10 @@ function switchRentType(type, btn) {
     btn.classList.add('active');
     document.getElementById('rent-long').style.display = type === 'long' ? '' : 'none';
     document.getElementById('rent-short').style.display = type === 'short' ? '' : 'none';
+    var showAll = document.getElementById('rent-show-all');
+    if (showAll) {
+        showAll.href = type === 'short' ? '/property/for-rent/short-term' : '/property/for-rent';
+    }
 }
 
 function switchMotorsRentType(type, btn) {
