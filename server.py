@@ -1364,6 +1364,10 @@ _RE_JSON_LD    = re.compile(
     r'<script\s[^>]*type=["\']application/ld\+json["\'][^>]*>.*?</script>',
     re.I | re.S
 )
+_RE_GTAG = re.compile(
+    r'<!--\s*Google tag[^-]*-->\s*<script[^>]+googletagmanager[^>]*></script>\s*<script>window\.dataLayer.*?</script>',
+    re.I | re.S
+)
 _RE_HEAD_OPEN      = re.compile(r'(<head[^>]*>)', re.I)
 _RE_PROP_TITLE     = re.compile(r'<p([^>]*id="prop-title"[^>]*)>[^<]*</p>', re.I)
 _RE_BREADCRUMB     = re.compile(r'(<ul[^>]+id="breadcrumb"[^>]*>).*?(</ul>)', re.I | re.S)
@@ -1373,6 +1377,7 @@ _RE_SR_HERO_SLOT      = re.compile(r'<!--\s*SR_CAT_HERO\s*-->', re.I)
 
 def inject_seo(html: str, seo_head: str) -> str:
     """Strip old SEO tags, inject fresh ones right after <head>."""
+    html = _RE_GTAG.sub('', html)
     html = _RE_TITLE.sub('', html)
     html = _RE_DESC.sub('', html)
     html = _RE_ROBOTS.sub('', html)
