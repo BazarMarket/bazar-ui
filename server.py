@@ -1326,6 +1326,9 @@ def build_seo_head(seo: dict) -> str:
     json_ld  = seo.get('json_ld')
 
     lines = [
+        '<!-- Google tag (gtag.js) -->',
+        '<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1808636054"></script>',
+        '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'AW-1808636054\');</script>',
         f'<title>{title}</title>',
         f'<meta name="google-site-verification" content="Tw8NlNC_J7btA3jopUVmkaAIfZrinCVS9mPlFH1UWWY">',
         f'<meta name="description" content="{desc}">',
