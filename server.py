@@ -175,7 +175,7 @@ CATEGORY_ACTION = {
     'property':  'for sale',   'real-estate': 'for sale',
     'cars':      'for sale',   'motors':      'for sale',
     'vehicles':  'for sale',   'rooms':       'to rent',
-    'flats':     'to rent',
+    'flats':     'for Rent',
     'jobs':      '',           'electronics': 'for sale',
     'furniture': 'for sale',   'fashion':     'for sale',
     'services':  '',           'pets':        'for sale',
@@ -493,7 +493,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
         canonical = f'{PUBLIC_DOMAIN}/{cat}/short-term'
 
-        h1    = f'Short-Term {cat_label} to Rent in the UK'
+        h1    = f'Short-Term {cat_label} for Rent in the UK' if cat == 'flats' else f'Short-Term {cat_label} to Rent in the UK'
         if cat == 'rooms':
             intro = ('Find short-term rooms to rent across the UK. '
                      'Perfect for temporary stays, students, and flexible living.')
