@@ -5846,3 +5846,17 @@ p {
   margin: 0 0 12px;
   line-height: 1.5;
 }
+.sr-cat-related {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+.sr-cat-related a {
+  color: #f07d00;
+  text-decoration: none;
+  font-weight: 500;
+}
+.sr-cat-related a:hover {
+  text-decoration: underline;
+}

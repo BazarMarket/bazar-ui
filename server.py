@@ -478,16 +478,21 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             for slug in city_slugs[:12] if slug
         ]
 
+        related_links = []
+        if cat == 'flats':
+            related_links = [('Looking for short-term rentals?', 'View short-term flats', '/flats/short-term')]
+
         seo['ssr'] = {
-            'h1':          h1,
-            'intro':       intro,
-            'breadcrumbs': [
+            'h1':            h1,
+            'intro':         intro,
+            'breadcrumbs':   [
                 ('Home', '/'),
                 (cat_label, None),
             ],
-            'city_links':  city_links,
-            'cat_label':   h1_phrase,
-            'type':        'category',
+            'city_links':    city_links,
+            'cat_label':     h1_phrase,
+            'related_links': related_links,
+            'type':          'category',
         }
         return seo
 
@@ -540,15 +545,20 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        related_links = []
+        if cat == 'flats':
+            related_links = [('Looking for long-term rentals?', 'View long-term flats', '/flats')]
+
         seo['ssr'] = {
-            'h1':          h1,
-            'intro':       intro,
-            'breadcrumbs': [
+            'h1':            h1,
+            'intro':         intro,
+            'breadcrumbs':   [
                 ('Home', '/'),
                 (cat_label, f'/{cat}'),
                 ('Short-Term', None),
             ],
-            'type': 'category',
+            'related_links': related_links,
+            'type':          'category',
         }
         return seo
 
@@ -594,14 +604,19 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        related_links = []
+        if is_rent:
+            related_links = [('Looking for short-term rentals?', 'View short-term properties', '/property/for-rent/short-term')]
+
         seo['ssr'] = {
-            'h1':          h1,
-            'intro':       intro,
-            'breadcrumbs': [
+            'h1':            h1,
+            'intro':         intro,
+            'breadcrumbs':   [
                 ('Home', '/'),
                 (f'Real Estate {verb}', None),
             ],
-            'type': 'category',
+            'related_links': related_links,
+            'type':          'category',
         }
         return seo
 
@@ -649,14 +664,15 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'json_ld':     json.dumps(schema),
         })
         seo['ssr'] = {
-            'h1':          h1,
-            'intro':       intro,
-            'breadcrumbs': [
+            'h1':            h1,
+            'intro':         intro,
+            'breadcrumbs':   [
                 ('Home', '/'),
                 ('Real Estate for Rent', f'/property/for-rent'),
                 ('Short-Term', None),
             ],
-            'type': 'category',
+            'related_links': [('Looking for long-term rentals?', 'View all properties for rent', '/property/for-rent')],
+            'type':          'category',
         }
         return seo
 
@@ -766,16 +782,21 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        related_links = []
+        if cat == 'flats':
+            related_links = [('Looking for long-term rentals?', f'View long-term flats in {city}', f'/flats/{city_slug}')]
+
         seo['ssr'] = {
-            'h1':          h1,
-            'intro':       intro,
-            'breadcrumbs': [
+            'h1':            h1,
+            'intro':         intro,
+            'breadcrumbs':   [
                 ('Home', '/'),
                 (cat_label, f'/{cat}'),
                 (city, f'/{cat}/{city_slug}'),
                 ('Short-Term', None),
             ],
-            'type': 'category',
+            'related_links': related_links,
+            'type':          'category',
         }
         return seo
 
@@ -837,15 +858,20 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        related_links = []
+        if cat == 'flats':
+            related_links = [('Looking for short-term rentals?', f'View short-term flats in {city}', f'/flats/{city_slug}/short-term')]
+
         seo['ssr'] = {
-            'h1':          h1,
-            'intro':       city_intro,
-            'breadcrumbs': [
+            'h1':            h1,
+            'intro':         city_intro,
+            'breadcrumbs':   [
                 ('Home', '/'),
                 (h1_phrase_cat, f'/{cat}'),
                 (city, None),
             ],
-            'type': 'category',
+            'related_links': related_links,
+            'type':          'category',
         }
         return seo
 
@@ -1015,14 +1041,15 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
 
 
 def inject_ssr_category(html: str, ssr: dict) -> str:
-    """Inject visible H1, intro text, breadcrumbs, and city links into search.html
+    """Inject visible H1, intro text, breadcrumbs, city links and related links into search.html
     for category and category+city pages."""
 
-    h1          = ssr.get('h1', '')
-    intro       = ssr.get('intro', '')
-    breadcrumbs = ssr.get('breadcrumbs', [])
-    city_links  = ssr.get('city_links', [])
-    cat_label   = ssr.get('cat_label', '')
+    h1             = ssr.get('h1', '')
+    intro          = ssr.get('intro', '')
+    breadcrumbs    = ssr.get('breadcrumbs', [])
+    city_links     = ssr.get('city_links', [])
+    cat_label      = ssr.get('cat_label', '')
+    related_links  = ssr.get('related_links', [])
 
     # ── Build replacement srBreadcrumb ────────────────────────────────────────
     if breadcrumbs:
@@ -1051,6 +1078,14 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         )
         if intro:
             hero_html += f'<p class="sr-cat-intro" id="srCatIntro">{_esc(intro)}</p>'
+        if related_links:
+            for (text, link_text, href) in related_links:
+                hero_html += (
+                    f'<p class="sr-cat-related" id="srCatRelated">'
+                    f'{_esc(text)} '
+                    f'<a href="{_attr(href)}">{_esc(link_text)} →</a>'
+                    f'</p>'
+                )
         hero_html += '</div>'
 
         m = _RE_SR_HERO_SLOT.search(html)
