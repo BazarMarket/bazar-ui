@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
     <link rel="stylesheet" href="css/main.css?v=108" type="text/css">
-    <link rel="stylesheet" href="css/cabinet.css?v=3" type="text/css">
+    <link rel="stylesheet" href="css/cabinet.css?v=4" type="text/css">
     <link rel="icon" type="image/png" href="favicon.png?v=12">
     <style>
         /* Transaction filters */
@@ -899,11 +899,11 @@
 
                     <!-- Photo column -->
                     <div class="cab-profile-photo-col">
-                        <div class="cab-avatar-upload" id="avatarUploadBox" onclick="triggerAvatarUpload()">
+                        <div class="cab-avatar-upload" id="avatarUploadBox">
                             <span class="cab-avatar-upload__icon icon-win-user"></span>
                             <img src="" alt="" id="avatarPreview">
                             <div class="cab-avatar-upload__overlay icon-win-plus"></div>
-                            <input type="file" id="avatarInput" accept="image/*" style="display:none">
+                            <input type="file" id="avatarInput" accept="image/*">
                         </div>
                         <p class="cab-avatar-hint">Click to upload photo<br>JPG, PNG — auto-compressed</p>
                         <p id="removeAvatarBtn" style="display:none;margin:6px 0 0;font-size:12px;color:#e55a00;cursor:pointer;font-family:Poppins,sans-serif;text-decoration:underline;" onclick="removeAvatar()">Remove photo</p>
@@ -1562,15 +1562,6 @@
         var avatarBox     = document.getElementById('avatarUploadBox');
         var avatarInput   = document.getElementById('avatarInput');
         var avatarPreview = document.getElementById('avatarPreview');
-        var avatarBusy    = false; // флаг блокировки повторного открытия
-
-        window.triggerAvatarUpload = function() {
-            if (avatarBusy) return;
-            avatarBusy = true;
-            // Сбрасываем флаг через 10с если пользователь отменил выбор
-            setTimeout(function() { avatarBusy = false; }, 10000);
-            if (avatarInput) avatarInput.click();
-        };
 
         function applyAvatar(dataUrl) {
             if (avatarPreview) {
@@ -1611,61 +1602,42 @@
         };
 
         function compressAndSaveAvatar(file) {
-            if (!file) return;
-            // URL.createObjectURL — стримит файл напрямую, не грузит весь
-            // base64 в память, надёжнее работает с большими фото на iOS
-            var objectUrl = URL.createObjectURL(file);
-            var img = new Image();
-            img.onload = function() {
-                URL.revokeObjectURL(objectUrl);
-                var MAX = 400;
-                var w = img.width, h = img.height;
-                if (w > MAX || h > MAX) {
-                    if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
-                    else        { w = Math.round(w * MAX / h); h = MAX; }
-                }
-                var canvas = document.createElement('canvas');
-                canvas.width = w; canvas.height = h;
-                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                var dataUrl = canvas.toDataURL('image/jpeg', 0.80);
-                try { localStorage.setItem('bazar_avatar', dataUrl); } catch(e) {}
-                applyAvatar(dataUrl);
-                // Сбрасываем флаг через 1с после успешного показа фото —
-                // ghost click от iOS к этому моменту уже отработал вхолостую
-                setTimeout(function() { avatarBusy = false; }, 1000);
-                var uid = localStorage.getItem('bazar_firebase_uid');
-                if (uid) {
-                    fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({ avatar: dataUrl })
-                    }).catch(function() {});
-                }
-            };
-            img.onerror = function() {
-                // Если createObjectURL не сработал — fallback на FileReader
-                URL.revokeObjectURL(objectUrl);
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    try { localStorage.setItem('bazar_avatar', e.target.result); } catch(ex) {}
-                    applyAvatar(e.target.result);
-                    setTimeout(function() { avatarBusy = false; }, 1000);
+            if (!file || !file.type.match(/image\/.*/)) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var MAX = 400;
+                    var w = img.width, h = img.height;
+                    if (w > MAX || h > MAX) {
+                        if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
+                        else        { w = Math.round(w * MAX / h); h = MAX; }
+                    }
+                    var canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    var dataUrl = canvas.toDataURL('image/jpeg', 0.80);
+                    try { localStorage.setItem('bazar_avatar', dataUrl); } catch(ex) {}
+                    applyAvatar(dataUrl);
+                    var uid = localStorage.getItem('bazar_firebase_uid');
+                    if (uid) {
+                        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify({ avatar: dataUrl })
+                        }).catch(function() {});
+                    }
                 };
-                reader.onerror = function() { avatarBusy = false; };
-                reader.readAsDataURL(file);
+                img.src = e.target.result;
             };
-            img.src = objectUrl;
+            reader.readAsDataURL(file);
         }
 
         if (avatarInput) {
             avatarInput.addEventListener('change', function() {
                 if (avatarInput.files && avatarInput.files[0]) {
-                    // avatarBusy остаётся true — ghost click от iOS придёт
-                    // после change и не должен снова открыть диалог
                     compressAndSaveAvatar(avatarInput.files[0]);
-                } else {
-                    // Пользователь отменил — освобождаем через паузу
-                    setTimeout(function() { avatarBusy = false; }, 1000);
+                    avatarInput.value = '';
                 }
             });
         }
