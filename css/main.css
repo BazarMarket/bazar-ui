@@ -253,8 +253,13 @@ body {
   border-radius: 15px;
   white-space: nowrap;
 }
+.btn_mini {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
 .btn_mini:hover {
   background: #fe7653;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 .header-old .btn_mini {
   font-size: 15px;
@@ -380,6 +385,11 @@ body {
   padding: 10px 0;
   cursor: pointer;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-down:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 .btn-down__text {
   font-family: "Poppins", sans-serif;
