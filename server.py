@@ -131,6 +131,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'property_transaction_modifier', {
                 'transaction': parts[1], 'modifier': 'short-term'
             }
+        # /property/shop/short-term  →  property_subtype_modifier
+        if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'short-term':
+            return 'property_subtype_modifier', {'subtype': parts[1]}
         # /property/for-rent/{city} or /property/for-sale/{city}  →  property_transaction_city
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
             return 'property_transaction_city', {
@@ -148,6 +151,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/for-rent or /property/for-sale  →  property_transaction
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
             return 'property_transaction', {'transaction': parts[1]}
+        # /property/shop, /property/office, etc.  →  property_subtype
+        if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES:
+            return 'property_subtype', {'subtype': parts[1]}
         # /rooms/short-term  →  category_modifier
         if parts[1] == 'short-term':
             return 'category_modifier', {
@@ -224,6 +230,67 @@ FLATS_POPULAR_CITIES = [
     ('Nottingham',   'nottingham'),
     ('Leicester',    'leicester'),
     ('Cardiff',      'cardiff'),
+]
+
+PROPERTY_SUBTYPES = {'shop', 'restaurant', 'industrial', 'office', 'hotel'}
+
+PROPERTY_SUBTYPE_SEO = {
+    'shop': {
+        'label':       'Shops',
+        'h1':          'Shops for Rent in the UK',
+        'h1_short':    'Short-Term Shops for Rent in the UK',
+        'intro':       ('Browse shops and retail spaces for rent across the UK. '
+                        'Find commercial properties suitable for businesses, retail stores, '
+                        'and investments in prime locations.'),
+        'intro_short': ('Find short-term shops and retail spaces for rent across the UK. '
+                        'Flexible commercial lets for businesses of all sizes.'),
+    },
+    'restaurant': {
+        'label':       'Restaurants',
+        'h1':          'Restaurants for Rent in the UK',
+        'h1_short':    'Short-Term Restaurants for Rent in the UK',
+        'intro':       ('Explore restaurants and food businesses for rent across the UK. '
+                        'Ideal for cafes, takeaways, and fully equipped restaurant spaces.'),
+        'intro_short': ('Find short-term restaurant spaces for rent across the UK. '
+                        'Ideal for pop-ups, cafes, and temporary food businesses.'),
+    },
+    'industrial': {
+        'label':       'Industrial Property',
+        'h1':          'Industrial Property for Rent in the UK',
+        'h1_short':    'Short-Term Industrial Property for Rent in the UK',
+        'intro':       ('Browse industrial properties for rent across the UK, '
+                        'including warehouses, factories, and storage facilities.'),
+        'intro_short': ('Find short-term industrial units and warehouses for rent across the UK. '
+                        'Flexible leases for businesses of all sizes.'),
+    },
+    'office': {
+        'label':       'Offices',
+        'h1':          'Offices for Rent in the UK',
+        'h1_short':    'Short-Term Offices for Rent in the UK',
+        'intro':       ('Find office spaces for rent across the UK, from small offices to large '
+                        'commercial workspaces in major business locations.'),
+        'intro_short': ('Find short-term office spaces for rent across the UK. '
+                        'Flexible desk and workspace solutions for modern businesses.'),
+    },
+    'hotel': {
+        'label':       'Hotels',
+        'h1':          'Hotels for Rent in the UK',
+        'h1_short':    'Short-Term Hotels for Rent in the UK',
+        'intro':       ('Browse hotels and hospitality properties for rent across the UK. '
+                        'Suitable for investors and operators in the hospitality industry.'),
+        'intro_short': ('Find short-term hotel and hospitality property lets across the UK. '
+                        'Ideal for seasonal operators and event-based businesses.'),
+    },
+}
+
+PROPERTY_TYPE_NAV = [
+    ('Flats',       '/flats'),
+    ('Rooms',       '/rooms'),
+    ('Shops',       '/property/shop'),
+    ('Offices',     '/property/office'),
+    ('Industrial',  '/property/industrial'),
+    ('Restaurants', '/property/restaurant'),
+    ('Hotels',      '/property/hotel'),
 ]
 
 def _api_get(path: str, cache_key: str = None):
@@ -588,11 +655,16 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         verb        = 'for Rent' if is_rent else 'for Sale'
         canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}'
 
-        h1    = f'Real Estate {verb} in the UK'
-        intro = (
-            f'Browse thousands of properties {verb.lower()} across the UK. '
-            f'Flats, houses, rooms, commercial properties and more.'
-        )
+        if is_rent:
+            h1    = 'Property for Rent in the UK'
+            intro = ('Browse all types of property for rent across the UK, including flats, '
+                     'houses, rooms, and commercial spaces. Find both long-term and short-term '
+                     'rental options to suit your needs.')
+        else:
+            h1    = 'Property for Sale in the UK'
+            intro = ('Discover property for sale across the UK, including flats, houses, land, '
+                     'and commercial real estate. Browse listings from private sellers and agents '
+                     'in all regions.')
         desc  = intro[:160]
 
         breadcrumb_schema = {
@@ -601,7 +673,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": f'Real Estate {verb}', "item": canonical},
+                 "name": h1, "item": canonical},
             ]
         }
         schema = {
@@ -628,18 +700,21 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             for label, slug in FLATS_POPULAR_CITIES
         ]
         related_links = []
+        type_links    = []
         if is_rent:
             related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]
+            type_links    = PROPERTY_TYPE_NAV
 
         seo['ssr'] = {
             'h1':            h1,
             'intro':         intro,
             'breadcrumbs':   [
                 ('Home', '/'),
-                (f'Real Estate {verb}', None),
+                (h1, None),
             ],
             'city_links':    city_links,
             'cat_label':     f'Property {verb}',
+            'type_links':    type_links,
             'related_links': related_links,
             'type':          'category',
         }
@@ -651,11 +726,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/short-term'
         parent_url  = f'{PUBLIC_DOMAIN}/property/{transaction}'
 
-        h1    = 'Short-Term Real Estate for Rent in the UK'
-        intro = (
-            'Find short-term properties for rent across the UK. '
-            'Ideal for temporary stays, corporate lets, and flexible rentals.'
-        )
+        h1    = 'Short-Term Property for Rent in the UK'
+        intro = ('Explore short-term property rentals across the UK, including flats, rooms, '
+                 'and houses. Ideal for temporary stays, business trips, and flexible living.')
         desc  = intro[:160]
 
         breadcrumb_schema = {
@@ -664,7 +737,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Real Estate for Rent", "item": parent_url},
+                 "name": "Property for Rent", "item": parent_url},
                 {"@type": "ListItem", "position": 3,
                  "name": "Short-Term", "item": canonical},
             ]
@@ -693,7 +766,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':         intro,
             'breadcrumbs':   [
                 ('Home', '/'),
-                ('Real Estate for Rent', f'/property/for-rent'),
+                ('Property for Rent', f'/property/for-rent'),
                 ('Short-Term', None),
             ],
             'related_links': [('Looking for long-term rentals?', 'Browse all properties for long-term rent', '/property/for-rent')],
@@ -711,11 +784,14 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         parent_url  = f'{PUBLIC_DOMAIN}/property/{transaction}'
         canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/{city_slug}'
 
-        h1    = f'Real Estate {verb} in {city}'
-        intro = (
-            f'Browse properties {verb.lower()} in {city}. '
-            f'Flats, houses, rooms and commercial properties in {city} on Bazar UK.'
-        )
+        if is_rent:
+            h1    = f'Property for Rent in {city}'
+            intro = (f'Browse all property for rent in {city}, including flats, houses, and rooms. '
+                     f'Find both long-term and short-term rental options across the city.')
+        else:
+            h1    = f'Property for Sale in {city}'
+            intro = (f'Explore property for sale in {city}, including flats, houses, and '
+                     f'investment opportunities. Find the best deals across the city.')
         desc  = intro[:160]
 
         breadcrumb_schema = {
@@ -724,9 +800,124 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": f'Real Estate {verb}', "item": parent_url},
+                 "name": f'Property {verb}', "item": parent_url},
                 {"@type": "ListItem", "position": 3,
                  "name": city, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        parent_label = 'Property for Rent' if is_rent else 'Property for Sale'
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                (parent_label, f'/property/{transaction}'),
+                (city, None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    # ── /property/{subtype} (e.g. /property/shop, /property/office) ───────────
+    elif page_type == 'property_subtype':
+        subtype  = params.get('subtype', '')
+        data     = PROPERTY_SUBTYPE_SEO.get(subtype, {})
+        label    = data.get('label', subtype.title())
+        h1       = data.get('h1', f'{label} for Rent in the UK')
+        intro    = data.get('intro', f'Browse {label.lower()} for rent across the UK on Bazar.')
+        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}'
+        desc      = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property/for-rent'},
+                {"@type": "ListItem", "position": 3,
+                 "name": h1, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        city_links = [
+            (lbl, f'/property/{subtype}/{slug}')
+            for lbl, slug in FLATS_POPULAR_CITIES
+        ]
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Rent', '/property/for-rent'),
+                (h1, None),
+            ],
+            'city_links':  city_links,
+            'cat_label':   label,
+            'related_links': [('Looking for short-term options?', f'Browse short-term {label.lower()} for rent', f'/property/{subtype}/short-term')],
+            'type':        'category',
+        }
+        return seo
+
+    # ── /property/{subtype}/short-term ────────────────────────────────────────
+    elif page_type == 'property_subtype_modifier':
+        subtype   = params.get('subtype', '')
+        data      = PROPERTY_SUBTYPE_SEO.get(subtype, {})
+        label     = data.get('label', subtype.title())
+        h1        = data.get('h1_short', f'Short-Term {label} for Rent in the UK')
+        intro     = data.get('intro_short', f'Find short-term {label.lower()} for rent across the UK on Bazar.')
+        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}/short-term'
+        parent_url = f'{PUBLIC_DOMAIN}/property/{subtype}'
+        desc      = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property/for-rent'},
+                {"@type": "ListItem", "position": 3,
+                 "name": data.get('h1', f'{label} for Rent in the UK'), "item": parent_url},
+                {"@type": "ListItem", "position": 4,
+                 "name": "Short-Term", "item": canonical},
             ]
         }
         schema = {
@@ -753,10 +944,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                (f'Real Estate {verb}', f'/property/{transaction}'),
-                (city, None),
+                ('Property for Rent', '/property/for-rent'),
+                (data.get('h1', f'{label} for Rent in the UK'), f'/property/{subtype}'),
+                ('Short-Term', None),
             ],
-            'type': 'category',
+            'related_links': [(f'Looking for long-term options?', f'Browse all {label.lower()} for rent', f'/property/{subtype}')],
+            'type':        'category',
         }
         return seo
 
@@ -1066,7 +1259,7 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
 
 
 def inject_ssr_category(html: str, ssr: dict) -> str:
-    """Inject visible H1, intro text, breadcrumbs, city links and related links into search.html
+    """Inject visible H1, intro text, breadcrumbs, city links, type links and related links into search.html
     for category and category+city pages."""
 
     h1             = ssr.get('h1', '')
@@ -1075,6 +1268,7 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
     city_links     = ssr.get('city_links', [])
     cat_label      = ssr.get('cat_label', '')
     related_links  = ssr.get('related_links', [])
+    type_links     = ssr.get('type_links', [])
 
     # ── Build replacement srBreadcrumb ────────────────────────────────────────
     if breadcrumbs:
@@ -1116,6 +1310,20 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         m = _RE_SR_HERO_SLOT.search(html)
         if m:
             html = html[:m.start()] + hero_html + html[m.end():]
+
+    # ── Inject type links nav before </body> ─────────────────────────────────
+    if type_links:
+        type_links_html = ''.join(
+            f'<a href="{_attr(href)}" style="color:#888;display:block;padding:2px 0">'
+            f'{_esc(label)}</a>'
+            for label, href in type_links
+        )
+        type_nav = (
+            f'\n<nav aria-label="Browse by type" style="font-size:13px;padding:10px 16px 4px;">'
+            f'<span style="color:#aaa;display:block;margin-bottom:4px">Browse by type:</span>'
+            f'{type_links_html}</nav>'
+        )
+        html = html.replace('</body>', type_nav + '\n</body>', 1)
 
     # ── Inject city links nav before </body> ─────────────────────────────────
     if city_links:
@@ -1399,7 +1607,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'category_city', 'category_city_modifier',
                          'category_city_district', 'search',
                          'property_transaction', 'property_transaction_modifier',
-                         'property_transaction_city'):
+                         'property_transaction_city',
+                         'property_subtype', 'property_subtype_modifier'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
