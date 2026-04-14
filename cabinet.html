@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
     <link rel="stylesheet" href="css/main.css?v=108" type="text/css">
-    <link rel="stylesheet" href="css/cabinet.css?v=2" type="text/css">
+    <link rel="stylesheet" href="css/cabinet.css?v=3" type="text/css">
     <link rel="icon" type="image/png" href="favicon.png?v=12">
     <style>
         /* Transaction filters */
@@ -899,11 +899,11 @@
 
                     <!-- Photo column -->
                     <div class="cab-profile-photo-col">
-                        <div class="cab-avatar-upload" id="avatarUploadBox">
+                        <div class="cab-avatar-upload" id="avatarUploadBox" onclick="triggerAvatarUpload()">
                             <span class="cab-avatar-upload__icon icon-win-user"></span>
                             <img src="" alt="" id="avatarPreview">
                             <div class="cab-avatar-upload__overlay icon-win-plus"></div>
-                            <input type="file" id="avatarInput" accept=".jpg,.jpeg,.png,.gif">
+                            <input type="file" id="avatarInput" accept="image/*" style="display:none">
                         </div>
                         <p class="cab-avatar-hint">Click to upload photo<br>JPG, PNG — auto-compressed</p>
                         <p id="removeAvatarBtn" style="display:none;margin:6px 0 0;font-size:12px;color:#e55a00;cursor:pointer;font-family:Poppins,sans-serif;text-decoration:underline;" onclick="removeAvatar()">Remove photo</p>
@@ -1562,6 +1562,15 @@
         var avatarBox     = document.getElementById('avatarUploadBox');
         var avatarInput   = document.getElementById('avatarInput');
         var avatarPreview = document.getElementById('avatarPreview');
+        var avatarBusy    = false; // флаг блокировки повторного открытия
+
+        window.triggerAvatarUpload = function() {
+            if (avatarBusy) return;
+            avatarBusy = true;
+            // Сбрасываем флаг через 10с если пользователь отменил выбор
+            setTimeout(function() { avatarBusy = false; }, 10000);
+            if (avatarInput) avatarInput.click();
+        };
 
         function applyAvatar(dataUrl) {
             if (avatarPreview) {
@@ -1635,9 +1644,9 @@
 
         if (avatarInput) {
             avatarInput.addEventListener('change', function() {
+                avatarBusy = false; // сбрасываем флаг — файл выбран
                 if (avatarInput.files && avatarInput.files[0]) {
                     compressAndSaveAvatar(avatarInput.files[0]);
-                    avatarInput.value = '';
                 }
             });
         }
