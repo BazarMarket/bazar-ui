@@ -299,6 +299,15 @@ PROPERTY_TYPE_NAV = [
     ('Hotels',      '/property/hotel'),
 ]
 
+PROPERTY_TYPE_NAV_SALE = [
+    ('Flats',       '/flats/for-sale'),
+    ('Shops',       '/property/shop/for-sale'),
+    ('Offices',     '/property/office/for-sale'),
+    ('Industrial',  '/property/industrial/for-sale'),
+    ('Restaurants', '/property/restaurant/for-sale'),
+    ('Hotels',      '/property/hotel/for-sale'),
+]
+
 PROPERTY_SUBTYPE_SALE_SEO = {
     'shop': {
         'label':  'Shops',
@@ -739,10 +748,11 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             for label, slug in FLATS_POPULAR_CITIES
         ]
         related_links = []
-        type_links    = []
         if is_rent:
             related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]
-            type_links    = PROPERTY_TYPE_NAV
+            type_links = PROPERTY_TYPE_NAV
+        else:
+            type_links = PROPERTY_TYPE_NAV_SALE
 
         seo['ssr'] = {
             'h1':            h1,
