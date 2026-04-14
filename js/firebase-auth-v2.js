@@ -87,7 +87,7 @@ function clearUserLocalData() {
     var keys = [
         'bazar_username', 'bazar_phone', 'bazar_gender', 'bazar_plan',
         'bazar_firebase_uid', 'bazar_uid', 'bazar_email', 'bazar_address',
-        'bazar_balance', 'bazar_local_txns', 'bazar_withdrew'
+        'bazar_balance', 'bazar_local_txns', 'bazar_withdrew', 'bazar_avatar'
     ];
     keys.forEach(function(k) { localStorage.removeItem(k); });
     var favKeys = [];
