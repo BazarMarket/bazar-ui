@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18086360543"></script>
+   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18086360543');</script>
    <meta charset="UTF-8">
    <title>Post an Ad – Bazar</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -2737,6 +2740,7 @@
                   ads[0].photo = '';
                   localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                }
+               if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
                window.location.href = 'publish-options.html?ad_id=' + (data.property_id || '');
             }
 
@@ -2892,6 +2896,7 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'car', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
             window.location.href = 'publish-options.html?ad_id=' + adId;
          })
          .catch(function(err) {
@@ -3017,6 +3022,7 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'phone', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
             window.location.href = 'publish-options.html?ad_id=' + adId;
          })
          .catch(function(err) {

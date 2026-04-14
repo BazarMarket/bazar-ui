@@ -445,6 +445,7 @@ function finishRegistration() {
     document.getElementById('header-avatar').src = selectedGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
     closeProfileModal();
     doLogin();
+    if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
 
     var firebaseUser = auth.currentUser;
     if (firebaseUser) {
