@@ -1612,7 +1612,6 @@
             avatarInput.addEventListener('change', function() {
                 var file = avatarInput.files && avatarInput.files[0];
                 if (!file || !file.type.match(/image\/.*/)) return;
-                avatarInput.value = '';
                 // Запоминаем текущее фото перед заменой
                 prevAvatarSrc = localStorage.getItem('bazar_avatar') || null;
                 var reader = new FileReader();
@@ -2083,5 +2082,5 @@
     }
 </script>
 
-<script src="js/header-auth.js"></script>
+<script src="js/header-auth.js?v=2"></script>
 </body></html>

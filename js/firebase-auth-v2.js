@@ -75,7 +75,10 @@ function doLogin() {
     var avatarEl = document.getElementById('header-avatar');
     if (avatarEl) {
         var avatarImg = avatarEl.querySelector('img') || avatarEl;
-        if (avatarImg && avatarImg.tagName === 'IMG') avatarImg.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+        if (avatarImg && avatarImg.tagName === 'IMG') {
+            var savedAvatar = localStorage.getItem('bazar_avatar');
+            avatarImg.src = savedAvatar || (gender === 'female' ? 'icon/woman.png' : 'icon/man.svg');
+        }
     }
     var phoneMenuEl = document.getElementById('header-menu-phone');
     if (phoneMenuEl) phoneMenuEl.textContent = localStorage.getItem('bazar_phone') || '';
