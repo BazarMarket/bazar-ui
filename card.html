@@ -38,8 +38,9 @@
                            <a href="#" class="icon-item icon-heart"><span class="icon-item__namber">3</span></a>
                         </div>
                      </div>
-                     <div class="header-old__cell" id="header-guest">
-                        <button class="btn btn_mini" onclick="handleLogin()" style="background:#ff9138;color:#fff;border:none;cursor:pointer;">Log in</button>
+                     <div class="header-old__cell" id="header-guest" style="display:flex;align-items:center;gap:8px;">
+                        <a href="#" class="btn btn_mini" onclick="openCreateAccountModal();return false;" style="background:#fff;color:#ff9138;border:1px solid #ff9138;">Create an account</a>
+                        <a href="#" class="btn btn_mini" onclick="handleLogin();return false;" style="background:#ff9138;color:#fff;border:none;">Log in</a>
                      </div>
                      <div class="header-old__cell" id="header-logged-in" style="display:none">
                         <div class="user-link">
@@ -1596,6 +1597,76 @@ function submitEmailForm(e) {
    setTimeout(closeEmailPopup, 3000);
 }
 </script>
+
+<!-- OTP Code Modal -->
+<div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
+   <div class="modal-card modal-card--otp">
+      <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
+      <div class="otp-icon">
+         <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
+      </div>
+      <h2 class="modal-title otp-title">Enter the code</h2>
+      <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
+      <div class="otp-inputs">
+         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      </div>
+      <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
+      <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
+      <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
+   </div>
+</div>
+
+<!-- Profile Setup Modal -->
+<div class="modal-overlay" id="profileModal">
+   <div class="modal-card modal-card--profile">
+      <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
+      <div class="profile-avatar-wrap">
+         <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
+      </div>
+      <h2 class="modal-title profile-modal-title">Almost there!</h2>
+      <p class="profile-modal-subtitle">Just a few details</p>
+      <div class="profile-gender-btns">
+         <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+         <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
+      </div>
+      <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
+      <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
+   </div>
+</div>
+
+<!-- Create Account / Login Modal -->
+<div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
+   <div class="modal-card">
+      <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
+      <h2 class="modal-title">Create an account</h2>
+      <div class="modal-phone-input">
+         <div class="modal-country-select">
+            <span class="modal-country-code">+44</span>
+         </div>
+         <input class="modal-number-input" type="tel" placeholder="7XXX XXX XXX" inputmode="tel">
+      </div>
+      <label class="modal-checkbox-label">
+         <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
+         <span>I agree to the <a href="terms-of-service.html" target="_blank">Terms of Service</a> and the <a href="privacy-policy.html" target="_blank">Privacy Policy</a></span>
+      </label>
+      <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
+      <div class="modal-btns" id="modalSignBtns">
+         <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
+         <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
+      </div>
+   </div>
+</div>
+
+<div id="recaptcha-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+<script src="js/firebase-auth.js?v=4"></script>
 
 <!-- Custom Gallery Lightbox -->
 <div id="galleryLightbox" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;" onclick="closeGalleryLightbox()">
