@@ -55,29 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ── Avatar upload ── */
-    var avatarInput = document.getElementById('avatarInput');
-    var avatarPreview = document.getElementById('avatarPreview');
-    var sidebarAvatar = document.getElementById('sidebarAvatar');
-    var headerAvatar = document.getElementById('headerAvatar');
-
-    if (avatarInput) {
-        document.getElementById('avatarUploadBox').addEventListener('click', function () {
-            avatarInput.click();
-        });
-        avatarInput.addEventListener('change', function () {
-            var file = this.files[0];
-            if (!file) return;
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                if (avatarPreview) { avatarPreview.src = e.target.result; avatarPreview.classList.add('loaded'); avatarPreview.closest('.cab-avatar-upload').querySelector('.cab-avatar-upload__icon').style.display = 'none'; }
-                if (sidebarAvatar) sidebarAvatar.src = e.target.result;
-                if (headerAvatar) headerAvatar.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
     /* ── Profile form ── */
     var profileForm = document.getElementById('profileForm');
     if (profileForm) {

@@ -971,6 +971,7 @@
     height: 100%;
     opacity: 0;
     cursor: pointer;
+    border-radius: 50%;
     z-index: 10;
 }
 
