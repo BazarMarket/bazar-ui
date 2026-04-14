@@ -1672,9 +1672,10 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         path          = parsed.path
         qs            = parsed.query
 
-        # /admin/* → redirect to admin.bazar.uk
+        # /admin/* → redirect to admin.bazar.uk (strip /admin prefix)
         if path == '/admin' or path.startswith('/admin/'):
-            dest = 'https://admin.bazar.uk' + path
+            sub = path[len('/admin'):]  # '' or '/login' or '/users/...'
+            dest = 'https://admin.bazar.uk' + (sub if sub else '/')
             if qs:
                 dest += '?' + qs
             self.send_response(301)
