@@ -84,11 +84,12 @@ function doLogin() {
 }
 
 function clearUserLocalData() {
-    localStorage.removeItem('bazar_username');
-    localStorage.removeItem('bazar_phone');
-    localStorage.removeItem('bazar_gender');
-    localStorage.removeItem('bazar_plan');
-    localStorage.removeItem('bazar_firebase_uid');
+    var keys = [
+        'bazar_username', 'bazar_phone', 'bazar_gender', 'bazar_plan',
+        'bazar_firebase_uid', 'bazar_uid', 'bazar_email', 'bazar_address',
+        'bazar_balance', 'bazar_local_txns', 'bazar_withdrew'
+    ];
+    keys.forEach(function(k) { localStorage.removeItem(k); });
     var favKeys = [];
     for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
