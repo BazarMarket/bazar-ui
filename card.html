@@ -504,12 +504,6 @@
 
          <!-- Messages -->
          <div class="cab-chat-body ccp-inline-body" id="ccpChatBody">
-            <div class="cab-chat-date">Today</div>
-            <div class="cab-bubble cab-bubble--in">
-               <img class="cab-bubble__avatar" src="icon/man.svg" alt="">
-               <div class="cab-bubble__text" id="ccpWelcomeMsg">Hi! How can I help you?</div>
-               <span class="cab-bubble__time" id="ccpWelcomeTime">now</span>
-            </div>
          </div>
 
          <!-- Offer panel -->
@@ -1071,10 +1065,6 @@
       var now2 = new Date();
       var hh = now2.getHours().toString().padStart(2,'0');
       var mm = now2.getMinutes().toString().padStart(2,'0');
-      var ccpWelc = document.getElementById('ccpWelcomeMsg');
-      if(ccpWelc) ccpWelc.textContent = 'Hi! I\'m ' + p.seller_name + '. How can I help you with "' + p.title + '"?';
-      var ccpWT = document.getElementById('ccpWelcomeTime');
-      if(ccpWT) ccpWT.textContent = hh + ':' + mm;
 
       /* ── Store ad data for chat ── */
       window._chatAdData = {
