@@ -163,8 +163,8 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     if p == 'search.html' or p.startswith('search'):
         return 'search', {}
 
-    # internal / private pages
-    if p in INTERNAL_PAGES:
+    # internal / private pages (match both with and without .html extension)
+    if p in INTERNAL_PAGES or (p + '.html') in INTERNAL_PAGES:
         return 'internal', {}
 
     # static assets – let them pass through unchanged
@@ -1927,6 +1927,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(body)
                     return
 
+        # /post-ad → serve post-ad.html directly (no SEO injection needed)
+        if path in ('/post-ad', '/post-ad.html'):
+            self.path = '/post-ad.html'
+            return super().do_GET()
+
         # 301 redirect: /listing/{id} or /listing/{id}-{slug} → /{id}-{slug}
         m = re.match(r'^/listing/(\d+)', path)
         if m:
@@ -2009,6 +2014,10 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         # since these are noindex pages served at their root-level URL.
         if page_type == 'internal':
             actual = os.path.join(SITE_ROOT, p_clean)
+            if not os.path.isfile(actual):
+                actual = os.path.join(SITE_ROOT, p_clean + '.html')
+                if os.path.isfile(actual):
+                    self.path = '/' + p_clean + '.html'
             if os.path.isfile(actual):
                 super().do_GET()
                 return
