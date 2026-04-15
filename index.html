@@ -111,7 +111,7 @@
                         <div class="search__duoble">
                             <div class="search__first">
                                 <span class="icon-glass search__glass-icon"></span>
-                                <input type="text" placeholder="Search 297,671 ads">
+                                <input type="text" id="mainSearchInput" placeholder="Search ads">
                             </div>
                         </div>
                         <div class="search__third search__third--loc" style="position:relative">
@@ -1346,6 +1346,15 @@
     <script type="text/javascript" src="js/fslightbox.js"></script>
     <script type="text/javascript" src="js/script.js?v=2"></script>
     <script src="js/firebase-auth-v2.js?v=3"></script>
+    <script>
+        fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
+            var n = d.ads_total;
+            if (!n) return;
+            var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads';
+            var el = document.getElementById('mainSearchInput');
+            if (el) el.placeholder = txt;
+        }).catch(function(){});
+    </script>
     <script src="js/location-autocomplete.js"></script>
     <script>
        function setHeaderLocation(btn) {

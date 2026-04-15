@@ -378,7 +378,7 @@
                      <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px; position:relative;">
                         <div class="cf-search-q">
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                           <input type="text" value="" placeholder="Search 297,671 ads">
+                           <input type="text" id="mainSearchInput" value="" placeholder="Search ads">
                         </div>
                         <div style="position:relative;">
                         <input type="text" class="cf-search-loc" id="searchLocationInput" placeholder="All locations" autocomplete="off" onfocus="showSearchLocDropdown()" oninput="onSearchLocInput()">
@@ -2640,6 +2640,15 @@
          });
          updateFavCount();
       })();
+   </script>
+   <script>
+      fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
+         var n = d.ads_total;
+         if (!n) return;
+         var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads';
+         var el = document.getElementById('mainSearchInput');
+         if (el) el.placeholder = txt;
+      }).catch(function(){});
    </script>
 </body>
 </html>

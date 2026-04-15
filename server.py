@@ -1816,6 +1816,40 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'googleMapsApiKey': GOOGLE_MAPS_API_KEY})
             return
 
+        # ── /api/stats ────────────────────────────────────────────────────────
+        if path == '/api/stats':
+            cached = _cache_get('stats_total')
+            if cached:
+                self._send_json(200, cached); return
+            # Fetch max listing ID from sitemap-listings as approximate total
+            listings = _api_get('/sitemap-listings', None)
+            total = 0
+            if listings and isinstance(listings, list):
+                ids = [item.get('id', 0) for item in listings if isinstance(item, dict) and item.get('id')]
+                if ids:
+                    max_id = max(ids)
+                    # Probe upward from max_id to find real maximum
+                    probe = max_id
+                    for step in (500, 100, 50, 10, 1):
+                        while True:
+                            candidate = probe + step
+                            try:
+                                req = urllib.request.Request(
+                                    f'{LARAVEL_API_BASE}/properties/{candidate}',
+                                    headers={'Accept': 'application/json'})
+                                with urllib.request.urlopen(req, timeout=2) as r:
+                                    d = json.loads(r.read().decode())
+                                    if isinstance(d, dict) and d.get('id'):
+                                        probe = candidate
+                                        continue
+                            except Exception:
+                                pass
+                            break
+                    total = probe
+            result = {'ads_total': total}
+            _cache_set('stats_total', result)
+            self._send_json(200, result); return
+
         # ── /api/chat/msgs ────────────────────────────────────────────────────
         if path == '/api/chat/msgs':
             params = urllib.parse.parse_qs(qs)
