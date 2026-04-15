@@ -21,6 +21,7 @@ import urllib.request
 import urllib.parse
 import time
 import threading
+import sqlite3
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 PORT               = 5000
@@ -31,6 +32,52 @@ SITE_ROOT          = os.environ.get('BAZAR_SITE_ROOT', os.path.dirname(os.path.a
 SEO_CACHE_TTL      = 300  # seconds (5 min)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 STRIPE_SECRET_KEY   = os.environ.get('STRIPE_SECRET_KEY', '')
+CHAT_DB             = os.path.join(SITE_ROOT, 'bazar_chat.db')
+
+# ── Chat DB init ──────────────────────────────────────────────────────────────
+_chat_lock = threading.Lock()
+
+def _chat_db():
+    conn = sqlite3.connect(CHAT_DB, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def _init_chat_db():
+    with _chat_lock:
+        conn = _chat_db()
+        conn.executescript('''
+            CREATE TABLE IF NOT EXISTS conversations (
+                id          TEXT PRIMARY KEY,
+                ad_id       TEXT DEFAULT '',
+                ad_title    TEXT DEFAULT '',
+                ad_url      TEXT DEFAULT '',
+                ad_photo    TEXT DEFAULT '',
+                ad_price    TEXT DEFAULT '',
+                seller_name TEXT DEFAULT '',
+                buyer_id    TEXT DEFAULT '',
+                buyer_name  TEXT DEFAULT '',
+                last_msg    TEXT DEFAULT '',
+                last_time   REAL DEFAULT 0,
+                unread_seller INTEGER DEFAULT 0,
+                unread_buyer  INTEGER DEFAULT 0
+            );
+            CREATE TABLE IF NOT EXISTS messages (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                conv_id     TEXT NOT NULL,
+                sender_id   TEXT DEFAULT '',
+                sender_name TEXT DEFAULT '',
+                text        TEXT DEFAULT '',
+                time        REAL DEFAULT 0,
+                type        TEXT DEFAULT 'text'
+            );
+            CREATE INDEX IF NOT EXISTS idx_msgs_conv ON messages(conv_id, id);
+            CREATE INDEX IF NOT EXISTS idx_convs_buyer   ON conversations(buyer_id);
+            CREATE INDEX IF NOT EXISTS idx_convs_seller  ON conversations(seller_name);
+        ''')
+        conn.commit()
+        conn.close()
+
+_init_chat_db()
 
 # ── In-memory SEO cache ───────────────────────────────────────────────────────
 _cache: dict = {}
@@ -1661,6 +1708,86 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(500, {'success': False, 'error': str(e)})
             return
 
+        # ── /api/chat/ensure ──────────────────────────────────────────────────
+        if self.path == '/api/chat/ensure':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            cid = data.get('conv_id', '')
+            if not cid:
+                self._send_json(400, {'error': 'missing conv_id'}); return
+            with _chat_lock:
+                conn = _chat_db()
+                row = conn.execute('SELECT id FROM conversations WHERE id=?', (cid,)).fetchone()
+                if not row:
+                    conn.execute('''INSERT INTO conversations
+                        (id,ad_id,ad_title,ad_url,ad_photo,ad_price,seller_name,buyer_id,buyer_name,last_time)
+                        VALUES (?,?,?,?,?,?,?,?,?,?)''', (
+                        cid,
+                        data.get('ad_id',''), data.get('ad_title',''), data.get('ad_url',''),
+                        data.get('ad_photo',''), data.get('ad_price',''), data.get('seller_name',''),
+                        data.get('buyer_id',''), data.get('buyer_name',''), time.time()
+                    ))
+                    conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True, 'conv_id': cid}); return
+
+        # ── /api/chat/send ────────────────────────────────────────────────────
+        if self.path == '/api/chat/send':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            cid      = data.get('conv_id', '')
+            sender   = data.get('sender_id', '')
+            sname    = data.get('sender_name', '')
+            text     = data.get('text', '').strip()
+            mtype    = data.get('type', 'text')
+            if not cid or not text:
+                self._send_json(400, {'error': 'missing fields'}); return
+            now = time.time()
+            with _chat_lock:
+                conn = _chat_db()
+                cur = conn.execute('''INSERT INTO messages (conv_id,sender_id,sender_name,text,time,type)
+                                      VALUES (?,?,?,?,?,?)''', (cid, sender, sname, text, now, mtype))
+                msg_id = cur.lastrowid
+                conv = conn.execute('SELECT buyer_id,unread_seller,unread_buyer FROM conversations WHERE id=?', (cid,)).fetchone()
+                if conv:
+                    is_buyer = conv['buyer_id'] == sender
+                    if is_buyer:
+                        conn.execute('UPDATE conversations SET last_msg=?,last_time=?,unread_seller=unread_seller+1 WHERE id=?',
+                                     (text, now, cid))
+                    else:
+                        conn.execute('UPDATE conversations SET last_msg=?,last_time=?,unread_buyer=unread_buyer+1 WHERE id=?',
+                                     (text, now, cid))
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True, 'id': msg_id}); return
+
+        # ── /api/chat/read ────────────────────────────────────────────────────
+        if self.path == '/api/chat/read':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            cid  = data.get('conv_id', '')
+            role = data.get('role', '')
+            if cid and role in ('buyer', 'seller'):
+                field = 'unread_buyer' if role == 'buyer' else 'unread_seller'
+                with _chat_lock:
+                    conn = _chat_db()
+                    conn.execute(f'UPDATE conversations SET {field}=0 WHERE id=?', (cid,))
+                    conn.commit()
+                    conn.close()
+            self._send_json(200, {'ok': True}); return
+
         self.send_response(404)
         self.end_headers()
 
@@ -1688,6 +1815,49 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         if path == '/api/config':
             self._send_json(200, {'googleMapsApiKey': GOOGLE_MAPS_API_KEY})
             return
+
+        # ── /api/chat/msgs ────────────────────────────────────────────────────
+        if path == '/api/chat/msgs':
+            params = urllib.parse.parse_qs(qs)
+            cid   = params.get('conv_id', [None])[0]
+            since = int(params.get('since', ['0'])[0])
+            if not cid:
+                self._send_json(400, {'error': 'missing conv_id'}); return
+            with _chat_lock:
+                conn = _chat_db()
+                rows = conn.execute(
+                    'SELECT id,sender_id,sender_name,text,time,type FROM messages WHERE conv_id=? AND id>? ORDER BY id ASC',
+                    (cid, since)
+                ).fetchall()
+                conn.close()
+            msgs = [dict(r) for r in rows]
+            self._send_json(200, {'messages': msgs}); return
+
+        # ── /api/chat/convs ───────────────────────────────────────────────────
+        if path == '/api/chat/convs':
+            params = urllib.parse.parse_qs(qs)
+            uid  = params.get('uid', [None])[0]
+            name = params.get('name', [None])[0]
+            if not uid and not name:
+                self._send_json(400, {'error': 'missing uid'}); return
+            with _chat_lock:
+                conn = _chat_db()
+                if uid and name:
+                    rows = conn.execute(
+                        'SELECT * FROM conversations WHERE buyer_id=? OR seller_name=? ORDER BY last_time DESC',
+                        (uid, name)
+                    ).fetchall()
+                elif uid:
+                    rows = conn.execute(
+                        'SELECT * FROM conversations WHERE buyer_id=? ORDER BY last_time DESC', (uid,)
+                    ).fetchall()
+                else:
+                    rows = conn.execute(
+                        'SELECT * FROM conversations WHERE seller_name=? ORDER BY last_time DESC', (name,)
+                    ).fetchall()
+                conn.close()
+            convs = [dict(r) for r in rows]
+            self._send_json(200, {'conversations': convs}); return
 
         # API: products (dev fallback)
         if path.startswith('/api/products/'):

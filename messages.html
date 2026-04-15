@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Messages — Bazar</title>
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
@@ -9,92 +10,62 @@
     <link rel="stylesheet" href="css/cabinet.css?v=2" type="text/css">
     <link rel="icon" type="image/png" href="favicon.png?v=12">
     <style>
-
-
-        /* Emoji-only messages */
         .cab-bubble--emoji-only .cab-bubble__text {
-            background: none !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 2px 4px !important;
-            font-size: 40px !important;
-            line-height: 1.15 !important;
+            background: none !important; border: none !important;
+            box-shadow: none !important; padding: 2px 4px !important;
+            font-size: 40px !important; line-height: 1.15 !important;
         }
-        /* Emoji Picker */
         .emoji-picker {
-            position: fixed;
-            right: auto;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            padding: 8px;
-            z-index: 99999;
-            display: none;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 2px;
-            width: 224px;
-            box-sizing: border-box;
+            position: fixed; right: auto; background: #fff;
+            border: 1px solid #e0e0e0; border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); padding: 8px;
+            z-index: 99999; display: none; grid-template-columns: repeat(6, 1fr);
+            gap: 2px; width: 224px; box-sizing: border-box;
         }
         .emoji-picker.open { display: grid; }
         .emoji-picker button {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px 2px;
-            border-radius: 6px;
-            line-height: 1;
-            text-align: center;
+            background: none; border: none; font-size: 22px; cursor: pointer;
+            padding: 4px 2px; border-radius: 6px; line-height: 1; text-align: center;
         }
         .emoji-picker button:hover { background: #f5f5f5; }
         body { background: #f5f5f5; overflow: hidden; }
         .msgs-page {
-            padding: 16px 32px 0;
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 68px);
-            box-sizing: border-box;
-            overflow: hidden;
-            max-width: 1354px;
-            margin: 0 auto;
-            width: 100%;
+            padding: 16px 32px 0; display: flex; flex-direction: column;
+            height: calc(100vh - 68px); box-sizing: border-box; overflow: hidden;
+            max-width: 1354px; margin: 0 auto; width: 100%;
         }
         .msgs-page .cab-msgs-wrap {
-            flex: 1;
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            height: 100%;
-            max-height: calc(100vh - 100px);
-            min-height: 0;
-            overflow: hidden;
+            flex: 1; width: 100%; max-width: 100%; margin: 0; height: 100%;
+            max-height: calc(100vh - 100px); min-height: 0; overflow: hidden;
+        }
+        .cab-msgs-loading {
+            padding: 24px; text-align: center; color: #bbb; font-size: 14px;
         }
     </style>
 </head>
 
 <body>
-
 <div class="wrapper">
 
     <!-- ══════════════════════ HEADER ══════════════════════ -->
     <header class="header-old">
         <div class="container-full">
             <div class="header-old__body">
-                <a href="/" class="logo">
-                    <img src="img/logo.png" alt="">
-                </a>
+                <a href="/" class="logo"><img src="img/logo.png" alt=""></a>
                 <div class="burger-body">
                     <div class="header-old__right">
-                        <div class="header-old__cell">
-                        </div>
+                        <div class="header-old__cell"></div>
                         <div class="header-old__cell">
                             <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
                         </div>
                         <div class="header-old__cell">
                             <div class="icons-list">
-                                <a href="messages.html" class="icon-item icon-email" style="color:#ff9138;"><span class="icon-item__namber">2</span></a>
-                                <a href="/cabinet/favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
+                                <a href="/messages" class="icon-item icon-email" style="color:#ff9138;">
+                                    <span class="icon-item__namber" id="unreadBadge" style="display:none">0</span>
+                                </a>
+                                <a href="/cabinet/favorites" class="icon-item icon-heart">
+                                    <span class="icon-item__namber" id="fav-count" style="display:none">0</span>
+                                </a>
                             </div>
                         </div>
                         <div class="header-old__cell">
@@ -125,7 +96,6 @@
 
     <!-- ══════════════════════ MESSAGES PAGE ══════════════════════ -->
     <div class="msgs-page">
-
         <div class="cab-msgs-wrap">
 
             <!-- ── Conversation list ── -->
@@ -137,7 +107,7 @@
                 </div>
                 <div class="cab-msgs-convs">
 
-                    <!-- Bazar Support -->
+                    <!-- Bazar Support (static) -->
                     <div class="cab-conv-item" onclick="cabOpenChat('support')">
                         <div class="cab-conv-avatar cab-conv-avatar--orange">B</div>
                         <div class="cab-conv-body">
@@ -150,62 +120,9 @@
                         <div class="cab-conv-online"></div>
                     </div>
 
-                    <!-- Sarah Mitchell -->
-                    <div class="cab-conv-item active" onclick="cabOpenChat('sarah')">
-                        <div class="cab-conv-avatar">
-                            <img src="/icon/man.svg" alt="">
-                        </div>
-                        <div class="cab-conv-body">
-                            <div class="cab-conv-top">
-                                <span class="cab-conv-name">Sarah Mitchell</span>
-                                <span class="cab-conv-time">11:32</span>
-                            </div>
-                            <div class="cab-conv-preview">Is the villa still available?</div>
-                        </div>
-                        <span class="cab-conv-badge">2</span>
-                        <div class="cab-conv-online"></div>
-                    </div>
-
-                    <!-- Michael Green -->
-                    <div class="cab-conv-item" onclick="cabOpenChat('michael')">
-                        <div class="cab-conv-avatar">
-                            <img src="/icon/man.svg" alt="">
-                        </div>
-                        <div class="cab-conv-body">
-                            <div class="cab-conv-top">
-                                <span class="cab-conv-name">Michael Green</span>
-                                <span class="cab-conv-time">Yesterday</span>
-                            </div>
-                            <div class="cab-conv-preview">Can we meet Thursday?</div>
-                        </div>
-                    </div>
-
-                    <!-- Elena Vassileva -->
-                    <div class="cab-conv-item" onclick="cabOpenChat('elena')">
-                        <div class="cab-conv-avatar">
-                            <img src="/icon/man.svg" alt="">
-                        </div>
-                        <div class="cab-conv-body">
-                            <div class="cab-conv-top">
-                                <span class="cab-conv-name">Elena Vassileva</span>
-                                <span class="cab-conv-time">Mon</span>
-                            </div>
-                            <div class="cab-conv-preview">Thank you, I'll think about it</div>
-                        </div>
-                    </div>
-
-                    <!-- John Papadopoulos -->
-                    <div class="cab-conv-item" onclick="cabOpenChat('john')">
-                        <div class="cab-conv-avatar">
-                            <img src="/icon/man.svg" alt="">
-                        </div>
-                        <div class="cab-conv-body">
-                            <div class="cab-conv-top">
-                                <span class="cab-conv-name">John Papadopoulos</span>
-                                <span class="cab-conv-time">Sun</span>
-                            </div>
-                            <div class="cab-conv-preview">What's the lowest you'd go?</div>
-                        </div>
+                    <!-- Real conversations from DB -->
+                    <div id="cabRealConvs">
+                        <div class="cab-msgs-loading">Loading conversations…</div>
                     </div>
 
                 </div>
@@ -215,68 +132,34 @@
             <div class="cab-msgs-chat">
 
                 <!-- Empty state -->
-                <div class="cab-msgs-empty" id="cabMsgEmpty" style="display:none;">
+                <div class="cab-msgs-empty" id="cabMsgEmpty">
                     <div style="font-size:40px;opacity:.3;">💬</div>
                     <div style="color:#bbb;font-size:14px;margin-top:8px;">Choose a conversation</div>
                 </div>
 
-                <!-- Sarah chat -->
-                <div class="cab-chat-content" id="cab-chat-sarah" style="display:flex;flex-direction:column;height:100%;">
+                <!-- Dynamic real chat pane -->
+                <div class="cab-chat-content" id="cab-chat-real" style="display:none;flex-direction:column;height:100%;">
                     <div class="cab-chat-head">
-                        <img class="cab-chat-head__avatar" src="/icon/man.svg" alt="">
+                        <img class="cab-chat-head__avatar" src="/icon/man.svg" alt="" id="cabRealAvatar">
                         <div>
-                            <div class="cab-chat-head__name">Sarah Mitchell</div>
-                            <div class="cab-chat-head__status">Online now</div>
+                            <div class="cab-chat-head__name" id="cabRealHeadName"></div>
+                            <div class="cab-chat-head__status" id="cabRealStatus">Online now</div>
                         </div>
-                        <div class="cab-chat-head__ad">
-                            <a href="card.html" style="display:block;line-height:0;flex-shrink:0;"><img src="img/product.jpg" alt="" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;"></a>
+                        <div class="cab-chat-head__ad" id="cabRealAdSection" style="display:none;">
+                            <a id="cabRealAdLink" href="#" style="display:block;line-height:0;flex-shrink:0;">
+                                <img id="cabRealAdImg" src="/img/product.jpg" alt="" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;">
+                            </a>
                             <div>
-                                <a href="card.html" style="display:block;font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.3;text-decoration:none;">Villa for Sale in Tsada</a>
+                                <a id="cabRealAdTitle" href="#" style="display:block;font-size:12px;font-weight:600;color:#1a1a1a;line-height:1.3;text-decoration:none;"></a>
                                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:1px;">
-                                    <span style="font-size:12px;color:#1a1a1a;font-weight:700;">£ 1,049,000</span>
-                                    <span style="font-size:11px;color:#e03030;text-decoration:line-through;font-weight:500;">£ 1,200,000</span>
+                                    <span id="cabRealAdPrice" style="font-size:12px;color:#1a1a1a;font-weight:700;"></span>
                                 </div>
                             </div>
-                            <a href="card.html" class="cab-ad-viewbtn">View listing →</a>
-                            <span class="cab-ad-status cab-ad-status--active">✓ Active</span>
+                            <a id="cabRealViewBtn" href="#" class="cab-ad-viewbtn">View listing →</a>
                         </div>
                     </div>
 
-                    <div class="cab-chat-body" id="cabChatBody">
-                        <div class="cab-chat-date">Yesterday</div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Hello! I saw your villa listing in Tsada. Is it still available?</div>
-                            <span class="cab-bubble__time">18:42</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--out">
-                            <div class="cab-bubble__text">Hi Sarah! Yes, the villa is still available. Are you interested in scheduling a viewing?</div>
-                            <span class="cab-bubble__time">18:55</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">That would be great! Could you tell me more about the plot size?</div>
-                            <span class="cab-bubble__time">19:03</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--out">
-                            <div class="cab-bubble__text">The plot is 433 m². The villa itself is 153 m² with 2 bedrooms, 2 bathrooms, and a private pool. 🏊</div>
-                            <span class="cab-bubble__time">19:10</span>
-                        </div>
-                        <div class="cab-chat-date">Today</div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Is the villa still available?</div>
-                            <span class="cab-bubble__time">11:32</span>
-                        </div>
-                        <div class="cab-typing" id="cabTypingIndicator">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-typing__dots">
-                                <span class="cab-typing__dot"></span>
-                                <span class="cab-typing__dot"></span>
-                                <span class="cab-typing__dot"></span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="cab-chat-body" id="cabChatBody"></div>
 
                     <!-- Make an offer panel -->
                     <div class="cab-offer-panel" id="cabOfferPanel">
@@ -311,110 +194,20 @@
 
                     <div class="cab-chat-input-row">
                         <button class="cab-chat-attach">📎</button>
-                        <input class="cab-chat-input" type="text" placeholder="Write a message..." id="cabChatInput">
+                        <input class="cab-chat-input" type="text" placeholder="Write a message…" id="cabChatInput">
                         <button class="cab-chat-emoji" onclick="toggleEmojiPicker(this)">😊</button>
-                        <button class="cab-chat-send" onclick="cabSendMessage()">&#10148;</button>
+                        <button class="cab-chat-send" onclick="cabSendRealMessage()">&#10148;</button>
                     </div>
                 </div>
 
-                <!-- Michael chat -->
-                <div class="cab-chat-content" id="cab-chat-michael">
-                    <div class="cab-chat-head">
-                        <img class="cab-chat-head__avatar" src="/icon/man.svg" alt="">
-                        <div><div class="cab-chat-head__name">Michael Green</div><div class="cab-chat-head__status" style="color:#aaa;">Last seen yesterday</div></div>
-                    </div>
-                    <div class="cab-chat-body">
-                        <div class="cab-chat-date">Yesterday</div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Hi! Is the iPhone still for sale?</div>
-                            <span class="cab-bubble__time">14:10</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--out">
-                            <div class="cab-bubble__text">Yes it is! In perfect condition, barely used.</div>
-                            <span class="cab-bubble__time">14:22</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Can we meet Thursday?</div>
-                            <span class="cab-bubble__time">14:45</span>
-                        </div>
-                    </div>
-                    <div class="cab-chat-input-row">
-                        <button class="cab-chat-attach">📎</button>
-                        <input class="cab-chat-input" type="text" placeholder="Write a message..." onkeydown="if(event.key==='Enter')cabSendToActive(this)">
-                        <button class="cab-chat-emoji" onclick="toggleEmojiPicker(this)">😊</button>
-                        <button class="cab-chat-send" onclick="cabSendToActive(this.previousElementSibling.previousElementSibling)">&#10148;</button>
-                    </div>
-                </div>
-
-                <!-- Elena chat -->
-                <div class="cab-chat-content" id="cab-chat-elena">
-                    <div class="cab-chat-head">
-                        <img class="cab-chat-head__avatar" src="/icon/man.svg" alt="">
-                        <div><div class="cab-chat-head__name">Elena Vassileva</div><div class="cab-chat-head__status" style="color:#aaa;">Last seen Mon</div></div>
-                    </div>
-                    <div class="cab-chat-body">
-                        <div class="cab-chat-date">Monday</div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Would you consider £280,000 for the apartment?</div>
-                            <span class="cab-bubble__time">10:05</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--out">
-                            <div class="cab-bubble__text">The minimum I can go is £300,000. The location alone is worth it.</div>
-                            <span class="cab-bubble__time">10:18</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Thank you, I'll think about it</div>
-                            <span class="cab-bubble__time">10:30</span>
-                        </div>
-                    </div>
-                    <div class="cab-chat-input-row">
-                        <button class="cab-chat-attach">📎</button>
-                        <input class="cab-chat-input" type="text" placeholder="Write a message..." onkeydown="if(event.key==='Enter')cabSendToActive(this)">
-                        <button class="cab-chat-emoji" onclick="toggleEmojiPicker(this)">😊</button>
-                        <button class="cab-chat-send" onclick="cabSendToActive(this.previousElementSibling.previousElementSibling)">&#10148;</button>
-                    </div>
-                </div>
-
-                <!-- John chat -->
-                <div class="cab-chat-content" id="cab-chat-john">
-                    <div class="cab-chat-head">
-                        <img class="cab-chat-head__avatar" src="/icon/man.svg" alt="">
-                        <div><div class="cab-chat-head__name">John Papadopoulos</div><div class="cab-chat-head__status" style="color:#aaa;">Last seen Sun</div></div>
-                    </div>
-                    <div class="cab-chat-body">
-                        <div class="cab-chat-date">Sunday</div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">Great bike! What's the lowest you'd go?</div>
-                            <span class="cab-bubble__time">16:20</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--out">
-                            <div class="cab-bubble__text">Best I can do is £390. It's in mint condition.</div>
-                            <span class="cab-bubble__time">16:35</span>
-                        </div>
-                        <div class="cab-bubble cab-bubble--in">
-                            <img class="cab-bubble__avatar" src="/icon/man.svg" alt="">
-                            <div class="cab-bubble__text">What's the lowest you'd go?</div>
-                            <span class="cab-bubble__time">17:01</span>
-                        </div>
-                    </div>
-                    <div class="cab-chat-input-row">
-                        <button class="cab-chat-attach">📎</button>
-                        <input class="cab-chat-input" type="text" placeholder="Write a message..." onkeydown="if(event.key==='Enter')cabSendToActive(this)">
-                        <button class="cab-chat-emoji" onclick="toggleEmojiPicker(this)">😊</button>
-                        <button class="cab-chat-send" onclick="cabSendToActive(this.previousElementSibling.previousElementSibling)">&#10148;</button>
-                    </div>
-                </div>
-
-                <!-- Support chat -->
-                <div class="cab-chat-content" id="cab-chat-support">
+                <!-- Support chat (static) -->
+                <div class="cab-chat-content" id="cab-chat-support" style="display:none;">
                     <div class="cab-chat-head">
                         <div class="cab-chat-head__avatar cab-chat-head__avatar--b">B</div>
-                        <div><div class="cab-chat-head__name">Bazar Support</div><div class="cab-chat-head__status">Online now</div></div>
+                        <div>
+                            <div class="cab-chat-head__name">Bazar Support</div>
+                            <div class="cab-chat-head__status">Online now</div>
+                        </div>
                     </div>
                     <div class="cab-chat-body">
                         <div class="cab-chat-date">Today</div>
@@ -426,7 +219,7 @@
                     </div>
                     <div class="cab-chat-input-row">
                         <button class="cab-chat-attach">📎</button>
-                        <input class="cab-chat-input" type="text" placeholder="Write a message..." onkeydown="if(event.key==='Enter')cabSendToActive(this)">
+                        <input class="cab-chat-input" type="text" placeholder="Write a message…" onkeydown="if(event.key==='Enter')cabSendToActive(this)">
                         <button class="cab-chat-emoji" onclick="toggleEmojiPicker(this)">😊</button>
                         <button class="cab-chat-send" onclick="cabSendToActive(this.previousElementSibling.previousElementSibling)">&#10148;</button>
                     </div>
@@ -434,7 +227,6 @@
 
             </div>
         </div>
-
     </div>
     <!-- end msgs-page -->
 
@@ -442,183 +234,339 @@
 <!-- end wrapper -->
 
 <script>
-    function cabScrollToBottom() {
-        var active = document.querySelector('.cab-chat-content[style*="flex"]');
-        if (!active) active = document.getElementById('cab-chat-sarah');
-        if (active) {
-            var body = active.querySelector('.cab-chat-body');
-            if (body) body.scrollTop = body.scrollHeight;
-        }
+/* ═══════════════════════════════════════════════════
+   State
+═══════════════════════════════════════════════════ */
+var _myUid  = localStorage.getItem('bazar_firebase_uid') || '';
+var _myName = localStorage.getItem('bazar_username') || 'User';
+var _activeConvId = null;
+var _allConvs     = {};   // id → conv object
+var _unsubConvs   = null;
+var _unsubMsgs    = null;
+
+/* ═══════════════════════════════════════════════════
+   Helpers
+═══════════════════════════════════════════════════ */
+function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatMsgTime(date) {
+    if (!date || isNaN(date.getTime())) return '';
+    var now  = new Date();
+    var diff = now - date;
+    if (diff < 86400000 && now.getDate() === date.getDate())
+        return date.getHours().toString().padStart(2,'0') + ':' + date.getMinutes().toString().padStart(2,'0');
+    if (diff < 172800000) return 'Yesterday';
+    return date.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+function formatDateLabel(date) {
+    var now  = new Date();
+    var diff = now - date;
+    if (diff < 86400000 && now.getDate() === date.getDate()) return 'Today';
+    if (diff < 172800000) return 'Yesterday';
+    return date.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'short' });
+}
+
+/* ═══════════════════════════════════════════════════
+   Init
+═══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+    /* hide all chat panes initially */
+    document.querySelectorAll('.cab-chat-content').forEach(function (el) { el.style.display = 'none'; });
+
+    /* wire up input enter key */
+    var inp = document.getElementById('cabChatInput');
+    if (inp) inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') cabSendRealMessage(); });
+
+    if (!_myUid) {
+        document.getElementById('cabRealConvs').innerHTML =
+            '<div class="cab-msgs-loading">Please <a href="/" style="color:#ff9138">log in</a> to see your messages.</div>';
+        return;
     }
 
-    /* ── localStorage unread counter ── */
-    var UNREAD_KEY = 'bazar_unread_msgs';
-    function getUnread() {
-        var v = localStorage.getItem(UNREAD_KEY);
-        return v === null ? 2 : Math.max(0, parseInt(v, 10) || 0);
-    }
-    function setUnread(n) {
-        n = Math.max(0, n);
-        localStorage.setItem(UNREAD_KEY, n);
-    }
-
-    function cabOpenChat(id) {
-        document.querySelectorAll('.cab-conv-item').forEach(function(el) { el.classList.remove('active'); });
-        var item = document.querySelector('.cab-conv-item[onclick*="' + id + '"]');
-        if (item) item.classList.add('active');
-
-        document.querySelectorAll('.cab-chat-content').forEach(function(el) { el.style.display = 'none'; });
-        var chat = document.getElementById('cab-chat-' + id);
-        if (chat) { chat.style.display = 'flex'; chat.style.flexDirection = 'column'; chat.style.height = '100%'; }
-
-        var empty = document.getElementById('cabMsgEmpty');
-        if (empty) empty.style.display = 'none';
-
-        /* Remove unread badge and update localStorage counter */
-        var badge = item && item.querySelector('.cab-conv-badge');
-        if (badge) {
-            var badgeCount = parseInt(badge.textContent, 10) || 1;
-            badge.remove();
-            setUnread(getUnread() - badgeCount);
-            /* Also hide the envelope badge on this page */
-            document.querySelectorAll('.icon-email .icon-item__namber').forEach(function(el) {
-                var remaining = getUnread();
-                if (remaining > 0) { el.textContent = remaining; el.style.display = ''; }
-                else { el.style.display = 'none'; }
-            });
-        }
-
-        setTimeout(cabScrollToBottom, 30);
-    }
-
-    function cabToggleSearch() {
-        var label = document.getElementById('cabMsgsLabel');
-        var input = document.getElementById('cabMsgsInput');
-        if (label.style.display === 'none') {
-            label.style.display = '';
-            input.classList.add('cab-msgs-search__input--hidden');
-            input.value = '';
-        } else {
-            label.style.display = 'none';
-            input.classList.remove('cab-msgs-search__input--hidden');
-            input.focus();
-        }
-    }
-
-    function cabSendMessage() {
-        var input = document.getElementById('cabChatInput');
-        if (!input || !input.value.trim()) return;
-        cabPostBubble(input.value.trim());
-        input.value = '';
-    }
-
-    function cabSendToActive(input) {
-        if (!input || !input.value.trim()) return;
-        var chat = input.closest('.cab-chat-content');
-        if (!chat) return;
-        var body = chat.querySelector('.cab-chat-body');
-        if (!body) return;
-        var now = new Date();
-        var h = now.getHours().toString().padStart(2,'0');
-        var m = now.getMinutes().toString().padStart(2,'0');
-        var bubble = document.createElement('div');
-        var msgText = input.value.trim();
-        var isEmoji = window.isEmojiOnly && isEmojiOnly(msgText);
-        bubble.className = 'cab-bubble cab-bubble--out';
-        var textStyle = isEmoji ? ' style="background:none;border:none;box-shadow:none;padding:0;font-size:42px;line-height:1.2"' : '';
-        bubble.innerHTML = '<div class="cab-bubble__text"' + textStyle + '>' + msgText + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
-        body.appendChild(bubble);
-        body.scrollTop = body.scrollHeight;
-        input.value = '';
-    }
-
-    function cabPostBubble(text, extraClass) {
-        var body = document.getElementById('cabChatBody');
-        if (!body) return;
-        var now = new Date();
-        var h = now.getHours().toString().padStart(2,'0');
-        var m = now.getMinutes().toString().padStart(2,'0');
-        var bubble = document.createElement('div');
-        var isEmoji = !extraClass && window.isEmojiOnly && isEmojiOnly(text);
-        bubble.className = 'cab-bubble cab-bubble--out' + (extraClass ? ' ' + extraClass : '');
-        var textStyle = isEmoji ? ' style="background:none;border:none;box-shadow:none;padding:0;font-size:42px;line-height:1.2"' : '';
-        bubble.innerHTML = '<div class="cab-bubble__text"' + textStyle + '>' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
-        body.appendChild(bubble);
-        body.scrollTop = body.scrollHeight;
-    }
-
-    function cabQuickReply(text) { cabPostBubble(text); }
-
-    function cabShowOffer() {
-        document.getElementById('cabOfferPanel').classList.add('is-open');
-        document.getElementById('cabSchedulePanel').classList.remove('is-open');
-        setTimeout(function(){ var el=document.getElementById('cabOfferInput'); if(el) el.focus(); }, 100);
-    }
-    function cabHideOffer() { document.getElementById('cabOfferPanel').classList.remove('is-open'); }
-    function cabSendOffer() {
-        var val = document.getElementById('cabOfferInput').value;
-        if (!val || isNaN(val) || +val <= 0) return;
-        var formatted = '£ ' + (+val).toLocaleString('en-GB');
-        cabPostBubble('💰 Offer: <strong>' + formatted + '</strong>', 'cab-bubble--offer');
-        document.getElementById('cabOfferInput').value = '';
-        cabHideOffer();
-        setTimeout(function() {
-            var body = document.getElementById('cabChatBody');
-            var resp = document.createElement('div');
-            resp.className = 'cab-bubble cab-bubble--in';
-            resp.innerHTML = '<img class="cab-bubble__avatar" src="/icon/man.svg" alt=""><div class="cab-bubble__text cab-bubble__text--offer-resp"><span style="font-weight:600;">Offer received!</span> I\'ll get back to you shortly.<div class="cab-offer-actions"><button class="cab-offer-btn cab-offer-btn--accept" onclick="cabOfferReply(\'accept\',this)">✓ Accept</button><button class="cab-offer-btn cab-offer-btn--counter" onclick="cabOfferReply(\'counter\',this)">Counter</button><button class="cab-offer-btn cab-offer-btn--reject" onclick="cabOfferReply(\'reject\',this)">✕ Reject</button></div></div><span class="cab-bubble__time">now</span>';
-            body.appendChild(resp);
-            body.scrollTop = body.scrollHeight;
-        }, 900);
-    }
-    function cabOfferReply(action, btn) {
-        var msgs = { accept: '✅ Offer accepted! Let\'s proceed.', counter: '🔄 How about £ 980,000?', reject: '❌ Sorry, the price is firm at £ 1,049,000.' };
-        var actions = btn.closest('.cab-offer-actions');
-        if (actions) actions.remove();
-        cabPostBubble(msgs[action]);
-    }
-
-    function cabShowSchedule() {
-        document.getElementById('cabSchedulePanel').classList.add('is-open');
-        document.getElementById('cabOfferPanel').classList.remove('is-open');
-        var today = new Date().toISOString().split('T')[0];
-        document.getElementById('cabScheduleDate').min = today;
-        if (!document.getElementById('cabScheduleDate').value) document.getElementById('cabScheduleDate').value = today;
-    }
-    function cabHideSchedule() { document.getElementById('cabSchedulePanel').classList.remove('is-open'); }
-    function cabSendSchedule() {
-        var d = document.getElementById('cabScheduleDate').value;
-        var t = document.getElementById('cabScheduleTime').value;
-        if (!d || !t) return;
-        var dateStr = new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
-        cabPostBubble('📅 Viewing request: <strong>' + dateStr + ' at ' + t + '</strong>');
-        cabHideSchedule();
-        setTimeout(function() {
-            var body = document.getElementById('cabChatBody');
-            var resp = document.createElement('div');
-            resp.className = 'cab-bubble cab-bubble--in';
-            resp.innerHTML = '<img class="cab-bubble__avatar" src="/icon/man.svg" alt=""><div class="cab-bubble__text">✅ Confirmed! I\'ll see you on <strong>' + dateStr + ' at ' + t + '</strong>. I\'ll send the address shortly.</div><span class="cab-bubble__time">now</span>';
-            body.appendChild(resp);
-            body.scrollTop = body.scrollHeight;
-        }, 800);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.cab-chat-content').forEach(function(el) { el.style.display = 'none'; });
-        var sarah = document.getElementById('cab-chat-sarah');
-        if (sarah) { sarah.style.display = 'flex'; sarah.style.flexDirection = 'column'; sarah.style.height = '100%'; }
-        var input = document.getElementById('cabChatInput');
-        if (input) input.addEventListener('keydown', function(e) { if (e.key === 'Enter') cabSendMessage(); });
-        setTimeout(cabScrollToBottom, 80);
-
-        /* Sync envelope badge with localStorage */
-        var n = getUnread();
-        document.querySelectorAll('.icon-email .icon-item__namber').forEach(function(el) {
-            if (n > 0) { el.textContent = n; el.style.display = ''; }
-            else { el.style.display = 'none'; }
-        });
+    /* Load conversations from server */
+    _unsubConvs = BAZAR_CHAT.listenConvs(_myUid, _myName, function (convs) {
+        convs.forEach(function (c) { _allConvs[c.id] = c; });
+        renderConvsList();
     });
 
+    /* Open conversation if ?conv= query param is present */
+    var convParam = new URLSearchParams(window.location.search).get('conv');
+    if (convParam) {
+        setTimeout(function () { cabOpenRealChat(convParam); }, 300);
+    }
+});
+
+/* ═══════════════════════════════════════════════════
+   Render conversation list
+═══════════════════════════════════════════════════ */
+function renderConvsList() {
+    var el = document.getElementById('cabRealConvs');
+    var convs = Object.values(_allConvs).sort(function (a, b) {
+        return (b.last_time || 0) - (a.last_time || 0);
+    });
+
+    if (!convs.length) {
+        el.innerHTML = '<div class="cab-msgs-loading">No conversations yet</div>';
+        return;
+    }
+
+    el.innerHTML = convs.map(function (c) {
+        var isBuyer  = c.buyer_id === _myUid;
+        var other    = isBuyer ? (c.seller_name || 'Seller') : (c.buyer_name || 'Buyer');
+        var unread   = isBuyer ? (c.unread_buyer || 0) : (c.unread_seller || 0);
+        var timeStr  = c.last_time ? formatMsgTime(new Date(c.last_time * 1000)) : '';
+        var isActive = _activeConvId === c.id;
+
+        return '<div class="cab-conv-item' + (isActive ? ' active' : '') +
+               '" onclick="cabOpenRealChat(\'' + c.id + '\')" data-conv="' + c.id + '">' +
+               '<div class="cab-conv-avatar"><img src="/icon/man.svg" alt=""></div>' +
+               '<div class="cab-conv-body">' +
+               '<div class="cab-conv-top"><span class="cab-conv-name">' + escHtml(other) + '</span>' +
+               '<span class="cab-conv-time">' + timeStr + '</span></div>' +
+               '<div class="cab-conv-preview">' + escHtml(c.last_msg || '') + '</div>' +
+               '</div>' +
+               (unread > 0 ? '<span class="cab-conv-badge">' + unread + '</span>' : '') +
+               '</div>';
+    }).join('');
+}
+
+/* ═══════════════════════════════════════════════════
+   Open a real conversation
+═══════════════════════════════════════════════════ */
+function cabOpenRealChat(convId) {
+    if (_unsubMsgs) { _unsubMsgs(); _unsubMsgs = null; }
+    _activeConvId = convId;
+
+    /* fetch latest conv data if we don't have it yet */
+    var conv = _allConvs[convId];
+
+    /* update active states */
+    document.querySelectorAll('[data-conv]').forEach(function (el) {
+        el.classList.toggle('active', el.dataset.conv === convId);
+    });
+    document.querySelectorAll('.cab-conv-item:not([data-conv])').forEach(function (el) {
+        el.classList.remove('active');
+    });
+
+    /* show real chat pane */
+    document.getElementById('cabMsgEmpty').style.display = 'none';
+    var supportEl = document.getElementById('cab-chat-support');
+    if (supportEl) supportEl.style.display = 'none';
+    var realEl = document.getElementById('cab-chat-real');
+    realEl.style.display = 'flex';
+    realEl.style.flexDirection = 'column';
+    realEl.style.height = '100%';
+
+    if (conv) {
+        /* fill header */
+        var isBuyer  = conv.buyer_id === _myUid;
+        var other    = isBuyer ? (conv.seller_name || 'Seller') : (conv.buyer_name || 'Buyer');
+        document.getElementById('cabRealHeadName').textContent = other;
+
+        /* ad info */
+        var adSection = document.getElementById('cabRealAdSection');
+        if (conv.ad_title) {
+            adSection.style.display = '';
+            document.getElementById('cabRealAdLink').href  = conv.ad_url || '#';
+            document.getElementById('cabRealViewBtn').href = conv.ad_url || '#';
+            document.getElementById('cabRealAdTitle').textContent = conv.ad_title;
+            document.getElementById('cabRealAdTitle').href  = conv.ad_url || '#';
+            document.getElementById('cabRealAdPrice').textContent = conv.ad_price || '';
+            if (conv.ad_photo) document.getElementById('cabRealAdImg').src = conv.ad_photo;
+        } else {
+            adSection.style.display = 'none';
+        }
+
+        /* mark as read */
+        BAZAR_CHAT.markRead(convId, isBuyer ? 'buyer' : 'seller');
+
+        /* remove badge */
+        var item = document.querySelector('[data-conv="' + convId + '"]');
+        if (item) { var badge = item.querySelector('.cab-conv-badge'); if (badge) badge.remove(); }
+
+        /* start message listener */
+        _unsubMsgs = BAZAR_CHAT.listenAllMsgs(convId, function (msgs) {
+            renderMessages(msgs, isBuyer);
+        });
+    } else {
+        /* conv not in local cache yet — fetch and try again in 500ms */
+        document.getElementById('cabRealHeadName').textContent = '…';
+        document.getElementById('cabChatBody').innerHTML = '<div class="cab-msgs-loading">Loading…</div>';
+        setTimeout(function () {
+            if (_allConvs[convId]) cabOpenRealChat(convId);
+        }, 600);
+    }
+
+    /* focus input */
+    var inp = document.getElementById('cabChatInput');
+    if (inp) inp.focus();
+}
+
+/* ═══════════════════════════════════════════════════
+   Render messages
+═══════════════════════════════════════════════════ */
+function renderMessages(msgs, isBuyer) {
+    var body = document.getElementById('cabChatBody');
+    if (!body) return;
+    var wasAtBottom = (body.scrollHeight - body.scrollTop - body.clientHeight) < 80;
+
+    body.innerHTML = '';
+    var prevDate = null;
+    msgs.forEach(function (msg) {
+        var msgDate = msg.time ? new Date(msg.time * 1000) : null;
+        if (msgDate) {
+            var ds = msgDate.toDateString();
+            if (ds !== prevDate) {
+                prevDate = ds;
+                var dd = document.createElement('div');
+                dd.className = 'cab-chat-date';
+                dd.textContent = formatDateLabel(msgDate);
+                body.appendChild(dd);
+            }
+        }
+        var isOut = msg.sender_id === _myUid;
+        var div   = document.createElement('div');
+        div.className = 'cab-bubble ' + (isOut ? 'cab-bubble--out' : 'cab-bubble--in');
+        var t = msgDate ? (msgDate.getHours().toString().padStart(2,'0') + ':' + msgDate.getMinutes().toString().padStart(2,'0')) : '';
+        if (isOut) {
+            div.innerHTML = '<div class="cab-bubble__text">' + escHtml(msg.text) + '</div><span class="cab-bubble__time">' + t + '</span>';
+        } else {
+            div.innerHTML = '<img class="cab-bubble__avatar" src="/icon/man.svg" alt=""><div class="cab-bubble__text">' + escHtml(msg.text) + '</div><span class="cab-bubble__time">' + t + '</span>';
+        }
+        body.appendChild(div);
+    });
+
+    if (wasAtBottom || msgs.length <= 30) body.scrollTop = body.scrollHeight;
+}
+
+/* ═══════════════════════════════════════════════════
+   Send real message
+═══════════════════════════════════════════════════ */
+function cabSendRealMessage() {
+    var inp = document.getElementById('cabChatInput');
+    if (!inp || !inp.value.trim() || !_activeConvId || !_myUid) return;
+    var text = inp.value.trim();
+    inp.value = '';
+    BAZAR_CHAT.send(_activeConvId, _myUid, _myName, text).catch(function () {
+        inp.value = text;
+    });
+}
+
+/* alias used by original code */
+function cabSendMessage() { cabSendRealMessage(); }
+
+/* ═══════════════════════════════════════════════════
+   Static support chat
+═══════════════════════════════════════════════════ */
+function cabOpenChat(id) {
+    if (id !== 'support') return;
+    if (_unsubMsgs) { _unsubMsgs(); _unsubMsgs = null; }
+    _activeConvId = null;
+
+    document.querySelectorAll('.cab-chat-content').forEach(function (el) { el.style.display = 'none'; });
+    document.querySelectorAll('[data-conv]').forEach(function (el) { el.classList.remove('active'); });
+    document.querySelectorAll('.cab-conv-item:not([data-conv])').forEach(function (el) {
+        el.classList.toggle('active', el.getAttribute('onclick') && el.getAttribute('onclick').includes('support'));
+    });
+
+    var support = document.getElementById('cab-chat-support');
+    if (support) {
+        support.style.display = 'flex';
+        support.style.flexDirection = 'column';
+        support.style.height = '100%';
+        var b = support.querySelector('.cab-chat-body');
+        if (b) b.scrollTop = b.scrollHeight;
+    }
+    document.getElementById('cabMsgEmpty').style.display = 'none';
+}
+
+function cabSendToActive(input) {
+    if (!input || !input.value.trim()) return;
+    var chat = input.closest('.cab-chat-content');
+    if (!chat) return;
+    var body = chat.querySelector('.cab-chat-body');
+    if (!body) return;
+    var now  = new Date();
+    var h    = now.getHours().toString().padStart(2,'0');
+    var m    = now.getMinutes().toString().padStart(2,'0');
+    var bubble = document.createElement('div');
+    bubble.className = 'cab-bubble cab-bubble--out';
+    bubble.innerHTML = '<div class="cab-bubble__text">' + escHtml(input.value.trim()) + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
+    body.appendChild(bubble);
+    body.scrollTop = body.scrollHeight;
+    input.value = '';
+}
+
+/* ═══════════════════════════════════════════════════
+   Search toggle
+═══════════════════════════════════════════════════ */
+function cabToggleSearch() {
+    var label = document.getElementById('cabMsgsLabel');
+    var input = document.getElementById('cabMsgsInput');
+    if (label.style.display === 'none') {
+        label.style.display = '';
+        input.classList.add('cab-msgs-search__input--hidden');
+        input.value = '';
+    } else {
+        label.style.display = 'none';
+        input.classList.remove('cab-msgs-search__input--hidden');
+        input.focus();
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   Quick replies → real send
+═══════════════════════════════════════════════════ */
+function cabQuickReply(text) {
+    if (_activeConvId && _myUid) {
+        BAZAR_CHAT.send(_activeConvId, _myUid, _myName, text);
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   Offer panel
+═══════════════════════════════════════════════════ */
+function cabShowOffer() {
+    document.getElementById('cabOfferPanel').classList.add('is-open');
+    document.getElementById('cabSchedulePanel').classList.remove('is-open');
+    setTimeout(function(){ var el=document.getElementById('cabOfferInput'); if(el) el.focus(); }, 100);
+}
+function cabHideOffer() { document.getElementById('cabOfferPanel').classList.remove('is-open'); }
+function cabSendOffer() {
+    var val = document.getElementById('cabOfferInput').value;
+    if (!val || isNaN(val) || +val <= 0) return;
+    var formatted = '£ ' + (+val).toLocaleString('en-GB');
+    var text = '💰 Offer: ' + formatted;
+    document.getElementById('cabOfferInput').value = '';
+    cabHideOffer();
+    if (_activeConvId && _myUid) BAZAR_CHAT.send(_activeConvId, _myUid, _myName, text, 'offer');
+}
+
+/* ═══════════════════════════════════════════════════
+   Schedule panel
+═══════════════════════════════════════════════════ */
+function cabShowSchedule() {
+    document.getElementById('cabSchedulePanel').classList.add('is-open');
+    document.getElementById('cabOfferPanel').classList.remove('is-open');
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('cabScheduleDate').min = today;
+    if (!document.getElementById('cabScheduleDate').value) document.getElementById('cabScheduleDate').value = today;
+}
+function cabHideSchedule() { document.getElementById('cabSchedulePanel').classList.remove('is-open'); }
+function cabSendSchedule() {
+    var d = document.getElementById('cabScheduleDate').value;
+    var t = document.getElementById('cabScheduleTime').value;
+    if (!d || !t) return;
+    var dateStr = new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+    var text = '📅 Viewing request: ' + dateStr + ' at ' + t;
+    cabHideSchedule();
+    if (_activeConvId && _myUid) BAZAR_CHAT.send(_activeConvId, _myUid, _myName, text, 'schedule');
+}
+
+/* ═══════════════════════════════════════════════════
+   Emoji picker
+═══════════════════════════════════════════════════ */
 ;(function(){
     var EMOJIS = [
         '😊','😂','😍','😭','😘','🥰','😁','😎','🤔','😉','😢','😅',
@@ -631,18 +579,16 @@
 
     function buildPicker() {
         var d = document.createElement('div');
-        d.className = 'emoji-picker';
-        d.id = 'bazarEmojiPicker';
+        d.className = 'emoji-picker'; d.id = 'bazarEmojiPicker';
         EMOJIS.forEach(function(em) {
             var b = document.createElement('button');
-            b.type = 'button';
-            b.textContent = em;
+            b.type = 'button'; b.textContent = em;
             b.addEventListener('click', function(e) {
                 e.stopPropagation();
                 if (currentInput) {
                     var s = currentInput.selectionStart || currentInput.value.length;
                     var v = currentInput.value;
-                    currentInput.value = v.slice(0, s) + em + v.slice(s);
+                    currentInput.value = v.slice(0,s) + em + v.slice(s);
                     currentInput.selectionStart = currentInput.selectionEnd = s + em.length;
                     currentInput.focus();
                 }
@@ -655,34 +601,23 @@
     }
 
     window.isEmojiOnly = function(str) {
-        var s = str.trim();
-        if (!s) return false;
-        // Remove all emoji-range chars; if nothing printable remains → emoji-only
+        var s = str.trim(); if (!s) return false;
         var cleaned = s.replace(/[\u00A9\u00AE\u203C-\u3299\uD800-\uDFFF\uFE0F\u20E3\u200D]/g, '');
         return cleaned.trim().length === 0;
     };
 
     window.toggleEmojiPicker = function(btn) {
         if (!picker) picker = buildPicker();
-        if (picker.classList.contains('open')) {
-            picker.classList.remove('open');
-            return;
-        }
+        if (picker.classList.contains('open')) { picker.classList.remove('open'); return; }
         currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
         var rect = btn.getBoundingClientRect();
-        var pickerW = 224;
-        var viewW = document.documentElement.clientWidth; // excludes scrollbar
-        var viewH = window.innerHeight;
-        // Horizontal: right-align to button, ensure fully in viewport
+        var pickerW = 224, viewW = document.documentElement.clientWidth, viewH = window.innerHeight;
         var left = rect.right - pickerW;
         if (left + pickerW > viewW - 20) left = viewW - pickerW - 20;
         if (left < 4) left = 4;
-        // Vertical: pin picker BOTTOM to button TOP (always shows button below)
         var bottomOffset = viewH - rect.top + 6;
-        picker.style.bottom = bottomOffset + 'px';
-        picker.style.top  = 'auto';
-        picker.style.left = left + 'px';
-        picker.style.right = 'auto';
+        picker.style.bottom = bottomOffset + 'px'; picker.style.top = 'auto';
+        picker.style.left = left + 'px'; picker.style.right = 'auto';
         picker.classList.add('open');
     };
 
@@ -694,9 +629,9 @@
         }
     });
 })();
-
 </script>
 
+<script src="js/chat.js?v=1"></script>
 <script src="js/header-auth.js?v=2"></script>
 </body>
 </html>

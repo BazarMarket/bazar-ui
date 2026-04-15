@@ -1076,6 +1076,16 @@
       var ccpWT = document.getElementById('ccpWelcomeTime');
       if(ccpWT) ccpWT.textContent = hh + ':' + mm;
 
+      /* ── Store ad data for chat ── */
+      window._chatAdData = {
+          adId:       String(p.id || ''),
+          adTitle:    p.title || '',
+          adUrl:      window.location.pathname,
+          adPhoto:    (p.photos && p.photos[0]) ? p.photos[0] : '',
+          adPrice:    p.price ? ('£ ' + p.price) : '',
+          sellerName: p.seller_name || ''
+      };
+
          }); // end fetch
    })();
    </script>
@@ -1258,6 +1268,68 @@
    </style>
 
    <script>
+   /* ═══════════════════════════════════════════════
+      Card chat – real backend state
+   ═══════════════════════════════════════════════ */
+   var _ccpConvId   = null;
+   var _ccpUnsubMsg = null;
+   var _ccpInited   = false;
+   var _ccpMyUid    = '';
+   var _ccpMyName   = '';
+   var _ccpIsBuyer  = true; /* buyer opens chat on card page */
+
+   function _ccpGetUser() {
+      _ccpMyUid  = localStorage.getItem('bazar_firebase_uid') || '';
+      _ccpMyName = localStorage.getItem('bazar_username') || 'User';
+   }
+
+   function ccpInitChat(cb) {
+      if (_ccpInited) { if(cb) cb(); return; }
+      _ccpGetUser();
+      var d = window._chatAdData;
+      if (!d || !d.adId || !_ccpMyUid) { if(cb) cb(); return; }
+      _ccpConvId = BAZAR_CHAT.convId(d.adId, _ccpMyUid);
+      BAZAR_CHAT.ensure(_ccpConvId, {
+         ad_id: d.adId, ad_title: d.adTitle, ad_url: d.adUrl,
+         ad_photo: d.adPhoto, ad_price: d.adPrice,
+         seller_name: d.sellerName, buyer_id: _ccpMyUid, buyer_name: _ccpMyName
+      }).then(function() {
+         _ccpInited = true;
+         if (_ccpUnsubMsg) { _ccpUnsubMsg(); }
+         _ccpUnsubMsg = BAZAR_CHAT.listenAllMsgs(_ccpConvId, function(msgs) {
+            ccpRenderMessages(msgs);
+         });
+         if(cb) cb();
+      }).catch(function() { if(cb) cb(); });
+   }
+
+   function ccpRenderMessages(msgs) {
+      var body = document.getElementById('ccpChatBody');
+      if (!body) return;
+      var atBottom = (body.scrollHeight - body.scrollTop - body.clientHeight) < 80;
+      /* keep welcome bubble; remove previously rendered real bubbles */
+      body.querySelectorAll('.ccp-real-bubble').forEach(function(el){ el.remove(); });
+      msgs.forEach(function(msg) {
+         var isOut = msg.sender_id === _ccpMyUid;
+         var now3  = new Date(msg.time * 1000);
+         var h3    = now3.getHours().toString().padStart(2,'0');
+         var m3    = now3.getMinutes().toString().padStart(2,'0');
+         var div   = document.createElement('div');
+         div.className = 'cab-bubble ccp-real-bubble ' + (isOut ? 'cab-bubble--out' : 'cab-bubble--in');
+         if (isOut) {
+            div.innerHTML = '<div class="cab-bubble__text">' + escHtmlCcp(msg.text) + '</div><span class="cab-bubble__time">' + h3 + ':' + m3 + '</span>';
+         } else {
+            div.innerHTML = '<img class="cab-bubble__avatar" src="/icon/man.svg" alt=""><div class="cab-bubble__text">' + escHtmlCcp(msg.text) + '</div><span class="cab-bubble__time">' + h3 + ':' + m3 + '</span>';
+         }
+         body.appendChild(div);
+      });
+      if (atBottom || msgs.length <= 30) body.scrollTop = body.scrollHeight;
+   }
+
+   function escHtmlCcp(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+   }
+
    function toggleCardChat() {
       var panel   = document.getElementById('ccpSidePanel');
       var overlay = document.getElementById('ccpOverlay');
@@ -1267,12 +1339,14 @@
       document.body.style.overflow = open ? 'hidden' : '';
       if (btn) btn.textContent = open ? 'Close Chat' : 'Start Chat';
       if (open) {
-         setTimeout(function(){
-            var body = document.getElementById('ccpChatBody');
-            if(body) body.scrollTop = body.scrollHeight;
-            var inp = document.getElementById('ccpChatInput');
-            if(inp) inp.focus();
-         }, 80);
+         ccpInitChat(function(){
+            setTimeout(function(){
+               var body = document.getElementById('ccpChatBody');
+               if(body) body.scrollTop = body.scrollHeight;
+               var inp = document.getElementById('ccpChatInput');
+               if(inp) inp.focus();
+            }, 80);
+         });
       }
    }
    function openCardChat() {
@@ -1283,12 +1357,14 @@
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       if (btn) btn.textContent = 'Close Chat';
-      setTimeout(function(){
-         var body = document.getElementById('ccpChatBody');
-         if(body) body.scrollTop = body.scrollHeight;
-         var inp = document.getElementById('ccpChatInput');
-         if(inp) inp.focus();
-      }, 80);
+      ccpInitChat(function(){
+         setTimeout(function(){
+            var body = document.getElementById('ccpChatBody');
+            if(body) body.scrollTop = body.scrollHeight;
+            var inp = document.getElementById('ccpChatInput');
+            if(inp) inp.focus();
+         }, 80);
+      });
    }
    function closeCardChat() {
       var panel   = document.getElementById('ccpSidePanel');
@@ -1323,10 +1399,21 @@
    function ccpSendMessage() {
       var inp = document.getElementById('ccpChatInput');
       if(!inp || !inp.value.trim()) return;
-      ccpPostBubble(inp.value.trim());
+      var text = inp.value.trim();
       inp.value = '';
+      if (_ccpConvId && _ccpMyUid) {
+         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text).catch(function(){ inp.value = text; });
+      } else {
+         ccpInitChat(function(){ if(_ccpConvId && _ccpMyUid) BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text).catch(function(){}); });
+      }
    }
-   function ccpQuickReply(text) { ccpPostBubble(text); }
+   function ccpQuickReply(text) {
+      if (_ccpConvId && _ccpMyUid) {
+         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text);
+      } else {
+         ccpInitChat(function(){ if(_ccpConvId && _ccpMyUid) BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text); });
+      }
+   }
 
    function ccpShowOffer() {
       document.getElementById('ccpOfferPanel').classList.add('is-open');
@@ -1338,17 +1425,12 @@
       var val = document.getElementById('ccpOfferInput').value;
       if(!val || isNaN(val) || +val <= 0) return;
       var formatted = '£ ' + (+val).toLocaleString('en-GB');
-      ccpPostBubble('💰 Offer: <strong>' + formatted + '</strong>', 'cab-bubble--offer');
+      var text = '💰 Offer: ' + formatted;
       document.getElementById('ccpOfferInput').value = '';
       ccpHideOffer();
-      setTimeout(function() {
-         var body = document.getElementById('ccpChatBody');
-         var resp = document.createElement('div');
-         resp.className = 'cab-bubble cab-bubble--in';
-         resp.innerHTML = '<img class="cab-bubble__avatar" src="icon/man.svg" alt=""><div class="cab-bubble__text cab-bubble__text--offer-resp"><span style="font-weight:600;">Offer received!</span> I\'ll get back to you shortly.<div class="cab-offer-actions"><button class="cab-offer-btn cab-offer-btn--accept" onclick="ccpOfferReply(\'accept\',this)">✓ Accept</button><button class="cab-offer-btn cab-offer-btn--counter" onclick="ccpOfferReply(\'counter\',this)">Counter</button><button class="cab-offer-btn cab-offer-btn--reject" onclick="ccpOfferReply(\'reject\',this)">✕ Reject</button></div></div><span class="cab-bubble__time">now</span>';
-         body.appendChild(resp);
-         body.scrollTop = body.scrollHeight;
-      }, 900);
+      if (_ccpConvId && _ccpMyUid) {
+         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text, 'offer');
+      }
    }
    function ccpOfferReply(action, btn) {
       var msgs = { accept: '✅ Offer accepted! Let\'s proceed.', counter: '🔄 How about a counter-offer?', reject: '❌ Sorry, the price is firm.' };
@@ -1370,16 +1452,11 @@
       var t = document.getElementById('ccpScheduleTime').value;
       if(!d || !t) return;
       var dateStr = new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
-      ccpPostBubble('📅 Viewing request: <strong>' + dateStr + ' at ' + t + '</strong>');
+      var text = '📅 Viewing request: ' + dateStr + ' at ' + t;
       ccpHideSchedule();
-      setTimeout(function() {
-         var body = document.getElementById('ccpChatBody');
-         var resp = document.createElement('div');
-         resp.className = 'cab-bubble cab-bubble--in';
-         resp.innerHTML = '<img class="cab-bubble__avatar" src="icon/man.svg" alt=""><div class="cab-bubble__text">✅ Confirmed! I\'ll see you on <strong>' + dateStr + ' at ' + t + '</strong>. I\'ll send the address shortly.</div><span class="cab-bubble__time">now</span>';
-         body.appendChild(resp);
-         body.scrollTop = body.scrollHeight;
-      }, 800);
+      if (_ccpConvId && _ccpMyUid) {
+         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text, 'schedule');
+      }
    }
 
    document.addEventListener('DOMContentLoaded', function() {
@@ -1675,6 +1752,7 @@ function submitEmailForm(e) {
 
 <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+<script src="js/chat.js?v=1"></script>
 <script src="js/firebase-auth-v2.js?v=3"></script>
 
 <!-- Custom Gallery Lightbox -->
