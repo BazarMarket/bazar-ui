@@ -1733,6 +1733,30 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 return
 
+        # 301 redirects: static pages .html → clean URL
+        _STATIC_PAGES = [
+            'about-us', 'contact-us', 'privacy-policy', 'advertising-policy',
+            'terms-and-conditions', 'cookie-policy', 'terms-of-service',
+            'withdrawals', 'refund-policy', 'payment-methods', 'payments-policy',
+        ]
+        for _page in _STATIC_PAGES:
+            if path == f'/{_page}.html':
+                self.send_response(301)
+                self.send_header('Location', f'/{_page}')
+                self.end_headers()
+                return
+            if path == f'/{_page}':
+                html_file = os.path.join(SITE_ROOT, f'{_page}.html')
+                if os.path.exists(html_file):
+                    with open(html_file, 'rb') as fh:
+                        body = fh.read()
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/html; charset=utf-8')
+                    self.send_header('Content-Length', str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+
         # 301 redirect: /listing/{id} or /listing/{id}-{slug} → /{id}-{slug}
         m = re.match(r'^/listing/(\d+)', path)
         if m:
