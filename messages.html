@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <base href="/">
+    <script>
+        if (!localStorage.getItem('bazar_firebase_uid')) {
+            window.location.replace('/?login=1');
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Messages — Bazar</title>
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
