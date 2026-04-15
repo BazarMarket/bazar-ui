@@ -1818,9 +1818,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
         # ── /api/stats ────────────────────────────────────────────────────────
         if path == '/api/stats':
-            cached = _cache_get('stats_total')
-            if cached:
-                self._send_json(200, cached); return
+            # Short 30-second cache so count updates quickly after add/delete
+            with _cache_lock:
+                entry = _cache.get('stats_total')
+                if entry and time.time() - entry['ts'] < 30:
+                    self._send_json(200, entry['data']); return
             # Fetch max listing ID from sitemap-listings as approximate total
             listings = _api_get('/sitemap-listings', None)
             total = 0

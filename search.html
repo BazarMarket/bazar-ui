@@ -2642,13 +2642,17 @@
       })();
    </script>
    <script>
-      fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
-         var n = d.ads_total;
-         if (!n) return;
-         var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads';
-         var el = document.getElementById('mainSearchInput');
-         if (el) el.placeholder = txt;
-      }).catch(function(){});
+      function _loadAdCount() {
+         fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
+            var n = d.ads_total;
+            if (!n) return;
+            var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
+            var el = document.getElementById('mainSearchInput');
+            if (el) el.placeholder = txt;
+         }).catch(function(){});
+      }
+      _loadAdCount();
+      setInterval(_loadAdCount, 30000);
    </script>
 </body>
 </html>
