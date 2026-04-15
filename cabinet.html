@@ -91,7 +91,7 @@
                         <div class="header-old__cell">
                             <div class="icons-list">
                                 <a href="/messages" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
-                                <a href="/cabinet#favorites" class="icon-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
+                                <a href="/cabinet/favorites" class="icon-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
                             </div>
                         </div>
                         <div class="header-old__cell">
@@ -1684,7 +1684,7 @@
                     }).catch(function() {});
                 }
             }
-            history.replaceState(null, '', window.location.pathname + '#payments');
+            history.replaceState(null, '', '/cabinet/payments');
             switchToTab('payments');
         }
 
@@ -1698,7 +1698,7 @@
                 saveLocalTxn('debit', 'Subscription', 'Subscription ' + planLabel, planPrice, 'paid');
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            history.replaceState(null, '', window.location.pathname + '#subscriptions');
+            history.replaceState(null, '', '/cabinet/subscriptions');
             switchToTab('subscriptions');
             if (sessionId) {
                 fetch('https://admin.bazar.uk/api/stripe/checkout/verify/' + sessionId, {
@@ -1717,7 +1717,8 @@
         }
 
         highlightCurrentPlan();
-        var hash = window.location.hash.replace('#', '');
+        var pathParts = window.location.pathname.split('/');
+        var hash = pathParts.length >= 3 && pathParts[2] ? pathParts[2] : window.location.hash.replace('#', '');
         var returnTab = sessionStorage.getItem('cabReturnTab');
         if (returnTab) { sessionStorage.removeItem('cabReturnTab'); hash = returnTab; }
         var isRedirected = params.get('payment') === 'success' || params.get('deposit') === 'success';
