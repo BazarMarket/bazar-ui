@@ -77,7 +77,7 @@ function doLogin() {
         var avatarImg = avatarEl.querySelector('img') || avatarEl;
         if (avatarImg && avatarImg.tagName === 'IMG') {
             var savedAvatar = localStorage.getItem('bazar_avatar');
-            avatarImg.src = savedAvatar || (gender === 'female' ? 'icon/woman.png' : 'icon/man.svg');
+            avatarImg.src = savedAvatar || (gender === 'female' ? '/icon/woman.png' : '/icon/man.svg');
         }
     }
     var phoneMenuEl = document.getElementById('header-menu-phone');
@@ -409,7 +409,7 @@ var selectedGender = 'male';
 
 function selectGender(gender) {
     selectedGender = gender;
-    document.getElementById('profileAvatarPreview').src = gender === 'female' ? 'icon/woman.png' : 'icon/man.png';
+    document.getElementById('profileAvatarPreview').src = gender === 'female' ? '/icon/woman.png' : '/icon/man.png';
     document.getElementById('genderMale').classList.toggle('profile-gender-btn--active', gender === 'male');
     document.getElementById('genderFemale').classList.toggle('profile-gender-btn--active', gender === 'female');
     checkProfileReady();
@@ -427,7 +427,7 @@ function checkProfileReady() {
 
 function openProfileModal() {
     selectedGender = 'male';
-    document.getElementById('profileAvatarPreview').src = 'icon/man.png';
+    document.getElementById('profileAvatarPreview').src = '/icon/man.png';
     document.getElementById('genderMale').classList.add('profile-gender-btn--active');
     document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
     document.getElementById('profileFullName').value = '';
