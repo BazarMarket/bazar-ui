@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    window._cabSwitchTab = switchTab;
+
     navItems.forEach(function (item) {
         item.addEventListener('click', function () {
             switchTab(this.dataset.tab);

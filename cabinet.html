@@ -1083,7 +1083,7 @@
 </div>
 
 <script type="text/javascript" src="js/script.js?v=2"></script>
-<script type="text/javascript" src="js/cabinet.js?v=2"></script>
+<script type="text/javascript" src="js/cabinet.js?v=3"></script>
 <script>
     var BAZAR_PRODUCTS = {
         10: { title: "3 Bedroom Flats for Sale", price: 520000, image: "img/properties/penthouse-edinburgh.jpg", city: "Edinburgh" },
@@ -1155,8 +1155,12 @@
     }
 
     function switchToTab(tab) {
-        var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
-        if (item) item.click();
+        if (typeof window._cabSwitchTab === 'function') {
+            window._cabSwitchTab(tab);
+        } else {
+            var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
+            if (item) item.click();
+        }
         if (tab === 'favorites') renderFavorites();
         if (tab === 'payments') loadPayments();
         if (tab === 'my-ads') loadMyAds();
