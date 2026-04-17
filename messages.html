@@ -401,9 +401,25 @@ function cabOpenRealChat(convId) {
         /* mark as read */
         BAZAR_CHAT.markRead(convId, isBuyer ? 'buyer' : 'seller');
 
-        /* remove badge */
+        /* remove badge from sidebar + decrement header badge */
         var item = document.querySelector('[data-conv="' + convId + '"]');
         if (item) { var badge = item.querySelector('.cab-conv-badge'); if (badge) badge.remove(); }
+        if (conv) {
+            var wasUnread = isBuyer ? (conv.unread_buyer || 0) : (conv.unread_seller || 0);
+            if (wasUnread > 0) {
+                var cached = parseInt(localStorage.getItem('bazar_unread_count') || '0', 10);
+                var newCount = Math.max(0, cached - wasUnread);
+                localStorage.setItem('bazar_unread_count', newCount);
+                /* update header badge immediately */
+                var headerBadges = document.querySelectorAll('.icon-email .icon-item__namber');
+                headerBadges.forEach(function (b) {
+                    b.textContent = newCount;
+                    b.style.display = newCount > 0 ? 'flex' : 'none';
+                });
+                /* reset in local cache so next renderConvsList is accurate */
+                if (isBuyer) { conv.unread_buyer = 0; } else { conv.unread_seller = 0; }
+            }
+        }
 
         /* start message listener */
         _unsubMsgs = BAZAR_CHAT.listenAllMsgs(convId, function (msgs) {
@@ -652,6 +668,6 @@ function cabSendSchedule() {
 </script>
 
 <script src="js/chat.js?v=1"></script>
-<script src="js/header-auth.js?v=2"></script>
+<script src="js/header-auth.js?v=4"></script>
 </body>
 </html>
