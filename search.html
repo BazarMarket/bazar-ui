@@ -2281,15 +2281,17 @@
               var mn = ('0'+d.getMinutes()).slice(-2);
               return dd + ' ' + mm + ' ' + yy + ' | ' + hh + ':' + mn;
             }
+            /* Group API items by bucket preserving newest-first order */
+            var apiByBucket = {};
             resp.data.forEach(function(ad) {
               var bucket = guessCategory(ad.title, ad.category);
-              if (!BAZAR_LISTINGS[bucket]) BAZAR_LISTINGS[bucket] = [];
+              if (!apiByBucket[bucket]) apiByBucket[bucket] = [];
               var stk = [];
               if (ad.is_vip) stk.push('VIP');
               if (ad.is_pro) stk.push('PRO');
               var cc = ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '';
               var imgSrc = ad.photo || 'img/product.jpg';
-              BAZAR_LISTINGS[bucket].unshift({
+              apiByBucket[bucket].push({
                 id:   ad.id,
                 s:    'Bazar Seller',
                 t:    ad.title || 'Property listing',
@@ -2306,8 +2308,13 @@
                 cy:   ad.city ? ad.city.toUpperCase() : 'UK'
               });
             });
-            /* Re-render if a type filter is already selected */
-            var urlType = new URLSearchParams(window.location.search).get('type');
+            /* Prepend API items (newest first) before static demo items */
+            for (var bucket in apiByBucket) {
+              if (!BAZAR_LISTINGS[bucket]) BAZAR_LISTINGS[bucket] = [];
+              BAZAR_LISTINGS[bucket] = apiByBucket[bucket].concat(BAZAR_LISTINGS[bucket]);
+            }
+            /* Re-render if a type filter is already selected (via URL or user interaction) */
+            var urlType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
             if (urlType && BAZAR_LISTINGS[urlType]) {
               renderListings(urlType);
               if (typeof initProductSwipers === 'function') initProductSwipers();
@@ -2378,6 +2385,7 @@
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
       }
       function renderListings(type) {
+        window._bazarCurrentType = type;
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
         var listBody = document.querySelector('.list-products__body');
