@@ -955,9 +955,32 @@
       }
 
       function applyExistingPlan() {
-         var plan     = localStorage.getItem('bazar_plan') || 'free';
+         var plan     = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
          var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
-         if (plan === 'free' && daysLeft <= 0) return;
+
+         /* Always fetch from API for accurate plan/days */
+         var uid = localStorage.getItem('bazar_firebase_uid') || '';
+         if (uid) {
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+               .then(function(r) { return r.json(); })
+               .then(function(d) {
+                  if (!d.exists) return;
+                  var sPlan = (d.plan || 'free').toLowerCase();
+                  var sDays = parseInt(d.days_left || 0, 10);
+                  if (sPlan !== plan || sDays !== daysLeft) {
+                     localStorage.setItem('bazar_plan', sPlan);
+                     if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
+                     _showPlanBadges(sPlan, sDays);
+                  }
+               })
+               .catch(function(){});
+         }
+
+         _showPlanBadges(plan, daysLeft);
+      }
+
+      function _showPlanBadges(plan, daysLeft) {
+         if (!plan || plan === 'free') return;
 
          function makeActiveBadge(text) {
             var b = document.createElement('span');
@@ -970,6 +993,9 @@
             return d > 0 ? ' · ' + d + ' day' + (d !== 1 ? 's' : '') + ' left' : '';
          }
 
+         /* Remove any previously inserted badges */
+         document.querySelectorAll('.po-active-badge').forEach(function(b) { b.remove(); });
+
          if (plan === 'pro' || plan === 'vip') {
             var proBtn = document.getElementById('proBtn');
             var proCard = document.querySelector('.po-card--pro');
@@ -979,6 +1005,7 @@
                proBtn.onclick = function() { publishWithSubscription('pro'); };
                var proDays = (plan === 'pro') ? daysLeft : 0;
                var badge = makeActiveBadge('PRO active' + daysText(proDays));
+               badge.className = 'po-active-badge';
                var proName = proCard.querySelector('.po-plan-name');
                if (proName) proName.parentNode.insertBefore(badge, proName);
             }
@@ -992,28 +1019,10 @@
                vipBtn.style.background = '#1a9448';
                vipBtn.onclick = function() { publishWithSubscription('vip'); };
                var vipBadge = makeActiveBadge('VIP active' + daysText(daysLeft));
+               vipBadge.className = 'po-active-badge';
                var vipName = vipCard.querySelector('.po-plan-name');
                if (vipName) vipName.parentNode.insertBefore(vipBadge, vipName);
             }
-         }
-
-         /* Also try to refresh from API for accurate days_left */
-         var uid = localStorage.getItem('bazar_firebase_uid') || '';
-         if (uid) {
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
-               .then(function(r) { return r.json(); })
-               .then(function(d) {
-                  var serverDays = parseInt(d.days_left || d.pro_days_left || d.vip_days_left || 0, 10);
-                  if (serverDays > 0 && serverDays !== daysLeft) {
-                     localStorage.setItem('bazar_days_left', serverDays);
-                     /* Update badge text */
-                     document.querySelectorAll('.po-card--pro span[style*="#e8f8ee"], .po-card--vip span[style*="#e8f8ee"]').forEach(function(b) {
-                        var planLabel = (d.plan || plan).toUpperCase();
-                        b.innerHTML = '&#10003; ' + planLabel + ' active · ' + serverDays + ' day' + (serverDays !== 1 ? 's' : '') + ' left';
-                     });
-                  }
-               })
-               .catch(function(){});
          }
       }
 
@@ -1022,6 +1031,6 @@
          applyExistingPlan();
       });
    </script>
-<script src="js/header-auth.js?v=5"></script>
+<script src="js/header-auth.js?v=6"></script>
 </body>
 </html>
