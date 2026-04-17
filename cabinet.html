@@ -1012,6 +1012,7 @@
 
                 <div class="cab-panel__top">
                     <h1 class="cab-panel__title">My Profile</h1>
+                    <p class="cab-panel__welcome">Welcome back, <strong id="cabWelcomeNameProfile"></strong>!</p>
                 </div>
 
                 <div class="cab-stat-cards" style="margin-bottom:24px;">
@@ -1780,7 +1781,8 @@
 
         var elName    = document.getElementById('header-username');
         var elPhone   = document.getElementById('header-phone');
-        var elWelcome = document.getElementById('cabWelcomeName');
+        var elWelcome  = document.getElementById('cabWelcomeName');
+        var elWelcome2 = document.getElementById('cabWelcomeNameProfile');
         var elAvatar  = document.getElementById('header-avatar');
         var elFirst   = document.getElementById('fieldFirstName');
         var elLast    = document.getElementById('fieldLastName');
@@ -1788,9 +1790,10 @@
         var elEmail   = document.getElementById('fieldEmail');
         var elAddr    = document.getElementById('fieldAddress');
 
-        if (elName)    elName.textContent    = name;
-        if (elPhone)   elPhone.textContent   = phone;
-        if (elWelcome) elWelcome.textContent = name;
+        if (elName)     elName.textContent     = name;
+        if (elPhone)    elPhone.textContent    = phone;
+        if (elWelcome)  elWelcome.textContent  = name;
+        if (elWelcome2) elWelcome2.textContent = name;
         if (elFirst)   elFirst.value         = first;
         if (elLast)    elLast.value          = last;
         if (elPh)      elPh.value            = phone;
@@ -1837,6 +1840,8 @@
                             if (elN) elN.textContent = d.name;
                             var elW = document.getElementById('cabWelcomeName');
                             if (elW) elW.textContent = d.name;
+                            var elW2 = document.getElementById('cabWelcomeNameProfile');
+                            if (elW2) elW2.textContent = d.name;
                         }
                         if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
                         if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
@@ -2054,6 +2059,8 @@
                     if (hName) hName.textContent = fullName;
                     var wName = document.getElementById('cabWelcomeName');
                     if (wName) wName.textContent = fullName;
+                    var wName2 = document.getElementById('cabWelcomeNameProfile');
+                    if (wName2) wName2.textContent = fullName;
                 }
                 localStorage.setItem('bazar_email',   email);
                 localStorage.setItem('bazar_address', address);
