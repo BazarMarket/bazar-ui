@@ -3133,6 +3133,520 @@
          });
       }
 
+      /* ── EDIT MODE ──────────────────────────────────────────────────── */
+      var _editAdId   = null;
+      var _editAdData = null;
+
+      /* Reverse-map API property_type → {mainCat, listingTypeUI, subSubUI} */
+      function _apiTypeToUI(d) {
+         var pt = (d.property_type || '').toLowerCase();
+         var lt = (d.listing_type  || '').toLowerCase();
+
+         var listingMap = {
+            'sale':       'For Sale',
+            'long_rent':  'For Long-term Rent',
+            'short_rent': 'For Short-term Rent',
+            'rent':       'For Rent'
+         };
+         var listingUI = listingMap[lt] || 'For Sale';
+
+         var reMap = {
+            'apartment': 'Flats',      'studio': 'Studio',       'house': 'House',
+            'maisonette':'Maisonette', 'townhouse':'Townhouse',   'penthouse':'Penthouse',
+            'duplex':    'Duplex',     'bungalow':'Bungalow',     'cottage':'Cottage',
+            'room':      'Rooms',      'office':  'Office',       'shop':'Shop',
+            'restaurant':'Restaurant', 'industrial':'Industrial', 'hotel':'Hotel',
+            'business':  'Business or Investment',                'land':'Land',
+            'building':  'Building'
+         };
+
+         if (reMap[pt]) {
+            return { mainCat: 'real-estate', subcatUI: listingUI, subsubUI: reMap[pt] };
+         }
+         if (pt === 'car')         return { mainCat: 'motors',  subcatUI: lt === 'rent' ? 'For Rent' : 'For Sale', subsubUI: 'Cars' };
+         if (pt === 'motorbike')   return { mainCat: 'motors',  subcatUI: lt === 'rent' ? 'For Rent' : 'For Sale', subsubUI: 'Motorbikes' };
+         if (pt === 'truck')       return { mainCat: 'motors',  subcatUI: 'For Sale', subsubUI: 'Trucks' };
+         if (pt === 'boat')        return { mainCat: 'motors',  subcatUI: 'For Sale', subsubUI: 'Boats & marine' };
+         if (pt === 'mobile_phone')return { mainCat: 'phones',  subcatUI: 'Mobile phones', subsubUI: null };
+         /* Fallback */
+         return { mainCat: 'real-estate', subcatUI: listingUI, subsubUI: reMap[pt] || null };
+      }
+
+      function _setVal(id, val) {
+         var el = document.getElementById(id);
+         if (!el || val === null || val === undefined) return;
+         el.value = val;
+         el.classList.toggle('pa-empty', !val);
+      }
+      function _setCheck(id, bool) {
+         var el = document.getElementById(id);
+         if (el) el.checked = !!bool;
+      }
+      function _setSelect(id, val) {
+         var sel = document.getElementById(id);
+         if (!sel || !val) return;
+         var found = Array.from(sel.options).find(function(o) {
+            return o.value === val || o.text === val;
+         });
+         if (found) { sel.value = found.value; sel.classList.remove('pa-empty'); }
+      }
+
+      /* Inject old-price preview banner above priceInput */
+      function _showOldPricePreview(oldPriceNum) {
+         var existing = document.getElementById('_editOldPriceRow');
+         if (existing) existing.remove();
+         if (!oldPriceNum) return;
+         var priceField = document.getElementById('priceInput');
+         if (!priceField) return;
+         var row = document.createElement('div');
+         row.id = '_editOldPriceRow';
+         row.style.cssText = 'margin-bottom:6px;font-size:13px;color:#888;';
+         row.innerHTML = 'Previous price: <span style="color:#e53935;text-decoration:line-through;font-weight:600;">£' +
+            Number(oldPriceNum).toLocaleString('en-GB') + '</span>';
+         priceField.parentNode.insertBefore(row, priceField);
+      }
+
+      /* Fill form after categories are selected */
+      function _fillEditFields(d) {
+         /* Update submit button */
+         var btn = document.querySelector('.pa-btn-submit');
+         if (btn) btn.textContent = 'Save Changes';
+
+         /* Basic */
+         var titleEl = document.getElementById('titleInput');
+         if (titleEl) { titleEl.removeAttribute('readonly'); titleEl.value = d.title || ''; }
+         _setVal('descriptionInput', d.description || '');
+
+         /* Price */
+         var rawPrice = Math.round(parseFloat(d.price || 0));
+         _setVal('priceInput', rawPrice ? rawPrice.toLocaleString('en-GB') : '');
+         _setCheck('negotiableCheckbox', d.negotiable);
+
+         /* If there's already an old_price in the DB, show it */
+         if (d.old_price && parseFloat(d.old_price) > 0) {
+            _showOldPricePreview(parseFloat(d.old_price));
+         }
+
+         /* Price change → show old price preview */
+         var _origPrice = rawPrice;
+         var priceEl = document.getElementById('priceInput');
+         if (priceEl) {
+            priceEl.addEventListener('input', function() {
+               var cur = parseInt((priceEl.value || '').replace(/[^0-9]/g, ''), 10) || 0;
+               if (cur !== _origPrice && _origPrice > 0) {
+                  _showOldPricePreview(_origPrice);
+               } else {
+                  var old = document.getElementById('_editOldPriceRow');
+                  if (old) old.remove();
+               }
+            });
+         }
+
+         /* Location */
+         _setVal('locationCity',     d.city     || '');
+         _setVal('locationRegion',   d.region   || '');
+         _setVal('locationDistrict', d.district || '');
+         _setVal('locationPostcode', d.postal_code || '');
+         _setVal('locationLat',      d.latitude || '');
+         _setVal('locationLng',      d.longitude || '');
+         _setVal('exactLat',         d.exact_latitude  || '');
+         _setVal('exactLng',         d.exact_longitude || '');
+
+         /* Show location text */
+         var locInput = document.getElementById('locationInput');
+         if (locInput) {
+            var parts = [d.district, d.city, d.country].filter(Boolean);
+            locInput.value = parts.join(', ');
+         }
+
+         /* Contact */
+         _setVal('sellerNameInput',  d.seller_name  || '');
+         _setVal('sellerPhoneInput', d.seller_phone || '');
+         _setVal('sellerEmailInput', d.seller_email || '');
+         _setCheck('whatsappCheck', d.has_whatsapp);
+         _setCheck('telegramCheck', d.has_telegram);
+         _setCheck('viberCheck',    d.has_viber);
+         _setCheck('emailCheck',    d.has_email);
+
+         /* Real-estate specific */
+         _setSelect('bedroomsSelect',  d.bedrooms  !== null ? String(d.bedrooms)  : '');
+         _setSelect('bathroomsSelect', d.bathrooms !== null ? String(d.bathrooms) : '');
+         _setSelect('conditionSelect', d.condition || '');
+
+         if (d.covered_area)  _setVal('propertyAreaInput', d.covered_area);
+         if (d.construction_year) _setVal('regNumInput', d.construction_year);
+
+         _setCheck('poolCheck',    d.pool);
+         _setCheck('gardenCheck',  d.garden);
+         _setCheck('balconyCheck', d.balcony);
+         _setCheck('terraceCheck', d.terrace);
+         _setCheck('verandaCheck', d.veranda);
+         _setCheck('parkingCheck', d.parking);
+         _setCheck('securityCheck',d.security);
+         _setCheck('furnishedCheck', d.furnished);
+
+         /* Building/house type */
+         var htSel = document.getElementById('houseTypeSelect');
+         if (htSel && d.sub_type) {
+            var htOpt = Array.from(htSel.options).find(function(o){return o.value===d.sub_type||o.text===d.sub_type;});
+            if (htOpt) { htSel.value = htOpt.value; }
+         }
+         var btSel = document.getElementById('buildingTypeSelect');
+         if (btSel && d.building_type) _setSelect('buildingTypeSelect', d.building_type);
+
+         /* Floor (custom dropdown) */
+         if (d.floor) csdPick('floorCsd', 'floorSelect', d.floor);
+         /* Air con */
+         if (d.ac_type) csdPick('airConCsd', 'airConSelect', d.ac_type);
+         /* Furnishing */
+         if (d.furnishing_type) {
+            var furnSel = document.getElementById('furnishingSelect');
+            if (furnSel) _setSelect('furnishingSelect', d.furnishing_type);
+         }
+
+         /* Video */
+         _setVal('youtubeInput', d.video_url || '');
+
+         /* Existing photos */
+         if (d.images && d.images.length) {
+            var grid = document.getElementById('photoPreviewGrid');
+            if (grid) {
+               d.images.forEach(function(url) {
+                  var box = document.createElement('div');
+                  box.className = 'pa-photo-box';
+                  box.style.backgroundImage = 'url(' + url + ')';
+                  box.title = 'Existing photo';
+                  box._paExistingUrl = url;
+                  var del = document.createElement('button');
+                  del.className = 'pa-photo-del';
+                  del.innerHTML = '&times;';
+                  del.onclick = function(){ box.remove(); };
+                  box.appendChild(del);
+                  grid.appendChild(box);
+               });
+            }
+         }
+
+         /* Motors */
+         if (d.car_make) {
+            setTimeout(function(){
+               _setSelect('carMakeSelect', d.car_make);
+               var evt = new Event('change'); document.getElementById('carMakeSelect') && document.getElementById('carMakeSelect').dispatchEvent(evt);
+               setTimeout(function(){
+                  _setSelect('carModelSelect', d.car_model || '');
+                  _setSelect('carYearSelect',  d.car_year  ? String(d.car_year) : '');
+               }, 300);
+            }, 400);
+         }
+         _setSelect('fuelTypeSelect',     d.fuel_type     || '');
+         _setSelect('transmissionSelect', d.transmission  || '');
+         _setSelect('bodyTypeSelect',     d.body_type     || '');
+         _setSelect('colourSelect',       d.colour        || '');
+         if (d.mileage)  _setVal('mileageInput',  d.mileage);
+         if (d.engine_size) _setVal('engineSizeInput', d.engine_size);
+         if (d.doors)    _setSelect('doorsSelect',  String(d.doors));
+         if (d.seats)    _setSelect('seatsSelect',  String(d.seats));
+         _setSelect('driveTypeSelect',   d.drive_type    || '');
+         _setSelect('steeringSelect',    d.steering_side || '');
+         _setSelect('ownersSelect',      d.previous_owners !== null ? String(d.previous_owners) : '');
+         _setSelect('serviceHistSelect', d.service_history || '');
+         _setSelect('motStatusSelect',   d.mot_status    || '');
+
+         /* Phones */
+         if (d.phone_brand) {
+            setTimeout(function(){
+               _setSelect('phoneBrandSelect', d.phone_brand);
+               var evt2 = new Event('change'); document.getElementById('phoneBrandSelect') && document.getElementById('phoneBrandSelect').dispatchEvent(evt2);
+               setTimeout(function(){
+                  _setSelect('phoneModelSelect', d.phone_model || '');
+               }, 300);
+            }, 400);
+         }
+         _setSelect('phoneStorageSelect', d.phone_storage || '');
+      }
+
+      /* Override submit to use update endpoint */
+      function _patchSubmitForEdit(adId, firebaseUid) {
+         var origSubmitProp  = window.submitProperty;
+         var origSubmitCar   = window.submitCar;
+         var origSubmitPhone = window.submitPhone;
+
+         function _doUpdate(formData) {
+            var btn = document.querySelector('.pa-btn-submit');
+            if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
+            formData.append('firebase_uid', firebaseUid);
+
+            /* collect existing image URLs to preserve them */
+            var grid = document.getElementById('photoPreviewGrid');
+            if (grid) {
+               Array.from(grid.children).forEach(function(box) {
+                  if (box._paExistingUrl) formData.append('keep_images[]', box._paExistingUrl);
+               });
+            }
+
+            fetch('https://admin.bazar.uk/api/properties/' + adId + '/update', {
+               method: 'POST',
+               body: formData,
+               headers: { 'Accept': 'application/json' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+               if (btn) { btn.textContent = 'Save Changes'; btn.disabled = false; }
+               if (data.success) {
+                  /* Update local cache */
+                  try {
+                     var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
+                     var idx = ads.findIndex(function(a){ return String(a.id) === String(adId); });
+                     if (idx !== -1) {
+                        var price = parseInt((document.getElementById('priceInput').value||'').replace(/[^0-9]/g,''), 10);
+                        ads[idx].price  = price || ads[idx].price;
+                        ads[idx].title  = document.getElementById('titleInput').value || ads[idx].title;
+                        localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+                     }
+                  } catch(e){}
+                  window.location.href = 'card.html?id=' + adId;
+               } else {
+                  alert(data.message || data.error || 'Error saving changes');
+               }
+            })
+            .catch(function(e) {
+               if (btn) { btn.textContent = 'Save Changes'; btn.disabled = false; }
+               alert('Network error, please try again.');
+            });
+         }
+
+         window.submitProperty = function() {
+            if (reState.cat === 'motors' && window.isCarSubtype) { window.submitCar(); return; }
+            if (reState.cat === 'phones' && window.isPhoneSubtype) { window.submitPhone(); return; }
+            /* Build formData same as submitProperty does, then intercept */
+            var title       = getInputVal('titleInput');
+            var listingType = mapListingType(reState.listingType);
+            var propertyType= mapPropertyType(reState.propType);
+            var price       = getInputVal('priceInput').replace(/\./g, '');
+            var sellerName  = getInputVal('sellerNameInput');
+            var sellerPhone = getInputVal('sellerPhoneInput');
+            if (!title)       { alert('Please enter a title.'); return; }
+            if (!sellerName)  { alert('Please enter your Name.'); return; }
+            if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+            var formData = new FormData();
+            formData.append('title',        title);
+            formData.append('listing_type', listingType);
+            formData.append('property_type',propertyType);
+            if (price) formData.append('price', price);
+            formData.append('currency',     'GBP');
+            formData.append('negotiable',   document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+            formData.append('seller_name',  sellerName);
+            formData.append('seller_phone', sellerPhone);
+            var desc = getInputVal('descriptionInput');
+            if (desc) formData.append('description', desc);
+            var city = document.getElementById('locationCity').value;
+            var country = document.getElementById('locationCountry') ? document.getElementById('locationCountry').value : 'United Kingdom';
+            if (city) formData.append('city', city);
+            if (country) formData.append('country', country || 'United Kingdom');
+            var district = document.getElementById('locationDistrict').value;
+            if (district) formData.append('district', district);
+            var region = document.getElementById('locationRegion').value;
+            if (region) formData.append('region', region);
+            var postcode = document.getElementById('locationPostcode').value;
+            if (postcode) formData.append('postal_code', postcode);
+            var lat = document.getElementById('locationLat').value;
+            var lng = document.getElementById('locationLng').value;
+            if (lat) formData.append('latitude', lat);
+            if (lng) formData.append('longitude', lng);
+            var eLat = document.getElementById('exactLat').value;
+            var eLng = document.getElementById('exactLng').value;
+            if (eLat) formData.append('exact_latitude', eLat);
+            if (eLng) formData.append('exact_longitude', eLng);
+            var bedrooms = document.getElementById('bedroomsSelect').value;
+            if (bedrooms) formData.append('bedrooms', bedrooms);
+            var bathrooms = document.getElementById('bathroomsSelect').value;
+            if (bathrooms) formData.append('bathrooms', bathrooms);
+            var condition = document.getElementById('conditionSelect').value;
+            if (condition) formData.append('condition', condition);
+            var sub_type = (document.getElementById('houseTypeSelect') || {}).value;
+            if (sub_type) formData.append('sub_type', sub_type);
+            var btype = (document.getElementById('buildingTypeSelect') || {}).value;
+            if (btype) formData.append('building_type', btype);
+            var floor = (document.getElementById('floorSelect') || {}).value;
+            if (floor) formData.append('floor', floor);
+            var area = getInputVal('propertyAreaInput');
+            if (area) formData.append('covered_area', area);
+            var hasWa = document.getElementById('whatsappCheck');
+            var hasTg = document.getElementById('telegramCheck');
+            var hasVb = document.getElementById('viberCheck');
+            var hasEm = document.getElementById('emailCheck');
+            formData.append('has_whatsapp', (hasWa && hasWa.checked) ? '1' : '0');
+            formData.append('has_telegram', (hasTg && hasTg.checked) ? '1' : '0');
+            formData.append('has_viber',    (hasVb && hasVb.checked) ? '1' : '0');
+            formData.append('has_email',    (hasEm && hasEm.checked) ? '1' : '0');
+            var sellerEmail = getInputVal('sellerEmailInput');
+            if (sellerEmail) formData.append('seller_email', sellerEmail);
+            var youtube = getInputVal('youtubeInput');
+            if (youtube) formData.append('video_url', youtube);
+            var boolFields2 = ['pool','garden','balcony','terrace','veranda','parking','security','furnished','air_conditioning'];
+            boolFields2.forEach(function(bf) {
+               var el = document.getElementById(bf+'Check') || document.getElementById(bf.replace('_','')+'Check');
+               if (el) formData.append(bf, el.checked ? '1' : '0');
+            });
+            var photoGrid = document.getElementById('photoPreviewGrid');
+            if (photoGrid) {
+               Array.from(photoGrid.children).forEach(function(box) {
+                  if (box._paFile) formData.append('images[]', box._paFile);
+               });
+            }
+            _doUpdate(formData);
+         };
+
+         window.submitCar = function() {
+            var title       = getInputVal('titleInput');
+            var price       = getInputVal('priceInput').replace(/\./g, '');
+            var sellerName  = getInputVal('sellerNameInput');
+            var sellerPhone = getInputVal('sellerPhoneInput');
+            if (!sellerName)  { alert('Please enter your Name.'); return; }
+            if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+            var formData = new FormData();
+            formData.append('title',         title);
+            formData.append('property_type', 'car');
+            formData.append('listing_type',  reState.listingType === 'For Rent' ? 'rent' : 'sale');
+            if (price) formData.append('price', price);
+            formData.append('currency',      'GBP');
+            formData.append('seller_name',   sellerName);
+            formData.append('seller_phone',  sellerPhone);
+            var desc = getInputVal('descriptionInput');
+            if (desc) formData.append('description', desc);
+            var city = document.getElementById('locationCity').value;
+            if (city) formData.append('city', city); else formData.append('city', 'United Kingdom');
+            formData.append('country', 'United Kingdom');
+            var make  = (document.getElementById('carMakeSelect')||{}).value;
+            var model = (document.getElementById('carModelSelect')||{}).value || getInputVal('carModelOtherInput');
+            var year  = (document.getElementById('carYearSelect')||{}).value;
+            if (make)  formData.append('car_make',  make);
+            if (model) formData.append('car_model', model);
+            if (year)  formData.append('car_year',  year);
+            var fuel  = (document.getElementById('fuelTypeSelect')||{}).value;
+            var trans = (document.getElementById('transmissionSelect')||{}).value;
+            var body  = (document.getElementById('bodyTypeSelect')||{}).value;
+            var col   = (document.getElementById('colourSelect')||{}).value;
+            var mil   = getInputVal('mileageInput');
+            if (fuel)  formData.append('fuel_type',     fuel);
+            if (trans) formData.append('transmission',  trans);
+            if (body)  formData.append('body_type',     body);
+            if (col)   formData.append('colour',        col);
+            if (mil)   formData.append('mileage',       mil);
+            var condition = (document.getElementById('conditionSelect')||{}).value;
+            if (condition) formData.append('condition', condition);
+            var hasWa = document.getElementById('whatsappCheck');
+            var hasTg = document.getElementById('telegramCheck');
+            var hasVb = document.getElementById('viberCheck');
+            var hasEm = document.getElementById('emailCheck');
+            formData.append('has_whatsapp', (hasWa && hasWa.checked) ? '1' : '0');
+            formData.append('has_telegram', (hasTg && hasTg.checked) ? '1' : '0');
+            formData.append('has_viber',    (hasVb && hasVb.checked) ? '1' : '0');
+            formData.append('has_email',    (hasEm && hasEm.checked) ? '1' : '0');
+            var photoGrid = document.getElementById('photoPreviewGrid');
+            if (photoGrid) {
+               Array.from(photoGrid.children).forEach(function(box) {
+                  if (box._paFile) formData.append('images[]', box._paFile);
+               });
+            }
+            _doUpdate(formData);
+         };
+
+         window.submitPhone = function() {
+            var title       = getInputVal('titleInput');
+            var price       = getInputVal('priceInput').replace(/\./g, '');
+            var sellerName  = getInputVal('sellerNameInput');
+            var sellerPhone = getInputVal('sellerPhoneInput');
+            if (!sellerName)  { alert('Please enter your Name.'); return; }
+            if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+            var formData = new FormData();
+            formData.append('title',         title);
+            formData.append('property_type', 'mobile_phone');
+            formData.append('listing_type',  'sale');
+            if (price) formData.append('price', price);
+            formData.append('currency',      'GBP');
+            formData.append('seller_name',   sellerName);
+            formData.append('seller_phone',  sellerPhone);
+            var desc = getInputVal('descriptionInput');
+            if (desc) formData.append('description', desc);
+            var city = document.getElementById('locationCity').value;
+            if (city) formData.append('city', city); else formData.append('city', 'United Kingdom');
+            formData.append('country', 'United Kingdom');
+            var brand   = (document.getElementById('phoneBrandSelect')||{}).value;
+            var model2  = (document.getElementById('phoneModelSelect')||{}).value || getInputVal('phoneModelOtherInput');
+            var storage = (document.getElementById('phoneStorageSelect')||{}).value;
+            if (brand)   formData.append('phone_brand',   brand);
+            if (model2)  formData.append('phone_model',   model2);
+            if (storage) formData.append('phone_storage', storage);
+            var hasWa = document.getElementById('whatsappCheck');
+            var hasTg = document.getElementById('telegramCheck');
+            var hasVb = document.getElementById('viberCheck');
+            var hasEm = document.getElementById('emailCheck');
+            formData.append('has_whatsapp', (hasWa && hasWa.checked) ? '1' : '0');
+            formData.append('has_telegram', (hasTg && hasTg.checked) ? '1' : '0');
+            formData.append('has_viber',    (hasVb && hasVb.checked) ? '1' : '0');
+            formData.append('has_email',    (hasEm && hasEm.checked) ? '1' : '0');
+            var photoGrid = document.getElementById('photoPreviewGrid');
+            if (photoGrid) {
+               Array.from(photoGrid.children).forEach(function(box) {
+                  if (box._paFile) formData.append('images[]', box._paFile);
+               });
+            }
+            _doUpdate(formData);
+         };
+      }
+
+      /* Initialize edit mode */
+      function _initEditMode(adId) {
+         _editAdId = adId;
+         var firebaseUid = localStorage.getItem('bazar_firebase_uid') || '';
+
+         /* Change page title */
+         var pageTitle = document.querySelector('.pa-page-title');
+         if (pageTitle) pageTitle.textContent = 'Edit Ad';
+         document.title = 'Edit Ad – Bazar';
+
+         fetch('https://admin.bazar.uk/api/properties/' + adId)
+         .then(function(r) { return r.json(); })
+         .then(function(d) {
+            _editAdData = d;
+            var ui = _apiTypeToUI(d);
+
+            /* Select main category */
+            var mainEl = document.querySelector('#mainCats .cat-item[data-cat="' + ui.mainCat + '"]');
+            if (mainEl) { selectCat(mainEl); }
+
+            setTimeout(function() {
+               /* Select sub-category */
+               if (ui.subcatUI) {
+                  var subEl = Array.from(document.querySelectorAll('#subCats .cat-item')).find(function(el) {
+                     return el.textContent.trim() === ui.subcatUI;
+                  });
+                  if (subEl) { selectSubcat(subEl, ui.mainCat); }
+               }
+
+               setTimeout(function() {
+                  /* Select sub-sub-category */
+                  if (ui.subsubUI) {
+                     var subsubEl = Array.from(document.querySelectorAll('#subSubCats .cat-item')).find(function(el) {
+                        return el.textContent.trim() === ui.subsubUI;
+                     });
+                     if (subsubEl) { selectSubSub(subsubEl); }
+                  } else {
+                     /* for categories without sub-sub (phones, etc.) */
+                     document.getElementById('paForm').classList.add('visible');
+                  }
+
+                  setTimeout(function() {
+                     _fillEditFields(d);
+                     _patchSubmitForEdit(adId, firebaseUid);
+                  }, 200);
+               }, 200);
+            }, 200);
+         })
+         .catch(function(e) { console.error('Edit mode load error:', e); });
+      }
+
       window.addEventListener('DOMContentLoaded', function() {
          var first = document.querySelector('#mainCats .cat-item.active');
          if (first) selectCat(first);
@@ -3163,6 +3677,11 @@
             var phoneEl = document.getElementById('sellerPhoneInput');
             if (phoneEl && !phoneEl.value) phoneEl.value = phone;
          }
+
+         /* Check for edit mode */
+         var params = new URLSearchParams(window.location.search);
+         var editId = params.get('edit');
+         if (editId) _initEditMode(editId);
       });
    </script>
    <script>
