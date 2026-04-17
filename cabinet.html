@@ -1389,14 +1389,14 @@
                                     <span class="csrow__label">Deactivate account</span>
                                     <span class="csrow__hint">Temporarily hide your profile and all ads</span>
                                 </div>
-                                <button class="csbtn csbtn--outline-danger" onclick="return false;">Deactivate</button>
+                                <button class="csbtn csbtn--outline-danger" id="deactivateAccountBtn" onclick="showDangerModal('deactivate')">Deactivate</button>
                             </div>
                             <div class="csrow csrow--last">
                                 <div class="csrow__left">
                                     <span class="csrow__label">Delete account</span>
                                     <span class="csrow__hint">Permanently remove your account and all data</span>
                                 </div>
-                                <button class="csbtn csbtn--danger" onclick="return false;">Delete account</button>
+                                <button class="csbtn csbtn--danger" onclick="showDangerModal('delete')">Delete account</button>
                             </div>
                         </div>
                     </div>
@@ -2612,4 +2612,117 @@
 </script>
 
 <script src="js/header-auth.js?v=2"></script>
+
+<!-- ── Danger Zone Modal ── -->
+<div id="dangerModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:400px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.18);font-family:Poppins,sans-serif;text-align:center;">
+        <div style="width:52px;height:52px;background:#fce4e4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p id="dangerModalTitle" style="font-size:17px;font-weight:700;color:#1a1a1a;margin:0 0 8px;"></p>
+        <p id="dangerModalText"  style="font-size:14px;color:#666;margin:0 0 24px;"></p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button onclick="closeDangerModal()" style="flex:1;padding:11px 0;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;color:#444;">Cancel</button>
+            <button id="dangerModalYes" style="flex:1;padding:11px 0;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;background:#c0392b;">Yes, proceed</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var _dangerAction = null;
+
+function showDangerModal(action) {
+    _dangerAction = action;
+    var modal = document.getElementById('dangerModal');
+    var title = document.getElementById('dangerModalTitle');
+    var text  = document.getElementById('dangerModalText');
+    var yesBtn= document.getElementById('dangerModalYes');
+    if (action === 'deactivate') {
+        var isActive = document.getElementById('deactivateAccountBtn').dataset.active !== '1';
+        title.textContent = isActive ? 'Deactivate your account?' : 'Activate your account?';
+        text.textContent  = isActive
+            ? 'Your profile and all ads will be temporarily hidden. You can reactivate at any time.'
+            : 'Your profile and ads will become visible again.';
+        yesBtn.textContent = isActive ? 'Yes, deactivate' : 'Yes, activate';
+        yesBtn.style.background = '#c0392b';
+    } else {
+        title.textContent = 'Delete your account?';
+        text.textContent  = 'This will permanently remove your account, phone number and all data. This cannot be undone.';
+        yesBtn.textContent = 'Yes, delete';
+        yesBtn.style.background = '#c0392b';
+    }
+    modal.style.display = 'flex';
+}
+
+function closeDangerModal() {
+    document.getElementById('dangerModal').style.display = 'none';
+    _dangerAction = null;
+}
+
+document.getElementById('dangerModalYes').addEventListener('click', function() {
+    if (_dangerAction === 'deactivate') {
+        execDeactivate();
+    } else if (_dangerAction === 'delete') {
+        execDeleteAccount();
+    }
+});
+
+function execDeactivate() {
+    var uid = localStorage.getItem('bazar_firebase_uid');
+    var btn = document.getElementById('deactivateAccountBtn');
+    var isDeactivating = btn.dataset.active !== '1';
+    closeDangerModal();
+    if (!uid) return;
+    fetch('https://admin.bazar.uk/api/customers/' + uid + '/deactivate', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ deactivate: isDeactivating })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (d.success) {
+            if (isDeactivating) {
+                btn.textContent = 'Activate';
+                btn.dataset.active = '1';
+            } else {
+                btn.textContent = 'Deactivate';
+                btn.dataset.active = '0';
+            }
+        }
+    })
+    .catch(function() {});
+}
+
+function execDeleteAccount() {
+    var uid = localStorage.getItem('bazar_firebase_uid');
+    closeDangerModal();
+    if (!uid) {
+        clearLocalAndRedirect();
+        return;
+    }
+    fetch('https://admin.bazar.uk/api/customers/' + uid, {
+        method: 'DELETE',
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        clearLocalAndRedirect();
+    })
+    .catch(function() {
+        clearLocalAndRedirect();
+    });
+}
+
+function clearLocalAndRedirect() {
+    var keys = ['bazar_username','bazar_firebase_uid','bazar_avatar','bazar_plan',
+                'bazar_email','bazar_phone','bazar_address','bazar_joined',
+                'bazar_prof_stats','bazar_balance','bazar_withdrew','bazar_gender'];
+    keys.forEach(function(k) { localStorage.removeItem(k); });
+    window.location.href = '/';
+}
+
+document.getElementById('dangerModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDangerModal();
+});
+</script>
 </body></html>
