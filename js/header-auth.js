@@ -40,9 +40,17 @@
                     }
                     var plan = (d.plan || 'free').toLowerCase();
                     var daysLeft = parseInt(d.days_left || 0, 10);
-                    localStorage.setItem('bazar_plan', plan);
-                    if (daysLeft > 0) localStorage.setItem('bazar_days_left', daysLeft);
-                    applyPlanBadge(plan, daysLeft);
+                    var localPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+                    var rank = { free: 0, pro: 1, vip: 2 };
+                    /* Only update if API returns equal or higher plan (never downgrade) */
+                    if ((rank[plan] || 0) >= (rank[localPlan] || 0)) {
+                        localStorage.setItem('bazar_plan', plan);
+                        if (daysLeft > 0) localStorage.setItem('bazar_days_left', daysLeft);
+                        applyPlanBadge(plan, daysLeft);
+                    } else {
+                        /* Keep local plan, just refresh badge */
+                        applyPlanBadge(localPlan, parseInt(localStorage.getItem('bazar_days_left') || '0', 10));
+                    }
                 })
                 .catch(function() {});
         }
