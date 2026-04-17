@@ -1381,13 +1381,18 @@
         }
 
         var uid = localStorage.getItem('bazar_firebase_uid');
-        if (uid && (!email || !address)) {
+        if (uid) {
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     if (d.exists) {
                         if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
                         if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
+                        if (d.plan && d.plan !== (localStorage.getItem('bazar_plan') || 'free')) {
+                            localStorage.setItem('bazar_plan', d.plan);
+                            if (window.updatePlanBadge) updatePlanBadge();
+                            highlightCurrentPlan();
+                        }
                     }
                 })
                 .catch(function() {});
@@ -1739,6 +1744,30 @@
             if (window.updatePlanBadge) updatePlanBadge();
             history.replaceState(null, '', '/cabinet/subscriptions');
             switchToTab('subscriptions');
+
+            function _applyPlanFromServer(plan) {
+                if (!plan || plan === (localStorage.getItem('bazar_plan') || 'free')) return;
+                localStorage.setItem('bazar_plan', plan);
+                if (window.updatePlanBadge) updatePlanBadge();
+                highlightCurrentPlan();
+            }
+            function _fetchPlanFromCustomerApi(uid, attempts) {
+                if (!uid) return;
+                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        if (d.exists && d.plan && d.plan !== 'free') {
+                            _applyPlanFromServer(d.plan);
+                        } else if (attempts > 0) {
+                            setTimeout(function() { _fetchPlanFromCustomerApi(uid, attempts - 1); }, 3000);
+                        }
+                    })
+                    .catch(function() {
+                        if (attempts > 0) setTimeout(function() { _fetchPlanFromCustomerApi(uid, attempts - 1); }, 3000);
+                    });
+            }
+
+            var _payUid = localStorage.getItem('bazar_firebase_uid');
             if (sessionId) {
                 fetch('https://admin.bazar.uk/api/stripe/checkout/verify/' + sessionId, {
                     headers: { 'Accept': 'application/json' }
@@ -1746,12 +1775,14 @@
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.success && data.plan) {
-                        localStorage.setItem('bazar_plan', data.plan);
-                        if (window.updatePlanBadge) updatePlanBadge();
-                        highlightCurrentPlan();
+                        _applyPlanFromServer(data.plan);
+                    } else {
+                        _fetchPlanFromCustomerApi(_payUid, 4);
                     }
                 })
-                .catch(function() {});
+                .catch(function() { _fetchPlanFromCustomerApi(_payUid, 4); });
+            } else {
+                _fetchPlanFromCustomerApi(_payUid, 4);
             }
         }
 
