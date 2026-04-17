@@ -3056,7 +3056,10 @@
          var avatarEl = document.getElementById('header-avatar');
          if (avatarEl) {
             var avatarImg = avatarEl.querySelector('img');
-            if (avatarImg) avatarImg.src = gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+            if (avatarImg) {
+               var savedAv = localStorage.getItem('bazar_avatar');
+               avatarImg.src = savedAv || (gender === 'female' ? 'icon/woman.png' : 'icon/man.svg');
+            }
          }
 
          // Auto-fill contact details from user profile
@@ -3403,5 +3406,6 @@
          });
       }
    </script>
+<script src="js/header-auth.js?v=2"></script>
 </body>
 </html>
