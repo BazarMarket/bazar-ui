@@ -1805,6 +1805,11 @@
                         }
                         if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
                         if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
+                        if (d.member_since) {
+                            localStorage.setItem('bazar_joined', d.member_since);
+                            var elMs = document.getElementById('csMemberSince');
+                            if (elMs) elMs.textContent = d.member_since;
+                        }
                         if (d.plan && d.plan !== (localStorage.getItem('bazar_plan') || 'free')) {
                             localStorage.setItem('bazar_plan', d.plan);
                             if (window.updatePlanBadge) updatePlanBadge();
