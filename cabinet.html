@@ -1735,11 +1735,11 @@
         if (params.get('payment') === 'success') {
             var paidPlan = params.get('plan');
             var sessionId = params.get('session_id');
+            var planPrice = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
-                var planPrice = paidPlan === 'pro' ? 7 : 14;
-                var planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
-                saveLocalTxn('debit', 'Subscription', 'Subscription ' + planLabel, planPrice, 'paid');
+                planPrice = paidPlan === 'pro' ? 7 : 14;
+                planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
             }
             if (window.updatePlanBadge) updatePlanBadge();
             history.replaceState(null, '', '/cabinet/subscriptions');
@@ -1775,13 +1775,22 @@
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.success && data.plan) {
+                        var lbl = data.plan === 'pro' ? 'PRO' : 'VIP';
+                        var dur = data.duration_days || (data.plan === 'pro' ? 14 : 30);
+                        var prc = data.plan === 'pro' ? 7 : 14;
+                        saveLocalTxn('debit', 'Subscription', 'Subscription — ' + lbl + ' Plan — ' + dur + ' Days', prc, 'paid');
                         _applyPlanFromServer(data.plan);
                     } else {
+                        if (planLabel) saveLocalTxn('debit', 'Subscription', 'Subscription — ' + planLabel + ' Plan', planPrice, 'paid');
                         _fetchPlanFromCustomerApi(_payUid, 4);
                     }
                 })
-                .catch(function() { _fetchPlanFromCustomerApi(_payUid, 4); });
+                .catch(function() {
+                    if (planLabel) saveLocalTxn('debit', 'Subscription', 'Subscription — ' + planLabel + ' Plan', planPrice, 'paid');
+                    _fetchPlanFromCustomerApi(_payUid, 4);
+                });
             } else {
+                if (planLabel) saveLocalTxn('debit', 'Subscription', 'Subscription — ' + planLabel + ' Plan', planPrice, 'paid');
                 _fetchPlanFromCustomerApi(_payUid, 4);
             }
         }
