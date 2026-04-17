@@ -3191,19 +3191,19 @@
          if (found) { sel.value = found.value; sel.classList.remove('pa-empty'); }
       }
 
-      /* Inject old-price preview banner above priceInput */
+      /* Inject old-price preview banner above the price row */
       function _showOldPricePreview(oldPriceNum) {
          var existing = document.getElementById('_editOldPriceRow');
          if (existing) existing.remove();
          if (!oldPriceNum) return;
-         var priceField = document.getElementById('priceInput');
-         if (!priceField) return;
+         var priceRow = document.querySelector('.pa-price-row');
+         if (!priceRow) return;
          var row = document.createElement('div');
          row.id = '_editOldPriceRow';
          row.style.cssText = 'margin-bottom:6px;font-size:13px;color:#888;';
-         row.innerHTML = 'Previous price: <span style="color:#e53935;text-decoration:line-through;font-weight:600;">£' +
-            Number(oldPriceNum).toLocaleString('en-GB') + '</span>';
-         priceField.parentNode.insertBefore(row, priceField);
+         var fmtOld = String(Math.round(oldPriceNum)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+         row.innerHTML = 'Previous price: <span style="color:#e53935;text-decoration:line-through;font-weight:600;">£' + fmtOld + '</span>';
+         priceRow.parentNode.insertBefore(row, priceRow);
       }
 
       /* Fill form after categories are selected */
@@ -3217,9 +3217,10 @@
          if (titleEl) { titleEl.removeAttribute('readonly'); titleEl.value = d.title || ''; }
          _setVal('descriptionInput', d.description || '');
 
-         /* Price */
+         /* Price — formatPrice() uses dots as thousands sep (e.g. 10.000.000) */
          var rawPrice = Math.round(parseFloat(d.price || 0));
-         _setVal('priceInput', rawPrice ? rawPrice.toLocaleString('en-GB') : '');
+         var fmtPrice = rawPrice ? String(rawPrice).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+         _setVal('priceInput', fmtPrice);
          _setCheck('negotiableCheckbox', d.negotiable);
 
          /* If there's already an old_price in the DB, show it */
@@ -3227,13 +3228,13 @@
             _showOldPricePreview(parseFloat(d.old_price));
          }
 
-         /* Price change → show old price preview */
+         /* Price change → show old price preview (only if no existing old_price in DB) */
          var _origPrice = rawPrice;
          var priceEl = document.getElementById('priceInput');
-         if (priceEl) {
+         if (priceEl && _origPrice > 0 && !(d.old_price && parseFloat(d.old_price) > 0)) {
             priceEl.addEventListener('input', function() {
-               var cur = parseInt((priceEl.value || '').replace(/[^0-9]/g, ''), 10) || 0;
-               if (cur !== _origPrice && _origPrice > 0) {
+               var cur = parseInt((priceEl.value || '').replace(/\./g, '').replace(/[^0-9]/g, ''), 10) || 0;
+               if (cur !== _origPrice) {
                   _showOldPricePreview(_origPrice);
                } else {
                   var old = document.getElementById('_editOldPriceRow');
