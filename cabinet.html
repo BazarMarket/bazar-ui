@@ -2180,13 +2180,25 @@
         }
 
         if (params.get('payment') === 'success') {
-            var paidPlan = params.get('plan');
+            var paidPlan  = params.get('plan');
+            var paidDays  = parseInt(params.get('days') || '0', 10);
+            var paidAdId  = params.get('ad_id') || '';
             var sessionId = params.get('session_id');
             var planPrice = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
-                planPrice = paidPlan === 'pro' ? 7 : 14;
+                if (paidDays > 0) localStorage.setItem('bazar_days_left', paidDays);
+                planPrice = paidPlan === 'pro' ? 10 : 20;
                 planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
+                /* Activate the ad on the server */
+                if (paidAdId) {
+                    var _uid = localStorage.getItem('bazar_firebase_uid') || '';
+                    fetch('https://admin.bazar.uk/api/properties/' + paidAdId + '/activate-plan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan })
+                    }).catch(function(){});
+                }
             }
             if (window.updatePlanBadge) updatePlanBadge();
             history.replaceState(null, '', '/cabinet/subscriptions');

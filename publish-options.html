@@ -900,10 +900,12 @@
          var btn = document.getElementById(btnId);
          var origText = btn ? btn.textContent : '';
          if (btn) { btn.textContent = 'Redirecting…'; btn.disabled = true; }
+         var days  = currentDays[plan]  || 14;
+         var price = currentPrice[plan] || (plan === 'pro' ? '7.00' : '14.00');
          fetch('https://admin.bazar.uk/api/stripe/checkout/plan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ firebase_uid: uid, plan: plan, ad_id: adId })
+            body: JSON.stringify({ firebase_uid: uid, plan: plan, ad_id: adId, days: days, amount: parseFloat(price) })
          })
          .then(function(r) { return r.json(); })
          .then(function(data) {
@@ -953,16 +955,19 @@
       }
 
       function applyExistingPlan() {
-         var plan = localStorage.getItem('bazar_plan') || 'free';
-         if (plan === 'free') return;
-
+         var plan     = localStorage.getItem('bazar_plan') || 'free';
          var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+         if (plan === 'free' && daysLeft <= 0) return;
 
          function makeActiveBadge(text) {
             var b = document.createElement('span');
             b.style.cssText = 'display:inline-flex;align-items:center;gap:5px;background:#e8f8ee;color:#1a9448;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;';
             b.innerHTML = '&#10003; ' + text;
             return b;
+         }
+
+         function daysText(d) {
+            return d > 0 ? ' · ' + d + ' day' + (d !== 1 ? 's' : '') + ' left' : '';
          }
 
          if (plan === 'pro' || plan === 'vip') {
@@ -972,7 +977,8 @@
                proBtn.textContent = 'Publish with PRO plan — Free';
                proBtn.style.background = '#1a9448';
                proBtn.onclick = function() { publishWithSubscription('pro'); };
-               var badge = makeActiveBadge('PRO subscription active');
+               var proDays = (plan === 'pro') ? daysLeft : 0;
+               var badge = makeActiveBadge('PRO active' + daysText(proDays));
                var proName = proCard.querySelector('.po-plan-name');
                if (proName) proName.parentNode.insertBefore(badge, proName);
             }
@@ -985,10 +991,29 @@
                vipBtn.textContent = 'Publish with VIP plan — Free';
                vipBtn.style.background = '#1a9448';
                vipBtn.onclick = function() { publishWithSubscription('vip'); };
-               var vipBadge = makeActiveBadge('VIP subscription active');
+               var vipBadge = makeActiveBadge('VIP active' + daysText(daysLeft));
                var vipName = vipCard.querySelector('.po-plan-name');
                if (vipName) vipName.parentNode.insertBefore(vipBadge, vipName);
             }
+         }
+
+         /* Also try to refresh from API for accurate days_left */
+         var uid = localStorage.getItem('bazar_firebase_uid') || '';
+         if (uid) {
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+               .then(function(r) { return r.json(); })
+               .then(function(d) {
+                  var serverDays = parseInt(d.days_left || d.pro_days_left || d.vip_days_left || 0, 10);
+                  if (serverDays > 0 && serverDays !== daysLeft) {
+                     localStorage.setItem('bazar_days_left', serverDays);
+                     /* Update badge text */
+                     document.querySelectorAll('.po-card--pro span[style*="#e8f8ee"], .po-card--vip span[style*="#e8f8ee"]').forEach(function(b) {
+                        var planLabel = (d.plan || plan).toUpperCase();
+                        b.innerHTML = '&#10003; ' + planLabel + ' active · ' + serverDays + ' day' + (serverDays !== 1 ? 's' : '') + ' left';
+                     });
+                  }
+               })
+               .catch(function(){});
          }
       }
 
