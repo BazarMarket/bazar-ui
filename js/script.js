@@ -1174,6 +1174,22 @@ window.onload = function () {
         badge.className = 'subscription__stiker';
         if (plan === 'vip') badge.className += ' subscription__stiker--vip';
         if (plan === 'free') badge.className += ' subscription__stiker--free';
+
+        var daysEl = document.getElementById('subDaysEl');
+        if (!daysEl) return;
+        daysEl.textContent = '';
+        if (plan === 'pro' || plan === 'vip') {
+            var uid = localStorage.getItem('bazar_firebase_uid');
+            if (uid) {
+                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        var days = parseInt(d.pro_days_left || d.vip_days_left || d.days_left || 0, 10);
+                        if (days > 0) daysEl.textContent = days + 'd';
+                    })
+                    .catch(function() {});
+            }
+        }
     }
     window.updatePlanBadge = updatePlanBadge;
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updatePlanBadge);

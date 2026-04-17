@@ -116,7 +116,7 @@
                                     <a href="#" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                        <p class="subscription__title"><img src="/icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
                                        <span class="subscription__stiker" id="subPlanBadge">Free</span>
-                                       <span class="subscription__days">382d</span>
+                                       <span class="subscription__days" id="subDaysEl"></span>
                                     </div></a>
                                     <hr class="user-menu__hr">
                                     <div class="dark-mode">
@@ -820,7 +820,7 @@
                             <span id="cabProPrice">7.00</span>
                         </div>
                         <p class="po-plan-tagline">Most popular with sellers</p>
-                        <p class="po-active-meta">⏱ Used in 1 listing · 14 days left</p>
+                        <p class="po-active-meta" id="proActiveMeta" style="display:none"></p>
                         <p class="po-price__note">Choose duration:</p>
                         <div class="po-duration-row">
                             <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',3,'3.00',this);event.stopPropagation()">3 days</button></div>
@@ -863,7 +863,7 @@
                             <span id="cabVipPrice">14.00</span>
                         </div>
                         <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
-                        <p class="po-active-meta">⏱ Used in 1 listing · 25 days left</p>
+                        <p class="po-active-meta" id="vipActiveMeta" style="display:none"></p>
                         <p class="po-price__note">Choose duration:</p>
                         <div class="po-duration-row">
                             <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',3,'6.00',this);event.stopPropagation()">3 days</button></div>
@@ -1275,6 +1275,25 @@
         alert('Action "' + action + '" for ad #' + adId);
     }
 
+    function _applySubMeta(plan, daysLeft, listings) {
+        var proMeta = document.getElementById('proActiveMeta');
+        var vipMeta = document.getElementById('vipActiveMeta');
+        if (proMeta) proMeta.style.display = 'none';
+        if (vipMeta) vipMeta.style.display = 'none';
+        if (plan !== 'pro' && plan !== 'vip') return;
+        var meta = plan === 'pro' ? proMeta : vipMeta;
+        if (!meta) return;
+        var parts = [];
+        if (listings > 0) parts.push('Used in ' + listings + ' listing' + (listings > 1 ? 's' : ''));
+        if (daysLeft > 0) parts.push(daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' left');
+        if (!parts.length) return;
+        meta.textContent = '⏱ ' + parts.join(' · ');
+        meta.style.display = '';
+        meta.classList.remove('po-active-meta--urgent', 'po-active-meta--warning');
+        if (daysLeft > 0 && daysLeft < 10) meta.classList.add('po-active-meta--urgent');
+        else if (daysLeft > 0 && daysLeft < 20) meta.classList.add('po-active-meta--warning');
+    }
+
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';
         document.querySelectorAll('.po-card').forEach(function(c) {
@@ -1286,6 +1305,7 @@
         var vipPill = document.getElementById('vipActivePill');
         if (proPill) proPill.style.display = 'none';
         if (vipPill) vipPill.style.display = 'none';
+        _applySubMeta('free', 0, 0);
         if (plan === 'pro') {
             var card = document.querySelector('.po-card--pro');
             if (card) card.classList.add('po-card--active', 'is-selected');
@@ -1301,6 +1321,19 @@
         } else {
             if (proBtn) proBtn.textContent = 'Upgrade to PRO — £7.00';
             if (vipBtn) vipBtn.textContent = 'Upgrade to VIP — £14.00';
+        }
+        if (plan === 'pro' || plan === 'vip') {
+            var uid = localStorage.getItem('bazar_firebase_uid');
+            if (uid) {
+                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        var daysLeft = parseInt(d.pro_days_left || d.vip_days_left || d.days_left || 0, 10);
+                        var listings = parseInt(d.sub_listings || d.subscription_listings || 0, 10);
+                        _applySubMeta(plan, daysLeft, listings);
+                    })
+                    .catch(function() {});
+            }
         }
     }
 
