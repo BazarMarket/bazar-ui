@@ -230,10 +230,6 @@
                                     <td>Kissonerga</td>
                                  </tr>
                                  <tr>
-                                    <th>House type:</th>
-                                    <td>Villa</td>
-                                 </tr>
-                                 <tr>
                                     <th>Stage:</th>
                                     <td>New</td>
                                  </tr>
@@ -909,14 +905,12 @@
       specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
       specs += specRow('City', p.city);
       specs += specRow('Area', p.district);
-      specs += specRow('House type', p.sub_type);
       if (p.building_type) specs += specRow('Building type', p.building_type);
       var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
       specs += specRow('Condition', condLabel[p.condition] || p.condition);
       specs += specRow('Number of Bedrooms', p.bedrooms);
       specs += specRow('Number of Bathrooms', p.bathrooms);
       specs += specRow('Address', p.address);
-      specs += specRow('Postal Code', p.postal_code);
       if (p.covered_area) specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
       if (p.plot_area) specs += '<tr><th>Plot area:</th><td>' + p.plot_area + ' m2</td></tr>';
       specs += specRow('Floor', p.floor);
