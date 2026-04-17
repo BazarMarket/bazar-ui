@@ -71,6 +71,119 @@
         .cab-table--payments td:nth-child(3) { width: 140px; font-weight: 600; }
         .cab-table--payments th:nth-child(5),
         .cab-table--payments td:nth-child(5) { width: 110px; text-align: right; }
+
+        /* ── My Settings cards ── */
+        .cscard {
+            background: #fff;
+            border: 1px solid #ececec;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.04);
+        }
+        .cscard--danger {
+            border-color: #fce4e4;
+            background: #fffafa;
+        }
+        .cscard__title {
+            font-family: Poppins, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 4px;
+        }
+        .cscard__desc {
+            font-family: Poppins, sans-serif;
+            font-size: 12px;
+            color: #aaa;
+            margin: 0 0 16px;
+        }
+        .cscard__body {
+            display: flex;
+            flex-direction: column;
+        }
+        .csrow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 13px 0;
+            border-bottom: 1px solid #f3f3f3;
+        }
+        .csrow--last { border-bottom: none; }
+        .csrow__left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+        .csrow__label {
+            font-family: Poppins, sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .csrow__hint {
+            font-family: Poppins, sans-serif;
+            font-size: 11.5px;
+            color: #aaa;
+        }
+        .csbtn {
+            font-family: Poppins, sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .18s, color .18s;
+        }
+        .csbtn--secondary {
+            background: #f4f4f4;
+            color: #333;
+        }
+        .csbtn--secondary:hover { background: #e8e8e8; }
+        .csbtn--danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .csbtn--danger:hover { background: #a93226; }
+        .csbtn--outline-danger {
+            background: transparent;
+            color: #c0392b;
+            border: 1.5px solid #e8b4b0;
+        }
+        .csbtn--outline-danger:hover { background: #fce4e4; }
+        .csbadge {
+            font-family: Poppins, sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            background: #f4f4f4;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+        .csbadge--green {
+            background: #eafaf1;
+            color: #1e8449;
+        }
+        .cssel {
+            font-family: Poppins, sans-serif;
+            font-size: 12.5px;
+            padding: 7px 12px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fff;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+        @media (max-width: 500px) {
+            .csrow { flex-wrap: wrap; }
+            .cscard { padding: 18px; }
+        }
     </style>
 </head>
 
@@ -127,7 +240,7 @@
                                         </label>
                                     </div>
                                     <hr class="user-menu__hr">
-                                    <a href="#" class="user-menu-item icon-win-setting" onclick="event.preventDefault();switchToTab('settings')">My Settings</a>
+                                    <a href="#" class="user-menu-item icon-win-setting" onclick="event.preventDefault();switchToTab('cab-settings')">My Settings</a>
                                     <a href="#" class="user-menu-item icon-win-faq" onclick="event.preventDefault();switchToTab('support')">Support</a>
                                     <hr class="user-menu__hr">
                                     <a href="#" class="user-logout icon-win-logout" onclick="event.preventDefault();switchToTab('logout')">Log Out</a>
@@ -158,7 +271,7 @@
                 <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Subscriptions</div>
 
                 <p class="cab-nav__group-label">System</p>
-                <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
+                <div class="cab-nav__item icon-win-setting" data-tab="cab-settings">My Settings</div>
                 <div class="cab-nav__item icon-question" data-tab="support">Support</div>
 
                 <div class="cab-nav__divider"></div>
@@ -1089,6 +1202,255 @@
 
             </div>
 
+            <!-- ══════════════ MY SETTINGS ══════════════ -->
+            <div class="cab-panel" data-panel="cab-settings">
+
+                <div class="cab-panel__top">
+                    <h1 class="cab-panel__title">My Settings</h1>
+                    <p style="font-family:Poppins,sans-serif;font-size:13px;color:#808080;margin:4px 0 0;">Manage your account, security, privacy and notifications.</p>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:20px;margin-top:8px;">
+
+                    <!-- ─── 1. Login & Security ─── -->
+                    <div class="cscard">
+                        <p class="cscard__title">Login &amp; Security</p>
+                        <p class="cscard__desc">Control how you sign in and protect your account.</p>
+                        <div class="cscard__body">
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Phone number</span>
+                                    <span class="csrow__hint" id="csPhoneDisplay">+44 ••• ••• ••••</span>
+                                </div>
+                                <button class="csbtn csbtn--secondary" onclick="return false;">Change</button>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Backup email</span>
+                                    <span class="csrow__hint">Add email for receipts and account recovery</span>
+                                </div>
+                                <button class="csbtn csbtn--secondary" onclick="return false;">Add email</button>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Login verification</span>
+                                    <span class="csrow__hint">Use SMS code when signing in on a new device</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox"><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Remember this device</span>
+                                    <span class="csrow__hint">Skip verification on this device</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Active sessions</span>
+                                    <span class="csrow__hint">1 active device</span>
+                                </div>
+                                <button class="csbtn csbtn--secondary" onclick="return false;">Manage</button>
+                            </div>
+                            <div class="csrow csrow--last">
+                                <div class="csrow__left">
+                                    <span class="csrow__label" style="color:#c0392b;">Log out from all devices</span>
+                                    <span class="csrow__hint">End all active sessions immediately</span>
+                                </div>
+                                <button class="csbtn csbtn--danger" onclick="return false;">Log out all</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── 2. Notifications ─── -->
+                    <div class="cscard">
+                        <p class="cscard__title">Notifications</p>
+                        <p class="cscard__desc">Choose what you want to be notified about.</p>
+                        <div class="cscard__body">
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">New messages</span>
+                                    <span class="csrow__hint">When someone sends you a message</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Replies to my ads</span>
+                                    <span class="csrow__hint">When someone responds to your listing</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Favorites activity</span>
+                                    <span class="csrow__hint">Price drops on your saved items</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Ad performance updates</span>
+                                    <span class="csrow__hint">Weekly views and engagement summary</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox"><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Promotions and offers</span>
+                                    <span class="csrow__hint">Special deals from Bazar</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox"><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow csrow--last">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Payment alerts</span>
+                                    <span class="csrow__hint">Receipts and subscription renewals</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── 3. Privacy ─── -->
+                    <div class="cscard">
+                        <p class="cscard__title">Privacy</p>
+                        <p class="cscard__desc">Control what others can see about you.</p>
+                        <div class="cscard__body">
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Show phone number on ads</span>
+                                    <span class="csrow__hint">Buyers will see your number on listing pages</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Show email publicly</span>
+                                    <span class="csrow__hint">Visible on your public profile</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox"><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Show social links on profile</span>
+                                    <span class="csrow__hint">Instagram, Telegram etc.</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow csrow--last">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Profile visibility</span>
+                                    <span class="csrow__hint">Who can view your public profile</span>
+                                </div>
+                                <select class="cssel">
+                                    <option>Public</option>
+                                    <option>Limited</option>
+                                    <option>Private</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── 4. Payments & Billing ─── -->
+                    <div class="cscard">
+                        <p class="cscard__title">Payments &amp; Billing</p>
+                        <p class="cscard__desc">Manage your payment methods and billing preferences.</p>
+                        <div class="cscard__body">
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Default currency</span>
+                                    <span class="csrow__hint">All prices shown in GBP</span>
+                                </div>
+                                <span class="csbadge">GBP £</span>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Saved payment methods</span>
+                                    <span class="csrow__hint">No cards added yet</span>
+                                </div>
+                                <button class="csbtn csbtn--secondary" onclick="return false;">Add card</button>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Billing receipts</span>
+                                    <span class="csrow__hint">Sent to your backup email when set</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                            <div class="csrow csrow--last">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Subscription auto-renewal</span>
+                                    <span class="csrow__hint">Renew plan automatically before expiry</span>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked><span class="toggle__slider"></span></label>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px;">
+                            <button class="csbtn csbtn--secondary" onclick="switchToTab('payments');return false;">Manage payments</button>
+                        </div>
+                    </div>
+
+                    <!-- ─── 5. Account ─── -->
+                    <div class="cscard">
+                        <p class="cscard__title">Account</p>
+                        <p class="cscard__desc">Your account status and public identity.</p>
+                        <div class="cscard__body">
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Member since</span>
+                                    <span class="csrow__hint" id="csMemberSince">—</span>
+                                </div>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Verification status</span>
+                                    <span class="csrow__hint">Phone number confirmed</span>
+                                </div>
+                                <span class="csbadge csbadge--green">&#10003; Verified</span>
+                            </div>
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Seller rating</span>
+                                    <span class="csrow__hint">Based on buyer reviews</span>
+                                </div>
+                                <span class="csbadge">4.0 / 5.0 &#9733;</span>
+                            </div>
+                            <div class="csrow csrow--last">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Public profile</span>
+                                    <span class="csrow__hint">How buyers see your page</span>
+                                </div>
+                                <button class="csbtn csbtn--secondary" onclick="return false;">View profile</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── 6. Danger Zone ─── -->
+                    <div class="cscard cscard--danger">
+                        <p class="cscard__title" style="color:#c0392b;">Danger Zone</p>
+                        <p class="cscard__desc">Irreversible account actions. Please proceed carefully.</p>
+                        <div class="cscard__body">
+                            <div class="csrow">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Deactivate account</span>
+                                    <span class="csrow__hint">Temporarily hide your profile and all ads</span>
+                                </div>
+                                <button class="csbtn csbtn--outline-danger" onclick="return false;">Deactivate</button>
+                            </div>
+                            <div class="csrow csrow--last">
+                                <div class="csrow__left">
+                                    <span class="csrow__label">Delete account</span>
+                                    <span class="csrow__hint">Permanently remove your account and all data</span>
+                                </div>
+                                <button class="csbtn csbtn--danger" onclick="return false;">Delete account</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <!-- ══════════════ LOGOUT ══════════════ -->
             <div class="cab-panel" data-panel="logout">
                 <div class="cab-logout-screen">
@@ -1427,6 +1789,19 @@
         if (elPh)      elPh.value            = phone;
         if (elEmail)   elEmail.value         = email;
         if (elAddr)    elAddr.value          = address;
+
+        var csPhone = document.getElementById('csPhoneDisplay');
+        if (csPhone && phone) csPhone.textContent = phone;
+
+        var csMember = document.getElementById('csMemberSince');
+        var uid2 = localStorage.getItem('bazar_firebase_uid');
+        if (csMember && uid2) {
+            var meta = firebase.auth().currentUser;
+            if (meta && meta.metadata && meta.metadata.creationTime) {
+                var d = new Date(meta.metadata.creationTime);
+                csMember.textContent = d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+            }
+        }
 
         if (elAvatar) {
             var img = elAvatar.querySelector('img');
