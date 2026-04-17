@@ -798,6 +798,15 @@
       }
       if (!id) return;
 
+      if (window.location.hostname === 'www.bazar.uk') {
+         var _viewUid = localStorage.getItem('bazar_firebase_uid') || '';
+         fetch('https://admin.bazar.uk/api/properties/' + id + '/view', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ viewer_uid: _viewUid })
+         }).catch(function() {});
+      }
+
       var apiUrl = (window.location.hostname === 'www.bazar.uk')
          ? 'https://admin.bazar.uk/api/properties/' + id
          : '/api/products/' + id;

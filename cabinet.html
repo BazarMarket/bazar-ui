@@ -908,7 +908,7 @@
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-eye">Views This Month</p>
-                        <p class="cab-stat-card__value" id="profStatViews" style="font-size:26px;">749 <span>views</span></p>
+                        <p class="cab-stat-card__value" id="profStatViews" style="font-size:26px;">— <span>views</span></p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-heart-new">Active Favorites</p>
@@ -1145,6 +1145,8 @@
 
         if (favEl) favEl.innerHTML = updateFavCount() + ' <span>saved</span>';
 
+        var viewsEl = document.getElementById('profStatViews');
+
         if (uid) {
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.json(); })
@@ -1153,6 +1155,13 @@
                     if (adsEl) adsEl.innerHTML = active + ' <span>ads</span>';
                 })
                 .catch(function() { if (adsEl) adsEl.innerHTML = '0 <span>ads</span>'; });
+
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/views/monthly', { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    if (viewsEl) viewsEl.innerHTML = (d.views || 0) + ' <span>views</span>';
+                })
+                .catch(function() { if (viewsEl) viewsEl.innerHTML = '0 <span>views</span>'; });
 
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.json(); })
@@ -1163,8 +1172,9 @@
                 })
                 .catch(function() { if (daysEl) daysEl.textContent = '—'; });
         } else {
-            if (adsEl)  adsEl.innerHTML = '0 <span>ads</span>';
-            if (daysEl) daysEl.textContent = '—';
+            if (adsEl)   adsEl.innerHTML  = '0 <span>ads</span>';
+            if (viewsEl) viewsEl.innerHTML = '0 <span>views</span>';
+            if (daysEl)  daysEl.textContent = '—';
         }
     }
 
