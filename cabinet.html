@@ -109,7 +109,7 @@
                                 <div class="user-menu">
                                     <a href="#" class="user-menu-tel icon-tel-full" id="header-phone"></a>
                                     <hr class="user-menu__hr">
-                                    <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('dashboard')">My Profile</a>
+                                    <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('settings')">My Profile</a>
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">My Favorites</a>
                                     <a href="#" id="menuMyPayments" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
@@ -149,7 +149,7 @@
             <!-- Navigation -->
             <nav class="cab-nav">
                 <p class="cab-nav__group-label">Main</p>
-                <div class="cab-nav__item icon-main-home active" data-tab="dashboard">My Profile</div>
+                <div class="cab-nav__item icon-main-home active" data-tab="settings">My Profile</div>
                 <div class="cab-nav__item icon-win-ad" data-tab="my-ads">My Ads</div>
                 <div class="cab-nav__item icon-heart-new" data-tab="favorites">My Favorites</div>
 
@@ -158,7 +158,7 @@
                 <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Subscriptions</div>
 
                 <p class="cab-nav__group-label">System</p>
-                <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
+                <div class="cab-nav__item icon-win-setting" data-tab="dashboard">Overview</div>
                 <div class="cab-nav__item icon-question" data-tab="support">Support</div>
 
                 <div class="cab-nav__divider"></div>
@@ -179,10 +179,10 @@
         <main class="cab-content" style="background:#f5f5f5;">
 
             <!-- ══════════════ DASHBOARD ══════════════ -->
-            <div class="cab-panel active" data-panel="dashboard">
+            <div class="cab-panel" data-panel="dashboard">
 
                 <div class="cab-panel__top">
-                    <h1 class="cab-panel__title">Balance</h1>
+                    <h1 class="cab-panel__title">Overview</h1>
                     <p class="cab-panel__welcome">Welcome back, <strong id="cabWelcomeName"></strong>!</p>
                 </div>
 
@@ -895,10 +895,10 @@
             </div>
 
             <!-- ══════════════ MY SETTINGS (Edit Profile) ══════════════ -->
-            <div class="cab-panel" data-panel="settings">
+            <div class="cab-panel active" data-panel="settings">
 
                 <div class="cab-panel__top">
-                    <h1 class="cab-panel__title">Edit Profile</h1>
+                    <h1 class="cab-panel__title">My Profile</h1>
                 </div>
 
                 <div class="cab-profile-grid">
