@@ -1809,12 +1809,10 @@
         if (csPhone && phone) csPhone.textContent = phone;
 
         var csMember = document.getElementById('csMemberSince');
-        var uid2 = localStorage.getItem('bazar_firebase_uid');
-        if (csMember && uid2) {
-            var meta = firebase.auth().currentUser;
-            if (meta && meta.metadata && meta.metadata.creationTime) {
-                var d = new Date(meta.metadata.creationTime);
-                csMember.textContent = d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+        if (csMember) {
+            var joined = localStorage.getItem('bazar_joined');
+            if (joined) {
+                csMember.textContent = joined;
             }
         }
 
