@@ -2549,6 +2549,22 @@
          return map[pt] || pt.toLowerCase();
       }
 
+      function _goAfterPublish(adId) {
+         var plan = (localStorage.getItem('bazar_plan') || '').toLowerCase();
+         if (plan === 'pro' || plan === 'vip') {
+            var uid = localStorage.getItem('bazar_firebase_uid') || '';
+            fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+               body: JSON.stringify({ firebase_uid: uid, plan: plan })
+            })
+            .then(function() { window.location.href = 'card.html?id=' + adId; })
+            .catch(function() { window.location.href = 'card.html?id=' + adId; });
+         } else {
+            window.location.href = 'publish-options.html?ad_id=' + adId;
+         }
+      }
+
       function submitProperty() {
          if (reState.cat === 'motors' && isCarSubtype) {
             submitCar();
@@ -2738,11 +2754,11 @@
                   ads[0].photo = '';
                   localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                }
-               var _redir1 = 'publish-options.html?ad_id=' + (data.property_id || '');
+               var _adId1 = data.property_id || '';
                if (typeof gtag === 'function') {
-                  gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ window.location.href = _redir1; }});
-                  setTimeout(function(){ window.location.href = _redir1; }, 1500);
-               } else { window.location.href = _redir1; }
+                  gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(_adId1); }});
+                  setTimeout(function(){ _goAfterPublish(_adId1); }, 1500);
+               } else { _goAfterPublish(_adId1); }
             }
 
             if (photoDataUrl && photoDataUrl.indexOf('data:') === 0) {
@@ -2897,11 +2913,10 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'car', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            var _redir2 = 'publish-options.html?ad_id=' + adId;
             if (typeof gtag === 'function') {
-               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ window.location.href = _redir2; }});
-               setTimeout(function(){ window.location.href = _redir2; }, 1500);
-            } else { window.location.href = _redir2; }
+               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+               setTimeout(function(){ _goAfterPublish(adId); }, 1500);
+            } else { _goAfterPublish(adId); }
          })
          .catch(function(err) {
             btn.textContent = 'Publish Ad';
@@ -3026,11 +3041,10 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'phone', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            var _redir3 = 'publish-options.html?ad_id=' + adId;
             if (typeof gtag === 'function') {
-               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ window.location.href = _redir3; }});
-               setTimeout(function(){ window.location.href = _redir3; }, 1500);
-            } else { window.location.href = _redir3; }
+               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+               setTimeout(function(){ _goAfterPublish(adId); }, 1500);
+            } else { _goAfterPublish(adId); }
          })
          .catch(function(err) {
             btn.textContent = 'Publish Ad';
