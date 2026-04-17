@@ -1470,7 +1470,7 @@
 </div>
 
 <script type="text/javascript" src="js/script.js?v=3"></script>
-<script type="text/javascript" src="js/cabinet.js?v=6"></script>
+<script type="text/javascript" src="js/cabinet.js?v=7"></script>
 <script>
     var BAZAR_PRODUCTS = {
         10: { title: "3 Bedroom Flats for Sale", price: 520000, image: "/img/properties/penthouse-edinburgh.jpg", city: "Edinburgh" },
@@ -1504,40 +1504,55 @@
         var favEl  = document.getElementById('profStatFav');
         var adsEl  = document.getElementById('profStatAds');
         var daysEl = document.getElementById('profStatDays');
-
-        if (favEl) favEl.innerHTML = updateFavCount() + ' <span>saved</span>';
-
         var viewsEl = document.getElementById('profStatViews');
 
-        if (uid) {
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
-                .then(function(r) { return r.json(); })
-                .then(function(d) {
-                    var active = (d.data || []).filter(function(a) { return a.status === 'active'; }).length;
-                    if (adsEl) adsEl.innerHTML = active + ' <span>ads</span>';
-                })
-                .catch(function() { if (adsEl) adsEl.innerHTML = '0 <span>ads</span>'; });
+        var fav = updateFavCount();
+        if (favEl) favEl.innerHTML = fav + ' <span>saved</span>';
 
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/views/monthly', { headers: { 'Accept': 'application/json' } })
-                .then(function(r) { return r.json(); })
-                .then(function(d) {
-                    if (viewsEl) viewsEl.innerHTML = (d.views || 0) + ' <span>views</span>';
-                })
-                .catch(function() { if (viewsEl) viewsEl.innerHTML = '0 <span>views</span>'; });
+        var cached = {};
+        try { cached = JSON.parse(localStorage.getItem('bazar_prof_stats') || '{}'); } catch(e) {}
+        if (cached.ads  !== undefined && adsEl)   adsEl.innerHTML  = cached.ads  + ' <span>ads</span>';
+        if (cached.views !== undefined && viewsEl) viewsEl.innerHTML = cached.views + ' <span>views</span>';
+        if (cached.days !== undefined && daysEl)  daysEl.innerHTML  = cached.plan === 'free' ? '—' : (cached.days + ' <span>days</span>');
 
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
-                .then(function(r) { return r.json(); })
-                .then(function(d) {
-                    var days = parseInt(d.days_left || 0, 10);
-                    var plan = d.plan || 'free';
-                    if (daysEl) daysEl.innerHTML = plan === 'free' ? '—' : (days + ' <span>days</span>');
-                })
-                .catch(function() { if (daysEl) daysEl.textContent = '—'; });
-        } else {
+        if (!uid) {
             if (adsEl)   adsEl.innerHTML  = '0 <span>ads</span>';
             if (viewsEl) viewsEl.innerHTML = '0 <span>views</span>';
             if (daysEl)  daysEl.textContent = '—';
+            return;
         }
+
+        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var active = (d.data || []).filter(function(a) { return a.status === 'active'; }).length;
+                if (adsEl) adsEl.innerHTML = active + ' <span>ads</span>';
+                cached.ads = active;
+                try { localStorage.setItem('bazar_prof_stats', JSON.stringify(cached)); } catch(e) {}
+            })
+            .catch(function() { if (adsEl && cached.ads === undefined) adsEl.innerHTML = '0 <span>ads</span>'; });
+
+        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/views/monthly', { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var v = d.views || 0;
+                if (viewsEl) viewsEl.innerHTML = v + ' <span>views</span>';
+                cached.views = v;
+                try { localStorage.setItem('bazar_prof_stats', JSON.stringify(cached)); } catch(e) {}
+            })
+            .catch(function() { if (viewsEl && cached.views === undefined) viewsEl.innerHTML = '0 <span>views</span>'; });
+
+        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var days = parseInt(d.days_left || 0, 10);
+                var plan = d.plan || 'free';
+                if (daysEl) daysEl.innerHTML = plan === 'free' ? '—' : (days + ' <span>days</span>');
+                cached.days = days;
+                cached.plan = plan;
+                try { localStorage.setItem('bazar_prof_stats', JSON.stringify(cached)); } catch(e) {}
+            })
+            .catch(function() { if (daysEl && cached.days === undefined) daysEl.textContent = '—'; });
     }
 
     function renderFavorites() {
@@ -2018,6 +2033,16 @@
         updateWalletDisplay();
         loadPayments();
         populateProfileStats();
+
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    localStorage.setItem('bazar_firebase_uid', user.uid);
+                    populateUserData();
+                    populateProfileStats();
+                }
+            });
+        }
 
         var profileForm = document.getElementById('profileForm');
         if (profileForm) {
