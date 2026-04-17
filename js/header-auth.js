@@ -159,6 +159,13 @@
         /* Don't double-start if already running */
         if (window._bazarMsgPollTimer) return;
 
+        /* On /messages page chat.js already handles sound — avoid double beep */
+        var onMessagesPage = (window.location.pathname === '/messages' ||
+                              window.location.pathname.indexOf('messages') !== -1);
+
+        var _prevUnread = parseInt(localStorage.getItem('bazar_unread_count') || '0', 10);
+        var _firstPoll  = true; /* skip sound on the very first poll */
+
         window._bazarMsgPollTimer = setInterval(function () {
             var url = '/api/chat/convs?uid=' + encodeURIComponent(uid);
             if (name) url += '&name=' + encodeURIComponent(name);
@@ -172,8 +179,16 @@
                         total += isBuyer ? (c.unread_buyer || 0) : (c.unread_seller || 0);
                     });
                     setMsgBadge(total);
+                    /* Play sound when new messages arrive (not first poll, not on /messages) */
+                    if (!_firstPoll && !onMessagesPage && total > _prevUnread) {
+                        if (window.BAZAR_CHAT && window.BAZAR_CHAT.playMsgSound) {
+                            window.BAZAR_CHAT.playMsgSound();
+                        }
+                    }
+                    _prevUnread = total;
+                    _firstPoll  = false;
                 })
-                .catch(function () {});
+                .catch(function () { _firstPoll = false; });
         }, 10000);
     }
 

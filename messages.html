@@ -423,7 +423,7 @@ function cabOpenRealChat(convId) {
         /* start message listener */
         _unsubMsgs = BAZAR_CHAT.listenAllMsgs(convId, function (msgs) {
             renderMessages(msgs, isBuyer);
-        });
+        }, { myUid: _myUid });
     } else {
         /* conv not in local cache yet — fetch and try again in 500ms */
         document.getElementById('cabRealHeadName').textContent = '…';
@@ -670,7 +670,7 @@ function cabSendSchedule() {
 })();
 </script>
 
-<script src="js/chat.js?v=2"></script>
-<script src="js/header-auth.js?v=9"></script>
+<script src="js/chat.js?v=3"></script>
+<script src="js/header-auth.js?v=10"></script>
 </body>
 </html>

@@ -53,22 +53,46 @@ window.BAZAR_CHAT = (function () {
     }
 
     /**
+     * Play a short two-tone notification sound via Web Audio API.
+     * Skips silently if audio is not available or blocked.
+     */
+    function playMsgSound() {
+        try {
+            var ctx = new (window.AudioContext || window.webkitAudioContext)();
+            var osc  = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.25, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.35);
+        } catch (e) {}
+    }
+
+    /**
      * Listen to ALL messages in a conversation (load all, then poll for new).
+     * opts.myUid — if set, plays a sound when messages from others arrive.
      * Returns object with:
      *   unsub()          — stop polling
      *   pushOptimistic() — immediately render a message before server confirms it
      */
-    function listenAllMsgs(cid, cb) {
+    function listenAllMsgs(cid, cb, opts) {
+        var myUid = (opts && opts.myUid) || '';
         var allMsgs = [];
         var lastId = 0;
         var timer = null;
         var _optimisticId = -1;
+        var _initialLoaded = false; /* don't play sound for history on first load */
 
         function applyNew(newMsgs) {
             if (!newMsgs.length) return;
+            var hasIncoming = false;
             newMsgs.forEach(function (m) {
                 if (m.id > lastId) lastId = m.id;
-                /* skip if already in the list (e.g. duplicate poll) */
                 var already = allMsgs.some(function (x) { return x.id === m.id; });
                 if (!already) {
                     /* remove matching optimistic placeholder if present */
@@ -80,10 +104,13 @@ window.BAZAR_CHAT = (function () {
                     }
                     if (optIdx !== -1) allMsgs.splice(optIdx, 1);
                     allMsgs.push(m);
+                    /* incoming = from someone else, not optimistic */
+                    if (myUid && m.sender_id !== myUid && !m._optimistic) hasIncoming = true;
                 }
             });
             allMsgs.sort(function (a, b) { return a.id - b.id; });
             cb(allMsgs.slice());
+            if (_initialLoaded && hasIncoming) playMsgSound();
         }
 
         /* Immediately render sender's own message before server round-trip */
@@ -113,7 +140,8 @@ window.BAZAR_CHAT = (function () {
             } else {
                 cb([]);
             }
-        }).catch(function () { cb([]); });
+            _initialLoaded = true;
+        }).catch(function () { cb([]); _initialLoaded = true; });
 
         // Poll for new messages every 1 second
         timer = setInterval(function () {
@@ -155,6 +183,7 @@ window.BAZAR_CHAT = (function () {
         getMsgs: getMsgs,
         listenAllMsgs: listenAllMsgs,
         listenConvs: listenConvs,
-        markRead: markRead
+        markRead: markRead,
+        playMsgSound: playMsgSound
     };
 })();
