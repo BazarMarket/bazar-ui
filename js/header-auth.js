@@ -21,6 +21,21 @@
                 img.src = savedAv || (gender === 'female' ? 'icon/woman.png' : 'icon/man.svg');
             }
         }
+
+        updateFavCount();
+    }
+
+    function updateFavCount() {
+        var count = 0;
+        for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key && key.indexOf('favorite_') === 0 && localStorage.getItem(key) === '1') count++;
+        }
+        var badge = document.getElementById('fav-count');
+        if (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        }
     }
 
     if (document.readyState === 'loading') {
