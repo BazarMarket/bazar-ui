@@ -253,6 +253,35 @@
          transform: translateY(-50%);
          pointer-events: none;
       }
+      /* Custom always-down dropdown */
+      .pa-csd { position: relative; }
+      .pa-csd__trigger {
+         width: 100%; padding: 11px 16px; border: 1px solid #e4e4e4; border-radius: 8px;
+         font-family: "Poppins", sans-serif; font-size: 15px; color: #333; background: #fff;
+         box-shadow: inset 0 2px 4px rgba(0,0,0,.06); box-sizing: border-box;
+         cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+         user-select: none;
+      }
+      .pa-csd__trigger.pa-empty { color: rgba(0,0,0,0.54); }
+      .pa-csd__trigger:focus { outline: none; border-color: #ff9138; }
+      .pa-csd__trigger svg { flex-shrink: 0; margin-left: 8px; transition: transform .2s; }
+      .pa-csd--open .pa-csd__trigger { border-color: #ff9138; }
+      .pa-csd--open .pa-csd__trigger svg { transform: rotate(180deg); }
+      .pa-csd__list {
+         display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+         background: #fff; border: 1px solid #e4e4e4; border-radius: 8px;
+         max-height: 220px; overflow-y: auto; z-index: 9999;
+         box-shadow: 0 6px 18px rgba(0,0,0,.12);
+      }
+      .pa-csd--open .pa-csd__list { display: block; }
+      .pa-csd__opt {
+         padding: 10px 16px; font-family: "Poppins", sans-serif; font-size: 15px;
+         color: #333; cursor: pointer;
+      }
+      .pa-csd__opt:hover { background: #fff3e8; }
+      .pa-csd__opt.selected { color: #ff9138; font-weight: 600; }
+      .pa-select-wrap:has(.pa-csd)::after { display: none; }
+
       .pa-textarea {
          width: 100%;
          min-height: 160px;
@@ -878,14 +907,32 @@
                   <div class="pa-field" id="reFloorField" style="display:none">
                      <span class="pa-field__label">Floor:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="floorSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select floor</option>
-                           <option>Ground floor</option>
-                           <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-                           <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-                           <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
-                           <option>16 and higher</option>
-                        </select>
+                        <div class="pa-csd" id="floorCsd">
+                           <div class="pa-csd__trigger pa-empty" tabindex="0" onclick="csdToggle('floorCsd')" onkeydown="if(event.key==='Enter'||event.key===' ')csdToggle('floorCsd')">
+                              <span id="floorCsdLabel">Select floor</span>
+                              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="3,5 7,9 11,5" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </div>
+                           <div class="pa-csd__list">
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','Ground floor')">Ground floor</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','1')">1</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','2')">2</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','3')">3</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','4')">4</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','5')">5</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','6')">6</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','7')">7</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','8')">8</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','9')">9</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','10')">10</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','11')">11</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','12')">12</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','13')">13</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','14')">14</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','15')">15</div>
+                              <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','16 and higher')">16 and higher</div>
+                           </div>
+                        </div>
+                        <input type="hidden" id="floorSelect" value="">
                      </div>
                   </div>
 
@@ -917,13 +964,19 @@
                   <div class="pa-field" id="airConField" style="display:none">
                      <span class="pa-field__label pa-field__label--wrap">Air conditioning:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="airConSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select air conditioning</option>
-                           <option>Yes</option>
-                           <option>No</option>
-                           <option>Central A/C</option>
-                           <option>Split A/C</option>
-                        </select>
+                        <div class="pa-csd" id="airConCsd">
+                           <div class="pa-csd__trigger pa-empty" tabindex="0" onclick="csdToggle('airConCsd')" onkeydown="if(event.key==='Enter'||event.key===' ')csdToggle('airConCsd')">
+                              <span id="airConCsdLabel">Select air conditioning</span>
+                              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="3,5 7,9 11,5" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </div>
+                           <div class="pa-csd__list">
+                              <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','Yes')">Yes</div>
+                              <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','No')">No</div>
+                              <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','Central A/C')">Central A/C</div>
+                              <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','Split A/C')">Split A/C</div>
+                           </div>
+                        </div>
+                        <input type="hidden" id="airConSelect" value="">
                      </div>
                   </div>
 
@@ -2548,6 +2601,33 @@
          };
          return map[pt] || pt.toLowerCase();
       }
+
+      /* Custom always-down select */
+      function csdToggle(csdId) {
+         var csd = document.getElementById(csdId);
+         if (!csd) return;
+         var isOpen = csd.classList.contains('pa-csd--open');
+         document.querySelectorAll('.pa-csd--open').forEach(function(el) { el.classList.remove('pa-csd--open'); });
+         if (!isOpen) csd.classList.add('pa-csd--open');
+      }
+      function csdPick(csdId, inputId, value) {
+         var csd = document.getElementById(csdId);
+         var inp = document.getElementById(inputId);
+         if (!csd || !inp) return;
+         inp.value = value;
+         var label = csd.querySelector('[id$="CsdLabel"]');
+         if (label) label.textContent = value;
+         csd.querySelector('.pa-csd__trigger').classList.remove('pa-empty');
+         csd.querySelectorAll('.pa-csd__opt').forEach(function(o) {
+            o.classList.toggle('selected', o.textContent === value);
+         });
+         csd.classList.remove('pa-csd--open');
+      }
+      document.addEventListener('click', function(e) {
+         if (!e.target.closest('.pa-csd')) {
+            document.querySelectorAll('.pa-csd--open').forEach(function(el) { el.classList.remove('pa-csd--open'); });
+         }
+      });
 
       function _goAfterPublish(adId) {
          var plan = (localStorage.getItem('bazar_plan') || '').toLowerCase();
