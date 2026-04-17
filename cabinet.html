@@ -1624,9 +1624,9 @@
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
-                '<td style="vertical-align:middle;">' + (ad.propType || ad.type || '—') + '</td>' +
+                '<td style="vertical-align:middle;">' + (ad.category || ad.propType || ad.type || '—') + '</td>' +
                 '<td style="vertical-align:middle;">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
-                '<td style="vertical-align:middle;">—</td>' +
+                '<td style="vertical-align:middle;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
                 '<tr style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
