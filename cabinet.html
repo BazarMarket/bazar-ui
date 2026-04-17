@@ -1438,6 +1438,16 @@
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     if (d.exists) {
+                        if (d.name) {
+                            localStorage.setItem('bazar_username', d.name);
+                            var nameParts = d.name.trim().split(' ');
+                            if (elFirst) elFirst.value = nameParts[0] || '';
+                            if (elLast)  elLast.value  = nameParts.slice(1).join(' ') || '';
+                            var elN = document.getElementById('header-username');
+                            if (elN) elN.textContent = d.name;
+                            var elW = document.getElementById('cabWelcomeName');
+                            if (elW) elW.textContent = d.name;
+                        }
                         if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
                         if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
                         if (d.plan && d.plan !== (localStorage.getItem('bazar_plan') || 'free')) {
@@ -1639,7 +1649,7 @@
 
                 var fullName = [firstName, lastName].filter(Boolean).join(' ');
                 if (fullName) {
-                    localStorage.setItem('bazar_name', fullName);
+                    localStorage.setItem('bazar_username', fullName);
                     var hName = document.getElementById('header-username');
                     if (hName) hName.textContent = fullName;
                     var wName = document.getElementById('cabWelcomeName');
