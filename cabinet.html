@@ -2190,14 +2190,23 @@
                 if (paidDays > 0) localStorage.setItem('bazar_days_left', paidDays);
                 planPrice = paidPlan === 'pro' ? 10 : 20;
                 planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
-                /* Activate the ad on the server */
+                /* Activate the ad on the server — retry up to 5x if plan not yet updated */
                 if (paidAdId) {
                     var _uid = localStorage.getItem('bazar_firebase_uid') || '';
-                    fetch('https://admin.bazar.uk/api/properties/' + paidAdId + '/activate-plan', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan })
-                    }).catch(function(){});
+                    function _activateAd(attemptsLeft) {
+                        fetch('https://admin.bazar.uk/api/properties/' + paidAdId + '/activate-plan', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan })
+                        }).then(function(r) {
+                            if (r.status === 403 && attemptsLeft > 0) {
+                                setTimeout(function() { _activateAd(attemptsLeft - 1); }, 4000);
+                            }
+                        }).catch(function(){
+                            if (attemptsLeft > 0) setTimeout(function() { _activateAd(attemptsLeft - 1); }, 4000);
+                        });
+                    }
+                    _activateAd(5);
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
