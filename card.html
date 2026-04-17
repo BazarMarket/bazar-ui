@@ -116,8 +116,8 @@
                               <li style="padding-left:4px"><a href="#" id="prop-district-link">Kapsalos</a></li>
                            </ul>
                            <div class="card-head__mob-price">
-                              <div class="card-head__mob-price-new" id="mob-price-new"> 814,<sup>99</sup>£</div>
-                              <div class="card-head__mob-price-old" id="mob-price-old"> 853,<sup>08</sup>£</div>
+                              <div class="card-head__mob-price-new" id="mob-price-new"> 815£</div>
+                              <div class="card-head__mob-price-old" id="mob-price-old"> 853£</div>
                            </div>
                         </div>
                      </div>
@@ -393,10 +393,10 @@
                            <div class="card-price__right">
                               <div class="price-last">
                                  <div class="price-last-old" id="price-old">
-                                    <span> 853,<sup>08</sup>£</span>
+                                    <span> 853£</span>
                                  </div>
                                  <div class="price-last-new" id="price-new">
-                                    <span> 814,<sup>99</sup>£</span>
+                                    <span> 815£</span>
                                  </div>
                                  <div class="price-last__text">
                                     <a href="" class="price__link" id="price-negotiable"> Negotiable </a>
@@ -819,12 +819,7 @@
       }
 
       function fmtPrice(n) {
-         var s = fmt(n);
-         var comma = s.lastIndexOf(',');
-         if(comma >= 0) {
-            return s.substring(0, comma + 1) + '<sup>' + s.substring(comma + 1) + '</sup>£';
-         }
-         return s + '£';
+         return fmt(Math.round(n)) + '£';
       }
 
       var hasOldPrice = p.old_price && p.old_price > 0;
