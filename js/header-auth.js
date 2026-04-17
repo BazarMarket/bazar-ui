@@ -85,7 +85,7 @@
 
         if (daysEl) {
             if (daysLeft > 0 && plan !== 'free') {
-                daysEl.textContent = daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' left';
+                daysEl.textContent = daysLeft + 'd';
                 daysEl.style.display = '';
             } else {
                 daysEl.textContent = '';
