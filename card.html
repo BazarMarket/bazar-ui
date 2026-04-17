@@ -137,7 +137,7 @@
                            <div id="boost-top-nav-item" style="display:none;">
                               <a href="#" class="card-head__boost" onclick="bazarBoostPay(window.location.href,''); return false;">Boost to Top</a>
                            </div>
-                           <a href="#" class="card-head__edit">&#9998; Edit Ad</a>
+                           <a href="#" class="card-head__edit" id="edit-ad-btn" style="display:none">&#9998; Edit Ad</a>
                         </div>
                      </div>
                   </div>
@@ -955,6 +955,18 @@
         var planOk   = curPlan === 'free' || curPlan === 'pro';
         if ((_demoCard === '1') || (canBoost && isOwner && planOk)) {
           boostWrap.style.display = '';
+        }
+      })();
+
+      /* ── Edit Ad button: only for the ad owner ── */
+      (function() {
+        var editBtn = document.getElementById('edit-ad-btn');
+        if (!editBtn) return;
+        var curUser = localStorage.getItem('bazar_username') || '';
+        var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
+        if (isOwner) {
+          editBtn.href = 'post-ad.html?edit=' + encodeURIComponent(id);
+          editBtn.style.display = '';
         }
       })();
 
