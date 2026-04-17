@@ -56,14 +56,19 @@
     }
 
     function updateMsgCount() {
-        var uid = localStorage.getItem('bazar_firebase_uid') || '';
-        if (!uid) return;
+        var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+        var name = localStorage.getItem('bazar_username')     || '';
+        if (!uid && !name) return;
 
         /* Show cached count immediately, then refresh from API */
         var cached = parseInt(localStorage.getItem('bazar_unread_count') || '0', 10);
         if (cached > 0) setMsgBadge(cached);
 
-        fetch('/api/chat/convs?uid=' + encodeURIComponent(uid))
+        /* Send both uid AND name so server finds buyer convs (by uid) AND seller convs (by name) */
+        var url = '/api/chat/convs?uid=' + encodeURIComponent(uid);
+        if (name) url += '&name=' + encodeURIComponent(name);
+
+        fetch(url)
             .then(function (r) { return r.ok ? r.json() : { conversations: [] }; })
             .then(function (data) {
                 var convs = data.conversations || [];
