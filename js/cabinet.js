@@ -4,12 +4,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var navItems = document.querySelectorAll('.cab-nav__item[data-tab]');
     var panels = document.querySelectorAll('.cab-panel[data-panel]');
 
-    function switchTab(tabId) {
-        navItems.forEach(function (item) {
-            item.classList.toggle('active', item.dataset.tab === tabId);
-        });
+    function switchTab(tabId, sourceEl) {
+        navItems.forEach(function (item) { item.classList.remove('active'); });
+        if (sourceEl) {
+            sourceEl.classList.add('active');
+        } else {
+            var first = document.querySelector('.cab-nav__item[data-tab="' + tabId + '"]');
+            if (first) first.classList.add('active');
+        }
+        var panelId = tabId;
         panels.forEach(function (panel) {
-            panel.classList.toggle('active', panel.dataset.panel === tabId);
+            panel.classList.toggle('active', panel.dataset.panel === panelId);
         });
         history.replaceState(null, '', tabId === 'dashboard' ? '/cabinet' : '/cabinet/' + tabId);
         if (window.innerWidth <= 768) {
@@ -33,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     navItems.forEach(function (item) {
         item.addEventListener('click', function () {
-            switchTab(this.dataset.tab);
+            switchTab(this.dataset.tab, this);
         });
     });
 
