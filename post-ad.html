@@ -3198,12 +3198,23 @@
          if (!oldPriceNum) return;
          var priceRow = document.querySelector('.pa-price-row');
          if (!priceRow) return;
-         var row = document.createElement('div');
-         row.id = '_editOldPriceRow';
-         row.style.cssText = 'margin-bottom:6px;font-size:13px;color:#888;';
          var fmtOld = String(Math.round(oldPriceNum)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-         row.innerHTML = 'Previous price: <span style="color:#e53935;text-decoration:line-through;font-weight:600;">£' + fmtOld + '</span>';
-         priceRow.parentNode.insertBefore(row, priceRow);
+         var wrap = document.createElement('div');
+         wrap.id = '_editOldPriceRow';
+         wrap.style.cssText = 'margin-bottom:10px;';
+         wrap.innerHTML =
+            '<span style="' +
+               'font-family:Poppins,sans-serif;font-weight:700;font-size:20px;' +
+               'color:#1d1d1b;display:inline-block;position:relative;' +
+            '">' +
+               '£' + fmtOld +
+               '<span style="' +
+                  'position:absolute;left:0;right:0;top:50%;' +
+                  'height:2px;background:#e53935;' +
+                  'transform:translateY(-50%);' +
+               '"></span>' +
+            '</span>';
+         priceRow.parentNode.insertBefore(wrap, priceRow);
       }
 
       /* Fill form after categories are selected */
