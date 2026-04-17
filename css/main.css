@@ -1430,7 +1430,6 @@ body {
   font-size: 45px;
   color: red;
   line-height: 100%;
-  margin-top: -5px;
 }
 
 /* end -------------------- */
@@ -5699,7 +5698,7 @@ p {
   font-size: 28px;
   color: red;
   line-height: 110%;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 .card-head__mob-price-old {
   font-family: "Poppins", sans-serif;
