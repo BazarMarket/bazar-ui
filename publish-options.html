@@ -873,8 +873,23 @@
 
       function publishAd(plan) {
          if (plan === 'free') {
-            var adId = (new URLSearchParams(window.location.search)).get('ad_id') || '';
-            window.location.href = adId ? 'card.html?id=' + adId : 'cabinet.html#my-ads';
+            var uid   = localStorage.getItem('bazar_firebase_uid');
+            var adId  = (new URLSearchParams(window.location.search)).get('ad_id') || '';
+            if (!adId) { window.location.href = 'cabinet.html#my-ads'; return; }
+            var freeBtn = document.getElementById('freeBtn');
+            if (freeBtn) { freeBtn.textContent = 'Publishing…'; freeBtn.disabled = true; }
+            fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+               body: JSON.stringify({ firebase_uid: uid || '', plan: 'free' })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+               window.location.href = 'card.html?id=' + adId;
+            })
+            .catch(function() {
+               window.location.href = 'card.html?id=' + adId;
+            });
             return;
          }
          var uid = localStorage.getItem('bazar_firebase_uid');
