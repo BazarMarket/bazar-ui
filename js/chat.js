@@ -66,25 +66,24 @@ window.BAZAR_CHAT = (function () {
 
         function applyNew(newMsgs) {
             if (!newMsgs.length) return;
-            var changed = false;
             newMsgs.forEach(function (m) {
                 if (m.id > lastId) lastId = m.id;
-                /* replace matching optimistic entry or add new */
-                var existIdx = allMsgs.findIndex(function (x) { return x.id === m.id; });
-                if (existIdx === -1) {
-                    /* remove optimistic placeholder with same text+sender if present */
-                    var optIdx = allMsgs.findIndex(function (x) {
-                        return x._optimistic && x.sender_id === m.sender_id && x.text === m.text;
-                    });
-                    if (optIdx !== -1) { allMsgs.splice(optIdx, 1); }
+                /* skip if already in the list (e.g. duplicate poll) */
+                var already = allMsgs.some(function (x) { return x.id === m.id; });
+                if (!already) {
+                    /* remove matching optimistic placeholder if present */
+                    var optIdx = -1;
+                    for (var i = 0; i < allMsgs.length; i++) {
+                        if (allMsgs[i]._optimistic && allMsgs[i].sender_id === m.sender_id && allMsgs[i].text === m.text) {
+                            optIdx = i; break;
+                        }
+                    }
+                    if (optIdx !== -1) allMsgs.splice(optIdx, 1);
                     allMsgs.push(m);
-                    changed = true;
                 }
             });
-            if (changed) {
-                allMsgs.sort(function (a, b) { return a.id - b.id; });
-                cb(allMsgs.slice());
-            }
+            allMsgs.sort(function (a, b) { return a.id - b.id; });
+            cb(allMsgs.slice());
         }
 
         /* Immediately render sender's own message before server round-trip */

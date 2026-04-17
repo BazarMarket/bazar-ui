@@ -26,6 +26,9 @@
         updateMsgCount();
         applyPlanBadge();
 
+        /* Start live badge polling — updates unread count every 10s on any page */
+        startMsgPolling();
+
         /* Fetch fresh data from API */
         var uid = localStorage.getItem('bazar_firebase_uid') || '';
         if (uid) {
@@ -145,6 +148,33 @@
                 setMsgBadge(total);
             })
             .catch(function () {});
+    }
+
+    /* Poll unread count every 10 seconds on every page */
+    function startMsgPolling() {
+        var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+        var name = localStorage.getItem('bazar_username')     || '';
+        if (!uid && !name) return;
+
+        /* Don't double-start if already running */
+        if (window._bazarMsgPollTimer) return;
+
+        window._bazarMsgPollTimer = setInterval(function () {
+            var url = '/api/chat/convs?uid=' + encodeURIComponent(uid);
+            if (name) url += '&name=' + encodeURIComponent(name);
+            fetch(url)
+                .then(function (r) { return r.ok ? r.json() : { conversations: [] }; })
+                .then(function (data) {
+                    var convs = data.conversations || [];
+                    var total = 0;
+                    convs.forEach(function (c) {
+                        var isBuyer = c.buyer_id === uid;
+                        total += isBuyer ? (c.unread_buyer || 0) : (c.unread_seller || 0);
+                    });
+                    setMsgBadge(total);
+                })
+                .catch(function () {});
+        }, 10000);
     }
 
     window.updatePlanBadge = applyPlanBadge;
