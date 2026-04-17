@@ -54,20 +54,52 @@ window.BAZAR_CHAT = (function () {
 
     /**
      * Listen to ALL messages in a conversation (load all, then poll for new).
-     * Returns unsubscribe function.
-     * cb(msgs_array) called with full sorted message list each time.
+     * Returns object with:
+     *   unsub()          — stop polling
+     *   pushOptimistic() — immediately render a message before server confirms it
      */
     function listenAllMsgs(cid, cb) {
         var allMsgs = [];
         var lastId = 0;
         var timer = null;
+        var _optimisticId = -1;
 
         function applyNew(newMsgs) {
             if (!newMsgs.length) return;
+            var changed = false;
             newMsgs.forEach(function (m) {
                 if (m.id > lastId) lastId = m.id;
-                allMsgs.push(m);
+                /* replace matching optimistic entry or add new */
+                var existIdx = allMsgs.findIndex(function (x) { return x.id === m.id; });
+                if (existIdx === -1) {
+                    /* remove optimistic placeholder with same text+sender if present */
+                    var optIdx = allMsgs.findIndex(function (x) {
+                        return x._optimistic && x.sender_id === m.sender_id && x.text === m.text;
+                    });
+                    if (optIdx !== -1) { allMsgs.splice(optIdx, 1); }
+                    allMsgs.push(m);
+                    changed = true;
+                }
             });
+            if (changed) {
+                allMsgs.sort(function (a, b) { return a.id - b.id; });
+                cb(allMsgs.slice());
+            }
+        }
+
+        /* Immediately render sender's own message before server round-trip */
+        function pushOptimistic(senderId, senderName, text, type) {
+            var msg = {
+                id: _optimisticId--,
+                conv_id: cid,
+                sender_id: senderId,
+                sender_name: senderName,
+                text: text,
+                time: Math.floor(Date.now() / 1000),
+                type: type || 'text',
+                _optimistic: true
+            };
+            allMsgs.push(msg);
             allMsgs.sort(function (a, b) { return a.id - b.id; });
             cb(allMsgs.slice());
         }
@@ -91,12 +123,15 @@ window.BAZAR_CHAT = (function () {
             }).catch(function () {});
         }, 1000);
 
-        return function () { if (timer) clearInterval(timer); };
+        return {
+            unsub: function () { if (timer) clearInterval(timer); },
+            pushOptimistic: pushOptimistic
+        };
     }
 
     /**
      * Listen to conversations list.
-     * Polls every 5 seconds.
+     * Polls every 2 seconds.
      * cb(conversations_array) called each time.
      */
     function listenConvs(uid, sellerName, cb) {
@@ -109,7 +144,7 @@ window.BAZAR_CHAT = (function () {
         }
 
         poll(); // immediate first call
-        timer = setInterval(poll, 5000);
+        timer = setInterval(poll, 2000);
 
         return function () { if (timer) clearInterval(timer); };
     }

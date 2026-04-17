@@ -1272,7 +1272,7 @@
          seller_name: d.sellerName, buyer_id: _ccpMyUid, buyer_name: _ccpMyName
       }).then(function() {
          _ccpInited = true;
-         if (_ccpUnsubMsg) { _ccpUnsubMsg(); }
+         if (_ccpUnsubMsg) { _ccpUnsubMsg.unsub ? _ccpUnsubMsg.unsub() : _ccpUnsubMsg(); }
          _ccpUnsubMsg = BAZAR_CHAT.listenAllMsgs(_ccpConvId, function(msgs) {
             ccpRenderMessages(msgs);
          });
@@ -1379,6 +1379,9 @@
       var text = inp.value.trim();
       inp.value = '';
       if (_ccpConvId && _ccpMyUid) {
+         if (_ccpUnsubMsg && _ccpUnsubMsg.pushOptimistic) {
+            _ccpUnsubMsg.pushOptimistic(_ccpMyUid, _ccpMyName, text, 'text');
+         }
          BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text).catch(function(){ inp.value = text; });
       } else {
          ccpInitChat(function(){ if(_ccpConvId && _ccpMyUid) BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text).catch(function(){}); });
@@ -1729,7 +1732,7 @@ function submitEmailForm(e) {
 
 <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
-<script src="js/chat.js?v=1"></script>
+<script src="js/chat.js?v=2"></script>
 <script src="js/firebase-auth-v2.js?v=4"></script>
 <script>
 function submitComment() {

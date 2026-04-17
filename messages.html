@@ -354,7 +354,7 @@ function renderConvsList() {
    Open a real conversation
 ═══════════════════════════════════════════════════ */
 function cabOpenRealChat(convId) {
-    if (_unsubMsgs) { _unsubMsgs(); _unsubMsgs = null; }
+    if (_unsubMsgs) { _unsubMsgs.unsub(); _unsubMsgs = null; }
     _activeConvId = convId;
 
     /* fetch latest conv data if we don't have it yet */
@@ -483,6 +483,10 @@ function cabSendRealMessage() {
     if (!inp || !inp.value.trim() || !_activeConvId || !_myUid) return;
     var text = inp.value.trim();
     inp.value = '';
+    /* show own message immediately (optimistic) */
+    if (_unsubMsgs && _unsubMsgs.pushOptimistic) {
+        _unsubMsgs.pushOptimistic(_myUid, _myName, text, 'text');
+    }
     BAZAR_CHAT.send(_activeConvId, _myUid, _myName, text).catch(function () {
         inp.value = text;
     });
@@ -496,7 +500,7 @@ function cabSendMessage() { cabSendRealMessage(); }
 ═══════════════════════════════════════════════════ */
 function cabOpenChat(id) {
     if (id !== 'support') return;
-    if (_unsubMsgs) { _unsubMsgs(); _unsubMsgs = null; }
+    if (_unsubMsgs) { _unsubMsgs.unsub(); _unsubMsgs = null; }
     _activeConvId = null;
 
     document.querySelectorAll('.cab-chat-content').forEach(function (el) { el.style.display = 'none'; });
@@ -666,7 +670,7 @@ function cabSendSchedule() {
 })();
 </script>
 
-<script src="js/chat.js?v=1"></script>
+<script src="js/chat.js?v=2"></script>
 <script src="js/header-auth.js?v=8"></script>
 </body>
 </html>
