@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabId === 'my-ads' && typeof loadMyAds === 'function') {
             loadMyAds();
         }
+        if (tabId === 'settings' && typeof populateProfileStats === 'function') {
+            populateProfileStats();
+        }
     }
 
     window._cabSwitchTab = switchTab;

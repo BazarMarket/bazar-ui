@@ -901,6 +901,25 @@
                     <h1 class="cab-panel__title">My Profile</h1>
                 </div>
 
+                <div class="cab-stat-cards" style="margin-bottom:24px;">
+                    <div class="cab-stat-card">
+                        <p class="cab-stat-card__label icon-win-ad">Active Ads</p>
+                        <p class="cab-stat-card__value"><span id="profStatAds">—</span></p>
+                    </div>
+                    <div class="cab-stat-card">
+                        <p class="cab-stat-card__label icon-eye">Views This Month</p>
+                        <p class="cab-stat-card__value"><span id="profStatViews">749</span> <span>views</span></p>
+                    </div>
+                    <div class="cab-stat-card">
+                        <p class="cab-stat-card__label icon-heart-new">Active Favorites</p>
+                        <p class="cab-stat-card__value"><span id="profStatFav">—</span></p>
+                    </div>
+                    <div class="cab-stat-card">
+                        <p class="cab-stat-card__label icon-calendar-upd">Subscription Days Left</p>
+                        <p class="cab-stat-card__value"><span id="profStatDays">—</span></p>
+                    </div>
+                </div>
+
                 <div class="cab-profile-grid">
 
                     <!-- Photo column -->
@@ -1089,7 +1108,7 @@
 </div>
 
 <script type="text/javascript" src="js/script.js?v=3"></script>
-<script type="text/javascript" src="js/cabinet.js?v=5"></script>
+<script type="text/javascript" src="js/cabinet.js?v=6"></script>
 <script>
     var BAZAR_PRODUCTS = {
         10: { title: "3 Bedroom Flats for Sale", price: 520000, image: "/img/properties/penthouse-edinburgh.jpg", city: "Edinburgh" },
@@ -1114,6 +1133,39 @@
         }
         var badge = document.getElementById('fav-count');
         if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+        return count;
+    }
+
+    function populateProfileStats() {
+        var uid = localStorage.getItem('bazar_firebase_uid');
+
+        var favEl  = document.getElementById('profStatFav');
+        var adsEl  = document.getElementById('profStatAds');
+        var daysEl = document.getElementById('profStatDays');
+
+        if (favEl)  favEl.textContent  = updateFavCount();
+
+        if (uid) {
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    var active = (d.data || []).filter(function(a) { return a.status === 'active'; }).length;
+                    if (adsEl) adsEl.textContent = active;
+                })
+                .catch(function() { if (adsEl) adsEl.textContent = '0'; });
+
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    var days = parseInt(d.days_left || 0, 10);
+                    var plan = d.plan || 'free';
+                    if (daysEl) daysEl.textContent = plan === 'free' ? '—' : (days + ' days');
+                })
+                .catch(function() { if (daysEl) daysEl.textContent = '—'; });
+        } else {
+            if (adsEl)  adsEl.textContent  = '0';
+            if (daysEl) daysEl.textContent = '—';
+        }
     }
 
     function renderFavorites() {
@@ -1570,6 +1622,7 @@
         updateFavCount();
         updateWalletDisplay();
         loadPayments();
+        populateProfileStats();
 
         var profileForm = document.getElementById('profileForm');
         if (profileForm) {
