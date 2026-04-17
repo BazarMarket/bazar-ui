@@ -799,8 +799,8 @@
       var stikerEl = el('prop-stiker');
       if(stikerEl) {
          var badges = '';
-         if(p.is_vip) badges += '<span class="stiker stiker_vip">VIP</span>';
-         if(p.is_pro) badges += '<span class="stiker stiker_top">PRO</span>';
+         if(p.is_vip) badges = '<span class="stiker stiker_vip">VIP</span>';
+         else if(p.is_pro) badges = '<span class="stiker stiker_top">PRO</span>';
          stikerEl.innerHTML = badges;
       }
       if (el('bread-category')) el('bread-category').textContent = 'Real Estate for ' + (p.listing_type || '');
