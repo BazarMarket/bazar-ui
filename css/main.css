@@ -1411,7 +1411,7 @@ body {
   color: #1d1d1b;
   line-height: 100%;
   position: relative;
-  margin-bottom: -10px;
+  margin-bottom: 10px;
 }
 .price-last-old::before {
   content: "";
@@ -1421,7 +1421,7 @@ body {
   background: red;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-20deg);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 .price-last-new {
@@ -5717,7 +5717,7 @@ p {
   background: red;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-8deg);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 /* Стикки-кнопка Contact Seller — скрыта на десктопе */
