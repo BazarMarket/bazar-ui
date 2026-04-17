@@ -971,11 +971,11 @@
                             <div class="cab-form-grid">
                                 <div class="input-custom">
                                     <label>First Name</label>
-                                    <input id="fieldFirstName" type="text" placeholder="First name" value="" readonly style="background:#f5f5f5;color:#888;cursor:default;">
+                                    <input id="fieldFirstName" type="text" placeholder="First name" value="">
                                 </div>
                                 <div class="input-custom">
                                     <label>Last Name</label>
-                                    <input id="fieldLastName" type="text" placeholder="Last name" value="" readonly style="background:#f5f5f5;color:#888;cursor:default;">
+                                    <input id="fieldLastName" type="text" placeholder="Last name" value="">
                                 </div>
                                 <div class="input-custom">
                                     <label>Email</label>
@@ -1628,21 +1628,33 @@
         if (profileForm) {
             profileForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                var uid     = localStorage.getItem('bazar_firebase_uid');
-                var email   = (document.getElementById('fieldEmail')   || {}).value || '';
-                var address = (document.getElementById('fieldAddress') || {}).value || '';
-                var saveBtn = profileForm.querySelector('button[type="submit"]');
-                var orig    = saveBtn ? saveBtn.textContent : 'Save Changes';
+                var uid       = localStorage.getItem('bazar_firebase_uid');
+                var firstName = ((document.getElementById('fieldFirstName') || {}).value || '').trim();
+                var lastName  = ((document.getElementById('fieldLastName')  || {}).value || '').trim();
+                var email     = (document.getElementById('fieldEmail')   || {}).value || '';
+                var address   = (document.getElementById('fieldAddress') || {}).value || '';
+                var saveBtn   = profileForm.querySelector('button[type="submit"]');
+                var orig      = saveBtn ? saveBtn.textContent : 'Save Changes';
                 if (saveBtn) { saveBtn.textContent = 'Saving...'; saveBtn.disabled = true; }
 
+                var fullName = [firstName, lastName].filter(Boolean).join(' ');
+                if (fullName) {
+                    localStorage.setItem('bazar_name', fullName);
+                    var hName = document.getElementById('header-username');
+                    if (hName) hName.textContent = fullName;
+                    var wName = document.getElementById('cabWelcomeName');
+                    if (wName) wName.textContent = fullName;
+                }
                 localStorage.setItem('bazar_email',   email);
                 localStorage.setItem('bazar_address', address);
 
                 if (uid) {
+                    var payload = { email: email, address: address };
+                    if (fullName) payload.name = fullName;
                     fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({ email: email, address: address })
+                        body: JSON.stringify(payload)
                     })
                     .then(function(r) { return r.json(); })
                     .then(function(d) {
