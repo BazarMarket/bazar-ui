@@ -969,7 +969,7 @@
                         </div> -->
                     </div>
                     <div class="cards__body">
-                        <div class="cards__grid before992">
+                        <div class="cards__grid before992" id="latestGrid">
                             <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=10" class="card-link" aria-label="View listing"></a>
                                 <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/savills.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">EDINBURGH</p></div></div>
                                 <div class="card__img">
@@ -1549,6 +1549,42 @@
                 })
                 .catch(function() {});
         });
+    })();
+    </script>
+
+    <script>
+    /* Load Latest Updates from API */
+    (function() {
+        fetch('https://admin.bazar.uk/api/properties/recent', { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(resp) {
+                if (!resp || !resp.data || !resp.data.length) return;
+                var grid = document.getElementById('latestGrid');
+                if (!grid) return;
+                var html = '';
+                resp.data.forEach(function(ad) {
+                    var cardCls = ad.is_vip ? 'card card_red' : ad.is_pro ? 'card card_orange' : 'card';
+                    var stiker = ad.is_vip
+                        ? '<div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>'
+                        : ad.is_pro
+                            ? '<div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>'
+                            : '<div class="card__stikers"></div>';
+                    var imgSrc = ad.photo || 'img/product.jpg';
+                    var price = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
+                    html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer">' +
+                        '<a href="card.html?id=' + ad.id + '" class="card-link" aria-label="View listing"></a>' +
+                        '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
+                        '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
+                        '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
+                        '<div class="card__img">' + stiker +
+                        '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
+                        '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
+                        '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span></div></div>' +
+                        '</div>';
+                });
+                grid.innerHTML = html;
+            })
+            .catch(function() {});
     })();
     </script>
 
