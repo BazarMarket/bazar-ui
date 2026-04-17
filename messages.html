@@ -316,10 +316,12 @@ function renderConvsList() {
         return;
     }
 
+    var totalUnread = 0;
     el.innerHTML = convs.map(function (c) {
         var isBuyer  = c.buyer_id === _myUid;
         var other    = isBuyer ? (c.seller_name || 'Seller') : (c.buyer_name || 'Buyer');
         var unread   = isBuyer ? (c.unread_buyer || 0) : (c.unread_seller || 0);
+        totalUnread += unread;
         var timeStr  = c.last_time ? formatMsgTime(new Date(c.last_time * 1000)) : '';
         var isActive = _activeConvId === c.id;
 
@@ -334,6 +336,19 @@ function renderConvsList() {
                (unread > 0 ? '<span class="cab-conv-badge">' + unread + '</span>' : '') +
                '</div>';
     }).join('');
+
+    /* Update header badge + cache */
+    localStorage.setItem('bazar_unread_count', totalUnread);
+    var headerBadges = document.querySelectorAll('.icon-email .icon-item__namber');
+    headerBadges.forEach(function (b) {
+        b.textContent = totalUnread;
+        b.style.display = totalUnread > 0 ? 'flex' : 'none';
+    });
+    var unreadBadge = document.getElementById('unreadBadge');
+    if (unreadBadge) {
+        unreadBadge.textContent = totalUnread;
+        unreadBadge.style.display = totalUnread > 0 ? 'flex' : 'none';
+    }
 }
 
 /* ═══════════════════════════════════════════════════

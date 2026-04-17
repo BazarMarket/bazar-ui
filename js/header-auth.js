@@ -23,6 +23,7 @@
         }
 
         updateFavCount();
+        updateMsgCount();
     }
 
     function updateFavCount() {
@@ -36,6 +37,44 @@
             badge.textContent = count;
             badge.style.display = count > 0 ? 'flex' : 'none';
         }
+    }
+
+    function setMsgBadge(count) {
+        var badges = document.querySelectorAll('.icon-email .icon-item__namber');
+        badges.forEach(function (b) {
+            b.textContent = count;
+            b.style.display = count > 0 ? 'flex' : 'none';
+        });
+        /* also the dedicated id="msg-count" if present */
+        var byId = document.getElementById('msg-count');
+        if (byId) {
+            byId.textContent = count;
+            byId.style.display = count > 0 ? 'flex' : 'none';
+        }
+        /* cache for next page load */
+        localStorage.setItem('bazar_unread_count', count);
+    }
+
+    function updateMsgCount() {
+        var uid = localStorage.getItem('bazar_firebase_uid') || '';
+        if (!uid) return;
+
+        /* Show cached count immediately, then refresh from API */
+        var cached = parseInt(localStorage.getItem('bazar_unread_count') || '0', 10);
+        if (cached > 0) setMsgBadge(cached);
+
+        fetch('/api/chat/convs?uid=' + encodeURIComponent(uid))
+            .then(function (r) { return r.ok ? r.json() : { conversations: [] }; })
+            .then(function (data) {
+                var convs = data.conversations || [];
+                var total = 0;
+                convs.forEach(function (c) {
+                    var isBuyer = c.buyer_id === uid;
+                    total += isBuyer ? (c.unread_buyer || 0) : (c.unread_seller || 0);
+                });
+                setMsgBadge(total);
+            })
+            .catch(function () {});
     }
 
     if (document.readyState === 'loading') {
