@@ -907,8 +907,81 @@
          });
       }
 
+      function publishWithSubscription(plan) {
+         var uid   = localStorage.getItem('bazar_firebase_uid');
+         var adId  = (new URLSearchParams(window.location.search)).get('ad_id') || '';
+         if (!uid || !adId) {
+            alert('Session error. Please try again.');
+            return;
+         }
+         var btnId = plan === 'pro' ? 'proBtn' : 'vipBtn';
+         var btn   = document.getElementById(btnId);
+         var orig  = btn ? btn.textContent : '';
+         if (btn) { btn.textContent = 'Publishing…'; btn.disabled = true; }
+
+         fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ firebase_uid: uid, plan: plan })
+         })
+         .then(function(r) { return r.json(); })
+         .then(function(data) {
+            if (data.success) {
+               window.location.href = 'card.html?id=' + adId;
+            } else {
+               alert(data.error || 'Error. Please try again.');
+               if (btn) { btn.textContent = orig; btn.disabled = false; }
+            }
+         })
+         .catch(function() {
+            alert('Connection error. Please try again.');
+            if (btn) { btn.textContent = orig; btn.disabled = false; }
+         });
+      }
+
+      function applyExistingPlan() {
+         var plan = localStorage.getItem('bazar_plan') || 'free';
+         if (plan === 'free') return;
+
+         var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+
+         function makeActiveBadge(text) {
+            var b = document.createElement('span');
+            b.style.cssText = 'display:inline-flex;align-items:center;gap:5px;background:#e8f8ee;color:#1a9448;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;';
+            b.innerHTML = '&#10003; ' + text;
+            return b;
+         }
+
+         if (plan === 'pro' || plan === 'vip') {
+            var proBtn = document.getElementById('proBtn');
+            var proCard = document.querySelector('.po-card--pro');
+            if (proBtn && proCard) {
+               proBtn.textContent = 'Publish with PRO plan — Free';
+               proBtn.style.background = '#1a9448';
+               proBtn.onclick = function() { publishWithSubscription('pro'); };
+               var badge = makeActiveBadge('PRO subscription active');
+               var proName = proCard.querySelector('.po-plan-name');
+               if (proName) proName.parentNode.insertBefore(badge, proName);
+            }
+         }
+
+         if (plan === 'vip') {
+            var vipBtn = document.getElementById('vipBtn');
+            var vipCard = document.querySelector('.po-card--vip');
+            if (vipBtn && vipCard) {
+               vipBtn.textContent = 'Publish with VIP plan — Free';
+               vipBtn.style.background = '#1a9448';
+               vipBtn.onclick = function() { publishWithSubscription('vip'); };
+               var vipBadge = makeActiveBadge('VIP subscription active');
+               var vipName = vipCard.querySelector('.po-plan-name');
+               if (vipName) vipName.parentNode.insertBefore(vipBadge, vipName);
+            }
+         }
+      }
+
       document.addEventListener('DOMContentLoaded', function() {
          selectPlan('pro');
+         applyExistingPlan();
       });
    </script>
 <script src="js/header-auth.js?v=3"></script>
