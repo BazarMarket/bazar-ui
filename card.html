@@ -830,7 +830,15 @@
       var hasOldPrice = p.old_price && p.old_price > 0;
       var priceHtml = fmtPrice(p.price);
 
-      el('mob-price-new').innerHTML = ' ' + priceHtml;
+      var _mobPriceEl = el('mob-price-new');
+      if(_mobPriceEl) {
+         _mobPriceEl.innerHTML = ' ' + priceHtml;
+         var _mpv = parseFloat(p.price) || 0;
+         if      (_mpv >= 1000000000) _mobPriceEl.style.fontSize = '16px';
+         else if (_mpv >= 100000000)  _mobPriceEl.style.fontSize = '20px';
+         else if (_mpv >= 10000000)   _mobPriceEl.style.fontSize = '24px';
+         else if (_mpv >= 1000000)    _mobPriceEl.style.fontSize = '26px';
+      }
       if(hasOldPrice) {
          el('mob-price-old').innerHTML = ' ' + fmtPrice(p.old_price);
          el('mob-price-old').style.display = '';
@@ -842,6 +850,11 @@
       if(priceNew) {
          priceNew.innerHTML = '<span>' + priceHtml + '</span>';
          if(!hasOldPrice) priceNew.style.color = '#1d1d1b';
+         var _pv = parseFloat(p.price) || 0;
+         if      (_pv >= 1000000000) priceNew.style.fontSize = '18px';
+         else if (_pv >= 100000000)  priceNew.style.fontSize = '22px';
+         else if (_pv >= 10000000)   priceNew.style.fontSize = '26px';
+         else if (_pv >= 1000000)    priceNew.style.fontSize = '30px';
       }
       var priceOld = el('price-old');
       if(priceOld) {
