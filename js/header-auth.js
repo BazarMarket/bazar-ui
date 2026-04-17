@@ -24,6 +24,66 @@
 
         updateFavCount();
         updateMsgCount();
+        applyPlanBadge();
+
+        /* Fetch fresh data from API */
+        var uid = localStorage.getItem('bazar_firebase_uid') || '';
+        if (uid) {
+            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                .then(function(r) { return r.ok ? r.json() : {}; })
+                .then(function(d) {
+                    if (!d.exists) return;
+                    if (d.name) {
+                        localStorage.setItem('bazar_username', d.name);
+                        var el = document.getElementById('header-username') || document.querySelector('.user-link__title');
+                        if (el) el.textContent = d.name;
+                    }
+                    var plan = (d.plan || 'free').toLowerCase();
+                    var daysLeft = parseInt(d.days_left || 0, 10);
+                    localStorage.setItem('bazar_plan', plan);
+                    if (daysLeft > 0) localStorage.setItem('bazar_days_left', daysLeft);
+                    applyPlanBadge(plan, daysLeft);
+                })
+                .catch(function() {});
+        }
+    }
+
+    function applyPlanBadge(plan, daysLeft) {
+        plan     = plan     || (localStorage.getItem('bazar_plan')      || 'free').toLowerCase();
+        daysLeft = daysLeft !== undefined ? daysLeft : parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+
+        /* Find badge element by id or fallback to class */
+        var badge = document.getElementById('subPlanBadge') ||
+                    document.querySelector('.subscription__stiker');
+        var daysEl = document.getElementById('subDaysEl') ||
+                     document.querySelector('.subscription__days');
+
+        if (!badge) return;
+
+        /* Style map */
+        var styles = {
+            free: { text: 'Free',  bg: '#22c55e', color: '#fff' },
+            pro:  { text: 'PRO',   bg: '#ff9138', color: '#fff' },
+            vip:  { text: 'VIP',   bg: '#c99a10', color: '#fff' }
+        };
+        var s = styles[plan] || styles.free;
+        badge.textContent = s.text;
+        badge.style.background = s.bg;
+        badge.style.color = s.color;
+        badge.style.borderRadius = '20px';
+        badge.style.padding = '2px 10px';
+        badge.style.fontWeight = '700';
+        badge.style.fontSize = '12px';
+
+        if (daysEl) {
+            if (daysLeft > 0 && plan !== 'free') {
+                daysEl.textContent = daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' left';
+                daysEl.style.display = '';
+            } else {
+                daysEl.textContent = '';
+                daysEl.style.display = 'none';
+            }
+        }
     }
 
     function updateFavCount() {
@@ -45,13 +105,11 @@
             b.textContent = count;
             b.style.display = count > 0 ? 'flex' : 'none';
         });
-        /* also the dedicated id="msg-count" if present */
         var byId = document.getElementById('msg-count');
         if (byId) {
             byId.textContent = count;
             byId.style.display = count > 0 ? 'flex' : 'none';
         }
-        /* cache for next page load */
         localStorage.setItem('bazar_unread_count', count);
     }
 
@@ -60,11 +118,10 @@
         var name = localStorage.getItem('bazar_username')     || '';
         if (!uid && !name) return;
 
-        /* Show cached count immediately, then refresh from API */
+        /* Show cached count immediately */
         var cached = parseInt(localStorage.getItem('bazar_unread_count') || '0', 10);
         if (cached > 0) setMsgBadge(cached);
 
-        /* Send both uid AND name so server finds buyer convs (by uid) AND seller convs (by name) */
         var url = '/api/chat/convs?uid=' + encodeURIComponent(uid);
         if (name) url += '&name=' + encodeURIComponent(name);
 
@@ -81,6 +138,8 @@
             })
             .catch(function () {});
     }
+
+    window.updatePlanBadge = applyPlanBadge;
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', updateHeader);
