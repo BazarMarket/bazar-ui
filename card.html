@@ -271,7 +271,7 @@
                         <div class="card-tab mytab-js">
                            <div class="card-tab__btns">
                               <p data-tab-btn="card-tab1" class="card-tab__btn active">Description </p>
-                              <p data-tab-btn="card-tab3" class="card-tab__btn">Comments <span class="tab-count" id="comments-count">3</span></p>
+                              <p data-tab-btn="card-tab3" class="card-tab__btn">Comments <span class="tab-count" id="comments-count">0</span></p>
                            </div>
                            <div class="card-tab__contens">
                               <div data-tab-content="card-tab1" class="card-tab__item active">
@@ -292,7 +292,7 @@
                                  </div>
                               </div>
                               <div data-tab-content="card-tab3" class="card-tab__item">
-                                 <div class="card-tab__btn-mob">Comments <span class="tab-count">3</span></div>
+                                 <div class="card-tab__btn-mob">Comments <span class="tab-count" id="comments-count-mob">0</span></div>
                                  <div class="card-tab__body">
 
                                     <!-- Comment Form -->
@@ -310,7 +310,7 @@
                                        </div>
                                        <textarea class="comment-form__textarea" placeholder="Write your comment here..."></textarea>
                                        <div class="comment-form__footer">
-                                          <button type="button" class="comment-form__submit">Submit</button>
+                                          <button type="button" class="comment-form__submit" id="commentSubmitBtn" onclick="submitComment()">Submit</button>
                                           <div class="comment-form__rate">
                                              <span class="comment-form__rate-label">Rate the seller:</span>
                                              <div class="grade">
@@ -322,41 +322,8 @@
                                     </div>
 
                                     <!-- Comments List -->
-                                    <div class="comments-list">
-
-                                       <div class="comment-item">
-                                          <div class="comment-item__avatar" style="background:#ff9138">A</div>
-                                          <div class="comment-item__body">
-                                             <div class="comment-item__head">
-                                                <span class="comment-item__name">Alex Johnson</span>
-                                                <span class="comment-item__date">12 March 2024</span>
-                                             </div>
-                                             <p class="comment-item__text">Great product! Exactly as described. The iPhone XR is in perfect condition and works flawlessly. Delivery was fast. Highly recommend this seller.</p>
-                                          </div>
-                                       </div>
-
-                                       <div class="comment-item">
-                                          <div class="comment-item__avatar" style="background:#3ecb60">S</div>
-                                          <div class="comment-item__body">
-                                             <div class="comment-item__head">
-                                                <span class="comment-item__name">Sarah M.</span>
-                                                <span class="comment-item__date">5 February 2024</span>
-                                             </div>
-                                             <p class="comment-item__text">Bought this for my son. Phone is in excellent condition, battery holds charge well. Seller was very responsive and helpful throughout the process.</p>
-                                          </div>
-                                       </div>
-
-                                       <div class="comment-item">
-                                          <div class="comment-item__avatar" style="background:#2aabee">M</div>
-                                          <div class="comment-item__body">
-                                             <div class="comment-item__head">
-                                                <span class="comment-item__name">Michael K.</span>
-                                                <span class="comment-item__date">18 January 2024</span>
-                                             </div>
-                                             <p class="comment-item__text">Good value for the price. Minor scratches as mentioned in the description, but overall very satisfied with the purchase.</p>
-                                          </div>
-                                       </div>
-
+                                    <div class="comments-list" id="comments-list">
+                                       <p class="comments-empty" id="comments-empty" style="color:#aaa;font-size:14px;padding:16px 0;text-align:center;">No comments yet. Be the first to leave one!</p>
                                     </div>
 
                                  </div>
@@ -1753,6 +1720,46 @@ function submitEmailForm(e) {
 <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
 <script src="js/chat.js?v=1"></script>
 <script src="js/firebase-auth-v2.js?v=4"></script>
+<script>
+function submitComment() {
+    var textarea = document.querySelector('.comment-form__textarea');
+    var text = textarea ? textarea.value.trim() : '';
+    if (!text) return;
+
+    var name  = localStorage.getItem('bazar_username') || 'Anonymous';
+    var initial = name.charAt(0).toUpperCase();
+    var colors  = ['#ff9138','#3ecb60','#2aabee','#e55a00','#8e44ad','#e74c3c'];
+    var color   = colors[Math.floor(Math.random() * colors.length)];
+    var now     = new Date();
+    var months  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+    var list    = document.getElementById('comments-list');
+    var empty   = document.getElementById('comments-empty');
+    if (empty) empty.remove();
+
+    var item = document.createElement('div');
+    item.className = 'comment-item';
+    item.innerHTML =
+        '<div class="comment-item__avatar" style="background:' + color + '">' + initial + '</div>' +
+        '<div class="comment-item__body">' +
+            '<div class="comment-item__head">' +
+                '<span class="comment-item__name">' + name + '</span>' +
+                '<span class="comment-item__date">' + dateStr + '</span>' +
+            '</div>' +
+            '<p class="comment-item__text">' + text.replace(/</g,'&lt;') + '</p>' +
+        '</div>';
+    list.appendChild(item);
+
+    var count = list.querySelectorAll('.comment-item').length;
+    var badge = document.getElementById('comments-count');
+    if (badge) badge.textContent = count;
+    var badgeMob = document.getElementById('comments-count-mob');
+    if (badgeMob) badgeMob.textContent = count;
+
+    textarea.value = '';
+}
+</script>
 
 <!-- Custom Gallery Lightbox -->
 <div id="galleryLightbox" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;" onclick="closeGalleryLightbox()">
