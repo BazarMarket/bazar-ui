@@ -904,19 +904,19 @@
                 <div class="cab-stat-cards" style="margin-bottom:24px;">
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-win-ad">Active Ads</p>
-                        <p class="cab-stat-card__value"><span id="profStatAds">—</span></p>
+                        <p class="cab-stat-card__value" id="profStatAds">—</p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-eye">Views This Month</p>
-                        <p class="cab-stat-card__value"><span id="profStatViews">749</span> <span>views</span></p>
+                        <p class="cab-stat-card__value" id="profStatViews">749 <span>views</span></p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-heart-new">Active Favorites</p>
-                        <p class="cab-stat-card__value"><span id="profStatFav">—</span></p>
+                        <p class="cab-stat-card__value" id="profStatFav">—</p>
                     </div>
                     <div class="cab-stat-card">
                         <p class="cab-stat-card__label icon-calendar-upd">Subscription Days Left</p>
-                        <p class="cab-stat-card__value"><span id="profStatDays">—</span></p>
+                        <p class="cab-stat-card__value" id="profStatDays">—</p>
                     </div>
                 </div>
 
@@ -1143,27 +1143,27 @@
         var adsEl  = document.getElementById('profStatAds');
         var daysEl = document.getElementById('profStatDays');
 
-        if (favEl)  favEl.textContent  = updateFavCount();
+        if (favEl) favEl.innerHTML = updateFavCount() + ' <span>saved</span>';
 
         if (uid) {
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     var active = (d.data || []).filter(function(a) { return a.status === 'active'; }).length;
-                    if (adsEl) adsEl.textContent = active;
+                    if (adsEl) adsEl.innerHTML = active + ' <span>ads</span>';
                 })
-                .catch(function() { if (adsEl) adsEl.textContent = '0'; });
+                .catch(function() { if (adsEl) adsEl.innerHTML = '0 <span>ads</span>'; });
 
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     var days = parseInt(d.days_left || 0, 10);
                     var plan = d.plan || 'free';
-                    if (daysEl) daysEl.textContent = plan === 'free' ? '—' : (days + ' days');
+                    if (daysEl) daysEl.innerHTML = plan === 'free' ? '—' : (days + ' <span>days</span>');
                 })
                 .catch(function() { if (daysEl) daysEl.textContent = '—'; });
         } else {
-            if (adsEl)  adsEl.textContent  = '0';
+            if (adsEl)  adsEl.innerHTML = '0 <span>ads</span>';
             if (daysEl) daysEl.textContent = '—';
         }
     }
