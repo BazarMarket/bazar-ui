@@ -1,4 +1,22 @@
 (function () {
+    /* Two-tone notification beep (Web Audio API, no file needed) */
+    function playMsgSound() {
+        try {
+            var ctx = new (window.AudioContext || window.webkitAudioContext)();
+            var osc  = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.25, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.35);
+        } catch (e) {}
+    }
+
     function updateHeader() {
         var name   = localStorage.getItem('bazar_username') || '';
         var phone  = localStorage.getItem('bazar_phone')    || '';
@@ -181,9 +199,7 @@
                     setMsgBadge(total);
                     /* Play sound when new messages arrive (not first poll, not on /messages) */
                     if (!_firstPoll && !onMessagesPage && total > _prevUnread) {
-                        if (window.BAZAR_CHAT && window.BAZAR_CHAT.playMsgSound) {
-                            window.BAZAR_CHAT.playMsgSound();
-                        }
+                        playMsgSound();
                     }
                     _prevUnread = total;
                     _firstPoll  = false;
