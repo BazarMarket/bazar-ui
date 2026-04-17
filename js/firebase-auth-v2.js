@@ -385,6 +385,46 @@ function backToCreateAccount() {
     clearInterval(otpTimerInterval);
 }
 
+function resendOtpCode() {
+    var phoneDisplay = (document.getElementById('otpPhoneDisplay').textContent || '').replace(/\s/g, '');
+    if (!phoneDisplay) return;
+
+    var btn = document.getElementById('otpResendBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    document.getElementById('otpError').style.display = 'none';
+
+    try { if (recaptchaVerifier) { recaptchaVerifier.clear(); } } catch(e) {}
+    recaptchaVerifier = null;
+    var c = document.getElementById('recaptcha-container');
+    if (c) c.innerHTML = '';
+    setupRecaptcha();
+
+    auth.signInWithPhoneNumber(phoneDisplay, recaptchaVerifier)
+        .then(function(result) {
+            confirmationResult = result;
+            document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
+            document.querySelectorAll('.otp-input')[0].focus();
+            startOtpTimer();
+        })
+        .catch(function(error) {
+            console.error('Resend SMS error:', error.code, error.message);
+            var errEl = document.getElementById('otpError');
+            if (error.code === 'auth/too-many-requests') {
+                errEl.textContent = 'Too many attempts. Please try again later.';
+            } else {
+                errEl.textContent = 'Failed to send code (' + (error.code || 'unknown') + '). Please try again.';
+            }
+            errEl.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Get new code';
+            try { if (recaptchaVerifier) { recaptchaVerifier.clear(); } } catch(e) {}
+            recaptchaVerifier = null;
+            if (c) c.innerHTML = '';
+            setupRecaptcha();
+        });
+}
+
 function startOtpTimer() {
     clearInterval(otpTimerInterval);
     var seconds = 60;
@@ -400,7 +440,7 @@ function startOtpTimer() {
             clearInterval(otpTimerInterval);
             btn.disabled = false;
             btn.textContent = 'Get new code';
-            btn.onclick = function() { sendSmsCode(); };
+            btn.onclick = function() { resendOtpCode(); };
         }
     }, 1000);
 }
