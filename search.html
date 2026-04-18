@@ -2356,7 +2356,7 @@
                 imgs: [imgSrc],
                 info: _buildInfoFromAd(ad),
                 p:    priceNum  ? '£ ' + priceNum.toLocaleString('en-GB')  : '—',
-                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + Math.round(oldPriceN * 1.1).toLocaleString('en-GB') : '',
+                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + Math.round(oldPriceN * 1.32).toLocaleString('en-GB') : '',
                 l:    ad.city ? ad.city + ', UK' : 'UK',
                 d:    ad.description || '',
                 dt:   fmtDate(ad.created_at),
@@ -2398,7 +2398,7 @@
                       id: ad.id, s: ad.seller_name || 'Bazar Seller', t: ad.title || 'Room listing',
                       imgs: [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
-                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2 * 1.1).toLocaleString('en-GB') : '',
+                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2 * 1.32).toLocaleString('en-GB') : '',
                       l: [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
@@ -2418,11 +2418,11 @@
           .catch(function() {});
       })();
 
-      /* Зачёркнутая цена = текущая × 1.1 */
+      /* Зачёркнутая цена = текущая × 1.32 (+32%) */
       function _makeOldPrice(p) {
         var raw = parseFloat((p || '').replace(/[^0-9.]/g, ''));
         if (!raw) return '';
-        return '<span class="price-old">£ ' + Math.round(raw * 1.1).toLocaleString('en-GB') + '</span>';
+        return '<span class="price-old">£ ' + Math.round(raw * 1.32).toLocaleString('en-GB') + '</span>';
       }
       function _topStiker(stk) {
         return stk.includes('VIP') ? ['VIP'] : stk.includes('PRO') ? ['PRO'] : stk;
