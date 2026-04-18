@@ -59,6 +59,7 @@
                         var el = document.getElementById('header-username') || document.querySelector('.user-link__title');
                         if (el) el.textContent = d.name;
                     }
+                    localStorage.setItem('bazar_is_admin', d.is_admin ? '1' : '0');
                     var plan = (d.plan || 'free').toLowerCase();
                     var daysLeft = parseInt(d.days_left || 0, 10);
                     var localPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
