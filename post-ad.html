@@ -3440,6 +3440,19 @@
             }, 400);
          }
          _setSelect('phoneStorageSelect', d.phone_storage || '');
+
+         /* Defensive: ensure RE fields are visible for real-estate properties */
+         var reProps = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','room','office','shop','restaurant','industrial','hotel','business','land','building'];
+         if (reProps.indexOf((d.property_type || '').toLowerCase()) !== -1) {
+            var reShow = ['bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','propertyAreaField','includedField','onlineViewingField','energyField','regBlockField','regNumField'];
+            reShow.forEach(function(id) {
+               var el = document.getElementById(id);
+               if (el && el.style.display === 'none') el.style.display = 'flex';
+            });
+            /* Ensure form is visible */
+            var paForm = document.getElementById('paForm');
+            if (paForm) paForm.classList.add('visible');
+         }
       }
 
       /* Override submit to use update endpoint */
