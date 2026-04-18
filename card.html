@@ -943,7 +943,11 @@
 
       el('prop-description').textContent = p.description || '';
 
-      el('seller-name').textContent = p.seller_name;
+      var _curUid = localStorage.getItem('bazar_firebase_uid') || '';
+      var _displaySellerName = (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid)
+         ? (localStorage.getItem('bazar_username') || p.seller_name)
+         : p.seller_name;
+      el('seller-name').textContent = _displaySellerName;
 
       /* ── Boost to Top button: Free plan owner only ── */
       (function() {
@@ -953,7 +957,7 @@
         var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
         var _demoCard = new URLSearchParams(window.location.search).get('boost_demo');
         var canBoost = !p.is_vip;
-        var isOwner  = curUser && p.seller_name && (curUser === p.seller_name);
+        var isOwner  = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
         var planOk   = curPlan === 'free' || curPlan === 'pro';
         if ((_demoCard === '1') || (canBoost && isOwner && planOk)) {
           boostWrap.style.display = '';
@@ -965,7 +969,7 @@
         var editBtn = document.getElementById('edit-ad-btn');
         if (!editBtn) return;
         var curUser = localStorage.getItem('bazar_username') || '';
-        var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
+        var isOwner = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
         if (isOwner) {
           editBtn.href = 'post-ad.html?edit=' + encodeURIComponent(id);
           editBtn.style.display = '';
@@ -1033,7 +1037,7 @@
       }
 
       var mobName = el('mob-seller-name');
-      if(mobName) mobName.textContent = p.seller_name;
+      if(mobName) mobName.textContent = _displaySellerName;
       var mobCall = el('mob-call-btn');
       if(mobCall) mobCall.href = 'tel:' + p.seller_phone;
 
@@ -1052,7 +1056,7 @@
       /* ── Hide Start Chat + Comment form for the ad owner ── */
       (function() {
         var curUser = localStorage.getItem('bazar_username') || '';
-        var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
+        var isOwner = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
         if (!isOwner) return;
         /* Hide desktop Start Chat button */
         var chatBtn = document.getElementById('ccpStartBtn');
@@ -1067,7 +1071,7 @@
 
       /* ── Fill inline chat with seller/product data ── */
       var ccpName = document.getElementById('ccpSellerName');
-      if(ccpName) ccpName.textContent = p.seller_name;
+      if(ccpName) ccpName.textContent = _displaySellerName;
       var now2 = new Date();
       var hh = now2.getHours().toString().padStart(2,'0');
       var mm = now2.getMinutes().toString().padStart(2,'0');
@@ -1079,7 +1083,7 @@
           adUrl:      window.location.pathname,
           adPhoto:    (p.photos && p.photos[0]) ? p.photos[0] : '',
           adPrice:    p.price ? ('£ ' + p.price) : '',
-          sellerName: p.seller_name || ''
+          sellerName: _displaySellerName || ''
       };
 
          }); // end fetch
