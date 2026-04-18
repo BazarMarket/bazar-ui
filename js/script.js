@@ -169,7 +169,7 @@ window.onload = function () {
 
     const productGallery = new Swiper('.product-gallery .swiper', {
         loop: true,
-        watchOverflow: true,
+        watchOverflow: false,
         centerInsufficientSlides: true,
         autoHeight: true,
         slidesPerView: 1,
@@ -177,7 +177,7 @@ window.onload = function () {
 
         // автопрокрутка
         autoplay: {
-            delay: 3000,
+            delay: 7000,
             disableOnInteraction: true,
         },
         effect: 'fade',
