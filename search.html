@@ -2289,6 +2289,12 @@
 
       /* ── Load real listings from API and prepend to BAZAR_LISTINGS ── */
       (function loadApiListings() {
+        /* On /rooms page also load rooms-specific endpoint to catch all active rooms */
+        var _pathCat0 = window.location.pathname.replace(/^\//, '').split('/')[0];
+        var _extraUrl = (_pathCat0 === 'rooms')
+          ? 'https://admin.bazar.uk/api/properties/recent?property_type=room&per_page=50'
+          : null;
+
         fetch('https://admin.bazar.uk/api/properties/recent', { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
           .then(function(resp) {
@@ -2359,6 +2365,41 @@
             if (urlType && BAZAR_LISTINGS[urlType]) {
               renderListings(urlType);
               if (typeof initProductSwipers === 'function') initProductSwipers();
+            }
+            /* Extra fetch for path-specific category (e.g. /rooms loads all active rooms) */
+            if (_extraUrl) {
+              fetch(_extraUrl, { headers: { 'Accept': 'application/json' } })
+                .then(function(r2) { return r2.ok ? r2.json() : null; })
+                .then(function(resp2) {
+                  if (!resp2 || !resp2.data || !resp2.data.length) return;
+                  var existingIds = {};
+                  (BAZAR_LISTINGS['Rooms'] || []).forEach(function(x) { if (x.id) existingIds[x.id] = true; });
+                  var newItems = [];
+                  resp2.data.forEach(function(ad) {
+                    if (existingIds[ad.id]) return;
+                    var imgSrc = ad.photo || 'img/product.jpg';
+                    if (!imgSrc || imgSrc.indexOf('dev.bazar.uk') !== -1) imgSrc = 'img/product.jpg';
+                    var stk = []; if (ad.is_vip) stk.push('VIP'); if (ad.is_pro) stk.push('PRO');
+                    newItems.push({
+                      id: ad.id, s: 'Bazar Seller', t: ad.title || 'Room listing',
+                      imgs: [imgSrc], info: [],
+                      p: ad.price ? '£ ' + Number(ad.price).toLocaleString() : '—',
+                      l: [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
+                      d: ad.description || '', dt: fmtDate(ad.created_at),
+                      n: String(ad.id), v: ad.views || 0, stk: stk,
+                      cc: ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '',
+                      cy: ad.city ? ad.city.toUpperCase() : 'UK',
+                      area: ad.area || ad.covered_area || 0,
+                      bathrooms: ad.bathrooms || 0, bedrooms: ad.bedrooms || 0
+                    });
+                  });
+                  if (newItems.length) {
+                    BAZAR_LISTINGS['Rooms'] = newItems.concat(BAZAR_LISTINGS['Rooms'] || []);
+                    var reType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
+                    if (reType === 'Rooms') { renderListings('Rooms'); if (typeof initProductSwipers === 'function') initProductSwipers(); }
+                  }
+                })
+                .catch(function() {});
             }
           })
           .catch(function() {});
@@ -2566,6 +2607,24 @@
             buildTypePanel();
             if (catLink) { catLink.parentNode.style.display = 'none'; }
             if (catArrow) { catArrow.style.display = 'none'; }
+
+            /* Auto-select the matching type for path-based category pages */
+            var pathAutoType = null;
+            if (pathCat === 'rooms') pathAutoType = 'Rooms';
+            if (pathCat === 'flats') pathAutoType = 'Flats';
+            if (pathAutoType && !type) {
+               var autoPanel = document.getElementById('cfTypePanel');
+               if (autoPanel) {
+                  var autoBox = autoPanel.querySelector('input[value="' + pathAutoType + '"]');
+                  if (autoBox) { autoBox.checked = true; updateTypeLabel(); }
+               }
+               if (typeEl) typeEl.textContent = pathAutoType;
+               window._bazarCurrentType = pathAutoType;
+               if (BAZAR_LISTINGS[pathAutoType]) {
+                  renderListings(pathAutoType);
+                  if (typeof initProductSwipers === 'function') initProductSwipers();
+               }
+            }
          } else {
             if (catLink) { catLink.parentNode.style.display = 'none'; }
             if (catArrow) { catArrow.style.display = 'none'; }
@@ -2585,7 +2644,7 @@
                renderListings(type);
                initProductSwipers();
             }
-         } else {
+         } else if (!window._bazarCurrentType) {
             if (typeEl) typeEl.textContent = 'Search results';
          }
       })();
