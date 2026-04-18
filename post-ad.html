@@ -2872,6 +2872,9 @@
                   date: new Date().toISOString().split('T')[0],
                   status: 'pending',
                   photo: thumb || '',
+                  area: area ? parseInt(area) : 0,
+                  bedrooms: bedrooms ? (bedrooms === '10 and more' ? 10 : parseInt(bedrooms)) : 0,
+                  bathrooms: bathrooms ? (bathrooms === '5 and more' ? 5 : parseInt(bathrooms)) : 0,
                   messengers: {
                      wa: !!(waEl && waEl.checked),
                      tg: !!(tgEl && tgEl.checked),
@@ -3484,6 +3487,12 @@
                         var price = parseInt((document.getElementById('priceInput').value||'').replace(/[^0-9]/g,''), 10);
                         ads[idx].price  = price || ads[idx].price;
                         ads[idx].title  = document.getElementById('titleInput').value || ads[idx].title;
+                        var editArea = getInputVal('propertyAreaInput');
+                        if (editArea) ads[idx].area = parseInt(editArea);
+                        var editBeds = getSelectVal('bedroomsSelect');
+                        if (editBeds) ads[idx].bedrooms = editBeds === '10 and more' ? 10 : parseInt(editBeds);
+                        var editBaths = getSelectVal('bathroomsSelect');
+                        if (editBaths) ads[idx].bathrooms = editBaths === '5 and more' ? 5 : parseInt(editBaths);
                         localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                      }
                   } catch(e){}
