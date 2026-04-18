@@ -1343,6 +1343,27 @@
          panel.classList.toggle('open', open);
          btn.classList.toggle('open', open);
       }
+      var catUrlMap = {
+         'Real Estate for sale':              '/property/for-sale',
+         'Real Estate for rent':              '/property/for-rent',
+         'Real Estate for short-term rent':   '/property/for-rent/short-term',
+         'Motors':                            '/cars',
+         'Motors for rent':                   '/cars/for-rent',
+         'Motors for short-term rent':        '/cars/for-short-term-rent',
+         'Mobile phones, communication':      '/electronics',
+         'Computers, gaming':                 '/electronics',
+         'Electronics, appliances':           '/electronics',
+         'Clothes, footwear, accessories':    '/fashion',
+         'Home, garden, pool':                '/home',
+         'Hobbies, sports, leisure':          '/sports',
+         'Animals, pets':                     '/animals',
+         'Health, beauty':                    '/health',
+         'Jobs':                              '/jobs',
+         'Services':                          '/services',
+         'Business':                          '/business',
+         'Free stuff':                        '/free'
+      };
+
       function selectCat(el, imgSrc, imgKey, label) {
          document.getElementById('cfCatLabel').textContent = label;
          var imgEl = document.getElementById('cfCatImg');
@@ -1372,6 +1393,12 @@
          var isMotors = l.indexOf('motors') !== -1;
          var motorsRow = document.getElementById('cfMotorsRow');
          if (motorsRow) motorsRow.style.display = isMotors ? '' : 'none';
+
+         /* Navigate to the category URL */
+         var targetUrl = catUrlMap[label];
+         if (targetUrl && window.location.pathname !== targetUrl) {
+            window.location.href = targetUrl;
+         }
       }
 
       function toggleTypePanel(e) {
