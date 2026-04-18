@@ -2368,7 +2368,7 @@ body {
 }
 .card-price:not(.card-price--single-price) .card-price__right .price-last-new {
   position: relative;
-  top: -15px;
+  top: 0;
 }
 .card-price__right .price__link,
 .card-price__right .price-last__link {
