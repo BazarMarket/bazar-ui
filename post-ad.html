@@ -2173,8 +2173,9 @@
             'For Short-term Rent': ['Flats', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
          },
          'motors': {
-            'For Sale': ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
-            'For Rent': ['Cars', 'Motorbikes', 'Boats & marine', 'Other']
+            'For Sale':            ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
+            'For Long-term rent':  ['Cars', 'Motorbikes', 'Boats & marine', 'Other'],
+            'For Short-term rent': ['Cars', 'Motorbikes', 'Boats & marine', 'Other']
          },
          'jobs': {
             'Full-time':   ['IT & Technology', 'Sales', 'Marketing', 'Finance', 'Healthcare', 'Other'],
@@ -2607,6 +2608,8 @@
          if (lt === 'For Sale') return 'sale';
          if (lt === 'For Long-term Rent') return 'long_rent';
          if (lt === 'For Short-term Rent') return 'short_rent';
+         if (lt === 'For Long-term rent') return 'rent';
+         if (lt === 'For Short-term rent') return 'short_rent';
          if (lt === 'For Rent') return 'rent';
          return 'sale';
       }
@@ -2907,7 +2910,7 @@
          var locationCity = document.getElementById('locationCity').value;
          if (!locationCity) { alert('Please select a location.'); return; }
 
-         var listingType = reState.listingType === 'For Rent' ? 'rent' : 'sale';
+         var listingType = (reState.listingType === 'For Long-term rent' || reState.listingType === 'For Short-term rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale';
 
          var formData = new FormData();
          formData.append('title', title);
@@ -3167,7 +3170,7 @@
             'sale':       'For Sale',
             'long_rent':  'For Long-term Rent',
             'short_rent': 'For Short-term Rent',
-            'rent':       'For Rent'
+            'rent':       'For Long-term rent'
          };
          var listingUI = listingMap[lt] || 'For Sale';
 
@@ -3184,8 +3187,8 @@
          if (reMap[pt]) {
             return { mainCat: 'real-estate', subcatUI: listingUI, subsubUI: reMap[pt] };
          }
-         if (pt === 'car')         return { mainCat: 'motors',  subcatUI: lt === 'rent' ? 'For Rent' : 'For Sale', subsubUI: 'Cars' };
-         if (pt === 'motorbike')   return { mainCat: 'motors',  subcatUI: lt === 'rent' ? 'For Rent' : 'For Sale', subsubUI: 'Motorbikes' };
+         if (pt === 'car')         return { mainCat: 'motors',  subcatUI: lt === 'rent' ? 'For Long-term rent' : 'For Sale', subsubUI: 'Cars' };
+         if (pt === 'motorbike')   return { mainCat: 'motors',  subcatUI: lt === 'rent' ? 'For Long-term rent' : 'For Sale', subsubUI: 'Motorbikes' };
          if (pt === 'truck')       return { mainCat: 'motors',  subcatUI: 'For Sale', subsubUI: 'Trucks' };
          if (pt === 'boat')        return { mainCat: 'motors',  subcatUI: 'For Sale', subsubUI: 'Boats & marine' };
          if (pt === 'mobile_phone')return { mainCat: 'phones',  subcatUI: 'Mobile phones', subsubUI: null };
@@ -3540,7 +3543,7 @@
             var formData = new FormData();
             formData.append('title',         title);
             formData.append('property_type', 'car');
-            formData.append('listing_type',  reState.listingType === 'For Rent' ? 'rent' : 'sale');
+            formData.append('listing_type',  (reState.listingType === 'For Long-term rent' || reState.listingType === 'For Short-term rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale');
             if (price) formData.append('price', price);
             formData.append('currency',      'GBP');
             formData.append('seller_name',   sellerName);
