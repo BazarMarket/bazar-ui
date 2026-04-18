@@ -2360,13 +2360,15 @@ body {
 }
 .card-price__right .price-last-old {
   font-size: 22px;
+  position: relative;
+  top: -12px;
 }
 .card-price__right .price-last-new {
   font-size: 36px;
 }
 .card-price:not(.card-price--single-price) .card-price__right .price-last-new {
   position: relative;
-  top: 0;
+  top: -15px;
 }
 .card-price__right .price__link,
 .card-price__right .price-last__link {
