@@ -2521,10 +2521,20 @@
          // Path-based category map: detects category from URL pathname
          var pathParts = window.location.pathname.replace(/^\//, '').split('/');
          var pathCat   = pathParts[0];
+         var pathSub   = pathParts[1] || '';
          var pathLast  = pathParts[pathParts.length - 1];
-         var pathCatMap = {
-            'rooms': pathLast === 'short-term' ? 'short-rent' : 'rent'
-         };
+
+         var _pathToKey = (function() {
+            if (pathCat === 'property') {
+               if (pathLast === 'short-term' || pathSub === 'for-rent' && pathLast === 'short-term') return 'short-rent';
+               if (pathSub === 'for-rent') return 'rent';
+               return 'sale';
+            }
+            if (pathCat === 'rooms') return pathLast === 'short-term' ? 'short-rent' : 'rent';
+            return null;
+         })();
+         var pathCatMap = {};
+         if (_pathToKey) pathCatMap[pathCat] = _pathToKey;
 
          if (cat && catMap[cat]) {
             var info = catMap[cat];
