@@ -1520,6 +1520,7 @@
             if (ad.bathrooms) luInfoItems += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
             if (ad.area) luInfoItems += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
             var luInfoBord = luInfoItems ? '<div class="card__dop"><div class="info-bord">' + luInfoItems + '</div></div>' : '';
+            var luInfoId = needsFetch ? 'luInfo_' + ad.id : '';
             html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer">' +
                 '<a href="card.html?id=' + ad.id + '" class="card-link" aria-label="View listing"></a>' +
                 '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
@@ -1530,7 +1531,7 @@
                 '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
                 '<div class="card__down"><div class="card__prices">' +
                 '<span class="price-new">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
-                '</div>' + luInfoBord + '</div></div>';
+                '</div><div ' + (luInfoId ? 'id="' + luInfoId + '"' : '') + '>' + luInfoBord + '</div></div></div>';
             if (needsFetch) needsApiFetch.push(ad.id);
         });
         grid.insertAdjacentHTML('afterbegin', html);
@@ -1541,18 +1542,32 @@
                 .then(function(r) { return r.ok ? r.json() : null; })
                 .then(function(d) {
                     if (!d) return;
+                    /* detail API: photo in images[0] or image; area in covered_area */
                     var firstImg = (d.images && d.images[0]) ? d.images[0] : (d.image || '');
-                    var el = document.getElementById('luImg_' + adId);
-                    if (el && firstImg) el.src = firstImg;
-                    /* Cache photo + area/beds/baths into localStorage so next load shows them */
+                    var apiArea  = d.covered_area || d.area || 0;
+                    var apiBeds  = d.bedrooms  || 0;
+                    var apiBaths = d.bathrooms || 0;
+                    /* Update photo in DOM immediately */
+                    var imgEl = document.getElementById('luImg_' + adId);
+                    if (imgEl && firstImg) imgEl.src = firstImg;
+                    /* Update info-bord in DOM immediately */
+                    var infoEl = document.getElementById('luInfo_' + adId);
+                    if (infoEl && (apiBeds || apiBaths || apiArea)) {
+                        var items = '';
+                        if (apiBeds)  items += '<span class="info-bord__item icon-bead">'       + apiBeds  + ' bed' + (apiBeds > 1 ? 's' : '') + '</span>';
+                        if (apiBaths) items += '<span class="info-bord__item icon-bath">'       + apiBaths + ' bath</span>';
+                        if (apiArea)  items += '<span class="info-bord__item icon-house-area">' + apiArea  + ' m2</span>';
+                        infoEl.innerHTML = '<div class="card__dop"><div class="info-bord">' + items + '</div></div>';
+                    }
+                    /* Cache into localStorage so next load is instant */
                     try {
                         var stored = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
                         stored.forEach(function(a) {
                             if (String(a.id) !== String(adId)) return;
                             if (firstImg && (!a.photo || a.photo.indexOf('dev.bazar.uk') !== -1)) a.photo = firstImg;
-                            if (d.area && !a.area) a.area = d.area;
-                            if (d.bedrooms && !a.bedrooms) a.bedrooms = d.bedrooms;
-                            if (d.bathrooms && !a.bathrooms) a.bathrooms = d.bathrooms;
+                            if (apiArea  && !a.area)     a.area     = apiArea;
+                            if (apiBeds  && !a.bedrooms) a.bedrooms = apiBeds;
+                            if (apiBaths && !a.bathrooms) a.bathrooms = apiBaths;
                         });
                         localStorage.setItem('bazar_my_ads', JSON.stringify(stored));
                     } catch(e) {}
