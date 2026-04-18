@@ -2814,7 +2814,8 @@
          btn.textContent = 'Submitting...';
          btn.disabled = true;
 
-         fetch(API_URL, {
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : API_URL;
+         fetch(submitUrl, {
             method: 'POST',
             body: formData,
             headers: { 'Accept': 'application/json' }
@@ -3005,7 +3006,8 @@
          btn.textContent = 'Submitting...';
          btn.disabled = true;
 
-         fetch(API_URL, {
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : API_URL;
+         fetch(submitUrl, {
             method: 'POST',
             body: formData,
             headers: { 'Accept': 'application/json' }
@@ -3134,7 +3136,8 @@
          btn.textContent = 'Submitting...';
          btn.disabled = true;
 
-         fetch(API_URL, {
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : API_URL;
+         fetch(submitUrl, {
             method: 'POST',
             body: formData,
             headers: { 'Accept': 'application/json' }
