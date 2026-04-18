@@ -2361,6 +2361,8 @@ body {
 }
 .card-price__right .price-last-new {
   font-size: 36px;
+}
+.card-price:not(.card-price--single-price) .card-price__right .price-last-new {
   position: relative;
   top: -15px;
 }
@@ -2370,6 +2372,8 @@ body {
 }
 .card-price__right .price-last__text {
   font-size: 13px;
+}
+.card-price:not(.card-price--single-price) .card-price__right .price-last__text {
   position: relative;
   top: -15px;
 }
