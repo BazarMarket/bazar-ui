@@ -916,13 +916,16 @@
       specs += specRow('Year Built', p.construction_year);
       specs += specRow('Energy Rating', p.energy_efficiency);
       if (p.parking_type) specs += specRow('Parking', p.parking_type);
+      else if (p.parking) specs += specRow('Parking', 'Yes');
       if (p.furnishing_type) specs += specRow('Furnishing', p.furnishing_type);
       if (p.ac_type) specs += specRow('Air conditioning', p.ac_type);
+      if (p.online_viewing) specs += specRow('Online viewing', p.online_viewing);
+      if (p.registration_block) specs += specRow('Registration block', p.registration_block);
+      if (p.registration_number) specs += specRow('Registration number', p.registration_number);
 
       var amenities = [];
       if(p.furnished) amenities.push('Furnished');
       if(p.air_conditioning) amenities.push('Air Conditioning');
-      if(p.parking) amenities.push('Parking');
       if(p.pool) amenities.push('Swimming Pool');
       if(p.garden) amenities.push('Garden');
       if(p.elevator) amenities.push('Elevator');

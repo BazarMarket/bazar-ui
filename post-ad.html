@@ -1532,14 +1532,14 @@
                   <div class="pa-field" id="regBlockField" style="display:none">
                      <span class="pa-field__label pa-field__label--wide">Registration block:</span>
                      <div class="pa-field__control">
-                        <input class="pa-input" type="text" placeholder="">
+                        <input class="pa-input" id="regBlockInput" type="text" placeholder="">
                      </div>
                   </div>
 
                   <div class="pa-field" id="regNumField" style="display:none">
                      <span class="pa-field__label pa-field__label--wide">Registration number:</span>
                      <div class="pa-field__control">
-                        <input class="pa-input" type="text" placeholder="">
+                        <input class="pa-input" id="regNumInput" type="text" placeholder="">
                      </div>
                   </div>
 
@@ -2746,6 +2746,15 @@
          var energy = getSelectVal('energySelect');
          if (energy) formData.append('energy_efficiency', energy);
 
+         var onlineViewing = getSelectVal('onlineViewingSelect');
+         if (onlineViewing) formData.append('online_viewing', onlineViewing);
+
+         var regBlock = getInputVal('regBlockInput');
+         if (regBlock) formData.append('registration_block', regBlock);
+
+         var regNum = getInputVal('regNumInput');
+         if (regNum) formData.append('registration_number', regNum);
+
          var parking = getSelectVal('parkingSelect');
          var hasParking = parking && parking !== 'No' && parking !== 'None' ? '1' : '0';
          formData.append('parking', hasParking);
@@ -3308,7 +3317,10 @@
          _setSelect('conditionSelect', d.condition || '');
 
          if (d.covered_area)  _setVal('propertyAreaInput', d.covered_area);
-         if (d.construction_year) _setVal('regNumInput', d.construction_year);
+         if (d.construction_year) _setSelect('constructionYearSelect', String(d.construction_year));
+         if (d.online_viewing) _setSelect('onlineViewingSelect', d.online_viewing);
+         if (d.registration_block) _setVal('regBlockInput', d.registration_block);
+         if (d.registration_number) _setVal('regNumInput', d.registration_number);
 
          _setCheck('poolCheck',    d.pool);
          _setCheck('gardenCheck',  d.garden);
@@ -3337,6 +3349,13 @@
             var furnSel = document.getElementById('furnishingSelect');
             if (furnSel) _setSelect('furnishingSelect', d.furnishing_type);
          }
+         /* Parking */
+         if (d.parking_type) {
+            var prkSel = document.getElementById('parkingSelect');
+            if (prkSel) _setSelect('parkingSelect', d.parking_type);
+         }
+         /* Energy */
+         if (d.energy_efficiency) _setSelect('energySelect', d.energy_efficiency);
 
          /* Video */
          _setVal('youtubeInput', d.video_url || '');
