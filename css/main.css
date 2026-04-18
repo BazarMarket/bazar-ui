@@ -4568,9 +4568,24 @@ p {
 .cards__head {
   gap: 16px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 32px;
 }
+.cards__show-all {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: #1a1a1a;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: normal;
+}
+.cards__show-all:hover { opacity: 0.7; }
 .cards__title {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
@@ -4632,6 +4647,9 @@ p {
 }
 @media screen and (max-width: 576px) {
   .cards__title {
+    font-size: 18px;
+  }
+  .cards__show-all {
     font-size: 18px;
   }
 }
