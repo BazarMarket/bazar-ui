@@ -2351,7 +2351,7 @@
               var oldPriceN = ad.old_price ? Number(ad.old_price) : 0;
               apiByBucket[bucket].push({
                 id:   ad.id,
-                s:    'Bazar Seller',
+                s:    ad.seller_name || 'Bazar Seller',
                 t:    ad.title || 'Property listing',
                 imgs: [imgSrc],
                 info: _buildInfoFromAd(ad),
@@ -2395,7 +2395,7 @@
                     var priceNum2  = ad.price     ? Number(ad.price)     : 0;
                     var oldPriceN2 = ad.old_price ? Number(ad.old_price) : 0;
                     newItems.push({
-                      id: ad.id, s: 'Bazar Seller', t: ad.title || 'Room listing',
+                      id: ad.id, s: ad.seller_name || 'Bazar Seller', t: ad.title || 'Room listing',
                       imgs: [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
                       op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2 * 1.1).toLocaleString('en-GB') : '',
