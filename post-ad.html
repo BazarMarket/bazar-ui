@@ -3371,8 +3371,13 @@
                   var box = document.createElement('div');
                   box.className = 'pa-photo-box';
                   box.style.backgroundImage = 'url(' + url + ')';
+                  box.style.backgroundSize = 'cover';
+                  box.style.backgroundPosition = 'center';
+                  box.style.backgroundRepeat = 'no-repeat';
+                  box.style.border = '2px solid #e4e4e4';
                   box.title = 'Existing photo';
                   box._paExistingUrl = url;
+                  box.setAttribute('draggable', 'true');
                   var del = document.createElement('button');
                   del.className = 'pa-photo-del';
                   del.innerHTML = '&times;';
@@ -3539,11 +3544,66 @@
             if (sellerEmail) formData.append('seller_email', sellerEmail);
             var youtube = getInputVal('youtubeInput');
             if (youtube) formData.append('video_url', youtube);
-            var boolFields2 = ['pool','garden','balcony','terrace','veranda','parking','security','furnished','air_conditioning'];
+
+            /* Construction year */
+            var cyear = (document.getElementById('constructionYearSelect') || {}).value;
+            if (cyear) formData.append('construction_year', cyear);
+
+            /* Energy efficiency */
+            var energy = (document.getElementById('energySelect') || {}).value;
+            if (energy) formData.append('energy_efficiency', energy);
+
+            /* Online viewing */
+            var ov = (document.getElementById('onlineViewingSelect') || {}).value;
+            if (ov) formData.append('online_viewing', ov);
+
+            /* Registration */
+            var rb = getInputVal('regBlockInput');
+            if (rb) formData.append('registration_block', rb);
+            var rn = getInputVal('regNumInput');
+            if (rn) formData.append('registration_number', rn);
+
+            /* Parking */
+            var parking = (document.getElementById('parkingSelect') || {}).value;
+            var hasParking = parking && parking !== 'No' && parking !== 'None' ? '1' : '0';
+            formData.append('parking', hasParking);
+            if (parking && parking !== 'No' && parking !== 'None') formData.append('parking_type', parking);
+
+            /* Furnishing */
+            var furnishing = (document.getElementById('furnishingSelect') || {}).value;
+            var hasFurnished = furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None' ? '1' : '0';
+            formData.append('furnished', hasFurnished);
+            if (furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None') formData.append('furnishing_type', furnishing);
+
+            /* Air conditioning */
+            var airCon = (document.getElementById('airConSelect') || {}).value;
+            var hasAC = airCon && airCon !== 'No' && airCon !== 'None' ? '1' : '0';
+            formData.append('air_conditioning', hasAC);
+            if (airCon && airCon !== 'No' && airCon !== 'None') formData.append('ac_type', airCon);
+
+            /* Bool checkboxes */
+            var boolFields2 = ['pool','garden','balcony','terrace','veranda','security'];
             boolFields2.forEach(function(bf) {
-               var el = document.getElementById(bf+'Check') || document.getElementById(bf.replace('_','')+'Check');
+               var el = document.getElementById(bf+'Check');
                if (el) formData.append(bf, el.checked ? '1' : '0');
             });
+            /* Key features checkboxes */
+            var features = document.querySelectorAll('#includedField input[type="checkbox"]');
+            var featureMap = {
+               'Garden': 'garden', 'Elevator': 'elevator', 'Security system': 'security',
+               'Swimming pool': 'pool', 'Veranda': 'veranda', 'Gym': 'gym', 'Solar panel': 'solar_panels',
+               'Balcony': 'balcony', 'Terrace': 'terrace', 'Central heating': 'central_heating', 'Storage room': 'storage_room'
+            };
+            var allBoolFields = ['pool','garden','veranda','gym','elevator','security','solar_panels','balcony','terrace','central_heating','storage_room'];
+            allBoolFields.forEach(function(f) { formData.append(f, '0'); });
+            features.forEach(function(cb) {
+               if (cb.checked) {
+                  var label = cb.parentElement.textContent.trim();
+                  var field = featureMap[label];
+                  if (field) formData.set(field, '1');
+               }
+            });
+
             var photoGrid = document.getElementById('photoPreviewGrid');
             if (photoGrid) {
                Array.from(photoGrid.children).forEach(function(box) {
