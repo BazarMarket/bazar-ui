@@ -3903,7 +3903,7 @@ p {
 .price-old {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 17px;
   color: red;
   line-height: normal;
   display: block;
@@ -3940,7 +3940,7 @@ p {
     font-size: 14px;
   }
   .price-old {
-    font-size: 12px;
+    font-size: 14px;
   }
   .info-bord {
     padding: 4px 4px;
@@ -3997,7 +3997,7 @@ p {
     font-size: 12px;
   }
   .price-old {
-    font-size: 10px;
+    font-size: 12px;
   }
   .info-bord {
     padding: 4px 4px;
