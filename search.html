@@ -2455,7 +2455,7 @@
           '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span></div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
           '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
-          '<div class="product__price-row"><span class="price-start">'+item.p+'</span>'+(item.op ? '<span class="price-old">'+item.op+'</span>' : '')+'</div>'+
+          '<div class="product__price-row"'+(item.id?' data-priceid="'+item.id+'"':'')+'><span class="price-start">'+item.p+'</span>'+(item.op ? '<span class="price-old">'+item.op+'</span>' : '')+'</div>'+
           '<p class="product__text">'+item.l+'</p>'+
           '<p class="product__desc">'+item.d+'</p>'+
           '<div class="product__info">'+
@@ -2479,7 +2479,7 @@
           '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
-          '<div class="card__down"><div class="card__prices"><span class="price-new">'+item.p+'</span>'+(item.op ? '<span class="price-old">'+item.op+'</span>' : '')+'</div>'+
+          '<div class="card__down"><div class="card__prices"'+(item.id?' data-gridpriceid="'+item.id+'"':'')+'><span class="price-new">'+item.p+'</span>'+(item.op ? '<span class="price-old">'+item.op+'</span>' : '')+'</div>'+
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
       }
       function renderListings(type) {
@@ -2490,6 +2490,25 @@
         if (listBody) listBody.innerHTML = items.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
         if (gridBody) gridBody.innerHTML = items.concat(items.slice(0,3)).map(buildGridCard).join('');
+        /* Async: backfill old_price for API items (not in /recent response) */
+        items.forEach(function(item) {
+          if (!item.id || item.op) return;
+          fetch('https://admin.bazar.uk/api/properties/' + item.id, { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(d) {
+              if (!d || !d.old_price) return;
+              var oldN = Number(d.old_price);
+              var newN = Number(d.price || item.p.replace(/[^0-9.]/g,''));
+              if (oldN <= newN) return;
+              var opHtml = '<span class="price-old">£ ' + oldN.toLocaleString('en-GB') + '</span>';
+              item.op = '£ ' + oldN.toLocaleString('en-GB');
+              var lr = document.querySelector('[data-priceid="' + item.id + '"]');
+              if (lr && !lr.querySelector('.price-old')) lr.insertAdjacentHTML('beforeend', opHtml);
+              var gr = document.querySelector('[data-gridpriceid="' + item.id + '"]');
+              if (gr && !gr.querySelector('.price-old')) gr.insertAdjacentHTML('beforeend', opHtml);
+            })
+            .catch(function(){});
+        });
       }
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
