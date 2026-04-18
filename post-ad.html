@@ -519,36 +519,23 @@
       .pa-feat-more:hover { text-decoration: underline; }
       .pa-feat-more svg { transition: transform .2s; }
       .pa-feat-more.open svg { transform: rotate(180deg); }
-      /* Room type dropdown */
-      .pa-rt-wrap { position: relative; width: 100%; }
-      .pa-rt-btn {
-         display: flex; align-items: center; justify-content: space-between;
-         width: 100%; padding: 10px 16px;
-         background: #fff; border: 1.5px solid #e0e0e0; border-radius: 10px;
-         font-family: 'Poppins', sans-serif; font-size: 14px; color: #444;
-         cursor: pointer; transition: border-color .2s;
-      }
-      .pa-rt-btn.open { border-color: #ff9138; }
-      .pa-rt-btn svg { flex-shrink: 0; transition: transform .2s; }
+      /* Room type dropdown — same style as search.html cf-cat */
+      .pa-rt-wrap { position: relative; }
+      .pa-rt-btn { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; color: #1a1a1a; cursor: pointer; white-space: nowrap; transition: border-color .15s; width: 100%; }
+      .pa-rt-btn:hover, .pa-rt-btn.open { border-color: #ff9138; }
+      .pa-rt-btn svg { color: #888; flex-shrink: 0; transition: transform .15s; margin-left: auto; }
       .pa-rt-btn.open svg { transform: rotate(180deg); }
-      .pa-rt-dropdown {
-         display: none; position: absolute; top: calc(100% + 6px); left: 0;
-         width: 100%; min-width: 260px; background: #fff;
-         border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.14);
-         z-index: 200; padding: 8px 0;
-      }
-      .pa-rt-dropdown.open { display: block; }
-      .pa-rt-group { padding: 10px 20px 6px; border-bottom: 1px solid #f0f0f0; }
-      .pa-rt-group:last-child { border-bottom: none; }
-      .pa-rt-group__title {
-         font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 700;
-         text-transform: uppercase; letter-spacing: .5px; color: #aaa; margin: 0 0 8px;
-      }
-      .pa-rt-item {
-         display: flex; align-items: center; gap: 12px; padding: 6px 0;
-         font-family: 'Poppins', sans-serif; font-size: 14px; color: #222; cursor: pointer;
-      }
-      .pa-rt-item input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+      .pa-rt-panel { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 280px; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,.12); padding: 8px 0; z-index: 200; max-height: 420px; overflow-y: auto; }
+      .pa-rt-panel.open { display: block; }
+      .pa-rt-group-label { font-size: 11px; font-weight: 600; color: #8a919c; text-transform: uppercase; letter-spacing: .5px; padding: 10px 14px 5px; border-top: 1px solid #e0e0e0; margin-top: 10px; }
+      .pa-rt-group-label:first-child { border-top: none; margin-top: 0; padding-top: 8px; }
+      .pa-rt-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; font-family: "Poppins", sans-serif; font-size: 13.5px; color: #1a1a1a; transition: background .12s; white-space: nowrap; }
+      .pa-rt-item:hover { background: #fff7f0; }
+      .pa-rt-item input[type="checkbox"] { display: none; }
+      .pa-rt-divider { height: 1px; background: #f3f4f6; margin: 4px 0; }
+      .pa-rt-check { width: 20px; height: 20px; border: 2px solid #b0b7c3; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; background: #fff; }
+      .pa-rt-item input:checked + .pa-rt-check { background: #555; border-color: #555; }
+      .pa-rt-item input:checked + .pa-rt-check::after { content: ''; display: block; width: 6px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-top: -2px; }
       .pa-checkboxes label,
       .pa-feat-top label,
       .pa-feat-group__items label {
@@ -885,31 +872,23 @@
                         <div class="pa-rt-wrap" id="paRtWrap">
                            <button type="button" class="pa-rt-btn" id="paRtBtn" onclick="toggleRtDropdown()">
                               <span id="paRtLabel">Room type</span>
-                              <svg id="paRtArrow" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="#ff9138" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                            </button>
-                           <div class="pa-rt-dropdown" id="paRtDropdown">
-                              <div class="pa-rt-group">
-                                 <p class="pa-rt-group__title">Room type</p>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Private" onchange="updateRtLabel()"> Private</label>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Shared" onchange="updateRtLabel()"> Shared</label>
-                              </div>
-                              <div class="pa-rt-group">
-                                 <p class="pa-rt-group__title">Features</p>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Ensuite" onchange="updateRtLabel()"> Ensuite</label>
-                              </div>
-                              <div class="pa-rt-group">
-                                 <p class="pa-rt-group__title">Costs</p>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Bills included" onchange="updateRtLabel()"> Bills included</label>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Bills excluded" onchange="updateRtLabel()"> Bills excluded</label>
-                              </div>
-                              <div class="pa-rt-group">
-                                 <p class="pa-rt-group__title">Rules</p>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Couples allowed" onchange="updateRtLabel()"> Couples allowed</label>
-                              </div>
-                              <div class="pa-rt-group">
-                                 <p class="pa-rt-group__title">Extras</p>
-                                 <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Furnished" onchange="updateRtLabel()"> Furnished</label>
-                              </div>
+                           <div class="pa-rt-panel" id="paRtDropdown">
+                              <div class="pa-rt-group-label">Room type</div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Private" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Private</label>
+                              <div class="pa-rt-divider"></div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Shared" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Shared</label>
+                              <div class="pa-rt-group-label">Features</div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Ensuite" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Ensuite</label>
+                              <div class="pa-rt-group-label">Costs</div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Bills included" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Bills included</label>
+                              <div class="pa-rt-divider"></div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Bills excluded" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Bills excluded</label>
+                              <div class="pa-rt-group-label">Rules</div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Couples allowed" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Couples allowed</label>
+                              <div class="pa-rt-group-label">Extras</div>
+                              <label class="pa-rt-item"><input type="checkbox" name="room_type" value="Furnished" onchange="updateRtLabel()"><span class="pa-rt-check"></span>Furnished</label>
                            </div>
                         </div>
                      </div>
@@ -2529,23 +2508,24 @@
 
       function toggleRtDropdown() {
          var btn = document.getElementById('paRtBtn');
-         var dd  = document.getElementById('paRtDropdown');
-         if (!btn || !dd) return;
-         var open = dd.classList.toggle('open');
+         var panel = document.getElementById('paRtDropdown');
+         if (!btn || !panel) return;
+         var open = panel.classList.toggle('open');
          btn.classList.toggle('open', open);
       }
       function updateRtLabel() {
          var checked = Array.from(document.querySelectorAll('#paRtDropdown input[name="room_type"]:checked')).map(function(cb){ return cb.value; });
          var lbl = document.getElementById('paRtLabel');
          if (lbl) lbl.textContent = checked.length ? checked.join(', ') : 'Room type';
+         var btn = document.getElementById('paRtBtn');
+         if (btn) btn.classList.toggle('open', document.getElementById('paRtDropdown').classList.contains('open'));
       }
-      /* Close rt dropdown on outside click */
       document.addEventListener('click', function(e) {
          var wrap = document.getElementById('paRtWrap');
          if (wrap && !wrap.contains(e.target)) {
-            var dd = document.getElementById('paRtDropdown');
+            var panel = document.getElementById('paRtDropdown');
             var btn = document.getElementById('paRtBtn');
-            if (dd) dd.classList.remove('open');
+            if (panel) panel.classList.remove('open');
             if (btn) btn.classList.remove('open');
          }
       });
