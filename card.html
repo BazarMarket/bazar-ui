@@ -1049,6 +1049,22 @@
       var videoSection = el('video-section');
       if(videoSection) videoSection.style.display = 'none';
 
+      /* ── Hide Start Chat + Comment form for the ad owner ── */
+      (function() {
+        var curUser = localStorage.getItem('bazar_username') || '';
+        var isOwner = curUser && p.seller_name && (curUser === p.seller_name);
+        if (!isOwner) return;
+        /* Hide desktop Start Chat button */
+        var chatBtn = document.getElementById('ccpStartBtn');
+        if (chatBtn) chatBtn.style.display = 'none';
+        /* Hide mobile Start Chat button */
+        var mobChatBtn = document.querySelector('.mob-contact-popup__btn.icon-chat');
+        if (mobChatBtn) mobChatBtn.style.display = 'none';
+        /* Hide comment form */
+        var commentForm = document.querySelector('.comment-form');
+        if (commentForm) commentForm.style.display = 'none';
+      })();
+
       /* ── Fill inline chat with seller/product data ── */
       var ccpName = document.getElementById('ccpSellerName');
       if(ccpName) ccpName.textContent = p.seller_name;
