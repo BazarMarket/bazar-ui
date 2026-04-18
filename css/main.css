@@ -1052,6 +1052,10 @@ body {
 .pagination-custom .swiper-pagination-bullet-active {
   background: #ffae49;
 }
+.product-gallery .pagination-custom {
+  display: block !important;
+  visibility: visible !important;
+}
 
 /* -блок управления слайдера */
 .swiper-control {
