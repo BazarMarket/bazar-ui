@@ -283,7 +283,22 @@
          .cf-search-loc { display: none; }
          .cf-search { border-radius: 10px; }
       }
+      [data-admin-only] { display: none !important; }
    </style>
+   <script>
+      (function() {
+         fetch('https://admin.bazar.uk/api/is-admin', { credentials: 'include' })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+               if (!d.admin) return;
+               document.querySelectorAll('[data-admin-only]').forEach(function(el) {
+                  el.style.removeProperty('display');
+                  el.removeAttribute('data-admin-only');
+               });
+            })
+            .catch(function() {});
+      })();
+   </script>
 </head>
 
 <body>
@@ -438,17 +453,17 @@
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image3.png', 'image3', 'Motors')"><img src="img/cat/image3.png" alt="">Motors</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image4.png', 'image4', 'Motors for rent')"><img src="img/cat/image4.png" alt="">Motors for rent</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image5.png', 'image5', 'Mobile phones, communication')"><img src="img/cat/image5.png" alt="">Mobile phones, communication</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image6.png', 'image6', 'Computers, gaming')"><img src="img/cat/image6.png" alt="">Computers, gaming</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image9.png', 'image9', 'Electronics, appliances')"><img src="img/cat/image9.png" alt="">Electronics, appliances</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image7.png', 'image7', 'Clothes, footwear')"><img src="img/cat/image7.png" alt="">Clothes, footwear, accessories</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image10.png', 'image10', 'Home, garden, pool')"><img src="img/cat/image10.png" alt="">Home, garden, pool</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image8.png', 'image8', 'Sports, Hobbies')"><img src="img/cat/image8.png" alt="">Hobbies, sports, leisure</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image12.png', 'image12', 'Animals, pets')"><img src="img/cat/image12.png" alt="">Animals, pets</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image13.png', 'image13', 'Health, beauty')"><img src="img/cat/image13.png" alt="">Health, beauty</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image11.png', 'image11', 'Jobs')"><img src="img/cat/image11.png" alt="">Jobs</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image14.png', 'image14', 'Services')"><img src="img/cat/image14.png" alt="">Services</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image15.png', 'image15', 'Business')"><img src="img/cat/image15.png" alt="">Business</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image16.png', 'image16', 'Free stuff')"><img src="img/cat/image16.png" alt="">Free stuff</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image6.png', 'image6', 'Computers, gaming')"><img src="img/cat/image6.png" alt="">Computers, gaming</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image9.png', 'image9', 'Electronics, appliances')"><img src="img/cat/image9.png" alt="">Electronics, appliances</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image7.png', 'image7', 'Clothes, footwear')"><img src="img/cat/image7.png" alt="">Clothes, footwear, accessories</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image10.png', 'image10', 'Home, garden, pool')"><img src="img/cat/image10.png" alt="">Home, garden, pool</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image8.png', 'image8', 'Sports, Hobbies')"><img src="img/cat/image8.png" alt="">Hobbies, sports, leisure</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image12.png', 'image12', 'Animals, pets')"><img src="img/cat/image12.png" alt="">Animals, pets</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image13.png', 'image13', 'Health, beauty')"><img src="img/cat/image13.png" alt="">Health, beauty</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image11.png', 'image11', 'Jobs')"><img src="img/cat/image11.png" alt="">Jobs</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image14.png', 'image14', 'Services')"><img src="img/cat/image14.png" alt="">Services</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image15.png', 'image15', 'Business')"><img src="img/cat/image15.png" alt="">Business</div>
+                           <div class="cf-cat-item" data-admin-only="1" onclick="selectCat(this, 'img/cat/image16.png', 'image16', 'Free stuff')"><img src="img/cat/image16.png" alt="">Free stuff</div>
                         </div>
                      </div>
                      <div class="cf-cat" id="cfTypeWrap">
