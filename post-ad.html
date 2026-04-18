@@ -848,6 +848,45 @@
                      </div>
                   </div>
 
+                  <!-- Room type field: only for Rooms -->
+                  <div class="pa-field" id="roomTypeField" style="display:none">
+                     <span class="pa-field__label">Room type:</span>
+                     <div class="pa-field__control">
+                        <div class="pa-feat-group" style="margin-bottom:10px">
+                           <p class="pa-feat-group__title">Room type</p>
+                           <div class="pa-feat-group__items">
+                              <label><input type="checkbox" name="room_type" value="Private"> Private</label>
+                              <label><input type="checkbox" name="room_type" value="Shared"> Shared</label>
+                           </div>
+                        </div>
+                        <div class="pa-feat-group" style="margin-bottom:10px">
+                           <p class="pa-feat-group__title">Features</p>
+                           <div class="pa-feat-group__items">
+                              <label><input type="checkbox" name="room_type" value="Ensuite"> Ensuite</label>
+                           </div>
+                        </div>
+                        <div class="pa-feat-group" style="margin-bottom:10px">
+                           <p class="pa-feat-group__title">Costs</p>
+                           <div class="pa-feat-group__items">
+                              <label><input type="checkbox" name="room_type" value="Bills included"> Bills included</label>
+                              <label><input type="checkbox" name="room_type" value="Bills excluded"> Bills excluded</label>
+                           </div>
+                        </div>
+                        <div class="pa-feat-group" style="margin-bottom:10px">
+                           <p class="pa-feat-group__title">Rules</p>
+                           <div class="pa-feat-group__items">
+                              <label><input type="checkbox" name="room_type" value="Couples allowed"> Couples allowed</label>
+                           </div>
+                        </div>
+                        <div class="pa-feat-group">
+                           <p class="pa-feat-group__title">Extras</p>
+                           <div class="pa-feat-group__items">
+                              <label><input type="checkbox" name="room_type" value="Furnished"> Furnished</label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="houseTypeField" style="display:none">
                      <span class="pa-field__label">House type:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
@@ -2444,6 +2483,10 @@
             condField.style.display = hide ? 'none' : 'flex';
             if (!hide) setConditionOptions(propType);
          }
+         var roomTypeField = document.getElementById('roomTypeField');
+         if (roomTypeField) {
+            roomTypeField.style.display = (propType === 'Rooms') ? 'flex' : 'none';
+         }
          if (bedroomsField) {
             var hideBeds = bedroomsHiddenFor.includes(propType) || (propType === 'Rooms' && (reState.listingType === 'For Long-term Rent' || reState.listingType === 'For Short-term Rent'));
             bedroomsField.style.display = hideBeds ? 'none' : 'flex';
@@ -2743,6 +2786,15 @@
          var exactLng = document.getElementById('exactLng').value;
          if (exactLat) formData.append('exact_latitude', exactLat);
          if (exactLng) formData.append('exact_longitude', exactLng);
+
+         /* Room type checkboxes */
+         var roomTypeCbs = document.querySelectorAll('#roomTypeField input[name="room_type"]:checked');
+         if (roomTypeCbs.length) {
+            var roomTypeVals = Array.from(roomTypeCbs).map(function(cb){ return cb.value; });
+            formData.append('sub_type', roomTypeVals.join(', '));
+            /* Also map Furnished checkbox to API boolean */
+            if (roomTypeVals.includes('Furnished')) formData.set('furnished', '1');
+         }
 
          var condition = getSelectVal('conditionSelect');
          if (condition) formData.append('condition', condition);
