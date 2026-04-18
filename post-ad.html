@@ -280,6 +280,7 @@
       }
       .pa-csd__opt:hover { background: #fff3e8; }
       .pa-csd__opt.selected { color: #ff9138; font-weight: 600; }
+      .pa-csd__opt--placeholder { color: #aaa; border-bottom: 1px solid #f0f0f0; }
       .pa-select-wrap:has(.pa-csd)::after { display: none; }
 
       .pa-textarea {
@@ -928,6 +929,7 @@
                               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="3,5 7,9 11,5" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                            </div>
                            <div class="pa-csd__list">
+                              <div class="pa-csd__opt pa-csd__opt--placeholder" onclick="csdPick('floorCsd','floorSelect','')">Select floor</div>
                               <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','Ground floor')">Ground floor</div>
                               <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','1')">1</div>
                               <div class="pa-csd__opt" onclick="csdPick('floorCsd','floorSelect','2')">2</div>
@@ -955,7 +957,7 @@
                      <span class="pa-field__label">Parking:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="parkingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select parking</option>
+                           <option value="">Select parking</option>
                            <option>Yes</option>
                            <option>No</option>
                            <option>Covered parking</option>
@@ -968,7 +970,7 @@
                      <span class="pa-field__label">Furnishing:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="furnishingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select furnishing</option>
+                           <option value="">Select furnishing</option>
                            <option>Furnished</option>
                            <option>Semi-furnished</option>
                            <option>Unfurnished</option>
@@ -985,6 +987,7 @@
                               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="3,5 7,9 11,5" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                            </div>
                            <div class="pa-csd__list">
+                              <div class="pa-csd__opt pa-csd__opt--placeholder" onclick="csdPick('airConCsd','airConSelect','')">Select air conditioning</div>
                               <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','Yes')">Yes</div>
                               <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','No')">No</div>
                               <div class="pa-csd__opt" onclick="csdPick('airConCsd','airConSelect','Central A/C')">Central A/C</div>
@@ -1400,7 +1403,7 @@
                      <span class="pa-field__label pa-field__label--wrap">Construction year:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="constructionYearSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select construction year</option>
+                           <option value="">Select construction year</option>
                            <option>2025</option><option>2024</option><option>2023</option><option>2022</option>
                            <option>2021</option><option>2020</option><option>2019</option><option>2018</option>
                            <option>2017</option><option>2016</option><option>2015</option><option>2014</option>
@@ -1511,7 +1514,7 @@
                      <span class="pa-field__label pa-field__label--wide">Online viewing:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="onlineViewingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select online viewing</option>
+                           <option value="">Select online viewing</option>
                            <option>Yes</option>
                            <option>No</option>
                         </select>
@@ -1522,7 +1525,7 @@
                      <span class="pa-field__label pa-field__label--wide">Energy Efficiency:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="energySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select energy efficiency</option>
+                           <option value="">Select energy efficiency</option>
                            <option>A+</option><option>A</option><option>B</option><option>C</option>
                            <option>D</option><option>E</option><option>F</option><option>G</option>
                         </select>
@@ -2638,10 +2641,20 @@
          if (!csd || !inp) return;
          inp.value = value;
          var label = csd.querySelector('[id$="CsdLabel"]');
-         if (label) label.textContent = value;
-         csd.querySelector('.pa-csd__trigger').classList.remove('pa-empty');
+         var trigger = csd.querySelector('.pa-csd__trigger');
+         if (value === '') {
+            /* Restore placeholder */
+            if (label) {
+               var defaultText = csdId === 'floorCsd' ? 'Select floor' : csdId === 'airConCsd' ? 'Select air conditioning' : 'Select';
+               label.textContent = defaultText;
+            }
+            if (trigger) trigger.classList.add('pa-empty');
+         } else {
+            if (label) label.textContent = value;
+            if (trigger) trigger.classList.remove('pa-empty');
+         }
          csd.querySelectorAll('.pa-csd__opt').forEach(function(o) {
-            o.classList.toggle('selected', o.textContent === value);
+            o.classList.toggle('selected', value !== '' && o.textContent.trim() === value);
          });
          csd.classList.remove('pa-csd--open');
       }
@@ -2758,17 +2771,17 @@
          var parking = getSelectVal('parkingSelect');
          var hasParking = parking && parking !== 'No' && parking !== 'None' ? '1' : '0';
          formData.append('parking', hasParking);
-         if (parking && parking !== 'No' && parking !== 'None') formData.append('parking_type', parking);
+         formData.append('parking_type', (parking && parking !== 'No' && parking !== 'None') ? parking : '');
 
          var furnishing = getSelectVal('furnishingSelect');
          var hasFurnished = furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None' ? '1' : '0';
          formData.append('furnished', hasFurnished);
-         if (furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None') formData.append('furnishing_type', furnishing);
+         formData.append('furnishing_type', (furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None') ? furnishing : '');
 
          var airCon = getSelectVal('airConSelect');
          var hasAC = airCon && airCon !== 'No' && airCon !== 'None' ? '1' : '0';
          formData.append('air_conditioning', hasAC);
-         if (airCon && airCon !== 'No' && airCon !== 'None') formData.append('ac_type', airCon);
+         formData.append('ac_type', (airCon && airCon !== 'No' && airCon !== 'None') ? airCon : '');
 
          var features = document.querySelectorAll('#includedField input[type="checkbox"]');
          var featureMap = {
@@ -3343,8 +3356,11 @@
          var btSel = document.getElementById('buildingTypeSelect');
          if (btSel && d.building_type) _setSelect('buildingTypeSelect', d.building_type);
 
-         /* Floor (custom dropdown) */
-         if (d.floor) csdPick('floorCsd', 'floorSelect', d.floor);
+         /* Floor (custom dropdown) — 0 means Ground floor */
+         if (d.floor !== null && d.floor !== undefined && d.floor !== '') {
+            var floorVal = (d.floor === 0 || d.floor === '0') ? 'Ground floor' : String(d.floor);
+            csdPick('floorCsd', 'floorSelect', floorVal);
+         }
          /* Air con */
          if (d.ac_type) csdPick('airConCsd', 'airConSelect', d.ac_type);
          /* Furnishing */
@@ -3529,7 +3545,7 @@
             var btype = (document.getElementById('buildingTypeSelect') || {}).value;
             if (btype) formData.append('building_type', btype);
             var floor = (document.getElementById('floorSelect') || {}).value;
-            if (floor) formData.append('floor', floor);
+            formData.append('floor', floor ? (floor === 'Ground floor' ? '0' : floor) : '');
             var area = getInputVal('propertyAreaInput');
             if (area) formData.append('covered_area', area);
             var hasWa = document.getElementById('whatsappCheck');
@@ -3547,39 +3563,37 @@
 
             /* Construction year */
             var cyear = (document.getElementById('constructionYearSelect') || {}).value;
-            if (cyear) formData.append('construction_year', cyear);
+            formData.append('construction_year', cyear || '');
 
             /* Energy efficiency */
             var energy = (document.getElementById('energySelect') || {}).value;
-            if (energy) formData.append('energy_efficiency', energy);
+            formData.append('energy_efficiency', energy || '');
 
             /* Online viewing */
             var ov = (document.getElementById('onlineViewingSelect') || {}).value;
-            if (ov) formData.append('online_viewing', ov);
+            formData.append('online_viewing', ov || '');
 
             /* Registration */
-            var rb = getInputVal('regBlockInput');
-            if (rb) formData.append('registration_block', rb);
-            var rn = getInputVal('regNumInput');
-            if (rn) formData.append('registration_number', rn);
+            formData.append('registration_block', getInputVal('regBlockInput'));
+            formData.append('registration_number', getInputVal('regNumInput'));
 
             /* Parking */
             var parking = (document.getElementById('parkingSelect') || {}).value;
             var hasParking = parking && parking !== 'No' && parking !== 'None' ? '1' : '0';
             formData.append('parking', hasParking);
-            if (parking && parking !== 'No' && parking !== 'None') formData.append('parking_type', parking);
+            formData.append('parking_type', (parking && parking !== 'No' && parking !== 'None') ? parking : '');
 
             /* Furnishing */
             var furnishing = (document.getElementById('furnishingSelect') || {}).value;
             var hasFurnished = furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None' ? '1' : '0';
             formData.append('furnished', hasFurnished);
-            if (furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None') formData.append('furnishing_type', furnishing);
+            formData.append('furnishing_type', (furnishing && furnishing !== 'Unfurnished' && furnishing !== 'None') ? furnishing : '');
 
             /* Air conditioning */
             var airCon = (document.getElementById('airConSelect') || {}).value;
             var hasAC = airCon && airCon !== 'No' && airCon !== 'None' ? '1' : '0';
             formData.append('air_conditioning', hasAC);
-            if (airCon && airCon !== 'No' && airCon !== 'None') formData.append('ac_type', airCon);
+            formData.append('ac_type', (airCon && airCon !== 'No' && airCon !== 'None') ? airCon : '');
 
             /* Bool checkboxes */
             var boolFields2 = ['pool','garden','balcony','terrace','veranda','security'];
