@@ -166,7 +166,7 @@
       .product .info-bord__item:before { font-size: 22px !important; }
       .product__price-row { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 6px; }
       .product__price-row .price-start { font-family: "Poppins", sans-serif; font-weight: 700; font-size: 24px; color: #1a1a1a; }
-      .product__price-row .price-old { display: none; }
+      .product__price-row .price-old { display: inline-block; margin-left: 10px; font-size: 16px; }
       .product__price-row .product__negotiable { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: #f4705a; }
       .product__text { margin: 2px 0 !important; font-size: 13px !important; }
       .product__desc { font-size: 14px !important; margin: 2px 0 !important; line-height: 1.35 !important; }
@@ -2328,6 +2328,15 @@
               var mn = ('0'+d.getMinutes()).slice(-2);
               return dd + ' ' + mm + ' ' + yy + ' | ' + hh + ':' + mn;
             }
+            /* Build info-bord items from API fields */
+            function _buildInfoFromAd(ad) {
+              var arr = [];
+              if (ad.bedrooms)  arr.push(['icon-bead', ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '')]);
+              if (ad.bathrooms) arr.push(['icon-bath', ad.bathrooms + ' bath']);
+              var a = ad.covered_area || ad.area;
+              if (a) arr.push(['icon-house-area', a + ' m²']);
+              return arr;
+            }
             /* Group API items by bucket preserving newest-first order */
             var apiByBucket = {};
             resp.data.forEach(function(ad) {
@@ -2338,18 +2347,21 @@
               if (ad.is_pro) stk.push('PRO');
               var cc = ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '';
               var imgSrc = ad.photo || 'img/product.jpg';
+              var priceNum  = ad.price     ? Number(ad.price)     : 0;
+              var oldPriceN = ad.old_price ? Number(ad.old_price) : 0;
               apiByBucket[bucket].push({
                 id:   ad.id,
                 s:    'Bazar Seller',
                 t:    ad.title || 'Property listing',
                 imgs: [imgSrc],
-                info: [],
-                p:    ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—',
+                info: _buildInfoFromAd(ad),
+                p:    priceNum  ? '£ ' + priceNum.toLocaleString('en-GB')  : '—',
+                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + oldPriceN.toLocaleString('en-GB') : '',
                 l:    ad.city ? ad.city + ', UK' : 'UK',
-                d:    '',
+                d:    ad.description || '',
                 dt:   fmtDate(ad.created_at),
                 n:    String(ad.id),
-                v:    0,
+                v:    ad.views || 0,
                 stk:  stk,
                 cc:   cc,
                 cy:   ad.city ? ad.city.toUpperCase() : 'UK'
@@ -2380,17 +2392,18 @@
                     var imgSrc = ad.photo || 'img/product.jpg';
                     if (!imgSrc || imgSrc.indexOf('dev.bazar.uk') !== -1) imgSrc = 'img/product.jpg';
                     var stk = []; if (ad.is_vip) stk.push('VIP'); if (ad.is_pro) stk.push('PRO');
+                    var priceNum2  = ad.price     ? Number(ad.price)     : 0;
+                    var oldPriceN2 = ad.old_price ? Number(ad.old_price) : 0;
                     newItems.push({
                       id: ad.id, s: 'Bazar Seller', t: ad.title || 'Room listing',
-                      imgs: [imgSrc], info: [],
-                      p: ad.price ? '£ ' + Number(ad.price).toLocaleString() : '—',
+                      imgs: [imgSrc], info: _buildInfoFromAd(ad),
+                      p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
+                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + oldPriceN2.toLocaleString('en-GB') : '',
                       l: [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
                       cc: ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '',
-                      cy: ad.city ? ad.city.toUpperCase() : 'UK',
-                      area: ad.area || ad.covered_area || 0,
-                      bathrooms: ad.bathrooms || 0, bedrooms: ad.bedrooms || 0
+                      cy: ad.city ? ad.city.toUpperCase() : 'UK'
                     });
                   });
                   if (newItems.length) {
@@ -2442,7 +2455,7 @@
           '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span></div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
           '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
-          '<div class="product__price-row"><span class="price-start">'+item.p+'</span></div>'+
+          '<div class="product__price-row"><span class="price-start">'+item.p+'</span>'+(item.op ? '<span class="price-old">'+item.op+'</span>' : '')+'</div>'+
           '<p class="product__text">'+item.l+'</p>'+
           '<p class="product__desc">'+item.d+'</p>'+
           '<div class="product__info">'+
@@ -2466,7 +2479,7 @@
           '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
-          '<div class="card__down"><div class="card__prices"><span class="price-new">'+item.p+'</span></div>'+
+          '<div class="card__down"><div class="card__prices"><span class="price-new">'+item.p+'</span>'+(item.op ? '<span class="price-old">'+item.op+'</span>' : '')+'</div>'+
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
       }
       function renderListings(type) {
