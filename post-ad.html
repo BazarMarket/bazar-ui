@@ -176,6 +176,12 @@
          gap: 20px;
          margin: 14px 0;
       }
+      /* ⚠️ ЗАФИКСИРОВАНО: min/max-width ОБЯЗАТЕЛЬНО 155px для ВСЕХ лейблов.
+         При 120px длинные лейблы (Online viewing, Energy Efficiency,
+         Registration block/number, Air conditioning, Construction year)
+         выходят за границу и инпуты съезжают в разные стороны.
+         НЕ МЕНЯТЬ на --wide / --wrap классы для отдельных полей —
+         это снова сломает выравнивание. */
       .pa-field__label {
          font-family: "Poppins", sans-serif;
          font-weight: 600;

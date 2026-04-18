@@ -207,6 +207,18 @@ else → doLogin()                                    // DEV/Replit: прямо�
 - Секции внутри: `margin: 0 6%`
 - Любой контент с `margin: 0 6%` ОБЯЗАН быть внутри `container-full` (padding: 0 32px)
 
+## ⚠️ post-ad.html — выравнивание лейблов формы (ЗАФИКСИРОВАНО, НЕ МЕНЯТЬ)
+
+`.pa-field__label` в `post-ad.html` ОБЯЗАН иметь `min-width: 155px; max-width: 155px; white-space: normal`.
+
+**Почему:** при 120px длинные лейблы («Online viewing», «Energy Efficiency», «Registration block», «Registration number», «Air conditioning», «Construction year») не влезают и инпуты съезжают в разные горизонтальные позиции. Это визуальный баг — «ячейки не на одном уровне».
+
+**Что нельзя делать:**
+- Менять ширину с 155px на 120px (или любую другую)
+- Добавлять `pa-field__label--wide` (162px) отдельным полям — это снова создаст смещение
+- Добавлять `pa-field__label--wrap` + `white-space: nowrap` — лейблы перестанут влезать
+- Все поля формы должны использовать ОДИН базовый класс `pa-field__label` без модификаторов
+
 ## ⚠️ CSS-ловушки
 
 - `.card-grid p { margin: 0 }` обнуляет отступы у ВСЕХ `<p>` внутри карточки — добавляй `!important`
