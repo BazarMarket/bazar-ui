@@ -181,11 +181,11 @@
          font-weight: 600;
          font-size: 14px;
          color: #333;
-         min-width: 120px;
-         max-width: 120px;
+         min-width: 155px;
+         max-width: 155px;
          text-align: right;
          padding-top: 12px;
-         white-space: nowrap;
+         white-space: normal;
       }
       .pa-field__label span {
          color: #ff4d4f;
@@ -979,7 +979,7 @@
                   </div>
 
                   <div class="pa-field" id="airConField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wrap">Air conditioning:</span>
+                     <span class="pa-field__label">Air conditioning:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <div class="pa-csd" id="airConCsd">
                            <div class="pa-csd__trigger pa-empty" tabindex="0" onclick="csdToggle('airConCsd')" onkeydown="if(event.key==='Enter'||event.key===' ')csdToggle('airConCsd')">
@@ -1400,7 +1400,7 @@
                   </div>
 
                   <div class="pa-field" id="constructionYearField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wrap">Construction year:</span>
+                     <span class="pa-field__label">Construction year:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="constructionYearSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="">Select construction year</option>
@@ -1511,7 +1511,7 @@
                   </div>
 
                   <div class="pa-field" id="onlineViewingField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wide">Online viewing:</span>
+                     <span class="pa-field__label">Online viewing:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="onlineViewingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="">Select online viewing</option>
@@ -1522,7 +1522,7 @@
                   </div>
 
                   <div class="pa-field" id="energyField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wide">Energy Efficiency:</span>
+                     <span class="pa-field__label">Energy Efficiency:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="energySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                            <option value="">Select energy efficiency</option>
@@ -1533,14 +1533,14 @@
                   </div>
 
                   <div class="pa-field" id="regBlockField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wide">Registration block:</span>
+                     <span class="pa-field__label">Registration block:</span>
                      <div class="pa-field__control">
                         <input class="pa-input" id="regBlockInput" type="text" placeholder="">
                      </div>
                   </div>
 
                   <div class="pa-field" id="regNumField" style="display:none">
-                     <span class="pa-field__label pa-field__label--wide">Registration number:</span>
+                     <span class="pa-field__label">Registration number:</span>
                      <div class="pa-field__control">
                         <input class="pa-input" id="regNumInput" type="text" placeholder="">
                      </div>
