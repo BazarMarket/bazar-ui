@@ -2370,6 +2370,8 @@ body {
 }
 .card-price__right .price-last__text {
   font-size: 13px;
+  position: relative;
+  top: -15px;
 }
 .info-icon {
   font-family: "Poppins", sans-serif;
