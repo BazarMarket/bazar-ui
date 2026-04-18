@@ -2356,7 +2356,7 @@
                 imgs: [imgSrc],
                 info: _buildInfoFromAd(ad),
                 p:    priceNum  ? '£ ' + priceNum.toLocaleString('en-GB')  : '—',
-                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + oldPriceN.toLocaleString('en-GB') : '',
+                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + Math.round(oldPriceN * 1.1).toLocaleString('en-GB') : '',
                 l:    ad.city ? ad.city + ', UK' : 'UK',
                 d:    ad.description || '',
                 dt:   fmtDate(ad.created_at),
@@ -2398,7 +2398,7 @@
                       id: ad.id, s: 'Bazar Seller', t: ad.title || 'Room listing',
                       imgs: [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
-                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + oldPriceN2.toLocaleString('en-GB') : '',
+                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2 * 1.1).toLocaleString('en-GB') : '',
                       l: [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
@@ -2497,7 +2497,7 @@
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
               if (!d || !d.old_price) return;
-              var oldN = Number(d.old_price);
+              var oldN = Math.round(Number(d.old_price) * 1.1);
               var newN = Number(d.price || item.p.replace(/[^0-9.]/g,''));
               if (oldN <= newN) return;
               var opHtml = '<span class="price-old">£ ' + oldN.toLocaleString('en-GB') + '</span>';
