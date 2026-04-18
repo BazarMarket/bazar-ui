@@ -2263,6 +2263,9 @@
          var subSubCats = document.getElementById('subSubCats');
          var data = catData[cat] || {};
          var keys = Object.keys(data);
+         if (cat === 'phones' && !window.bazarIsAdmin) {
+            keys = keys.filter(function(k) { return k === 'Mobile phones'; });
+         }
          subSubCats.innerHTML = '';
          document.getElementById('houseTypeField').style.display = 'none';
          document.getElementById('buildingTypeField').style.display = 'none';
@@ -3668,9 +3671,14 @@
             .then(function(d) {
                if (!d.admin) return;
                window.bazarIsAdmin = true;
-               var activeSub = document.querySelector('#subCats .cat-item.active');
-               if (activeSub && reState.cat === 'motors') {
-                  fillSubSub('motors', activeSub.dataset.subcat);
+               var activeCat = document.querySelector('#mainCats .cat-item.active');
+               if (!activeCat) return;
+               var cat = activeCat.dataset.cat;
+               if (cat === 'motors') {
+                  var activeSub = document.querySelector('#subCats .cat-item.active');
+                  if (activeSub) fillSubSub('motors', activeSub.dataset.subcat);
+               } else if (cat === 'phones') {
+                  selectCat(activeCat);
                }
             })
             .catch(function() {});
