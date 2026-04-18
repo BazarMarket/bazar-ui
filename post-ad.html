@@ -2465,7 +2465,8 @@
          var houseTypeField = document.getElementById('houseTypeField');
          houseTypeField.style.display = 'none';
          var list = (catData[cat] && catData[cat][sub]) || [];
-         if (cat === 'motors' && localStorage.getItem('bazar_is_admin') !== '1') {
+         var isAdmin = window.bazarIsAdmin === true || localStorage.getItem('bazar_is_admin') === '1';
+         if (cat === 'motors' && !isAdmin) {
             list = list.filter(function(s) { return s === 'Cars'; });
          }
          if (!list.length) { subSubCats.innerHTML = ''; return; }
@@ -3661,6 +3662,14 @@
          })
          .catch(function(e) { console.error('Edit mode load error:', e); });
       }
+
+      window.addEventListener('bazar:authReady', function(e) {
+         if (!e.detail.is_admin) return;
+         var activeSub = document.querySelector('#subCats .cat-item.active');
+         if (activeSub && reState.cat === 'motors') {
+            fillSubSub('motors', activeSub.dataset.subcat);
+         }
+      });
 
       window.addEventListener('DOMContentLoaded', function() {
          var first = document.querySelector('#mainCats .cat-item.active');

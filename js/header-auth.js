@@ -59,7 +59,10 @@
                         var el = document.getElementById('header-username') || document.querySelector('.user-link__title');
                         if (el) el.textContent = d.name;
                     }
-                    localStorage.setItem('bazar_is_admin', d.is_admin ? '1' : '0');
+                    var isAdmin = d.is_admin ? '1' : '0';
+                    localStorage.setItem('bazar_is_admin', isAdmin);
+                    window.bazarIsAdmin = d.is_admin;
+                    window.dispatchEvent(new CustomEvent('bazar:authReady', { detail: { is_admin: d.is_admin } }));
                     var plan = (d.plan || 'free').toLowerCase();
                     var daysLeft = parseInt(d.days_left || 0, 10);
                     var localPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
