@@ -2825,7 +2825,7 @@
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
-         if (window._clearOldPrice) formData.append('old_price', '0');
+         if (window._clearOldPrice) formData.append('clear_old_price', '1');
          formData.append('country', 'United Kingdom');
          var locationCity = document.getElementById('locationCity').value;
          if (!locationCity) { alert('Please select a location.'); return; }
@@ -3061,7 +3061,7 @@
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
-         if (window._clearOldPrice) formData.append('old_price', '0');
+         if (window._clearOldPrice) formData.append('clear_old_price', '1');
          formData.append('country', 'United Kingdom');
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
@@ -3199,7 +3199,7 @@
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
-         if (window._clearOldPrice) formData.append('old_price', '0');
+         if (window._clearOldPrice) formData.append('clear_old_price', '1');
          formData.append('country', 'United Kingdom');
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
