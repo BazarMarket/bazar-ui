@@ -1335,6 +1335,16 @@
                         </div>
                      </div>
                      <div class="pa-field">
+                        <span class="pa-field__label">Delivery:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneDeliverySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select delivery</option>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
                         <span class="pa-field__label">Unlock status:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneUnlockSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
@@ -3210,6 +3220,8 @@
          if (storage) formData.append('phone_storage', storage);
          var colour = getInputVal('phoneColourInput');
          if (colour) formData.append('colour', colour);
+         var phoneDelivery = getSelectVal('phoneDeliverySelect');
+         if (phoneDelivery) formData.append('delivery', phoneDelivery);
          var unlock = getSelectVal('phoneUnlockSelect');
          if (unlock) formData.append('unlock_status', unlock);
          var ram = getSelectVal('phoneRamSelect');

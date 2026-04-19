@@ -383,7 +383,7 @@
                            <div class="card-price__info">
                               <p class="info-icon icon-eye">301</p>
                               <p class="info-icon  icon-namber" id="prop-id">992301</p>
-                              <p class="info-icon icon-truck">Delivery</p>
+                              <p class="info-icon icon-truck" id="prop-delivery" style="display:none">Delivery</p>
                               <p class="info-icon icon-calendar" id="prop-date">19 03 2022 | 19:43</p>
                            </div>
                            <div class="card-price__right">
@@ -871,6 +871,13 @@
 
       el('prop-id').textContent = id;
       el('prop-date').textContent = '01 04 2026 | 10:00';
+
+      var deliveryEl = el('prop-delivery');
+      if (deliveryEl) {
+         var reTypes = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','office','shop','restaurant','industrial','hotel','business_investment','land','building','room'];
+         var isRealEstate = reTypes.indexOf((p.property_type || '').toLowerCase()) !== -1;
+         deliveryEl.style.display = (!isRealEstate && p.delivery === 'Yes') ? '' : 'none';
+      }
 
       var allImgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
       var mainWrap = document.getElementById('gallery-big');
