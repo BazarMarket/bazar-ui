@@ -2344,13 +2344,9 @@ body {
 /*  Стили блока .card-price */
 .card-price {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   margin-right: 0;
-}
-
-.card-price.card-price--single-price {
-  align-items: center;
 }
 .card-price__info .info-icon:not(:last-child) {
   margin-bottom: 10px;
