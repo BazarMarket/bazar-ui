@@ -2825,6 +2825,7 @@
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         if (window._clearOldPrice) formData.append('old_price', '0');
          formData.append('country', 'United Kingdom');
          var locationCity = document.getElementById('locationCity').value;
          if (!locationCity) { alert('Please select a location.'); return; }
@@ -3060,6 +3061,7 @@
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         if (window._clearOldPrice) formData.append('old_price', '0');
          formData.append('country', 'United Kingdom');
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
@@ -3197,6 +3199,7 @@
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         if (window._clearOldPrice) formData.append('old_price', '0');
          formData.append('country', 'United Kingdom');
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
@@ -3368,7 +3371,7 @@
          var fmtOld = String(Math.round(oldPriceNum)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
          var wrap = document.createElement('div');
          wrap.id = '_editOldPriceRow';
-         wrap.style.cssText = 'margin-bottom:10px;';
+         wrap.style.cssText = 'margin-bottom:10px;display:flex;align-items:center;gap:10px;';
          wrap.innerHTML =
             '<span style="' +
                'font-family:Poppins,sans-serif;font-weight:700;font-size:20px;' +
@@ -3380,8 +3383,19 @@
                   'height:2px;background:#e53935;' +
                   'transform:translateY(-50%);' +
                '"></span>' +
-            '</span>';
+            '</span>' +
+            '<button type="button" onclick="_removeOldPrice()" style="' +
+               'background:#e53935;color:#fff;border:none;border-radius:50%;' +
+               'width:22px;height:22px;font-size:14px;line-height:1;cursor:pointer;' +
+               'display:flex;align-items:center;justify-content:center;flex-shrink:0;' +
+            '" title="Remove old price">&times;</button>';
          priceRow.parentNode.insertBefore(wrap, priceRow);
+      }
+
+      function _removeOldPrice() {
+         var row = document.getElementById('_editOldPriceRow');
+         if (row) row.remove();
+         window._clearOldPrice = true;
       }
 
       /* Fill form after categories are selected */
