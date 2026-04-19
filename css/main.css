@@ -2344,7 +2344,7 @@ body {
 /*  Стили блока .card-price */
 .card-price {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   margin-right: 0;
 }
@@ -2353,6 +2353,12 @@ body {
 }
 .card-price__right {
   margin-right: calc(10% - 28px);
+  display: flex;
+  flex-direction: column;
+}
+.card-price__right .price-last {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .card-price__right .price-last-old {
   font-size: 22px;
@@ -2369,9 +2375,7 @@ body {
 }
 .card-price__right .price-last__text {
   font-size: 13px;
-  margin-top: 35px;
-  position: relative;
-  top: -25px;
+  margin-top: 10px;
 }
 .info-icon {
   font-family: "Poppins", sans-serif;
