@@ -2360,8 +2360,6 @@ body {
 }
 .card-price__right .price-last-old {
   font-size: 22px;
-  position: relative;
-  top: -10px;
 }
 .card-price__right .price-last-new {
   font-size: 36px;
