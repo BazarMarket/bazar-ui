@@ -2354,7 +2354,7 @@
                 imgs: [imgSrc],
                 info: _buildInfoFromAd(ad),
                 p:    priceNum  ? '£ ' + priceNum.toLocaleString('en-GB')  : '—',
-                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + Math.round(oldPriceN * 1.1).toLocaleString('en-GB') : '',
+                op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + Math.round(oldPriceN).toLocaleString('en-GB') : '',
                 l:    ad.city ? ad.city + ', UK' : 'UK',
                 d:    ad.description || '',
                 dt:   fmtDate(ad.created_at),
@@ -2396,7 +2396,7 @@
                       id: ad.id, s: (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller', t: ad.title || 'Room listing',
                       imgs: [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
-                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2 * 1.1).toLocaleString('en-GB') : '',
+                      op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2).toLocaleString('en-GB') : '',
                       l: [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
@@ -2418,7 +2418,16 @@
 
       /* Убираем /mo (и аналоги) из отображаемой цены */
       function _dispP(p) { return (p || '').replace(/\s*\/\s*mo\b/gi, '').replace(/\s*\/\s*week\b/gi, '').trim(); }
-      /* Зачёркнутая цена = текущая × 1.1 (+10%) */
+      /* Зачёркнутая цена: если item.op задан (API-данные) — берём его; иначе +10% от цены (статика) */
+      function _renderOldPrice(item) {
+        if (typeof item.op !== 'undefined') {
+          return item.op ? '<span class="price-old">' + item.op + '</span>' : '';
+        }
+        var raw = parseFloat((_dispP(item.p) || '').replace(/[^0-9.]/g, ''));
+        if (!raw) return '';
+        return '<span class="price-old">£ ' + Math.round(raw * 1.1).toLocaleString('en-GB') + '</span>';
+      }
+      /* Для обратной совместимости (статика без item-контекста) */
       function _makeOldPrice(p) {
         var raw = parseFloat((p || '').replace(/[^0-9.]/g, ''));
         if (!raw) return '';
@@ -2461,7 +2470,7 @@
           '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span></div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
           '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
-          '<div class="product__price-row"><span class="price-start">'+_dispP(item.p)+'</span>'+_makeOldPrice(item.p)+'</div>'+
+          '<div class="product__price-row"><span class="price-start">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
           '<p class="product__text">'+item.l+'</p>'+
           '<p class="product__desc">'+item.d+'</p>'+
           '<div class="product__info">'+
@@ -2485,7 +2494,7 @@
           '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
-          '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_makeOldPrice(item.p)+'</div>'+
+          '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
       }
       function renderListings(type) {

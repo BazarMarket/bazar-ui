@@ -1606,7 +1606,8 @@
                 : '<div class="card__stikers"></div>';
         var imgSrc = ad.photo || 'img/product.jpg';
         var price  = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
-        var priceOld = ad.price ? '<span class="price-old">£ ' + Math.round(Number(ad.price) * 1.1).toLocaleString('en-GB') + '</span>' : '';
+        var _opN = ad.old_price ? Number(ad.old_price) : 0;
+        var priceOld = (_opN && _opN > Number(ad.price)) ? '<span class="price-old">£ ' + Math.round(_opN).toLocaleString('en-GB') + '</span>' : '';
         var infoBord = '';
         if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
             var items = '';
@@ -1679,7 +1680,8 @@
                             : '<div class="card__stikers"></div>';
                     var imgSrc = ad.photo || 'img/product.jpg';
                     var price = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
-                    var priceOld = ad.price ? '<span class="price-old">£ ' + Math.round(Number(ad.price) * 1.1).toLocaleString('en-GB') + '</span>' : '';
+                    var _latOpN = ad.old_price ? Number(ad.old_price) : 0;
+                    var priceOld = (_latOpN && _latOpN > Number(ad.price)) ? '<span class="price-old">£ ' + Math.round(_latOpN).toLocaleString('en-GB') + '</span>' : '';
                     var infoBord = '';
                     if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
                         var infoItems = '';
