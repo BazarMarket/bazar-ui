@@ -1804,6 +1804,10 @@
          var f = document.getElementById('paForm'); if (f) f.classList.remove('visible');
          var pg = document.getElementById('photoPreviewGrid'); if (pg) pg.innerHTML = '';
          reState.cat = ''; reState.listingType = ''; reState.propType = ''; reState.subtype = ''; reState.bedrooms = '';
+         /* Edit mode: run AFTER reset so pre-fill is not wiped */
+         var _editParams = new URLSearchParams(window.location.search);
+         var _editId = _editParams.get('edit');
+         if (_editId) _initEditMode(_editId);
       });
 
       var reState = { cat: '', listingType: '', propType: '', subtype: '', bedrooms: '' };
@@ -3968,10 +3972,7 @@
             if (phoneEl && !phoneEl.value) phoneEl.value = phone;
          }
 
-         /* Check for edit mode */
-         var params = new URLSearchParams(window.location.search);
-         var editId = params.get('edit');
-         if (editId) _initEditMode(editId);
+         /* Edit mode is initialized in pageshow handler (after form reset) */
       });
    </script>
    <script>
