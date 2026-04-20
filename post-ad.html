@@ -3691,8 +3691,9 @@
             var sub_type = (document.getElementById('houseTypeSelect') || {}).value;
             if (sub_type) formData.append('sub_type', sub_type);
             /* Room type checkboxes override houseTypeSelect for room ads */
-            var _rtCbs = document.querySelectorAll('#roomTypeField input[name="room_type"]:checked');
-            if (_rtCbs.length) {
+            var _rtField = document.getElementById('roomTypeField');
+            if (_rtField && _rtField.style.display !== 'none') {
+               var _rtCbs = document.querySelectorAll('#roomTypeField input[name="room_type"]:checked');
                var _rtUpdateVals = Array.from(_rtCbs).map(function(cb){ return cb.value; });
                formData.set('sub_type', _rtUpdateVals.join(', '));
             }
