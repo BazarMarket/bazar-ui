@@ -493,23 +493,23 @@ function finishRegistration() {
     if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
 
     var firebaseUser = auth.currentUser;
-    if (firebaseUser) {
+    var uid   = (firebaseUser && firebaseUser.uid) ? firebaseUser.uid : localStorage.getItem('bazar_firebase_uid');
+    var phone = (firebaseUser && firebaseUser.phoneNumber) ? firebaseUser.phoneNumber : (localStorage.getItem('bazar_phone') || '');
+    if (firebaseUser && firebaseUser.uid) {
         localStorage.setItem('bazar_firebase_uid', firebaseUser.uid);
+    }
+    if (uid) {
         fetch('https://admin.bazar.uk/api/customers', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
-                firebase_uid: firebaseUser.uid,
-                phone: localStorage.getItem('bazar_phone') || firebaseUser.phoneNumber || '',
+                firebase_uid: uid,
+                phone: phone,
                 name: name,
                 gender: selectedGender,
                 plan: localStorage.getItem('bazar_plan') || 'free',
             })
         }).catch(function() {});
-    } else {
-        if (!localStorage.getItem('bazar_firebase_uid')) {
-            localStorage.setItem('bazar_firebase_uid', 'test_uid_123');
-        }
     }
 
     if (isPostAd) {
