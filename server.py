@@ -1731,7 +1731,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         data.get('ad_photo',''), data.get('ad_price',''), data.get('seller_name',''),
                         data.get('buyer_id',''), data.get('buyer_name',''), time.time()
                     ))
-                    conn.commit()
+                else:
+                    new_seller = data.get('seller_name', '')
+                    if new_seller:
+                        conn.execute('UPDATE conversations SET seller_name=? WHERE id=?', (new_seller, cid))
+                conn.commit()
                 conn.close()
             self._send_json(200, {'ok': True, 'conv_id': cid}); return
 

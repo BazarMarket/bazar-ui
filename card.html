@@ -1002,6 +1002,8 @@
                   el('seller-name').textContent = cust.name;
                   var mobName = document.getElementById('mob-seller-name');
                   if (mobName) mobName.textContent = cust.name;
+                  /* Also update chat data so ensure() sends the fresh name */
+                  if (window._chatAdData) window._chatAdData.sellerName = cust.name;
                }
             })
             .catch(function() {});
