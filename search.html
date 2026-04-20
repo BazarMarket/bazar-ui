@@ -2418,12 +2418,10 @@
 
       /* Убираем /mo (и аналоги) из отображаемой цены */
       function _dispP(p) { return (p || '').replace(/\s*\/\s*mo\b/gi, '').replace(/\s*\/\s*week\b/gi, '').trim(); }
-      /* Зачёркнутая цена: если item.op задан и не пустой — берём его; иначе +10% от цены */
+      /* Зачёркнутая цена: только если реально задана в API */
       function _renderOldPrice(item) {
         if (item.op) return '<span class="price-old">' + item.op + '</span>';
-        var raw = parseFloat((_dispP(item.p) || '').replace(/[^0-9.]/g, ''));
-        if (!raw) return '';
-        return '<span class="price-old">£ ' + Math.round(raw * 1.1).toLocaleString('en-GB') + '</span>';
+        return '';
       }
       /* Для обратной совместимости (статика без item-контекста) */
       function _makeOldPrice(p) {

@@ -1608,8 +1608,7 @@
         var price  = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
         var _opN = ad.old_price ? Number(ad.old_price) : 0;
         var _curN = Number(ad.price) || 0;
-        var _oldVal = (_opN && _opN > _curN) ? _opN : (_curN ? Math.round(_curN * 1.1) : 0);
-        var priceOld = (_oldVal && _curN) ? '<span class="price-old">£ ' + Math.round(_oldVal).toLocaleString('en-GB') + '</span>' : '';
+        var priceOld = (_opN && _opN > _curN) ? '<span class="price-old">£ ' + Math.round(_opN).toLocaleString('en-GB') + '</span>' : '';
         var infoBord = '';
         if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
             var items = '';
@@ -1684,8 +1683,7 @@
                     var price = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
                     var _latOpN = ad.old_price ? Number(ad.old_price) : 0;
                     var _latCurN = Number(ad.price) || 0;
-                    var _latOldVal = (_latOpN && _latOpN > _latCurN) ? _latOpN : (_latCurN ? Math.round(_latCurN * 1.1) : 0);
-                    var priceOld = (_latOldVal && _latCurN) ? '<span class="price-old">£ ' + Math.round(_latOldVal).toLocaleString('en-GB') + '</span>' : '';
+                    var priceOld = (_latOpN && _latOpN > _latCurN) ? '<span class="price-old">£ ' + Math.round(_latOpN).toLocaleString('en-GB') + '</span>' : '';
                     var infoBord = '';
                     if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
                         var infoItems = '';
