@@ -382,6 +382,7 @@
                               <p class="info-icon  icon-namber" id="prop-id">992301</p>
                               <p class="info-icon icon-truck" id="prop-delivery" style="display:none">Delivery</p>
                               <p class="info-icon icon-calendar" id="prop-date">19 03 2022 | 19:43</p>
+                              <p class="info-icon seller-status" id="prop-seller-status" style="display:none"><span class="seller-status__dot"></span><span class="seller-status__text"></span></p>
                            </div>
                            <div class="card-price__right">
                               <div class="price-last">
@@ -876,6 +877,46 @@
          deliveryEl.style.display = (!isRealEstate && p.delivery === 'Yes') ? '' : 'none';
       }
 
+      var sellerStatusEl = el('prop-seller-status');
+      if (sellerStatusEl) {
+         var lastSeenRaw = p.seller_last_seen || null;
+         var isActive = false;
+         var statusText = '';
+         if (lastSeenRaw) {
+            var lastSeenDate = new Date(lastSeenRaw);
+            var nowMs = Date.now();
+            var diffMs = nowMs - lastSeenDate.getTime();
+            var diffMins  = Math.floor(diffMs / 60000);
+            var diffHours = Math.floor(diffMs / 3600000);
+            var diffDays  = Math.floor(diffMs / 86400000);
+            if (diffMins < 30) {
+               isActive = true;
+               statusText = 'Active';
+            } else if (diffHours < 1) {
+               statusText = 'Last seen ' + diffMins + ' min ago';
+            } else if (diffHours < 24) {
+               statusText = 'Last seen ' + diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago';
+            } else if (diffDays === 1) {
+               statusText = 'Last seen yesterday';
+            } else if (diffDays < 30) {
+               statusText = 'Last seen ' + diffDays + ' days ago';
+            } else if (diffDays < 365) {
+               var mo = Math.floor(diffDays / 30);
+               statusText = 'Last seen ' + mo + ' month' + (mo > 1 ? 's' : '') + ' ago';
+            } else {
+               var yr = Math.floor(diffDays / 365);
+               statusText = 'Last seen ' + yr + ' year' + (yr > 1 ? 's' : '') + ' ago';
+            }
+         } else {
+            isActive = true;
+            statusText = 'Active';
+         }
+         sellerStatusEl.classList.remove('seller-status--active', 'seller-status--inactive');
+         sellerStatusEl.classList.add(isActive ? 'seller-status--active' : 'seller-status--inactive');
+         sellerStatusEl.querySelector('.seller-status__text').textContent = statusText;
+         sellerStatusEl.style.display = '';
+      }
+
       var allImgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
       var mainWrap = document.getElementById('gallery-big');
       if (mainWrap && allImgs.length) {
@@ -1129,6 +1170,13 @@
          display: block; position: absolute; inset: 0; z-index: 2;
          cursor: zoom-in; background: transparent;
       }
+      .seller-status { display: flex; align-items: center; gap: 7px; }
+      .seller-status__dot {
+         display: inline-block; width: 9px; height: 9px;
+         border-radius: 50%; flex-shrink: 0;
+      }
+      .seller-status--active .seller-status__dot  { background: #22c55e; box-shadow: 0 0 0 2px rgba(34,197,94,.25); }
+      .seller-status--inactive .seller-status__dot { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,.25); }
    </style>
 
    <!-- ═══════════ SIDE CHAT PANEL STYLES ═══════════ -->
