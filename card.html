@@ -949,6 +949,7 @@
       specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
       var _locationVal = p.city ? (p.district ? p.city + ', ' + p.district : p.city) : (p.district || '');
       specs += specRow('Location', _locationVal);
+      if ((p.property_type || '').toLowerCase() === 'room' && p.sub_type) specs += specRow('Room type', p.sub_type);
       if (p.building_type) specs += specRow('Building type', p.building_type);
       var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
       specs += specRow('Condition', condLabel[p.condition] || p.condition);
