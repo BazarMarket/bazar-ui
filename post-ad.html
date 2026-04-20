@@ -3593,7 +3593,12 @@
             var btn = document.querySelector('.pa-btn-submit');
             if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
             formData.append('firebase_uid', firebaseUid);
-            if (window._clearOldPrice) formData.append('clear_old_price', '1');
+            if (window._clearOldPrice) {
+               formData.append('clear_old_price', '1');
+            } else if (d.old_price && parseFloat(d.old_price) > 0) {
+               /* Preserve existing old_price — don't let backend overwrite it with previous price */
+               formData.append('old_price', d.old_price);
+            }
 
             /* collect existing image URLs to preserve them */
             var grid = document.getElementById('photoPreviewGrid');
