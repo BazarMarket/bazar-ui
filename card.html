@@ -993,6 +993,19 @@
          ? (localStorage.getItem('bazar_username') || p.seller_name)
          : p.seller_name;
       el('seller-name').textContent = _displaySellerName;
+      /* Fetch seller's current name from API (may have been updated after ad was created) */
+      if (p.seller_firebase_uid && !(p.seller_firebase_uid === _curUid)) {
+         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(p.seller_firebase_uid))
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(cust) {
+               if (cust && cust.name) {
+                  el('seller-name').textContent = cust.name;
+                  var mobName = document.getElementById('mob-seller-name');
+                  if (mobName) mobName.textContent = cust.name;
+               }
+            })
+            .catch(function() {});
+      }
 
       /* ── Boost to Top button: Free plan owner only ── */
       (function() {
@@ -1328,13 +1341,30 @@
    function _ccpGetUser() {
       _ccpMyUid  = localStorage.getItem('bazar_firebase_uid') || '';
       _ccpMyName = localStorage.getItem('bazar_username') || 'User';
+      /* Fallback: get UID directly from Firebase if not in localStorage */
+      if (!_ccpMyUid && window.auth && window.auth.currentUser) {
+         _ccpMyUid = window.auth.currentUser.uid;
+         localStorage.setItem('bazar_firebase_uid', _ccpMyUid);
+      }
    }
 
    function ccpInitChat(cb) {
       if (_ccpInited) { if(cb) cb(); return; }
       _ccpGetUser();
       var d = window._chatAdData;
-      if (!d || !d.adId || !_ccpMyUid) { if(cb) cb(); return; }
+      if (!d || !d.adId) { if(cb) cb(); return; }
+      if (!_ccpMyUid) {
+         /* Not logged in — show prompt in chat panel */
+         var _chatBody = document.getElementById('ccpChatBody');
+         if (_chatBody && !_chatBody.querySelector('.ccp-login-prompt')) {
+            var _pr = document.createElement('div');
+            _pr.className = 'ccp-login-prompt';
+            _pr.style.cssText = 'text-align:center;padding:24px 16px;color:#888;font-size:14px;';
+            _pr.innerHTML = 'Please <a href="#" onclick="openCreateAccountModal();return false;" style="color:#f97316;text-decoration:underline">log in</a> to send messages.';
+            _chatBody.appendChild(_pr);
+         }
+         if(cb) cb(); return;
+      }
       _ccpConvId = BAZAR_CHAT.convId(d.adId, _ccpMyUid);
       BAZAR_CHAT.ensure(_ccpConvId, {
          ad_id: d.adId, ad_title: d.adTitle, ad_url: d.adUrl,
