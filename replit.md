@@ -2,6 +2,17 @@
 
 A static HTML/CSS/JS classified ads marketplace website UI.
 
+---
+## ⛔ ПРАВИЛА ДЛЯ АГЕНТА — ОБЯЗАТЕЛЬНО К ИСПОЛНЕНИЮ
+
+1. **DEV-САЙТ (dev.bazar.uk) — ТОЛЬКО ПОЛЬЗОВАТЕЛЬ.** Агент НИКОГДА не копирует, не синхронизирует и не деплоит файлы на dev.bazar.uk самостоятельно. Не запускать `bash dev.sh`. Не делать rsync/scp из prod в dev. Не делать rsync/scp из Replit в /var/www/bazar-dev/. Синхронизацию prod → dev делает только пользователь вручную командой `bash dev.sh`.
+
+2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`.
+
+3. **Общение на русском языке.**
+
+---
+
 ## Project Structure
 
 - `index.html` - Main homepage
