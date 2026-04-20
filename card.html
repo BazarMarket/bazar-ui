@@ -1004,6 +1004,9 @@
                   if (mobName) mobName.textContent = cust.name;
                   /* Also update chat data so ensure() sends the fresh name */
                   if (window._chatAdData) window._chatAdData.sellerName = cust.name;
+                  /* Update chat panel header name */
+                  var _ccpNameEl = document.getElementById('ccpSellerName');
+                  if (_ccpNameEl) _ccpNameEl.textContent = cust.name;
                }
             })
             .catch(function() {});
