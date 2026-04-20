@@ -164,8 +164,14 @@ window.onload = function () {
         centerInsufficientSlides: true,
         slidesPerView: 'auto',
         spaceBetween: 8,
+        touchStartPreventDefault: false,
 
     });
+    window._bzCardSwipers = Array.isArray(cardsSliders) ? cardsSliders : [cardsSliders];
+    if (window._bzSwipersUpdateQueue) {
+        window._bzSwipersUpdateQueue.forEach(function(fn) { try { fn(window._bzCardSwipers); } catch(e) {} });
+        window._bzSwipersUpdateQueue = [];
+    }
 
     const productGallery = new Swiper('.product-gallery .swiper', {
         loop: true,
