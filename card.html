@@ -756,7 +756,7 @@
       }
       if (!id) return;
 
-      if (window.location.hostname === 'www.bazar.uk') {
+      if (window.location.hostname.endsWith('bazar.uk')) {
          var _viewUid = localStorage.getItem('bazar_firebase_uid') || '';
          fetch('https://admin.bazar.uk/api/properties/' + id + '/view', {
             method: 'POST',
@@ -765,7 +765,7 @@
          }).catch(function() {});
       }
 
-      var apiUrl = (window.location.hostname === 'www.bazar.uk')
+      var apiUrl = window.location.hostname.endsWith('bazar.uk')
          ? 'https://admin.bazar.uk/api/properties/' + id
          : '/api/products/' + id;
 
@@ -1098,7 +1098,7 @@
    function bazarBoostPay(returnUrl, listingId) {
      var uid  = localStorage.getItem('bazar_firebase_uid') || '';
      var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-     var apiBase = (window.location.hostname === 'www.bazar.uk')
+     var apiBase = window.location.hostname.endsWith('bazar.uk')
        ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
        : '/api/boost-checkout';
      var btn = document.querySelector('.card-head__boost');
