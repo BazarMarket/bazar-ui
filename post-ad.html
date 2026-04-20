@@ -3593,7 +3593,14 @@
             var btn = document.querySelector('.pa-btn-submit');
             if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
             formData.append('firebase_uid', firebaseUid);
-            if (window._clearOldPrice) formData.append('clear_old_price', '1');
+
+            if (window._clearOldPrice) {
+               formData.append('clear_old_price', '1');
+            } else {
+               /* Explicitly preserve existing old_price so backend doesn't overwrite it */
+               var _op = _editAdData && _editAdData.old_price ? parseFloat(_editAdData.old_price) : 0;
+               if (_op > 0) formData.append('old_price', String(Math.round(_op)));
+            }
 
             /* collect existing image URLs to preserve them */
             var grid = document.getElementById('photoPreviewGrid');
@@ -3602,11 +3609,6 @@
                   if (box._paExistingUrl) formData.append('keep_images[]', box._paExistingUrl);
                });
             }
-
-            /* Snapshot old_price BEFORE saving — backend may overwrite it with previous price */
-            var _op = _editAdData && _editAdData.old_price ? parseFloat(_editAdData.old_price) : 0;
-            var _savedOldPrice = (!window._clearOldPrice && _op > 0)
-               ? String(Math.round(_op)) : null;
 
             fetch('https://admin.bazar.uk/api/properties/' + adId + '/update', {
                method: 'POST',
@@ -3634,19 +3636,7 @@
                         localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                      }
                   } catch(e){}
-                  /* If an old_price existed, restore it in a silent follow-up call */
-                  if (_savedOldPrice) {
-                     var pf = new FormData();
-                     pf.append('firebase_uid', firebaseUid);
-                     pf.append('old_price', _savedOldPrice);
-                     fetch('https://admin.bazar.uk/api/properties/' + adId + '/update', {
-                        method: 'POST', body: pf, headers: { 'Accept': 'application/json' }
-                     }).finally(function() {
-                        window.location.href = 'card.html?id=' + adId;
-                     });
-                  } else {
-                     window.location.href = 'card.html?id=' + adId;
-                  }
+                  window.location.href = 'card.html?id=' + adId;
                } else {
                   alert(data.message || data.error || 'Error saving changes');
                }
