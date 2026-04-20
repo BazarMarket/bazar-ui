@@ -3485,6 +3485,15 @@
             var htOpt = Array.from(htSel.options).find(function(o){return o.value===d.sub_type||o.text===d.sub_type;});
             if (htOpt) { htSel.value = htOpt.value; }
          }
+         /* Room type checkboxes (only for room property type) */
+         if (d.sub_type && (d.property_type || '').toLowerCase() === 'room') {
+            var _rtVals = d.sub_type.split(',').map(function(v){ return v.trim(); });
+            document.querySelectorAll('#paRtDropdown input[name="room_type"]').forEach(function(cb) {
+               cb.checked = _rtVals.indexOf(cb.value) !== -1;
+            });
+            var _rtLbl = document.getElementById('paRtLabel');
+            if (_rtLbl) _rtLbl.textContent = _rtVals.join(', ');
+         }
          var btSel = document.getElementById('buildingTypeSelect');
          if (btSel && d.building_type) _setSelect('buildingTypeSelect', d.building_type);
 
@@ -3681,6 +3690,12 @@
             if (condition) formData.append('condition', condition);
             var sub_type = (document.getElementById('houseTypeSelect') || {}).value;
             if (sub_type) formData.append('sub_type', sub_type);
+            /* Room type checkboxes override houseTypeSelect for room ads */
+            var _rtCbs = document.querySelectorAll('#roomTypeField input[name="room_type"]:checked');
+            if (_rtCbs.length) {
+               var _rtUpdateVals = Array.from(_rtCbs).map(function(cb){ return cb.value; });
+               formData.set('sub_type', _rtUpdateVals.join(', '));
+            }
             var btype = (document.getElementById('buildingTypeSelect') || {}).value;
             if (btype) formData.append('building_type', btype);
             var floor = (document.getElementById('floorSelect') || {}).value;
