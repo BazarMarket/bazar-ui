@@ -1907,30 +1907,34 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             if not recent or not isinstance(recent.get('data'), list):
                 self._send_json(200, recent or {'data': []})
                 return
-            def _enrich(ad):
-                ad_id = ad.get('id')
-                if not ad_id:
-                    return ad
-                if ad.get('old_price'):
-                    return ad
-                detail = _api_get(f'/properties/{ad_id}', f'listing_{ad_id}')
-                if detail and detail.get('old_price'):
-                    ad['old_price'] = detail['old_price']
-                return ad
+            enriched_list = list(recent['data'])
+            lock = threading.Lock()
+            def _fetch_old_price(idx, ad_id):
+                try:
+                    req = urllib.request.Request(
+                        f'{LARAVEL_API_BASE}/properties/{ad_id}',
+                        headers={'Accept': 'application/json'})
+                    with urllib.request.urlopen(req, timeout=4) as r:
+                        detail = json.loads(r.read().decode('utf-8'))
+                        op = detail.get('old_price')
+                        with lock:
+                            enriched_list[idx] = dict(enriched_list[idx])
+                            enriched_list[idx]['old_price'] = op
+                        # Also refresh cache so card.html gets fresh data too
+                        _cache_set(f'listing_{ad_id}', detail)
+                except Exception:
+                    pass
             threads = []
-            enriched = [None] * len(recent['data'])
-            def _run(i, ad):
-                enriched[i] = _enrich(dict(ad))
-            for i, ad in enumerate(recent['data']):
-                t = threading.Thread(target=_run, args=(i, ad))
-                t.start()
-                threads.append(t)
+            for i, ad in enumerate(enriched_list):
+                ad_id = ad.get('id')
+                if ad_id:
+                    t = threading.Thread(target=_fetch_old_price, args=(i, ad_id))
+                    t.daemon = True
+                    t.start()
+                    threads.append(t)
             for t in threads:
-                t.join(timeout=4)
-            for i, ad in enumerate(recent['data']):
-                if enriched[i] is None:
-                    enriched[i] = ad
-            recent['data'] = enriched
+                t.join(timeout=5)
+            recent['data'] = enriched_list
             self._send_json(200, recent)
             return
 
