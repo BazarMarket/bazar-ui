@@ -1516,7 +1516,8 @@
         for (var i = 0; i < localStorage.length; i++) {
             var k = localStorage.key(i);
             if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
-                ids.push(parseInt(k.replace('favorite_', '')));
+                var rawId = k.replace('favorite_', '');
+                if (rawId) ids.push(rawId);
             }
         }
         grid.innerHTML = '';
@@ -1525,30 +1526,51 @@
             return;
         }
         if (empty) empty.style.display = 'none';
+        var apiBase = 'https://admin.bazar.uk/api/properties/';
         ids.forEach(function(id) {
-            var p = BAZAR_PRODUCTS[id];
-            if (!p) return;
+            /* Show skeleton while loading */
             var card = document.createElement('div');
-            card.className = 'cab-fav-card';
+            card.className = 'cab-fav-card cab-fav-card--loading';
+            card.id = 'fav-card-' + id;
             card.innerHTML =
-                '<div class="cab-fav-card__img"><img src="' + p.image + '" alt="' + p.title + '"></div>' +
-                '<div class="cab-fav-card__body">' +
-                    '<p class="cab-fav-card__title">' + p.title + '</p>' +
-                    '<p class="cab-fav-card__price">' + fmtPrice(p.price) + '</p>' +
-                '</div>' +
-                '<div class="cab-fav-card__foot">' +
-                    '<a href="/card?id=' + id + '" class="cab-btn-sm cab-btn-sm--primary">View</a>' +
-                    '<button class="cab-btn-sm cab-btn-sm--outline" data-fav-remove="' + id + '">Remove</button>' +
-                '</div>';
+                '<div class="cab-fav-card__img" style="background:#f0f0f0;height:120px;"></div>' +
+                '<div class="cab-fav-card__body"><p class="cab-fav-card__title" style="color:#bbb">Loading…</p></div>';
             grid.appendChild(card);
+            /* Check static fallback first, then API */
+            var staticP = BAZAR_PRODUCTS[parseInt(id)];
+            if (staticP) {
+                _renderFavCard(card, id, staticP.title, staticP.price, staticP.image);
+            } else {
+                fetch(apiBase + id, { headers: { 'Accept': 'application/json' } })
+                    .then(function(r) { return r.ok ? r.json() : null; })
+                    .then(function(d) {
+                        if (!d) { card.remove(); return; }
+                        var img = (d.images && d.images[0]) ? d.images[0] : (d.image || 'img/product.jpg');
+                        _renderFavCard(card, id, d.title || 'Listing #' + id, d.price || 0, img);
+                    })
+                    .catch(function() { card.remove(); });
+            }
         });
-        grid.querySelectorAll('[data-fav-remove]').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var id = btn.getAttribute('data-fav-remove');
-                localStorage.setItem('favorite_' + id, '0');
-                updateFavCount();
-                renderFavorites();
-            });
+    }
+    function _renderFavCard(card, id, title, price, img) {
+        card.classList.remove('cab-fav-card--loading');
+        card.innerHTML =
+            '<div class="cab-fav-card__img"><img src="' + img + '" alt="' + title + '" style="width:100%;height:100%;object-fit:cover;"></div>' +
+            '<div class="cab-fav-card__body">' +
+                '<p class="cab-fav-card__title">' + title + '</p>' +
+                '<p class="cab-fav-card__price">' + fmtPrice(Number(price)) + '</p>' +
+            '</div>' +
+            '<div class="cab-fav-card__foot">' +
+                '<a href="card.html?id=' + id + '" class="cab-btn-sm cab-btn-sm--primary">View</a>' +
+                '<button class="cab-btn-sm cab-btn-sm--outline" data-fav-remove="' + id + '">Remove</button>' +
+            '</div>';
+        card.querySelector('[data-fav-remove]').addEventListener('click', function() {
+            localStorage.setItem('favorite_' + id, '0');
+            updateFavCount();
+            card.remove();
+            var grid = document.getElementById('cab-fav-grid');
+            var empty = document.getElementById('cab-fav-empty');
+            if (grid && !grid.querySelector('.cab-fav-card') && empty) empty.style.display = '';
         });
     }
 
