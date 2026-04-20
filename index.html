@@ -1635,7 +1635,7 @@
     <script>
     /* Load Rooms for Rent section from API */
     (function() {
-        fetch('https://admin.bazar.uk/api/properties/recent?property_type=room', { headers: { 'Accept': 'application/json' } })
+        fetch('/api/properties/recent-enriched?property_type=room', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(resp) {
                 if (!resp || !resp.data) return;
@@ -1665,7 +1665,7 @@
     <script>
     /* Load Latest Updates from API */
     (function() {
-        fetch('https://admin.bazar.uk/api/properties/recent', { headers: { 'Accept': 'application/json' } })
+        fetch('/api/properties/recent-enriched', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(resp) {
                 if (!resp || !resp.data || !resp.data.length) return;

@@ -1900,6 +1900,40 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'conversations': convs}); return
 
         # API: products (dev fallback)
+        # ── /api/properties/recent-enriched — recent list + old_price per item ──
+        if path == '/api/properties/recent-enriched':
+            qs_forward = ('?' + qs) if qs else ''
+            recent = _api_get(f'/properties/recent{qs_forward}')
+            if not recent or not isinstance(recent.get('data'), list):
+                self._send_json(200, recent or {'data': []})
+                return
+            def _enrich(ad):
+                ad_id = ad.get('id')
+                if not ad_id:
+                    return ad
+                if ad.get('old_price'):
+                    return ad
+                detail = _api_get(f'/properties/{ad_id}', f'listing_{ad_id}')
+                if detail and detail.get('old_price'):
+                    ad['old_price'] = detail['old_price']
+                return ad
+            threads = []
+            enriched = [None] * len(recent['data'])
+            def _run(i, ad):
+                enriched[i] = _enrich(dict(ad))
+            for i, ad in enumerate(recent['data']):
+                t = threading.Thread(target=_run, args=(i, ad))
+                t.start()
+                threads.append(t)
+            for t in threads:
+                t.join(timeout=4)
+            for i, ad in enumerate(recent['data']):
+                if enriched[i] is None:
+                    enriched[i] = ad
+            recent['data'] = enriched
+            self._send_json(200, recent)
+            return
+
         if path.startswith('/api/products/'):
             pid = path.split('/api/products/')[-1].split('?')[0]
             try:

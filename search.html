@@ -2290,10 +2290,10 @@
         /* On /rooms page also load rooms-specific endpoint to catch all active rooms */
         var _pathCat0 = window.location.pathname.replace(/^\//, '').split('/')[0];
         var _extraUrl = (_pathCat0 === 'rooms')
-          ? 'https://admin.bazar.uk/api/properties/recent?property_type=room&per_page=50'
+          ? '/api/properties/recent-enriched?property_type=room&per_page=50'
           : null;
 
-        fetch('https://admin.bazar.uk/api/properties/recent', { headers: { 'Accept': 'application/json' } })
+        fetch('/api/properties/recent-enriched', { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
           .then(function(resp) {
             if (!resp || !resp.data || !resp.data.length) return;
