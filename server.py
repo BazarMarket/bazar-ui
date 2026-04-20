@@ -24,7 +24,7 @@ import threading
 import sqlite3
 
 # ── Configuration ─────────────────────────────────────────────────────────────
-PORT               = 5000
+PORT               = int(os.environ.get('BAZAR_PORT', 5000))
 PUBLIC_DOMAIN      = 'https://www.bazar.uk'
 LARAVEL_API_HOST   = 'admin.bazar.uk'
 LARAVEL_API_BASE   = 'https://admin.bazar.uk/api'
