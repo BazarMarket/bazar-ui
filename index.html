@@ -1457,36 +1457,54 @@
              badge.style.display = count > 0 ? 'flex' : 'none';
           }
        }
-       (function() {
-          var hearts = document.querySelectorAll('.card__heart');
-          hearts.forEach(function(heart) {
-             var cardId = heart.closest('.card').querySelector('[href*="id="]') ? 
-                         heart.closest('.card').querySelector('[href*="id="]').href.split('id=')[1] : null;
-             
-             if(cardId) {
-                var stored = localStorage.getItem('favorite_' + cardId);
-                if(stored === '1') {
-                   heart.classList.add('active');
-                   heart.classList.remove('icon-heart');
-                   heart.classList.add('icon-heart-full');
-                }
-             }
-             
-             heart.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                heart.classList.toggle('active');
-                var isActive = heart.classList.contains('active');
-                heart.classList.toggle('icon-heart', !isActive);
-                heart.classList.toggle('icon-heart-full', isActive);
-                if(cardId) {
-                   localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
-                }
-                updateFavCount();
+       function _heartGetId(heart) {
+          var card = heart.closest('.card');
+          if (!card) return null;
+          var link = card.querySelector('[href*="id="]');
+          if (!link) return null;
+          var m = link.href.match(/[?&]id=([^&]+)/);
+          return m ? m[1] : null;
+       }
+       function _heartApplyState(heart) {
+          var cardId = _heartGetId(heart);
+          if (!cardId) return;
+          var isFav = localStorage.getItem('favorite_' + cardId) === '1';
+          heart.classList.toggle('active', isFav);
+          heart.classList.toggle('icon-heart', !isFav);
+          heart.classList.toggle('icon-heart-full', isFav);
+       }
+       /* Event delegation — catches clicks on ALL hearts, static and dynamic */
+       document.addEventListener('click', function(e) {
+          var heart = e.target.closest('.card__heart');
+          if (!heart) return;
+          e.preventDefault();
+          e.stopPropagation();
+          var cardId = _heartGetId(heart);
+          heart.classList.toggle('active');
+          var isActive = heart.classList.contains('active');
+          heart.classList.toggle('icon-heart', !isActive);
+          heart.classList.toggle('icon-heart-full', isActive);
+          if (cardId) localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
+          updateFavCount();
+       }, true);
+       /* Watch for dynamically injected cards (API sections) and apply stored state */
+       (new MutationObserver(function(mutations) {
+          var found = false;
+          mutations.forEach(function(m) {
+             m.addedNodes.forEach(function(node) {
+                if (node.nodeType !== 1) return;
+                var hearts = (node.classList && node.classList.contains('card__heart'))
+                   ? [node]
+                   : Array.from(node.querySelectorAll('.card__heart'));
+                hearts.forEach(_heartApplyState);
+                if (hearts.length) found = true;
              });
           });
-          updateFavCount();
-       })();
+          if (found) updateFavCount();
+       })).observe(document.body, { childList: true, subtree: true });
+       /* Apply stored state to hearts already in DOM + init count */
+       document.querySelectorAll('.card__heart').forEach(_heartApplyState);
+       updateFavCount();
     </script>
     <script>
     (function() {

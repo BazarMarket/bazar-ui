@@ -1890,6 +1890,40 @@ function _glbKey(e) {
 </script>
 
 <script src="js/header-auth.js?v=11"></script>
+<script>
+(function() {
+   var params = new URLSearchParams(window.location.search);
+   var cardId = params.get('id');
+   var favBtn = document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
+   if (!favBtn) return;
+   /* Apply stored state on load */
+   function applyFavState() {
+      var isFav = cardId && localStorage.getItem('favorite_' + cardId) === '1';
+      favBtn.classList.toggle('icon-heart', !isFav);
+      favBtn.classList.toggle('icon-heart-full', isFav);
+   }
+   /* Update header badge count */
+   function updateFavCount() {
+      var count = 0;
+      for (var i = 0; i < localStorage.length; i++) {
+         var k = localStorage.key(i);
+         if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') count++;
+      }
+      var badge = document.getElementById('fav-count');
+      if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+   }
+   applyFavState();
+   updateFavCount();
+   favBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (!cardId) return;
+      var isFav = localStorage.getItem('favorite_' + cardId) === '1';
+      localStorage.setItem('favorite_' + cardId, isFav ? '0' : '1');
+      applyFavState();
+      updateFavCount();
+   });
+})();
+</script>
 </body>
 
 </html>
