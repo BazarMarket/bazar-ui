@@ -3604,8 +3604,9 @@
             }
 
             /* Snapshot old_price BEFORE saving — backend may overwrite it with previous price */
-            var _savedOldPrice = (!window._clearOldPrice && d.old_price && parseFloat(d.old_price) > 0)
-               ? String(Math.round(parseFloat(d.old_price))) : null;
+            var _op = _editAdData && _editAdData.old_price ? parseFloat(_editAdData.old_price) : 0;
+            var _savedOldPrice = (!window._clearOldPrice && _op > 0)
+               ? String(Math.round(_op)) : null;
 
             fetch('https://admin.bazar.uk/api/properties/' + adId + '/update', {
                method: 'POST',
