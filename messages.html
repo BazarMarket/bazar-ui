@@ -315,8 +315,13 @@ function renderConvsList() {
         return;
     }
 
+    /* Remove stale "no conversations" placeholder if present */
+    var placeholder = el.querySelector('.cab-msgs-loading');
+    if (placeholder) placeholder.remove();
+
     var totalUnread = 0;
-    el.innerHTML = convs.map(function (c) {
+
+    convs.forEach(function (c) {
         var isBuyer  = c.buyer_id === _myUid;
         var other    = isBuyer ? (c.seller_name || 'Seller') : (c.buyer_name || 'Buyer');
         var unread   = isBuyer ? (c.unread_buyer || 0) : (c.unread_seller || 0);
@@ -324,17 +329,51 @@ function renderConvsList() {
         var timeStr  = c.last_time ? formatMsgTime(new Date(c.last_time * 1000)) : '';
         var isActive = _activeConvId === c.id;
 
-        return '<div class="cab-conv-item' + (isActive ? ' active' : '') +
-               '" onclick="cabOpenRealChat(\'' + c.id + '\')" data-conv="' + c.id + '">' +
-               '<div class="cab-conv-avatar"><img src="/icon/man.svg" alt=""></div>' +
-               '<div class="cab-conv-body">' +
-               '<div class="cab-conv-top"><span class="cab-conv-name">' + escHtml(other) + '</span>' +
-               '<span class="cab-conv-time">' + timeStr + '</span></div>' +
-               '<div class="cab-conv-preview">' + escHtml(c.last_msg || '') + '</div>' +
-               '</div>' +
-               (unread > 0 ? '<span class="cab-conv-badge">' + unread + '</span>' : '') +
-               '</div>';
-    }).join('');
+        var item = el.querySelector('[data-conv="' + c.id + '"]');
+        if (item) {
+            /* Update only changed text — avatar img is never touched → no flicker */
+            var nameEl    = item.querySelector('.cab-conv-name');
+            var timeEl    = item.querySelector('.cab-conv-time');
+            var previewEl = item.querySelector('.cab-conv-preview');
+            if (nameEl    && nameEl.textContent    !== other)             nameEl.textContent    = other;
+            if (timeEl    && timeEl.textContent    !== timeStr)           timeEl.textContent    = timeStr;
+            if (previewEl && previewEl.textContent !== (c.last_msg || '')) previewEl.textContent = c.last_msg || '';
+            var badgeEl = item.querySelector('.cab-conv-badge');
+            if (unread > 0) {
+                if (!badgeEl) { badgeEl = document.createElement('span'); badgeEl.className = 'cab-conv-badge'; item.appendChild(badgeEl); }
+                if (badgeEl.textContent !== String(unread)) badgeEl.textContent = unread;
+            } else if (badgeEl) {
+                badgeEl.remove();
+            }
+            item.classList.toggle('active', isActive);
+        } else {
+            /* New conversation — create DOM node */
+            item = document.createElement('div');
+            item.className = 'cab-conv-item' + (isActive ? ' active' : '');
+            item.setAttribute('onclick', 'cabOpenRealChat(\'' + c.id + '\')');
+            item.setAttribute('data-conv', c.id);
+            item.innerHTML =
+                '<div class="cab-conv-avatar"><img src="/icon/man.svg" alt=""></div>' +
+                '<div class="cab-conv-body">' +
+                '<div class="cab-conv-top"><span class="cab-conv-name">' + escHtml(other) + '</span>' +
+                '<span class="cab-conv-time">' + timeStr + '</span></div>' +
+                '<div class="cab-conv-preview">' + escHtml(c.last_msg || '') + '</div>' +
+                '</div>' +
+                (unread > 0 ? '<span class="cab-conv-badge">' + unread + '</span>' : '');
+            el.appendChild(item);
+        }
+    });
+
+    /* Reorder items to match sort (by last_time desc) */
+    convs.forEach(function (c, i) {
+        var item = el.querySelector('[data-conv="' + c.id + '"]');
+        if (item && el.children[i] !== item) el.insertBefore(item, el.children[i] || null);
+    });
+
+    /* Remove items for conversations that were deleted */
+    Array.from(el.querySelectorAll('[data-conv]')).forEach(function (item) {
+        if (!_allConvs[item.dataset.conv]) item.remove();
+    });
 
     /* Update header badge + cache */
     localStorage.setItem('bazar_unread_count', totalUnread);
