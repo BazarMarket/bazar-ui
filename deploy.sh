@@ -8,7 +8,9 @@ if [ ! -f .local/ssh/bazar_deploy ]; then
   exit 1
 fi
 
-PROD_ROOT="root@49.13.231.137:/var/www/bazar-prod/public"
+SERVER="root@49.13.231.137"
+PROD_ROOT="$SERVER:/var/www/bazar-prod/public"
+SITE_ROOT="$SERVER:/var/www/bazar-prod"
 SSH_KEY=".local/ssh/bazar_deploy"
 SSH_OPTS="-o StrictHostKeyChecking=no -i $SSH_KEY"
 
@@ -20,6 +22,14 @@ fi
 for FILE in "$@"; do
   echo "--- Deploying: $FILE"
   scp $SSH_OPTS "$FILE" "$PROD_ROOT/$FILE"
+
+  # HTML-файлы Python-сервер читает из SITE_ROOT (не из public/)
+  # Поэтому копируем их туда тоже
+  if [[ "$FILE" == *.html ]]; then
+    BASENAME=$(basename "$FILE")
+    ssh $SSH_OPTS "$SERVER" "cp /var/www/bazar-prod/public/$FILE /var/www/bazar-prod/$BASENAME"
+    echo "    Also synced to SITE_ROOT: $BASENAME"
+  fi
 done
 
 echo "=== Production updated ==="

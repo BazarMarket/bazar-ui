@@ -509,7 +509,15 @@ Stripe проверяет сайт и не должен видеть Deposit/Wit
 Общаться с пользователем на русском языке.
 
 ## Production Deployment Notes
-- **server.py** → `/var/www/bazar-prod/server.py` (КОРЕНЬ, не public!)
-- **HTML файлы** (search.html, index.html, card.html и др.) → `/var/www/bazar-prod/public/`
+
+### Важно: два разных места для файлов!
+- **server.py** → `/var/www/bazar-prod/server.py` (КОРЕНЬ)
+- **index.html** → `/var/www/bazar-prod/index.html` ← **Python SITE_ROOT читает отсюда!**
+  - Также копировать в `/var/www/bazar-prod/public/index.html` (nginx статика)
+- **Остальные HTML** (card.html, search.html, cabinet.html и др.) → `/var/www/bazar-prod/public/`
+  - Python для них тоже читает из SITE_ROOT (`/var/www/bazar-prod/`), но туда приходят через `/var/www/bazar-prod/public/` по-другому. Лучше копировать в ОБОИХ местах.
+- **JS/CSS** → `/var/www/bazar-prod/public/js/` и `/var/www/bazar-prod/public/css/` (только nginx)
 - **Restart**: `ssh root@49.13.231.137 "systemctl restart bazar-seo"`
-- **Systemd**: `ExecStart=/usr/bin/python3 /var/www/bazar-prod/server.py`, `WorkingDirectory=/var/www/bazar-prod/public`
+- **Systemd**: `ExecStart=/usr/bin/python3 /var/www/bazar-prod/server.py`, `WorkingDirectory=/var/www/bazar-prod`
+- **SITE_ROOT** = `os.path.dirname(os.path.abspath(__file__))` = `/var/www/bazar-prod/`
+  (НЕ `/var/www/bazar-prod/public/`! Это была ошибка в прошлой документации)
