@@ -3586,6 +3586,7 @@
             var btn = document.querySelector('.pa-btn-submit');
             if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
             formData.append('firebase_uid', firebaseUid);
+            if (window._clearOldPrice) formData.append('clear_old_price', '1');
 
             /* collect existing image URLs to preserve them */
             var grid = document.getElementById('photoPreviewGrid');
