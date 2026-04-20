@@ -2416,6 +2416,8 @@
           .catch(function() {});
       })();
 
+      /* Убираем /mo (и аналоги) из отображаемой цены */
+      function _dispP(p) { return (p || '').replace(/\s*\/\s*mo\b/gi, '').replace(/\s*\/\s*week\b/gi, '').trim(); }
       /* Зачёркнутая цена = текущая × 1.1 (+10%) */
       function _makeOldPrice(p) {
         var raw = parseFloat((p || '').replace(/[^0-9.]/g, ''));
@@ -2459,7 +2461,7 @@
           '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span></div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
           '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
-          '<div class="product__price-row"><span class="price-start">'+item.p+'</span>'+_makeOldPrice(item.p)+'</div>'+
+          '<div class="product__price-row"><span class="price-start">'+_dispP(item.p)+'</span>'+_makeOldPrice(item.p)+'</div>'+
           '<p class="product__text">'+item.l+'</p>'+
           '<p class="product__desc">'+item.d+'</p>'+
           '<div class="product__info">'+
@@ -2483,7 +2485,7 @@
           '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
-          '<div class="card__down"><div class="card__prices"><span class="price-new">'+item.p+'</span>'+_makeOldPrice(item.p)+'</div>'+
+          '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_makeOldPrice(item.p)+'</div>'+
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
       }
       function renderListings(type) {

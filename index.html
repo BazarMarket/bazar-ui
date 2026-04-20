@@ -1606,6 +1606,7 @@
                 : '<div class="card__stikers"></div>';
         var imgSrc = ad.photo || 'img/product.jpg';
         var price  = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
+        var priceOld = ad.price ? '<span class="price-old">£ ' + Math.round(Number(ad.price) * 1.1).toLocaleString('en-GB') + '</span>' : '';
         var infoBord = '';
         if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
             var items = '';
@@ -1624,7 +1625,7 @@
             '<div class="card__img">' + stiker +
             '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
             '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
-            '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span></div>' + infoBord + '</div>' +
+            '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + infoBord + '</div>' +
             '</div>';
     }
     </script>
@@ -1678,6 +1679,7 @@
                             : '<div class="card__stikers"></div>';
                     var imgSrc = ad.photo || 'img/product.jpg';
                     var price = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
+                    var priceOld = ad.price ? '<span class="price-old">£ ' + Math.round(Number(ad.price) * 1.1).toLocaleString('en-GB') + '</span>' : '';
                     var infoBord = '';
                     if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
                         var infoItems = '';
@@ -1696,7 +1698,7 @@
                         '<div class="card__img">' + stiker +
                         '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
                         '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
-                        '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span></div>' + infoBord + '</div>' +
+                        '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + infoBord + '</div>' +
                         '</div>';
                 });
                 grid.innerHTML = html;
