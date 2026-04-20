@@ -947,8 +947,8 @@
       var specs = '';
       specs += '<caption>Specifications</caption>';
       specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
-      specs += specRow('City', p.city);
-      specs += specRow('Area', p.district);
+      var _locationVal = p.city ? (p.district ? p.city + ', ' + p.district : p.city) : (p.district || '');
+      specs += specRow('Location', _locationVal);
       if (p.building_type) specs += specRow('Building type', p.building_type);
       var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
       specs += specRow('Condition', condLabel[p.condition] || p.condition);
