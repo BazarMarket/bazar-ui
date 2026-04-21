@@ -2507,7 +2507,7 @@
         var listBody = document.querySelector('.list-products__body');
         if (listBody) listBody.innerHTML = items.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
-        if (gridBody) gridBody.innerHTML = items.concat(items.slice(0,3)).map(buildGridCard).join('');
+        if (gridBody) gridBody.innerHTML = items.map(buildGridCard).join('');
       }
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
@@ -2869,7 +2869,17 @@
          var isActive = heart.classList.contains('active');
          heart.classList.toggle('icon-heart', !isActive);
          heart.classList.toggle('icon-heart-full', isActive);
-         if (cardId) localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
+         if (cardId) {
+            localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
+            /* Sync all other hearts with the same card ID (list ↔ grid) */
+            document.querySelectorAll('.card__heart').forEach(function(h) {
+               if (h !== heart && _heartGetId(h) === cardId) {
+                  h.classList.toggle('active', isActive);
+                  h.classList.toggle('icon-heart', !isActive);
+                  h.classList.toggle('icon-heart-full', isActive);
+               }
+            });
+         }
          updateFavCount();
       }, true);
       /* Watch for dynamically injected cards and apply stored state */
