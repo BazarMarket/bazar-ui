@@ -879,7 +879,17 @@
       if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
 
       el('prop-id').textContent = id;
-      el('prop-date').textContent = '01 04 2026 | 10:00';
+      (function() {
+        var raw = p.created_at || '';
+        if (raw) {
+          var parts = raw.replace('T', ' ').split(/[\s:/-]/);
+          if (parts.length >= 5) {
+            var pad = function(n){ return String(n).length < 2 ? '0'+n : ''+n; };
+            el('prop-date').textContent = pad(parts[2]) + ' ' + pad(parts[1]) + ' ' + parts[0]
+                                        + ' | ' + pad(parts[3]) + ':' + pad(parts[4]);
+          }
+        }
+      })();
 
       var deliveryEl = el('prop-delivery');
       if (deliveryEl) {
