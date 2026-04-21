@@ -2664,12 +2664,37 @@
          btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="' + (open ? '2,8 6,4 10,8' : '2,4 6,8 10,4') + '"/></svg> ' + (open ? 'Show less' : 'Show more features');
       }
 
+      function _getPhotoLimit() {
+         var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+         if (plan === 'vip') return 50;
+         if (plan === 'pro') return 20;
+         return 10;
+      }
+      function _updatePhotoHint() {
+         var limit = _getPhotoLimit();
+         var hint = document.querySelector('.pa-upload-zone__hint');
+         if (hint) hint.textContent = 'JPG, PNG · Max 5 MB · First photo is the cover image · Up to ' + limit + ' photos';
+      }
+
       function onPhotosSelected(source) {
          var files = source.files;
          if (!files || !files.length) return;
          var grid = document.getElementById('photoPreviewGrid');
+         var limit = _getPhotoLimit();
+         var currentCount = grid ? grid.querySelectorAll('.pa-photo-box').length : 0;
+         var allowed = limit - currentCount;
+         if (allowed <= 0) {
+            var plan = (localStorage.getItem('bazar_plan') || 'free').toUpperCase();
+            alert('Photo limit reached: ' + plan + ' plan allows up to ' + limit + ' photos per listing.');
+            source.value = '';
+            return;
+         }
+         var skipped = 0;
+         var added = 0;
          Array.from(files).forEach(function(file) {
             if (!file.type.match(/image\/(jpeg|png|webp)/)) return;
+            if (added >= allowed) { skipped++; return; }
+            added++;
             var reader = new FileReader();
             reader.onload = function(e) {
                var box = document.createElement('div');
@@ -2714,13 +2739,15 @@
             };
             reader.readAsDataURL(file);
          });
+         if (skipped > 0) {
+            var _lim = _getPhotoLimit();
+            var _pl = (localStorage.getItem('bazar_plan') || 'free').toUpperCase();
+            alert(skipped + ' photo' + (skipped > 1 ? 's were' : ' was') + ' not added — ' + _pl + ' plan allows up to ' + _lim + ' photos per listing.');
+         }
+         source.value = '';
       }
 
       var API_URL = 'https://admin.bazar.uk/api/properties';
-      var origOnPhotosSelected = onPhotosSelected;
-      onPhotosSelected = function(source) {
-         origOnPhotosSelected(source);
-      };
 
       function getSelectVal(id) {
          var el = document.getElementById(id);
@@ -4018,6 +4045,7 @@
       })();
 
       window.addEventListener('DOMContentLoaded', function() {
+         _updatePhotoHint();
          var first = document.querySelector('#mainCats .cat-item.active');
          if (first) selectCat(first);
 
