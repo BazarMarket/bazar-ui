@@ -2300,19 +2300,26 @@
             var categoryMap = {
               'flat': 'Flats', 'flats': 'Flats', 'apartment': 'Flats',
               'house': 'House', 'houses': 'House', 'cottage': 'House', 'bungalow': 'House', 'villa': 'House',
-              'room': 'Rooms', 'rooms': 'Rooms', 'studio': 'Rooms',
+              'maisonette': 'House', 'townhouse': 'House', 'penthouse': 'House', 'duplex': 'House',
+              'room': 'Rooms', 'rooms': 'Rooms', 'studio': 'Studio',
               'office': 'Office', 'shop': 'Shop', 'restaurant': 'Restaurant',
               'industrial': 'Industrial', 'hotel': 'Hotel', 'land': 'Land',
-              'building': 'Building', 'business': 'Business or Investment'
+              'building': 'Building', 'business': 'Business or Investment',
+              'car': 'Cars', 'phone': 'Phones'
             };
-            function guessCategory(title, cat) {
-              if (cat) {
-                var cl = (cat + '').toLowerCase();
-                for (var k in categoryMap) { if (cl.indexOf(k) !== -1) return categoryMap[k]; }
+            function guessCategory(propType, title) {
+              if (propType) {
+                var pt = (propType + '').toLowerCase();
+                if (categoryMap[pt]) return categoryMap[pt];
               }
               if (title) {
                 var tl = title.toLowerCase();
-                for (var k in categoryMap) { if (tl.indexOf(k) !== -1) return categoryMap[k]; }
+                var keys = Object.keys(categoryMap);
+                for (var i = 0; i < keys.length; i++) {
+                  var k = keys[i];
+                  var re = new RegExp('\\b' + k + '\\b');
+                  if (re.test(tl)) return categoryMap[k];
+                }
               }
               return 'House';
             }
@@ -2338,7 +2345,7 @@
             /* Group API items by bucket preserving newest-first order */
             var apiByBucket = {};
             resp.data.forEach(function(ad) {
-              var bucket = guessCategory(ad.title, ad.category);
+              var bucket = guessCategory(ad.property_type, ad.title);
               if (!apiByBucket[bucket]) apiByBucket[bucket] = [];
               var stk = [];
               if (ad.is_vip) stk.push('VIP');
