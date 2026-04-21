@@ -9,13 +9,17 @@ A static HTML/CSS/JS classified ads marketplace website UI.
 
 2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`. server.py деплоится в `/var/www/bazar-prod/server.py` (НЕ в public/).
 
-3. **БАЗЫ ДАННЫХ (текущая конфигурация):**
-   - `www.bazar.uk` → Python:5000 → `LARAVEL_API_BASE=https://admin.bazar.uk/api` → **bazar_dev** (реальные данные)
-   - `dev.bazar.uk` → Python:5001 → `LARAVEL_API_BASE=https://admin.bazar.uk/api` → **bazar_dev** (зеркало прода)
-   - Dev является зеркалом прода: все объявления, добавленные на проде, видны и на деве
-   - `bazar_test` существует как отдельная пустая БД — на будущее, когда dev снова отвяжут от прода
-   - `LARAVEL_API_BASE` задаётся через Environment в systemd сервисе `bazar-seo-dev.service`
+3. **БАЗЫ ДАННЫХ (текущая конфигурация — PROD/DEV изолированы):**
+   - `www.bazar.uk` → Python:5000 → `admin.bazar.uk/api` → `/var/www/bazar-prod/` → **bazar_prod**
+   - `dev.bazar.uk` → Python:5001 → `127.0.0.1:9001/api` → `/var/www/bazar-dev/` → **bazar_dev**
+   - `admin.bazar.uk` → nginx → PHP-FPM (`www.conf`) → `/var/www/bazar-prod/` → **bazar_prod**
+   - `dev.bazar.uk/dev-admin` → nginx → PHP-FPM (`bazar-dev-api.conf`, порт 9001) → `/var/www/bazar-dev/` → **bazar_dev**
+   - Dev admin путь: `/dev-admin` (на dev.bazar.uk), `/` (на admin.bazar.uk) — AdminPanelProvider.php
+   - `/etc/nginx/sites-enabled/bazar-dev` — regex приоритет: dev-admin|login|filament|livewire → PHP-FPM dev
+   - `LARAVEL_API_BASE` задаётся через Environment в systemd: bazar-seo (prod, порт 5000), bazar-seo-dev (dev, порт 5001)
    - dev.sh копирует HTML/CSS/JS из prod в dev и перезапускает bazar-seo-dev — запускает только пользователь
+   - **bootstrap/app.php** (`/var/www/bazar-dev/`): trustProxies(at:'*') + validateCsrfTokens(except livewire-*/update) для dev.bazar.uk
+   - **ВАЖНО**: НЕ запускать `php artisan config:cache` на dev — ломает FPM pool env vars (bazar-dev-api.conf)
 
 4. **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 
