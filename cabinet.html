@@ -1646,8 +1646,8 @@
             var isInactive = (ad.status === 'inactive' || ad.status === 'rejected');
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
-            if (i > 0) html += '<tr><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
-            html += '<tr data-ad-id="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
+            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
+            html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
@@ -1656,7 +1656,7 @@
                 '<td style="vertical-align:middle;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
-                '<tr style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
+                '<tr data-ad-group="' + ad.id + '" style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
                 '<td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
                   '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
                     '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="bazarBoostPay(window.location.href,\'' + ad.id + '\')">Boost to Top</button>' +
@@ -1704,8 +1704,8 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.success) {
-                    var row = document.querySelector('[data-ad-id="' + adId + '"]');
-                    if (row) row.remove();
+                    var rows = document.querySelectorAll('[data-ad-group="' + adId + '"]');
+                    if (rows.length) rows.forEach(function(r) { r.remove(); });
                     else location.reload();
                 } else {
                     alert(data.error || 'Could not delete ad.');
