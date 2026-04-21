@@ -1600,11 +1600,15 @@
     /* Shared card builder for index page sections */
     function buildIndexCard(ad) {
         var cardCls = ad.is_vip ? 'card card_red' : ad.is_pro ? 'card card_orange' : 'card';
-        var stiker  = ad.is_vip
-            ? '<div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>'
-            : ad.is_pro
-                ? '<div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>'
-                : '<div class="card__stikers"></div>';
+        var _cu = localStorage.getItem('bazar_username') || '';
+        var _cp = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var _dgi = new URLSearchParams(window.location.search).get('boost_demo');
+        var _showBoostI = (_cu && (_cp === 'free' || _cp === 'pro') && ad.seller_name === _cu && !ad.is_vip) || (_dgi === '1' && !ad.is_vip);
+        var boostBtnI = _showBoostI ? '<button class="card__boost-btn" onclick="event.stopPropagation();event.preventDefault();bazarBoostPay(window.location.href,\''+ad.id+'\');">Boost to Top</button>' : '';
+        var _stikerSpan = ad.is_vip
+            ? '<span class="stiker stiker_vip">VIP</span>'
+            : ad.is_pro ? '<span class="stiker stiker_top">PRO</span>' : '';
+        var stiker = '<div class="card__stikers">' + _stikerSpan + boostBtnI + '</div>';
         var imgSrc = ad.photo || 'img/product.jpg';
         var price  = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
         var _opN = ad.old_price ? Number(ad.old_price) : 0;
@@ -1630,6 +1634,24 @@
             '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
             '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + infoBord + '</div>' +
             '</div>';
+    }
+    function bazarBoostPay(returnUrl, listingId) {
+        var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+        var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var apiBase = (window.location.hostname === 'www.bazar.uk')
+            ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
+            : '/api/boost-checkout';
+        fetch(apiBase, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid, plan: plan })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+            if (d.success && d.url) { window.location.href = d.url; }
+            else { alert('Payment error: ' + (d.error || 'Unknown error')); }
+        })
+        .catch(function(){ alert('Could not connect to payment server. Please try again.'); });
     }
     </script>
 
