@@ -9,18 +9,28 @@ A static HTML/CSS/JS classified ads marketplace website UI.
 
 2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`. server.py деплоится в `/var/www/bazar-prod/server.py` (НЕ в public/).
 
-3. **БАЗЫ ДАННЫХ (текущая конфигурация — PROD/DEV изолированы):**
-   - `www.bazar.uk` → Python:5000 → `admin.bazar.uk/api` → `/var/www/bazar-prod/` → **bazar_prod**
-   - `dev.bazar.uk` → Python:5001 → `127.0.0.1:9001/api` → `/var/www/bazar-dev/` → **bazar_dev**
-   - `admin.bazar.uk` → nginx → PHP-FPM (`www.conf`) → `/var/www/bazar-prod/` → **bazar_prod**
-   - `dev.bazar.uk/dev-admin` → nginx → PHP-FPM (`bazar-dev-api.conf`, порт 9001) → `/var/www/bazar-dev/` → **bazar_dev**
+3. **БАЗЫ ДАННЫХ — ЖЕЛЕЗНАЯ АРХИТЕКТУРА (не менять без явной просьбы):**
+
+   НАПРАВЛЕНИЕ СИНХРОНИЗАЦИИ: ТОЛЬКО прод → dev. НИКОГДА наоборот.
+
+   | Среда | URL | Python | API | Laravel | БД MySQL |
+   |---|---|---|---|---|---|
+   | **ПРОД** | www.bazar.uk | port 5000 | admin.bazar.uk/api | /var/www/bazar-prod/ | **bazar_dev** |
+   | **ПРОД АДМИН** | admin.bazar.uk | — | — | /var/www/bazar-prod/ | **bazar_dev** |
+   | **DEV** | dev.bazar.uk | port 5001 | 127.0.0.1:9001/api | /var/www/bazar-dev/ | **bazar_prod** |
+   | **DEV АДМИН** | dev.bazar.uk/dev-admin | — | — | /var/www/bazar-dev/ | **bazar_prod** |
+
+   - Прод-база: `bazar_dev` (используется admin.bazar.uk через `/var/www/bazar-prod/.env`)
+   - Dev-база: `bazar_prod` (используется dev через FPM pool `/etc/php/8.3/fpm/pool.d/bazar-dev-api.conf`: `env[DB_DATABASE] = bazar_prod`)
+   - **bash dev.sh** синхронизирует:
+     1. Frontend: rsync `/var/www/bazar-prod/public/` → `/var/www/bazar-dev/public/`
+     2. БД: `mysqldump bazar_dev | mysql bazar_prod` (прод → dev)
+     3. Перезапускает `bazar-seo-dev`
    - Dev admin путь: `/dev-admin` (на dev.bazar.uk), `/` (на admin.bazar.uk) — AdminPanelProvider.php
    - `/etc/nginx/sites-enabled/bazar-dev` — regex приоритет: dev-admin|login|filament|livewire → PHP-FPM dev
-   - `LARAVEL_API_BASE` задаётся через Environment в systemd: bazar-seo (prod, порт 5000), bazar-seo-dev (dev, порт 5001)
-   - dev.sh копирует HTML/CSS/JS из prod в dev и перезапускает bazar-seo-dev — запускает только пользователь
    - **bootstrap/app.php** (`/var/www/bazar-dev/`): trustProxies(at:'*') + validateCsrfTokens(except livewire-*/update) для dev.bazar.uk
-   - **ВАЖНО**: НЕ запускать `php artisan config:cache` на dev — ломает FPM pool env vars (bazar-dev-api.conf)
-   - **dev.sh**: синхронизирует frontend (HTML/CSS/JS) + БД (mysqldump bazar_prod → bazar_dev) + перезапускает bazar-seo-dev
+   - **ВАЖНО**: НЕ запускать `php artisan config:cache` на dev — ломает FPM pool env vars
+   - **АГЕНТ НИКОГДА не трогает /var/www/bazar-prod/.env и не меняет прод-конфиг без явного запроса**
 
 4. **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 
