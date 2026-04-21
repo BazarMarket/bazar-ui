@@ -16,7 +16,7 @@ A static HTML/CSS/JS classified ads marketplace website UI.
    - `LARAVEL_API_BASE` задаётся через Environment в systemd сервисе `bazar-seo-dev.service`
    - dev.sh копирует server.py из prod в dev — это безопасно, т.к. API определяется env var сервиса, а не кодом
 
-3. **Общение на русском языке.**
+4. **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 
 ---
 
