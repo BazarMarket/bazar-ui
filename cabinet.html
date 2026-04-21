@@ -900,7 +900,10 @@
 
                     <!-- FREE -->
                     <div class="po-card po-card--free" onclick="cabSelectPlan(this,'free')">
-                        <span class="po-plan-badge po-plan-badge--free">Free</span>
+                        <div class="po-card-head">
+                            <span class="po-plan-badge po-plan-badge--free">Free</span>
+                            <span class="po-active-pill" id="freeActivePill" style="display:none">✓ Active</span>
+                        </div>
                         <p class="po-plan-name">✔ Free listing</p>
                         <p class="po-position">Standard placement in category</p>
                         <div class="po-price"><span class="po-price__free">Free</span></div>
@@ -913,7 +916,7 @@
                             <li class="po-feat--dim">No priority placement</li>
                             <li class="po-feat--dim">No highlight or badge</li>
                         </ul>
-                        <button class="po-btn po-btn--free" onclick="event.stopPropagation()">Start for free</button>
+                        <button class="po-btn po-btn--free" id="cabFreeBtn" onclick="event.stopPropagation()">Start for free</button>
                     </div>
 
                     <!-- PRO -->
@@ -1748,6 +1751,36 @@
         else if (daysLeft > 0 && daysLeft < 20) meta.classList.add('po-active-meta--warning');
     }
 
+    function _setFreeBtn(locked, planName) {
+        var freeBtn = document.getElementById('cabFreeBtn');
+        if (!freeBtn) return;
+        if (locked) {
+            freeBtn.disabled = true;
+            freeBtn.style.opacity = '0.45';
+            freeBtn.style.cursor = 'not-allowed';
+            freeBtn.title = 'Your ' + planName.toUpperCase() + ' plan is still active';
+        } else {
+            freeBtn.disabled = false;
+            freeBtn.style.opacity = '';
+            freeBtn.style.cursor = '';
+            freeBtn.title = '';
+        }
+    }
+    function _setProBtn(locked) {
+        var proBtn = document.getElementById('cabProBtn');
+        if (!proBtn) return;
+        if (locked) {
+            proBtn.disabled = true;
+            proBtn.style.opacity = '0.45';
+            proBtn.style.cursor = 'not-allowed';
+            proBtn.title = 'Cannot downgrade from VIP to PRO';
+        } else {
+            proBtn.disabled = false;
+            proBtn.style.opacity = '';
+            proBtn.style.cursor = '';
+            proBtn.title = '';
+        }
+    }
     function highlightCurrentPlan() {
         var plan = localStorage.getItem('bazar_plan') || 'free';
         document.querySelectorAll('.po-card').forEach(function(c) {
@@ -1755,24 +1788,33 @@
         });
         var proBtn = document.getElementById('cabProBtn');
         var vipBtn = document.getElementById('cabVipBtn');
-        var proPill = document.getElementById('proActivePill');
-        var vipPill = document.getElementById('vipActivePill');
-        if (proPill) proPill.style.display = 'none';
-        if (vipPill) vipPill.style.display = 'none';
+        var proPill  = document.getElementById('proActivePill');
+        var vipPill  = document.getElementById('vipActivePill');
+        var freePill = document.getElementById('freeActivePill');
+        if (proPill)  proPill.style.display  = 'none';
+        if (vipPill)  vipPill.style.display  = 'none';
+        if (freePill) freePill.style.display = 'none';
         _applySubMeta('free', 0, 0);
+        _setFreeBtn(false, '');
+        _setProBtn(false);
         if (plan === 'pro') {
             var card = document.querySelector('.po-card--pro');
             if (card) card.classList.add('po-card--active', 'is-selected');
             if (proPill) proPill.style.display = '';
-            if (proBtn) proBtn.textContent = 'Extend PRO — £7.00';
+            if (proBtn) { proBtn.disabled = false; proBtn.style.opacity = ''; proBtn.style.cursor = ''; proBtn.textContent = 'Extend PRO — £7.00'; }
             if (vipBtn) vipBtn.textContent = 'Upgrade to VIP — £14.00';
+            _setFreeBtn(true, 'pro');
         } else if (plan === 'vip') {
             var card = document.querySelector('.po-card--vip');
             if (card) card.classList.add('po-card--active', 'is-selected');
             if (vipPill) vipPill.style.display = '';
-            if (vipBtn) vipBtn.textContent = 'Extend VIP — £14.00';
-            if (proBtn) proBtn.textContent = 'Upgrade to PRO — £7.00';
+            if (vipBtn) { vipBtn.disabled = false; vipBtn.style.opacity = ''; vipBtn.style.cursor = ''; vipBtn.textContent = 'Extend VIP — £14.00'; }
+            _setFreeBtn(true, 'vip');
+            _setProBtn(true);
         } else {
+            var card = document.querySelector('.po-card--free');
+            if (card) card.classList.add('po-card--active', 'is-selected');
+            if (freePill) freePill.style.display = '';
             if (proBtn) proBtn.textContent = 'Upgrade to PRO — £7.00';
             if (vipBtn) vipBtn.textContent = 'Upgrade to VIP — £14.00';
         }
@@ -1783,6 +1825,13 @@
                     .then(function(r) { return r.json(); })
                     .then(function(d) {
                         var daysLeft = parseInt(d.pro_days_left || d.vip_days_left || d.days_left || 0, 10);
+                        /* Auto-expire: subscription ended — switch to free */
+                        if (daysLeft <= 0) {
+                            localStorage.setItem('bazar_plan', 'free');
+                            localStorage.removeItem('bazar_days_left');
+                            highlightCurrentPlan();
+                            return;
+                        }
                         var listings = parseInt(d.sub_listings || d.subscription_listings || 0, 10);
                         _applySubMeta(plan, daysLeft, listings);
                     })
