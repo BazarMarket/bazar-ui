@@ -896,6 +896,21 @@
                      </div>
                   </div>
 
+                  <!-- Bathrooms shown before Room type for Rooms -->
+                  <div class="pa-field" id="bathroomsField" style="display:none">
+                     <span class="pa-field__label">Bathrooms:</span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="bathroomsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>1</option>
+                           <option>2</option>
+                           <option>3</option>
+                           <option>4</option>
+                           <option>5 and more</option>
+                        </select>
+                     </div>
+                  </div>
+
                   <!-- Room type field: only for Rooms -->
                   <div class="pa-field" id="roomTypeField" style="display:none">
                      <span class="pa-field__label">Room type:</span>
@@ -962,21 +977,6 @@
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select" id="subtypeSelect" onchange="onSubtypeChange()">
                            <option value="">Select type</option>
-                        </select>
-                     </div>
-                  </div>
-
-
-                  <div class="pa-field" id="bathroomsField" style="display:none">
-                     <span class="pa-field__label">Bathrooms:</span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="bathroomsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled hidden>Choose one...</option>
-                           <option>1</option>
-                           <option>2</option>
-                           <option>3</option>
-                           <option>4</option>
-                           <option>5 and more</option>
                         </select>
                      </div>
                   </div>
