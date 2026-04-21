@@ -20,6 +20,7 @@ A static HTML/CSS/JS classified ads marketplace website UI.
    - dev.sh копирует HTML/CSS/JS из prod в dev и перезапускает bazar-seo-dev — запускает только пользователь
    - **bootstrap/app.php** (`/var/www/bazar-dev/`): trustProxies(at:'*') + validateCsrfTokens(except livewire-*/update) для dev.bazar.uk
    - **ВАЖНО**: НЕ запускать `php artisan config:cache` на dev — ломает FPM pool env vars (bazar-dev-api.conf)
+   - **dev.sh**: синхронизирует frontend (HTML/CSS/JS) + БД (mysqldump bazar_prod → bazar_dev) + перезапускает bazar-seo-dev
 
 4. **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 
