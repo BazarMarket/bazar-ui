@@ -986,7 +986,7 @@
 
       el('spec-table').innerHTML = specs;
 
-      el('prop-description').textContent = p.description || '';
+      el('prop-description').textContent = (p.description || '').replace(/<[^>]*>/g, '').trim();
 
       var _curUid = localStorage.getItem('bazar_firebase_uid') || '';
       var _displaySellerName = (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid)
