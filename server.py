@@ -159,8 +159,8 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     if m:
         return 'listing', {'id': m.group(1)}
 
-    # search
-    if p == 'search.html' or p.startswith('search'):
+    # search / latest-updates
+    if p == 'search.html' or p.startswith('search') or p == 'latest-updates':
         return 'search', {}
 
     # internal / private pages (match both with and without .html extension)
