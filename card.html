@@ -759,16 +759,14 @@
 
       if (window.location.hostname.endsWith('bazar.uk')) {
          var _viewUid = localStorage.getItem('bazar_firebase_uid') || '';
-         fetch('https://admin.bazar.uk/api/properties/' + id + '/view', {
+         fetch('/api/properties/' + id + '/view', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ viewer_uid: _viewUid })
          }).catch(function() {});
       }
 
-      var apiUrl = window.location.hostname.endsWith('bazar.uk')
-         ? 'https://admin.bazar.uk/api/properties/' + id
-         : '/api/products/' + id;
+      var apiUrl = '/api/properties/' + id;
 
       fetch(apiUrl)
          .then(function(r) { if (!r.ok) return null; return r.json(); })
@@ -1038,7 +1036,7 @@
       el('seller-name').textContent = _displaySellerName;
       /* Fetch seller's current name from API (may have been updated after ad was created) */
       if (p.seller_firebase_uid && !(p.seller_firebase_uid === _curUid)) {
-         fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(p.seller_firebase_uid))
+         fetch('/api/customers/' + encodeURIComponent(p.seller_firebase_uid))
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(cust) {
                if (cust && cust.name) {

@@ -26,8 +26,8 @@ import sqlite3
 # ── Configuration ─────────────────────────────────────────────────────────────
 PORT               = int(os.environ.get('BAZAR_PORT', 5000))
 PUBLIC_DOMAIN      = 'https://www.bazar.uk'
-LARAVEL_API_HOST   = 'admin.bazar.uk'
-LARAVEL_API_BASE   = 'https://admin.bazar.uk/api'
+LARAVEL_API_BASE   = os.environ.get('LARAVEL_API_BASE', 'https://admin.bazar.uk/api')
+LARAVEL_API_HOST   = LARAVEL_API_BASE.split('/')[2] if '/' in LARAVEL_API_BASE else 'admin.bazar.uk'
 SITE_ROOT          = os.environ.get('BAZAR_SITE_ROOT', os.path.dirname(os.path.abspath(__file__)))
 SEO_CACHE_TTL      = 300  # seconds (5 min)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
@@ -1950,6 +1950,42 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     self._send_json(404, {'error': 'not found'})
             except Exception:
                 self._send_json(500, {'error': 'server error'})
+            return
+
+        # Generic /api/* proxy → forward to LARAVEL_API_BASE
+        # This handles any /api/ path not explicitly handled above
+        # (e.g. /api/properties/recent, /api/search/suggest, /api/customers/*, etc.)
+        if path.startswith('/api/'):
+            api_path = path[len('/api'):]   # keep leading slash
+            qs_str   = ('?' + qs) if qs else ''
+            url      = f'{LARAVEL_API_BASE}{api_path}{qs_str}'
+            try:
+                headers = {
+                    'Accept':        self.headers.get('Accept', 'application/json'),
+                    'Content-Type':  self.headers.get('Content-Type', 'application/json'),
+                    'Authorization': self.headers.get('Authorization', ''),
+                    'X-Firebase-UID': self.headers.get('X-Firebase-UID', ''),
+                }
+                headers = {k: v for k, v in headers.items() if v}
+                req = urllib.request.Request(url, headers=headers)
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    body        = resp.read()
+                    status      = resp.status
+                    content_type = resp.headers.get('Content-Type', 'application/json')
+                self.send_response(status)
+                self.send_header('Content-Type', content_type)
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except urllib.error.HTTPError as e:
+                body = e.read()
+                self.send_response(e.code)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except Exception:
+                self._send_json(502, {'error': 'api unavailable'})
             return
 
         # Sitemap

@@ -1557,7 +1557,7 @@
 
         /* Async: load photo + area/beds/baths from API for ads missing cached data */
         needsApiFetch.forEach(function(adId) {
-            fetch('https://admin.bazar.uk/api/properties/' + adId, { headers: { 'Accept': 'application/json' } })
+            fetch('/api/properties/' + adId, { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.ok ? r.json() : null; })
                 .then(function(d) {
                     if (!d) return;
@@ -1821,7 +1821,7 @@
     }
 
     function fetchSuggest(q) {
-        fetch('https://admin.bazar.uk/api/search/suggest?q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } })
+        fetch('/api/search/suggest?q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } })
             .then(function(r){ return r.json(); })
             .then(function(d){ renderSuggest(q, d); })
             .catch(function(){ hideSuggest(); });

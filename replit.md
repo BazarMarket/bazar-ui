@@ -7,7 +7,14 @@ A static HTML/CSS/JS classified ads marketplace website UI.
 
 1. **DEV-САЙТ (dev.bazar.uk) — ТОЛЬКО ПОЛЬЗОВАТЕЛЬ.** Агент НИКОГДА не копирует, не синхронизирует и не деплоит файлы на dev.bazar.uk самостоятельно. Не запускать `bash dev.sh`. Не делать rsync/scp из prod в dev. Не делать rsync/scp из Replit в /var/www/bazar-dev/. Синхронизацию prod → dev делает только пользователь вручную командой `bash dev.sh`.
 
-2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`.
+2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`. server.py деплоится в `/var/www/bazar-prod/server.py` (НЕ в public/).
+
+3. **РАЗДЕЛЬНЫЕ БАЗЫ ДАННЫХ (с апреля 2026):**
+   - `www.bazar.uk` → Python:5000 → `LARAVEL_API_BASE=https://admin.bazar.uk/api` → **bazar_dev** (реальные данные)
+   - `dev.bazar.uk` → Python:5001 → `LARAVEL_API_BASE=http://127.0.0.1:9001/api` → **bazar_test** (тестовые данные, отдельная БД)
+   - Порт 9001 — отдельный nginx+PHP-FPM пул `bazar-dev-api` с env `DB_DATABASE=bazar_test`
+   - `LARAVEL_API_BASE` задаётся через Environment в systemd сервисе `bazar-seo-dev.service`
+   - dev.sh копирует server.py из prod в dev — это безопасно, т.к. API определяется env var сервиса, а не кодом
 
 3. **Общение на русском языке.**
 

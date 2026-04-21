@@ -21,12 +21,21 @@ fi
 
 for FILE in "$@"; do
   echo "--- Deploying: $FILE"
+  BASENAME=$(basename "$FILE")
+
+  # server.py lives at SITE_ROOT (not inside public/)
+  if [[ "$FILE" == "server.py" ]]; then
+    scp $SSH_OPTS "$FILE" "$SITE_ROOT/server.py"
+    ssh $SSH_OPTS "$SERVER" "systemctl restart bazar-seo"
+    echo "    Deployed server.py to SITE_ROOT and restarted bazar-seo"
+    continue
+  fi
+
   scp $SSH_OPTS "$FILE" "$PROD_ROOT/$FILE"
 
   # HTML-файлы Python-сервер читает из SITE_ROOT (не из public/)
   # Поэтому копируем их туда тоже
   if [[ "$FILE" == *.html ]]; then
-    BASENAME=$(basename "$FILE")
     ssh $SSH_OPTS "$SERVER" "cp /var/www/bazar-prod/public/$FILE /var/www/bazar-prod/$BASENAME"
     echo "    Also synced to SITE_ROOT: $BASENAME"
   fi
