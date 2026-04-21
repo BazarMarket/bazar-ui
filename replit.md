@@ -9,12 +9,13 @@ A static HTML/CSS/JS classified ads marketplace website UI.
 
 2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`. server.py деплоится в `/var/www/bazar-prod/server.py` (НЕ в public/).
 
-3. **РАЗДЕЛЬНЫЕ БАЗЫ ДАННЫХ (с апреля 2026):**
+3. **БАЗЫ ДАННЫХ (текущая конфигурация):**
    - `www.bazar.uk` → Python:5000 → `LARAVEL_API_BASE=https://admin.bazar.uk/api` → **bazar_dev** (реальные данные)
-   - `dev.bazar.uk` → Python:5001 → `LARAVEL_API_BASE=http://127.0.0.1:9001/api` → **bazar_test** (тестовые данные, отдельная БД)
-   - Порт 9001 — отдельный nginx+PHP-FPM пул `bazar-dev-api` с env `DB_DATABASE=bazar_test`
+   - `dev.bazar.uk` → Python:5001 → `LARAVEL_API_BASE=https://admin.bazar.uk/api` → **bazar_dev** (зеркало прода)
+   - Dev является зеркалом прода: все объявления, добавленные на проде, видны и на деве
+   - `bazar_test` существует как отдельная пустая БД — на будущее, когда dev снова отвяжут от прода
    - `LARAVEL_API_BASE` задаётся через Environment в systemd сервисе `bazar-seo-dev.service`
-   - dev.sh копирует server.py из prod в dev — это безопасно, т.к. API определяется env var сервиса, а не кодом
+   - dev.sh копирует HTML/CSS/JS из prod в dev и перезапускает bazar-seo-dev — запускает только пользователь
 
 4. **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 
