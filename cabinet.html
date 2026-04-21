@@ -1640,9 +1640,11 @@
             var imgStyle = 'style="width:90px;height:72px;border-radius:6px;object-fit:cover;flex-shrink:0;"';
             var titleStyle = 'style="font-weight:600;color:#111;"';
             var img = ad.photo ? '<img class="cab-ads-table-img" ' + imgStyle + ' src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" ' + imgStyle + ' src="/img/product.jpg" alt="">';
-            var deactLbl = ad.status === 'rejected' ? 'Activate' : 'Deactivate';
+            var isInactive = (ad.status === 'inactive' || ad.status === 'rejected');
+            var deactLbl = isInactive ? 'Activate' : 'Deactivate';
+            var deactAction = isInactive ? 'activate' : 'deactivate';
             if (i > 0) html += '<tr><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
-            html += '<tr style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
+            html += '<tr data-ad-id="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
@@ -1656,7 +1658,7 @@
                   '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
                     '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="bazarBoostPay(window.location.href,\'' + ad.id + '\')">Boost to Top</button>' +
                     '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:10px;" onmouseover="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18)\'" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="adAction(\'deactivate\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
+                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="adAction(\'' + deactAction + '\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
                     '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';this.style.boxShadow=\'\';" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
                   '</div>' +
                 '</td>' +
@@ -1685,8 +1687,46 @@
 
     function adAction(action, adId) {
         if (action === 'edit') { window.location.href = 'post-ad.html?edit=' + adId; return; }
-        if (action === 'delete') { if (!confirm('Delete this ad? This cannot be undone.')) return; }
-        alert('Action "' + action + '" for ad #' + adId);
+
+        var uid = localStorage.getItem('bazar_firebase_uid') || '';
+        if (!uid) { alert('Please log in.'); return; }
+
+        if (action === 'delete') {
+            if (!confirm('Delete this ad? This cannot be undone.')) return;
+            fetch('https://admin.bazar.uk/api/properties/' + adId + '/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ firebase_uid: uid })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    var row = document.querySelector('[data-ad-id="' + adId + '"]');
+                    if (row) row.remove();
+                    else location.reload();
+                } else {
+                    alert(data.error || 'Could not delete ad.');
+                }
+            })
+            .catch(function() { alert('Connection error. Please try again.'); });
+            return;
+        }
+
+        if (action === 'deactivate' || action === 'activate') {
+            var newStatus = action === 'deactivate' ? 'inactive' : 'active';
+            fetch('https://admin.bazar.uk/api/properties/' + adId + '/set-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ firebase_uid: uid, status: newStatus })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) { location.reload(); }
+                else { alert(data.error || 'Could not update ad status.'); }
+            })
+            .catch(function() { alert('Connection error. Please try again.'); });
+            return;
+        }
     }
 
     function _applySubMeta(plan, daysLeft, listings) {
