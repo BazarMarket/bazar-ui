@@ -3524,6 +3524,20 @@
          _setCheck('securityCheck',d.security);
          _setCheck('furnishedCheck', d.furnished);
 
+         /* Pre-check Key Features checkboxes in #includedField */
+         (function() {
+            var featMap = {
+               'Garden': d.garden, 'Elevator': d.elevator, 'Security system': d.security,
+               'Swimming pool': d.pool, 'Veranda': d.veranda, 'Gym': d.gym,
+               'Solar panel': d.solar_panels, 'Balcony': d.balcony, 'Terrace': d.terrace,
+               'Central heating': d.central_heating, 'Storage room': d.storage_room
+            };
+            document.querySelectorAll('#includedField input[type="checkbox"]').forEach(function(cb) {
+               var label = cb.parentElement.textContent.trim();
+               if (label in featMap) cb.checked = !!featMap[label];
+            });
+         })();
+
          /* Building/house type */
          var htSel = document.getElementById('houseTypeSelect');
          if (htSel && d.sub_type) {
