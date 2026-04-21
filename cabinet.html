@@ -2391,6 +2391,12 @@
         localStorage.setItem('bazar_plan', plan);
         if (window.updatePlanBadge) updatePlanBadge();
     }
+    /* Track selected duration per plan { pro: {days,pence}, vip: {days,pence} } */
+    window._cabDur = {
+        pro: { days: 14, pence: 700  },
+        vip: { days: 14, pence: 1400 }
+    };
+
     function cabSetDur(plan, days, price, btn) {
         var prefix = plan === 'pro' ? 'cabPro' : 'cabVip';
         var cls = 'po-duration-btn--' + plan;
@@ -2402,6 +2408,8 @@
         var card = btn.closest('.po-card');
         var isActive = card && card.classList.contains('po-card--active');
         if (btnEl) btnEl.textContent = (isActive ? 'Extend ' : 'Upgrade to ') + plan.toUpperCase() + ' \u2014 \u00A3' + price;
+        /* Store selected duration so startCheckout can send it */
+        window._cabDur[plan] = { days: days, pence: Math.round(parseFloat(price) * 100) };
     }
 
     function startCheckout(plan) {
@@ -2415,10 +2423,12 @@
         var origText = btn ? btn.textContent : '';
         if (btn) { btn.textContent = 'Redirecting...'; btn.disabled = true; }
 
+        var dur = window._cabDur[plan] || (plan === 'pro' ? { days: 14, pence: 700 } : { days: 14, pence: 1400 });
+
         fetch('https://admin.bazar.uk/api/stripe/checkout/plan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ firebase_uid: uid, plan: plan })
+            body: JSON.stringify({ firebase_uid: uid, plan: plan, days: dur.days, amount_pence: dur.pence })
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {
