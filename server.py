@@ -1792,6 +1792,42 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     conn.close()
             self._send_json(200, {'ok': True}); return
 
+        # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
+        path_only = self.path.split('?')[0]
+        if path_only.startswith('/api/'):
+            api_path = path_only[len('/api'):]
+            qs       = self.path[len(path_only)+1:] if '?' in self.path else ''
+            qs_str   = ('?' + qs) if qs else ''
+            url      = f'{LARAVEL_API_BASE}{api_path}{qs_str}'
+            try:
+                content_len = int(self.headers.get('Content-Length', 0))
+                body_data   = self.rfile.read(content_len) if content_len > 0 else None
+                fwd_headers = {
+                    'Accept':       self.headers.get('Accept', 'application/json'),
+                    'Content-Type': self.headers.get('Content-Type', 'application/json'),
+                }
+                fwd_headers = {k: v for k, v in fwd_headers.items() if v}
+                req = urllib.request.Request(url, data=body_data, headers=fwd_headers, method='POST')
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    body         = resp.read()
+                    status       = resp.status
+                    content_type = resp.headers.get('Content-Type', 'application/json')
+                self.send_response(status)
+                self.send_header('Content-Type', content_type)
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except urllib.error.HTTPError as e:
+                body = e.read()
+                self.send_response(e.code)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except Exception:
+                self._send_json(502, {'error': 'api unavailable'})
+            return
+
         self.send_response(404)
         self.end_headers()
 
@@ -1967,7 +2003,13 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     'X-Firebase-UID': self.headers.get('X-Firebase-UID', ''),
                 }
                 headers = {k: v for k, v in headers.items() if v}
-                req = urllib.request.Request(url, headers=headers)
+                # Read request body for POST/PUT/PATCH
+                body_data = None
+                if self.command in ('POST', 'PUT', 'PATCH'):
+                    content_len = int(self.headers.get('Content-Length', 0))
+                    if content_len > 0:
+                        body_data = self.rfile.read(content_len)
+                req = urllib.request.Request(url, data=body_data, headers=headers, method=self.command)
                 with urllib.request.urlopen(req, timeout=5) as resp:
                     body        = resp.read()
                     status      = resp.status
