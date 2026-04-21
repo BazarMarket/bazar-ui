@@ -1929,6 +1929,11 @@ function _glbKey(e) {
 (function() {
    var params = new URLSearchParams(window.location.search);
    var cardId = params.get('id');
+   if (!cardId) {
+      var _m = window.location.pathname.match(/^\/(\d+)(?:-[^/]+)?$/)
+             || window.location.pathname.match(/\/listing\/(\d+)/);
+      if (_m) cardId = _m[1];
+   }
    var favBtn = document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
    if (!favBtn) return;
    /* Apply stored state on load */
