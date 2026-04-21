@@ -795,8 +795,21 @@
          else if(p.is_pro) badges = '<span class="stiker stiker_top">PRO</span>';
          stikerEl.innerHTML = badges;
       }
-      if (el('bread-category')) el('bread-category').textContent = 'Real Estate for ' + (p.listing_type || '');
-      if (el('bread-type')) el('bread-type').textContent = p.property_type || '';
+      if (el('bread-category')) {
+        var _lt = (p.listing_type || '').toLowerCase();
+        var _pt = (p.property_type || '').toLowerCase();
+        var _catLabel = _lt === 'long_rent' ? 'Property to rent'
+                      : _lt === 'short_rent' ? 'Property to rent'
+                      : 'Property for sale';
+        var _catHref  = _pt === 'room'
+                          ? (_lt === 'short_rent' ? '/rooms/short-term' : '/rooms')
+                          : _lt === 'long_rent'  ? '/property/for-rent'
+                          : _lt === 'short_rent' ? '/property/for-rent/short-term'
+                          : '/property';
+        el('bread-category').textContent = _catLabel;
+        el('bread-category').href = _catHref;
+      }
+      if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_',' ');
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district || '';
       // Hide slash and district li when no district

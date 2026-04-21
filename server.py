@@ -529,6 +529,18 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         cat_label  = f'Property {action_label}'
         type_label = prop_type.replace('_', ' ').title() if prop_type else 'Property'
 
+        # ── Breadcrumb category URL (depends on listing_type and property_type) ──
+        _lt_norm = listing_type.lower() if listing_type else 'sale'
+        _pt_norm = prop_type.lower() if prop_type else ''
+        if _pt_norm == 'room':
+            cat_url = f'{PUBLIC_DOMAIN}/rooms/short-term' if _lt_norm == 'short_rent' else f'{PUBLIC_DOMAIN}/rooms'
+        elif _lt_norm == 'long_rent':
+            cat_url = f'{PUBLIC_DOMAIN}/property/for-rent'
+        elif _lt_norm == 'short_rent':
+            cat_url = f'{PUBLIC_DOMAIN}/property/for-rent/short-term'
+        else:
+            cat_url = f'{PUBLIC_DOMAIN}/property'
+
         # ── JSON-LD ───────────────────────────────────────────────────────────
         real_estate_types = {'apartment', 'house', 'flat', 'room', 'villa',
                              'studio', 'bungalow', 'maisonette', 'cottage'}
@@ -539,7 +551,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
         bc_items = [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
-            {"@type": "ListItem", "position": 2, "name": cat_label, "item": f"{PUBLIC_DOMAIN}/property"},
+            {"@type": "ListItem", "position": 2, "name": cat_label, "item": cat_url},
         ]
         if city_url:
             bc_items.append({"@type": "ListItem", "position": 3, "name": city, "item": city_url})
@@ -575,9 +587,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             }
 
         # ── SSR blocks: visible H1 + breadcrumbs injected into body ──────────
+        _cat_rel_url = cat_url.replace(PUBLIC_DOMAIN, '') or '/property'
         listing_breadcrumbs = [
             ('Home', '/'),
-            (cat_label, '/property'),
+            (cat_label, _cat_rel_url),
         ]
         if city and city_slug_url:
             listing_breadcrumbs.append((city, f'/property/{city_slug_url}'))
