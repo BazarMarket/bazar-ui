@@ -2792,9 +2792,8 @@
       });
 
       function _goAfterPublish(adId) {
-         var plan = (localStorage.getItem('bazar_plan') || '').toLowerCase();
-         if (plan === 'pro' || plan === 'vip') {
-            var uid = localStorage.getItem('bazar_firebase_uid') || '';
+         var uid = localStorage.getItem('bazar_firebase_uid') || '';
+         function _activateAndGo(plan) {
             fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
                method: 'POST',
                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -2802,8 +2801,31 @@
             })
             .then(function() { window.location.href = 'card.html?id=' + adId; })
             .catch(function() { window.location.href = 'card.html?id=' + adId; });
+         }
+         function _decide(plan) {
+            plan = (plan || '').toLowerCase();
+            if (plan === 'pro' || plan === 'vip') {
+               _activateAndGo(plan);
+            } else {
+               window.location.href = 'publish-options.html?ad_id=' + adId;
+            }
+         }
+         // Always fetch fresh plan from server so VIP/PRO users skip the plan page
+         if (uid) {
+            fetch('https://admin.bazar.uk/api/customers/' + uid, {
+               headers: { 'Accept': 'application/json' }
+            })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(d) {
+               var freshPlan = (d && (d.bazar_plan || d.plan)) || '';
+               if (freshPlan) localStorage.setItem('bazar_plan', freshPlan);
+               _decide(freshPlan || localStorage.getItem('bazar_plan'));
+            })
+            .catch(function() {
+               _decide(localStorage.getItem('bazar_plan'));
+            });
          } else {
-            window.location.href = 'publish-options.html?ad_id=' + adId;
+            _decide(localStorage.getItem('bazar_plan'));
          }
       }
 

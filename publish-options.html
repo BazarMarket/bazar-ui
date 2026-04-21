@@ -957,26 +957,41 @@
       function applyExistingPlan() {
          var plan     = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
          var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+         var uid      = localStorage.getItem('bazar_firebase_uid') || '';
+         var adId     = (new URLSearchParams(window.location.search)).get('ad_id') || '';
+
+         function _autoActivateIfPaid(sPlan) {
+            sPlan = (sPlan || '').toLowerCase();
+            if ((sPlan === 'pro' || sPlan === 'vip') && adId && uid) {
+               fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                  body: JSON.stringify({ firebase_uid: uid, plan: sPlan })
+               })
+               .then(function() { window.location.href = 'card.html?id=' + adId; })
+               .catch(function() { window.location.href = 'card.html?id=' + adId; });
+               return true;
+            }
+            return false;
+         }
 
          /* Always fetch from API for accurate plan/days */
-         var uid = localStorage.getItem('bazar_firebase_uid') || '';
          if (uid) {
             fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
                .then(function(r) { return r.json(); })
                .then(function(d) {
-                  if (!d.exists) return;
-                  var sPlan = (d.plan || 'free').toLowerCase();
+                  var sPlan = (d.bazar_plan || d.plan || 'free').toLowerCase();
                   var sDays = parseInt(d.days_left || 0, 10);
-                  if (sPlan !== plan || sDays !== daysLeft) {
-                     localStorage.setItem('bazar_plan', sPlan);
-                     if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
+                  localStorage.setItem('bazar_plan', sPlan);
+                  if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
+                  if (!_autoActivateIfPaid(sPlan)) {
                      _showPlanBadges(sPlan, sDays);
                   }
                })
-               .catch(function(){});
+               .catch(function(){ _showPlanBadges(plan, daysLeft); });
+         } else {
+            _showPlanBadges(plan, daysLeft);
          }
-
-         _showPlanBadges(plan, daysLeft);
       }
 
       function _showPlanBadges(plan, daysLeft) {
