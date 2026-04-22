@@ -2859,30 +2859,7 @@
          heart.classList.toggle('icon-heart', !isFav);
          heart.classList.toggle('icon-heart-full', isFav);
       }
-      /* Event delegation — catches clicks on ALL hearts, including dynamically added */
-      document.addEventListener('click', function(e) {
-         var heart = e.target.closest('.card__heart');
-         if (!heart) return;
-         e.preventDefault();
-         e.stopPropagation();
-         var cardId = _heartGetId(heart);
-         heart.classList.toggle('active');
-         var isActive = heart.classList.contains('active');
-         heart.classList.toggle('icon-heart', !isActive);
-         heart.classList.toggle('icon-heart-full', isActive);
-         if (cardId) {
-            localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
-            /* Sync all other hearts with the same card ID (list ↔ grid) */
-            document.querySelectorAll('.card__heart').forEach(function(h) {
-               if (h !== heart && _heartGetId(h) === cardId) {
-                  h.classList.toggle('active', isActive);
-                  h.classList.toggle('icon-heart', !isActive);
-                  h.classList.toggle('icon-heart-full', isActive);
-               }
-            });
-         }
-         updateFavCount();
-      }, true);
+      /* Click delegation handled globally by header-auth.js */
       /* Watch for dynamically injected cards and apply stored state */
       (new MutationObserver(function(mutations) {
          mutations.forEach(function(m) {
@@ -2910,6 +2887,6 @@
       _loadAdCount();
       setInterval(_loadAdCount, 30000);
    </script>
-<script src="js/header-auth.js?v=11"></script>
+<script src="js/header-auth.js?v=12"></script>
 </body>
 </html>

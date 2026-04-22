@@ -236,6 +236,18 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         });
     }
 
+    function _getHeartId(btn) {
+        if (btn.dataset.listingId) return btn.dataset.listingId;
+        var container = btn.closest('.card') || btn.closest('.product');
+        if (!container) return '';
+        var link = container.querySelector('[href*="id="]');
+        if (!link) return '';
+        var m = (link.getAttribute('href') || '').match(/[?&]id=(\d+)/);
+        var id = m ? m[1] : '';
+        if (id) btn.dataset.listingId = id;
+        return id;
+    }
+
     document.addEventListener('click', function(e) {
         var btn = e.target.closest('.card__heart');
         if (!btn) return;
@@ -245,15 +257,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         var uid = localStorage.getItem('bazar_firebase_uid');
         if (!uid) return;
 
-        var id = btn.dataset.listingId;
-        if (!id) {
-            var card = btn.closest('.card');
-            var link = card ? card.querySelector('[href*="id="]') : null;
-            var href = link ? (link.getAttribute('href') || '') : '';
-            var match = href.match(/[?&]id=(\d+)/);
-            id = match ? match[1] : '';
-            if (id) btn.dataset.listingId = id;
-        }
+        var id = _getHeartId(btn);
         if (!id) return;
 
         var key = 'favorite_' + id;
@@ -266,6 +270,17 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         btn.classList.toggle('active', nowFav);
         btn.classList.toggle('icon-heart', !nowFav);
         btn.classList.toggle('icon-heart-full', nowFav);
+
+        /* Sync list ↔ grid: update all other hearts with same card ID */
+        document.querySelectorAll('.card__heart').forEach(function(h) {
+            if (h === btn) return;
+            if (_getHeartId(h) === id) {
+                h.classList.toggle('active', nowFav);
+                h.classList.toggle('icon-heart', !nowFav);
+                h.classList.toggle('icon-heart-full', nowFav);
+            }
+        });
+
         updateFavCount();
     }, true);
 
