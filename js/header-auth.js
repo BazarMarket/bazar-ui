@@ -240,7 +240,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         var btn = e.target.closest('.card__heart');
         if (!btn) return;
         e.preventDefault();
-        e.stopPropagation();
+        e.stopImmediatePropagation();
 
         var uid = localStorage.getItem('bazar_firebase_uid');
         if (!uid) return;
@@ -248,22 +248,24 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         var id = btn.dataset.listingId;
         if (!id) {
             var card = btn.closest('.card');
-            var link = card ? card.querySelector('a.card-link') : null;
+            var link = card ? card.querySelector('[href*="id="]') : null;
             var href = link ? (link.getAttribute('href') || '') : '';
             var match = href.match(/[?&]id=(\d+)/);
-            id = match ? match[1] : href.replace(/[^0-9]/g, '');
+            id = match ? match[1] : '';
             if (id) btn.dataset.listingId = id;
         }
         if (!id) return;
 
         var key = 'favorite_' + id;
-        if (localStorage.getItem(key) === '1') {
-            localStorage.removeItem(key);
-            btn.classList.remove('active');
-        } else {
+        var nowFav = localStorage.getItem(key) !== '1';
+        if (nowFav) {
             localStorage.setItem(key, '1');
-            btn.classList.add('active');
+        } else {
+            localStorage.removeItem(key);
         }
+        btn.classList.toggle('active', nowFav);
+        btn.classList.toggle('icon-heart', !nowFav);
+        btn.classList.toggle('icon-heart-full', nowFav);
         updateFavCount();
     }, true);
 

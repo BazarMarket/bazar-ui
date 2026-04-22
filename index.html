@@ -1474,20 +1474,7 @@
           heart.classList.toggle('icon-heart', !isFav);
           heart.classList.toggle('icon-heart-full', isFav);
        }
-       /* Event delegation — catches clicks on ALL hearts, static and dynamic */
-       document.addEventListener('click', function(e) {
-          var heart = e.target.closest('.card__heart');
-          if (!heart) return;
-          e.preventDefault();
-          e.stopPropagation();
-          var cardId = _heartGetId(heart);
-          heart.classList.toggle('active');
-          var isActive = heart.classList.contains('active');
-          heart.classList.toggle('icon-heart', !isActive);
-          heart.classList.toggle('icon-heart-full', isActive);
-          if (cardId) localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
-          updateFavCount();
-       }, true);
+       /* Click delegation handled globally by header-auth.js */
        /* Watch for dynamically injected cards (API sections) and apply stored state */
        (new MutationObserver(function(mutations) {
           var found = false;
