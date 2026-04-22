@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bazar — Buy & Sell in the UK</title>
+    <title>About Us — Bazar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="description" content="">
     <meta name="keywords" content="">
@@ -30,11 +30,11 @@
                         <img loading="lazy" src="img/logo.png" alt="">
                     </a>
                     <div class="header__btns">
-                        <a href="post-ad.html" class="btn btn_mini" onclick="return handlePostAd(event)">+ Post an Ad</a>
-                        <div style="width:1px;background:#e0e0e0;height:28px;align-self:center;margin:0 8px;flex-shrink:0;"></div>
-                        <div class="btn-down icon" onclick="openCreateAccountModal()">
-                            <p class="btn-down__text" style="padding:0 18px 0 18px;">Log in / Register</p>
-                        </div>
+                       <a href="post-ad.html" class="btn btn_mini" onclick="return handlePostAd(event)">+ Post an Ad</a>
+                       <div style="width:1px;background:#e0e0e0;height:28px;align-self:center;margin:0 8px;flex-shrink:0;"></div>
+                       <div class="btn-down icon" onclick="openCreateAccountModal()">
+                          <p class="btn-down__text" style="padding:0 18px 0 18px;">Log in / Register</p>
+                       </div>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
 
                                 <a href="/cabinet/subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                    <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
-                                   <span class="subscription__stiker" id="subPlanBadge">Free</span>
+                                   <span class="subscription__stiker">PRO</span>
                                    <span class="subscription__days" id="subDaysEl"></span>
                                 </div></a>
                                 <hr class="user-menu__hr">
@@ -96,1034 +96,49 @@
            </div>
         </header>
 
-      <div class="index-body container-full">
 
-        <div class="search">
-            <div class="container">
-                <div class="search__body">
+        <main class="main">
 
-                    <div class="search__inputs">
-                        <div class="search__duoble">
-                            <div class="search__first">
-                                <span class="icon-glass search__glass-icon"></span>
-                                <input type="text" id="mainSearchInput" placeholder="Search ads">
-                            </div>
-                        </div>
-                        <div class="search__third search__third--loc" style="position:relative">
-                            <span class="icon-location search__loc-icon"></span>
-                            <input type="text" class="search__loc-input" id="headerLocationInput" placeholder="All locations" autocomplete="off" onfocus="showLocDropdown()" oninput="onLocInput()">
-                            <div class="loc-dropdown" id="headerLocDropdown">
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="7" r="4" stroke="#888" stroke-width="1.5"/><path d="M8 11v3" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
-                                    All UK
-                                </div>
-                                <div class="loc-dropdown__item loc-dropdown__item--myloc" onclick="useMyLocation('header')">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="#e8873a"/><circle cx="8" cy="8" r="6.5" stroke="#e8873a" stroke-width="1.3"/><path d="M8 0v3M8 13v3M0 8h3M13 8h3" stroke="#e8873a" stroke-width="1.3"/></svg>
-                                    My location
-                                </div>
-                                <div id="headerLocError" style="display:none;padding:6px 16px 8px;font-size:11.5px;color:#e53935;line-height:1.4;"></div>
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="London">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
-                                    London
-                                </div>
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Manchester">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
-                                    Manchester
-                                </div>
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Birmingham">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
-                                    Birmingham
-                                </div>
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Leeds">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
-                                    Leeds
-                                </div>
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Liverpool">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
-                                    Liverpool
-                                </div>
-                                <div class="loc-dropdown__item" onclick="pickLocItem(this)" data-city="Bristol">
-                                    <svg class="loc-dropdown__pin" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1C5.2 1 3 3.1 3 5.7 3 9.5 8 15 8 15s5-5.5 5-9.3C13 3.1 10.8 1 8 1z" stroke="#888" stroke-width="1.3"/><circle cx="8" cy="5.7" r="1.5" fill="#888"/></svg>
-                                    Bristol
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <a href="#" class="btn btn_grad icon-search">Search</a>
-                    <a href="map-search.html" class="btn" style="background:#fff;color:#1a1a1a;border:1.5px solid #e5e7eb;border-radius:12px;font-size:13px;font-weight:500;padding:0 16px;height:42px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap;transition:border-color .15s" onmouseover="this.style.borderColor='#ff9138'" onmouseout="this.style.borderColor='#e5e7eb'">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M12 13v4"/></svg>
-                      Map
-                    </a>
-                </div>
-            </div>
-        </div>
-        <script>
-           function showLocDropdown(){var d=document.getElementById('headerLocDropdown'),i=document.getElementById('headerLocationInput');if(i&&!i.value&&d)d.classList.add('open');}
-           function onLocInput(){var d=document.getElementById('headerLocDropdown'),i=document.getElementById('headerLocationInput');if(!d||!i)return;var s=d.querySelectorAll('.loc-dropdown__item:not(.loc-dropdown__item--result)');if(i.value.length>0){for(var j=0;j<s.length;j++)s[j].style.display='none';if(typeof LocationAutocomplete!=='undefined')LocationAutocomplete.clearResults('headerLocDropdown');d.classList.remove('open');}else{for(var j=0;j<s.length;j++)s[j].style.display='';if(typeof LocationAutocomplete!=='undefined')LocationAutocomplete.clearResults('headerLocDropdown');d.classList.add('open');}}
-           function pickLocItem(el){var i=document.getElementById('headerLocationInput'),c=el.dataset.city;i.value=c||'';i.dataset.city=c;i.placeholder=c?c:'All locations';document.getElementById('headerLocDropdown').classList.remove('open');}
-           document.addEventListener('click',function(e){var d=document.getElementById('headerLocDropdown');if(d&&!d.contains(e.target)&&e.target.id!=='headerLocationInput')d.classList.remove('open');});
-        </script>
-
-        <div class="menu-mob  after992">
-            <a href="#" class="menu-mob__item icon-main-home">Home</a>
-            <a href="#" class="menu-mob__item icon-glass">Search</a>
-            <a href="#" class="menu-mob__item icon-heart-new">Favorites</a>
-            <a href="#" class="menu-mob__item icon-add">New AD</a>
-            <a href="#" class="menu-mob__item icon-user-big">Profile</a>
-        </div>
-
-
-        <main class="main header-indent">
-
-            <section class="category margin before992">
+            <section class="text ">
                 <div class="container">
-                    <div class="category__body">
+                    <h1 class="text__title">About Us</h1>
+                    <div class="text__body text-custom">
 
-                        <div class="category-box">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image1.png" alt="" class="category-item__img">
-                                <p class="category-item__title">Real Estate for sale</p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property/for-sale" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="/flats/for-sale" class="menu-sub__links">Flats</a>
-                                            <a href="/property/for-sale?type=House" class="menu-sub__links">House</a>
-                                            <a href="/property/office/for-sale" class="menu-sub__links">Office</a>
-                                            <a href="/property/shop/for-sale" class="menu-sub__links">Shop</a>
-                                            <a href="/property/restaurant/for-sale" class="menu-sub__links">Restaurant</a>
-                                            <a href="/property/industrial/for-sale" class="menu-sub__links">Industrial</a>
-                                            <a href="/property/hotel/for-sale" class="menu-sub__links">Hotel</a>
-                                            <a href="/property/for-sale?type=Business+or+Investment" class="menu-sub__links">Business or Investment</a>
-                                            <a href="/property/for-sale?type=Land" class="menu-sub__links">Land</a>
-                                            <a href="/property/for-sale?type=Building" class="menu-sub__links">Building</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image2.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Real Estate for Rent </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4,531)</span></p>
-                                            <a href="/property/for-rent" id="rent-show-all" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="rent-toggle">
-                                            <div class="rent-toggle__btns">
-                                                <button class="rent-toggle__btn active" onclick="switchRentType('long', this)">Long-term</button>
-                                                <button class="rent-toggle__btn" onclick="switchRentType('short', this)">Short-term</button>
-                                            </div>
-                                        </div>
-                                        <div class="menu-sub__body" id="rent-long">
-                                            <a href="/flats" class="menu-sub__links">Flats</a>
-                                            <a href="/property/for-rent?type=House" class="menu-sub__links">House</a>
-                                            <a href="/rooms" class="menu-sub__links">Rooms</a>
-                                            <a href="/property/office" class="menu-sub__links">Office</a>
-                                            <a href="/property/shop" class="menu-sub__links">Shop</a>
-                                            <a href="/property/restaurant" class="menu-sub__links">Restaurant</a>
-                                            <a href="/property/industrial" class="menu-sub__links">Industrial</a>
-                                            <a href="/property/hotel" class="menu-sub__links">Hotel</a>
-                                        </div>
-                                        <div class="menu-sub__body" id="rent-short" style="display:none">
-                                            <a href="/flats/short-term" class="menu-sub__links">Flats</a>
-                                            <a href="/property/for-rent/short-term?type=House" class="menu-sub__links">House</a>
-                                            <a href="/rooms/short-term" class="menu-sub__links">Rooms</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image3.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Motors </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Cars</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Car rentals</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbikes</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Auto parts</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Auto accessories</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbike parts, accessories</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Tractors, parts</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Trucks, truck parts</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Boats, sailing, marine equipment</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Buses</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Vans</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Tools, equipment</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Lifts, cranes</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Trailers</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Caravans</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Quads, ATV, buggy</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Go-karts</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Aircraft</a>
+                        <p>Bazar is an online marketplace where people can buy, sell, and promote products and services easily and securely.</p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image4.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Motors for rent </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="rent-toggle">
-                                            <div class="rent-toggle__btns">
-                                                <button class="rent-toggle__btn active" onclick="switchMotorsRentType('long', this)">Long-term</button>
-                                                <button class="rent-toggle__btn" onclick="switchMotorsRentType('short', this)">Short-term</button>
-                                            </div>
-                                        </div>
-                                        <div class="menu-sub__body" id="motors-rent-long">
-                                            <a href="#" class="menu-sub__links">Cars</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbikes</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Vans</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Trucks</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Boats & marine</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Caravans</a>
-                                        </div>
-                                        <div class="menu-sub__body" id="motors-rent-short" style="display:none">
-                                            <a href="#" class="menu-sub__links">Cars</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Motorbikes</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Vans</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Boats & marine</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <p>Our goal is to create a simple, fast, and user-friendly platform where individuals and businesses can connect directly without unnecessary complexity.</p>
 
-                        <div class="category-box">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image5.png" alt="" class="category-item__img">
-                                <p class="category-item__title">Mobile phones, communication
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Accessories</a>
-                                            <a href="#" class="menu-sub__links">Mobile phones</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Phones, answering machines</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Wearables, accessories</a>
-                                            <a href="#" class="menu-sub__links" data-admin-only="1">Phone parts, tools</a>
+                        <p>We provide tools that help users:</p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image6.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Computers, gaming
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">PC, Laptop accessories</a>
-                                            <a href="#" class="menu-sub__links">Desktop parts</a>
-                                            <a href="#" class="menu-sub__links">Desktops, servers</a>
-                                            <a href="#" class="menu-sub__links">Laptops, notebooks</a>
-                                            <a href="#" class="menu-sub__links">Laptop parts, tools</a>
-                                            <a href="#" class="menu-sub__links">Miners</a>
-                                            <a href="#" class="menu-sub__links">Monitors</a>
-                                            <a href="#" class="menu-sub__links">Printers, scanners</a>
-                                            <a href="#" class="menu-sub__links">Routers, modems, switches</a>
-                                            <a href="#" class="menu-sub__links">Tablets, accessories</a>
-                                            <a href="#" class="menu-sub__links">Software</a>
-                                            <a href="#" class="menu-sub__links">Gaming</a>
-                                            <a href="#" class="menu-sub__links">Other</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image7.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Clothes, footwear, accessories
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Accessories</a>
-                                            <a href="#" class="menu-sub__links">Bags</a>
-                                            <a href="#" class="menu-sub__links">Clothing</a>
-                                            <a href="#" class="menu-sub__links">Costumes, accessories</a>
-                                            <a href="#" class="menu-sub__links">Glasses</a>
-                                            <a href="#" class="menu-sub__links">Jewellery</a>
-                                            <a href="#" class="menu-sub__links">Shoes</a>
-                                            <a href="#" class="menu-sub__links">Wrist watches</a>
-                                            <a href="#" class="menu-sub__links">Other</a>
+                        <ul>
+                            <li>Post and manage listings</li>
+                            <li>Promote their ads for better visibility</li>
+                            <li>Communicate directly with buyers and sellers</li>
+                        </ul>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image8.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Sports, Hobbies </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Bicycles, bicycle accessories</a>
-                                            <a href="#" class="menu-sub__links">Hobbies</a>
-                                            <a href="#" class="menu-sub__links">Music, musical instruments</a>
-                                            <a href="#" class="menu-sub__links">Sporting goods</a>
+                        <p>Bazar is not a seller of goods or services. We act as a platform that connects users and facilitates listings.</p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <p>We do not own or control the items listed on the platform and are not responsible for transactions between users.</p>
 
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image9.png" alt="" class="category-item__img">
-                                <p class="category-item__title">Electronics, appliances
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Audio, stereo</a>
-                                            <a href="#" class="menu-sub__links">Air, cooling, heating</a>
-                                            <a href="#" class="menu-sub__links">Cameras, camcorders</a>
-                                            <a href="#" class="menu-sub__links">Health, beauty appliances</a>
-                                            <a href="#" class="menu-sub__links">Home appliances</a>
-                                            <a href="#" class="menu-sub__links">Kitchen appliances</a>
-                                            <a href="#" class="menu-sub__links">Measuring instruments</a>
-                                            <a href="#" class="menu-sub__links">Energy</a>
-                                            <a href="#" class="menu-sub__links">DVD, TVs, videos</a>
-                                            <a href="#" class="menu-sub__links">Binoculars, telescopes</a>
+                        <p>Our mission is to make online classifieds more efficient, transparent, and accessible for everyone.</p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image10.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Home, garden, pool
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Building materials</a>
-                                            <a href="#" class="menu-sub__links">Bathrooms</a>
-                                            <a href="#" class="menu-sub__links">Christmas ornaments</a>
-                                            <a href="#" class="menu-sub__links">Fireplaces, heaters</a>
-                                            <a href="#" class="menu-sub__links">Furniture</a>
-                                            <a href="#" class="menu-sub__links">Garden, patio</a>
-                                            <a href="#" class="menu-sub__links">Home decor, accessories</a>
-                                            <a href="#" class="menu-sub__links">Kitchenware</a>
-                                            <a href="#" class="menu-sub__links">Pool</a>
-                                            <a href="#" class="menu-sub__links">Tools, equipment</a>
-                                            <a href="#" class="menu-sub__links">Other household goods</a>
+                        <p>We are continuously improving our platform by adding new features and enhancing the user experience.</p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image11.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Jobs
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Administration</a>
-                                            <a href="#" class="menu-sub__links">Advertising, Marketing</a>
-                                            <a href="#" class="menu-sub__links">Art, Design</a>
-                                            <a href="#" class="menu-sub__links">Babysitting, Nannies</a>
-                                            <a href="#" class="menu-sub__links">Betting, Casino</a>
-                                            <a href="#" class="menu-sub__links">Construction, Engineering</a>
-                                            <a href="#" class="menu-sub__links">Customer service</a>
-                                            <a href="#" class="menu-sub__links">Education</a>
-                                            <a href="#" class="menu-sub__links">Fashion, Beauty</a>
-                                            <a href="#" class="menu-sub__links">Financial services</a>
-                                            <a href="#" class="menu-sub__links">Health, Medicine</a>
-                                            <a href="#" class="menu-sub__links">Household, Cleaning</a>
-                                            <a href="#" class="menu-sub__links">Human resources</a>
-                                            <a href="#" class="menu-sub__links">Legal</a>
-                                            <a href="#" class="menu-sub__links">Property maintenance, Technicians</a>
-                                            <a href="#" class="menu-sub__links">Retail</a>
-                                            <a href="#" class="menu-sub__links">Sales</a>
-                                            <a href="#" class="menu-sub__links">Security</a>
-                                            <a href="#" class="menu-sub__links">Telecom, IT</a>
-                                            <a href="#" class="menu-sub__links">Tourism, Catering</a>
-                                            <a href="#" class="menu-sub__links">Logistics</a>
-                                            <a href="#" class="menu-sub__links">Volunteerism</a>
-                                            <a href="#" class="menu-sub__links">Wellness, Sports</a>
-                                            <a href="#" class="menu-sub__links">Other jobs</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image12.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Animals, pets
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Dogs</a>
-                                            <a href="#" class="menu-sub__links">Cats</a>
-                                            <a href="#" class="menu-sub__links">Birds</a>
-                                            <a href="#" class="menu-sub__links">Reptiles</a>
-                                            <a href="#" class="menu-sub__links">Fish & aquarium</a>
-                                            <a href="#" class="menu-sub__links">Farm animals</a>
-                                            <a href="#" class="menu-sub__links">Pet accessories</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image13.png" alt="" class="category-item__img">
-                                <p class="category-item__title">Health, beauty
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Contact lenses, accessories</a>
-                                            <a href="#" class="menu-sub__links">Hair</a>
-                                            <a href="#" class="menu-sub__links">Hygiene products</a>
-                                            <a href="#" class="menu-sub__links">Make-up</a>
-                                            <a href="#" class="menu-sub__links">Professional massage</a>
-                                            <a href="#" class="menu-sub__links">Erotic massage, adult services (18+)</a>
-                                            <a href="#" class="menu-sub__links">Adult products (18+)</a>
-                                            <a href="#" class="menu-sub__links">Nails</a>
-                                            <a href="#" class="menu-sub__links">Perfumes</a>
-                                            <a href="#" class="menu-sub__links">Skin</a>
-                                            <a href="#" class="menu-sub__links">Tattoos</a>
-                                            <a href="#" class="menu-sub__links">Mobility assistance</a>
-                                            <a href="#" class="menu-sub__links">Other</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image14.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Services
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Beauty Services</a>
-                                            <a href="#" class="menu-sub__links">Childcare</a>
-                                            <a href="#" class="menu-sub__links">Clothing</a>
-                                            <a href="#" class="menu-sub__links">Design, photo, copy, print, video</a>
-                                            <a href="#" class="menu-sub__links">Digital marketing</a>
-                                            <a href="#" class="menu-sub__links">Entertainment</a>
-                                            <a href="#" class="menu-sub__links">Finance, legal</a>
-                                            <a href="#" class="menu-sub__links">Food, drink</a>
-                                            <a href="#" class="menu-sub__links">Healthcare</a>
-                                            <a href="#" class="menu-sub__links">IT, computers, telecoms</a>
-                                            <a href="#" class="menu-sub__links">Life coaching</a>
-                                            <a href="#" class="menu-sub__links">Online classes</a>
-                                            <a href="#" class="menu-sub__links">Property, maintenance</a>
-                                            <a href="#" class="menu-sub__links">Transport, moving, repairing</a>
-                                            <a href="#" class="menu-sub__links">Travel, tourism</a>
-                                            <a href="#" class="menu-sub__links">Tuition, classes</a>
-                                            <a href="#" class="menu-sub__links">Weddings</a>
-                                            <a href="#" class="menu-sub__links">Other</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <div data-unfolding="category-box__body,category-box" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image15.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Business
-                                </p>
-                            </div>
-                            <div class="category-box__body">
-                                <div class="category-box__content">
-                                    <div class="menu-sub">
-                                        <div class="menu-sub__head">
-                                            <p class="menu-sub__title">Show all ads in category<span>(4.531)</span></p>
-                                            <a href="/property" class="btn btn_small">Show all</a>
-                                        </div>
-                                        <div class="menu-sub__body">
-                                            <a href="#" class="menu-sub__links">Businesses for sale</a>
-                                            <a href="#" class="menu-sub__links">Beauty equipment</a>
-                                            <a href="#" class="menu-sub__links">Commercial, industrial equipment</a>
-                                            <a href="#" class="menu-sub__links">Commercial furniture</a>
-                                            <a href="#" class="menu-sub__links">Goods suppliers, retailers</a>
-                                            <a href="#" class="menu-sub__links">Businesses to rent</a>
-                                            <a href="#" class="menu-sub__links">Stationery items</a>
-                                            <a href="#" class="menu-sub__links">Other</a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-box" data-admin-only="1">
-                            <a href="#" class="unfolding category-item">
-                                <img loading="lazy" src="img/cat/image16.png" alt="" class="category-item__img">
-                                <p class="category-item__title"> Free stuff </p>
-                            </a>
-                        </div>
+                        <p>If you have any questions or suggestions, feel free to contact us through the website.</p>
 
                     </div>
                 </div>
             </section>
-
-            <section class="category-mob after992 margin">
-                <div class="container">
-                    <div class="category-mob__body ">
-                        <div class="category-mob-slider">
-                            <div class="swiper">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <a href="/property" class="category-item">
-                                            <img loading="lazy" src="img/cat/image1.png" alt="" class="category-item__img">
-                                            <p class="category-item__title">Real Estate for sale</p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="/property" class="category-item">
-                                            <img loading="lazy" src="img/cat/image2.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Real Estate for Rent </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="/cars" class="category-item">
-                                            <img loading="lazy" src="img/cat/image3.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Motors </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <a href="/cars" class="category-item">
-                                            <img loading="lazy" src="img/cat/image4.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Motors for rent </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide">
-
-                                        <a href="/electronics" class="category-item">
-                                            <img loading="lazy" src="img/cat/image5.png" alt="" class="category-item__img">
-                                            <p class="category-item__title">Mobile phones, communication
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="/electronics" class="category-item">
-                                            <img loading="lazy" src="img/cat/image6.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Computers, gaming
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="/fashion" class="category-item">
-                                            <img loading="lazy" src="img/cat/image7.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Clothes, footwear, accessories
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="#" class="category-item">
-                                            <img loading="lazy" src="img/cat/image8.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Sports, Hobbies </p>
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="category-mob-slider">
-                            <div class="swiper">
-                                <div class="swiper-wrapper">
-
-
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="#" class="category-item">
-                                            <img loading="lazy" src="img/cat/image9.png" alt="" class="category-item__img">
-                                            <p class="category-item__title">Electronics, appliances
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="#" class="category-item">
-                                            <img loading="lazy" src="img/cat/image10.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Home, garden, pool
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="/jobs" class="category-item">
-                                            <img loading="lazy" src="img/cat/image11.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Jobs
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="/pets" class="category-item">
-                                            <img loading="lazy" src="img/cat/image12.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Animals, pets
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-
-                                        <a href="#" class="category-item">
-                                            <img loading="lazy" src="img/cat/image13.png" alt="" class="category-item__img">
-                                            <p class="category-item__title">Health, beauty
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="/services" class="category-item">
-                                            <img loading="lazy" src="img/cat/image14.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Services
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="#" class="category-item">
-                                            <img loading="lazy" src="img/cat/image15.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Business
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide" data-admin-only="1">
-                                        <a href="#" class="category-item">
-                                            <img loading="lazy" src="img/cat/image16.png" alt="" class="category-item__img">
-                                            <p class="category-item__title"> Free stuff </p>
-                                        </a>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-
-            <hr class="hr-block">
-
-            <section class="cards margin">
-                <div class="container">
-                    <div class="cards__head">
-                        <h2 class="cards__title">Properties for Sale across the UK</h2>
-                        <!-- <div class="long-filter">
-                            <a href="#" class="long-filter__item active">FREE</a>
-                            <a href="#" class="long-filter__item">VIP</a>
-                            <a href="#" class="long-filter__item">TOP</a>
-                        </div> -->
-                    </div>
-                    <div class="cards__body">
-                        <div class="cards__grid before992">
-                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=10" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/savills.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">EDINBURGH</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>
-                                    <img loading="lazy" src="img/properties/penthouse-edinburgh.jpg" alt="Modern Penthouse in Edinburgh" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 520,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">150 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=11" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">HAMPSHIRE</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>
-                                    <img loading="lazy" src="img/properties/house-hampshire.jpg" alt="Elegant Country House in Hampshire" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 580,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">210 m2</span><span class="info-bord__item icon-Plot">400 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=12" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/foxtons.png" alt=""></div><div class="card__info"><p class="card__name">2 Bedroom Flats for Sale</p><p class="card__label">LONDON</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>
-                                    <img loading="lazy" src="img/properties/flat-chelsea.jpg" alt="Luxury Flat in Chelsea" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 895,000</span><span class="price-old">£ 950,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">110 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=13" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">OXFORD</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>
-                                    <img loading="lazy" src="img/properties/house-oxford.jpg" alt="Family House in Oxford" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 675,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">220 m2</span><span class="info-bord__item icon-Plot">450 m2</span></div></div>
-                                </div>
-                            </div>
-
-                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html?id=14" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">Studio Flats for Sale</p><p class="card__label">LEEDS</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"></div>
-                                    <img loading="lazy" src="img/properties/studio-leeds.jpg" alt="Studio Flats in Leeds" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 125,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">1 bed</span><span class="info-bord__item icon-bath">1 bath</span><span class="info-bord__item icon-house-area">42 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=15" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/foxtons.png" alt=""></div><div class="card__info"><p class="card__name">2 Bedroom Flats for Sale</p><p class="card__label">BIRMINGHAM</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>
-                                    <img loading="lazy" src="img/properties/maisonette-birmingham.jpg" alt="2 Bedroom Maisonette in Birmingham" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 210,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">1 bath</span><span class="info-bord__item icon-house-area">95 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=16" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom House for Sale</p><p class="card__label">COTSWOLDS</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>
-                                    <img loading="lazy" src="img/properties/cottage-cotswolds.jpg" alt="3 Bedroom Cottage in Cotswolds" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 485,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">150 m2</span><span class="info-bord__item icon-Plot">500 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html?id=17" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">LIVERPOOL</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"></div>
-                                    <img loading="lazy" src="img/properties/penthouse-liverpool.jpg" alt="3 Bedroom Penthouse in Liverpool" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 550,000</span><span class="price-old">£ 595,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">200 m2</span></div></div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="cards__sliders after992">
-                            <div class="cards-sliders">
-                                <div class="swiper">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=10" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/savills.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">EDINBURGH</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/properties/penthouse-edinburgh.jpg" alt="Modern Penthouse in Edinburgh" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 520,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">150 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=11" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">HAMPSHIRE</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div><img loading="lazy" src="img/properties/house-hampshire.jpg" alt="Elegant Country House in Hampshire" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 580,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">210 m2</span><span class="info-bord__item icon-Plot">400 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=12" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/foxtons.png" alt=""></div><div class="card__info"><p class="card__name">2 Bedroom Flats for Sale</p><p class="card__label">LONDON</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div><img loading="lazy" src="img/properties/flat-chelsea.jpg" alt="Luxury Flat in Chelsea" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 895,000</span><span class="price-old">£ 950,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">110 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=13" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">OXFORD</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/properties/house-oxford.jpg" alt="Family House in Oxford" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 675,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">220 m2</span><span class="info-bord__item icon-Plot">450 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </section>
-
-            <hr class="hr-block">
-
-            <section class="cards margin">
-                <div class="container">
-                    <div class="cards__head">
-                        <h2 class="cards__title">Latest updates</h2>
-                        <!-- <div class="long-filter">
-                            <a href="#" class="long-filter__item active">FREE</a>
-                            <a href="#" class="long-filter__item">VIP</a>
-                            <a href="#" class="long-filter__item">TOP</a>
-                        </div> -->
-                    </div>
-                    <div class="cards__body">
-                        <div class="cards__grid before992">
-                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=10" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/savills.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">EDINBURGH</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>
-                                    <img loading="lazy" src="img/properties/penthouse-edinburgh.jpg" alt="Modern Penthouse in Edinburgh" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 520,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">150 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=11" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">HAMPSHIRE</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>
-                                    <img loading="lazy" src="img/properties/house-hampshire.jpg" alt="Elegant Country House in Hampshire" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 580,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">210 m2</span><span class="info-bord__item icon-Plot">400 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=12" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/foxtons.png" alt=""></div><div class="card__info"><p class="card__name">2 Bedroom Flats for Sale</p><p class="card__label">LONDON</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>
-                                    <img loading="lazy" src="img/properties/flat-chelsea.jpg" alt="Luxury Flat in Chelsea" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 895,000</span><span class="price-old">£ 950,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">110 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=13" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">OXFORD</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>
-                                    <img loading="lazy" src="img/properties/house-oxford.jpg" alt="Family House in Oxford" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 675,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">220 m2</span><span class="info-bord__item icon-Plot">450 m2</span></div></div>
-                                </div>
-                            </div>
-
-                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html?id=14" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">Studio Flats for Sale</p><p class="card__label">LEEDS</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"></div>
-                                    <img loading="lazy" src="img/properties/studio-leeds.jpg" alt="Studio Flats in Leeds" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 125,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">1 bed</span><span class="info-bord__item icon-bath">1 bath</span><span class="info-bord__item icon-house-area">42 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=15" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/foxtons.png" alt=""></div><div class="card__info"><p class="card__name">2 Bedroom Flats for Sale</p><p class="card__label">BIRMINGHAM</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>
-                                    <img loading="lazy" src="img/properties/maisonette-birmingham.jpg" alt="2 Bedroom Maisonette in Birmingham" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 210,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">1 bath</span><span class="info-bord__item icon-house-area">95 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=16" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom House for Sale</p><p class="card__label">COTSWOLDS</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>
-                                    <img loading="lazy" src="img/properties/cottage-cotswolds.jpg" alt="3 Bedroom Cottage in Cotswolds" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 485,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">150 m2</span><span class="info-bord__item icon-Plot">500 m2</span></div></div>
-                                </div>
-                            </div>
-                            <div class="card" style="position:relative;cursor:pointer"><a href="card.html?id=17" class="card-link" aria-label="View listing"></a>
-                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">LIVERPOOL</p></div></div>
-                                <div class="card__img">
-                                    <div class="card__stikers"></div>
-                                    <img loading="lazy" src="img/properties/penthouse-liverpool.jpg" alt="3 Bedroom Penthouse in Liverpool" class="img-cover">
-                                <button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>
-                                <div class="card__down">
-                                    <div class="card__prices"><span class="price-new">£ 550,000</span><span class="price-old">£ 595,000</span></div>
-                                    <div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">200 m2</span></div></div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="cards__sliders after992">
-                            <div class="cards-sliders">
-                                <div class="swiper">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=10" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/savills.png" alt=""></div><div class="card__info"><p class="card__name">3 Bedroom Flats for Sale</p><p class="card__label">EDINBURGH</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/properties/penthouse-edinburgh.jpg" alt="Modern Penthouse in Edinburgh" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 520,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">3 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">150 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=11" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">HAMPSHIRE</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div><img loading="lazy" src="img/properties/house-hampshire.jpg" alt="Elegant Country House in Hampshire" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 580,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">210 m2</span><span class="info-bord__item icon-Plot">400 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="card card_red" style="position:relative;cursor:pointer"><a href="card.html?id=12" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/foxtons.png" alt=""></div><div class="card__info"><p class="card__name">2 Bedroom Flats for Sale</p><p class="card__label">LONDON</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div><img loading="lazy" src="img/properties/flat-chelsea.jpg" alt="Luxury Flat in Chelsea" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 895,000</span><span class="price-old">£ 950,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">2 beds</span><span class="info-bord__item icon-bath">2 bath</span><span class="info-bord__item icon-house-area">110 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="card card_orange" style="position:relative;cursor:pointer"><a href="card.html?id=13" class="card-link" aria-label="View listing"></a>
-                                                <div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/woman.png" alt=""></div><div class="card__info"><p class="card__name">4 Bedroom House for Sale</p><p class="card__label">OXFORD</p></div></div>
-                                                <div class="card__img"><div class="card__stikers"><span class="stiker stiker_top">PRO</span></div><img loading="lazy" src="img/properties/house-oxford.jpg" alt="Family House in Oxford" class="img-cover"></div>
-                                                <div class="card__down"><div class="card__prices"><span class="price-new">£ 675,000</span></div><div class="card__dop"><div class="info-bord"><span class="info-bord__item icon-bead">4 beds</span><span class="info-bord__item icon-bath">3 bath</span><span class="info-bord__item icon-house-area">220 m2</span><span class="info-bord__item icon-Plot">450 m2</span></div></div></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </section>
-
-
-
-
-
-            <!-- 
-            <section class="">
-                <div class="container">
-                    <div class="__body">
-
-                    </div>
-                </div>
-            </section> -->
-
 
 
         </main>
-
-      </div><!-- /index-body -->
 
         <footer>
             <div class="footer before992">
                 <div class="container">
                     <div class="footer__body">
                         <div class="footer__start">
-                            <a href="#" class="footer__logo">
+                            <a href="/" class="footer__logo">
                                 <img loading="lazy" src="img/logo.png" alt="">
                             </a>
                             <p class="footer__text">
@@ -1246,7 +261,6 @@
             <div class="footer-coop">
                 <div class="container">
                     <p class="footer-coop__text">© 2025-2026 Bazar.uk. All Rights Reserved.</p>
-                    <p class="footer-coop__text" style="margin-top:6px;font-size:12px;opacity:0.7;">Bazar is a marketplace platform connecting buyers and sellers. We do not sell items directly.</p>
                 </div>
             </div>
         </footer>
@@ -1308,13 +322,13 @@
     <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
         <div class="modal-card">
             <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
-            <h2 class="modal-title">Login / Register</h2>
+            <h2 class="modal-title">Create an account</h2>
 
             <div class="modal-phone-input">
                 <div class="modal-country-select">
                     <span class="modal-country-code">+44</span>
                 </div>
-                <input class="modal-number-input" type="tel" placeholder="7XXX XXX XXX" inputmode="tel">
+                <input class="modal-number-input" type="tel" placeholder="Phone number">
             </div>
 
             <label class="modal-checkbox-label">
@@ -1324,9 +338,8 @@
 
             <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
 
-            <div class="modal-btns" id="modalSignBtns">
-                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
-                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
+            <div class="modal-btns" id="modalSignBtns" style="justify-content:center">
+                <button class="modal-btn modal-btn--orange" onclick="sendSmsCode()">Sign in by an SMS</button>
             </div>
         </div>
     </div>
@@ -1341,19 +354,6 @@
     <script type="text/javascript" src="js/fslightbox.js"></script>
     <script type="text/javascript" src="js/script.js?v=4"></script>
     <script src="js/firebase-auth-v2.js?v=4"></script>
-    <script>
-        function _loadAdCount() {
-            fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
-                var n = d.ads_total;
-                if (!n) return;
-                var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
-                var el = document.getElementById('mainSearchInput');
-                if (el) el.placeholder = txt;
-            }).catch(function(){});
-        }
-        _loadAdCount();
-        setInterval(_loadAdCount, 30000);
-    </script>
     <script src="js/location-autocomplete.js"></script>
     <script>
        function setHeaderLocation(btn) {
@@ -1363,66 +363,39 @@
        }
        function useMyLocation(target) {
           var dd = document.getElementById(target === 'header' ? 'headerLocDropdown' : 'searchLocDropdown');
-          var errEl = document.getElementById(target === 'header' ? 'headerLocError' : 'headerLocError');
+          dd.classList.remove('open');
           var input = document.getElementById(target === 'header' ? 'headerLocationInput' : 'searchLocationInput');
-          if (errEl) errEl.style.display = 'none';
           input.value = 'Detecting...';
-          if (!navigator.geolocation) {
-             input.value = '';
-             if (errEl) { errEl.textContent = 'Geolocation is not supported by your browser.'; errEl.style.display = 'block'; }
-             return;
-          }
+          if (!navigator.geolocation) { input.value = ''; alert('Geolocation is not supported by your browser'); return; }
           navigator.geolocation.getCurrentPosition(function(pos) {
              var lat = pos.coords.latitude, lng = pos.coords.longitude;
-             dd.classList.remove('open');
-             if (typeof google !== 'undefined' && google.maps) {
-                var geocoder = new google.maps.Geocoder();
-                geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
-                   if (status === 'OK' && results[0]) {
-                      var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
-                      for (var i = 0; i < results[0].address_components.length; i++) {
-                         var c = results[0].address_components[i];
-                         if (c.types.indexOf('locality') !== -1) locality = c.long_name;
-                         if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
-                         if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
-                         if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
-                         if (c.types.indexOf('country') !== -1) country = c.short_name;
-                      }
-                      var parts = [];
-                      var mainCity = postalTown || locality || '';
-                      if (mainCity) parts.push(mainCity);
-                      var region = area2 || area1 || '';
-                      if (region && region !== mainCity) parts.push(region);
-                      if (country) parts.push(country);
-                      var label = parts.join(', ') || results[0].formatted_address;
-                      input.value = label;
-                      input.dataset.city = mainCity || label;
-                   } else {
-                      input.value = '';
-                      if (errEl) { errEl.textContent = 'Could not determine your location.'; errEl.style.display = 'block'; }
+             var geocoder = new google.maps.Geocoder();
+             geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                   var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
+                   for (var i = 0; i < results[0].address_components.length; i++) {
+                      var c = results[0].address_components[i];
+                      if (c.types.indexOf('locality') !== -1) locality = c.long_name;
+                      if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
+                      if (c.types.indexOf('country') !== -1) country = c.short_name;
                    }
-                });
-             } else {
-                fetch('/api/config').then(function(r){return r.json();}).then(function(cfg){
-                   return fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key='+(cfg.googleMapsApiKey||''));
-                }).then(function(r){return r.json();}).then(function(data){
-                   if (data.results && data.results.length > 0) {
-                      var c = data.results[0].address_components || [];
-                      var postalTown = '', locality = '', area = '', postcode = '';
-                      c.forEach(function(x){ if(x.types.includes('postal_town')||x.types.includes('locality')) postalTown=x.long_name; if(x.types.includes('postal_code')) postcode=x.long_name; });
-                      var label = [postalTown, postcode].filter(Boolean).join(', ') || data.results[0].formatted_address;
-                      input.value = label; input.dataset.city = postalTown || label;
-                   } else { input.value = ''; }
-                }).catch(function(){ input.value = ''; });
-             }
-          }, function(err) {
-             input.value = '';
-             var msg = err.code === 1
-                ? 'Location access denied. Click the 🔒 lock icon in the address bar → Location → Allow.'
-                : err.code === 2 ? 'Location unavailable. Please select a city from the list.'
-                : 'Location request timed out. Please try again.';
-             if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
-          }, {timeout: 10000});
+                   var parts = [];
+                   var mainCity = postalTown || locality || '';
+                   if (mainCity) parts.push(mainCity);
+                   var region = area2 || area1 || '';
+                   if (region && region !== mainCity) parts.push(region);
+                   if (country) parts.push(country);
+                   var label = parts.join(', ') || results[0].formatted_address;
+                   input.value = label;
+                   input.dataset.city = mainCity || label;
+                } else {
+                   input.value = '';
+                   alert('Could not determine your location');
+                }
+             });
+          }, function() { input.value = ''; alert('Location access denied'); });
        }
        window.initMapsForLocation = function() {
           LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
@@ -1483,89 +456,8 @@
           updateFavCount();
        })();
     </script>
-    <script>
-    (function() {
-        var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
-        if (!ads.length) return;
-        var titles = document.querySelectorAll('.cards__title');
-        var grid = null;
-        for (var i = 0; i < titles.length; i++) {
-            if (titles[i].textContent.trim().toLowerCase() === 'latest updates') {
-                var sec = titles[i].closest('.cards');
-                if (sec) { grid = sec.querySelector('.cards__grid'); break; }
-            }
-        }
-        if (!grid) return;
-        var plan = localStorage.getItem('bazar_plan') || 'free';
-        var stikerClass = plan === 'vip' ? 'stiker_vip' : plan === 'pro' ? 'stiker_top' : '';
-        var stikerLabel = plan === 'vip' ? 'VIP' : plan === 'pro' ? 'PRO' : '';
-        var html = '';
-        var needsApiPhoto = [];
-        ads.slice(0, 4).forEach(function(ad) {
-            var badPhoto = ad.photo && ad.photo.indexOf('dev.bazar.uk') !== -1;
-            var imgSrc = (ad.photo && !badPhoto) ? ad.photo : 'img/product.jpg';
-            var needsFetch = (!ad.photo || badPhoto) && ad.id;
-            var imgId = needsFetch ? 'luImg_' + ad.id : '';
-            var cardCls = stikerLabel ? 'card card_orange' : 'card';
-            var stiker = stikerLabel
-                ? '<div class="card__stikers"><span class="stiker ' + stikerClass + '">' + stikerLabel + '</span></div>'
-                : '<div class="card__stikers"></div>';
-            html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer">' +
-                '<a href="card.html?id=' + ad.id + '" class="card-link" aria-label="View listing"></a>' +
-                '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
-                '<div class="card__info"><p class="card__name">' + (ad.title || 'My Ad') + '</p>' +
-                '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
-                '<div class="card__img">' + stiker +
-                '<img ' + (imgId ? 'id="' + imgId + '" ' : '') + 'src="' + imgSrc + '" alt="" class="img-cover">' +
-                '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
-                '<div class="card__down"><div class="card__prices">' +
-                '<span class="price-new">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' +
-                '</div></div></div>';
-            if (needsFetch) needsApiPhoto.push(ad.id);
-        });
-        grid.insertAdjacentHTML('afterbegin', html);
 
-        /* Async: load photo from API for ads that don't have a cached thumbnail */
-        needsApiPhoto.forEach(function(adId) {
-            fetch(window.BAZAR_API + '/properties/' + adId, { headers: { 'Accept': 'application/json' } })
-                .then(function(r) { return r.ok ? r.json() : null; })
-                .then(function(d) {
-                    if (!d) return;
-                    var firstImg = (d.images && d.images[0]) ? d.images[0] : (d.image || '');
-                    if (!firstImg) return;
-                    var el = document.getElementById('luImg_' + adId);
-                    if (el) el.src = firstImg;
-                    /* Cache into localStorage so next load is instant */
-                    try {
-                        var stored = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
-                        stored.forEach(function(a) { if (String(a.id) === String(adId) && (!a.photo || a.photo.indexOf('dev.bazar.uk') !== -1)) a.photo = firstImg; });
-                        localStorage.setItem('bazar_my_ads', JSON.stringify(stored));
-                    } catch(e) {}
-                })
-                .catch(function() {});
-        });
-    })();
-    </script>
-
-    <script>
-    (function() {
-        if (window.location.hostname !== 'www.bazar.uk') return;
-        var style = document.createElement('style');
-        style.id = 'admin-only-hide';
-        style.textContent = '[data-admin-only]{display:none!important}';
-        document.head.appendChild(style);
-        fetch(window.BAZAR_API + '/is-admin', {credentials: 'include'})
-            .then(function(r) { return r.json(); })
-            .then(function(d) {
-                if (d.admin) {
-                    var s = document.getElementById('admin-only-hide');
-                    if (s) s.parentNode.removeChild(s);
-                }
-            })
-            .catch(function() {});
-    })();
-    </script>
-
+<script src="js/header-auth.js?v=11"></script>
 </body>
 
 </html>

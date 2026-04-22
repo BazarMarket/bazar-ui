@@ -2,620 +2,144 @@
 <html lang="ru">
 
 <head>
-   <meta charset="UTF-8">
-   <title>Listing — Bazar</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-   <meta name="description" content="">
-   <meta name="keywords" content="">
-   <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
-   <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-   <link rel="stylesheet" href="css/main.css?v=200" type="text/css"> <!-- Основные стили темы  -->
-   <link rel="stylesheet" href="css/cabinet.css?v=2" type="text/css">
-   <link rel="icon" type="image/png" href="favicon.png?v=12">
+    <meta charset="UTF-8">
+    <title>About Us — Bazar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
+    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
+    <link rel="stylesheet" href="css/main.css?v=118" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="icon" type="image/png" href="favicon.png?v=12">
 </head>
 
-
 <body>
-   <div class="wrapper">
 
-      <header class="header" id="header-guest">
-         <div class="container-full">
-            <div class="header__body">
-               <a href="/" class="logo">
-                  <img loading="lazy" src="img/logo.png" alt="">
-               </a>
-               <div class="header__btns">
-                  <a href="post-ad.html" class="btn btn_mini" onclick="return handlePostAd(event)">+ Post an Ad</a>
-                  <div style="width:1px;background:#e0e0e0;height:28px;align-self:center;margin:0 8px;flex-shrink:0;"></div>
-                  <div class="btn-down icon" onclick="openCreateAccountModal()">
-                     <p class="btn-down__text" style="padding:0 18px 0 18px;">Log in / Register</p>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </header>
+    <div class="sending-main">
+        <img loading="lazy" src="icon/load.gif" alt="">
+    </div>
 
-      <header class="header-old" id="header-logged-in" style="display:none;">
-         <div class="container-full">
-            <div class="header-old__body">
-               <a href="/" class="logo">
-                  <img src="img/logo.png" alt="">
-               </a>
-               <div class="burger-body">
-                  <div class="header-old__right">
-                     <div class="header-old__vsep"></div>
-                     <div class="header-old__cell">
-                        <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
-                     </div>
-                     <div class="header-old__cell">
-                        <div class="icons-list">
-                           <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber" id="msg-count" style="display:none">0</span></a>
-                           <a href="/cabinet/favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
-                        </div>
-                     </div>
-                     <div class="header-old__cell">
-                        <div class="user-link">
-                           <a href="/cabinet" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo">
-                              <img loading="lazy" class="img-cover" id="header-avatar" src="icon/man.svg" alt="">
-                           </div>
-                           <div class="user-link__title" id="header-username"></div></a>
-                           <div class="user-menu">
-                              <a href="#" class="user-menu-tel icon-tel-full" id="header-menu-phone"></a>
-                              <hr class="user-menu__hr">
-                              <a href="/cabinet" class="user-menu-item icon-win-user">My Profile</a>
-                              <a href="/cabinet/my-ads" class="user-menu-item icon-win-ad">My Ads</a>
-                              <a href="/cabinet/favorites" class="user-menu-item icon-heart">My Favorites</a>
-                              <a href="/cabinet/payments" class="user-menu-item icon-win-wallet">My Payments</a>
-                              <a href="/cabinet/subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
-                                 <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
-                                 <span class="subscription__stiker">PRO</span>
-                                 <span class="subscription__days" id="subDaysEl"></span>
-                              </div></a>
-                              <hr class="user-menu__hr">
-                              <div class="dark-mode">
-                                 <div class="user-menu-item icon-win-sun">Dark Mode</div>
-                                 <label class="toggle">
-                                    <input type="checkbox">
-                                    <span class="toggle__slider"></span>
-                                 </label>
-                              </div>
-                              <a href="/cabinet/support" class="user-menu-item icon-win-faq">Support</a>
-                              <a href="/cabinet/settings" class="user-menu-item icon-win-setting">My Settings</a>
-                              <hr class="user-menu__hr">
-                              <a href="#" class="user-logout icon-win-logout" onclick="doLogout(); return false;">Log out</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="burger-old">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-               </div>
-            </div>
-         </div>
-      </header>
 
-      <main class="main header-indent">
+    <div class="wrapper">
 
-         <section class="card-grid">
+
+        <header class="header" id="header-guest">
             <div class="container-full">
-               <div class="card-grid__body">
-                  <div class="card-grid__top">
-                     <ul class="bread-custom" id="breadcrumb">
-                        <li><a href="/">Home</a> <span class="icon-arrow-r"></span> </li>
-                        <li><a href="#" id="bread-category">Phones</a><span class="icon-arrow-r"></span></li>
-                        <li><a href="#" id="bread-type">Smartphones</a></li>
-                     </ul>
-                     <div class="card-head card-tile">
-                        <div class="card-head__left">
-                           <p class="card-head__title" id="prop-title">Apple iPhone XR 128gb</p>
-                           <ul class="bread">
-                              <li><a id="prop-city-link">Limassol</a> <span>/</span></li>
-                              <li style="padding-left:4px"><a id="prop-district-link">Kapsalos</a></li>
-                           </ul>
-                           <div class="card-head__mob-price">
-                              <div class="card-head__mob-price-new" id="mob-price-new"> 815£</div>
-                              <div class="card-head__mob-price-old" id="mob-price-old"> 853£</div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="card-nav card-tile">
-                        <div class="card-nav__item">
-                           <span data-popup="popup-location" class="popup-link link-icon icon-location">Location</span>
-                        </div>
-                        <div class="card-nav__item">
-                           <a href="#" class="link-icon icon-heart">Favourite</a>
-                        </div>
-                        <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
-                           <div id="boost-top-nav-item" style="display:none;">
-                              <a href="#" class="card-head__boost" onclick="bazarBoostPay(window.location.href,''); return false;">Boost to Top</a>
-                           </div>
-                           <a href="#" class="card-head__edit" id="edit-ad-btn" style="display:none">&#9998; Edit Ad</a>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="card-grid__main">
-                     <div class="card-grid__left">
-
-                        <div class="card-grid__gallery">
-                           <div class="card-gallery card-tile">
-                              <div class="card-gallery__big" style="position:relative;">
-                                 <div id="prop-stiker" class="card__stikers"></div>
-                                 <div class="slider-gallery-big">
-                                    <div class="swiper">
-                                       <div class="swiper-wrapper" id="gallery-big">
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-big__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-big__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-big__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-big__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-big__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                       </div>
-                                       <div class="button-prev icon-arrow-l"></div>
-                                       <div class="button-next icon-arrow-r"></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="card-gallery__mini">
-                                 <div class="slider-gallery-mini">
-                                    <div class="swiper">
-                                       <div class="swiper-wrapper" id="gallery-mini">
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-mini__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-mini__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-mini__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-mini__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                          <div class="swiper-slide">
-                                             <div class="slider-gallery-mini__img">
-                                                <img loading="lazy" src="img/phone.jpg" alt="" class="img-cover">
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-
-                        <div class="card-grid__description">
-
-                           <div class="card-description">
-                              <table cellpadding="0" cellspacing="0" class="table-custom" id="spec-table">
-                                 <caption>Specifications</caption>
-                                 <tr>
-                                    <th>City:</th>
-                                    <td>London</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Area:</th>
-                                    <td>Kissonerga</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Stage:</th>
-                                    <td>New</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Number of Bedrooms:</th>
-                                    <td>3 </td>
-                                 </tr>
-                                 <tr>
-                                    <th>Number of Bathrooms:</th>
-                                    <td>3</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Number of Toilets:</th>
-                                    <td>1</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Distance to sea:</th>
-                                    <td>First line</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Covered area:</th>
-                                    <td>219 m2</td>
-                                 </tr>
-                                 <tr>
-                                    <th>Building type:</th>
-                                    <td>Residential</td>
-                                 </tr>
-                              </table>
-                           </div>
-
-                        </div>
-
-                        <div class="card-tab mytab-js">
-                           <div class="card-tab__btns">
-                              <p data-tab-btn="card-tab1" class="card-tab__btn active">Description </p>
-                              <p data-tab-btn="card-tab3" class="card-tab__btn">Comments <span class="tab-count" id="comments-count">0</span></p>
-                           </div>
-                           <div class="card-tab__contens">
-                              <div data-tab-content="card-tab1" class="card-tab__item active">
-                                 <div class="card-tab__btn-mob">Description </div>
-                                 <div class="card-tab__body">
-                                    <p class="card-tab__text" id="prop-description">Lorem ipsum, dolor sit amet consectetur adipisicing
-                                       elit. Odio, beatae deserunt quos architecto nihil numquam, totam quaerat hic
-                                       consequatur unde non dolor magni eius autem voluptate expedita quisquam.
-                                       Adipisci hic consequatur maxime! Ipsam unde rem obcaecati quo cupiditate sint
-                                       quis saepe, hic, alias minima repellat. Debitis alias perspiciatis corrupti
-                                       officiis, in cupiditate natus quidem illum! Sit ex, assumenda ea ipsam itaque
-                                       tempore rem inventore ducimus voluptatem dolor atque debitis voluptatibus
-                                       nobis laborum non quae, eos provident consequuntur omnis. Excepturi magni
-                                       totam laudantium corrupti optio vel. Obcaecat hic, alias minima repellat. Debitis
-                                       alias perspiciatis
-
-                                    </p>
-                                 </div>
-                              </div>
-                              <div data-tab-content="card-tab3" class="card-tab__item">
-                                 <div class="card-tab__btn-mob">Comments <span class="tab-count" id="comments-count-mob">0</span></div>
-                                 <div class="card-tab__body">
-
-                                    <!-- Comment Form -->
-                                    <div class="comment-form">
-                                       <div class="comment-form__toolbar">
-                                          <button type="button" class="comment-form__tool"><b>B</b></button>
-                                          <button type="button" class="comment-form__tool"><i>I</i></button>
-                                          <button type="button" class="comment-form__tool"><u>U</u></button>
-                                          <span class="comment-form__sep"></span>
-                                          <button type="button" class="comment-form__tool">&#8801;</button>
-                                          <button type="button" class="comment-form__tool">&#9776;</button>
-                                          <span class="comment-form__sep"></span>
-                                          <button type="button" class="comment-form__tool">&#128512;</button>
-                                          <button type="button" class="comment-form__tool">&#10077;</button>
-                                       </div>
-                                       <textarea class="comment-form__textarea" placeholder="Write your comment here..."></textarea>
-                                       <div class="comment-form__footer">
-                                          <button type="button" class="comment-form__submit" id="commentSubmitBtn" onclick="submitComment()">Submit</button>
-                                          <div class="comment-form__rate">
-                                             <span class="comment-form__rate-label">Rate the seller:</span>
-                                             <div class="grade">
-                                                <a href="#" class="grade__item icon-like comment-rate-like">0</a>
-                                                <a href="#" class="grade__item icon-dislike comment-rate-dislike">0</a>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div>
-
-                                    <!-- Comments List -->
-                                    <div class="comments-list" id="comments-list">
-                                       <p class="comments-empty" id="comments-empty" style="color:#aaa;font-size:14px;padding:16px 0;text-align:center;">No comments yet. Be the first to leave one!</p>
-                                    </div>
-
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-
-                        <div class="card-grid__video" id="video-section">
-                           <iframe class="img-cover" src="https://www.youtube.com/embed/dIQGI36BxDE"
-                              title="God of War Ragnarök - &quot;Father and Son&quot; Cinematic Trailer | PS5 &amp; PS4 Games"
-                              frameborder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowfullscreen></iframe>
-                        </div>
-
-                        <div class="card-grid__map-section">
-                           <p class="card-map-label" id="location-label"><b>Location:</b> Limassol — Limassol - Agia Napa</p>
-                           <div class="card-map-embed">
-                              <iframe id="map-inline-iframe"
-                                 src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d18989.386424518565!2d33.36439805884907!3d35.17365468290854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sus!4v1674761810943!5m2!1sru!2sus"
-                                 width="100%" height="340" style="border:0;" allowfullscreen="" loading="lazy"
-                                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-                           </div>
-                        </div>
-
-                     </div>
-
-                     <div class="card-grid__right">
-                        <div class="card-name card-tile">
-                           <div class="card-name__left">
-                              <div class="card-name__photo online">
-                                 <img loading="lazy" src="icon/man.svg" alt="" class="img-cover">
-                              </div>
-                              <div class="card-name__bottom">
-                                 <div class="network">
-                                    <a href="#" class="network__item icon-wp"></a>
-                                    <a href="#" class="network__item icon-tg"></a>
-                                    <a href="#" class="network__item icon-vb"></a>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="card-name__right">
-                              <div class="card-name__info">
-                                 <div class="stars">
-                                    <ul class="stars__body">
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                    </ul>
-                                    <a href="#" class="stars__link link-hover"></a>
-                                 </div>
-                                 <p class="card-name__name" id="seller-name">Andreas Xenofontos Construction &amp; Developers Ltd</p>
-                              </div>
-                              <p class="card-name__text" id="seller-since">2 years with Bazar Market</p>
-                              <div class="card-name__links">
-                                 <a href="#" class="link-start link-hover">Other Ads from this seller</a>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="card-price card-tile">
-                           <div class="card-price__info">
-                              <p class="info-icon icon-eye">301</p>
-                              <p class="info-icon  icon-namber" id="prop-id">992301</p>
-                              <p class="info-icon icon-truck" id="prop-delivery" style="display:none">Delivery</p>
-                              <p class="info-icon icon-calendar" id="prop-date">19 03 2022 | 19:43</p>
-                              <p class="info-icon seller-status" id="prop-seller-status" style="display:none"><span class="seller-status__dot"></span><span class="seller-status__text"></span></p>
-                           </div>
-                           <div class="card-price__right">
-                              <div class="price-last">
-                                 <div class="price-last-old" id="price-old">
-                                    <span> 853£</span>
-                                 </div>
-                                 <div class="price-last-new" id="price-new">
-                                    <span> 815£</span>
-                                 </div>
-                                 <div class="price-last__text">
-                                    <a href="" class="price__link" id="price-negotiable"> Negotiable </a>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="card-btns card-tile">
-                           <a href="#" class="btn btn_old icon-chat" id="ccpStartBtn" onclick="event.preventDefault();toggleCardChat()">Start Chat</a>
-                           <div class="btn-phone icon-phone" id="call-btn" onclick="showPhone(event, this)">
-                              <div class="btn-phone__body">
-                                 <p class="btn-phone__title">Show Phone</p>
-                                 <span class="btn-phone__namber">
-                                    <span class="phone-masked" id="phone-masked">+357xxxxxxxx</span>
-                                    <a href="tel:+35796123456" class="phone-full" style="display:none" id="phone-full">+357 96 123456</a>
-                                 </span>
-                              </div>
-                           </div>
-                           <a href="#" id="emailContactBtn" class="btn btn_old icon-email" onclick="event.preventDefault();openEmailPopup()" style="display:none">Email</a>
-                        </div>
-
-                        <div class="card-options card-tile">
-                           <div class="card-options__item">
-                              <span data-popup="popup-share"
-                                 class="popup-link link-icon link-icon_vertical icon-share">Share</a>
-                           </div>
-                           <div class="card-options__item">
-                              <span data-popup="popup-pdf"
-                                 class="popup-link link-icon link-icon_vertical icon-pdf">PDF</a>
-                           </div>
-                           <div class="card-options__item">
-                              <a href="#" class="link-icon link-icon_vertical icon-printer">Print</a>
-                           </div>
-                           <div class="card-options__item">
-                              <a href="#" class="link-icon link-icon_vertical icon-flag">Report</a>
-                           </div>
-                           <div class="card-options__item">
-                              <a href="#" class="link-icon link-icon_vertical icon-refresh">Compare</a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-
-               </div>
+                <div class="header__body">
+                    <a href="/" class="logo">
+                        <img loading="lazy" src="img/logo.png" alt="">
+                    </a>
+                    <div class="header__btns">
+                       <a href="post-ad.html" class="btn btn_mini" onclick="return handlePostAd(event)">+ Post an Ad</a>
+                       <div style="width:1px;background:#e0e0e0;height:28px;align-self:center;margin:0 8px;flex-shrink:0;"></div>
+                       <div class="btn-down icon" onclick="openCreateAccountModal()">
+                          <p class="btn-down__text" style="padding:0 18px 0 18px;">Log in / Register</p>
+                       </div>
+                    </div>
+                </div>
             </div>
-         </section>
+        </header>
+
+        <header class="header-old" id="header-logged-in" style="display:none;">
+           <div class="container-full">
+              <div class="header-old__body">
+                 <a href="/" class="logo">
+                    <img src="img/logo.png" alt="">
+                 </a>
+                 <div class="burger-body">
+                    <div class="header-old__right">
+                       <div class="header-old__vsep"></div>
+                       <div class="header-old__cell">
+                          <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="icons-list">
+                             <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber">2</span></a>
+                             <a href="/cabinet/favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
+                          </div>
+                       </div>
+                       <div class="header-old__cell">
+                          <div class="user-link">
+                             <a href="/cabinet" style="display:contents;text-decoration:none;color:inherit;"><div class="user-link__photo">
+                                <img loading="lazy" class="img-cover" id="header-avatar" src="icon/man.svg" alt="">
+                             </div>
+                             <div class="user-link__title" id="header-username"></div></a>
+                             <div class="user-menu">
+                                <a href="#" class="user-menu-tel icon-tel-full" id="header-menu-phone"></a>
+                                <hr class="user-menu__hr">
+                                <a href="/cabinet" class="user-menu-item icon-win-user">My Profile</a>
+                                <a href="/cabinet/my-ads" class="user-menu-item icon-win-ad">My Ads</a>
+                                <a href="/cabinet/favorites" class="user-menu-item icon-heart">My Favorites</a>
+                                <a href="/cabinet/payments" class="user-menu-item icon-win-wallet">My Payments</a>
+
+                                <a href="/cabinet/subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
+                                   <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
+                                   <span class="subscription__stiker">PRO</span>
+                                   <span class="subscription__days" id="subDaysEl"></span>
+                                </div></a>
+                                <hr class="user-menu__hr">
+                                <a href="/cabinet/support" class="user-menu-item icon-win-faq">Support</a>
+                                <a href="/cabinet/settings" class="user-menu-item icon-win-setting">My Settings</a>
+                                <hr class="user-menu__hr">
+                                <a href="#" class="user-logout icon-win-logout" onclick="doLogout(); return false;">Log out</a>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="burger-old">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                 </div>
+              </div>
+           </div>
+        </header>
 
 
+        <main class="main">
+
+            <section class="text ">
+                <div class="container">
+                    <h1 class="text__title">About Us</h1>
+                    <div class="text__body text-custom">
+
+                        <p>Bazar is an online marketplace where people can buy, sell, and promote products and services easily and securely.</p>
+
+                        <p>Our goal is to create a simple, fast, and user-friendly platform where individuals and businesses can connect directly without unnecessary complexity.</p>
+
+                        <p>We provide tools that help users:</p>
+
+                        <ul>
+                            <li>Post and manage listings</li>
+                            <li>Promote their ads for better visibility</li>
+                            <li>Communicate directly with buyers and sellers</li>
+                        </ul>
+
+                        <p>Bazar is not a seller of goods or services. We act as a platform that connects users and facilitates listings.</p>
+
+                        <p>We do not own or control the items listed on the platform and are not responsible for transactions between users.</p>
+
+                        <p>Our mission is to make online classifieds more efficient, transparent, and accessible for everyone.</p>
+
+                        <p>We are continuously improving our platform by adding new features and enhancing the user experience.</p>
+
+                        <p>If you have any questions or suggestions, feel free to contact us through the website.</p>
+
+                    </div>
+                </div>
+            </section>
 
 
-      <!-- Кнопка Contact Seller (только мобайл) -->
-      <div class="mob-contact-bar">
-         <button class="mob-contact-btn" onclick="openContactPopup()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.338 0-10 1.671-10 5v2h20v-2c0-3.329-6.662-5-10-5z"/></svg> Contact Seller</button>
-      </div>
+        </main>
 
-      <!-- ── Side Chat Panel ── -->
-      <div id="ccpOverlay" class="ccp-overlay" onclick="closeCardChat()" style="opacity:0;visibility:hidden;pointer-events:none;"></div>
-      <div id="ccpSidePanel" class="ccp-side-panel" style="transform:translateX(100%);visibility:hidden;">
-
-         <!-- Header -->
-         <div class="ccp-inline-head">
-            <img class="cab-chat-head__avatar" src="icon/man.svg" id="ccpSellerAvatar" alt="">
-            <div style="flex:1;min-width:0;">
-               <div class="cab-chat-head__name" id="ccpSellerName">Seller</div>
-               <div class="cab-chat-head__status">Online now</div>
-            </div>
-            <button class="ccp-close-panel" onclick="closeCardChat()">✕ Close</button>
-         </div>
-
-         <!-- Messages -->
-         <div class="cab-chat-body ccp-inline-body" id="ccpChatBody">
-         </div>
-
-         <!-- Offer panel -->
-         <div class="cab-offer-panel" id="ccpOfferPanel">
-            <div class="cab-offer-panel__header">
-               <span class="cab-offer-panel__title">💰 Make an offer</span>
-               <button class="cab-offer-panel__cancel" onclick="ccpHideOffer()">✕</button>
-            </div>
-            <div class="cab-offer-panel__row">
-               <span class="cab-offer-panel__currency">£</span>
-               <input type="number" class="cab-offer-panel__input" id="ccpOfferInput" placeholder="Your price">
-               <button class="cab-offer-panel__send" onclick="ccpSendOffer()">Send offer</button>
-            </div>
-         </div>
-
-         <!-- Schedule panel -->
-         <div class="cab-schedule-panel" id="ccpSchedulePanel">
-            <div class="cab-schedule-panel__header">
-               <span class="cab-schedule-panel__title">📅 Schedule a viewing</span>
-               <button class="cab-schedule-panel__cancel" onclick="ccpHideSchedule()">✕</button>
-            </div>
-            <div class="cab-schedule-panel__row">
-               <input type="date" class="cab-schedule-panel__input" id="ccpScheduleDate">
-               <input type="time" class="cab-schedule-panel__input" id="ccpScheduleTime" value="10:00">
-               <button class="cab-schedule-panel__send" onclick="ccpSendSchedule()">Confirm</button>
-            </div>
-         </div>
-
-         <!-- Quick replies -->
-         <div class="cab-quick-replies">
-            <button class="cab-qr-btn" onclick="ccpQuickReply('Is it available?')">Is it available?</button>
-            <button class="cab-qr-btn" onclick="ccpQuickReply('What is the final price?')">Final price?</button>
-            <button class="cab-qr-btn" onclick="ccpQuickReply('Can I see it today?')">See it today?</button>
-            <button class="cab-qr-btn cab-qr-btn--offer" onclick="ccpShowOffer()">💰 Make offer</button>
-            <button class="cab-qr-btn cab-qr-btn--schedule" onclick="ccpShowSchedule()">📅 Schedule viewing</button>
-         </div>
-
-         <!-- Input -->
-         <div class="cab-chat-input-row">
-            <button class="cab-chat-attach">📎</button>
-            <input class="cab-chat-input" type="text" placeholder="Write a message..." id="ccpChatInput">
-            <button class="cab-chat-emoji" onclick="toggleEmojiPicker(this)">😊</button>
-            <button class="cab-chat-send" onclick="ccpSendMessage()">&#10148;</button>
-         </div>
-
-      </div><!-- /ccpSidePanel -->
-
-      <!-- Попап Contact Seller (только мобайл) -->
-      <div id="mob-contact-popup" class="mob-contact-popup">
-         <div class="mob-contact-popup__overlay" onclick="closeContactPopup()"></div>
-         <div class="mob-contact-popup__sheet">
-            <div class="mob-contact-popup__handle"></div>
-            <p class="mob-contact-popup__name" id="mob-seller-name"></p>
-            <p class="mob-contact-popup__since" id="mob-seller-since">2 years with Bazar Market</p>
-            <a href="tel:+35796123456" class="mob-contact-popup__btn icon-phone" id="mob-call-btn">Call</a>
-            <a href="#" class="mob-contact-popup__btn icon-wp">WhatsApp</a>
-            <a href="#" class="mob-contact-popup__btn icon-chat" onclick="event.preventDefault();openCardChat()">Start Chat</a>
-         </div>
-      </div>
-
-      </main>
-
-   </div>
-
-   <!-- Попапы -->
-   <!-- data-popup="popup-pdf" class="popup-link" -->
-   <div id="popup-pdf" class="popup popup-mini">
-      <div class="popup__wraper">
-         <div class="popup-body popup__body">
-            <div class="popup-head">
-               <p class="popup-head__title icon-pdf">PDF</p>
-               <div class="popup-head__close popup-close  icon-close"></div>
-            </div>
-
-            <div class="pdf-popup">
-               <p class="pdf-popup__title">Открыть в PDF</p>
-               <div class="pdf-popup__body">
-                  <div class="input-checkbox">
-                     <input id="checkbox1" type="checkbox">
-                     <label for="checkbox1">Не показывать цену</label>
-                  </div>
-                  <div class="input-checkbox">
-                     <input id="checkbox2" type="checkbox">
-                     <label for="checkbox2">Не показывать логотип</label>
-                  </div>
-                  <div class="input-checkbox">
-                     <input id="checkbox3" type="checkbox">
-                     <label for="checkbox3">Не показывать ID</label>
-                  </div>
-                  <div class="input-checkbox">
-                     <input id="checkbox4" type="checkbox">
-                     <label for="checkbox4">Одна страница</label>
-                  </div>
-               </div>
-               <a href="#" class="btn btn_mini">Export</a>
-            </div>
-
-
-         </div>
-      </div>
-   </div>
-
-   <!-- data-popup="popup-share" class="popup-link" -->
-   <div id="popup-share" class="popup popup-mini ">
-      <div class="popup__wraper">
-         <div class="popup-body popup__body">
-            <div class="popup-head">
-               <p class="popup-head__title icon-share">Share</p>
-               <div class="popup-head__close popup-close  icon-close"></div>
-            </div>
-
-            <div class="share-popup">
-               <a href="#" class="share-links"><img loading="lazy" src="icon/linked.png" alt=""><span>Скопировать ссылку</span></a>
-               <a href="#" class="share-links"><img loading="lazy" src="icon/tg.svg" alt=""><span>Telegram</span></a>
-               <a href="#" class="share-links"><img loading="lazy" src="icon/fb.svg" alt=""><span>Facebook</span></a>
-               <a href="#" class="share-links"><img loading="lazy" src="icon/tw.svg" alt=""><span>Twiter</span></a>
-               <a href="#" class="share-links"><img loading="lazy" src="icon/wp.svg" alt=""><span>Whatsapp</span></a>
-            </div>
-
-
-         </div>
-      </div>
-   </div>
-
-   <!-- data-popup="popup-location" class="popup-link" -->
-   <div id="popup-location" class="popup">
-      <div class="popup__wraper">
-         <div class="popup-body popup__body">
-            <div class="popup-head">
-               <p class="popup-head__title icon-location">Location</p>
-               <div class="popup-head__close popup-close  icon-close"></div>
-            </div>
-
-            <div class="map-popup">
-               <iframe id="map-popup-iframe"
-                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d18989.386424518565!2d33.36439805884907!3d35.17365468290854!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sus!4v1674761810943!5m2!1sru!2sus"
-                  width="100%" height="400px" style="border:0;" allowfullscreen="" loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-
-         </div>
-      </div>
-   </div>
-
-
-
-           <footer>
+        <footer>
             <div class="footer before992">
                 <div class="container">
                     <div class="footer__body">
                         <div class="footer__start">
                             <a href="/" class="footer__logo">
-                                <img src="img/logo.png" alt="">
+                                <img loading="lazy" src="img/logo.png" alt="">
                             </a>
                             <p class="footer__text">
                                 Welcome to our marketplace, where products find their buyers.
@@ -671,6 +195,7 @@
                                 <a href="#" class="networks__item networks__item_in"></a>
                             </div>
                         </div>
+
                         <div class="payment">
                             <p class="payment__title">Payment Accepted:</p>
                             <div class="payment__list">
@@ -735,1298 +260,204 @@
             </div>
             <div class="footer-coop">
                 <div class="container">
-                    <p class="footer-coop__text">&copy; 2025-2026 Bazar.uk. All Rights Reserved.</p>
+                    <p class="footer-coop__text">© 2025-2026 Bazar.uk. All Rights Reserved.</p>
                 </div>
             </div>
         </footer>
+    </div>
 
 
-   <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
-   <script type="text/javascript" src="js/inputmask.min.js"></script>
-   <!-- fslightbox removed: replaced with custom lightbox below -->
-   <script type="text/javascript" src="js/script.js?v=4"></script>
 
-   <script>
-   (function(){
-      var params = new URLSearchParams(window.location.search);
-      var id = params.get('id');
-      if (!id) {
-         var _m = window.location.pathname.match(/^\/(\d+)(?:-[^/]+)?$/)
-                || window.location.pathname.match(/\/listing\/(\d+)/);
-         id = _m ? _m[1] : null;
-      }
-      if (!id) return;
+    <!-- OTP Code Modal -->
+    <div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
+        <div class="modal-card modal-card--otp">
+            <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
 
-      if (window.location.hostname.endsWith('bazar.uk')) {
-         var _viewUid = localStorage.getItem('bazar_firebase_uid') || '';
-         fetch('/api/properties/' + id + '/view', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ viewer_uid: _viewUid })
-         }).catch(function() {});
-      }
+            <div class="otp-icon">
+                <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
+            </div>
 
-      var apiUrl = '/api/properties/' + id;
+            <h2 class="modal-title otp-title">Enter the code</h2>
+            <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
 
-      fetch(apiUrl)
-         .then(function(r) { if (!r.ok) return null; return r.json(); })
-         .then(function(p) {
-            if (!p) return;
+            <div class="otp-inputs">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            </div>
+            <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
 
-      function fmt(n) {
-         return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      }
+            <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
+            <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
+        </div>
+    </div>
 
-      (function(){
-         var sym = p.currency === 'EUR' ? '€' : (p.currency === 'USD' ? '$' : '£');
-         var priceStr = p.price ? sym + fmt(Math.round(p.price)) : '';
-         var loc = (p.district && p.city) ? p.district + ', ' + p.city : (p.city || 'UK');
-         var rawTitle = p.title + ' in ' + loc + (priceStr ? ' – ' + priceStr : '') + ' | Bazar UK';
-         document.title = rawTitle.length > 68 ? rawTitle.substring(0, 65) + '…' : rawTitle;
-      })();
-      var el = function(s){ return document.getElementById(s); };
+    <!-- Profile Setup Modal (Step 3) -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-card modal-card--profile">
+            <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
 
-      el('prop-title').textContent = p.title;
+            <div class="profile-avatar-wrap">
+                <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
+            </div>
 
-      var stikerEl = el('prop-stiker');
-      if(stikerEl) {
-         var badges = '';
-         if(p.is_vip) badges = '<span class="stiker stiker_vip">VIP</span>';
-         else if(p.is_pro) badges = '<span class="stiker stiker_top">PRO</span>';
-         stikerEl.innerHTML = badges;
-      }
-      if (el('bread-category')) {
-        var _lt = (p.listing_type || '').toLowerCase();
-        var _pt = (p.property_type || '').toLowerCase();
-        var _catLabel = _lt === 'long_rent' ? 'Property to rent'
-                      : _lt === 'short_rent' ? 'Property to rent'
-                      : 'Property for sale';
-        var _catHref  = _pt === 'room'
-                          ? (_lt === 'short_rent' ? '/rooms/short-term' : '/rooms')
-                          : _lt === 'long_rent'  ? '/property/for-rent'
-                          : _lt === 'short_rent' ? '/property/for-rent/short-term'
-                          : '/property';
-        el('bread-category').textContent = _catLabel;
-        el('bread-category').href = _catHref;
-      }
-      if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_',' ');
-      el('prop-city-link').textContent = p.city;
-      el('prop-district-link').textContent = p.district || '';
-      // Hide slash and district li when no district
-      var _districtLi = el('prop-district-link') ? el('prop-district-link').parentElement : null;
-      var _slashSpan = el('prop-city-link') ? el('prop-city-link').parentElement.querySelector('span') : null;
-      if (p.district) {
-         if (_districtLi) _districtLi.style.display = '';
-         if (_slashSpan) _slashSpan.style.display = '';
-      } else {
-         if (_districtLi) _districtLi.style.display = 'none';
-         if (_slashSpan) _slashSpan.style.display = 'none';
-      }
+            <h2 class="modal-title profile-modal-title">Almost there!</h2>
+            <p class="profile-modal-subtitle">Just a few details</p>
 
-      function fmtPrice(n) {
-         return fmt(Math.round(n)) + '£';
-      }
+            <div class="profile-gender-btns">
+                <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+                <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
+            </div>
 
-      var hasOldPrice = p.old_price && p.old_price > 0 && parseFloat(p.old_price) > parseFloat(p.price);
-      var priceHtml = fmtPrice(p.price);
+            <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
 
-      var _mobPriceEl = el('mob-price-new');
-      if(_mobPriceEl) {
-         _mobPriceEl.innerHTML = ' ' + priceHtml;
-         var _mpv = parseFloat(p.price) || 0;
-         if      (_mpv >= 1000000000) _mobPriceEl.style.fontSize = '16px';
-         else if (_mpv >= 100000000)  _mobPriceEl.style.fontSize = '20px';
-         else if (_mpv >= 10000000)   _mobPriceEl.style.fontSize = '24px';
-         else if (_mpv >= 1000000)    _mobPriceEl.style.fontSize = '26px';
-      }
-      if(hasOldPrice) {
-         el('mob-price-old').innerHTML = ' ' + fmtPrice(p.old_price);
-         el('mob-price-old').style.display = '';
-      } else {
-         el('mob-price-old').style.display = 'none';
-      }
+            <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
+        </div>
+    </div>
 
-      var priceNew = el('price-new');
-      if(priceNew) {
-         priceNew.innerHTML = '<span>' + priceHtml + '</span>';
-         if(!hasOldPrice) priceNew.style.color = '#1d1d1b';
-         var _pv = parseFloat(p.price) || 0;
-         if      (_pv >= 1000000000) priceNew.style.fontSize = '18px';
-         else if (_pv >= 100000000)  priceNew.style.fontSize = '22px';
-         else if (_pv >= 10000000)   priceNew.style.fontSize = '26px';
-         else if (_pv >= 1000000)    priceNew.style.fontSize = '30px';
-      }
-      var priceOld = el('price-old');
-      if(priceOld) {
-         if(hasOldPrice) {
-            priceOld.innerHTML = '<span>' + fmtPrice(p.old_price) + '</span>';
-            priceOld.style.display = '';
-         } else {
-            priceOld.style.display = 'none';
-         }
-      }
+    <!-- Create Account Modal -->
+    <div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
+            <h2 class="modal-title">Create an account</h2>
 
-      var cardPrice = document.querySelector('.card-price');
-      if(cardPrice) {
-         if(hasOldPrice) {
-            cardPrice.classList.remove('card-price--single-price');
-         } else {
-            cardPrice.classList.add('card-price--single-price');
-         }
-      }
+            <div class="modal-phone-input">
+                <div class="modal-country-select">
+                    <span class="modal-country-code">+44</span>
+                </div>
+                <input class="modal-number-input" type="tel" placeholder="Phone number">
+            </div>
 
-      var negEl = el('price-negotiable');
-      if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
+            <label class="modal-checkbox-label">
+                <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
+                <span>I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and the <a href="/privacy-policy" target="_blank">Privacy Policy</a></span>
+            </label>
 
-      el('prop-id').textContent = id;
-      (function() {
-        var raw = p.created_at || '';
-        if (raw) {
-          var parts = raw.replace('T', ' ').split(/[\s:/-]/);
-          if (parts.length >= 5) {
-            var pad = function(n){ return String(n).length < 2 ? '0'+n : ''+n; };
-            el('prop-date').textContent = pad(parts[2]) + ' ' + pad(parts[1]) + ' ' + parts[0]
-                                        + ' | ' + pad(parts[3]) + ':' + pad(parts[4]);
-          }
-        }
-      })();
+            <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
 
-      var deliveryEl = el('prop-delivery');
-      if (deliveryEl) {
-         var reTypes = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','office','shop','restaurant','industrial','hotel','business_investment','land','building','room'];
-         var isRealEstate = reTypes.indexOf((p.property_type || '').toLowerCase()) !== -1;
-         deliveryEl.style.display = (!isRealEstate && p.delivery === 'Yes') ? '' : 'none';
-      }
+            <div class="modal-btns" id="modalSignBtns" style="justify-content:center">
+                <button class="modal-btn modal-btn--orange" onclick="sendSmsCode()">Sign in by an SMS</button>
+            </div>
+        </div>
+    </div>
 
-      var sellerStatusEl = el('prop-seller-status');
-      if (sellerStatusEl) {
-         var lastSeenRaw = p.seller_last_seen || null;
-         var isActive = false;
-         var statusText = '';
-         if (lastSeenRaw) {
-            var lastSeenDate = new Date(lastSeenRaw);
-            var nowMs = Date.now();
-            var diffMs = nowMs - lastSeenDate.getTime();
-            var diffMins  = Math.floor(diffMs / 60000);
-            var diffHours = Math.floor(diffMs / 3600000);
-            var diffDays  = Math.floor(diffMs / 86400000);
-            if (diffMins < 30) {
-               isActive = true;
-               statusText = 'Active';
-            } else if (diffHours < 1) {
-               statusText = 'Last seen ' + diffMins + ' min ago';
-            } else if (diffHours < 24) {
-               statusText = 'Last seen ' + diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago';
-            } else if (diffDays === 1) {
-               statusText = 'Last seen yesterday';
-            } else if (diffDays < 30) {
-               statusText = 'Last seen ' + diffDays + ' days ago';
-            } else if (diffDays < 365) {
-               var mo = Math.floor(diffDays / 30);
-               statusText = 'Last seen ' + mo + ' month' + (mo > 1 ? 's' : '') + ' ago';
-            } else {
-               var yr = Math.floor(diffDays / 365);
-               statusText = 'Last seen ' + yr + ' year' + (yr > 1 ? 's' : '') + ' ago';
-            }
-         } else {
-            isActive = true;
-            statusText = 'Active';
-         }
-         sellerStatusEl.classList.remove('seller-status--active', 'seller-status--inactive');
-         sellerStatusEl.classList.add(isActive ? 'seller-status--active' : 'seller-status--inactive');
-         sellerStatusEl.querySelector('.seller-status__text').textContent = statusText;
-         sellerStatusEl.style.display = '';
-      }
+    <div id="recaptcha-container"></div>
 
-      var allImgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
-      var mainWrap = document.getElementById('gallery-big');
-      if (mainWrap && allImgs.length) {
-         mainWrap.innerHTML = allImgs.map(function(src, idx) {
-            return '<div class="swiper-slide slider-gallery-big__img">' +
-               '<img src="' + src + '" alt="' + p.title + '" class="img-cover">' +
-               '<a href="#" onclick="openGalleryLightbox(' + idx + ');return false;" class="gallery-zoom-overlay" aria-label="Enlarge photo"></a>' +
-               '</div>';
-         }).join('');
-         var _swiperBigEl = mainWrap.closest('.swiper');
-         if (_swiperBigEl && _swiperBigEl.swiper) { _swiperBigEl.swiper.update(); }
-         // Store images for lightbox
-         window._galleryImages = allImgs;
-      }
-      var miniWrap = document.getElementById('gallery-mini');
-      if (miniWrap && allImgs.length) {
-         miniWrap.innerHTML = allImgs.map(function(src) {
-            return '<div class="swiper-slide slider-gallery-mini__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover"></div>';
-         }).join('');
-         var _swiperMiniEl = miniWrap.closest('.swiper');
-         if (_swiperMiniEl && _swiperMiniEl.swiper) { _swiperMiniEl.swiper.update(); }
-      }
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
 
-      function specRow(label, val) {
-         if (val === null || val === undefined || val === '' || val === 0) return '';
-         return '<tr><th>' + label + ':</th><td>' + val + '</td></tr>';
-      }
-      var specs = '';
-      specs += '<caption>Specifications</caption>';
-      specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
-      var _locationVal = p.city ? (p.district ? p.city + ', ' + p.district : p.city) : (p.district || '');
-      specs += specRow('Location', _locationVal);
-
-      var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
-      var ptype = (p.property_type || '').toLowerCase();
-
-      if (ptype === 'car') {
-         /* ── Cars — form order ── */
-         specs += specRow('Make', p.car_make);
-         specs += specRow('Model', p.car_model);
-         specs += specRow('Year', p.car_year);
-         if (p.mileage) specs += specRow('Mileage', p.mileage + ' miles');
-         specs += specRow('Fuel type', p.fuel_type);
-         specs += specRow('Transmission', p.transmission);
-         specs += specRow('Body type', p.body_type);
-         specs += specRow('Colour', p.colour);
-         specs += specRow('Doors', p.doors);
-         specs += specRow('Seats', p.seats);
-         specs += specRow('Drive type', p.drive_type);
-         specs += specRow('Steering side', p.steering_side);
-         if (p.engine_size) specs += specRow('Engine size', p.engine_size + ' L');
-         specs += specRow('Previous owners', p.previous_owners);
-         specs += specRow('Service history', p.service_history);
-         specs += specRow('MOT status', p.mot_status);
-         specs += specRow('Condition', condLabel[p.condition] || p.condition);
-
-      } else if (ptype === 'phone') {
-         /* ── Phones — form order ── */
-         specs += specRow('Brand', p.phone_brand);
-         specs += specRow('Model', p.phone_model);
-         specs += specRow('Storage', p.phone_storage);
-         specs += specRow('Colour', p.colour);
-         specs += specRow('Unlock status', p.unlock_status);
-         specs += specRow('RAM', p.phone_ram);
-         specs += specRow('SIM type', p.sim_type);
-         specs += specRow('Network', p.network);
-         specs += specRow('Battery health', p.battery_health);
-         specs += specRow('Operating system', p.operating_system);
-         specs += specRow('Warranty', p.warranty);
-         specs += specRow('Original box', p.original_box);
-         specs += specRow('Charger included', p.charger_included);
-         specs += specRow('Seller type', p.seller_type);
-         specs += specRow('Condition', condLabel[p.condition] || p.condition);
-
-      } else {
-         /* ── Real estate — form order ── */
-         if (ptype !== 'room' && p.building_type) specs += specRow('Building type', p.building_type);
-         specs += specRow('Number of Bedrooms', p.bedrooms);
-         specs += specRow('Number of Bathrooms', p.bathrooms);
-         if (ptype === 'room' && p.sub_type) specs += specRow('Room type', p.sub_type);
-         specs += specRow('Condition', condLabel[p.condition] || p.condition);
-         specs += specRow('Floor', p.floor);
-         if (p.parking_type) specs += specRow('Parking', p.parking_type);
-         else if (p.parking) specs += specRow('Parking', 'Yes');
-         if (p.furnishing_type) specs += specRow('Furnishing', p.furnishing_type);
-         if (p.ac_type) specs += specRow('Air conditioning', p.ac_type);
-         specs += specRow('Year Built', p.construction_year);
-         if (p.covered_area) specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
-         if (p.plot_area) specs += '<tr><th>Plot area:</th><td>' + p.plot_area + ' m2</td></tr>';
-         var amenities = [];
-         if(p.air_conditioning) amenities.push('Air Conditioning');
-         if(p.pool) amenities.push('Swimming Pool');
-         if(p.garden) amenities.push('Garden');
-         if(p.elevator) amenities.push('Elevator');
-         if(p.security) amenities.push('Security');
-         if(p.gym) amenities.push('Gym');
-         if(p.veranda) amenities.push('Veranda');
-         if(p.balcony) amenities.push('Balcony');
-         if(p.terrace) amenities.push('Terrace');
-         if(p.central_heating) amenities.push('Central Heating');
-         if(p.storage_room) amenities.push('Storage Room');
-         if(p.solar_panels) amenities.push('Solar Panels');
-         if(amenities.length) specs += '<tr><th>Amenities:</th><td>' + amenities.join(', ') + '</td></tr>';
-         if (p.online_viewing) specs += specRow('Online viewing', p.online_viewing);
-         specs += specRow('Energy Rating', p.energy_efficiency);
-         if (p.registration_block) specs += specRow('Registration block', p.registration_block);
-         if (p.registration_number) specs += specRow('Registration number', p.registration_number);
-      }
-
-      el('spec-table').innerHTML = specs;
-
-      el('prop-description').textContent = (p.description || '').replace(/<[^>]*>/g, '').trim();
-
-      var _curUid = localStorage.getItem('bazar_firebase_uid') || '';
-      var _displaySellerName = (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid)
-         ? (localStorage.getItem('bazar_username') || p.seller_name)
-         : p.seller_name;
-      el('seller-name').textContent = _displaySellerName;
-      /* Fetch seller's current name from API (may have been updated after ad was created) */
-      if (p.seller_firebase_uid && !(p.seller_firebase_uid === _curUid)) {
-         fetch('/api/customers/' + encodeURIComponent(p.seller_firebase_uid))
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(cust) {
-               if (cust && cust.name) {
-                  el('seller-name').textContent = cust.name;
-                  var mobName = document.getElementById('mob-seller-name');
-                  if (mobName) mobName.textContent = cust.name;
-                  /* Also update chat data so ensure() sends the fresh name */
-                  if (window._chatAdData) window._chatAdData.sellerName = cust.name;
-                  /* Update chat panel header name */
-                  var _ccpNameEl = document.getElementById('ccpSellerName');
-                  if (_ccpNameEl) _ccpNameEl.textContent = cust.name;
-               }
-            })
-            .catch(function() {});
-      }
-
-      /* ── Boost to Top button: Free plan owner only ── */
-      (function() {
-        var boostWrap = document.getElementById('boost-top-nav-item');
-        if (!boostWrap) return;
-        var curUser = localStorage.getItem('bazar_username') || '';
-        var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-        var _demoCard = new URLSearchParams(window.location.search).get('boost_demo');
-        var canBoost = !p.is_vip;
-        var isOwner  = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
-        var planOk   = curPlan === 'free' || curPlan === 'pro';
-        if ((_demoCard === '1') || (canBoost && isOwner && planOk)) {
-          boostWrap.style.display = '';
-        }
-      })();
-
-      /* ── Edit Ad button: only for the ad owner ── */
-      (function() {
-        var editBtn = document.getElementById('edit-ad-btn');
-        if (!editBtn) return;
-        var curUser = localStorage.getItem('bazar_username') || '';
-        var isOwner = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
-        if (isOwner) {
-          editBtn.href = 'post-ad.html?edit=' + encodeURIComponent(id);
-          editBtn.style.display = '';
-        }
-      })();
-
-      function timeSince(dateStr) {
-         var reg = new Date(dateStr);
-         var now = new Date();
-         var diffMs = now - reg;
-         var diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-         if(diffDays < 1) return '1 day with Bazar Market';
-         if(diffDays === 1) return '1 day with Bazar Market';
-         if(diffDays < 30) return diffDays + ' days with Bazar Market';
-         var months = Math.floor(diffDays / 30);
-         if(months === 1) return '1 month with Bazar Market';
-         if(months < 12) return months + ' months with Bazar Market';
-         var years = Math.floor(months / 12);
-         if(years === 1) return '1 year with Bazar Market';
-         return years + ' years with Bazar Market';
-      }
-
-      var sinceText = p.seller_registered ? timeSince(p.seller_registered) : 'Member of Bazar Market';
-      el('seller-since').textContent = sinceText;
-      var mobSince = el('mob-seller-since');
-      if(mobSince) mobSince.textContent = sinceText;
-
-      var phoneMasked = el('phone-masked');
-      if(phoneMasked) phoneMasked.textContent = '+44 xxxx xxxxxx';
-      var phoneFull = el('phone-full');
-      if(phoneFull) { phoneFull.textContent = p.seller_phone; phoneFull.href = 'tel:' + p.seller_phone; }
-
-      var cleanPhone = p.seller_phone.replace(/[^0-9]/g, '');
-      var wpLink = document.querySelector('.card-name__bottom .icon-wp');
-      if(wpLink) wpLink.href = 'https://wa.me/' + cleanPhone;
-      var tgLink = document.querySelector('.card-name__bottom .icon-tg');
-      if(tgLink) tgLink.href = 'https://t.me/+' + cleanPhone;
-      var vbLink = document.querySelector('.card-name__bottom .icon-vb');
-      if(vbLink) vbLink.href = 'viber://chat?number=' + cleanPhone;
-
-      /* Show only selected messengers + Email.
-         Priority: API fields → localStorage bazar_my_ads → show all (fallback) */
-      var msgWa = p.has_whatsapp, msgTg = p.has_telegram, msgVb = p.has_viber, msgEm = p.has_email;
-      var apiHasMessenger = (msgWa !== null && msgWa !== undefined);
-      if (!apiHasMessenger) {
-         var storedAds = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
-         var matchAd = storedAds.filter(function(a){ return String(a.id) === String(id); })[0];
-         if (matchAd && matchAd.messengers) {
-            msgWa = matchAd.messengers.wa;
-            msgTg = matchAd.messengers.tg;
-            msgVb = matchAd.messengers.vb;
-            msgEm = matchAd.messengers.em;
-            apiHasMessenger = true;
-         }
-      }
-      var emailBtn = document.getElementById('emailContactBtn');
-      if (apiHasMessenger) {
-         if(wpLink)   wpLink.style.display   = msgWa ? '' : 'none';
-         if(tgLink)   tgLink.style.display   = msgTg ? '' : 'none';
-         if(vbLink)   vbLink.style.display   = msgVb ? '' : 'none';
-         if(emailBtn) emailBtn.style.display = msgEm ? '' : 'none';
-      } else {
-         /* fallback: hide email button (no data) */
-         if(emailBtn) emailBtn.style.display = 'none';
-      }
-
-      var mobName = el('mob-seller-name');
-      if(mobName) mobName.textContent = _displaySellerName;
-      var mobCall = el('mob-call-btn');
-      if(mobCall) mobCall.href = 'tel:' + p.seller_phone;
-
-      var _locLabel = el('location-label');
-      if (_locLabel) _locLabel.innerHTML = '<b>Location:</b> ' + (p.city || '') + (p.district ? ' — ' + p.district : '');
-
-      var mapQ = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=' + p.map_query;
-      var mapInline = el('map-inline-iframe');
-      if(mapInline) mapInline.src = mapQ;
-      var mapPopup = el('map-popup-iframe');
-      if(mapPopup) mapPopup.src = mapQ;
-
-      var videoSection = el('video-section');
-      if(videoSection) videoSection.style.display = 'none';
-
-      /* ── Hide Start Chat + Comment form for the ad owner ── */
-      (function() {
-        var curUser = localStorage.getItem('bazar_username') || '';
-        var isOwner = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
-        if (!isOwner) return;
-        /* Hide desktop Start Chat button */
-        var chatBtn = document.getElementById('ccpStartBtn');
-        if (chatBtn) chatBtn.style.display = 'none';
-        /* Hide mobile Start Chat button */
-        var mobChatBtn = document.querySelector('.mob-contact-popup__btn.icon-chat');
-        if (mobChatBtn) mobChatBtn.style.display = 'none';
-        /* Hide comment form */
-        var commentForm = document.querySelector('.comment-form');
-        if (commentForm) commentForm.style.display = 'none';
-      })();
-
-      /* ── Fill inline chat with seller/product data ── */
-      var ccpName = document.getElementById('ccpSellerName');
-      if(ccpName) ccpName.textContent = _displaySellerName;
-      var now2 = new Date();
-      var hh = now2.getHours().toString().padStart(2,'0');
-      var mm = now2.getMinutes().toString().padStart(2,'0');
-
-      /* ── Store ad data for chat ── */
-      window._chatAdData = {
-          adId:       String(p.id || ''),
-          adTitle:    p.title || '',
-          adUrl:      window.location.pathname,
-          adPhoto:    (p.photos && p.photos[0]) ? p.photos[0] : '',
-          adPrice:    p.price ? ('£ ' + p.price) : '',
-          sellerName: _displaySellerName || ''
-      };
-
-         }); // end fetch
-   })();
-   </script>
-
-   <script>
-   function bazarBoostPay(returnUrl, listingId) {
-     var uid  = localStorage.getItem('bazar_firebase_uid') || '';
-     var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-     var apiBase = window.location.hostname.endsWith('bazar.uk')
-       ? window.BAZAR_API + '/stripe/checkout/boost'
-       : '/api/boost-checkout';
-     var btn = document.querySelector('.card-head__boost');
-     if (btn) { btn.textContent = 'Processing…'; btn.style.pointerEvents = 'none'; }
-     fetch(apiBase, {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ return_url: returnUrl, listing_id: listingId || '', firebase_uid: uid, plan: plan })
-     })
-     .then(function(r){ return r.json(); })
-     .then(function(d){
-       if (d.success && d.url) { window.location.href = d.url; }
-       else {
-         alert('Payment error: ' + (d.error || 'Unknown error'));
-         if (btn) { btn.textContent = 'Boost to Top'; btn.style.pointerEvents = ''; }
+    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
+    <script type="text/javascript" src="js/inputmask.min.js"></script>
+    <script type="text/javascript" src="js/fslightbox.js"></script>
+    <script type="text/javascript" src="js/script.js?v=4"></script>
+    <script src="js/firebase-auth-v2.js?v=4"></script>
+    <script src="js/location-autocomplete.js"></script>
+    <script>
+       function setHeaderLocation(btn) {
+          var input = document.getElementById('headerLocationInput');
+          input.value = btn.dataset.city;
+          input.dataset.city = btn.dataset.city;
        }
-     })
-     .catch(function(){
-       alert('Could not connect to payment server. Please try again.');
-       if (btn) { btn.textContent = 'Boost to Top'; btn.style.pointerEvents = ''; }
-     });
-   }
-   </script>
-
-   <!-- ═══════════ GALLERY LIGHTBOX STYLES ═══════════ -->
-   <style>
-      .slider-gallery-big__img { position: relative; overflow: hidden; }
-      .gallery-zoom-overlay {
-         display: block; position: absolute; inset: 0; z-index: 2;
-         cursor: zoom-in; background: transparent;
-      }
-      .seller-status { display: flex; align-items: center; }
-      .seller-status__dot {
-         display: inline-flex; align-items: center; justify-content: center;
-         width: 20px; flex-shrink: 0; margin-right: 5px;
-      }
-      .seller-status__dot::after {
-         content: ''; display: block;
-         width: 17.5px; height: 17.5px;
-         background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E") center/contain no-repeat;
-      }
-      .seller-status__text { color: #222; }
-   </style>
-
-   <!-- ═══════════ SIDE CHAT PANEL STYLES ═══════════ -->
-   <style>
-
-
-        /* Emoji-only messages */
-        .cab-bubble--emoji-only .cab-bubble__text {
-            background: none !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 2px 4px !important;
-            font-size: 40px !important;
-            line-height: 1.15 !important;
-        }
-        /* Emoji Picker */
-        .emoji-picker {
-            position: fixed;
-            right: auto;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            padding: 8px;
-            z-index: 99999;
-            display: none;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 2px;
-            width: 224px;
-            box-sizing: border-box;
-        }
-        .emoji-picker.open { display: grid; }
-        .emoji-picker button {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px 2px;
-            border-radius: 6px;
-            line-height: 1;
-            text-align: center;
-        }
-        .emoji-picker button:hover { background: #f5f5f5; }
-   /* Overlay */
-   .ccp-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.2);
-      z-index: 1100;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity .3s ease, visibility .3s ease;
-   }
-   .ccp-overlay.is-open {
-      opacity: 1 !important;
-      visibility: visible !important;
-      pointer-events: auto !important;
-   }
-
-   /* Side panel */
-   .ccp-side-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      height: 100vh;
-      width: 400px;
-      max-width: 100vw;
-      min-width: 320px;
-      border-radius: 16px 0 0 16px;
-      background: #fff;
-      box-shadow: -8px 0 30px rgba(0,0,0,.15);
-      z-index: 1101;
-      display: flex;
-      flex-direction: column;
-      transform: translateX(100%);
-      visibility: hidden;
-      transition: transform .35s cubic-bezier(.4,0,.2,1), visibility .35s cubic-bezier(.4,0,.2,1);
-      overflow: hidden;
-   }
-   .ccp-side-panel.is-open {
-      transform: translateX(0) !important;
-      visibility: visible !important;
-   }
-
-   /* Header */
-   .ccp-inline-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 16px;
-      border-bottom: 1px solid #f0f0f0;
-      flex-shrink: 0;
-   }
-   .ccp-close-panel {
-      background: #f2f2f2;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-family: Poppins, sans-serif;
-      cursor: pointer;
-      color: #333;
-      font-weight: 500;
-      padding: 6px 12px;
-      line-height: 1;
-      flex-shrink: 0;
-      transition: background .15s, color .15s;
-   }
-   .ccp-close-panel:hover { background: #e0e0e0; color: #111; }
-
-   /* Chat body fills remaining space */
-   .ccp-inline-body {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-   }
-
-   /* Mobile: fullscreen */
-   @media (max-width: 767px) {
-      .ccp-side-panel {
-         top: 0;
-         right: 0;
-         bottom: 0;
-         width: 100vw;
-         max-width: 100vw;
-         min-width: unset;
-         border-radius: 0;
-      }
-   }
-   </style>
-
-   <script>
-   /* ═══════════════════════════════════════════════
-      Card chat – real backend state
-   ═══════════════════════════════════════════════ */
-   var _ccpConvId   = null;
-   var _ccpUnsubMsg = null;
-   var _ccpInited   = false;
-   var _ccpMyUid    = '';
-   var _ccpMyName   = '';
-   var _ccpIsBuyer  = true; /* buyer opens chat on card page */
-
-   function _ccpGetUser() {
-      _ccpMyUid  = localStorage.getItem('bazar_firebase_uid') || '';
-      _ccpMyName = localStorage.getItem('bazar_username') || 'User';
-      /* Fallback: get UID directly from Firebase if not in localStorage */
-      if (!_ccpMyUid && window.auth && window.auth.currentUser) {
-         _ccpMyUid = window.auth.currentUser.uid;
-         localStorage.setItem('bazar_firebase_uid', _ccpMyUid);
-      }
-   }
-
-   function ccpInitChat(cb) {
-      if (_ccpInited) { if(cb) cb(); return; }
-      _ccpGetUser();
-      var d = window._chatAdData;
-      if (!d || !d.adId) { if(cb) cb(); return; }
-      if (!_ccpMyUid) {
-         /* Not logged in — show prompt in chat panel */
-         var _chatBody = document.getElementById('ccpChatBody');
-         if (_chatBody && !_chatBody.querySelector('.ccp-login-prompt')) {
-            var _pr = document.createElement('div');
-            _pr.className = 'ccp-login-prompt';
-            _pr.style.cssText = 'text-align:center;padding:24px 16px;color:#888;font-size:14px;';
-            _pr.innerHTML = 'Please <a href="#" onclick="openCreateAccountModal();return false;" style="color:#f97316;text-decoration:underline">log in</a> to send messages.';
-            _chatBody.appendChild(_pr);
-         }
-         if(cb) cb(); return;
-      }
-      _ccpConvId = BAZAR_CHAT.convId(d.adId, _ccpMyUid);
-      BAZAR_CHAT.ensure(_ccpConvId, {
-         ad_id: d.adId, ad_title: d.adTitle, ad_url: d.adUrl,
-         ad_photo: d.adPhoto, ad_price: d.adPrice,
-         seller_name: d.sellerName, buyer_id: _ccpMyUid, buyer_name: _ccpMyName
-      }).then(function() {
-         _ccpInited = true;
-         if (_ccpUnsubMsg) { _ccpUnsubMsg.unsub ? _ccpUnsubMsg.unsub() : _ccpUnsubMsg(); }
-         _ccpUnsubMsg = BAZAR_CHAT.listenAllMsgs(_ccpConvId, function(msgs) {
-            ccpRenderMessages(msgs);
-         }, { myUid: _ccpMyUid });
-         if(cb) cb();
-      }).catch(function() { if(cb) cb(); });
-   }
-
-   function ccpRenderMessages(msgs) {
-      var body = document.getElementById('ccpChatBody');
-      if (!body) return;
-      var atBottom = (body.scrollHeight - body.scrollTop - body.clientHeight) < 80;
-      /* keep welcome bubble; remove previously rendered real bubbles */
-      body.querySelectorAll('.ccp-real-bubble').forEach(function(el){ el.remove(); });
-      msgs.forEach(function(msg) {
-         var isOut = msg.sender_id === _ccpMyUid;
-         var now3  = new Date(msg.time * 1000);
-         var h3    = now3.getHours().toString().padStart(2,'0');
-         var m3    = now3.getMinutes().toString().padStart(2,'0');
-         var div   = document.createElement('div');
-         div.className = 'cab-bubble ccp-real-bubble ' + (isOut ? 'cab-bubble--out' : 'cab-bubble--in');
-         if (isOut) {
-            div.innerHTML = '<div class="cab-bubble__text">' + escHtmlCcp(msg.text) + '</div><span class="cab-bubble__time">' + h3 + ':' + m3 + '</span>';
-         } else {
-            div.innerHTML = '<img class="cab-bubble__avatar" src="/icon/man.svg" alt=""><div class="cab-bubble__text">' + escHtmlCcp(msg.text) + '</div><span class="cab-bubble__time">' + h3 + ':' + m3 + '</span>';
-         }
-         body.appendChild(div);
-      });
-      if (atBottom || msgs.length <= 30) body.scrollTop = body.scrollHeight;
-   }
-
-   function escHtmlCcp(s) {
-      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-   }
-
-   function toggleCardChat() {
-      var panel   = document.getElementById('ccpSidePanel');
-      var overlay = document.getElementById('ccpOverlay');
-      var btn     = document.getElementById('ccpStartBtn');
-      var open    = panel.classList.toggle('is-open');
-      overlay.classList.toggle('is-open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
-      if (btn) btn.textContent = open ? 'Close Chat' : 'Start Chat';
-      if (open) {
-         ccpInitChat(function(){
-            setTimeout(function(){
-               var body = document.getElementById('ccpChatBody');
-               if(body) body.scrollTop = body.scrollHeight;
-               var inp = document.getElementById('ccpChatInput');
-               if(inp) inp.focus();
-            }, 80);
-         });
-      }
-   }
-   function openCardChat() {
-      var panel   = document.getElementById('ccpSidePanel');
-      var overlay = document.getElementById('ccpOverlay');
-      var btn     = document.getElementById('ccpStartBtn');
-      panel.classList.add('is-open');
-      overlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-      if (btn) btn.textContent = 'Close Chat';
-      ccpInitChat(function(){
-         setTimeout(function(){
-            var body = document.getElementById('ccpChatBody');
-            if(body) body.scrollTop = body.scrollHeight;
-            var inp = document.getElementById('ccpChatInput');
-            if(inp) inp.focus();
-         }, 80);
-      });
-   }
-   function closeCardChat() {
-      var panel   = document.getElementById('ccpSidePanel');
-      var overlay = document.getElementById('ccpOverlay');
-      var btn     = document.getElementById('ccpStartBtn');
-      panel.classList.remove('is-open');
-      overlay.classList.remove('is-open');
-      document.body.style.overflow = '';
-      if(btn) btn.textContent = 'Start Chat';
-   }
-   document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') closeCardChat();
-   });
-   function ccpScrollBottom() {
-      var body = document.getElementById('ccpChatBody');
-      if(body) body.scrollTop = body.scrollHeight;
-   }
-   function ccpPostBubble(text, extraClass) {
-      var body = document.getElementById('ccpChatBody');
-      if(!body) return;
-      var now = new Date();
-      var h = now.getHours().toString().padStart(2,'0');
-      var m = now.getMinutes().toString().padStart(2,'0');
-      var div = document.createElement('div');
-      var isEmoji = !extraClass && window.isEmojiOnly && isEmojiOnly(text);
-      div.className = 'cab-bubble cab-bubble--out' + (extraClass ? ' '+extraClass : '');
-      var textStyle = isEmoji ? ' style="background:none;border:none;box-shadow:none;padding:0;font-size:42px;line-height:1.2"' : '';
-      div.innerHTML = '<div class="cab-bubble__text"' + textStyle + '>' + text + '</div><span class="cab-bubble__time">' + h + ':' + m + '</span>';
-      body.appendChild(div);
-      body.scrollTop = body.scrollHeight;
-   }
-   function ccpSendMessage() {
-      var inp = document.getElementById('ccpChatInput');
-      if(!inp || !inp.value.trim()) return;
-      var text = inp.value.trim();
-      inp.value = '';
-      if (_ccpConvId && _ccpMyUid) {
-         if (_ccpUnsubMsg && _ccpUnsubMsg.pushOptimistic) {
-            _ccpUnsubMsg.pushOptimistic(_ccpMyUid, _ccpMyName, text, 'text');
-         }
-         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text).catch(function(){ inp.value = text; });
-      } else {
-         ccpInitChat(function(){ if(_ccpConvId && _ccpMyUid) BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text).catch(function(){}); });
-      }
-   }
-   function ccpQuickReply(text) {
-      if (_ccpConvId && _ccpMyUid) {
-         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text);
-      } else {
-         ccpInitChat(function(){ if(_ccpConvId && _ccpMyUid) BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text); });
-      }
-   }
-
-   function ccpShowOffer() {
-      document.getElementById('ccpOfferPanel').classList.add('is-open');
-      document.getElementById('ccpSchedulePanel').classList.remove('is-open');
-      setTimeout(function(){ var el=document.getElementById('ccpOfferInput'); if(el) el.focus(); }, 80);
-   }
-   function ccpHideOffer() { document.getElementById('ccpOfferPanel').classList.remove('is-open'); }
-   function ccpSendOffer() {
-      var val = document.getElementById('ccpOfferInput').value;
-      if(!val || isNaN(val) || +val <= 0) return;
-      var formatted = '£ ' + (+val).toLocaleString('en-GB');
-      var text = '💰 Offer: ' + formatted;
-      document.getElementById('ccpOfferInput').value = '';
-      ccpHideOffer();
-      if (_ccpConvId && _ccpMyUid) {
-         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text, 'offer');
-      }
-   }
-   function ccpOfferReply(action, btn) {
-      var msgs = { accept: '✅ Offer accepted! Let\'s proceed.', counter: '🔄 How about a counter-offer?', reject: '❌ Sorry, the price is firm.' };
-      var actions = btn.closest('.cab-offer-actions');
-      if(actions) actions.remove();
-      setTimeout(function(){ ccpPostBubble(msgs[action]); }, 200);
-   }
-
-   function ccpShowSchedule() {
-      document.getElementById('ccpSchedulePanel').classList.add('is-open');
-      document.getElementById('ccpOfferPanel').classList.remove('is-open');
-      var today = new Date().toISOString().split('T')[0];
-      document.getElementById('ccpScheduleDate').min = today;
-      if(!document.getElementById('ccpScheduleDate').value) document.getElementById('ccpScheduleDate').value = today;
-   }
-   function ccpHideSchedule() { document.getElementById('ccpSchedulePanel').classList.remove('is-open'); }
-   function ccpSendSchedule() {
-      var d = document.getElementById('ccpScheduleDate').value;
-      var t = document.getElementById('ccpScheduleTime').value;
-      if(!d || !t) return;
-      var dateStr = new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
-      var text = '📅 Viewing request: ' + dateStr + ' at ' + t;
-      ccpHideSchedule();
-      if (_ccpConvId && _ccpMyUid) {
-         BAZAR_CHAT.send(_ccpConvId, _ccpMyUid, _ccpMyName, text, 'schedule');
-      }
-   }
-
-   document.addEventListener('DOMContentLoaded', function() {
-      var inp = document.getElementById('ccpChatInput');
-      if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') ccpSendMessage(); });
-      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCardChat(); });
-      var nameEl = document.getElementById('header-username');
-      if(nameEl) nameEl.textContent = localStorage.getItem('bazar_username') || '';
-   });
-   
-;(function(){
-    var EMOJIS = [
-        '😊','😂','😍','😭','😘','🥰','😁','😎','🤔','😉','😢','😅',
-        '😆','🤗','😏','🥳','👍','🙏','👋','💪','👏','🤝',
-        '❤️','🧡','💛','💚','💙','💜','🔥','✨','💯','🎉',
-        '🏠','💰','🔑','📞','📱','📅'
-    ];
-    var picker = null;
-    var currentInput = null;
-
-    function buildPicker() {
-        var d = document.createElement('div');
-        d.className = 'emoji-picker';
-        d.id = 'bazarEmojiPicker';
-        EMOJIS.forEach(function(em) {
-            var b = document.createElement('button');
-            b.type = 'button';
-            b.textContent = em;
-            b.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (currentInput) {
-                    var s = currentInput.selectionStart || currentInput.value.length;
-                    var v = currentInput.value;
-                    currentInput.value = v.slice(0, s) + em + v.slice(s);
-                    currentInput.selectionStart = currentInput.selectionEnd = s + em.length;
-                    currentInput.focus();
+       function useMyLocation(target) {
+          var dd = document.getElementById(target === 'header' ? 'headerLocDropdown' : 'searchLocDropdown');
+          dd.classList.remove('open');
+          var input = document.getElementById(target === 'header' ? 'headerLocationInput' : 'searchLocationInput');
+          input.value = 'Detecting...';
+          if (!navigator.geolocation) { input.value = ''; alert('Geolocation is not supported by your browser'); return; }
+          navigator.geolocation.getCurrentPosition(function(pos) {
+             var lat = pos.coords.latitude, lng = pos.coords.longitude;
+             var geocoder = new google.maps.Geocoder();
+             geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                   var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
+                   for (var i = 0; i < results[0].address_components.length; i++) {
+                      var c = results[0].address_components[i];
+                      if (c.types.indexOf('locality') !== -1) locality = c.long_name;
+                      if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
+                      if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
+                      if (c.types.indexOf('country') !== -1) country = c.short_name;
+                   }
+                   var parts = [];
+                   var mainCity = postalTown || locality || '';
+                   if (mainCity) parts.push(mainCity);
+                   var region = area2 || area1 || '';
+                   if (region && region !== mainCity) parts.push(region);
+                   if (country) parts.push(country);
+                   var label = parts.join(', ') || results[0].formatted_address;
+                   input.value = label;
+                   input.dataset.city = mainCity || label;
+                } else {
+                   input.value = '';
+                   alert('Could not determine your location');
                 }
-                d.classList.remove('open');
-            });
-            d.appendChild(b);
-        });
-        document.body.appendChild(d);
-        return d;
-    }
+             });
+          }, function() { input.value = ''; alert('Location access denied'); });
+       }
+       window.initMapsForLocation = function() {
+          LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
+       };
+       (function() {
+          fetch('/api/config')
+             .then(function(r) { return r.json(); })
+             .then(function(cfg) {
+                if (!cfg.googleMapsApiKey) return;
+                var s = document.createElement('script');
+                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initMapsForLocation';
+                s.async = true; s.defer = true;
+                document.head.appendChild(s);
+             });
+       })();
 
-    window.isEmojiOnly = function(str) {
-        var s = str.trim();
-        if (!s) return false;
-        // Remove all emoji-range chars; if nothing printable remains → emoji-only
-        var cleaned = s.replace(/[\u00A9\u00AE\u203C-\u3299\uD800-\uDFFF\uFE0F\u20E3\u200D]/g, '');
-        return cleaned.trim().length === 0;
-    };
-
-    window.toggleEmojiPicker = function(btn) {
-        if (!picker) picker = buildPicker();
-        if (picker.classList.contains('open')) {
-            picker.classList.remove('open');
-            return;
-        }
-        currentInput = btn.closest('.cab-chat-input-row').querySelector('.cab-chat-input');
-        var rect = btn.getBoundingClientRect();
-        var pickerW = 224;
-        var viewW = document.documentElement.clientWidth; // excludes scrollbar
-        var viewH = window.innerHeight;
-        // Horizontal: right-align to button, ensure fully in viewport
-        var left = rect.right - pickerW;
-        if (left + pickerW > viewW - 20) left = viewW - pickerW - 20;
-        if (left < 4) left = 4;
-        // Vertical: pin picker BOTTOM to button TOP (always shows button below)
-        var bottomOffset = viewH - rect.top + 6;
-        picker.style.bottom = bottomOffset + 'px';
-        picker.style.top  = 'auto';
-        picker.style.left = left + 'px';
-        picker.style.right = 'auto';
-        picker.classList.add('open');
-    };
-
-    document.addEventListener('click', function(e) {
-        if (picker && picker.classList.contains('open')
-            && !picker.contains(e.target)
-            && !e.target.classList.contains('cab-chat-emoji')) {
-            picker.classList.remove('open');
-        }
-    });
-})();
-
-</script>
-
-<!-- ── Email popup ── -->
-<div id="popup-email" class="popup" onclick="if(event.target===this)closeEmailPopup()">
-   <div class="popup__wraper" style="max-width:540px">
-      <div class="popup-body popup__body">
-         <div class="popup-head">
-            <p class="popup-head__title icon-email">Contact Seller</p>
-            <div class="popup-head__close icon-close" onclick="closeEmailPopup()"></div>
-         </div>
-         <h3 class="email-popup__title">Request information from seller</h3>
-         <form id="email-popup-form" onsubmit="submitEmailForm(event)" novalidate>
-            <div class="input-custom">
-               <label>Your name <span class="email-popup__req">*</span></label>
-               <input type="text" id="ep-name" placeholder="Your name">
-               <p class="input-custom__error">Please enter your name</p>
-            </div>
-            <div class="input-custom">
-               <label>Your phone <span class="email-popup__req">*</span></label>
-               <input type="tel" id="ep-phone" placeholder="+44 xxxx xxxxxx">
-               <p class="input-custom__error">Please enter your phone</p>
-            </div>
-            <div class="input-custom">
-               <label>Your email</label>
-               <input type="email" id="ep-email" placeholder="your@email.com">
-            </div>
-            <div class="input-custom">
-               <label>Your message</label>
-               <textarea id="ep-message" rows="4" placeholder="I'm interested in this listing…"></textarea>
-            </div>
-            <div class="email-popup__footer">
-               <button type="submit" class="email-popup__send">Send</button>
-            </div>
-         </form>
-         <div id="email-popup-success" class="email-popup__success">
-            <div class="email-popup__success-icon">✓</div>
-            <p class="email-popup__success-title">Message sent!</p>
-            <p class="email-popup__success-sub">The seller will get back to you soon.</p>
-         </div>
-      </div>
-   </div>
-</div>
-
-<style>
-.email-popup__title {
-   font-family: "Poppins", sans-serif;
-   font-weight: 700;
-   font-size: 20px;
-   color: #1d1d1b;
-   line-height: 130%;
-   margin: 0 0 20px 0;
-}
-.email-popup__req { color: #e53935; }
-.email-popup__footer {
-   display: flex;
-   justify-content: flex-end;
-   margin-top: 18px;
-}
-.email-popup__send {
-   background: #ff9138;
-   color: #fff;
-   border: none;
-   border-radius: 10px;
-   font-family: "Poppins", sans-serif;
-   font-weight: 700;
-   font-size: 16px;
-   padding: 12px 34px;
-   cursor: pointer;
-   transition: background 0.25s;
-}
-.email-popup__send:hover { background: #fe7653; }
-.email-popup__success {
-   display: none;
-   text-align: center;
-   padding: 30px 10px 20px;
-}
-.email-popup__success-icon {
-   font-size: 52px;
-   color: #3ecb60;
-   line-height: 1;
-   margin-bottom: 12px;
-}
-.email-popup__success-title {
-   font-family: "Poppins", sans-serif;
-   font-weight: 700;
-   font-size: 20px;
-   color: #1d1d1b;
-   margin: 0 0 8px;
-}
-.email-popup__success-sub {
-   font-family: "Poppins", sans-serif;
-   font-size: 15px;
-   color: #797979;
-   margin: 0;
-}
-</style>
-
-<script>
-function openEmailPopup() {
-   /* If not logged in — open Create account modal instead */
-   if (!localStorage.getItem('bazar_firebase_uid')) {
-      openCreateAccountModal();
-      return;
-   }
-   var popup = document.getElementById('popup-email');
-   var form  = document.getElementById('email-popup-form');
-   var succ  = document.getElementById('email-popup-success');
-   form.style.display = '';
-   succ.style.display = 'none';
-   /* remove any validation errors */
-   form.querySelectorAll('.input-custom').forEach(function(el){ el.classList.remove('error'); });
-   /* pre-fill from localStorage */
-   var savedName  = localStorage.getItem('bazar_username') || '';
-   var savedPhone = localStorage.getItem('bazar_phone') || '';
-   document.getElementById('ep-name').value  = savedName;
-   document.getElementById('ep-phone').value = savedPhone;
-   popup.classList.add('active');
-   document.body.style.overflow = 'hidden';
-}
-function closeEmailPopup() {
-   document.getElementById('popup-email').classList.remove('active');
-   document.body.style.overflow = '';
-}
-function submitEmailForm(e) {
-   e.preventDefault();
-   var nameEl  = document.getElementById('ep-name');
-   var phoneEl = document.getElementById('ep-phone');
-   var ok = true;
-   [nameEl, phoneEl].forEach(function(el) {
-      var wrap = el.closest('.input-custom');
-      if (!el.value.trim()) { wrap.classList.add('error'); ok = false; }
-      else wrap.classList.remove('error');
-   });
-   if (!ok) return;
-   /* Show success */
-   document.getElementById('email-popup-form').style.display = 'none';
-   document.getElementById('email-popup-success').style.display = '';
-   setTimeout(closeEmailPopup, 3000);
-}
-</script>
-
-<!-- OTP Code Modal -->
-<div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
-   <div class="modal-card modal-card--otp">
-      <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
-      <div class="otp-icon">
-         <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
-      </div>
-      <h2 class="modal-title otp-title">Enter the code</h2>
-      <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
-      <div class="otp-inputs">
-         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-         <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-      </div>
-      <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
-      <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
-      <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
-   </div>
-</div>
-
-<!-- Profile Setup Modal -->
-<div class="modal-overlay" id="profileModal">
-   <div class="modal-card modal-card--profile">
-      <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
-      <div class="profile-avatar-wrap">
-         <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
-      </div>
-      <h2 class="modal-title profile-modal-title">Almost there!</h2>
-      <p class="profile-modal-subtitle">Just a few details</p>
-      <div class="profile-gender-btns">
-         <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
-         <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
-      </div>
-      <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
-      <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
-   </div>
-</div>
-
-<!-- Create Account / Login Modal -->
-<div class="modal-overlay" id="createAccountModal" onclick="closeModalOutside(event)">
-   <div class="modal-card">
-      <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
-      <h2 class="modal-title">Create an account</h2>
-      <div class="modal-phone-input">
-         <div class="modal-country-select">
-            <span class="modal-country-code">+44</span>
-         </div>
-         <input class="modal-number-input" type="tel" placeholder="7XXX XXX XXX" inputmode="tel">
-      </div>
-      <label class="modal-checkbox-label">
-         <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
-         <span>I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and the <a href="/privacy-policy" target="_blank">Privacy Policy</a></span>
-      </label>
-      <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
-      <div class="modal-btns" id="modalSignBtns">
-         <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
-         <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
-      </div>
-   </div>
-</div>
-
-<div id="recaptcha-container"></div>
-
-<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
-<script src="js/chat.js?v=3"></script>
-<script src="js/firebase-auth-v2.js?v=4"></script>
-<script>
-function submitComment() {
-    var textarea = document.querySelector('.comment-form__textarea');
-    var text = textarea ? textarea.value.trim() : '';
-    if (!text) return;
-
-    var name  = localStorage.getItem('bazar_username') || 'Anonymous';
-    var initial = name.charAt(0).toUpperCase();
-    var colors  = ['#ff9138','#3ecb60','#2aabee','#e55a00','#8e44ad','#e74c3c'];
-    var color   = colors[Math.floor(Math.random() * colors.length)];
-    var now     = new Date();
-    var months  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
-
-    var list    = document.getElementById('comments-list');
-    var empty   = document.getElementById('comments-empty');
-    if (empty) empty.remove();
-
-    var item = document.createElement('div');
-    item.className = 'comment-item';
-    item.innerHTML =
-        '<div class="comment-item__avatar" style="background:' + color + '">' + initial + '</div>' +
-        '<div class="comment-item__body">' +
-            '<div class="comment-item__head">' +
-                '<span class="comment-item__name">' + name + '</span>' +
-                '<span class="comment-item__date">' + dateStr + '</span>' +
-            '</div>' +
-            '<p class="comment-item__text">' + text.replace(/</g,'&lt;') + '</p>' +
-        '</div>';
-    list.appendChild(item);
-
-    var count = list.querySelectorAll('.comment-item').length;
-    var badge = document.getElementById('comments-count');
-    if (badge) badge.textContent = count;
-    var badgeMob = document.getElementById('comments-count-mob');
-    if (badgeMob) badgeMob.textContent = count;
-
-    textarea.value = '';
-}
-</script>
-
-<!-- Custom Gallery Lightbox -->
-<div id="galleryLightbox" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;" onclick="closeGalleryLightbox()">
-   <button id="glbClose" onclick="closeGalleryLightbox()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:34px;cursor:pointer;z-index:2;line-height:1;">&times;</button>
-   <button id="glbPrev" onclick="event.stopPropagation();galleryLightboxMove(-1)" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:32px;width:50px;height:50px;border-radius:50%;cursor:pointer;z-index:2;line-height:1;">&#8249;</button>
-   <img id="glbImg" src="" alt="" style="max-width:94vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 40px rgba(0,0,0,.6);" onclick="event.stopPropagation()">
-   <div id="glbCounter" style="color:rgba(255,255,255,.7);margin-top:12px;font-size:15px;"></div>
-   <button id="glbNext" onclick="event.stopPropagation();galleryLightboxMove(1)" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:32px;width:50px;height:50px;border-radius:50%;cursor:pointer;z-index:2;line-height:1;">&#8250;</button>
-</div>
-<script>
-var _glbIndex = 0;
-function openGalleryLightbox(idx) {
-   var imgs = window._galleryImages || [];
-   if (!imgs.length) return;
-   _glbIndex = idx || 0;
-   var lb = document.getElementById('galleryLightbox');
-   lb.style.display = 'flex';
-   document.body.style.overflow = 'hidden';
-   _glbRender();
-   document.addEventListener('keydown', _glbKey);
-}
-function _glbRender() {
-   var imgs = window._galleryImages || [];
-   document.getElementById('glbImg').src = imgs[_glbIndex] || '';
-   document.getElementById('glbCounter').textContent = imgs.length > 1 ? (_glbIndex + 1) + ' / ' + imgs.length : '';
-   document.getElementById('glbPrev').style.display = imgs.length > 1 ? '' : 'none';
-   document.getElementById('glbNext').style.display = imgs.length > 1 ? '' : 'none';
-}
-function galleryLightboxMove(dir) {
-   var imgs = window._galleryImages || [];
-   _glbIndex = (_glbIndex + dir + imgs.length) % imgs.length;
-   _glbRender();
-}
-function closeGalleryLightbox() {
-   document.getElementById('galleryLightbox').style.display = 'none';
-   document.body.style.overflow = '';
-   document.removeEventListener('keydown', _glbKey);
-}
-function _glbKey(e) {
-   if (e.key === 'Escape') closeGalleryLightbox();
-   if (e.key === 'ArrowRight') galleryLightboxMove(1);
-   if (e.key === 'ArrowLeft') galleryLightboxMove(-1);
-}
-</script>
+       // Heart favorites functionality
+       function updateFavCount() {
+          var count = 0;
+          for(var i = 0; i < localStorage.length; i++) {
+             var key = localStorage.key(i);
+             if(key && key.indexOf('favorite_') === 0 && localStorage.getItem(key) === '1') count++;
+          }
+          var badge = document.getElementById('fav-count');
+          if(badge) {
+             badge.textContent = count;
+             badge.style.display = count > 0 ? 'flex' : 'none';
+          }
+       }
+       (function() {
+          var hearts = document.querySelectorAll('.card__heart');
+          hearts.forEach(function(heart) {
+             var cardId = heart.closest('.card').querySelector('[href*="id="]') ? 
+                         heart.closest('.card').querySelector('[href*="id="]').href.split('id=')[1] : null;
+             
+             if(cardId) {
+                var stored = localStorage.getItem('favorite_' + cardId);
+                if(stored === '1') {
+                   heart.classList.add('active');
+                   heart.classList.remove('icon-heart');
+                   heart.classList.add('icon-heart-full');
+                }
+             }
+             
+             heart.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                heart.classList.toggle('active');
+                var isActive = heart.classList.contains('active');
+                heart.classList.toggle('icon-heart', !isActive);
+                heart.classList.toggle('icon-heart-full', isActive);
+                if(cardId) {
+                   localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
+                }
+                updateFavCount();
+             });
+          });
+          updateFavCount();
+       })();
+    </script>
 
 <script src="js/header-auth.js?v=11"></script>
-<script>
-(function() {
-   var params = new URLSearchParams(window.location.search);
-   var cardId = params.get('id');
-   if (!cardId) {
-      var _m = window.location.pathname.match(/^\/(\d+)(?:-[^/]+)?$/)
-             || window.location.pathname.match(/\/listing\/(\d+)/);
-      if (_m) cardId = _m[1];
-   }
-   var favBtn = document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
-   if (!favBtn) return;
-   /* Apply stored state on load */
-   function applyFavState() {
-      var isFav = cardId && localStorage.getItem('favorite_' + cardId) === '1';
-      favBtn.classList.toggle('icon-heart', !isFav);
-      favBtn.classList.toggle('icon-heart-full', isFav);
-   }
-   /* Update header badge count */
-   function updateFavCount() {
-      var count = 0;
-      for (var i = 0; i < localStorage.length; i++) {
-         var k = localStorage.key(i);
-         if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') count++;
-      }
-      var badge = document.getElementById('fav-count');
-      if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
-   }
-   applyFavState();
-   updateFavCount();
-   favBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (!cardId) return;
-      var isFav = localStorage.getItem('favorite_' + cardId) === '1';
-      localStorage.setItem('favorite_' + cardId, isFav ? '0' : '1');
-      applyFavState();
-      updateFavCount();
-   });
-})();
-</script>
 </body>
 
 </html>
