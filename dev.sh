@@ -15,12 +15,15 @@ fi
 
 echo "=== Syncing Production → Dev ==="
 ssh -i .local/ssh/bazar_deploy -o StrictHostKeyChecking=no root@49.13.231.137 "
-  echo '--- Frontend: prod → dev ---' &&
+  echo '--- Frontend public/: prod → dev ---' &&
   rsync -av /var/www/bazar-prod/public/*.html /var/www/bazar-dev/public/ &&
   rsync -av /var/www/bazar-prod/public/css/   /var/www/bazar-dev/public/css/ &&
   rsync -av /var/www/bazar-prod/public/js/    /var/www/bazar-dev/public/js/ &&
   rsync -av /var/www/bazar-prod/public/img/   /var/www/bazar-dev/public/img/ &&
   rsync -av /var/www/bazar-prod/public/icon/  /var/www/bazar-dev/public/icon/ &&
+  echo '--- Frontend ROOT (SimpleHTTP fallback): prod → dev ---' &&
+  rsync -av /var/www/bazar-prod/*.html        /var/www/bazar-dev/ &&
+  rsync -av /var/www/bazar-prod/js/           /var/www/bazar-dev/js/ &&
   cp /var/www/bazar-prod/server.py /var/www/bazar-dev/server.py &&
   echo '--- Database: bazar_dev (prod) → bazar_prod (dev) ---' &&
   mysqldump -u bazar -pBazarSecure2026 bazar_dev 2>/dev/null | mysql -u bazar -pBazarSecure2026 bazar_prod 2>/dev/null &&
