@@ -134,6 +134,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
             badge.textContent = count;
             badge.style.display = count > 0 ? 'flex' : 'none';
         }
+        return count;
     }
 
     function setMsgBadge(count) {
