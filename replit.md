@@ -3,9 +3,35 @@
 A static HTML/CSS/JS classified ads marketplace website UI.
 
 ---
+## ⛔⛔⛔ АБСОЛЮТНЫЙ ЗАПРЕТ — ЧИТАТЬ ПЕРВЫМ ⛔⛔⛔
+
+**DEV — НЕ ТРОГАТЬ. НИКОГДА. НИ ПРИ КАКИХ ОБСТОЯТЕЛЬСТВАХ.**
+
+Агент работает ТОЛЬКО с продакшеном. Dev обновляет ТОЛЬКО пользователь командой `bash dev.sh`.
+
+Запрещено без каких-либо исключений:
+- Копировать, деплоить, менять файлы в `/var/www/bazar-dev/` (это dev Laravel)
+- Писать SQL в базу `bazar_prod` (это dev база)
+- Запускать `bash dev.sh`
+- Делать scp/rsync/ssh-команды, которые затрагивают dev
+
+Продакшен — это:
+- Файлы: `/var/www/bazar-prod/` и `/var/www/bazar-prod/public/`
+- База данных: `bazar_dev`
+- URL: www.bazar.uk, admin.bazar.uk
+
+Dev — это (НЕ ТРОГАТЬ):
+- Файлы: `/var/www/bazar-dev/`
+- База данных: `bazar_prod`
+- URL: dev.bazar.uk, dev.bazar.uk/dev-admin
+
+Если dev сломан — это исправляет пользователь через `bash dev.sh`. Агент не вмешивается.
+
+---
+
 ## ⛔ ПРАВИЛА ДЛЯ АГЕНТА — ОБЯЗАТЕЛЬНО К ИСПОЛНЕНИЮ
 
-1. **DEV-САЙТ (dev.bazar.uk) — ТОЛЬКО ПОЛЬЗОВАТЕЛЬ.** Агент НИКОГДА не копирует, не синхронизирует и не деплоит файлы на dev.bazar.uk самостоятельно. Не запускать `bash dev.sh`. Не делать rsync/scp из prod в dev. Не делать rsync/scp из Replit в /var/www/bazar-dev/. Синхронизацию prod → dev делает только пользователь вручную командой `bash dev.sh`.
+1. **DEV-САЙТ (dev.bazar.uk) — ТОЛЬКО ПОЛЬЗОВАТЕЛЬ.** Агент НИКОГДА не копирует, не синхронизирует и не деплоит файлы на dev.bazar.uk самостоятельно. Не запускать `bash dev.sh`. Не делать rsync/scp из prod в dev. Не делать rsync/scp из Replit в /var/www/bazar-dev/. Не писать SQL в `bazar_prod`. Синхронизацию prod → dev делает только пользователь вручную командой `bash dev.sh`.
 
 2. **DEPLOY только в PROD.** Агент пишет код и деплоит только в `/var/www/bazar-prod/` (prod). Скрипт деплоя: `bash deploy.sh <файлы>`. server.py деплоится в `/var/www/bazar-prod/server.py` (НЕ в public/).
 
