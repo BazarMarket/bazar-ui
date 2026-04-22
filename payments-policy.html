@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>About Us — Bazar</title>
+    <title>Payments Policy — Bazar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="description" content="">
     <meta name="keywords" content="">
-    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
-    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/main.css?v=118" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
+    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css?v=118" type="text/css">
     <link rel="icon" type="image/png" href="favicon.png?v=12">
 </head>
 
@@ -19,9 +19,7 @@
         <img loading="lazy" src="icon/load.gif" alt="">
     </div>
 
-
     <div class="wrapper">
-
 
         <header class="header" id="header-guest">
             <div class="container-full">
@@ -71,7 +69,6 @@
                                 <a href="/cabinet/my-ads" class="user-menu-item icon-win-ad">My Ads</a>
                                 <a href="/cabinet/favorites" class="user-menu-item icon-heart">My Favorites</a>
                                 <a href="/cabinet/payments" class="user-menu-item icon-win-wallet">My Payments</a>
-
                                 <a href="/cabinet/subscriptions" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
                                    <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">Subscription</p>
                                    <span class="subscription__stiker">PRO</span>
@@ -101,30 +98,44 @@
 
             <section class="text ">
                 <div class="container">
-                    <h1 class="text__title">About Us</h1>
+                    <h1 class="text__title">Payments Policy</h1>
                     <div class="text__body text-custom">
 
-                        <p>Bazar is an online marketplace where people can buy, sell, and promote products and services easily and securely.</p>
+                        <p>Bazar offers paid promotional services designed to increase the visibility of listings on the platform.</p>
 
-                        <p>Our goal is to create a simple, fast, and user-friendly platform where individuals and businesses can connect directly without unnecessary complexity.</p>
+                        <h2>1. Paid Services</h2>
 
-                        <p>We provide tools that help users:</p>
+                        <p>Users can purchase the following services:</p>
 
                         <ul>
-                            <li>Post and manage listings</li>
-                            <li>Promote their ads for better visibility</li>
-                            <li>Communicate directly with buyers and sellers</li>
+                            <li><strong>PRO listing</strong> — priority placement within search results</li>
+                            <li><strong>VIP listing</strong> — top position in category listings</li>
+                            <li><strong>Boost to Top</strong> — a paid feature that temporarily increases the visibility of a listing by placing it higher in search results. Boost to Top increases the visibility of a listing for a limited period of time.</li>
                         </ul>
 
-                        <p>Bazar is not a seller of goods or services. We act as a platform that connects users and facilitates listings.</p>
+                        <h2>2. Payment Terms</h2>
 
-                        <p>We do not own or control the items listed on the platform and are not responsible for transactions between users.</p>
+                        <p>All payments on Bazar are one-time payments. There are no recurring charges unless explicitly stated.</p>
 
-                        <p>Our mission is to make online classifieds more efficient, transparent, and accessible for everyone.</p>
+                        <p>All prices are displayed in GBP (£).</p>
 
-                        <p>We are continuously improving our platform by adding new features and enhancing the user experience.</p>
+                        <h2>3. Payment Processing</h2>
 
-                        <p>If you have any questions or suggestions, feel free to contact us through the website.</p>
+                        <p>Payments are securely processed via Stripe. Bazar does not store or have access to users' card details.</p>
+
+                        <p>If a payment is not successfully completed, the service will not be activated.</p>
+
+                        <h2>4. Non-Refundable Services</h2>
+
+                        <p>Once a paid service has been activated or applied to a listing, it is considered delivered and is non-refundable.</p>
+
+                        <h2>5. Marketplace Disclaimer</h2>
+
+                        <p>Bazar operates as a marketplace platform and is not the seller of any listed items. All transactions for goods or services take place directly between users.</p>
+
+                        <p>Bazar is not responsible for agreements, payments, or disputes between users.</p>
+
+                        <p>By completing a payment, the user agrees to these terms.</p>
 
                     </div>
                 </div>
@@ -166,7 +177,7 @@
                             <div class="footer__box">
                                 <h3 class="footer__title">Company Links</h3>
                                 <div class="footer__links">
-                                    <a href="/cookie-policy" target="_blank">Cookie Policy </a>
+                                    <a href="/cookie-policy" target="_blank">Cookie Policy</a>
                                     <a href="/payments-policy" target="_blank">Payments Policy</a>
                                     <a href="/terms-of-service" target="_blank">Terms of Service</a>
                                 </div>
@@ -246,6 +257,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="accordion__item">
+                                <div class="unfolding accordion__head icon-arrow-d">Payments </div>
+                                <div class="accordion__content">
+                                    <div class="accordion__body">
+                                        <div class="footer__links">
+                                            <a href="/withdrawals" target="_blank">Withdrawals</a>
+                                            <a href="/refund-policy" target="_blank">Refund Policy</a>
+                                            <a href="/payment-methods" target="_blank">Payment Methods</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="networks">
                             <div class="networks__list">
@@ -267,19 +290,15 @@
     </div>
 
 
-
     <!-- OTP Code Modal -->
     <div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
         <div class="modal-card modal-card--otp">
             <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
-
             <div class="otp-icon">
                 <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
             </div>
-
             <h2 class="modal-title otp-title">Enter the code</h2>
             <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
-
             <div class="otp-inputs">
                 <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
                 <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
@@ -289,7 +308,6 @@
                 <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
             </div>
             <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
-
             <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
             <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
         </div>
@@ -299,21 +317,16 @@
     <div class="modal-overlay" id="profileModal">
         <div class="modal-card modal-card--profile">
             <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
-
             <div class="profile-avatar-wrap">
                 <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
             </div>
-
             <h2 class="modal-title profile-modal-title">Almost there!</h2>
             <p class="profile-modal-subtitle">Just a few details</p>
-
             <div class="profile-gender-btns">
                 <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
                 <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
             </div>
-
             <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
-
             <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
         </div>
     </div>
@@ -323,23 +336,20 @@
         <div class="modal-card">
             <button class="modal-close" onclick="closeCreateAccountModal()">&#x2715;</button>
             <h2 class="modal-title">Create an account</h2>
-
             <div class="modal-phone-input">
                 <div class="modal-country-select">
                     <span class="modal-country-code">+44</span>
                 </div>
                 <input class="modal-number-input" type="tel" placeholder="Phone number">
             </div>
-
             <label class="modal-checkbox-label">
                 <input type="checkbox" class="modal-checkbox" id="agreeCheckbox" onchange="toggleSignBtns(this)">
                 <span>I agree to the <a href="/terms-of-service" target="_blank">Terms of Service</a> and the <a href="/privacy-policy" target="_blank">Privacy Policy</a></span>
             </label>
-
             <p id="agreeError" style="color:#e53935;font-size:13px;margin:0 0 10px;display:none">Please agree to the Terms of Service and Privacy Policy</p>
-
-            <div class="modal-btns" id="modalSignBtns" style="justify-content:center">
-                <button class="modal-btn modal-btn--orange" onclick="sendSmsCode()">Sign in by an SMS</button>
+            <div class="modal-btns" id="modalSignBtns">
+                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by an SMS</button>
+                <button class="modal-btn modal-btn--gray" onclick="sendSmsCode()">Sign in by Whatsapp</button>
             </div>
         </div>
     </div>
@@ -361,45 +371,6 @@
           input.value = btn.dataset.city;
           input.dataset.city = btn.dataset.city;
        }
-       function useMyLocation(target) {
-          var dd = document.getElementById(target === 'header' ? 'headerLocDropdown' : 'searchLocDropdown');
-          dd.classList.remove('open');
-          var input = document.getElementById(target === 'header' ? 'headerLocationInput' : 'searchLocationInput');
-          input.value = 'Detecting...';
-          if (!navigator.geolocation) { input.value = ''; alert('Geolocation is not supported by your browser'); return; }
-          navigator.geolocation.getCurrentPosition(function(pos) {
-             var lat = pos.coords.latitude, lng = pos.coords.longitude;
-             var geocoder = new google.maps.Geocoder();
-             geocoder.geocode({location: {lat: lat, lng: lng}}, function(results, status) {
-                if (status === 'OK' && results[0]) {
-                   var locality = '', postalTown = '', area2 = '', area1 = '', country = '';
-                   for (var i = 0; i < results[0].address_components.length; i++) {
-                      var c = results[0].address_components[i];
-                      if (c.types.indexOf('locality') !== -1) locality = c.long_name;
-                      if (c.types.indexOf('postal_town') !== -1) postalTown = c.long_name;
-                      if (c.types.indexOf('administrative_area_level_2') !== -1) area2 = c.long_name;
-                      if (c.types.indexOf('administrative_area_level_1') !== -1) area1 = c.long_name;
-                      if (c.types.indexOf('country') !== -1) country = c.short_name;
-                   }
-                   var parts = [];
-                   var mainCity = postalTown || locality || '';
-                   if (mainCity) parts.push(mainCity);
-                   var region = area2 || area1 || '';
-                   if (region && region !== mainCity) parts.push(region);
-                   if (country) parts.push(country);
-                   var label = parts.join(', ') || results[0].formatted_address;
-                   input.value = label;
-                   input.dataset.city = mainCity || label;
-                } else {
-                   input.value = '';
-                   alert('Could not determine your location');
-                }
-             });
-          }, function() { input.value = ''; alert('Location access denied'); });
-       }
-       window.initMapsForLocation = function() {
-          LocationAutocomplete.init('headerLocationInput', 'headerLocDropdown');
-       };
        (function() {
           fetch('/api/config')
              .then(function(r) { return r.json(); })
@@ -410,50 +381,6 @@
                 s.async = true; s.defer = true;
                 document.head.appendChild(s);
              });
-       })();
-
-       // Heart favorites functionality
-       function updateFavCount() {
-          var count = 0;
-          for(var i = 0; i < localStorage.length; i++) {
-             var key = localStorage.key(i);
-             if(key && key.indexOf('favorite_') === 0 && localStorage.getItem(key) === '1') count++;
-          }
-          var badge = document.getElementById('fav-count');
-          if(badge) {
-             badge.textContent = count;
-             badge.style.display = count > 0 ? 'flex' : 'none';
-          }
-       }
-       (function() {
-          var hearts = document.querySelectorAll('.card__heart');
-          hearts.forEach(function(heart) {
-             var cardId = heart.closest('.card').querySelector('[href*="id="]') ? 
-                         heart.closest('.card').querySelector('[href*="id="]').href.split('id=')[1] : null;
-             
-             if(cardId) {
-                var stored = localStorage.getItem('favorite_' + cardId);
-                if(stored === '1') {
-                   heart.classList.add('active');
-                   heart.classList.remove('icon-heart');
-                   heart.classList.add('icon-heart-full');
-                }
-             }
-             
-             heart.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                heart.classList.toggle('active');
-                var isActive = heart.classList.contains('active');
-                heart.classList.toggle('icon-heart', !isActive);
-                heart.classList.toggle('icon-heart-full', isActive);
-                if(cardId) {
-                   localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
-                }
-                updateFavCount();
-             });
-          });
-          updateFavCount();
        })();
     </script>
 
