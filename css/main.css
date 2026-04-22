@@ -5461,6 +5461,28 @@ p {
 .otp-back-btn:hover {
   border-color: #888;
 }
+.otp-report-btn {
+  display: block;
+  margin: 12px auto 0;
+  background: none;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  color: #888;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.otp-report-btn:hover:not(:disabled) {
+  color: #e53935;
+}
+.otp-report-btn:disabled {
+  color: #aaa;
+  cursor: default;
+  text-decoration: none;
+}
 
 .modal-card--profile {
   text-align: center;

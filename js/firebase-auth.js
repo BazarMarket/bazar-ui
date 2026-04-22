@@ -212,6 +212,8 @@ function toggleSignBtns(checkbox) {
 }
 
 var otpTimerInterval = null;
+var otpResendCount = 0;
+var _bazarOtpPhone = '';
 
 function showPhoneError(msg, isHtml) {
     var input = document.querySelector('.modal-number-input');
@@ -302,12 +304,16 @@ function sendSmsCode() {
 function openOtpModal(phoneNumber) {
     var cleanNum = phoneNumber || '+44' + document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-]/g, '');
     var display = cleanNum.replace(/(\+44)(\d{4})(\d{6})/, '$1 $2 $3');
+    _bazarOtpPhone = cleanNum;
+    otpResendCount = 0;
     document.getElementById('otpPhoneDisplay').textContent = display;
     document.getElementById('otpError').style.display = 'none';
     document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
     document.getElementById('otpModal').classList.add('modal-overlay--active');
     document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
     document.querySelectorAll('.otp-input')[0].focus();
+    var rb = document.getElementById('otpReportBtn');
+    if (rb) rb.style.display = 'none';
     startOtpTimer();
 }
 
@@ -387,6 +393,11 @@ function backToCreateAccount() {
 
 function startOtpTimer() {
     clearInterval(otpTimerInterval);
+    otpResendCount++;
+    if (otpResendCount >= 2) {
+        var rb = document.getElementById('otpReportBtn');
+        if (rb) rb.style.display = 'block';
+    }
     var seconds = 60;
     var btn = document.getElementById('otpResendBtn');
     var timerEl = document.getElementById('otpTimer');
@@ -403,6 +414,16 @@ function startOtpTimer() {
             btn.onclick = function() { sendSmsCode(); };
         }
     }, 1000);
+}
+
+function reportSmsIssue() {
+    var btn = document.getElementById('otpReportBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Reported. We\'ll check it.'; }
+    fetch((window.BAZAR_API || '/api') + '/sms-report', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify({ phone: _bazarOtpPhone })
+    }).catch(function() {});
 }
 
 var selectedGender = 'male';
