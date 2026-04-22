@@ -393,11 +393,6 @@ function backToCreateAccount() {
 
 function startOtpTimer() {
     clearInterval(otpTimerInterval);
-    otpResendCount++;
-    if (otpResendCount >= 2) {
-        var rb = document.getElementById('otpReportBtn');
-        if (rb) rb.style.display = 'block';
-    }
     var seconds = 60;
     var btn = document.getElementById('otpResendBtn');
     var timerEl = document.getElementById('otpTimer');
@@ -412,6 +407,8 @@ function startOtpTimer() {
             btn.disabled = false;
             btn.textContent = 'Get new code';
             btn.onclick = function() { sendSmsCode(); };
+            var rb = document.getElementById('otpReportBtn');
+            if (rb) rb.style.display = 'block';
         }
     }, 1000);
 }
