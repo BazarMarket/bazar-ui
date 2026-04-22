@@ -220,7 +220,13 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
     window.updateFavCount  = updateFavCount;
 
     function initHearts() {
+        var uid = localStorage.getItem('bazar_firebase_uid');
         document.querySelectorAll('.card__heart').forEach(function(btn) {
+            if (!uid) {
+                btn.style.display = 'none';
+                return;
+            }
+            btn.style.display = '';
             var card = btn.closest('.card');
             var link = card ? card.querySelector('a.card-link') : null;
             var href = link ? (link.getAttribute('href') || '') : '';
@@ -241,15 +247,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         e.stopPropagation();
 
         var uid = localStorage.getItem('bazar_firebase_uid');
-        if (!uid) {
-            if (typeof openLoginModal === 'function') {
-                openLoginModal();
-            } else {
-                var modal = document.getElementById('createAccountModal');
-                if (modal) modal.classList.add('modal-overlay--active');
-            }
-            return;
-        }
+        if (!uid) return;
 
         var id = btn.dataset.listingId;
         if (!id) {
