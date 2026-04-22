@@ -221,12 +221,8 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
 
     function initHearts() {
         var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid) return;
         document.querySelectorAll('.card__heart').forEach(function(btn) {
-            if (!uid) {
-                btn.style.display = 'none';
-                return;
-            }
-            btn.style.display = '';
             var card = btn.closest('.card');
             var link = card ? card.querySelector('a.card-link') : null;
             var href = link ? (link.getAttribute('href') || '') : '';

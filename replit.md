@@ -133,10 +133,14 @@ ssh -i .local/ssh/bazar_deploy root@49.13.231.137 "systemctl restart bazar-seo"
 
 ## CSS Versioning
 
-**Текущая версия: main.css?v=95** (обновлять при каждом изменении CSS)
-icon-style.css?v=2
+**Текущие версии CSS:**
+- index.html: main.css?v=121
+- search.html: main.css?v=120
+- card.html: main.css?v=201
+- cabinet.html: main.css?v=119
+- icon-style.css?v=2
 
-Обновлять версию в: dev-index.html, card.html, search.html, cabinet.html
+Обновлять версию в: index.html, card.html, search.html, cabinet.html
 
 ## Responsive Breakpoints (search.html)
 

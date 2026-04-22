@@ -88,6 +88,7 @@ function doLogin() {
     if (phoneMenuEl) phoneMenuEl.textContent = localStorage.getItem('bazar_phone') || '';
     document.getElementById('header-guest').style.display = 'none';
     document.getElementById('header-logged-in').style.display = '';
+    document.body.classList.add('bazar-logged');
 }
 
 function clearUserLocalData() {
@@ -114,6 +115,7 @@ function doLogout() {
     var loggedEl = document.getElementById('header-logged-in');
     if (loggedEl) loggedEl.style.display = 'none';
     if (guestEl) guestEl.style.display = '';
+    document.body.classList.remove('bazar-logged');
 }
 
 function openLoginModal() {
