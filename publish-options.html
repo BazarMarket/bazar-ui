@@ -876,7 +876,7 @@
             if (!adId) { window.location.href = 'cabinet.html#my-ads'; return; }
             var freeBtn = document.getElementById('freeBtn');
             if (freeBtn) { freeBtn.textContent = 'Publishing…'; freeBtn.disabled = true; }
-            fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+            fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
                method: 'POST',
                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                body: JSON.stringify({ firebase_uid: uid || '', plan: 'free' })
@@ -902,7 +902,7 @@
          if (btn) { btn.textContent = 'Redirecting…'; btn.disabled = true; }
          var days  = currentDays[plan]  || 14;
          var price = currentPrice[plan] || (plan === 'pro' ? '7.00' : '14.00');
-         fetch('https://admin.bazar.uk/api/stripe/checkout/plan', {
+         fetch(window.BAZAR_API + '/stripe/checkout/plan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ firebase_uid: uid, plan: plan, ad_id: adId, days: days, amount: parseFloat(price) })
@@ -934,7 +934,7 @@
          var orig  = btn ? btn.textContent : '';
          if (btn) { btn.textContent = 'Publishing…'; btn.disabled = true; }
 
-         fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+         fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ firebase_uid: uid, plan: plan })
@@ -963,7 +963,7 @@
          function _autoActivateIfPaid(sPlan) {
             sPlan = (sPlan || '').toLowerCase();
             if ((sPlan === 'pro' || sPlan === 'vip') && adId && uid) {
-               fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+               fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                   body: JSON.stringify({ firebase_uid: uid, plan: sPlan })
@@ -977,7 +977,7 @@
 
          /* Always fetch from API for accurate plan/days */
          if (uid) {
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                .then(function(r) { return r.json(); })
                .then(function(d) {
                   var sPlan = (d.bazar_plan || d.plan || 'free').toLowerCase();

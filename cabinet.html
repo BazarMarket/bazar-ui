@@ -1478,7 +1478,7 @@
             return;
         }
 
-        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 var active = (d.data || []).filter(function(a) { return a.status === 'active'; }).length;
@@ -1488,7 +1488,7 @@
             })
             .catch(function() { if (adsEl && cached.ads === undefined) adsEl.innerHTML = '0 <span>ads</span>'; });
 
-        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/views/monthly', { headers: { 'Accept': 'application/json' } })
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/views/monthly', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 var v = d.views || 0;
@@ -1498,7 +1498,7 @@
             })
             .catch(function() { if (viewsEl && cached.views === undefined) viewsEl.innerHTML = '0 <span>views</span>'; });
 
-        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 var days = parseInt(d.days_left || 0, 10);
@@ -1529,7 +1529,7 @@
             return;
         }
         if (empty) empty.style.display = 'none';
-        var apiBase = 'https://admin.bazar.uk/api/properties/';
+        var apiBase = window.BAZAR_API + '/properties/';
         ids.forEach(function(id) {
             /* Show skeleton while loading */
             var card = document.createElement('div');
@@ -1594,7 +1594,7 @@
         if (!table) return;
         var uid = localStorage.getItem('bazar_firebase_uid');
         if (!uid) return;
-        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
             .then(function(d) { _doRenderAds(d.data || []); })
             .catch(function() {});
@@ -1673,7 +1673,7 @@
         var uid  = localStorage.getItem('bazar_firebase_uid') || '';
         var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
         var apiBase = (window.location.hostname === 'www.bazar.uk')
-            ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
+            ? window.BAZAR_API + '/stripe/checkout/boost'
             : '/api/boost-checkout';
         fetch(apiBase, {
             method: 'POST',
@@ -1696,7 +1696,7 @@
 
         if (action === 'delete') {
             if (!confirm('Delete this ad? This cannot be undone.')) return;
-            fetch('https://admin.bazar.uk/api/properties/' + adId + '/delete', {
+            fetch(window.BAZAR_API + '/properties/' + adId + '/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({ firebase_uid: uid })
@@ -1717,7 +1717,7 @@
 
         if (action === 'deactivate' || action === 'activate') {
             var newStatus = action === 'deactivate' ? 'inactive' : 'active';
-            fetch('https://admin.bazar.uk/api/properties/' + adId + '/set-status', {
+            fetch(window.BAZAR_API + '/properties/' + adId + '/set-status', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({ firebase_uid: uid, status: newStatus })
@@ -1821,7 +1821,7 @@
         if (plan === 'pro' || plan === 'vip') {
             var uid = localStorage.getItem('bazar_firebase_uid');
             if (uid) {
-                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                     .then(function(r) { return r.json(); })
                     .then(function(d) {
                         var daysLeft = parseInt(d.pro_days_left || d.vip_days_left || d.days_left || 0, 10);
@@ -1898,7 +1898,7 @@
 
         var uid = localStorage.getItem('bazar_firebase_uid');
         if (uid) {
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     if (d.exists) {
@@ -1952,7 +1952,7 @@
         var btn = document.getElementById(btnId);
         var orig = btn ? btn.textContent : 'Top Up';
         if (btn) { btn.textContent = 'Redirecting...'; btn.disabled = true; }
-        fetch('https://admin.bazar.uk/api/stripe/checkout/deposit', {
+        fetch(window.BAZAR_API + '/stripe/checkout/deposit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ firebase_uid: uid, amount: amount })
@@ -2144,7 +2144,7 @@
                 if (uid) {
                     var payload = { email: email, address: address };
                     if (fullName) payload.name = fullName;
-                    fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                    fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(payload)
@@ -2199,7 +2199,7 @@
             if (avatarInput) avatarInput.value = '';
             var uid = localStorage.getItem('bazar_firebase_uid');
             if (uid) {
-                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ avatar: null })
@@ -2227,7 +2227,7 @@
                     applyAvatar(dataUrl);
                     var uid = localStorage.getItem('bazar_firebase_uid');
                     if (uid) {
-                        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid), {
+                        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
                             method: 'PATCH',
                             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                             body: JSON.stringify({ avatar: dataUrl })
@@ -2281,7 +2281,7 @@
                 saveLocalTxn('credit', 'Deposit', 'Wallet Top-Up', depositAmt, 'paid');
                 updateWalletDisplay();
                 if (sessionId2) {
-                    fetch('https://admin.bazar.uk/api/stripe/checkout/verify-deposit/' + sessionId2, {
+                    fetch(window.BAZAR_API + '/stripe/checkout/verify-deposit/' + sessionId2, {
                         headers: { 'Accept': 'application/json' }
                     }).catch(function() {});
                 }
@@ -2305,7 +2305,7 @@
                 if (paidAdId) {
                     var _uid = localStorage.getItem('bazar_firebase_uid') || '';
                     function _activateAd(attemptsLeft) {
-                        fetch('https://admin.bazar.uk/api/properties/' + paidAdId + '/activate-plan', {
+                        fetch(window.BAZAR_API + '/properties/' + paidAdId + '/activate-plan', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                             body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan })
@@ -2332,7 +2332,7 @@
             }
             function _fetchPlanFromCustomerApi(uid, attempts) {
                 if (!uid) return;
-                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                     .then(function(r) { return r.json(); })
                     .then(function(d) {
                         if (d.exists && d.plan && d.plan !== 'free') {
@@ -2348,7 +2348,7 @@
 
             var _payUid = localStorage.getItem('bazar_firebase_uid');
             if (sessionId) {
-                fetch('https://admin.bazar.uk/api/stripe/checkout/verify/' + sessionId, {
+                fetch(window.BAZAR_API + '/stripe/checkout/verify/' + sessionId, {
                     headers: { 'Accept': 'application/json' }
                 })
                 .then(function(r) { return r.json(); })
@@ -2425,7 +2425,7 @@
 
         var dur = window._cabDur[plan] || (plan === 'pro' ? { days: 14, pence: 700 } : { days: 14, pence: 1400 });
 
-        fetch('https://admin.bazar.uk/api/stripe/checkout/plan', {
+        fetch(window.BAZAR_API + '/stripe/checkout/plan', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ firebase_uid: uid, plan: plan, days: dur.days, amount_pence: dur.pence })
@@ -2541,7 +2541,7 @@
             return;
         }
 
-        fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid) + '/payments')
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/payments')
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 var apiTxns = data.transactions || [];
@@ -2815,7 +2815,7 @@ function execDeactivate() {
     var isDeactivating = btn.dataset.active !== '1';
     closeDangerModal();
     if (!uid) return;
-    fetch('https://admin.bazar.uk/api/customers/' + uid + '/deactivate', {
+    fetch(window.BAZAR_API + '/customers/' + uid + '/deactivate', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ deactivate: isDeactivating })
@@ -2842,7 +2842,7 @@ function execDeleteAccount() {
         clearLocalAndRedirect();
         return;
     }
-    fetch('https://admin.bazar.uk/api/customers/' + uid, {
+    fetch(window.BAZAR_API + '/customers/' + uid, {
         method: 'DELETE',
         headers: { 'Accept': 'application/json' }
     })

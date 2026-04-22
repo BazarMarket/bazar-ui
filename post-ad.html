@@ -774,7 +774,7 @@
    </style>
    <script>
       (function() {
-         fetch('https://admin.bazar.uk/api/is-admin', { credentials: 'include' })
+         fetch(window.BAZAR_API + '/is-admin', { credentials: 'include' })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                if (!d.admin) return;
@@ -2747,7 +2747,7 @@
          source.value = '';
       }
 
-      var API_URL = 'https://admin.bazar.uk/api/properties';
+      var API_URL = window.BAZAR_API + '/properties';
 
       function getSelectVal(id) {
          var el = document.getElementById(id);
@@ -2821,7 +2821,7 @@
       function _goAfterPublish(adId) {
          var uid = localStorage.getItem('bazar_firebase_uid') || '';
          function _activateAndGo(plan) {
-            fetch('https://admin.bazar.uk/api/properties/' + adId + '/activate-plan', {
+            fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
                method: 'POST',
                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                body: JSON.stringify({ firebase_uid: uid, plan: plan })
@@ -2839,7 +2839,7 @@
          }
          // Always fetch fresh plan from server so VIP/PRO users skip the plan page
          if (uid) {
-            fetch('https://admin.bazar.uk/api/customers/' + uid, {
+            fetch(window.BAZAR_API + '/customers/' + uid, {
                headers: { 'Accept': 'application/json' }
             })
             .then(function(r) { return r.ok ? r.json() : null; })
@@ -3696,7 +3696,7 @@
                });
             }
 
-            fetch('https://admin.bazar.uk/api/properties/' + adId + '/update', {
+            fetch(window.BAZAR_API + '/properties/' + adId + '/update', {
                method: 'POST',
                body: formData,
                headers: { 'Accept': 'application/json' }
@@ -3984,7 +3984,7 @@
          if (pageTitle) pageTitle.textContent = 'Edit Ad';
          document.title = 'Edit Ad – Bazar';
 
-         fetch('https://admin.bazar.uk/api/properties/' + adId)
+         fetch(window.BAZAR_API + '/properties/' + adId)
          .then(function(r) { return r.json(); })
          .then(function(d) {
             _editAdData = d;
@@ -4026,7 +4026,7 @@
       }
 
       (function() {
-         fetch('https://admin.bazar.uk/api/is-admin', { credentials: 'include' })
+         fetch(window.BAZAR_API + '/is-admin', { credentials: 'include' })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                if (!d.admin) return;

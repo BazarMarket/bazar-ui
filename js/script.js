@@ -1,3 +1,7 @@
+window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.location.hostname === 'bazar.uk')
+    ? 'https://admin.bazar.uk/api'
+    : '/api';
+
 window.onload = function () {
 
 
@@ -1187,7 +1191,7 @@ window.onload = function () {
         if (plan === 'pro' || plan === 'vip') {
             var uid = localStorage.getItem('bazar_firebase_uid');
             if (uid) {
-                fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+                fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                     .then(function(r) { return r.json(); })
                     .then(function(d) {
                         var days = parseInt(d.pro_days_left || d.vip_days_left || d.days_left || 0, 10);

@@ -1,3 +1,7 @@
+window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.location.hostname === 'bazar.uk')
+    ? 'https://admin.bazar.uk/api'
+    : '/api';
+
 var firebaseConfig = {
     apiKey: "AIzaSyDoE8UOGnc4IXprZG-TEce514JI1cwo0Z4",
     authDomain: "bazar-code-auth.firebaseapp.com",
@@ -325,7 +329,7 @@ function verifyOtpCode() {
             if (uid)   localStorage.setItem('bazar_firebase_uid', uid);
 
             // Проверяем: есть ли аккаунт в базе?
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.exists) {
@@ -455,7 +459,7 @@ function finishRegistration() {
         localStorage.setItem('bazar_firebase_uid', firebaseUser.uid);
     }
     if (uid) {
-        fetch('https://admin.bazar.uk/api/customers', {
+        fetch(window.BAZAR_API + '/customers', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({

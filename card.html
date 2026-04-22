@@ -1221,7 +1221,7 @@
      var uid  = localStorage.getItem('bazar_firebase_uid') || '';
      var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
      var apiBase = window.location.hostname.endsWith('bazar.uk')
-       ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
+       ? window.BAZAR_API + '/stripe/checkout/boost'
        : '/api/boost-checkout';
      var btn = document.querySelector('.card-head__boost');
      if (btn) { btn.textContent = 'Processing…'; btn.style.pointerEvents = 'none'; }

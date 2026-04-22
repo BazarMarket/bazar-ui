@@ -1527,7 +1527,7 @@
 
         /* Async: load photo from API for ads that don't have a cached thumbnail */
         needsApiPhoto.forEach(function(adId) {
-            fetch('https://admin.bazar.uk/api/properties/' + adId, { headers: { 'Accept': 'application/json' } })
+            fetch(window.BAZAR_API + '/properties/' + adId, { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.ok ? r.json() : null; })
                 .then(function(d) {
                     if (!d) return;
@@ -1554,7 +1554,7 @@
         style.id = 'admin-only-hide';
         style.textContent = '[data-admin-only]{display:none!important}';
         document.head.appendChild(style);
-        fetch('https://admin.bazar.uk/api/is-admin', {credentials: 'include'})
+        fetch(window.BAZAR_API + '/is-admin', {credentials: 'include'})
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 if (d.admin) {

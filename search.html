@@ -287,7 +287,7 @@
    </style>
    <script>
       (function() {
-         fetch('https://admin.bazar.uk/api/is-admin', { credentials: 'include' })
+         fetch(window.BAZAR_API + '/is-admin', { credentials: 'include' })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                if (!d.admin) return;
@@ -2687,7 +2687,7 @@
      var uid  = localStorage.getItem('bazar_firebase_uid') || '';
      var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
      var apiBase = (window.location.hostname === 'www.bazar.uk')
-       ? 'https://admin.bazar.uk/api/stripe/checkout/boost'
+       ? window.BAZAR_API + '/stripe/checkout/boost'
        : '/api/boost-checkout';
      fetch(apiBase, {
        method: 'POST',

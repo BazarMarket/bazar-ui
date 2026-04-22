@@ -1,3 +1,7 @@
+window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.location.hostname === 'bazar.uk')
+    ? 'https://admin.bazar.uk/api'
+    : '/api';
+
 (function () {
     /* Two-tone notification beep (Web Audio API, no file needed) */
     function playMsgSound() {
@@ -50,7 +54,7 @@
         /* Fetch fresh data from API */
         var uid = localStorage.getItem('bazar_firebase_uid') || '';
         if (uid) {
-            fetch('https://admin.bazar.uk/api/customers/' + encodeURIComponent(uid))
+            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.ok ? r.json() : {}; })
                 .then(function(d) {
                     if (!d.exists) return;

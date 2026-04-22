@@ -31,6 +31,11 @@ A static HTML/CSS/JS classified ads marketplace website UI.
    - **bootstrap/app.php** (`/var/www/bazar-dev/`): trustProxies(at:'*') + validateCsrfTokens(except livewire-*/update) для dev.bazar.uk
    - **ВАЖНО**: НЕ запускать `php artisan config:cache` на dev — ломает FPM pool env vars
    - **АГЕНТ НИКОГДА не трогает /var/www/bazar-prod/.env и не меняет прод-конфиг без явного запроса**
+   - **window.BAZAR_API** (с апрель 2026): все JS-файлы используют `window.BAZAR_API` вместо хардкода `admin.bazar.uk/api`.
+     Определено в `js/script.js`, `js/firebase-auth.js`, `js/firebase-auth-v2.js`, `js/header-auth.js`:
+     - На `www.bazar.uk` / `bazar.uk` → `'https://admin.bazar.uk/api'`
+     - На dev.bazar.uk → `'/api'` (→ Python:5001 → 127.0.0.1:9001 → bazar_prod)
+     Это обеспечивает полную изоляцию dev от прод-данных.
 
 4. **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 
