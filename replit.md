@@ -134,11 +134,19 @@ ssh -i .local/ssh/bazar_deploy root@49.13.231.137 "systemctl restart bazar-seo"
 ## CSS Versioning
 
 **Текущие версии CSS/JS:**
-- index.html: main.css?v=121, header-auth.js?v=12
-- search.html: main.css?v=120, header-auth.js?v=12
-- card.html: main.css?v=201, header-auth.js?v=12
-- cabinet.html: main.css?v=119, header-auth.js?v=12
+- index.html: main.css?v=121, header-auth.js?v=12, error-logger.js?v=1
+- search.html: main.css?v=120, header-auth.js?v=12, error-logger.js?v=1
+- card.html: main.css?v=201, header-auth.js?v=12, error-logger.js?v=1
+- cabinet.html: main.css?v=119, header-auth.js?v=12, error-logger.js?v=1
 - icon-style.css?v=2
+
+**System Errors (мониторинг ошибок):**
+- Таблица: `system_errors` в bazar_prod (поля: type, message, page, user_agent, phone, status)
+- API: POST https://admin.bazar.uk/api/log-error (публичный, CORS разрешён для www.bazar.uk)
+- Фронтенд: js/error-logger.js — ловит window.onerror, unhandledrejection, Firebase/Stripe ошибки
+- Лимит: 10 ошибок на сессию, игнорирует browser-extension ошибки
+- Метод window.bzLogError(type, message) — доступен глобально для ручного логирования
+- Filament раздел: System Errors в группе "System Errors" в admin.bazar.uk
 
 Обновлять версию в: index.html, card.html, search.html, cabinet.html
 

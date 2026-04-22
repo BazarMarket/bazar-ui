@@ -256,6 +256,7 @@ function doSendFirebaseSms(phoneNumber, smsBtn) {
         })
         .catch(function(error) {
             console.error('SMS error code:', error.code, 'message:', error.message);
+            if (window.bzLogError) window.bzLogError('firebase', 'SMS send: ' + (error.code || error.message));
             smsBtn.textContent = 'Sign in by an SMS';
             smsBtn.disabled = false;
             if (error.code === 'auth/invalid-phone-number') {
@@ -369,6 +370,7 @@ function verifyOtpCode() {
         })
         .catch(function(error) {
             console.error('Verify error:', error);
+            if (window.bzLogError) window.bzLogError('firebase', 'OTP verify: ' + (error.code || error.message));
             var errEl = document.getElementById('otpError');
             errEl.textContent = 'Wrong code. Please try again.';
             errEl.style.display = 'block';
