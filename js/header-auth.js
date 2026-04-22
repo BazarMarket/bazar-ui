@@ -217,10 +217,69 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
     }
 
     window.updatePlanBadge = applyPlanBadge;
+    window.updateFavCount  = updateFavCount;
+
+    function initHearts() {
+        document.querySelectorAll('.card__heart').forEach(function(btn) {
+            var card = btn.closest('.card');
+            var link = card ? card.querySelector('a.card-link') : null;
+            var href = link ? (link.getAttribute('href') || '') : '';
+            var match = href.match(/[?&]id=(\d+)/);
+            var id = match ? match[1] : href.replace(/[^0-9]/g, '');
+            if (!id) return;
+            btn.dataset.listingId = id;
+            if (localStorage.getItem('favorite_' + id) === '1') {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.card__heart');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid) {
+            if (typeof openLoginModal === 'function') {
+                openLoginModal();
+            } else {
+                var modal = document.getElementById('createAccountModal');
+                if (modal) modal.classList.add('modal-overlay--active');
+            }
+            return;
+        }
+
+        var id = btn.dataset.listingId;
+        if (!id) {
+            var card = btn.closest('.card');
+            var link = card ? card.querySelector('a.card-link') : null;
+            var href = link ? (link.getAttribute('href') || '') : '';
+            var match = href.match(/[?&]id=(\d+)/);
+            id = match ? match[1] : href.replace(/[^0-9]/g, '');
+            if (id) btn.dataset.listingId = id;
+        }
+        if (!id) return;
+
+        var key = 'favorite_' + id;
+        if (localStorage.getItem(key) === '1') {
+            localStorage.removeItem(key);
+            btn.classList.remove('active');
+        } else {
+            localStorage.setItem(key, '1');
+            btn.classList.add('active');
+        }
+        updateFavCount();
+    }, true);
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', updateHeader);
+        document.addEventListener('DOMContentLoaded', function() {
+            updateHeader();
+            initHearts();
+        });
     } else {
         updateHeader();
+        initHearts();
     }
 })();
