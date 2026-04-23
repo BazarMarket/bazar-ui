@@ -527,7 +527,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'Long_rent': 'to rent', 'Short_rent': 'to rent',
         }.get(listing_type, 'for sale')
         cat_label  = f'Property {action_label}'
-        type_label = prop_type.replace('_', ' ').title() if prop_type else 'Property'
+        _type_label_map = {'room': 'Rooms'}
+        type_label = _type_label_map.get(prop_type.lower() if prop_type else '', prop_type.replace('_', ' ').title() if prop_type else 'Property')
 
         # ── Breadcrumb category URL (depends on listing_type and property_type) ──
         _lt_norm = listing_type.lower() if listing_type else 'sale'
