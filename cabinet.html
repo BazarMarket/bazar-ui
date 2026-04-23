@@ -2856,16 +2856,18 @@ function loadTickets() {
                 return;
             }
             if (list) { list.style.display = 'flex'; renderTicketList(tickets, list); }
-            // Badge on nav item
-            var needHuman = tickets.filter(function(t) { return t.status === 'need_human' || t.status === 'open'; }).length;
-            var navBadge = document.getElementById('navTickets');
-            if (navBadge && needHuman > 0) {
-                if (!navBadge.querySelector('.cab-nav__badge')) {
+            // Badge on nav item — count tickets with unread replies for client
+            var unreadReplies = tickets.filter(function(t) { return t.status === 'replied' || t.status === 'ai_answered'; }).length;
+            var navTicketsEl = document.getElementById('navTickets');
+            if (navTicketsEl) {
+                var existingBadge = navTicketsEl.querySelector('.cab-nav__badge');
+                if (existingBadge) existingBadge.remove();
+                if (unreadReplies > 0) {
                     var badge = document.createElement('span');
                     badge.className = 'cab-nav__badge';
-                    badge.style.cssText = 'background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:6px;';
-                    badge.textContent = needHuman;
-                    navBadge.appendChild(badge);
+                    badge.style.background = '#ef4444';
+                    badge.textContent = unreadReplies;
+                    navTicketsEl.appendChild(badge);
                 }
             }
         })
