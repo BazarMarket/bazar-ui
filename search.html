@@ -2369,7 +2369,8 @@
                 v:    ad.views || 0,
                 stk:  stk,
                 cc:   cc,
-                cy:   ad.city ? ad.city.toUpperCase() : 'UK'
+                cy:   ad.city ? ad.city.toUpperCase() : 'UK',
+                lt:   ad.listing_type || ''
               });
             });
             /* Prepend API items (newest first) before static demo items */
@@ -2408,7 +2409,8 @@
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
                       cc: ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '',
-                      cy: ad.city ? ad.city.toUpperCase() : 'UK'
+                      cy: ad.city ? ad.city.toUpperCase() : 'UK',
+                      lt: ad.listing_type || ''
                     });
                   });
                   if (newItems.length) {
@@ -2505,10 +2507,15 @@
         window._bazarCurrentType = type;
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
+        var _modeToLt = { 'sale': 'sale', 'rent': 'long_rent', 'short-rent': 'short_rent' };
+        var _ltFilter = _modeToLt[currentMode];
+        var filtered = _ltFilter
+          ? items.filter(function(item) { return !item.lt || item.lt === _ltFilter; })
+          : items;
         var listBody = document.querySelector('.list-products__body');
-        if (listBody) listBody.innerHTML = items.map(buildListProduct).join('');
+        if (listBody) listBody.innerHTML = filtered.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
-        if (gridBody) gridBody.innerHTML = items.map(buildGridCard).join('');
+        if (gridBody) gridBody.innerHTML = filtered.map(buildGridCard).join('');
       }
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
