@@ -594,7 +594,11 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             (cat_label, _cat_rel_url),
         ]
         if city and city_slug_url:
-            listing_breadcrumbs.append((city, f'/property/{city_slug_url}'))
+            if _lt_norm in ('long_rent', 'short_rent'):
+                _city_bc_url = f'/property/for-rent/{city_slug_url}'
+            else:
+                _city_bc_url = f'/property/for-sale/{city_slug_url}'
+            listing_breadcrumbs.append((city, _city_bc_url))
         listing_breadcrumbs.append((type_label, None))
 
         seo['ssr'] = {
