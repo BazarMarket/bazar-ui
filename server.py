@@ -239,6 +239,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/shop/for-sale  →  property_subtype_sale
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-sale':
             return 'property_subtype_sale', {'subtype': parts[1]}
+        # /property/house/for-rent  →  property_subtype_rent
+        if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-rent':
+            return 'property_subtype_rent', {'subtype': parts[1]}
         # /property/shop/short-term  →  property_subtype_modifier
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'short-term':
             return 'property_subtype_modifier', {'subtype': parts[1]}
@@ -343,7 +346,7 @@ FLATS_POPULAR_CITIES = [
     ('Cardiff',      'cardiff'),
 ]
 
-PROPERTY_SUBTYPES = {'shop', 'restaurant', 'industrial', 'office', 'hotel'}
+PROPERTY_SUBTYPES = {'shop', 'restaurant', 'industrial', 'office', 'hotel', 'house'}
 
 PROPERTY_SUBTYPE_SEO = {
     'shop': {
@@ -391,6 +394,15 @@ PROPERTY_SUBTYPE_SEO = {
                         'Suitable for investors and operators in the hospitality industry.'),
         'intro_short': ('Find short-term hotel and hospitality property lets across the UK. '
                         'Ideal for seasonal operators and event-based businesses.'),
+    },
+    'house': {
+        'label':       'Houses',
+        'h1':          'Houses for Rent in the UK',
+        'h1_short':    'Short-Term Houses for Rent in the UK',
+        'intro':       ('Browse houses for long-term rent across the UK. '
+                        'Find detached, semi-detached, terraced houses, cottages, and villas.'),
+        'intro_short': ('Find short-term houses for rent across the UK. '
+                        'Ideal for temporary stays, family relocations, and flexible living.'),
     },
 }
 
@@ -443,6 +455,12 @@ PROPERTY_SUBTYPE_SALE_SEO = {
         'h1':     'Hotels for Sale in the UK',
         'intro':  ('Browse hotels and hospitality businesses for sale across the UK. '
                    'Ideal for investors and operators in the hospitality industry.'),
+    },
+    'house': {
+        'label':  'Houses',
+        'h1':     'Houses for Sale in the UK',
+        'intro':  ('Browse houses for sale across the UK. Find detached, semi-detached, '
+                   'terraced houses, cottages, bungalows, and villas in all major UK towns and cities.'),
     },
 }
 
@@ -1122,6 +1140,68 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             ],
             'related_links': [(f'Looking for long-term options?', f'Browse all {label.lower()} for rent', f'/property/{subtype}')],
             'type':        'category',
+        }
+        return seo
+
+    # ── /property/{subtype}/for-rent (e.g. /property/house/for-rent) ──────────
+    elif page_type == 'property_subtype_rent':
+        subtype   = params.get('subtype', '')
+        data      = PROPERTY_SUBTYPE_SEO.get(subtype, {})
+        label     = data.get('label', subtype.title())
+        h1        = data.get('h1', f'{label} for Rent in the UK')
+        intro     = data.get('intro', f'Browse {label.lower()} for rent across the UK on Bazar.')
+        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}/for-rent'
+        desc      = intro[:160]
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1,
+                 "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2,
+                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property/for-rent'},
+                {"@type": "ListItem", "position": 3,
+                 "name": h1, "item": canonical},
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "CollectionPage",
+                    "name": h1,
+                    "description": desc,
+                    "url": canonical,
+                    "breadcrumb": breadcrumb_schema,
+                },
+                breadcrumb_schema,
+            ]
+        }
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
+        city_links = [
+            (lbl, f'/property/{subtype}/for-rent/{slug}')
+            for lbl, slug in FLATS_POPULAR_CITIES
+        ]
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Rent', '/property/for-rent'),
+                (h1, None),
+            ],
+            'city_links':  city_links,
+            'cat_label':   label,
+            'related_links': [
+                ('Looking for short-term options?', f'Browse short-term {label.lower()} for rent', f'/property/{subtype}/short-term'),
+                ('Looking to buy instead?', f'Browse {label.lower()} for sale', f'/property/{subtype}/for-sale'),
+            ],
+            'type': 'category',
         }
         return seo
 

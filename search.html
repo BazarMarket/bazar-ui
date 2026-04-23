@@ -2611,8 +2611,9 @@
 
          var _pathToKey = (function() {
             if (pathCat === 'property') {
-               if (pathLast === 'short-term' || pathSub === 'for-rent' && pathLast === 'short-term') return 'short-rent';
-               if (pathSub === 'for-rent') return 'rent';
+               if (pathLast === 'short-term') return 'short-rent';
+               if (pathSub === 'for-rent' || pathLast === 'for-rent') return 'rent';
+               if (pathSub === 'for-sale' || pathLast === 'for-sale') return 'sale';
                return 'sale';
             }
             if (pathCat === 'rooms') return pathLast === 'short-term' ? 'short-rent' : 'rent';
@@ -2656,6 +2657,8 @@
             var pathAutoType = null;
             if (pathCat === 'rooms') pathAutoType = 'Rooms';
             if (pathCat === 'flats') pathAutoType = 'Flats';
+            var _propSubtypeToType = { 'house': 'House', 'shop': 'Shop', 'office': 'Office', 'restaurant': 'Restaurant', 'industrial': 'Industrial', 'hotel': 'Hotel' };
+            if (pathCat === 'property' && _propSubtypeToType[pathSub]) pathAutoType = _propSubtypeToType[pathSub];
             if (pathAutoType && !type) {
                var autoPanel = document.getElementById('cfTypePanel');
                if (autoPanel) {
