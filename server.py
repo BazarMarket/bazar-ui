@@ -32,6 +32,7 @@ SITE_ROOT          = os.environ.get('BAZAR_SITE_ROOT', os.path.dirname(os.path.a
 SEO_CACHE_TTL      = 300  # seconds (5 min)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 STRIPE_SECRET_KEY   = os.environ.get('STRIPE_SECRET_KEY', '')
+GEMINI_API_KEY      = os.environ.get('GEMINI_API_KEY', '')
 CHAT_DB             = os.path.join(SITE_ROOT, 'bazar_chat.db')
 
 # ── Chat DB init ──────────────────────────────────────────────────────────────
@@ -78,6 +79,63 @@ def _init_chat_db():
         conn.close()
 
 _init_chat_db()
+
+# ── Gemini AI for ticket auto-reply ───────────────────────────────────────────
+_BAZAR_SYSTEM_PROMPT = """You are a helpful support assistant for Bazar (www.bazar.uk) — a UK online marketplace specialising in property listings (for sale, long-term rent, short-term rent) as well as other goods.
+
+Your job is to answer customer support questions clearly and concisely. Here is key knowledge about Bazar:
+
+POSTING ADS:
+- Free ads can be posted in "My Ads" → "+ New Ad". Fill in category, title, description, price, photos.
+- Ads are reviewed and go live within a few hours.
+
+PROMOTIONS:
+- VIP (red badge): puts your ad at top of search results and category pages. Paid monthly from wallet.
+- TOP (orange badge): similar to VIP but slightly lower placement. Paid monthly from wallet.
+
+PAYMENTS & WALLET:
+- Top up balance in "My Payments" tab — choose preset amount or enter custom, select card, click "Top Up". Funds appear instantly.
+- Withdraw in "My Payments" → Withdraw tab. Enter amount and bank details. Takes 1–3 business days.
+
+SUBSCRIPTIONS:
+- Monthly subscription plans available under "My Subscriptions".
+
+ACCOUNT:
+- Login issues: try "Log out from all devices" in My Settings.
+- Email support: info@bazar.uk (response within 24–48 hours).
+
+RULES:
+- Be concise and professional. Use plain English.
+- If you cannot answer confidently or the issue requires account-level access or human judgment, end your response with exactly the tag: [NEED_HUMAN]
+- Do NOT include [NEED_HUMAN] if you can answer the question adequately.
+- Never make up pricing or policies you are unsure about — say so and include [NEED_HUMAN] instead.
+"""
+
+def _gemini_reply(subject: str, message: str) -> tuple[str, bool]:
+    """Call Gemini 1.5 Flash. Returns (reply_text, needs_human)."""
+    if not GEMINI_API_KEY:
+        return ('', True)
+    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}'
+    payload = {
+        'systemInstruction': {'parts': [{'text': _BAZAR_SYSTEM_PROMPT}]},
+        'contents': [{'role': 'user', 'parts': [{'text': f'Subject: {subject}\n\n{message}'}]}],
+        'generationConfig': {'temperature': 0.4, 'maxOutputTokens': 600},
+    }
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            result = json.loads(resp.read())
+        text = result['candidates'][0]['content']['parts'][0]['text'].strip()
+        needs_human = '[NEED_HUMAN]' in text
+        clean_text = text.replace('[NEED_HUMAN]', '').strip()
+        return (clean_text, needs_human)
+    except Exception as exc:
+        return ('', True)
 
 # ── In-memory SEO cache ───────────────────────────────────────────────────────
 _cache: dict = {}
@@ -1809,6 +1867,59 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     conn.commit()
                     conn.close()
             self._send_json(200, {'ok': True}); return
+
+        # ── /api/tickets (create ticket + Gemini AI reply) ───────────────────
+        path_only0 = self.path.split('?')[0]
+        if path_only0 == '/api/tickets':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            subject = data.get('subject', '').strip()
+            message = data.get('message', '').strip()
+            if not subject or not message:
+                self._send_json(422, {'error': 'subject and message required'}); return
+            # 1. Create ticket in Laravel
+            try:
+                create_req = urllib.request.Request(
+                    f'{LARAVEL_API_BASE}/tickets',
+                    data=json.dumps(data).encode(),
+                    headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    method='POST',
+                )
+                with urllib.request.urlopen(create_req, timeout=10) as r:
+                    ticket_resp = json.loads(r.read())
+            except Exception as e:
+                self._send_json(500, {'error': 'failed to create ticket', 'detail': str(e)}); return
+            ticket = ticket_resp.get('ticket', {})
+            ticket_id = ticket.get('id')
+            if not ticket_id:
+                self._send_json(500, {'error': 'no ticket id returned'}); return
+            # 2. Call Gemini AI
+            ai_text, needs_human = _gemini_reply(subject, message)
+            new_status = 'need_human' if needs_human or not ai_text else 'ai_answered'
+            # 3. Save AI reply (or mark need_human) in Laravel
+            try:
+                status_payload = {
+                    'status': new_status,
+                    'ai_confidence': 'low' if needs_human else 'high',
+                }
+                if ai_text:
+                    status_payload['ai_message'] = ai_text
+                status_req = urllib.request.Request(
+                    f'{LARAVEL_API_BASE}/tickets/{ticket_id}/status',
+                    data=json.dumps(status_payload).encode(),
+                    headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    method='POST',
+                )
+                with urllib.request.urlopen(status_req, timeout=10) as r:
+                    updated = json.loads(r.read())
+                ticket = updated.get('ticket', ticket)
+            except Exception:
+                pass
+            self._send_json(201, {'ok': True, 'ticket': ticket}); return
 
         # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
         path_only = self.path.split('?')[0]

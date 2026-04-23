@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if ((tabId === 'settings' || tabId === 'cab-settings') && typeof populateProfileStats === 'function') {
             populateProfileStats();
         }
+        if (tabId === 'tickets' && typeof loadTickets === 'function') {
+            loadTickets();
+        }
     }
 
     window._cabSwitchTab = switchTab;

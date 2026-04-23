@@ -273,6 +273,7 @@
                 <p class="cab-nav__group-label">System</p>
                 <div class="cab-nav__item icon-win-setting" data-tab="cab-settings">My Settings</div>
                 <div class="cab-nav__item icon-question" data-tab="support">Support</div>
+                <div class="cab-nav__item icon-win-faq" data-tab="tickets" id="navTickets">My Tickets</div>
 
                 <div class="cab-nav__divider"></div>
                 <div class="cab-nav__darkmode">
@@ -1201,6 +1202,65 @@
                     <div class="cab-faq-item">
                         <div class="cab-faq-head"><p class="cab-faq-question">Is posting an ad free?</p><span class="cab-faq-arrow icon-arrow-d"></span></div>
                         <div class="cab-faq-body"><p class="cab-faq-answer">Yes — standard ads are completely free. You only pay for optional promotions (VIP, TOP) or premium subscription plans.</p></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ══════════════ MY TICKETS ══════════════ -->
+            <div class="cab-panel" data-panel="tickets">
+
+                <div class="cab-panel__top" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                    <h1 class="cab-panel__title">My Tickets</h1>
+                    <button class="btn btn_grad" onclick="openNewTicketModal()" style="display:flex;align-items:center;gap:6px;padding:10px 20px;font-size:14px;">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+                        New Ticket
+                    </button>
+                </div>
+
+                <!-- Ticket list -->
+                <div id="ticketListSection">
+                    <div id="ticketsLoading" style="text-align:center;padding:40px;color:#9ca3af;font-family:Poppins,sans-serif;font-size:14px;">Loading tickets…</div>
+                    <div id="ticketsEmpty" style="display:none;text-align:center;padding:60px 20px;">
+                        <svg width="48" height="48" fill="none" viewBox="0 0 24 24" style="margin:0 auto 16px;display:block;color:#d1d5db;"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <p style="font-family:Poppins,sans-serif;font-size:15px;font-weight:600;color:#374151;margin:0 0 6px;">No tickets yet</p>
+                        <p style="font-family:Poppins,sans-serif;font-size:13px;color:#9ca3af;margin:0 0 20px;">Have a question? Open a support ticket and we'll help you out.</p>
+                        <button class="btn btn_grad" onclick="openNewTicketModal()" style="font-size:13px;padding:10px 24px;">Open First Ticket</button>
+                    </div>
+                    <div id="ticketsList" style="display:none;flex-direction:column;gap:10px;"></div>
+                </div>
+
+                <!-- Ticket detail -->
+                <div id="ticketDetailSection" style="display:none;">
+                    <button onclick="showTicketList()" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#6b7280;margin-bottom:18px;padding:0;">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M19 12H5m0 0 7 7m-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Back to all tickets
+                    </button>
+
+                    <div class="cab-box" style="margin-bottom:16px;">
+                        <div class="cab-box__head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                            <p class="cab-box__title" id="detailTicketNumber" style="margin:0;"></p>
+                            <span id="detailTicketStatus"></span>
+                        </div>
+                        <div class="cab-box__body" style="padding:16px 20px;">
+                            <p id="detailTicketSubject" style="font-family:Poppins,sans-serif;font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 4px;"></p>
+                            <p id="detailTicketMeta" style="font-family:Poppins,sans-serif;font-size:12px;color:#9ca3af;margin:0;"></p>
+                        </div>
+                    </div>
+
+                    <div class="cab-box" style="margin-bottom:16px;">
+                        <div class="cab-box__head"><p class="cab-box__title">Conversation</p></div>
+                        <div class="cab-box__body" style="padding:16px 20px;">
+                            <div id="detailMessages" style="display:flex;flex-direction:column;gap:12px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="cab-box" id="ticketReplyBox">
+                        <div class="cab-box__head"><p class="cab-box__title">Send a Follow-up</p></div>
+                        <div class="cab-box__body" style="padding:16px 20px;">
+                            <textarea id="ticketFollowupText" placeholder="Type your follow-up message here…" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;font-family:Poppins,sans-serif;font-size:13px;resize:vertical;min-height:100px;outline:none;color:#1a1a1a;" rows="4"></textarea>
+                            <button class="btn btn_grad" onclick="sendTicketFollowup()" style="margin-top:12px;padding:10px 24px;font-size:13px;">Send Message</button>
+                        </div>
                     </div>
                 </div>
 
@@ -2755,6 +2815,249 @@
 
 <script src="js/error-logger.js?v=1"></script>
 <script src="js/header-auth.js?v=12"></script>
+
+<script>
+/* ── My Tickets ── */
+var _currentTicketId = null;
+
+function _ticketStatusBadge(status) {
+    var cfg = {
+        need_human:  { bg: '#fef2f2', color: '#dc2626', text: '⚠ Need Human' },
+        open:        { bg: '#fff7ed', color: '#ea580c', text: 'Open' },
+        ai_answered: { bg: '#eff6ff', color: '#2563eb', text: '🤖 AI Replied' },
+        replied:     { bg: '#f0fdf4', color: '#16a34a', text: '✓ Replied' },
+        closed:      { bg: '#f9fafb', color: '#9ca3af', text: 'Closed' },
+    };
+    var c = cfg[status] || { bg: '#f9fafb', color: '#9ca3af', text: status };
+    return '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;font-family:Poppins,sans-serif;background:' + c.bg + ';color:' + c.color + ';">' + c.text + '</span>';
+}
+
+function _ticketCategoryLabel(cat) {
+    return { general: 'General', billing: 'Billing', technical: 'Technical', account: 'Account' }[cat] || cat;
+}
+
+function loadTickets() {
+    var uid = localStorage.getItem('bazar_firebase_uid');
+    if (!uid) return;
+    var loading = document.getElementById('ticketsLoading');
+    var empty   = document.getElementById('ticketsEmpty');
+    var list    = document.getElementById('ticketsList');
+    if (loading) loading.style.display = '';
+    if (empty)   empty.style.display   = 'none';
+    if (list)    list.style.display    = 'none';
+
+    fetch(window.BAZAR_API + '/tickets?firebase_uid=' + encodeURIComponent(uid), { headers: { Accept: 'application/json' } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var tickets = data.tickets || [];
+            if (loading) loading.style.display = 'none';
+            if (!tickets.length) {
+                if (empty) empty.style.display = '';
+                return;
+            }
+            if (list) { list.style.display = 'flex'; renderTicketList(tickets, list); }
+            // Badge on nav item
+            var needHuman = tickets.filter(function(t) { return t.status === 'need_human' || t.status === 'open'; }).length;
+            var navBadge = document.getElementById('navTickets');
+            if (navBadge && needHuman > 0) {
+                if (!navBadge.querySelector('.cab-nav__badge')) {
+                    var badge = document.createElement('span');
+                    badge.className = 'cab-nav__badge';
+                    badge.style.cssText = 'background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:6px;';
+                    badge.textContent = needHuman;
+                    navBadge.appendChild(badge);
+                }
+            }
+        })
+        .catch(function() {
+            if (loading) loading.textContent = 'Failed to load tickets.';
+        });
+}
+
+function renderTicketList(tickets, container) {
+    container.innerHTML = tickets.map(function(t) {
+        var date = t.created_at ? t.created_at.substring(0, 10) : '';
+        return '<div onclick="openTicketDetail(' + t.id + ')" style="cursor:pointer;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;transition:box-shadow .15s;" onmouseenter="this.style.boxShadow=\'0 4px 16px rgba(0,0,0,.08)\'" onmouseleave="this.style.boxShadow=\'none\'">' +
+            '<div style="display:flex;align-items:center;gap:14px;min-width:0;">' +
+            '<div style="font-family:Poppins,sans-serif;font-size:12px;font-weight:700;color:#9ca3af;white-space:nowrap;">' + (t.ticket_number || ('#' + t.id)) + '</div>' +
+            '<div style="min-width:0;">' +
+            '<p style="font-family:Poppins,sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;margin:0 0 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escHtml(t.subject) + '</p>' +
+            '<p style="font-family:Poppins,sans-serif;font-size:11px;color:#9ca3af;margin:0;">' + _ticketCategoryLabel(t.category) + ' · ' + date + '</p>' +
+            '</div></div>' +
+            '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">' + _ticketStatusBadge(t.status) +
+            '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" style="color:#d1d5db;flex-shrink:0;"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+            '</div></div>';
+    }).join('');
+}
+
+function openTicketDetail(ticketId) {
+    _currentTicketId = ticketId;
+    var uid = localStorage.getItem('bazar_firebase_uid');
+    document.getElementById('ticketListSection').style.display = 'none';
+    document.getElementById('ticketDetailSection').style.display = '';
+    document.getElementById('detailMessages').innerHTML = '<p style="color:#9ca3af;font-size:13px;font-family:Poppins,sans-serif;">Loading…</p>';
+
+    fetch(window.BAZAR_API + '/tickets/' + ticketId + '?firebase_uid=' + encodeURIComponent(uid || ''), { headers: { Accept: 'application/json' } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var ticket = data.ticket || {};
+            document.getElementById('detailTicketNumber').textContent = ticket.ticket_number || ('#' + ticket.id);
+            document.getElementById('detailTicketStatus').innerHTML = _ticketStatusBadge(ticket.status || 'open');
+            document.getElementById('detailTicketSubject').textContent = ticket.subject || '';
+            var meta = [_ticketCategoryLabel(ticket.category), ticket.created_at ? ticket.created_at.substring(0,10) : ''].filter(Boolean).join(' · ');
+            document.getElementById('detailTicketMeta').textContent = meta;
+            var msgs = (ticket.messages || []);
+            var msgsEl = document.getElementById('detailMessages');
+            if (!msgs.length) {
+                msgsEl.innerHTML = '<p style="color:#9ca3af;font-size:13px;font-family:Poppins,sans-serif;">No messages yet.</p>';
+            } else {
+                msgsEl.innerHTML = msgs.map(function(m) {
+                    var senderCfg = {
+                        client: { label: 'You', bg: '#eff6ff', color: '#1d4ed8' },
+                        ai:     { label: '🤖 AI Assistant', bg: '#f0fdf4', color: '#15803d' },
+                        human:  { label: '✍️ Support Team', bg: '#fffbeb', color: '#92400e' },
+                    }[m.sender_type] || { label: m.sender_type, bg: '#f9fafb', color: '#374151' };
+                    var time = m.created_at ? m.created_at.substring(0,16).replace('T',' ') : '';
+                    return '<div style="padding:14px 16px;border-radius:10px;background:' + senderCfg.bg + ';border:1px solid rgba(0,0,0,.06);">' +
+                        '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
+                        '<strong style="font-family:Poppins,sans-serif;font-size:12px;font-weight:700;color:' + senderCfg.color + ';">' + senderCfg.label + '</strong>' +
+                        '<span style="font-family:Poppins,sans-serif;font-size:11px;color:#9ca3af;">' + time + '</span>' +
+                        '</div>' +
+                        '<p style="font-family:Poppins,sans-serif;font-size:13px;line-height:1.65;color:#374151;margin:0;white-space:pre-wrap;">' + _escHtml(m.message) + '</p>' +
+                        '</div>';
+                }).join('');
+            }
+            // Hide reply if closed
+            var replyBox = document.getElementById('ticketReplyBox');
+            if (replyBox) replyBox.style.display = ticket.status === 'closed' ? 'none' : '';
+        })
+        .catch(function() {
+            document.getElementById('detailMessages').innerHTML = '<p style="color:#ef4444;font-size:13px;font-family:Poppins,sans-serif;">Failed to load ticket.</p>';
+        });
+}
+
+function showTicketList() {
+    _currentTicketId = null;
+    document.getElementById('ticketDetailSection').style.display = 'none';
+    document.getElementById('ticketListSection').style.display = '';
+    loadTickets();
+}
+
+function sendTicketFollowup() {
+    if (!_currentTicketId) return;
+    var uid  = localStorage.getItem('bazar_firebase_uid');
+    var text = (document.getElementById('ticketFollowupText') || {}).value || '';
+    if (!text.trim()) return;
+    var btn  = document.querySelector('#ticketReplyBox button');
+    if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
+    fetch(window.BAZAR_API + '/tickets/' + _currentTicketId + '/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ status: 'open', ai_message: '', human_message: '', firebase_uid: uid, client_followup: text.trim() }),
+    })
+    .then(function() {
+        if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
+        document.getElementById('ticketFollowupText').value = '';
+        openTicketDetail(_currentTicketId);
+    })
+    .catch(function() {
+        if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
+        alert('Failed to send message. Please try again.');
+    });
+}
+
+function openNewTicketModal() {
+    var modal = document.getElementById('newTicketModal');
+    if (modal) { modal.style.display = 'flex'; }
+    var subj = document.getElementById('newTicketSubject');
+    var msg  = document.getElementById('newTicketMessage');
+    var err  = document.getElementById('newTicketError');
+    if (subj) subj.value = '';
+    if (msg)  msg.value  = '';
+    if (err)  { err.style.display = 'none'; err.textContent = ''; }
+}
+
+function closeNewTicketModal() {
+    var modal = document.getElementById('newTicketModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function submitNewTicket() {
+    var uid     = localStorage.getItem('bazar_firebase_uid') || '';
+    var name    = localStorage.getItem('bazar_username') || '';
+    var email   = localStorage.getItem('bazar_email') || '';
+    var subject  = ((document.getElementById('newTicketSubject') || {}).value || '').trim();
+    var category = ((document.getElementById('newTicketCategory') || {}).value || 'general');
+    var message  = ((document.getElementById('newTicketMessage') || {}).value || '').trim();
+    var errEl    = document.getElementById('newTicketError');
+    var btn      = document.getElementById('newTicketSubmitBtn');
+
+    if (!subject) { if(errEl){errEl.style.display='';errEl.textContent='Please enter a subject.';} return; }
+    if (!message) { if(errEl){errEl.style.display='';errEl.textContent='Please describe your issue.';} return; }
+    if (errEl) errEl.style.display = 'none';
+    if (btn) { btn.textContent = 'Submitting…'; btn.disabled = true; }
+
+    fetch(window.BAZAR_API + '/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ firebase_uid: uid, customer_name: name, customer_email: email, subject: subject, category: category, message: message }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (btn) { btn.textContent = 'Submit Ticket'; btn.disabled = false; }
+        if (!data.ok) throw new Error(data.error || 'Failed');
+        closeNewTicketModal();
+        // Show the new ticket detail
+        var ticket = data.ticket || {};
+        if (ticket.id) {
+            switchToTab('tickets');
+            setTimeout(function() { openTicketDetail(ticket.id); }, 200);
+        } else {
+            switchToTab('tickets');
+            loadTickets();
+        }
+    })
+    .catch(function(e) {
+        if (btn) { btn.textContent = 'Submit Ticket'; btn.disabled = false; }
+        if (errEl) { errEl.style.display = ''; errEl.textContent = 'Failed to submit ticket. Please try again.'; }
+    });
+}
+
+function _escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<!-- ── New Ticket Modal ── -->
+<div id="newTicketModal" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,.5);align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;padding:28px;max-width:520px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.18);font-family:Poppins,sans-serif;position:relative;">
+        <button onclick="closeNewTicketModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:#9ca3af;font-size:20px;line-height:1;">✕</button>
+        <p style="font-size:17px;font-weight:700;color:#1a1a1a;margin:0 0 20px;">New Support Ticket</p>
+        <div class="input-custom" style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:600;color:#6b7280;display:block;margin-bottom:6px;">Subject</label>
+            <input type="text" id="newTicketSubject" placeholder="Briefly describe your issue" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:11px 14px;font-family:Poppins,sans-serif;font-size:13px;outline:none;color:#1a1a1a;">
+        </div>
+        <div class="input-custom" style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:600;color:#6b7280;display:block;margin-bottom:6px;">Category</label>
+            <select id="newTicketCategory" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:11px 14px;font-family:Poppins,sans-serif;font-size:13px;outline:none;color:#1a1a1a;background:#fff;appearance:none;">
+                <option value="general">General</option>
+                <option value="billing">Billing & Payments</option>
+                <option value="technical">Technical Issue</option>
+                <option value="account">Account</option>
+            </select>
+        </div>
+        <div class="input-custom" style="margin-bottom:20px;">
+            <label style="font-size:12px;font-weight:600;color:#6b7280;display:block;margin-bottom:6px;">Message</label>
+            <textarea id="newTicketMessage" placeholder="Describe your issue in detail…" rows="5" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;font-family:Poppins,sans-serif;font-size:13px;outline:none;color:#1a1a1a;resize:vertical;"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;">
+            <button onclick="closeNewTicketModal()" style="flex:1;padding:11px 0;border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#6b7280;font-family:Poppins,sans-serif;">Cancel</button>
+            <button onclick="submitNewTicket()" id="newTicketSubmitBtn" class="btn btn_grad" style="flex:2;padding:11px 0;font-size:13px;">Submit Ticket</button>
+        </div>
+        <p id="newTicketError" style="display:none;color:#ef4444;font-size:12px;margin:10px 0 0;text-align:center;"></p>
+    </div>
+</div>
 
 <!-- ── Danger Zone Modal ── -->
 <div id="dangerModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">

@@ -367,6 +367,50 @@ else → doLogin()                                    // DEV/Replit: прямо�
 - `do_POST /api/boost-checkout` — создаёт Stripe Checkout Session £1 через `stripe` Python SDK
 - `STRIPE_SECRET_KEY` из env vars
 
+## Support Tickets System
+
+### Архитектура
+- **Клиент**: Личный кабинет → "My Tickets" → форма + список тикетов
+- **ИИ**: Gemini 1.5 Flash (бесплатный) — авто-ответ при создании тикета
+- **Админ**: admin.bazar.uk → "Support Tickets" (Filament) — просмотр + ответ
+
+### Таблицы MySQL (bazar_dev)
+- `tickets` — id, ticket_number (TK-0001), firebase_uid, customer_name, customer_email, subject, category, status, ai_confidence
+- `ticket_messages` — id, ticket_id, sender_type (client/ai/human), message
+
+### Статусы тикетов
+- `open` — только что создан
+- `ai_answered` — ИИ ответил (высокая уверенность)
+- `need_human` — нужен ответ человека (красный badge в Filament)
+- `replied` — ответил человек
+- `closed` — закрыт
+
+### API эндпоинты (server.py)
+- `POST /api/tickets` — создать тикет + вызов Gemini + сохранить AI ответ
+- `GET /api/tickets?firebase_uid=` — список тикетов пользователя
+- `GET /api/tickets/{id}?firebase_uid=` — тикет + сообщения
+- `POST /api/tickets/{id}/status` — обновить статус/добавить сообщение
+
+### Gemini AI
+- Модель: `gemini-1.5-flash` (бесплатно, 60 RPM)
+- Ключ: `GEMINI_API_KEY` в `/etc/bazar/env` (пустой по умолчанию)
+- Без ключа → все тикеты автоматически `need_human`
+- Детектор escalation: если ответ содержит `[NEED_HUMAN]` → статус `need_human`
+
+### Laravel файлы (bazar-dev)
+- `app/Models/Ticket.php`, `app/Models/TicketMessage.php`
+- `app/Http/Controllers/TicketController.php`
+- `app/Filament/Resources/TicketResource.php`
+- `app/Filament/Resources/TicketResource/Pages/ListTickets.php`
+- `database/migrations/2026_04_23_100000_create_tickets_tables.php`
+
+### Получить бесплатный Gemini ключ
+1. Перейти на https://aistudio.google.com/
+2. "Get API key" → создать ключ
+3. На сервере: `echo 'GEMINI_API_KEY=ваш_ключ' >> /etc/bazar/env && systemctl restart bazar-seo`
+
+---
+
 ## Stripe Integration (Laravel на admin.bazar.uk)
 
 ### Архитектура
