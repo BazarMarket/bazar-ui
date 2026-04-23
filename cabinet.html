@@ -2171,9 +2171,13 @@
                     localStorage.setItem('bazar_firebase_uid', user.uid);
                     populateUserData();
                     populateProfileStats();
+                    setTimeout(refreshTicketNavBadge, 800);
                 }
             });
         }
+
+        /* Also try badge right away in case uid already cached */
+        setTimeout(refreshTicketNavBadge, 400);
 
         var profileForm = document.getElementById('profileForm');
         if (profileForm) {
@@ -2819,6 +2823,30 @@
 <script>
 /* ── My Tickets ── */
 var _currentTicketId = null;
+
+function refreshTicketNavBadge() {
+    var uid = localStorage.getItem('bazar_firebase_uid');
+    if (!uid) return;
+    fetch(window.BAZAR_API + '/tickets?firebase_uid=' + encodeURIComponent(uid), { headers: { Accept: 'application/json' } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var tickets = data.tickets || data || [];
+            if (!Array.isArray(tickets)) return;
+            var unread = tickets.filter(function(t) { return t.status === 'replied' || t.status === 'ai_answered'; }).length;
+            var navEl = document.getElementById('navTickets');
+            if (!navEl) return;
+            var existing = navEl.querySelector('.cab-nav__badge');
+            if (existing) existing.remove();
+            if (unread > 0) {
+                var badge = document.createElement('span');
+                badge.className = 'cab-nav__badge';
+                badge.style.background = '#ef4444';
+                badge.textContent = unread;
+                navEl.appendChild(badge);
+            }
+        })
+        .catch(function() {});
+}
 
 function _ticketStatusBadge(status) {
     var cfg = {
