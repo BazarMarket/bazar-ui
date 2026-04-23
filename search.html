@@ -2507,11 +2507,16 @@
         window._bazarCurrentType = type;
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
-        var _modeToLt = { 'sale': 'sale', 'rent': 'long_rent', 'short-rent': 'short_rent' };
-        var _ltFilter = _modeToLt[currentMode];
-        var filtered = _ltFilter
-          ? items.filter(function(item) { return !item.lt || item.lt === _ltFilter; })
-          : items;
+        var filtered;
+        if (currentMode === 'short-rent') {
+          filtered = items.filter(function(item) { return item.lt === 'short_rent'; });
+        } else if (currentMode === 'rent') {
+          filtered = items.filter(function(item) { return !item.lt || item.lt === 'long_rent' || item.lt === 'rent'; });
+        } else if (currentMode === 'sale') {
+          filtered = items.filter(function(item) { return !item.lt || item.lt === 'sale'; });
+        } else {
+          filtered = items;
+        }
         var listBody = document.querySelector('.list-products__body');
         if (listBody) listBody.innerHTML = filtered.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
