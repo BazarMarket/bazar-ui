@@ -302,15 +302,15 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /flats, /rooms  →  301 redirect to /property-to-rent/{cat}
         if parts[0] in {'flats', 'rooms'}:
             return 'redirect_301', {'location': f'/property-to-rent/{parts[0]}'}
-        # /property-for-sale  →  /property/for-sale
+        # /property-for-sale  →  property_transaction (for-sale)
         if parts[0] == 'property-for-sale':
-            return 'redirect_301', {'location': '/property/for-sale'}
-        # /property-to-rent  →  /property/for-rent
+            return 'property_transaction', {'transaction': 'for-sale'}
+        # /property-to-rent  →  property_transaction (for-rent)
         if parts[0] == 'property-to-rent':
-            return 'redirect_301', {'location': '/property/for-rent'}
-        # /property-short-rent  →  /property/for-rent/short-term
+            return 'property_transaction', {'transaction': 'for-rent'}
+        # /property-short-rent  →  property_transaction_modifier
         if parts[0] == 'property-short-rent':
-            return 'redirect_301', {'location': '/property/for-rent/short-term'}
+            return 'property_transaction_modifier', {'transaction': 'for-rent'}
         return 'category', {'category': parts[0]}
 
     return 'other', {}
@@ -879,7 +879,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         transaction = params.get('transaction', 'for-rent')
         is_rent     = (transaction == 'for-rent')
         verb        = 'for Rent' if is_rent else 'for Sale'
-        canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}'
+        canonical   = f'{PUBLIC_DOMAIN}/property-to-rent' if is_rent else f'{PUBLIC_DOMAIN}/property-for-sale'
 
         if is_rent:
             h1    = 'Property for Rent in the UK'
@@ -950,8 +950,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
     # ── /property/for-rent/short-term ─────────────────────────────────────────
     elif page_type == 'property_transaction_modifier':
         transaction = params.get('transaction', 'for-rent')
-        canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/short-term'
-        parent_url  = f'{PUBLIC_DOMAIN}/property/{transaction}'
+        canonical   = f'{PUBLIC_DOMAIN}/property-short-rent'
+        parent_url  = f'{PUBLIC_DOMAIN}/property-to-rent'
 
         h1    = 'Short-Term Property for Rent in the UK'
         intro = ('Explore short-term property rentals across the UK, including flats, rooms, '
