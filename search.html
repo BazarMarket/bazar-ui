@@ -1981,11 +1981,15 @@
 
       /* ── Load real listings from API and prepend to BAZAR_LISTINGS ── */
       (function loadApiListings() {
-        /* On /rooms page also load rooms-specific endpoint to catch all active rooms */
-        var _pathCat0 = window.location.pathname.replace(/^\//, '').split('/')[0];
-        var _extraUrl = (_pathCat0 === 'rooms')
+        /* On /rooms or /property-to-rent/rooms page also load rooms-specific endpoint */
+        var _pathParts0 = window.location.pathname.replace(/^\//, '').split('/');
+        var _pathCat0 = _pathParts0[0];
+        var _pathSub0 = _pathParts0[1] || '';
+        var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
+        var _extraUrl = _isRoomsPage
           ? '/api/properties/recent-enriched?property_type=room&per_page=50'
           : null;
+        var _isLatestPage = (_pathCat0 === 'latest-updates');
 
         fetch('/api/properties/recent-enriched', { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
@@ -2077,6 +2081,18 @@
             if (urlType) {
               if (!BAZAR_LISTINGS[urlType]) BAZAR_LISTINGS[urlType] = [];
               renderListings(urlType);
+              if (typeof initProductSwipers === 'function') initProductSwipers();
+            }
+            /* Latest Updates page: merge all buckets sorted by id desc and render */
+            if (_isLatestPage) {
+              var _allItems = [];
+              Object.keys(BAZAR_LISTINGS).forEach(function(k) {
+                if (Array.isArray(BAZAR_LISTINGS[k])) _allItems = _allItems.concat(BAZAR_LISTINGS[k]);
+              });
+              _allItems.sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
+              BAZAR_LISTINGS['Latest'] = _allItems;
+              window._bazarCurrentType = 'Latest';
+              renderListings('Latest');
               if (typeof initProductSwipers === 'function') initProductSwipers();
             }
             /* Extra fetch for path-specific category (e.g. /rooms loads all active rooms) */
@@ -2343,8 +2359,8 @@
 
             /* Auto-select the matching type for path-based category pages */
             var pathAutoType = null;
-            if (pathCat === 'rooms') pathAutoType = 'Rooms';
-            if (pathCat === 'flats') pathAutoType = 'Flats';
+            if (pathCat === 'rooms' || pathSub === 'rooms') pathAutoType = 'Rooms';
+            if (pathCat === 'flats' || pathSub === 'flats') pathAutoType = 'Flats';
             if (pathAutoType && !type) {
                var autoPanel = document.getElementById('cfTypePanel');
                if (autoPanel) {
