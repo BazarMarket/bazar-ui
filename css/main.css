@@ -5924,3 +5924,8 @@ body.bazar-logged .card__heart {
 .sr-cat-related a:hover {
   text-decoration: underline;
 }
+
+/* Prevent logged-in header flash before Firebase auth resolves */
+body:not(.bazar-logged) #header-logged-in {
+  display: none !important;
+}
