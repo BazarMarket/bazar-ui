@@ -896,7 +896,27 @@
                      </div>
                   </div>
 
-                  <!-- Bathrooms shown before Room type for Rooms -->
+                  <!-- Bedrooms: always second field -->
+                  <div class="pa-field" id="bedroomsField">
+                     <span class="pa-field__label">Bedrooms:<span>*</span></span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
+                           <option value="" disabled hidden>Choose one...</option>
+                           <option>1</option>
+                           <option>2</option>
+                           <option>3</option>
+                           <option>4</option>
+                           <option>5</option>
+                           <option>6</option>
+                           <option>7</option>
+                           <option>8</option>
+                           <option>9</option>
+                           <option>10 and more</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <!-- Bathrooms: always third field -->
                   <div class="pa-field" id="bathroomsField" style="display:none">
                      <span class="pa-field__label">Bathrooms:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -949,25 +969,6 @@
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="houseTypeSelect" onchange="onHouseTypeChange(this)">
                            <option value="" disabled selected hidden>Select house type</option>
-                        </select>
-                     </div>
-                  </div>
-
-                  <div class="pa-field" id="bedroomsField">
-                     <span class="pa-field__label">Bedrooms:<span>*</span></span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
-                           <option value="" disabled hidden>Choose one...</option>
-                           <option>1</option>
-                           <option>2</option>
-                           <option>3</option>
-                           <option>4</option>
-                           <option>5</option>
-                           <option>6</option>
-                           <option>7</option>
-                           <option>8</option>
-                           <option>9</option>
-                           <option>10 and more</option>
                         </select>
                      </div>
                   </div>
