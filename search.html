@@ -445,15 +445,15 @@
                      <div class="cf-cat">
                         <button class="cf-cat-btn" id="cfCatBtn" onclick="toggleCatPanel(event)">
                            <img src="img/cat/image1.png" id="cfCatImg" alt="">
-                           <span class="cf-cat-btn-label" id="cfCatLabel">Real Estate for sale</span>
+                           <span class="cf-cat-btn-label" id="cfCatLabel">Property for Sale</span>
                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <div class="cf-cat-panel" id="cfCatPanel">
                            <div class="cf-cat-item cf-cat-all" onclick="selectCat(this, '', '', 'All categories')">All categories</div>
                            <div class="cf-cat-divider"></div>
-                           <div class="cf-cat-item active" onclick="selectCat(this, 'img/cat/image1.png', 'image1', 'Real Estate for sale')"><img src="img/cat/image1.png" alt="">Real Estate for sale</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for rent')"><img src="img/cat/image2.png" alt="">Real Estate for rent</div>
-                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Real Estate for short-term rent')"><img src="img/cat/image2.png" alt="">Real Estate for short-term rent</div>
+                           <div class="cf-cat-item active" onclick="selectCat(this, 'img/cat/image1.png', 'image1', 'Property for Sale')"><img src="img/cat/image1.png" alt="">Property for Sale</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Property to Rent')"><img src="img/cat/image2.png" alt="">Property to Rent</div>
+                           <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image2.png', 'image2', 'Property to Rent (Short-term)')"><img src="img/cat/image2.png" alt="">Property to Rent (Short-term)</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image3.png', 'image3', 'Motors')"><img src="img/cat/image3.png" alt="">Motors</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image4.png', 'image4', 'Motors for rent')"><img src="img/cat/image4.png" alt="">Motors for rent</div>
                            <div class="cf-cat-item" onclick="selectCat(this, 'img/cat/image4.png', 'image4', 'Motors for short-term rent')"><img src="img/cat/image4.png" alt="">Motors for short-term rent</div>
@@ -769,7 +769,7 @@
                         </button>
                         <div class="cf-cat-panel" id="cfSellerPanel" style="display:none;padding:10px 14px;width:auto;min-width:200px;">
                            <label class="cf-type-item"><input type="checkbox" value="Private" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Private</label>
-                           <label class="cf-type-item"><input type="checkbox" value="Real Estate" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Real Estate</label>
+                           <label class="cf-type-item"><input type="checkbox" value="Estate Agent" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Estate Agent</label>
                            <label class="cf-type-item"><input type="checkbox" value="Construction" onchange="updateSellerLabel()"><span class="cf-type-check"></span>Construction</label>
                         </div>
                      </div>
@@ -1346,9 +1346,9 @@
          btn.classList.toggle('open', open);
       }
       var catUrlMap = {
-         'Real Estate for sale':              '/property/for-sale',
-         'Real Estate for rent':              '/property/for-rent',
-         'Real Estate for short-term rent':   '/property/for-rent/short-term',
+         'Property for Sale':              '/property/for-sale',
+         'Property to Rent':               '/property/for-rent',
+         'Property to Rent (Short-term)':  '/property/for-rent/short-term',
          'Motors':                            '/cars',
          'Motors for rent':                   '/cars/for-rent',
          'Motors for short-term rent':        '/cars/for-short-term-rent',
@@ -2612,9 +2612,9 @@
          var type = params.get('type');
 
          var catMap = {
-            'sale':       { label: 'Real Estate for sale',       img: 'img/cat/image1.png', mode: 'sale',       catLabel: 'Real Estate for sale',       catUrl: '/property' },
-            'rent':       { label: 'Real Estate for rent',       img: 'img/cat/image2.png', mode: 'rent',       catLabel: 'Real Estate for rent',       catUrl: '/property' },
-            'short-rent': { label: 'Real Estate for short-term rent', img: 'img/cat/image2.png', mode: 'short-rent', catLabel: 'Real Estate for short-term rent', catUrl: '/property' }
+            'sale':       { label: 'Property for Sale',              img: 'img/cat/image1.png', mode: 'sale',       catLabel: 'Property for Sale',              catUrl: '/property' },
+            'rent':       { label: 'Property to Rent',               img: 'img/cat/image2.png', mode: 'rent',       catLabel: 'Property to Rent',               catUrl: '/property' },
+            'short-rent': { label: 'Property to Rent (Short-term)',  img: 'img/cat/image2.png', mode: 'short-rent', catLabel: 'Property to Rent (Short-term)',  catUrl: '/property' }
          };
 
          var catLink = document.getElementById('breadCrumbCat');

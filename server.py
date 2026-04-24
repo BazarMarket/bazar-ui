@@ -852,7 +852,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         else:
             h1    = 'Property for Sale in the UK'
             intro = ('Discover property for sale across the UK, including flats, houses, land, '
-                     'and commercial real estate. Browse listings from private sellers and agents '
+                     'and commercial property. Browse listings from private sellers and agents '
                      'in all regions.')
         desc  = intro[:160]
 
