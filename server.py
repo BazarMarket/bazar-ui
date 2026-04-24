@@ -236,9 +236,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'property_transaction_modifier', {
                 'transaction': parts[1], 'modifier': 'short-term'
             }
-        # /property/shop/for-sale  →  property_subtype_sale
+        # /property/shop/for-sale  →  301 redirect to /property-for-sale/shop
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-sale':
-            return 'property_subtype_sale', {'subtype': parts[1]}
+            return 'redirect_301', {'location': f'/property-for-sale/{parts[1]}'}
         # /property/house/for-rent  →  property_subtype_rent
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-rent':
             return 'property_subtype_rent', {'subtype': parts[1]}
@@ -265,6 +265,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/shop, /property/office, etc.  →  property_subtype
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES:
             return 'property_subtype', {'subtype': parts[1]}
+        # /property-for-sale/house, /property-for-sale/shop etc.  →  property_subtype_sale
+        if parts[0] == 'property-for-sale' and parts[1] in PROPERTY_SUBTYPES:
+            return 'property_subtype_sale', {'subtype': parts[1]}
+        # /property-for-sale/land, /property-for-sale/building, /property-for-sale/business-or-investment
+        if parts[0] == 'property-for-sale' and parts[1] in {'land', 'building', 'business-or-investment'}:
+            return 'property_sale_type', {'sale_type': parts[1]}
         # /property-for-sale/flats  →  category_transaction (new SEO URL)
         if parts[0] == 'property-for-sale' and parts[1] in CATEGORY_LABELS:
             return 'category_transaction', {'category': parts[1], 'transaction': 'for-sale'}
@@ -421,11 +427,12 @@ PROPERTY_TYPE_NAV = [
 
 PROPERTY_TYPE_NAV_SALE = [
     ('Flats',       '/property-for-sale/flats'),
-    ('Shops',       '/property/shop/for-sale'),
-    ('Offices',     '/property/office/for-sale'),
-    ('Industrial',  '/property/industrial/for-sale'),
-    ('Restaurants', '/property/restaurant/for-sale'),
-    ('Hotels',      '/property/hotel/for-sale'),
+    ('Houses',      '/property-for-sale/house'),
+    ('Shops',       '/property-for-sale/shop'),
+    ('Offices',     '/property-for-sale/office'),
+    ('Industrial',  '/property-for-sale/industrial'),
+    ('Restaurants', '/property-for-sale/restaurant'),
+    ('Hotels',      '/property-for-sale/hotel'),
 ]
 
 PROPERTY_SUBTYPE_SALE_SEO = {
@@ -1270,7 +1277,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         label     = data.get('label', subtype.title())
         h1        = data.get('h1', f'{label} for Sale in the UK')
         intro     = data.get('intro', f'Browse {label.lower()} for sale across the UK on Bazar.')
-        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}/for-sale'
+        canonical = f'{PUBLIC_DOMAIN}/property-for-sale/{subtype}'
         desc      = intro[:160]
 
         breadcrumb_schema = {
@@ -1320,6 +1327,39 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'related_links': [(f'Looking to rent instead?', f'Browse {label.lower()} for rent', f'/property/{subtype}')],
             'type':        'category',
         }
+        return seo
+
+    # ── /property-for-sale/land, /property-for-sale/building, etc. ───────────
+    elif page_type == 'property_sale_type':
+        sale_type = params.get('sale_type', '')
+        label_map = {
+            'land':                   'Land',
+            'building':               'Buildings',
+            'business-or-investment': 'Business or Investment',
+        }
+        label    = label_map.get(sale_type, sale_type.replace('-', ' ').title())
+        h1       = f'{label} for Sale in the UK'
+        intro    = f'Browse {label.lower()} for sale across the UK. Find the best deals from private sellers and agents.'
+        canonical = f'{PUBLIC_DOMAIN}/property-for-sale/{sale_type}'
+        desc     = intro[:160]
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2, "name": "Property for Sale", "item": f'{PUBLIC_DOMAIN}/property/for-sale'},
+                {"@type": "ListItem", "position": 3, "name": h1, "item": canonical},
+            ]
+        }
+        schema = {"@context": "https://schema.org", "@graph": [
+            {"@type": "CollectionPage", "name": h1, "description": desc, "url": canonical, "breadcrumb": breadcrumb_schema},
+            breadcrumb_schema,
+        ]}
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'json_ld':     json.dumps(schema),
+        })
         return seo
 
     # ── Category + city + modifier (e.g. /rooms/london/short-term) ────────────
@@ -2366,7 +2406,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_transaction', 'property_transaction_modifier',
                          'property_transaction_city',
                          'property_subtype', 'property_subtype_modifier',
-                         'property_subtype_sale', 'category_transaction'):
+                         'property_subtype_sale', 'property_sale_type', 'category_transaction'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
