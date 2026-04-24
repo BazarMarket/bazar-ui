@@ -2608,7 +2608,13 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 var apiTxns = data.transactions || [];
-                var allTxns = localTxns.concat(apiTxns);
+                /* Hide local 'pending' (Processing) records — API is source of truth.
+                   Abandoned Stripe sessions create pending local entries; only keep
+                   local non-pending records (e.g. wallet credits) when API has data.
+                   Also prune pending entries from localStorage so they don't accumulate. */
+                var localVisible = localTxns.filter(function(t) { return t.status !== 'pending'; });
+                try { localStorage.setItem('bazar_local_txns', JSON.stringify(localVisible)); } catch(e) {}
+                var allTxns = localVisible.concat(apiTxns);
                 renderAll(allTxns, data.total_spent || '0.00');
             })
             .catch(function() {
