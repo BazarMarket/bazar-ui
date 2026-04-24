@@ -322,9 +322,8 @@
                            </div>
                         </div>
 
-                        <div class="card-grid__video" id="video-section">
-                           <iframe class="img-cover" src="https://www.youtube.com/embed/dIQGI36BxDE"
-                              title="God of War Ragnarök - &quot;Father and Son&quot; Cinematic Trailer | PS5 &amp; PS4 Games"
+                        <div class="card-grid__video" id="video-section" style="display:none;">
+                           <iframe class="img-cover" src="about:blank"
                               frameborder="0"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               allowfullscreen></iframe>
@@ -1177,7 +1176,21 @@
       if(mapPopup) mapPopup.src = mapQ;
 
       var videoSection = el('video-section');
-      if(videoSection) videoSection.style.display = 'none';
+      if (videoSection) {
+        var _rawVideo = p.video_url || '';
+        var _embedUrl = '';
+        if (_rawVideo) {
+          var _ytMatch = _rawVideo.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+          if (_ytMatch) _embedUrl = 'https://www.youtube.com/embed/' + _ytMatch[1];
+        }
+        if (_embedUrl) {
+          var _iframe = videoSection.querySelector('iframe');
+          if (_iframe) _iframe.src = _embedUrl;
+          videoSection.style.display = '';
+        } else {
+          videoSection.style.display = 'none';
+        }
+      }
 
       /* ── Hide Start Chat + Comment form for the ad owner ── */
       (function() {
