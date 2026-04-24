@@ -3015,7 +3015,7 @@
          formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
 
          var youtube = getInputVal('youtubeInput');
-         if (youtube) formData.append('video_url', youtube);
+         formData.append('video_url', youtube);
 
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
@@ -3211,7 +3211,7 @@
          formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
          formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
          var youtube = getInputVal('youtubeInput');
-         if (youtube) formData.append('video_url', youtube);
+         formData.append('video_url', youtube);
 
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
@@ -3344,7 +3344,7 @@
          formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
          formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
          var youtube = getInputVal('youtubeInput');
-         if (youtube) formData.append('video_url', youtube);
+         formData.append('video_url', youtube);
 
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
@@ -3829,7 +3829,7 @@
             var sellerEmail = getInputVal('sellerEmailInput');
             if (sellerEmail) formData.append('seller_email', sellerEmail);
             var youtube = getInputVal('youtubeInput');
-            if (youtube) formData.append('video_url', youtube);
+            formData.append('video_url', youtube);
 
             /* Construction year */
             var cyear = (document.getElementById('constructionYearSelect') || {}).value;
