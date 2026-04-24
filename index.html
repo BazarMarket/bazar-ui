@@ -1109,17 +1109,11 @@
     <script type="text/javascript" src="js/script.js?v=4"></script>
     <script src="js/firebase-auth-v2.js?v=4"></script>
     <script>
-        function _loadAdCount() {
-            fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
-                var n = d.ads_total;
-                if (!n) return;
-                var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
-                var el = document.getElementById('mainSearchInput');
-                if (el) el.placeholder = txt;
-            }).catch(function(){});
+        function _updateSearchPlaceholder(n) {
+            if (!n) return;
+            var el = document.getElementById('mainSearchInput');
+            if (el) el.placeholder = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
         }
-        _loadAdCount();
-        setInterval(_loadAdCount, 30000);
     </script>
     <script src="js/location-autocomplete.js"></script>
     <script>
@@ -1481,6 +1475,7 @@
                         '</div>';
                 });
                 grid.innerHTML = html;
+                if (typeof _updateSearchPlaceholder === 'function') _updateSearchPlaceholder(resp.data.length);
                 /* mobile swiper for latest */
                 var latestSwiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
                 if (latestSwiperWrapper) {

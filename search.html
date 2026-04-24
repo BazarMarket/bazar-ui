@@ -2071,6 +2071,7 @@
               if (!BAZAR_LISTINGS[bucket]) BAZAR_LISTINGS[bucket] = [];
               BAZAR_LISTINGS[bucket] = apiByBucket[bucket].concat(BAZAR_LISTINGS[bucket]);
             }
+            if (typeof _loadAdCount === 'function') _loadAdCount();
             /* Re-render if a type filter is already selected (via URL or user interaction) */
             var urlType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
             if (urlType) {
@@ -2577,16 +2578,13 @@
    </script>
    <script>
       function _loadAdCount() {
-         fetch('/api/stats').then(function(r){return r.json();}).then(function(d){
-            var n = d.ads_total;
-            if (!n) return;
-            var txt = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
-            var el = document.getElementById('mainSearchInput');
-            if (el) el.placeholder = txt;
-         }).catch(function(){});
+         if (typeof BAZAR_LISTINGS === 'undefined') return;
+         var n = 0;
+         Object.keys(BAZAR_LISTINGS).forEach(function(k) { n += (BAZAR_LISTINGS[k] || []).length; });
+         if (!n) return;
+         var el = document.getElementById('mainSearchInput');
+         if (el) el.placeholder = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
       }
-      _loadAdCount();
-      setInterval(_loadAdCount, 30000);
    </script>
 <script src="js/header-auth.js?v=12"></script>
 
