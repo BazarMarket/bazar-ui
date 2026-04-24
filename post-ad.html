@@ -3693,11 +3693,17 @@
                if (_op > 0) formData.append('old_price', String(Math.round(_op)));
             }
 
-            /* collect existing image URLs to preserve them */
+            /* collect photos in DOM order, preserving drag-and-drop sequence */
             var grid = document.getElementById('photoPreviewGrid');
             if (grid) {
                Array.from(grid.children).forEach(function(box) {
-                  if (box._paExistingUrl) formData.append('keep_images[]', box._paExistingUrl);
+                  if (box._paExistingUrl) {
+                     formData.append('keep_images[]', box._paExistingUrl);
+                     formData.append('photo_order[]', 'exist');
+                  } else if (box._paFile) {
+                     formData.append('images[]', box._paFile);
+                     formData.append('photo_order[]', 'new');
+                  }
                });
             }
 
