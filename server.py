@@ -302,6 +302,15 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /flats, /rooms  →  301 redirect to /property-to-rent/{cat}
         if parts[0] in {'flats', 'rooms'}:
             return 'redirect_301', {'location': f'/property-to-rent/{parts[0]}'}
+        # /property-for-sale  →  /property/for-sale
+        if parts[0] == 'property-for-sale':
+            return 'redirect_301', {'location': '/property/for-sale'}
+        # /property-to-rent  →  /property/for-rent
+        if parts[0] == 'property-to-rent':
+            return 'redirect_301', {'location': '/property/for-rent'}
+        # /property-short-rent  →  /property/for-rent/short-term
+        if parts[0] == 'property-short-rent':
+            return 'redirect_301', {'location': '/property/for-rent/short-term'}
         return 'category', {'category': parts[0]}
 
     return 'other', {}
