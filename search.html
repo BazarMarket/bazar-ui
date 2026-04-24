@@ -2630,6 +2630,9 @@
          var pathLast  = pathParts[pathParts.length - 1];
 
          var _pathToKey = (function() {
+            if (pathCat === 'property-for-sale')  return 'sale';
+            if (pathCat === 'property-to-rent')   return 'rent';
+            if (pathCat === 'property-short-rent') return 'short-rent';
             if (pathCat === 'property') {
                if (pathLast === 'short-term' || pathSub === 'for-rent' && pathLast === 'short-term') return 'short-rent';
                if (pathSub === 'for-rent') return 'rent';
