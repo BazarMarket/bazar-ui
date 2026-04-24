@@ -2832,16 +2832,16 @@ function refreshTicketNavBadge() {
         .then(function(data) {
             var tickets = data.tickets || data || [];
             if (!Array.isArray(tickets)) return;
-            var unread = tickets.filter(function(t) { return t.status === 'replied' || t.status === 'ai_answered'; }).length;
+            var totalUnread = tickets.reduce(function(sum, t) { return sum + (parseInt(t.client_unread) || 0); }, 0);
             var navEl = document.getElementById('navTickets');
             if (!navEl) return;
             var existing = navEl.querySelector('.cab-nav__badge');
             if (existing) existing.remove();
-            if (unread > 0) {
+            if (totalUnread > 0) {
                 var badge = document.createElement('span');
                 badge.className = 'cab-nav__badge';
                 badge.style.background = '#ef4444';
-                badge.textContent = unread;
+                badge.textContent = totalUnread;
                 navEl.appendChild(badge);
             }
         })
@@ -2884,17 +2884,17 @@ function loadTickets() {
                 return;
             }
             if (list) { list.style.display = 'flex'; renderTicketList(tickets, list); }
-            // Badge on nav item — count tickets with unread replies for client
-            var unreadReplies = tickets.filter(function(t) { return t.status === 'replied' || t.status === 'ai_answered'; }).length;
+            // Badge on nav item — sum of client_unread across all tickets
+            var totalUnread = tickets.reduce(function(sum, t) { return sum + (parseInt(t.client_unread) || 0); }, 0);
             var navTicketsEl = document.getElementById('navTickets');
             if (navTicketsEl) {
                 var existingBadge = navTicketsEl.querySelector('.cab-nav__badge');
                 if (existingBadge) existingBadge.remove();
-                if (unreadReplies > 0) {
+                if (totalUnread > 0) {
                     var badge = document.createElement('span');
                     badge.className = 'cab-nav__badge';
                     badge.style.background = '#ef4444';
-                    badge.textContent = unreadReplies;
+                    badge.textContent = totalUnread;
                     navTicketsEl.appendChild(badge);
                 }
             }
@@ -2960,6 +2960,8 @@ function openTicketDetail(ticketId) {
             // Hide reply if closed
             var replyBox = document.getElementById('ticketReplyBox');
             if (replyBox) replyBox.style.display = ticket.status === 'closed' ? 'none' : '';
+            // Client just read this ticket — refresh nav badge (server reset client_unread)
+            setTimeout(refreshTicketNavBadge, 300);
         })
         .catch(function() {
             document.getElementById('detailMessages').innerHTML = '<p style="color:#ef4444;font-size:13px;font-family:Poppins,sans-serif;">Failed to load ticket.</p>';
