@@ -760,7 +760,7 @@
                      </button>
                   </div>
                   <!-- Row 5: Seller + Online viewing + Key features (hidden by default) -->
-                  <div class="cf-row cf-row-extra" id="cfMoreRow" style="max-height:0;opacity:0;margin-top:0;">
+                  <div class="cf-row cf-row-extra" id="cfMoreRow" style="max-height:0;opacity:0;margin-top:0;pointer-events:none;">
                      <div class="cf-cat" id="cfSellerWrap">
                         <button class="cf-cat-btn" id="cfSellerBtn" onclick="toggleSellerPanel(event)">
                            <span class="cf-cat-btn-label" id="cfSellerLabel">Any seller</span>
@@ -1789,10 +1789,12 @@
             row.style.maxHeight = '0';
             row.style.opacity = '0';
             row.style.marginTop = '0';
+            row.style.pointerEvents = 'none';
          } else {
             row.style.maxHeight = row.scrollHeight + 'px';
             row.style.opacity = '1';
             row.style.marginTop = '10px';
+            row.style.pointerEvents = '';
             setTimeout(function(){ row.classList.remove('cf-collapsing'); }, 350);
          }
          btn.classList.toggle('active', !isOpen);
