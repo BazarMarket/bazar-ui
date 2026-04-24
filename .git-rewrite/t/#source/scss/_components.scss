@@ -1,0 +1,49 @@
+// Переменные
+
+$c1: #fff;
+
+$color-acent: #ffae49;
+$color-acent-hover: #fe7653;
+
+$color-acent-second: #fe7653;
+
+$gradient-main: linear-gradient(270deg, #ffae49 0%, #fe7653 100%);
+
+$color-bg: #fff;
+$color-bg-second: #fef6fa;
+
+$color-text: #1a1a1a;
+$color-text-second: #808080;
+
+$color-border: #e4e4e4;
+$color-line: #f7f7f7;
+
+$c1: #fff;
+$accent-color: #ffae49;
+$accent-color-light: #e1f7ff;
+$accent-hover-color: #fe7653;
+
+$light-color: #e7e7e7;
+$grey-color: #797979;
+$text-color: #1d1d1b;
+
+$accent-color2: #2ebdee;
+
+// Шаблоны
+
+%center-colun {
+   position: absolute;
+   top: 50%;
+   transform: translateY(-50%);
+}
+// @extend %center-colun;
+
+// Миксины
+@mixin fontMain($fw, $lh, $fz, $fc) {
+   font-family: "Poppins", sans-serif;
+   font-weight: $fw;
+   font-size: $fz;
+   color: $fc;
+   line-height: $lh;
+}
+// @include fontMain(600, 130%, 9px, $c1);

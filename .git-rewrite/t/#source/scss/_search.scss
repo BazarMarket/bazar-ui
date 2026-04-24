@@ -1,0 +1,227 @@
+@import "components";
+
+.list-products {
+   padding: 50px 0;
+   &__body {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 1150px;
+      .product:not(:last-child) {
+         margin-bottom: 16px;
+      }
+   }
+   &__pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
+}
+
+.product {
+   width: 100%;
+   padding: 20px;
+   background: #ffffff;
+   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+   display: flex;
+   align-items: start;
+   justify-content: space-between;
+   &__left {
+      flex: 0 0 32%;
+      min-width: 0px;
+   }
+
+   &__gallery {
+      position: relative;
+   }
+   &__stiker {
+      position: absolute;
+      z-index: 3;
+      top: 30px;
+      right: -8px;
+      display: flex;
+      flex-direction: column;
+      .stiker {
+         width: 100%;
+         &:not(:last-child) {
+            margin-bottom: 5px;
+         }
+      }
+   }
+   &__center {
+      flex: 1 1 auto;
+      margin: 0 24px;
+   }
+   &__title {
+      @include fontMain(700, 130%, 28px, $text-color);
+   }
+
+   &__text {
+      margin: 10px 0;
+      @include fontMain(600, 130%, 14px, $text-color);
+   }
+
+   &__details {
+      margin: 10px 0;
+      padding: 10px 0;
+      border-top: 1px solid #f2f2f2;
+      border-bottom: 1px solid #f2f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .details-item {
+         &:not(:last-child) {
+            margin-right: 10px;
+         }
+      }
+   }
+
+   &__desc {
+      @include fontMain(400, 130%, 16px, $text-color#fff);
+   }
+
+   &__info {
+      margin: 10px 0;
+      padding: 10px 0;
+      border-top: 1px solid #f2f2f2;
+      display: flex;
+      align-items: center;
+      .details-item {
+         &:not(:last-child) {
+            margin-right: 10px;
+         }
+      }
+   }
+
+   &__right {
+      flex: 0 0 32%;
+   }
+
+   &__rating {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .rating {
+         margin-right: 10px;
+      }
+   }
+
+   &__price {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      .price-start {
+      }
+      .price-old {
+         margin: 0 15px;
+      }
+   }
+
+   &__negotiable {
+      @include fontMain(700, 130%, 16px, $accent-hover-color);
+   }
+
+   &__shiping {
+      margin: 10px 0;
+   }
+
+   &__btns {
+      .btn-phone {
+         margin-bottom: 10px;
+      }
+   }
+}
+.rating {
+   display: inline-flex;
+   @include fontMain(700, 100%, 14px, $text-color);
+   align-items: center;
+   &:before {
+      color: yellow;
+      font-size: 20px;
+      margin: 0 7px 0 0;
+   }
+}
+
+.coment {
+   display: inline-flex;
+   @include fontMain(700, 100%, 14px, $text-color);
+   align-items: center;
+   &:before {
+      color: #797979;
+      font-size: 20px;
+      margin: 0 7px 0 0;
+   }
+}
+
+.favorites {
+   &:before {
+      display: block;
+      font-size: 16px;
+      color: $grey-color;
+      transition: 0.3s;
+   }
+   &:hover:before {
+      color: $accent-color;
+   }
+   &.active:before {
+      color: $accent-color;
+   }
+}
+
+.product-shiping {
+   border-top: 1px solid #f2f2f2;
+   border-bottom: 1px solid #f2f2f2;
+   padding: 10px 0;
+   display: flex;
+   align-items: center;
+   @include fontMain(400, 130%, 14px, $text-color);
+   &:before {
+      font-size: 20px;
+      color: $accent-hover-color;
+      margin: 0 10px 0 0;
+   }
+}
+
+.details-item {
+   display: flex;
+   align-items: center;
+   @include fontMain(400, 130%, 14px, $text-color);
+   &:before {
+      font-size: 20px;
+      color: $accent-color;
+      margin: 0 7px 0 0;
+   }
+}
+
+.product-gallery {
+   &__img {
+      display: block;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      padding-bottom: 90%;
+   }
+   .swiper {
+      position: relative;
+      overflow: hidden;
+   }
+   .swiper-wrapper {
+   }
+   .swiper-slide {
+   }
+   .img-cover {
+   }
+   .swiper-pagination {
+   }
+   .pagination-custom {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translate(-50%, 0);
+      .swiper-pagination-bullet {
+      }
+      .swiper-pagination-bullet-active {
+      }
+   }
+}

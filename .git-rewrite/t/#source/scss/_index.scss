@@ -1,0 +1,382 @@
+/* Стили для -------- */
+/* ------- адаптация ------- */
+/* ------- end ------- */
+
+/* Стили для category */
+
+.category-box {
+   cursor: pointer;
+   transition: 0.3s;
+   &__body {
+      width: 100%;
+      position: absolute;
+      left: 50%;
+      max-height: 0px;
+      overflow: hidden;
+      transition: 0.3s;
+      transform: translate(-50%, 0);
+   }
+
+   &__content {
+      margin-top: 12px;
+      border: 1px solid $color-border;
+      gap: 15px;
+      border-radius: 16px;
+      transition: 0.3;
+      background: #fff;
+   }
+   &:nth-child(4n + 1) {
+      .category-box__content {
+         border-radius: 0 16px 16px 16px;
+      }
+   }
+   &:nth-child(4n) {
+      .category-box__content {
+         border-radius: 16px 0 16px 16px;
+      }
+   }
+}
+
+.menu-sub {
+   padding: 32px;
+   &__head {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 0 20px 0;
+      border-bottom: 1px solid $color-border;
+   }
+
+   &__title {
+      margin: 0;
+      @include fontMain(700, normal, 16px, $color-text);
+      span {
+         color: #797979;
+         margin-left: 12px;
+      }
+   }
+
+   &__body {
+      padding: 20px 0 0 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+   }
+
+   &__links {
+      position: relative;
+      @include fontMain(400, normal, 16px, $color-text-second);
+      display: flex;
+      padding-left: 20px;
+      &:before {
+         top: 8px;
+         left: 0;
+         position: absolute;
+         content: "";
+         width: 9px;
+         height: 9px;
+         flex: 0 0 9px;
+         border-radius: 2px;
+         background: $color-acent;
+      }
+      &:hover {
+         color: $color-text;
+      }
+   }
+}
+
+.category {
+   overflow: hidden;
+   &__body {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+   }
+}
+.category-item {
+   height: 74px;
+   padding: 12px;
+   border: 1px solid $color-border;
+   display: flex;
+   align-items: center;
+   gap: 15px;
+   border-radius: 16px;
+   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.07);
+   transition: 0.3;
+   position: relative;
+
+   &.active:before {
+      content: "";
+      position: absolute;
+      height: 30px;
+      background: #fff;
+      left: -1px;
+      right: -1px;
+      top: 100%;
+      z-index: 3;
+      transform: translate(0, -16px);
+      border-left: 1px solid $color-border;
+      border-right: 1px solid $color-border;
+      background: #fff;
+
+      // background: #fff linear-gradient(to bottom, $color-border 0 30px, transparent 30px) right top / 1px 100% no-repeat;
+   }
+
+   &__img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      position: relative;
+      z-index: 3;
+   }
+
+   &__title {
+      @include fontMain(500, 100%, 16px, $color-text);
+      transition: 0.3s;
+      margin: 0;
+   }
+}
+/* ------- адаптация ------- */
+@media screen and (max-width: 992px) {
+   .category {
+      &__body {
+         grid-template-columns: repeat(2, 1fr);
+      }
+   }
+}
+
+@media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 576px) {
+   // .category {
+   //    &__body {
+   //       grid-template-columns: repeat(1, 1fr);
+   //    }
+   // }
+}
+/* ------- end ------- */
+
+/* Стили для cards */
+.cards {
+   overflow: hidden;
+   gap: 32px;
+   display: flex;
+   flex-direction: column;
+   &__head {
+      gap: 16px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 32px;
+   }
+
+   &__title {
+      @include fontMain(600, normal, 24px, $color-text);
+      margin: 0;
+   }
+
+   &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+   }
+
+   &__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+   }
+   &__sliders {
+   }
+}
+.cards-sliders {
+   .swiper {
+      overflow: visible;
+   }
+   .swiper-wrapper {
+   }
+   .swiper-slide {
+      width: auto;
+      height: auto;
+   }
+}
+
+.long-filter {
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 4px;
+   &__item {
+      padding: 8px 24px;
+      border-radius: 4px;
+      @include fontMain(600, normal, 16px, $color-text-second);
+      text-transform: uppercase;
+      &:hover {
+         background: $color-line;
+      }
+      &.active {
+         color: #fff;
+         background: $color-acent;
+      }
+   }
+}
+
+/* ------- адаптация ------- */
+@media screen and (max-width: 1200px) {
+}
+
+@media screen and (max-width: 992px) {
+   .cards {
+      &__head {
+         margin-bottom: 20px;
+      }
+      .long-filter {
+         display: none;
+      }
+   }
+}
+
+@media screen and (max-width: 768px) {
+}
+
+@media screen and (max-width: 576px) {
+   .cards {
+      &__title {
+         font-size: 18px;
+      }
+   }
+}
+/* ------- end ------- */
+
+/* Стили для search */
+.search {
+   background: $color-bg-second;
+   padding: 20px 0;
+   &__body {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      input {
+         height: 42px;
+      }
+   }
+
+   &__inputs {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      border: 1px solid $color-border;
+      border-radius: 4px;
+      overflow: hidden;
+   }
+
+   &__duoble {
+      display: flex;
+      align-items: center;
+   }
+
+   &__first {
+      input {
+         padding: 10px 12px 10px 40px;
+         background: url("../icon/search.svg") 12px 50% / auto auto no-repeat;
+         appearance: none;
+      }
+   }
+
+   &__second {
+      input {
+         padding: 10px 12px 10px 12px;
+         appearance: none;
+      }
+   }
+
+   &__third {
+      border-left: 1px solid $color-border;
+      padding-left: 12px;
+      input {
+         padding: 10px 12px 10px 12px;
+         appearance: none;
+      }
+   }
+}
+
+/* ------- адаптация ------- */
+@media screen and (max-width: 992px) {
+   .search {
+      background: $gradient-main;
+      &__second {
+         display: none;
+         width: 100%;
+      }
+      &__third {
+         display: flex;
+         align-items: center;
+      }
+      .btn {
+         display: none;
+      }
+   }
+}
+/* ------- end ------- */
+
+/* Стили для -------- */
+.category-mob {
+   &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+   }
+
+   .category-item {
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 130px;
+      padding: 16px;
+      gap: 12px;
+      border-radius: 16px;
+      &__img {
+         width: 40px;
+         height: 40px;
+      }
+      &__title {
+         font-size: 12px;
+         text-align: center;
+      }
+   }
+}
+.category-mob-slider {
+   overflow: hidden;
+   .swiper {
+      overflow: visible;
+   }
+   .swiper-wrapper {
+   }
+   .swiper-slide {
+      width: auto;
+      height: auto;
+   }
+}
+
+/* ------- адаптация ------- */
+/* ------- end ------- */
+
+/* Стили для -------- */
+/* ------- адаптация ------- */
+/* ------- end ------- */
+
+/* Стили для -------- */
+/* ------- адаптация ------- */
+/* ------- end ------- */
+
+/* Стили для -------- */
+/* ------- адаптация ------- */
+/* ------- end ------- */
+
+/* Стили для -------- */
+/* ------- адаптация ------- */
+/* ------- end ------- */
+
+/* Стили для -------- */
+/* ------- адаптация ------- */
+/* ------- end ------- */
