@@ -217,8 +217,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     if m:
         return 'listing', {'id': m.group(1)}
 
-    # search / latest-updates
-    if p == 'search.html' or p.startswith('search') or p == 'latest-updates':
+    # latest-updates — dedicated route with H1 heading
+    if p == 'latest-updates':
+        return 'latest_updates', {}
+
+    # search
+    if p == 'search.html' or p.startswith('search'):
         return 'search', {}
 
     # internal / private pages (match both with and without .html extension)
@@ -1591,6 +1595,26 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         return seo
 
     # ── Search (noindex always) ───────────────────────────────────────────────
+    elif page_type == 'latest_updates':
+        seo.update({
+            'title':       'Latest Update | Bazar UK',
+            'description': 'Browse the most recently listed properties and ads across the UK on Bazar.',
+            'robots':      'index, follow',
+            'ssr': {
+                'type': 'category',
+                'h1':   'Latest Update',
+                'intro': 'The most recently listed ads across the UK. New properties, rooms, and more added every day.',
+                'breadcrumbs': [
+                    ('Home', '/'),
+                    ('Latest Update', '/latest-updates'),
+                ],
+                'related_links': [],
+                'city_links':    [],
+                'type_links':    [],
+            },
+        })
+        return seo
+
     elif page_type == 'search':
         seo.update({
             'title':   'Search | Bazar UK',
@@ -2456,7 +2480,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
         if page_type in ('homepage', 'listing', 'category', 'category_modifier',
                          'category_city', 'category_city_modifier',
-                         'category_city_district', 'search',
+                         'category_city_district', 'search', 'latest_updates',
                          'property_transaction', 'property_transaction_modifier',
                          'property_transaction_city',
                          'property_subtype', 'property_subtype_modifier',
@@ -2464,9 +2488,10 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_sale_type', 'category_transaction'):
             # Determine which HTML file to serve
             html_filename = {
-                'homepage': 'index.html' if is_production else 'dev-index.html',
-                'listing':  'card.html',
-                'search':   'search.html',
+                'homepage':       'index.html' if is_production else 'dev-index.html',
+                'listing':        'card.html',
+                'search':         'search.html',
+                'latest_updates': 'search.html',
             }.get(page_type)
 
             if html_filename is None:
