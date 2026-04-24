@@ -170,7 +170,7 @@ body {
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   min-height: 100vh;
 }
 .wrapper .main {
@@ -4020,6 +4020,7 @@ body.bazar-logged .card__heart {
 .footer {
   padding: 64px 0;
   background: #fef6fa;
+  margin-top: auto;
 }
 .footer__body {
   display: flex;
