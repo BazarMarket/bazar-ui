@@ -2211,6 +2211,8 @@ body {
   height: 80px;
   flex: 0 0 80px;
   position: relative;
+}
+.card-name__photo .img-cover {
   border-radius: 50%;
 }
 .card-name__photo.online {
