@@ -3698,11 +3698,15 @@ p {
   justify-content: space-between;
 }
 .card__head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
   padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: 1 1 100%;
 }
 .card__logo {
   width: 50px;
@@ -3737,7 +3741,7 @@ p {
 }
 .card__img {
   position: relative;
-  padding-bottom: 70%;
+  padding-bottom: 90%;
 }
 .card__stikers {
   position: absolute;
