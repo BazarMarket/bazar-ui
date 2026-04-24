@@ -239,9 +239,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/shop/for-sale  →  301 redirect to /property-for-sale/shop
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-sale':
             return 'redirect_301', {'location': f'/property-for-sale/{parts[1]}'}
-        # /property/house/for-rent  →  property_subtype_rent
+        # /property/house/for-rent  →  301 redirect to /property-to-rent/house
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-rent':
-            return 'property_subtype_rent', {'subtype': parts[1]}
+            return 'redirect_301', {'location': f'/property-to-rent/{parts[1]}'}
         # /property/shop/short-term  →  property_subtype_modifier
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'short-term':
             return 'property_subtype_modifier', {'subtype': parts[1]}
@@ -274,6 +274,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property-for-sale/flats  →  category_transaction (new SEO URL)
         if parts[0] == 'property-for-sale' and parts[1] in CATEGORY_LABELS:
             return 'category_transaction', {'category': parts[1], 'transaction': 'for-sale'}
+        # /property-to-rent/house, /property-to-rent/shop etc.  →  property_subtype_rent
+        if parts[0] == 'property-to-rent' and parts[1] in PROPERTY_SUBTYPES:
+            return 'property_subtype_rent', {'subtype': parts[1]}
+        # /property-to-rent/flats, /property-to-rent/rooms  →  category_transaction (rent)
+        if parts[0] == 'property-to-rent' and parts[1] in CATEGORY_LABELS:
+            return 'category_transaction', {'category': parts[1], 'transaction': 'for-rent'}
         # /flats/for-sale, /rooms/for-sale  →  301 redirect to /property-for-sale/{cat}
         if parts[1] == 'for-sale' and parts[0] in CATEGORY_LABELS:
             return 'redirect_301', {'location': f'/property-for-sale/{parts[0]}'}
@@ -284,6 +290,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             }
         return 'category_city', {'category': parts[0], 'city': parts[1]}
     if len(parts) == 1:
+        # /flats, /rooms  →  301 redirect to /property-to-rent/{cat}
+        if parts[0] in {'flats', 'rooms'}:
+            return 'redirect_301', {'location': f'/property-to-rent/{parts[0]}'}
         return 'category', {'category': parts[0]}
 
     return 'other', {}
@@ -1160,7 +1169,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         label     = data.get('label', subtype.title())
         h1        = data.get('h1', f'{label} for Rent in the UK')
         intro     = data.get('intro', f'Browse {label.lower()} for rent across the UK on Bazar.')
-        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}/for-rent'
+        canonical = f'{PUBLIC_DOMAIN}/property-to-rent/{subtype}'
         desc      = intro[:160]
 
         breadcrumb_schema = {
@@ -1194,7 +1203,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'json_ld':     json.dumps(schema),
         })
         city_links = [
-            (lbl, f'/property/{subtype}/for-rent/{slug}')
+            (lbl, f'/property-to-rent/{subtype}/{slug}')
             for lbl, slug in FLATS_POPULAR_CITIES
         ]
         seo['ssr'] = {
@@ -1215,17 +1224,31 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         }
         return seo
 
-    # ── /property-for-sale/flats etc. ─────────────────────────────────────────
+    # ── /property-for-sale/flats, /property-to-rent/flats etc. ───────────────
     elif page_type == 'category_transaction':
         cat         = params.get('category', '')
+        transaction = params.get('transaction', 'for-sale')
+        is_rent     = (transaction == 'for-rent')
         cat_label   = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
-        canonical   = f'{PUBLIC_DOMAIN}/property-for-sale/{cat}'
-        cat_url     = f'{PUBLIC_DOMAIN}/{cat}'
 
-        h1    = f'{cat_label} for Sale in the UK'
-        intro = (f'Browse {cat_label.lower()} for sale across the UK. '
-                 f'Find the best deals on {cat_label.lower()} from private sellers and agents nationwide.')
-        desc  = intro[:160]
+        if is_rent:
+            canonical        = f'{PUBLIC_DOMAIN}/property-to-rent/{cat}'
+            h1               = f'{cat_label} to Rent in the UK'
+            intro            = (f'Browse {cat_label.lower()} to rent across the UK. '
+                                f'Find long-term lets from private landlords and letting agents nationwide.')
+            bc_parent_label  = 'Property to Rent'
+            bc_parent_url    = f'{PUBLIC_DOMAIN}/property/for-rent'
+            related_links    = [(f'Looking to buy instead?', f'Browse {cat_label.lower()} for sale', f'/property-for-sale/{cat}')]
+        else:
+            canonical        = f'{PUBLIC_DOMAIN}/property-for-sale/{cat}'
+            h1               = f'{cat_label} for Sale in the UK'
+            intro            = (f'Browse {cat_label.lower()} for sale across the UK. '
+                                f'Find the best deals on {cat_label.lower()} from private sellers and agents nationwide.')
+            bc_parent_label  = 'Property for Sale'
+            bc_parent_url    = f'{PUBLIC_DOMAIN}/property/for-sale'
+            related_links    = [(f'Looking to rent instead?', f'Browse {cat_label.lower()} for rent', f'/property-to-rent/{cat}')]
+
+        desc = intro[:160]
 
         breadcrumb_schema = {
             "@type": "BreadcrumbList",
@@ -1233,7 +1256,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": f'Property for Sale', "item": f'{PUBLIC_DOMAIN}/property/for-sale'},
+                 "name": bc_parent_label, "item": bc_parent_url},
                 {"@type": "ListItem", "position": 3,
                  "name": h1, "item": canonical},
             ]
@@ -1262,10 +1285,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Sale', '/property/for-sale'),
+                (bc_parent_label, f'/property/{"for-rent" if is_rent else "for-sale"}'),
                 (h1, None),
             ],
-            'related_links': [(f'Looking to rent instead?', f'Browse {cat_label.lower()} for rent', f'/{cat}')],
+            'related_links': related_links,
             'type':        'category',
         }
         return seo
