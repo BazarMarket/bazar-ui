@@ -12,7 +12,7 @@
    <meta name="keywords" content="">
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css">
-   <link rel="stylesheet" href="css/main.css?v=120" type="text/css">
+   <link rel="stylesheet" href="css/main.css?v=119" type="text/css">
    <link rel="icon" type="image/png" href="favicon.png?v=12">
    <style>
       /* ── Page layout ── */
@@ -33,9 +33,9 @@
       .sr-sort label { font-family: "Poppins", sans-serif; font-size: 13px; color: #999; white-space: nowrap; }
       .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 5px 10px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
       .sr-sort select:focus { border-color: #ff9138; }
-      .sr-results-wrap { display: flex; gap: 0; align-items: flex-start; }
-      .sr-view-sidebar { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; padding-top: 4px; flex-shrink: 0; }
-      .sr-results-main { flex: 1; min-width: 0; }
+      .sr-results-wrap { display: block; }
+      .sr-view-sidebar { display: flex; flex-direction: row; gap: 4px; align-items: center; }
+      .sr-results-main { width: 100%; }
       .sr-view-btn { width: 41px; height: 41px; border: 1px solid #e8e8e8; border-radius: 8px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
       .sr-view-btn:hover { border-color: #9ca3af; }
       .sr-view-btn.active { border-color: #9ca3af; background: #f3f4f6; }
@@ -45,6 +45,7 @@
       .sr-grid-view.active { display: block; }
       .sr-grid-view .cards__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
       .list-products__body.hidden { display: none; }
+      .list-products__body { width: 100%; }
       .sr-tags { display: none; }
 
       /* ── Compact filter block ── */
@@ -192,6 +193,7 @@
          .product__desc { display: none !important; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(3, 1fr); }
          .sr-view-sidebar { display: none; }
+         .list-products__body { max-width: 100%; }
       }
 
       /* ── Tablet small / large phone (≤768px) ── */
@@ -268,6 +270,7 @@
          .sr-sort select { font-size: 12px; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
          .sr-view-sidebar { display: none; }
+         .list-products__body { max-width: 100%; }
          #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 100%; }
          .cf-chips { gap: 6px; margin-top: 8px; padding-top: 8px; }
          .cf-tag { font-size: 12px; padding: 4px 10px; }
@@ -847,19 +850,6 @@
                </div>
                <div class="sr-hero-sort">
                   <!-- SR_CAT_HERO -->
-                  <div class="sr-sort">
-                     <label>Sort by:</label>
-                     <select>
-                        <option>Relevance</option>
-                        <option>Price: low to high</option>
-                        <option>Price: high to low</option>
-                        <option>Newest first</option>
-                        <option>Most popular</option>
-                     </select>
-                  </div>
-               </div>
-
-               <div class="sr-results-wrap">
                   <div class="sr-view-sidebar">
                      <button class="sr-view-btn active" id="btn-list" title="List view" onclick="setView('list')">
                         <svg width="22" height="22" viewBox="0 0 18 18" fill="none">
@@ -880,6 +870,19 @@
                         </svg>
                      </button>
                   </div>
+                  <div class="sr-sort">
+                     <label>Sort by:</label>
+                     <select>
+                        <option>Relevance</option>
+                        <option>Price: low to high</option>
+                        <option>Price: high to low</option>
+                        <option>Newest first</option>
+                        <option>Most popular</option>
+                     </select>
+                  </div>
+               </div>
+
+               <div class="sr-results-wrap">
                   <div class="sr-results-main">
 
                <div class="list-products__body">
@@ -2369,8 +2372,7 @@
                 v:    ad.views || 0,
                 stk:  stk,
                 cc:   cc,
-                cy:   ad.city ? ad.city.toUpperCase() : 'UK',
-                lt:   ad.listing_type || ''
+                cy:   ad.city ? ad.city.toUpperCase() : 'UK'
               });
             });
             /* Prepend API items (newest first) before static demo items */
@@ -2409,8 +2411,7 @@
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
                       cc: ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '',
-                      cy: ad.city ? ad.city.toUpperCase() : 'UK',
-                      lt: ad.listing_type || ''
+                      cy: ad.city ? ad.city.toUpperCase() : 'UK'
                     });
                   });
                   if (newItems.length) {
@@ -2507,20 +2508,10 @@
         window._bazarCurrentType = type;
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
-        var filtered;
-        if (currentMode === 'short-rent') {
-          filtered = items.filter(function(item) { return item.lt === 'short_rent'; });
-        } else if (currentMode === 'rent') {
-          filtered = items.filter(function(item) { return !item.lt || item.lt === 'long_rent' || item.lt === 'rent'; });
-        } else if (currentMode === 'sale') {
-          filtered = items.filter(function(item) { return !item.lt || item.lt === 'sale'; });
-        } else {
-          filtered = items;
-        }
         var listBody = document.querySelector('.list-products__body');
-        if (listBody) listBody.innerHTML = filtered.map(buildListProduct).join('');
+        if (listBody) listBody.innerHTML = items.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
-        if (gridBody) gridBody.innerHTML = filtered.map(buildGridCard).join('');
+        if (gridBody) gridBody.innerHTML = items.map(buildGridCard).join('');
       }
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
@@ -2611,9 +2602,8 @@
 
          var _pathToKey = (function() {
             if (pathCat === 'property') {
-               if (pathLast === 'short-term') return 'short-rent';
-               if (pathSub === 'for-rent' || pathLast === 'for-rent') return 'rent';
-               if (pathSub === 'for-sale' || pathLast === 'for-sale') return 'sale';
+               if (pathLast === 'short-term' || pathSub === 'for-rent' && pathLast === 'short-term') return 'short-rent';
+               if (pathSub === 'for-rent') return 'rent';
                return 'sale';
             }
             if (pathCat === 'rooms') return pathLast === 'short-term' ? 'short-rent' : 'rent';
@@ -2657,8 +2647,6 @@
             var pathAutoType = null;
             if (pathCat === 'rooms') pathAutoType = 'Rooms';
             if (pathCat === 'flats') pathAutoType = 'Flats';
-            var _propSubtypeToType = { 'house': 'House', 'shop': 'Shop', 'office': 'Office', 'restaurant': 'Restaurant', 'industrial': 'Industrial', 'hotel': 'Hotel' };
-            if (pathCat === 'property' && _propSubtypeToType[pathSub]) pathAutoType = _propSubtypeToType[pathSub];
             if (pathAutoType && !type) {
                var autoPanel = document.getElementById('cfTypePanel');
                if (autoPanel) {
@@ -2784,8 +2772,7 @@
 
    <div id="recaptcha-container"></div>
 
-   <script src="js/error-logger.js?v=1"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
    <script src="js/firebase-auth-v2.js?v=4"></script>
 
@@ -2875,7 +2862,30 @@
          heart.classList.toggle('icon-heart', !isFav);
          heart.classList.toggle('icon-heart-full', isFav);
       }
-      /* Click delegation handled globally by header-auth.js */
+      /* Event delegation — catches clicks on ALL hearts, including dynamically added */
+      document.addEventListener('click', function(e) {
+         var heart = e.target.closest('.card__heart');
+         if (!heart) return;
+         e.preventDefault();
+         e.stopPropagation();
+         var cardId = _heartGetId(heart);
+         heart.classList.toggle('active');
+         var isActive = heart.classList.contains('active');
+         heart.classList.toggle('icon-heart', !isActive);
+         heart.classList.toggle('icon-heart-full', isActive);
+         if (cardId) {
+            localStorage.setItem('favorite_' + cardId, isActive ? '1' : '0');
+            /* Sync all other hearts with the same card ID (list ↔ grid) */
+            document.querySelectorAll('.card__heart').forEach(function(h) {
+               if (h !== heart && _heartGetId(h) === cardId) {
+                  h.classList.toggle('active', isActive);
+                  h.classList.toggle('icon-heart', !isActive);
+                  h.classList.toggle('icon-heart-full', isActive);
+               }
+            });
+         }
+         updateFavCount();
+      }, true);
       /* Watch for dynamically injected cards and apply stored state */
       (new MutationObserver(function(mutations) {
          mutations.forEach(function(m) {
@@ -2903,6 +2913,6 @@
       _loadAdCount();
       setInterval(_loadAdCount, 30000);
    </script>
-<script src="js/header-auth.js?v=12"></script>
+<script src="js/header-auth.js?v=11"></script>
 </body>
 </html>
