@@ -2419,7 +2419,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_transaction', 'property_transaction_modifier',
                          'property_transaction_city',
                          'property_subtype', 'property_subtype_modifier',
-                         'property_subtype_sale', 'property_sale_type', 'category_transaction'):
+                         'property_subtype_rent', 'property_subtype_sale',
+                         'property_sale_type', 'category_transaction'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage': 'index.html' if is_production else 'dev-index.html',
