@@ -1282,9 +1282,10 @@
             if (ad.area) luInfoItems += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
             var luInfoBord = luInfoItems ? '<div class="card__dop"><div class="info-bord">' + luInfoItems + '</div></div>' : '';
             var luInfoId = needsFetch ? 'luInfo_' + ad.id : '';
+            var _myUid = localStorage.getItem('bazar_firebase_uid') || '';
             html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer">' +
                 '<a href="card.html?id=' + ad.id + '" class="card-link" aria-label="View listing"></a>' +
-                '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
+                '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_myUid ? 'data-uid="' + _myUid + '"' : '') + ' alt=""></div>' +
                 '<div class="card__info"><p class="card__name">' + (ad.title || 'My Ad') + '</p>' +
                 '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                 '<div class="card__img">' + stiker +
@@ -1296,6 +1297,7 @@
             if (needsFetch) needsApiFetch.push(ad.id);
         });
         grid.insertAdjacentHTML('afterbegin', html);
+        if (typeof _loadCardAvatars === 'function') _loadCardAvatars();
 
         /* Async: load photo + area/beds/baths from API for ads missing cached data */
         needsApiFetch.forEach(function(adId) {
@@ -1366,9 +1368,10 @@
             infoBord = '<div class="card__dop"><div class="info-bord">' + items + '</div></div>';
         }
         var cardUrl = 'card.html?id=' + ad.id;
+        var _logoUid = ad.seller_firebase_uid || '';
         return '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + cardUrl + '\'}">' +
             '<a href="' + cardUrl + '" class="card-link" aria-label="View listing"></a>' +
-            '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
+            '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_logoUid ? 'data-uid="' + _logoUid + '"' : '') + ' alt=""></div>' +
             '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
             '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
             '<div class="card__img">' + stiker +
@@ -1395,6 +1398,39 @@
         })
         .catch(function(){ alert('Could not connect to payment server. Please try again.'); });
     }
+    var _avatarCache = {};
+    function _loadCardAvatars() {
+        var imgs = document.querySelectorAll('img[data-uid]');
+        var myUid = localStorage.getItem('bazar_firebase_uid') || '';
+        var myAvatar = localStorage.getItem('bazar_avatar') || '';
+        var toFetch = {};
+        imgs.forEach(function(img) {
+            var uid = img.getAttribute('data-uid');
+            if (!uid) return;
+            if (myUid && uid === myUid && myAvatar) {
+                img.src = myAvatar;
+            } else if (_avatarCache[uid]) {
+                img.src = _avatarCache[uid];
+            } else if (!toFetch[uid]) {
+                toFetch[uid] = [];
+                toFetch[uid].push(img);
+            } else {
+                toFetch[uid].push(img);
+            }
+        });
+        Object.keys(toFetch).forEach(function(uid) {
+            fetch('/api/customers/' + uid, { headers: { 'Accept': 'application/json' } })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(cust) {
+                    if (!cust || !cust.avatar) return;
+                    _avatarCache[uid] = cust.avatar;
+                    document.querySelectorAll('img[data-uid="' + uid + '"]').forEach(function(el) {
+                        el.src = cust.avatar;
+                    });
+                })
+                .catch(function() {});
+        });
+    }
     </script>
 
     <script>
@@ -1410,6 +1446,7 @@
                 var html = '';
                 resp.data.forEach(function(ad) { html += buildIndexCard(ad); });
                 grid.innerHTML = html;
+                if (typeof _loadCardAvatars === 'function') _loadCardAvatars();
                 /* mobile swiper */
                 var swiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
                 if (swiperWrapper) {
@@ -1463,9 +1500,10 @@
                         infoBord = '<div class="card__dop"><div class="info-bord">' + infoItems + '</div></div>';
                     }
                     var latCardUrl = 'card.html?id=' + ad.id;
+                    var _latUid = ad.seller_firebase_uid || '';
                     html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latCardUrl + '\'}">' +
                         '<a href="' + latCardUrl + '" class="card-link" aria-label="View listing"></a>' +
-                        '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
+                        '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_latUid ? 'data-uid="' + _latUid + '"' : '') + ' alt=""></div>' +
                         '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
                         '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                         '<div class="card__img">' + stiker +
@@ -1475,6 +1513,7 @@
                         '</div>';
                 });
                 grid.innerHTML = html;
+                if (typeof _loadCardAvatars === 'function') _loadCardAvatars();
                 if (typeof _updateSearchPlaceholder === 'function') _updateSearchPlaceholder(resp.data.length);
                 /* mobile swiper for latest */
                 var latestSwiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
@@ -1499,9 +1538,10 @@
                             infoBord2 = '<div class="card__dop"><div class="info-bord">' + ii + '</div></div>';
                         }
                         var latSwUrl = 'card.html?id=' + ad.id;
+                        var _latSwUid = ad.seller_firebase_uid || '';
                         latestSlidesHtml += '<div class="swiper-slide"><div class="' + cardCls2 + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latSwUrl + '\'}">' +
                             '<a href="' + latSwUrl + '" class="card-link" aria-label="View listing"></a>' +
-                            '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" alt=""></div>' +
+                            '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_latSwUid ? 'data-uid="' + _latSwUid + '"' : '') + ' alt=""></div>' +
                             '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
                             '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                             '<div class="card__img">' + stiker2 +

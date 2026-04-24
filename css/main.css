@@ -2212,6 +2212,7 @@ body {
   flex: 0 0 80px;
   position: relative;
   border-radius: 50%;
+  overflow: hidden;
 }
 .card-name__photo.online {
   position: relative;
