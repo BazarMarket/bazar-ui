@@ -242,9 +242,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/house/for-rent  →  301 redirect to /property-to-rent/house
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'for-rent':
             return 'redirect_301', {'location': f'/property-to-rent/{parts[1]}'}
-        # /property/shop/short-term  →  property_subtype_modifier
+        # /property/shop/short-term  →  301 redirect to /property-short-rent/shop
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'short-term':
-            return 'property_subtype_modifier', {'subtype': parts[1]}
+            return 'redirect_301', {'location': f'/property-short-rent/{parts[1]}'}
         # /property/for-rent/{city} or /property/for-sale/{city}  →  property_transaction_city
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
             return 'property_transaction_city', {
@@ -280,10 +280,19 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property-to-rent/flats, /property-to-rent/rooms  →  category_transaction (rent)
         if parts[0] == 'property-to-rent' and parts[1] in CATEGORY_LABELS:
             return 'category_transaction', {'category': parts[1], 'transaction': 'for-rent'}
+        # /property-short-rent/house, /property-short-rent/shop etc.  →  property_subtype_modifier
+        if parts[0] == 'property-short-rent' and parts[1] in PROPERTY_SUBTYPES:
+            return 'property_subtype_modifier', {'subtype': parts[1]}
+        # /property-short-rent/flats, /property-short-rent/rooms  →  category_modifier
+        if parts[0] == 'property-short-rent' and parts[1] in CATEGORY_LABELS:
+            return 'category_modifier', {'category': parts[1], 'modifier': 'short-term'}
         # /flats/for-sale, /rooms/for-sale  →  301 redirect to /property-for-sale/{cat}
         if parts[1] == 'for-sale' and parts[0] in CATEGORY_LABELS:
             return 'redirect_301', {'location': f'/property-for-sale/{parts[0]}'}
-        # /rooms/short-term  →  category_modifier
+        # /flats/short-term, /rooms/short-term  →  301 redirect to /property-short-rent/{cat}
+        if parts[1] == 'short-term' and parts[0] in CATEGORY_LABELS:
+            return 'redirect_301', {'location': f'/property-short-rent/{parts[0]}'}
+        # /{cat}/short-term  →  category_modifier (fallback)
         if parts[1] == 'short-term':
             return 'category_modifier', {
                 'category': parts[0], 'modifier': 'short-term'
@@ -774,7 +783,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
         related_links = []
         if cat == 'flats':
-            related_links = [('Looking for short-term rentals?', 'Browse short-term flats across the UK', '/flats/short-term')]
+            related_links = [('Looking for short-term rentals?', 'Browse short-term flats across the UK', '/property-short-rent/flats')]
 
         seo['ssr'] = {
             'h1':            h1,
@@ -795,7 +804,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         cat       = params.get('category', '')
         modifier  = params.get('modifier', '')
         cat_label = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
-        canonical = f'{PUBLIC_DOMAIN}/{cat}/short-term'
+        canonical = f'{PUBLIC_DOMAIN}/property-short-rent/{cat}'
 
         h1    = f'Short-Term {cat_label} for Rent in the UK' if cat == 'flats' else f'Short-Term {cat_label} to Rent in the UK'
         if cat == 'rooms':
@@ -909,7 +918,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         ]
         related_links = []
         if is_rent:
-            related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]
+            related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]  # /property/for-rent/short-term handled separately
             type_links = PROPERTY_TYPE_NAV
         else:
             type_links = PROPERTY_TYPE_NAV_SALE
@@ -1100,7 +1109,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             ],
             'city_links':  city_links,
             'cat_label':   label,
-            'related_links': [('Looking for short-term options?', f'Browse short-term {label.lower()} for rent', f'/property/{subtype}/short-term')],
+            'related_links': [('Looking for short-term options?', f'Browse short-term {label.lower()} for rent', f'/property-short-rent/{subtype}')],
             'type':        'category',
         }
         return seo
@@ -1112,8 +1121,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         label     = data.get('label', subtype.title())
         h1        = data.get('h1_short', f'Short-Term {label} for Rent in the UK')
         intro     = data.get('intro_short', f'Find short-term {label.lower()} for rent across the UK on Bazar.')
-        canonical = f'{PUBLIC_DOMAIN}/property/{subtype}/short-term'
-        parent_url = f'{PUBLIC_DOMAIN}/property/{subtype}'
+        canonical = f'{PUBLIC_DOMAIN}/property-short-rent/{subtype}'
+        parent_url = f'{PUBLIC_DOMAIN}/property-to-rent/{subtype}'
         desc      = intro[:160]
 
         breadcrumb_schema = {
