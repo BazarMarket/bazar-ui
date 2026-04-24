@@ -265,9 +265,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/shop, /property/office, etc.  →  property_subtype
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES:
             return 'property_subtype', {'subtype': parts[1]}
-        # /flats/for-sale, /rooms/for-sale  →  category_transaction
+        # /property-for-sale/flats  →  category_transaction (new SEO URL)
+        if parts[0] == 'property-for-sale' and parts[1] in CATEGORY_LABELS:
+            return 'category_transaction', {'category': parts[1], 'transaction': 'for-sale'}
+        # /flats/for-sale, /rooms/for-sale  →  301 redirect to /property-for-sale/{cat}
         if parts[1] == 'for-sale' and parts[0] in CATEGORY_LABELS:
-            return 'category_transaction', {'category': parts[0], 'transaction': 'for-sale'}
+            return 'redirect_301', {'location': f'/property-for-sale/{parts[0]}'}
         # /rooms/short-term  →  category_modifier
         if parts[1] == 'short-term':
             return 'category_modifier', {
@@ -417,7 +420,7 @@ PROPERTY_TYPE_NAV = [
 ]
 
 PROPERTY_TYPE_NAV_SALE = [
-    ('Flats',       '/flats/for-sale'),
+    ('Flats',       '/property-for-sale/flats'),
     ('Shops',       '/property/shop/for-sale'),
     ('Offices',     '/property/office/for-sale'),
     ('Industrial',  '/property/industrial/for-sale'),
@@ -1205,11 +1208,11 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         }
         return seo
 
-    # ── /flats/for-sale, /rooms/for-sale etc. ─────────────────────────────────
+    # ── /property-for-sale/flats etc. ─────────────────────────────────────────
     elif page_type == 'category_transaction':
         cat         = params.get('category', '')
         cat_label   = CATEGORY_LABELS.get(cat, cat.replace('-', ' ').title())
-        canonical   = f'{PUBLIC_DOMAIN}/{cat}/for-sale'
+        canonical   = f'{PUBLIC_DOMAIN}/property-for-sale/{cat}'
         cat_url     = f'{PUBLIC_DOMAIN}/{cat}'
 
         h1    = f'{cat_label} for Sale in the UK'
@@ -2349,6 +2352,13 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         # Determine page type for SEO injection
         p_clean = path.lstrip('/')
         page_type, params = resolve_page_type(path, qs)
+
+        # 301 redirect (e.g. /flats/for-sale → /property-for-sale/flats)
+        if page_type == 'redirect_301':
+            self.send_response(301)
+            self.send_header('Location', params['location'])
+            self.end_headers()
+            return
 
         if page_type in ('homepage', 'listing', 'category', 'category_modifier',
                          'category_city', 'category_city_modifier',
