@@ -344,7 +344,7 @@
                      <div class="card-grid__right">
                         <div class="card-name card-tile">
                            <div class="card-name__left">
-                              <div class="card-name__photo online">
+                              <div class="card-name__photo" id="seller-photo-wrap">
                                  <img loading="lazy" src="icon/man.svg" alt="" class="img-cover" id="seller-avatar-img">
                               </div>
                               <div class="card-name__bottom">
@@ -935,6 +935,11 @@
          sellerStatusEl.classList.add(isActive ? 'seller-status--active' : 'seller-status--inactive');
          sellerStatusEl.querySelector('.seller-status__text').textContent = statusText;
          sellerStatusEl.style.display = '';
+         var photoWrap = document.getElementById('seller-photo-wrap');
+         if (photoWrap) {
+            photoWrap.classList.remove('online', 'offline');
+            photoWrap.classList.add(isActive ? 'online' : 'offline');
+         }
       }
 
       var allImgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);

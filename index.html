@@ -1369,9 +1369,14 @@
         }
         var cardUrl = 'card.html?id=' + ad.id;
         var _logoUid = ad.seller_firebase_uid || '';
+        var _onlineCls = '';
+        if (ad.seller_last_seen) {
+            var _diffM = Math.floor((Date.now() - new Date(ad.seller_last_seen).getTime()) / 60000);
+            _onlineCls = _diffM < 30 ? ' online' : ' offline';
+        }
         return '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + cardUrl + '\'}">' +
             '<a href="' + cardUrl + '" class="card-link" aria-label="View listing"></a>' +
-            '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_logoUid ? 'data-uid="' + _logoUid + '"' : '') + ' alt=""></div>' +
+            '<div class="card__head"><div class="card__logo' + _onlineCls + '"><img class="img-cover" src="icon/man.png" ' + (_logoUid ? 'data-uid="' + _logoUid + '"' : '') + ' alt=""></div>' +
             '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
             '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
             '<div class="card__img">' + stiker +
@@ -1501,9 +1506,11 @@
                     }
                     var latCardUrl = 'card.html?id=' + ad.id;
                     var _latUid = ad.seller_firebase_uid || '';
+                    var _latOnline = '';
+                    if (ad.seller_last_seen) { var _lm = Math.floor((Date.now() - new Date(ad.seller_last_seen).getTime()) / 60000); _latOnline = _lm < 30 ? ' online' : ' offline'; }
                     html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latCardUrl + '\'}">' +
                         '<a href="' + latCardUrl + '" class="card-link" aria-label="View listing"></a>' +
-                        '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_latUid ? 'data-uid="' + _latUid + '"' : '') + ' alt=""></div>' +
+                        '<div class="card__head"><div class="card__logo' + _latOnline + '"><img class="img-cover" src="icon/man.png" ' + (_latUid ? 'data-uid="' + _latUid + '"' : '') + ' alt=""></div>' +
                         '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
                         '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                         '<div class="card__img">' + stiker +
@@ -1539,9 +1546,11 @@
                         }
                         var latSwUrl = 'card.html?id=' + ad.id;
                         var _latSwUid = ad.seller_firebase_uid || '';
+                        var _latSwOnline = '';
+                        if (ad.seller_last_seen) { var _lsm = Math.floor((Date.now() - new Date(ad.seller_last_seen).getTime()) / 60000); _latSwOnline = _lsm < 30 ? ' online' : ' offline'; }
                         latestSlidesHtml += '<div class="swiper-slide"><div class="' + cardCls2 + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latSwUrl + '\'}">' +
                             '<a href="' + latSwUrl + '" class="card-link" aria-label="View listing"></a>' +
-                            '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_latSwUid ? 'data-uid="' + _latSwUid + '"' : '') + ' alt=""></div>' +
+                            '<div class="card__head"><div class="card__logo' + _latSwOnline + '"><img class="img-cover" src="icon/man.png" ' + (_latSwUid ? 'data-uid="' + _latSwUid + '"' : '') + ' alt=""></div>' +
                             '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
                             '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                             '<div class="card__img">' + stiker2 +
