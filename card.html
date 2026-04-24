@@ -345,7 +345,7 @@
                         <div class="card-name card-tile">
                            <div class="card-name__left">
                               <div class="card-name__photo online">
-                                 <img loading="lazy" src="icon/man.svg" alt="" class="img-cover">
+                                 <img loading="lazy" src="icon/man.svg" alt="" class="img-cover" id="seller-avatar-img">
                               </div>
                               <div class="card-name__bottom">
                                  <div class="network">
@@ -1055,12 +1055,21 @@
          ? (localStorage.getItem('bazar_username') || p.seller_name)
          : p.seller_name;
       el('seller-name').textContent = _displaySellerName;
-      /* Fetch seller's current name from API (may have been updated after ad was created) */
+      /* Show own avatar from localStorage if viewing own listing */
+      if (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid) {
+         var _ownAv = localStorage.getItem('bazar_avatar');
+         if (_ownAv) {
+            var _ownAvImg = document.getElementById('seller-avatar-img');
+            if (_ownAvImg) _ownAvImg.src = _ownAv;
+         }
+      }
+      /* Fetch seller's current name + avatar from API (may have been updated after ad was created) */
       if (p.seller_firebase_uid && !(p.seller_firebase_uid === _curUid)) {
          fetch('/api/customers/' + encodeURIComponent(p.seller_firebase_uid))
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(cust) {
-               if (cust && cust.name) {
+               if (!cust) return;
+               if (cust.name) {
                   el('seller-name').textContent = cust.name;
                   var mobName = document.getElementById('mob-seller-name');
                   if (mobName) mobName.textContent = cust.name;
@@ -1069,6 +1078,13 @@
                   /* Update chat panel header name */
                   var _ccpNameEl = document.getElementById('ccpSellerName');
                   if (_ccpNameEl) _ccpNameEl.textContent = cust.name;
+               }
+               /* Update seller avatar if available */
+               if (cust.avatar) {
+                  var _sellerAv = document.getElementById('seller-avatar-img');
+                  if (_sellerAv) _sellerAv.src = cust.avatar;
+                  var _chatAv = document.getElementById('ccpSellerAvatar');
+                  if (_chatAv) _chatAv.src = cust.avatar;
                }
             })
             .catch(function() {});
