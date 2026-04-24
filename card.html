@@ -938,7 +938,7 @@
          var photoWrap = document.getElementById('seller-photo-wrap');
          if (photoWrap) {
             photoWrap.classList.remove('online', 'offline');
-            photoWrap.classList.add(isActive ? 'online' : 'offline');
+            if (isActive) photoWrap.classList.add('online');
          }
       }
 
