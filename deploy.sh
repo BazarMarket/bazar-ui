@@ -42,9 +42,4 @@ for FILE in "$@"; do
 done
 
 echo "=== Production updated ==="
-
-# Also push to GitHub so repo stays in sync
-echo "--- Pushing to GitHub..."
-git push https://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@github.com/BazarMarket/bazar-ui.git main 2>&1 | tail -3
-
 echo "=== Done! ==="
