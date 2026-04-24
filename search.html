@@ -890,6 +890,10 @@
                
                </div>
 
+               <div id="sr-grid-view">
+                  <div class="cards__grid"></div>
+               </div>
+
                <div class="list-products__pagination" style="display:none">
                   <div class="pagination">
                      <a class="pagination__arrow no-active icon-arrow-l" href="#"></a>
@@ -2395,6 +2399,12 @@
             }
          } else if (!window._bazarCurrentType) {
             if (typeEl) typeEl.textContent = 'Search results';
+         }
+         /* Latest Update page title */
+         if (pathCat === 'latest-updates') {
+            if (typeEl) typeEl.textContent = 'Latest Update';
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
          }
       })();
    </script>
