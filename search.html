@@ -2217,16 +2217,72 @@
           '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
       }
-      function renderListings(type) {
+      var _srCurrentPage = 1;
+      var _srItemsPerPage = 10;
+
+      function _buildPagination(total, current) {
+        var totalPages = Math.ceil(total / _srItemsPerPage);
+        if (totalPages <= 1) return '';
+        var html = '';
+        /* Prev arrow */
+        html += '<a class="pagination__arrow icon-arrow-l' + (current <= 1 ? ' no-active' : '') + '" href="#" onclick="srGoPage(' + (current - 1) + ');return false;"></a>';
+        html += '<ul>';
+        /* Build page numbers with ellipsis */
+        var pages = [];
+        for (var i = 1; i <= totalPages; i++) {
+          if (i === 1 || i === totalPages || (i >= current - 1 && i <= current + 1)) {
+            pages.push(i);
+          } else if (pages[pages.length - 1] !== '...') {
+            pages.push('...');
+          }
+        }
+        pages.forEach(function(p) {
+          if (p === '...') {
+            html += '<li><span>...</span></li>';
+          } else {
+            html += '<li><a class="' + (p === current ? 'active' : '') + '" href="#" onclick="srGoPage(' + p + ');return false;">' + p + '</a></li>';
+          }
+        });
+        html += '</ul>';
+        /* Next arrow */
+        html += '<a class="pagination__arrow icon-arrow-r' + (current >= totalPages ? ' no-active' : '') + '" href="#" onclick="srGoPage(' + (current + 1) + ');return false;"></a>';
+        return html;
+      }
+
+      function srGoPage(page) {
+        var type = window._bazarCurrentType;
+        var items = type && BAZAR_LISTINGS[type];
+        if (!items) return;
+        var totalPages = Math.max(1, Math.ceil(items.length / _srItemsPerPage));
+        if (page < 1 || page > totalPages) return;
+        _srCurrentPage = page;
+        renderListings(type, true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function renderListings(type, keepPage) {
+        if (!keepPage && window._bazarCurrentType !== type) _srCurrentPage = 1;
         window._bazarCurrentType = type;
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
+        /* Paginate */
+        var start = (_srCurrentPage - 1) * _srItemsPerPage;
+        var pageItems = items.slice(start, start + _srItemsPerPage);
         var listBody = document.querySelector('.list-products__body');
-        if (listBody) listBody.innerHTML = items.map(buildListProduct).join('');
+        if (listBody) listBody.innerHTML = pageItems.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
-        if (gridBody) gridBody.innerHTML = items.map(buildGridCard).join('');
+        if (gridBody) gridBody.innerHTML = pageItems.map(buildGridCard).join('');
+        /* Pagination control */
         var pag = document.querySelector('.list-products__pagination');
-        if (pag) pag.style.display = items.length > 0 ? '' : 'none';
+        if (pag) {
+          if (items.length > 0) {
+            pag.style.display = '';
+            var inner = pag.querySelector('.pagination');
+            if (inner) inner.innerHTML = _buildPagination(items.length, _srCurrentPage);
+          } else {
+            pag.style.display = 'none';
+          }
+        }
       }
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
