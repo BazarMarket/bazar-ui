@@ -3698,11 +3698,15 @@ p {
   justify-content: space-between;
 }
 .card__head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
   padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: 1 1 100%;
 }
 .card__logo {
   width: 50px;
@@ -3737,12 +3741,12 @@ p {
 }
 .card__img {
   position: relative;
-  padding-bottom: 70%;
+  padding-bottom: 85%;
 }
 .card__stikers {
   position: absolute;
   z-index: 2;
-  top: 16px;
+  top: 70px;
   left: 16px;
   display: flex;
   align-items: center;
@@ -3980,7 +3984,7 @@ body.bazar-logged .card__heart {
     font-size: 10px;
   }
   .card__stikers {
-    top: 6px;
+    top: 44px;
     left: 6px;
     gap: 2px;
   }
