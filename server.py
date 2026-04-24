@@ -1360,6 +1360,19 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Sale', '/property/for-sale'),
+                (h1, None),
+            ],
+            'city_links':    [],
+            'cat_label':     label,
+            'related_links': [],
+            'type':          'category',
+        }
         return seo
 
     # ── Category + city + modifier (e.g. /rooms/london/short-term) ────────────
