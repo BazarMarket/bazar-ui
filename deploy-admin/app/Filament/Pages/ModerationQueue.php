@@ -9,10 +9,10 @@ class ModerationQueue extends Page
     protected string $view = 'filament.pages.moderation-queue';
 
     protected static string $routePath = '/moderation-queue';
-    protected static string|\UnitEnum|null   $navigationGroup = 'Moderation';
-    protected static string|\BackedEnum|null $navigationIcon  = null;
+    protected static string|\UnitEnum|null   $navigationGroup = null;
+    protected static string|\BackedEnum|null $navigationIcon  = 'heroicon-o-shield-exclamation';
     protected static ?string $navigationLabel = 'AI Moderation';
-    protected static ?int    $navigationSort  = 1;
+    protected static ?int    $navigationSort  = 4;
 
     public array $items = [];
     public int $pendingCount = 0;

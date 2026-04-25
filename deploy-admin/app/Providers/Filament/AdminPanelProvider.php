@@ -38,9 +38,6 @@ class AdminPanelProvider extends PanelProvider
                     ->collapsed(),
                 NavigationGroup::make('Property')
                     ->collapsible(false),
-                NavigationGroup::make('Moderation')
-                    ->icon('heroicon-o-shield-exclamation')
-                    ->collapsible(),
                 NavigationGroup::make('For Sale')
                     ->collapsible()
                     ->collapsed(),
