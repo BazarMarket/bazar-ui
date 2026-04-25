@@ -155,7 +155,7 @@ window.onload = function () {
 
         // loop: true,
         watchOverflow: true,
-        centerInsufficientSlides: true,
+        centerInsufficientSlides: false,
         // autoHeight: true,
         slidesPerView: 'auto',
         spaceBetween: 8,
