@@ -80,6 +80,32 @@ def _init_chat_db():
 
 _init_chat_db()
 
+# ── Moderation DB init ────────────────────────────────────────────────────────
+MOD_DB = CHAT_DB  # reuse same SQLite file
+
+def _init_mod_db():
+    with _chat_lock:
+        conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+        conn.executescript('''
+            CREATE TABLE IF NOT EXISTS moderation_reviews (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                property_id     INTEGER DEFAULT 0,
+                title           TEXT DEFAULT '',
+                description     TEXT DEFAULT '',
+                firebase_uid    TEXT DEFAULT '',
+                ai_text_flagged INTEGER DEFAULT 0,
+                ai_reasons      TEXT DEFAULT '[]',
+                ai_confidence   REAL DEFAULT 0.0,
+                status          TEXT DEFAULT 'pending',
+                reviewed_at     REAL DEFAULT 0,
+                created_at      REAL DEFAULT 0
+            );
+        ''')
+        conn.commit()
+        conn.close()
+
+_init_mod_db()
+
 # ── Gemini AI for ticket auto-reply ───────────────────────────────────────────
 _BAZAR_SYSTEM_PROMPT = """You are a helpful support assistant for Bazar (www.bazar.uk) — a UK online marketplace specialising in property listings (for sale, long-term rent, short-term rent) as well as other goods.
 
@@ -136,6 +162,55 @@ def _gemini_reply(subject: str, message: str) -> tuple[str, bool]:
         return (clean_text, needs_human)
     except Exception as exc:
         return ('', True)
+
+# ── Gemini AI content moderation ──────────────────────────────────────────────
+_MOD_PROMPT = """You are a content moderation AI for Bazar (www.bazar.uk), a UK property marketplace.
+Analyse the following property listing and determine if it violates content policies.
+
+Policy violations to detect:
+1. Profanity or offensive language
+2. Hate speech or discrimination
+3. Sexual or explicit content
+4. Spam, scam, or clearly fraudulent content
+5. Content completely unrelated to property/real estate
+
+Title: {title}
+Description: {description}
+
+Respond ONLY with valid JSON, no markdown, no explanation:
+{{"flagged": true, "reasons": ["short reason"], "confidence": 0.9}}
+If content is acceptable: {{"flagged": false, "reasons": [], "confidence": 0.95}}"""
+
+def _gemini_moderate(title: str, description: str) -> dict:
+    """Run Gemini text moderation. Returns dict with flagged, reasons, confidence."""
+    if not GEMINI_API_KEY:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    prompt = _MOD_PROMPT.format(
+        title=(title or '')[:500],
+        description=(description or '')[:2000]
+    )
+    url = (f'https://generativelanguage.googleapis.com/v1beta/models/'
+           f'gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}')
+    payload = {
+        'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
+        'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 200},
+    }
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            result = json.loads(resp.read())
+        raw = result['candidates'][0]['content']['parts'][0]['text'].strip()
+        raw = raw.strip('`').strip()
+        if raw.lower().startswith('json'):
+            raw = raw[4:].strip()
+        return json.loads(raw)
+    except Exception:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
 
 # ── In-memory SEO cache ───────────────────────────────────────────────────────
 _cache: dict = {}
@@ -2069,8 +2144,78 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     conn.close()
             self._send_json(200, {'ok': True}); return
 
-        # ── /api/tickets (create ticket + Gemini AI reply) ───────────────────
+        # ── /api/moderation/approve ───────────────────────────────────────────
         path_only0 = self.path.split('?')[0]
+        if path_only0 == '/api/moderation/approve':
+            client_ip = self.client_address[0]
+            if client_ip not in ('127.0.0.1', '::1'):
+                self._send_json(403, {'error': 'forbidden'}); return
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            review_id = data.get('id')
+            if not review_id:
+                self._send_json(400, {'error': 'id required'}); return
+            with _chat_lock:
+                conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                conn.row_factory = sqlite3.Row
+                row = conn.execute('SELECT property_id FROM moderation_reviews WHERE id=?', (review_id,)).fetchone()
+                if row and row['property_id']:
+                    try:
+                        req = urllib.request.Request(
+                            f'{LARAVEL_API_BASE}/properties/{row["property_id"]}',
+                            data=json.dumps({'status': 'active'}).encode(),
+                            headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                            method='PUT',
+                        )
+                        urllib.request.urlopen(req, timeout=5)
+                    except Exception:
+                        pass
+                conn.execute('UPDATE moderation_reviews SET status=?, reviewed_at=? WHERE id=?',
+                             ('approved', time.time(), review_id))
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True}); return
+
+        # ── /api/moderation/reject ────────────────────────────────────────────
+        if path_only0 == '/api/moderation/reject':
+            client_ip = self.client_address[0]
+            if client_ip not in ('127.0.0.1', '::1'):
+                self._send_json(403, {'error': 'forbidden'}); return
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            review_id = data.get('id')
+            if not review_id:
+                self._send_json(400, {'error': 'id required'}); return
+            with _chat_lock:
+                conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                conn.row_factory = sqlite3.Row
+                row = conn.execute('SELECT property_id FROM moderation_reviews WHERE id=?', (review_id,)).fetchone()
+                if row and row['property_id']:
+                    try:
+                        req = urllib.request.Request(
+                            f'{LARAVEL_API_BASE}/properties/{row["property_id"]}',
+                            data=json.dumps({'status': 'inactive'}).encode(),
+                            headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                            method='PUT',
+                        )
+                        urllib.request.urlopen(req, timeout=5)
+                    except Exception:
+                        pass
+                conn.execute('UPDATE moderation_reviews SET status=?, reviewed_at=? WHERE id=?',
+                             ('rejected', time.time(), review_id))
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True}); return
+
+        # ── /api/tickets (create ticket + Gemini AI reply) ───────────────────
         if path_only0 == '/api/tickets':
             length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(length)
@@ -2122,8 +2267,77 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 pass
             self._send_json(201, {'ok': True, 'ticket': ticket}); return
 
-        # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
+        # ── /api/properties (POST) — AI text moderation before forwarding ───────
         path_only = self.path.split('?')[0]
+        if path_only == '/api/properties':
+            content_len = int(self.headers.get('Content-Length', 0))
+            body_bytes  = self.rfile.read(content_len) if content_len > 0 else b''
+            try:
+                body_data = json.loads(body_bytes) if body_bytes else {}
+            except Exception:
+                body_data = {}
+            title        = str(body_data.get('title', '') or '')
+            description  = str(body_data.get('description', '') or body_data.get('body', '') or '')
+            firebase_uid = str(body_data.get('firebase_uid', '') or '')
+            # Run Gemini moderation (non-blocking, times out in 15s)
+            mod = _gemini_moderate(title, description)
+            flagged = bool(mod.get('flagged', False))
+            if flagged:
+                body_data['status'] = 'pending'
+                body_bytes = json.dumps(body_data).encode('utf-8')
+            # Forward to Laravel
+            fwd_url = f'{LARAVEL_API_BASE}/properties'
+            qs_str  = ('?' + self.path[len(path_only)+1:]) if '?' in self.path else ''
+            fwd_url += qs_str
+            fwd_headers = {
+                'Accept':       self.headers.get('Accept', 'application/json'),
+                'Content-Type': self.headers.get('Content-Type', 'application/json'),
+            }
+            fwd_headers = {k: v for k, v in fwd_headers.items() if v}
+            try:
+                req = urllib.request.Request(fwd_url, data=body_bytes, headers=fwd_headers, method='POST')
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    resp_body = resp.read()
+                    resp_status = resp.status
+                    resp_ct = resp.headers.get('Content-Type', 'application/json')
+                if flagged:
+                    try:
+                        prop = json.loads(resp_body)
+                        prop_id = (prop.get('id') or
+                                   (prop.get('data') or {}).get('id') or 0)
+                        with _chat_lock:
+                            conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                            conn.execute(
+                                '''INSERT INTO moderation_reviews
+                                   (property_id, title, description, firebase_uid,
+                                    ai_text_flagged, ai_reasons, ai_confidence,
+                                    status, created_at)
+                                   VALUES (?,?,?,?,?,?,?,?,?)''',
+                                (prop_id, title[:500], description[:2000], firebase_uid,
+                                 1, json.dumps(mod.get('reasons', [])),
+                                 mod.get('confidence', 0.0), 'pending', time.time())
+                            )
+                            conn.commit()
+                            conn.close()
+                    except Exception:
+                        pass
+                self.send_response(resp_status)
+                self.send_header('Content-Type', resp_ct)
+                self.send_header('Content-Length', str(len(resp_body)))
+                self.end_headers()
+                self.wfile.write(resp_body)
+            except urllib.error.HTTPError as e:
+                b = e.read()
+                self.send_response(e.code)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', str(len(b)))
+                self.end_headers()
+                self.wfile.write(b)
+            except Exception:
+                self._send_json(502, {'error': 'gateway error'})
+            return
+
+        # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
         if path_only.startswith('/api/'):
             api_path = path_only[len('/api'):]
             qs       = self.path[len(path_only)+1:] if '?' in self.path else ''
@@ -2221,6 +2435,37 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             result = {'ads_total': total}
             _cache_set('stats_total', result)
             self._send_json(200, result); return
+
+        # ── /api/moderation/queue ──────────────────────────────────────────────
+        if path == '/api/moderation/queue':
+            client_ip = self.client_address[0]
+            if client_ip not in ('127.0.0.1', '::1'):
+                self._send_json(403, {'error': 'forbidden'}); return
+            with _chat_lock:
+                conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                conn.row_factory = sqlite3.Row
+                rows = conn.execute(
+                    'SELECT * FROM moderation_reviews ORDER BY created_at DESC LIMIT 200'
+                ).fetchall()
+                pending = conn.execute(
+                    'SELECT COUNT(*) as c FROM moderation_reviews WHERE status=?', ('pending',)
+                ).fetchone()['c']
+                conn.close()
+            items = []
+            for r in rows:
+                items.append({
+                    'id':           r['id'],
+                    'property_id':  r['property_id'],
+                    'title':        r['title'],
+                    'description':  r['description'],
+                    'firebase_uid': r['firebase_uid'],
+                    'ai_reasons':   json.loads(r['ai_reasons'] or '[]'),
+                    'ai_confidence': r['ai_confidence'],
+                    'status':       r['status'],
+                    'created_at':   r['created_at'],
+                    'reviewed_at':  r['reviewed_at'],
+                })
+            self._send_json(200, {'items': items, 'pending_count': pending}); return
 
         # ── /api/chat/msgs ────────────────────────────────────────────────────
         if path == '/api/chat/msgs':
