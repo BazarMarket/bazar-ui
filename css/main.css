@@ -4622,6 +4622,16 @@ body.bazar-logged .card__heart {
   width: auto;
   height: auto;
 }
+@media screen and (max-width: 992px) {
+  .cards-sliders .swiper-slide {
+    width: 290px;
+  }
+}
+@media screen and (max-width: 576px) {
+  .cards-sliders .swiper-slide {
+    width: 220px;
+  }
+}
 
 .long-filter {
   display: flex;
