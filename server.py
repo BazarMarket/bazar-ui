@@ -2560,6 +2560,29 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
             self._send_json(200, {'ok': True}); return
 
+        # ── /api/moderation/remove-by-property — browser-callable, auth by uid ──
+        if path_only0 == '/api/moderation/remove-by-property':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            prop_id = data.get('property_id')
+            firebase_uid = data.get('firebase_uid', '')
+            if not prop_id:
+                self._send_json(400, {'error': 'property_id required'}); return
+            with _chat_lock:
+                conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                if firebase_uid:
+                    conn.execute('DELETE FROM moderation_reviews WHERE property_id=? AND firebase_uid=?',
+                                 (prop_id, firebase_uid))
+                else:
+                    conn.execute('DELETE FROM moderation_reviews WHERE property_id=?', (prop_id,))
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True}); return
+
         # ── /api/moderation/delete — admin deletes listing from queue + Laravel ──
         if path_only0 == '/api/moderation/delete':
             client_ip = self.client_address[0]

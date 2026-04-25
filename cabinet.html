@@ -1842,6 +1842,11 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.success) {
+                    fetch('/api/moderation/remove-by-property', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ property_id: adId, firebase_uid: uid })
+                    }).catch(function() {});
                     var rows = document.querySelectorAll('[data-ad-group="' + adId + '"]');
                     if (rows.length) rows.forEach(function(r) { r.remove(); });
                     else location.reload();
