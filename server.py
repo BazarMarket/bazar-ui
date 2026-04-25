@@ -3526,8 +3526,9 @@ threading.Thread(target=_auto_delete_expired, daemon=True).start()
 # ══════════════════════════════════════════════════════════════════════════════
 # Entry point
 # ══════════════════════════════════════════════════════════════════════════════
-class ReusableTCPServer(socketserver.TCPServer):
+class ReusableTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
+    daemon_threads = True
 
 with ReusableTCPServer(('0.0.0.0', PORT), BazarHandler) as httpd:
     print(f'Bazar SEO server running on port {PORT}')
