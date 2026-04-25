@@ -22,6 +22,10 @@ import urllib.parse
 import time
 import threading
 import sqlite3
+import base64
+import email
+import email.parser
+import io
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 PORT               = int(os.environ.get('BAZAR_PORT', 5000))
@@ -32,7 +36,9 @@ SITE_ROOT          = os.environ.get('BAZAR_SITE_ROOT', os.path.dirname(os.path.a
 SEO_CACHE_TTL      = 300  # seconds (5 min)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 STRIPE_SECRET_KEY   = os.environ.get('STRIPE_SECRET_KEY', '')
-GEMINI_API_KEY      = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_API_KEY      = (os.environ.get('GEMINI_API_KEY', '') or
+                       os.environ.get('GOOGLE_API_KEY', ''))
+GOOGLE_API_KEY      = os.environ.get('GOOGLE_API_KEY', '')
 
 # ── Google Cloud Vision credentials (service account JSON) ────────────────────
 _VISION_CREDS: dict = {}
@@ -287,10 +293,19 @@ _VISION_LEVELS = {
 def _vision_safesearch(image_urls: list) -> dict:
     """Run SafeSearch detection on up to 3 image URLs.
     Returns {flagged, reasons, confidence}."""
-    if not image_urls or not _VISION_CREDS:
+    if not image_urls:
         return {'flagged': False, 'reasons': [], 'confidence': 0.0}
-    token = _get_vision_token()
-    if not token:
+    # Prefer service account; fall back to API key
+    if _VISION_CREDS:
+        token = _get_vision_token()
+        auth_header = f'Bearer {token}' if token else ''
+        api_key_param = ''
+    elif GOOGLE_API_KEY:
+        auth_header = ''
+        api_key_param = f'?key={GOOGLE_API_KEY}'
+    else:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    if not auth_header and not api_key_param:
         return {'flagged': False, 'reasons': [], 'confidence': 0.0}
     # Normalise URLs
     checked = []
@@ -308,11 +323,13 @@ def _vision_safesearch(image_urls: list) -> dict:
     ]
     try:
         payload = json.dumps({'requests': requests_body}).encode()
+        headers_v = {'Content-Type': 'application/json'}
+        if auth_header:
+            headers_v['Authorization'] = auth_header
         req = urllib.request.Request(
-            'https://vision.googleapis.com/v1/images:annotate',
+            f'https://vision.googleapis.com/v1/images:annotate{api_key_param}',
             data=payload,
-            headers={'Content-Type': 'application/json',
-                     'Authorization': f'Bearer {token}'},
+            headers=headers_v,
             method='POST',
         )
         with urllib.request.urlopen(req, timeout=15) as resp:
@@ -337,6 +354,121 @@ def _vision_safesearch(image_urls: list) -> dict:
             max_conf = max(max_conf, racy / 5.0)
     return {'flagged': len(reasons) > 0, 'reasons': reasons,
             'confidence': round(max_conf, 2)}
+
+
+def _vision_safesearch_bytes(image_bytes_list: list) -> dict:
+    """Run SafeSearch on raw image bytes (base64-encoded). Up to 3 images."""
+    if not image_bytes_list:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    if _VISION_CREDS:
+        token = _get_vision_token()
+        auth_header = f'Bearer {token}' if token else ''
+        api_key_param = ''
+    elif GOOGLE_API_KEY:
+        auth_header = ''
+        api_key_param = f'?key={GOOGLE_API_KEY}'
+    else:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    if not auth_header and not api_key_param:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    requests_body = []
+    for img_bytes in image_bytes_list[:3]:
+        try:
+            b64 = base64.b64encode(img_bytes).decode('utf-8')
+            requests_body.append({
+                'image': {'content': b64},
+                'features': [{'type': 'SAFE_SEARCH_DETECTION'}],
+            })
+        except Exception:
+            continue
+    if not requests_body:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    try:
+        payload = json.dumps({'requests': requests_body}).encode()
+        headers_v = {'Content-Type': 'application/json'}
+        if auth_header:
+            headers_v['Authorization'] = auth_header
+        req = urllib.request.Request(
+            f'https://vision.googleapis.com/v1/images:annotate{api_key_param}',
+            data=payload,
+            headers=headers_v,
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read())
+    except Exception:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    reasons: list = []
+    max_conf = 0.0
+    for i, response in enumerate(data.get('responses', [])):
+        ss = response.get('safeSearchAnnotation', {})
+        adult    = _VISION_LEVELS.get(ss.get('adult',    'UNKNOWN'), 0)
+        violence = _VISION_LEVELS.get(ss.get('violence', 'UNKNOWN'), 0)
+        racy     = _VISION_LEVELS.get(ss.get('racy',     'UNKNOWN'), 0)
+        if adult >= 4:
+            reasons.append(f'adult content (image {i+1})')
+            max_conf = max(max_conf, adult / 5.0)
+        if violence >= 4:
+            reasons.append(f'violent content (image {i+1})')
+            max_conf = max(max_conf, violence / 5.0)
+        if racy >= 4:
+            reasons.append(f'racy content (image {i+1})')
+            max_conf = max(max_conf, racy / 5.0)
+    return {'flagged': len(reasons) > 0, 'reasons': reasons,
+            'confidence': round(max_conf, 2)}
+
+
+def _parse_multipart(body_bytes: bytes, content_type: str):
+    """Parse multipart/form-data. Returns (fields_dict, image_bytes_list)."""
+    try:
+        msg_bytes = (b'Content-Type: ' + content_type.encode() +
+                     b'\r\n\r\n' + body_bytes)
+        msg = email.message_from_bytes(msg_bytes)
+        fields = {}
+        images = []
+        if msg.is_multipart():
+            for part in msg.walk():
+                cd = part.get('Content-Disposition', '')
+                if not cd:
+                    continue
+                params = {}
+                for item in cd.split(';'):
+                    item = item.strip()
+                    if '=' in item:
+                        k, v = item.split('=', 1)
+                        params[k.strip().lower()] = v.strip().strip('"')
+                name     = params.get('name', '')
+                filename = params.get('filename', '')
+                payload  = part.get_payload(decode=True)
+                if not payload:
+                    continue
+                if filename:
+                    images.append(payload)
+                elif name:
+                    fields[name] = payload.decode('utf-8', errors='replace')
+        return fields, images
+    except Exception:
+        return {}, []
+
+
+def _set_property_status_internal(prop_id: int, status: str) -> bool:
+    """Call Laravel set-status endpoint from the moderation server (no user auth)."""
+    try:
+        url     = f'{LARAVEL_API_BASE}/properties/{prop_id}/set-status'
+        payload = json.dumps({'status': status}).encode()
+        req     = urllib.request.Request(
+            url, data=payload,
+            headers={
+                'Content-Type':    'application/json',
+                'Accept':          'application/json',
+                'X-Bazar-Internal': 'moderation',
+            },
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
 
 # ── In-memory SEO cache ───────────────────────────────────────────────────────
 _cache: dict = {}
@@ -2396,24 +2528,38 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         # ── /api/properties (POST) — AI text + image moderation ─────────────────
         path_only = self.path.split('?')[0]
         if path_only == '/api/properties':
-            content_len = int(self.headers.get('Content-Length', 0))
-            body_bytes  = self.rfile.read(content_len) if content_len > 0 else b''
-            try:
-                body_data = json.loads(body_bytes) if body_bytes else {}
-            except Exception:
-                body_data = {}
-            title        = str(body_data.get('title', '') or '')
-            description  = str(body_data.get('description', '') or body_data.get('body', '') or '')
-            firebase_uid = str(body_data.get('firebase_uid', '') or '')
-            # Extract image URLs (field may be 'images', 'photos', or 'media')
-            raw_images = (body_data.get('images') or body_data.get('photos') or
-                          body_data.get('media') or [])
-            if isinstance(raw_images, str):
+            content_len  = int(self.headers.get('Content-Length', 0))
+            body_bytes   = self.rfile.read(content_len) if content_len > 0 else b''
+            content_type = self.headers.get('Content-Type', '')
+
+            # Parse body: multipart/form-data (real uploads) or JSON (API)
+            title            = ''
+            description      = ''
+            firebase_uid     = ''
+            image_bytes_list = []
+            image_urls       = []
+
+            if 'multipart/form-data' in content_type:
+                fields, image_bytes_list = _parse_multipart(body_bytes, content_type)
+                title        = fields.get('title', '') or ''
+                description  = fields.get('description', '') or ''
+                firebase_uid = fields.get('firebase_uid', '') or ''
+            else:
                 try:
-                    raw_images = json.loads(raw_images)
+                    body_data = json.loads(body_bytes) if body_bytes else {}
                 except Exception:
-                    raw_images = [raw_images] if raw_images else []
-            image_urls = [str(u) for u in (raw_images or []) if u]
+                    body_data = {}
+                title        = str(body_data.get('title', '') or '')
+                description  = str(body_data.get('description', '') or body_data.get('body', '') or '')
+                firebase_uid = str(body_data.get('firebase_uid', '') or '')
+                raw_images   = (body_data.get('images') or body_data.get('photos') or
+                                body_data.get('media') or [])
+                if isinstance(raw_images, str):
+                    try:
+                        raw_images = json.loads(raw_images)
+                    except Exception:
+                        raw_images = [raw_images] if raw_images else []
+                image_urls = [str(u) for u in (raw_images or []) if u]
 
             # Run Gemini (text) + Vision (images) in parallel
             text_result  = {}
@@ -2425,18 +2571,20 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
             def _run_vision():
                 nonlocal image_result
-                image_result = _vision_safesearch(image_urls)
+                if image_bytes_list:
+                    image_result = _vision_safesearch_bytes(image_bytes_list)
+                elif image_urls:
+                    image_result = _vision_safesearch(image_urls)
 
             t1 = threading.Thread(target=_run_text,   daemon=True)
             t2 = threading.Thread(target=_run_vision, daemon=True)
             t1.start(); t2.start()
-            t1.join(timeout=18); t2.join(timeout=18)
+            t1.join(timeout=25); t2.join(timeout=25)
 
             text_flagged  = bool(text_result.get('flagged', False))
             image_flagged = bool(image_result.get('flagged', False))
             flagged       = text_flagged or image_flagged
 
-            # Combine all reasons
             all_reasons = list(text_result.get('reasons', []))
             if image_flagged:
                 all_reasons += image_result.get('reasons', [])
@@ -2445,30 +2593,36 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 image_result.get('confidence', 0.0),
             )
 
-            if flagged:
-                body_data['status'] = 'pending'
-                body_bytes = json.dumps(body_data).encode('utf-8')
-
-            # Forward to Laravel
+            # Forward original body to Laravel (preserve content-type for multipart)
             fwd_url = f'{LARAVEL_API_BASE}/properties'
             qs_str  = ('?' + self.path[len(path_only)+1:]) if '?' in self.path else ''
             fwd_url += qs_str
             fwd_headers = {
                 'Accept':       self.headers.get('Accept', 'application/json'),
-                'Content-Type': self.headers.get('Content-Type', 'application/json'),
+                'Content-Type': content_type or 'application/json',
             }
+            if flagged:
+                fwd_headers['X-Bazar-Moderation'] = 'pending'
             fwd_headers = {k: v for k, v in fwd_headers.items() if v}
             try:
                 req = urllib.request.Request(fwd_url, data=body_bytes, headers=fwd_headers, method='POST')
-                with urllib.request.urlopen(req, timeout=10) as resp:
+                with urllib.request.urlopen(req, timeout=30) as resp:
                     resp_body   = resp.read()
                     resp_status = resp.status
                     resp_ct     = resp.headers.get('Content-Type', 'application/json')
                 if flagged:
                     try:
                         prop    = json.loads(resp_body)
-                        prop_id = (prop.get('id') or
+                        prop_id = (prop.get('id') or prop.get('property_id') or
                                    (prop.get('data') or {}).get('id') or 0)
+                        if prop_id:
+                            # Belt-and-suspenders: also call set-status directly
+                            _set_property_status_internal(prop_id, 'pending')
+                            try:
+                                prop['status'] = 'pending'
+                                resp_body = json.dumps(prop).encode()
+                            except Exception:
+                                pass
                         with _chat_lock:
                             conn = sqlite3.connect(MOD_DB, check_same_thread=False)
                             conn.execute(
