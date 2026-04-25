@@ -1266,8 +1266,17 @@
                     <div class="cab-box" id="ticketReplyBox">
                         <div class="cab-box__head"><p class="cab-box__title">Send a Follow-up</p></div>
                         <div class="cab-box__body" style="padding:16px 20px;">
-                            <textarea id="ticketFollowupText" placeholder="Type your follow-up message here…" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;font-family:Poppins,sans-serif;font-size:13px;resize:vertical;min-height:100px;outline:none;color:#1a1a1a;" rows="4"></textarea>
-                            <button class="btn btn_grad" onclick="sendTicketFollowup()" style="margin-top:12px;padding:10px 24px;font-size:13px;">Send Message</button>
+                            <textarea id="ticketFollowupText" placeholder="Type your follow-up message here…" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;font-family:Poppins,sans-serif;font-size:13px;resize:vertical;min-height:80px;outline:none;color:#1a1a1a;" rows="3"></textarea>
+                            <div id="ticketAttachPreviews" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
+                            <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
+                                <button class="btn btn_grad" onclick="sendTicketFollowup()" id="ticketSendBtn" style="padding:10px 24px;font-size:13px;">Send Message</button>
+                                <label id="ticketAttachBtn" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:9px 16px;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;font-family:Poppins,sans-serif;font-size:13px;color:#374151;transition:background .15s;" onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='#f9fafb'">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                    Attach photo
+                                    <input id="ticketFileInput" type="file" accept="image/*" multiple style="display:none;" onchange="handleTicketFileSelect(this)">
+                                </label>
+                                <span id="ticketUploadStatus" style="font-family:Poppins,sans-serif;font-size:12px;color:#9ca3af;display:none;"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2951,6 +2960,7 @@
 <script>
 /* ── My Tickets ── */
 var _currentTicketId   = null;
+var _currentAttachments = [];
 var _ticketPollTimer   = null;
 var _ticketMsgCount    = 0;   // last known message count
 
@@ -2984,16 +2994,91 @@ function _renderTicketMessages(ticket, msgs) {
                 human:  { label: '✍️ Support Team',  bg: '#fffbeb', color: '#92400e' },
             }[m.sender_type] || { label: m.sender_type, bg: '#f9fafb', color: '#374151' };
             var time = m.created_at ? m.created_at.substring(0,16).replace('T',' ') : '';
+            var attachHtml = '';
+            var atts = m.attachments || [];
+            if (typeof atts === 'string') { try { atts = JSON.parse(atts); } catch(e) { atts = []; } }
+            if (atts && atts.length) {
+                attachHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">' +
+                    atts.map(function(url) {
+                        return '<a href="' + _escHtml(url) + '" target="_blank" style="display:block;">' +
+                            '<img src="' + _escHtml(url) + '" alt="attachment" style="max-width:200px;max-height:160px;border-radius:8px;border:1px solid rgba(0,0,0,.1);cursor:zoom-in;object-fit:cover;">' +
+                            '</a>';
+                    }).join('') + '</div>';
+            }
+            var msgText = m.message && m.message !== '(image)' ?
+                '<p style="font-family:Poppins,sans-serif;font-size:13px;line-height:1.65;color:#374151;margin:0;white-space:pre-wrap;">' + _escHtml(m.message) + '</p>' : '';
             return '<div style="padding:14px 16px;border-radius:10px;background:' + senderCfg.bg + ';border:1px solid rgba(0,0,0,.06);">' +
                 '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
                 '<strong style="font-family:Poppins,sans-serif;font-size:12px;font-weight:700;color:' + senderCfg.color + ';">' + senderCfg.label + '</strong>' +
                 '<span style="font-family:Poppins,sans-serif;font-size:11px;color:#9ca3af;">' + time + '</span>' +
                 '</div>' +
-                '<p style="font-family:Poppins,sans-serif;font-size:13px;line-height:1.65;color:#374151;margin:0;white-space:pre-wrap;">' + _escHtml(m.message) + '</p>' +
+                msgText + attachHtml +
                 '</div>';
         }).join('');
     }
     if (replyBox) replyBox.style.display = ticket.status === 'closed' ? 'none' : '';
+}
+
+/* ── Ticket file attachment (client-side compress + upload) ── */
+function handleTicketFileSelect(input) {
+    var files = Array.from(input.files || []);
+    if (!files.length) return;
+    var status = document.getElementById('ticketUploadStatus');
+    var previews = document.getElementById('ticketAttachPreviews');
+    status.style.display = 'inline';
+    status.textContent = 'Uploading…';
+    var pending = files.length;
+    files.forEach(function(file) {
+        _compressAndUploadTicketImage(file, function(url, err) {
+            pending--;
+            if (err) {
+                status.textContent = 'Upload failed: ' + err;
+                if (pending === 0) setTimeout(function(){ status.style.display='none'; }, 3000);
+                return;
+            }
+            _currentAttachments.push(url);
+            var thumb = document.createElement('div');
+            thumb.style.cssText = 'position:relative;display:inline-block;';
+            var idx = _currentAttachments.length - 1;
+            thumb.innerHTML = '<a href="' + url + '" target="_blank"><img src="' + url + '" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;display:block;"></a>' +
+                '<button onclick="this.parentNode.remove();_currentAttachments.splice(' + idx + ',1);" style="position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;">×</button>';
+            previews.appendChild(thumb);
+            if (pending === 0) { status.style.display = 'none'; }
+        });
+    });
+    input.value = '';
+}
+
+function _compressAndUploadTicketImage(file, cb) {
+    var maxDim = 1200;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+            var w = img.width, h = img.height;
+            if (Math.max(w, h) > maxDim) {
+                var ratio = maxDim / Math.max(w, h);
+                w = Math.round(w * ratio); h = Math.round(h * ratio);
+            }
+            var canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            canvas.toBlob(function(blob) {
+                var fd = new FormData();
+                fd.append('file', blob, 'photo.jpg');
+                fetch('/api/ticket-upload', { method: 'POST', body: fd })
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        if (d.url) cb(d.url, null);
+                        else cb(null, d.error || 'unknown');
+                    })
+                    .catch(function(err) { cb(null, String(err)); });
+            }, 'image/jpeg', 0.85);
+        };
+        img.onerror = function() { cb(null, 'cannot read image'); };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 }
 
 function _startTicketPolling(msgCount, showIndicator) {
@@ -3147,6 +3232,9 @@ function renderTicketList(tickets, container) {
 function openTicketDetail(ticketId) {
     _stopTicketPoll();
     _currentTicketId = ticketId;
+    _currentAttachments = [];
+    var prev = document.getElementById('ticketAttachPreviews');
+    if (prev) prev.innerHTML = '';
     var uid = localStorage.getItem('bazar_firebase_uid');
     document.getElementById('ticketListSection').style.display = 'none';
     document.getElementById('ticketDetailSection').style.display = '';
@@ -3183,19 +3271,29 @@ function sendTicketFollowup() {
     if (!_currentTicketId) return;
     var uid  = localStorage.getItem('bazar_firebase_uid');
     var text = (document.getElementById('ticketFollowupText') || {}).value || '';
-    if (!text.trim()) return;
-    var btn  = document.querySelector('#ticketReplyBox button');
+    if (!text.trim() && !_currentAttachments.length) return;
+    var btn  = document.getElementById('ticketSendBtn');
     if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
+    var payload = {
+        ticket_id: _currentTicketId,
+        firebase_uid: uid,
+        message: text.trim(),
+        attachments: _currentAttachments.slice(),
+    };
 
     fetch('/api/ticket-followup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ ticket_id: _currentTicketId, firebase_uid: uid, message: text.trim() }),
+        body: JSON.stringify(payload),
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
         if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
         document.getElementById('ticketFollowupText').value = '';
+        _currentAttachments = [];
+        var prev = document.getElementById('ticketAttachPreviews');
+        if (prev) prev.innerHTML = '';
         var ticket = data.ticket || {};
         var msgs   = ticket.messages || [];
         _renderTicketMessages(ticket, msgs);

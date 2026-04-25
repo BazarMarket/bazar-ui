@@ -11,7 +11,10 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class TicketResource extends Resource
 {
@@ -56,6 +59,66 @@ class TicketResource extends Resource
         } catch (\Throwable $e) {
             return '';
         }
+    }
+
+    private static function buildThreadHtml(Ticket $record): string
+    {
+        $record->load('messages');
+        $html = '<div style="display:flex;flex-direction:column;gap:12px;max-height:340px;overflow-y:auto;padding:2px 0;">';
+
+        foreach ($record->messages as $msg) {
+            $senderLabel = match($msg->sender_type) {
+                'client' => '👤 Customer',
+                'ai'     => '🤖 AI Assistant',
+                'human'  => '✍️ Support Team',
+                default  => $msg->sender_type,
+            };
+            $bg = match($msg->sender_type) {
+                'client' => '#eff6ff',
+                'ai'     => '#f0fdf4',
+                'human'  => '#fffbeb',
+                default  => '#f9fafb',
+            };
+            $color = match($msg->sender_type) {
+                'client' => '#1d4ed8',
+                'ai'     => '#15803d',
+                'human'  => '#92400e',
+                default  => '#374151',
+            };
+            $time = $msg->created_at ? $msg->created_at->format('d M Y H:i') : '';
+            $msgText = $msg->message && $msg->message !== '(image)'
+                ? '<p style="font-size:13px;line-height:1.65;color:#374151;margin:0 0 4px;white-space:pre-wrap;">' . e($msg->message) . '</p>'
+                : '';
+
+            $attachHtml = '';
+            $atts = $msg->attachments ?? [];
+            if (is_string($atts)) {
+                $atts = json_decode($atts, true) ?: [];
+            }
+            if ($atts) {
+                $attachHtml = '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">';
+                foreach ($atts as $url) {
+                    $safeUrl = e($url);
+                    $attachHtml .= '<a href="' . $safeUrl . '" target="_blank"><img src="' . $safeUrl . '" style="max-width:140px;max-height:110px;border-radius:6px;border:1px solid rgba(0,0,0,.1);object-fit:cover;"></a>';
+                }
+                $attachHtml .= '</div>';
+            }
+
+            $html .= '<div style="padding:12px 14px;border-radius:8px;background:' . $bg . ';border:1px solid rgba(0,0,0,.06);">';
+            $html .= '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">';
+            $html .= '<strong style="font-size:12px;font-weight:700;color:' . $color . ';">' . $senderLabel . '</strong>';
+            $html .= '<span style="font-size:11px;color:#9ca3af;">' . $time . '</span>';
+            $html .= '</div>';
+            $html .= $msgText . $attachHtml;
+            $html .= '</div>';
+        }
+
+        if (!$record->messages->count()) {
+            $html .= '<p style="color:#9ca3af;font-size:13px;">No messages yet.</p>';
+        }
+
+        $html .= '</div>';
+        return $html;
     }
 
     public static function table(Table $table): Table
@@ -124,31 +187,13 @@ class TicketResource extends Resource
                     ->modalHeading(fn(Ticket $record): string => $record->ticket_number . ' — ' . $record->subject)
                     ->modalWidth('2xl')
                     ->form(function (Ticket $record): array {
-                        $record->load('messages');
-                        $threadLines = [];
-                        foreach ($record->messages as $msg) {
-                            $label = match($msg->sender_type) {
-                                'client' => '👤 Customer',
-                                'ai'     => '🤖 AI Assistant',
-                                'human'  => '✍️ Support Team',
-                                default  => $msg->sender_type,
-                            };
-                            $time = $msg->created_at->format('d M Y H:i');
-                            $threadLines[] = "[{$label} — {$time}]\n{$msg->message}";
-                        }
-                        $threadText = $threadLines
-                            ? implode("\n\n" . str_repeat('─', 40) . "\n\n", $threadLines)
-                            : 'No messages yet.';
-
-                        $aiDraft = self::getAiDraft($record);
+                        $threadHtml = self::buildThreadHtml($record);
+                        $aiDraft    = self::getAiDraft($record);
 
                         $fields = [
-                            Textarea::make('thread_preview')
+                            Placeholder::make('conversation')
                                 ->label('Conversation')
-                                ->default($threadText)
-                                ->disabled()
-                                ->rows(min(count($record->messages) * 4 + 2, 14))
-                                ->extraAttributes(['style' => 'font-family:monospace;font-size:12px;background:#f9fafb;']),
+                                ->content(new HtmlString($threadHtml)),
                         ];
 
                         if ($aiDraft) {
@@ -176,20 +221,43 @@ class TicketResource extends Resource
                             ->placeholder('Type your reply to the customer…')
                             ->rows(4);
 
+                        $fields[] = FileUpload::make('attachment_files')
+                            ->label('Attach Images (optional)')
+                            ->image()
+                            ->multiple()
+                            ->disk('public')
+                            ->directory('ticket-attachments')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                            ->maxSize(10240)
+                            ->imageResizeMode('contain')
+                            ->imageResizeMaxWidth(1200)
+                            ->imageResizeMaxHeight(1200)
+                            ->imageResizeUpscale(false)
+                            ->reorderable(false)
+                            ->panelLayout('grid')
+                            ->maxFiles(5);
+
                         return $fields;
                     })
                     ->action(function (Ticket $record, array $data): void {
-                        $status = $data['new_status'] ?? $record->status;
-                        $reply  = trim($data['reply_message'] ?? '');
+                        $status  = $data['new_status'] ?? $record->status;
+                        $reply   = trim($data['reply_message'] ?? '');
+                        $paths   = $data['attachment_files'] ?? [];
+                        if (!is_array($paths)) $paths = $paths ? [$paths] : [];
+
+                        $attachUrls = array_values(array_filter(array_map(function($path) {
+                            return 'https://www.bazar.uk/storage/' . $path;
+                        }, $paths)));
 
                         $record->status = $status;
                         $record->save();
 
-                        if ($reply) {
+                        if ($reply || $attachUrls) {
                             TicketMessage::create([
                                 'ticket_id'   => $record->id,
                                 'sender_type' => 'human',
-                                'message'     => $reply,
+                                'message'     => $reply ?: '',
+                                'attachments' => $attachUrls ?: null,
                             ]);
                             if (!in_array($status, ['closed'])) {
                                 $record->status = 'replied';

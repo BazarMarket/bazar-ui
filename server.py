@@ -26,6 +26,7 @@ import base64
 import email
 import email.parser
 import io
+import uuid
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 PORT               = int(os.environ.get('BAZAR_PORT', 5000))
@@ -2715,6 +2716,47 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 pass
             self._send_json(201, {'ok': True, 'ticket': ticket}); return
 
+        # ── /api/ticket-upload — upload & compress image for ticket messages ────
+        if path_only0 == '/api/ticket-upload':
+            content_len  = int(self.headers.get('Content-Length', 0))
+            body_bytes   = self.rfile.read(content_len) if content_len > 0 else b''
+            content_type = self.headers.get('Content-Type', '')
+            if 'multipart/form-data' not in content_type:
+                self._send_json(400, {'error': 'multipart/form-data required'}); return
+            _, image_bytes_list = _parse_multipart(body_bytes, content_type)
+            if not image_bytes_list:
+                self._send_json(400, {'error': 'no file uploaded'}); return
+            raw_bytes = image_bytes_list[0]
+            try:
+                from PIL import Image as _PILImage
+                img = _PILImage.open(io.BytesIO(raw_bytes))
+                if img.mode not in ('RGB', 'L'):
+                    img = img.convert('RGB')
+                max_dim = 1200
+                if max(img.size) > max_dim:
+                    ratio = max_dim / max(img.size)
+                    img = img.resize(
+                        (int(img.size[0] * ratio), int(img.size[1] * ratio)),
+                        _PILImage.LANCZOS
+                    )
+                out = io.BytesIO()
+                img.save(out, format='JPEG', quality=85, optimize=True)
+                compressed = out.getvalue()
+            except Exception as e:
+                self._send_json(500, {'error': f'image error: {e}'}); return
+            uploads_dir = os.path.join(SITE_ROOT, 'uploads', 'tickets')
+            os.makedirs(uploads_dir, mode=0o777, exist_ok=True)
+            try:
+                os.chmod(uploads_dir, 0o777)
+                os.chmod(os.path.dirname(uploads_dir), 0o777)
+            except OSError:
+                pass
+            filename = uuid.uuid4().hex + '.jpg'
+            with open(os.path.join(uploads_dir, filename), 'wb') as fh:
+                fh.write(compressed)
+            url = f'{PUBLIC_DOMAIN}/uploads/tickets/{filename}'
+            self._send_json(200, {'ok': True, 'url': url}); return
+
         # ── /api/ticket-followup — client sends follow-up, AI auto-replies ──────
         if path_only0 == '/api/ticket-followup':
             length = int(self.headers.get('Content-Length', 0))
@@ -2723,19 +2765,23 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 data = json.loads(body) if body else {}
             except Exception:
                 self._send_json(400, {'error': 'bad json'}); return
-            ticket_id  = data.get('ticket_id')
+            ticket_id    = data.get('ticket_id')
             firebase_uid = data.get('firebase_uid', '').strip()
             followup_text = data.get('message', '').strip()
-            if not ticket_id or not followup_text or not firebase_uid:
-                self._send_json(422, {'error': 'ticket_id, firebase_uid and message required'}); return
+            attachments  = data.get('attachments', [])
+            if not isinstance(attachments, list):
+                attachments = []
+            if not ticket_id or not firebase_uid or (not followup_text and not attachments):
+                self._send_json(422, {'error': 'ticket_id, firebase_uid and message or attachments required'}); return
             # 1. Save client message + set status=open in Laravel
             try:
                 status_req = urllib.request.Request(
                     f'{LARAVEL_API_BASE}/tickets/{ticket_id}/status',
                     data=json.dumps({
                         'status': 'open',
-                        'client_followup': followup_text,
+                        'client_followup': followup_text or '(image)',
                         'firebase_uid': firebase_uid,
+                        'attachments': attachments,
                     }).encode(),
                     headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
                     method='POST',
