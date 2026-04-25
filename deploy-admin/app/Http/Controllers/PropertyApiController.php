@@ -882,7 +882,7 @@ class PropertyApiController extends Controller
         if (!$isInternal && !$firebaseUid) {
             return response()->json(['error' => 'Authentication required'], 401);
         }
-        if (!in_array($status, ['active', 'inactive', 'deleted', 'pending'])) {
+        if (!in_array($status, ['active', 'inactive', 'deleted', 'pending', 'rejected'])) {
             return response()->json(['error' => 'Invalid status'], 422);
         }
         if ($isInternal) {
