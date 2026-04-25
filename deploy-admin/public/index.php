@@ -11,10 +11,31 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 // Load shared vendor autoloader (vendor/ is symlinked to prod)
 $loader = require_once __DIR__.'/../vendor/autoload.php';
 
-// CRITICAL: vendor/ is symlinked from prod, so Composer's autoloader maps
-// App\ namespace → /var/www/bazar-dev/app/ (prod). Override PSR-4 so that
-// App\ classes load from THIS dev-admin app/ directory instead.
-$loader->setPsr4('App\\', [dirname(__DIR__) . '/app']);
+// CRITICAL ISOLATION FIX:
+// vendor/ is a symlink to prod. Composer maps ALL App\ classes (PSR-4 and
+// classmap) to prod's app/ directory. Override BOTH to use dev-admin's app/.
+
+$devAppPath  = dirname(__DIR__) . '/app';                // /var/www/bazar-dev-admin/app
+$vendorReal  = realpath(dirname(__DIR__) . '/vendor');   // /var/www/bazar-dev/vendor (resolved)
+$prodAppPath = dirname($vendorReal) . '/app';            // /var/www/bazar-dev/app
+
+// 1. Override PSR-4
+$loader->setPsr4('App\\', [$devAppPath]);
+
+// 2. Override classmap — paths are non-normalized (contain ../../app/),
+//    use realpath() to resolve them before comparing
+$fixedMap = [];
+foreach ($loader->getClassMap() as $class => $path) {
+    if (strpos($class, 'App\\') === 0) {
+        $real = realpath($path);
+        if ($real && strpos($real, $prodAppPath) === 0) {
+            $fixedMap[$class] = $devAppPath . substr($real, strlen($prodAppPath));
+        }
+    }
+}
+if ($fixedMap) {
+    $loader->addClassMap($fixedMap);
+}
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
