@@ -2901,6 +2901,9 @@
          formData.append('title', title);
          var firebaseUid = localStorage.getItem('bazar_firebase_uid');
          if (firebaseUid) formData.append('firebase_uid', firebaseUid);
+
+         var description = getInputVal('descriptionInput');
+         if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
          formData.append('description', getInputVal('descriptionInput'));
          formData.append('listing_type', listingType);
          formData.append('property_type', propertyType);
@@ -3017,6 +3020,10 @@
          var youtube = getInputVal('youtubeInput');
          formData.append('video_url', youtube);
 
+
+         var photoGridCheck = document.getElementById('photoPreviewGrid');
+         var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
+         if (!_editAdId && !hasNewImages) { alert('Please add at least one photo.'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -3163,6 +3170,8 @@
          var exactLng = document.getElementById('exactLng').value;
          if (exactLat) formData.append('exact_latitude', exactLat);
          if (exactLng) formData.append('exact_longitude', exactLng);
+         var description = getInputVal('descriptionInput');
+         if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
@@ -3213,6 +3222,9 @@
          var youtube = getInputVal('youtubeInput');
          formData.append('video_url', youtube);
 
+         var photoGridCheck = document.getElementById('photoPreviewGrid');
+         var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
+         if (!_editAdId && !hasNewImages) { alert('Please add at least one photo.'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -3297,6 +3309,8 @@
          var locationLng = document.getElementById('locationLng').value;
          if (locationLat) formData.append('latitude', locationLat);
          if (locationLng) formData.append('longitude', locationLng);
+         var description = getInputVal('descriptionInput');
+         if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
@@ -3346,6 +3360,9 @@
          var youtube = getInputVal('youtubeInput');
          formData.append('video_url', youtube);
 
+         var photoGridCheck = document.getElementById('photoPreviewGrid');
+         var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
+         if (!_editAdId && !hasNewImages) { alert('Please add at least one photo.'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
