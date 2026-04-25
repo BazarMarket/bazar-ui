@@ -1440,6 +1440,16 @@
    var _ccpMyName   = '';
    var _ccpIsBuyer  = true; /* buyer opens chat on card page */
 
+   function _ccpMarkRead() {
+      if (!_ccpConvId) return;
+      var role = _ccpIsBuyer ? 'buyer' : 'seller';
+      fetch('/api/chat/read', {
+         method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({conv_id: _ccpConvId, role: role})
+      }).catch(function(){});
+   }
+
    function _ccpGetUser() {
       _ccpMyUid  = localStorage.getItem('bazar_firebase_uid') || '';
       _ccpMyName = localStorage.getItem('bazar_username') || 'User';
@@ -1485,6 +1495,9 @@
    function ccpRenderMessages(msgs) {
       var body = document.getElementById('ccpChatBody');
       if (!body) return;
+      /* Mark as read if panel is open and we have new incoming messages */
+      var _panel = document.getElementById('ccpSidePanel');
+      if (_panel && _panel.classList.contains('is-open')) _ccpMarkRead();
       var atBottom = (body.scrollHeight - body.scrollTop - body.clientHeight) < 80;
       /* keep welcome bubble; remove previously rendered real bubbles */
       body.querySelectorAll('.ccp-real-bubble').forEach(function(el){ el.remove(); });
@@ -1522,6 +1535,7 @@
          var _ob = document.getElementById('start-chat-badge'); if (_ob) { _ob.textContent = '0'; _ob.style.display = 'none'; }
          if (typeof window.bazarSetMsgBadge === 'function') window.bazarSetMsgBadge(0);
          ccpInitChat(function(){
+            _ccpMarkRead();
             setTimeout(function(){
                var body = document.getElementById('ccpChatBody');
                if(body) body.scrollTop = body.scrollHeight;
@@ -1543,6 +1557,7 @@
       var _ob2 = document.getElementById('start-chat-badge'); if (_ob2) { _ob2.textContent = '0'; _ob2.style.display = 'none'; }
       if (typeof window.bazarSetMsgBadge === 'function') window.bazarSetMsgBadge(0);
       ccpInitChat(function(){
+         _ccpMarkRead();
          setTimeout(function(){
             var body = document.getElementById('ccpChatBody');
             if(body) body.scrollTop = body.scrollHeight;
