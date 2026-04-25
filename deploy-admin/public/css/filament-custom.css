@@ -40,50 +40,9 @@
     overflow-x: auto !important;
 }
 
-/* Real estate nav wrapper (filament-real-estate.js) */
+/* Fix: building icon size in Property group (filament-real-estate.js) */
 .bazar-re-icon {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
     flex-shrink: 0;
-}
-
-.bazar-re-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.2rem 0.75rem;
-    text-decoration: none;
-    color: inherit;
-    font-size: 0.875rem;
-    font-weight: 500;
-    flex: 1;
-    min-width: 0;
-}
-
-.bazar-re-btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.bazar-re-arrow {
-    width: 1.25rem;
-    height: 1.25rem;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-}
-
-.bazar-re-arrow-btn {
-    padding: 0.3rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    border-radius: 0.25rem;
-}
-
-.bazar-re-arrow-btn:hover {
-    background-color: rgba(0, 0, 0, 0.06);
 }
