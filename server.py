@@ -2831,9 +2831,25 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     return
 
         # /post-ad → serve post-ad.html directly (no SEO injection needed)
+        # Served from SITE_ROOT (not cwd) with no-cache to prevent stale versions
         if path in ('/post-ad', '/post-ad.html'):
-            self.path = '/post-ad.html'
-            return super().do_GET()
+            html_file = os.path.join(SITE_ROOT, 'public', 'post-ad.html')
+            if not os.path.isfile(html_file):
+                html_file = os.path.join(SITE_ROOT, 'post-ad.html')
+            try:
+                with open(html_file, 'rb') as fh:
+                    body = fh.read()
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.send_header('Content-Length', str(len(body)))
+                self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+                self.send_header('Pragma', 'no-cache')
+                self.end_headers()
+                self.wfile.write(body)
+            except Exception:
+                self.send_response(500)
+                self.end_headers()
+            return
 
         # 301 redirect: /listing/{id} or /listing/{id}-{slug} → /{id}-{slug}
         m = re.match(r'^/listing/(\d+)', path)
