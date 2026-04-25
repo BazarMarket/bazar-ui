@@ -434,11 +434,10 @@
                 </div>
 
                 <div class="cab-ads-table" id="myAdsTable" style="background:transparent;overflow:visible;border:none;box-shadow:none;">
-                    <table class="cab-table" style="min-width:700px;border-collapse:separate;border-spacing:0 0;">
+                    <table class="cab-table" style="min-width:600px;border-collapse:separate;border-spacing:0 0;">
                         <thead>
                             <tr>
-                                <th style="width:35%">Ad</th>
-                                <th>Category</th>
+                                <th style="width:42%">Ad</th>
                                 <th>Price</th>
                                 <th>Views</th>
                                 <th>Subscription</th>
@@ -1715,7 +1714,7 @@
         }
 
         if (ads.length === 0) {
-            if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px 0;color:#aaa;font-size:15px;">You have no ads yet. <a href="/post-ad" style="color:#ff9138;text-decoration:underline;">Post your first ad</a></td></tr>';
+            if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px 0;color:#aaa;font-size:15px;">You have no ads yet. <a href="/post-ad" style="color:#ff9138;text-decoration:underline;">Post your first ad</a></td></tr>';
             return;
         }
         var statusBadge = {
@@ -1737,9 +1736,9 @@
             var plan = 'free';
             if (ad.is_vip) plan = 'vip';
             else if (ad.is_pro) plan = 'pro';
-            var planColor = plan === 'vip' ? '#7c3aed' : (plan === 'pro' ? '#0369a1' : '#4b5563');
-            var planBg    = plan === 'vip' ? '#ede9fe' : (plan === 'pro' ? '#e0f2fe' : '#f3f4f6');
-            var planBdr   = plan === 'vip' ? '#c4b5fd' : (plan === 'pro' ? '#7dd3fc' : '#d1d5db');
+            var planColor = plan === 'vip' ? '#b45309' : (plan === 'pro' ? '#ea580c' : '#16a34a');
+            var planBg    = plan === 'vip' ? '#fffbeb' : (plan === 'pro' ? '#fff7ed' : '#f0fdf4');
+            var planBdr   = plan === 'vip' ? '#fde68a' : (plan === 'pro' ? '#fed7aa' : '#86efac');
             var planBadge = '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:' + planBg + ';color:' + planColor + ';border:1px solid ' + planBdr + ';">' + plan.toUpperCase() + '</span>';
             var daysHtml = '';
             if (ad.expires_at) {
@@ -1747,12 +1746,12 @@
                 var nowMs = Date.now();
                 var daysLeft = Math.ceil((expMs - nowMs) / 86400000);
                 if (daysLeft > 0) {
-                    daysHtml = '<span style="font-size:11px;color:#6b7280;margin-left:4px;">' + daysLeft + 'd left</span>';
+                    daysHtml = '<span style="font-size:11px;color:#6b7280;">' + daysLeft + 'd left</span>';
                 } else {
-                    daysHtml = '<span style="font-size:11px;color:#dc2626;margin-left:4px;">Expired</span>';
+                    daysHtml = '<span style="font-size:11px;color:#dc2626;">Expired</span>';
                 }
             }
-            return planBadge + daysHtml;
+            return '<div style="display:flex;align-items:center;gap:6px;">' + planBadge + daysHtml + '</div>';
         }
 
         var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
@@ -1767,24 +1766,23 @@
             var isRejected = (ad.status === 'rejected');
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
-            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="6" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
+            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
             html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
-                '<td style="vertical-align:middle;">' + (ad.category || ad.propType || ad.type || '—') + '</td>' +
                 '<td style="vertical-align:middle;">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td style="vertical-align:middle;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
                 '<td style="vertical-align:middle;">' + _subCell(ad) + '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
                 '<tr data-ad-group="' + ad.id + '" style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
-                '<td colspan="6" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
+                '<td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
                   '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
                     (isRejected ? '' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="event.stopPropagation();bazarBoostPay(window.location.href,\'' + ad.id + '\')">Boost to Top</button>') +
-                    (isRejected ? '' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:' + (isRejected ? '0' : '10') + 'px;" onmouseover="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18)\'" onclick="event.stopPropagation();adAction(\'edit\',\'' + ad.id + '\')">Edit</button>') +
+                    (isRejected ? '' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:10px;" onmouseover="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18)\'" onclick="event.stopPropagation();adAction(\'edit\',\'' + ad.id + '\')">Edit</button>') +
                     (isRejected ? '<span style="font-size:12px;color:#991b1b;font-weight:600;">Your ad was rejected by moderation. It will be automatically deleted in 30 days.</span>' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="event.stopPropagation();adAction(\'' + deactAction + '\',\'' + ad.id + '\')">' + deactLbl + '</button>') +
-                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;margin-left:auto;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';this.style.boxShadow=\'\';" onclick="event.stopPropagation();adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';this.style.boxShadow=\'\';" onclick="event.stopPropagation();adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
                   '</div>' +
                 '</td>' +
                 '</tr>';
