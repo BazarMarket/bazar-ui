@@ -41,9 +41,6 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('System Errors')
                     ->collapsible()
                     ->collapsed(),
-                NavigationGroup::make('Support')
-                    ->collapsible()
-                    ->collapsed(),
                 NavigationGroup::make('For Sale')
                     ->collapsible()
                     ->collapsed(),
