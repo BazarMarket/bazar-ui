@@ -4861,6 +4861,9 @@ body.bazar-logged .card__heart {
     display: flex;
     align-items: center;
   }
+  .search__third--loc {
+    display: none;
+  }
   .search .btn {
     display: none;
   }
