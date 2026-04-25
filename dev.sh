@@ -37,6 +37,10 @@ ssh -i .local/ssh/bazar_deploy -o StrictHostKeyChecking=no root@49.13.231.137 "
   mkdir -p /var/www/bazar-dev-admin/public/css /var/www/bazar-dev-admin/public/js &&
   cp /var/www/bazar-dev/public/css/filament-custom.css     /var/www/bazar-dev-admin/public/css/filament-custom.css &&
   cp /var/www/bazar-dev/public/js/filament-real-estate.js  /var/www/bazar-dev-admin/public/js/filament-real-estate.js &&
+  # ВАЖНО: public/index.php НЕ копируется — он содержит PSR-4 патч автозагрузчика.
+  # Без него vendor/ (симлинк на prod) загружал бы App\ классы из prod/app/, а не dev-admin/app/.
+  # Файл: /var/www/bazar-dev-admin/public/index.php (не трогать!)
+
   chown -R www-data:www-data /var/www/bazar-dev-admin/ &&
   cd /var/www/bazar-dev-admin && php artisan optimize:clear 2>/dev/null &&
   echo 'Admin synced (PHP + assets)' &&
