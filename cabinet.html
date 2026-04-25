@@ -184,6 +184,10 @@
             .csrow { flex-wrap: wrap; }
             .cscard { padding: 18px; }
         }
+        @keyframes aiBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.3; transform: scale(0.7); }
+        }
     </style>
 </head>
 
@@ -1252,6 +1256,10 @@
                         <div class="cab-box__head"><p class="cab-box__title">Conversation</p></div>
                         <div class="cab-box__body" style="padding:16px 20px;">
                             <div id="detailMessages" style="display:flex;flex-direction:column;gap:12px;"></div>
+                            <div id="aiTypingIndicator" style="display:none;margin-top:12px;padding:10px 14px;border-radius:10px;background:#f0fdf4;border:1px solid #bbf7d0;font-family:Poppins,sans-serif;font-size:12px;color:#15803d;display:none;align-items:center;gap:8px;">
+                                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#15803d;animation:aiBlink 1s ease-in-out infinite;"></span>
+                                <span>🤖 AI Assistant is typing…</span>
+                            </div>
                         </div>
                     </div>
 
@@ -2942,7 +2950,67 @@
 
 <script>
 /* ── My Tickets ── */
-var _currentTicketId = null;
+var _currentTicketId  = null;
+var _ticketPollTimer  = null;
+
+function _stopTicketPoll() {
+    if (_ticketPollTimer) { clearInterval(_ticketPollTimer); _ticketPollTimer = null; }
+    var ind = document.getElementById('aiTypingIndicator');
+    if (ind) ind.style.display = 'none';
+}
+
+function _renderTicketMessages(ticket, msgs) {
+    var msgsEl  = document.getElementById('detailMessages');
+    var replyBox = document.getElementById('ticketReplyBox');
+    if (!msgsEl) return;
+    document.getElementById('detailTicketStatus').innerHTML = _ticketStatusBadge(ticket.status || 'open');
+    if (!msgs || !msgs.length) {
+        msgsEl.innerHTML = '<p style="color:#9ca3af;font-size:13px;font-family:Poppins,sans-serif;">No messages yet.</p>';
+    } else {
+        msgsEl.innerHTML = msgs.map(function(m) {
+            var senderCfg = {
+                client: { label: 'You',              bg: '#eff6ff', color: '#1d4ed8' },
+                ai:     { label: '🤖 AI Assistant',  bg: '#f0fdf4', color: '#15803d' },
+                human:  { label: '✍️ Support Team',  bg: '#fffbeb', color: '#92400e' },
+            }[m.sender_type] || { label: m.sender_type, bg: '#f9fafb', color: '#374151' };
+            var time = m.created_at ? m.created_at.substring(0,16).replace('T',' ') : '';
+            return '<div style="padding:14px 16px;border-radius:10px;background:' + senderCfg.bg + ';border:1px solid rgba(0,0,0,.06);">' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
+                '<strong style="font-family:Poppins,sans-serif;font-size:12px;font-weight:700;color:' + senderCfg.color + ';">' + senderCfg.label + '</strong>' +
+                '<span style="font-family:Poppins,sans-serif;font-size:11px;color:#9ca3af;">' + time + '</span>' +
+                '</div>' +
+                '<p style="font-family:Poppins,sans-serif;font-size:13px;line-height:1.65;color:#374151;margin:0;white-space:pre-wrap;">' + _escHtml(m.message) + '</p>' +
+                '</div>';
+        }).join('');
+    }
+    if (replyBox) replyBox.style.display = ticket.status === 'closed' ? 'none' : '';
+}
+
+function _startTicketPolling(afterMsgCount) {
+    _stopTicketPoll();
+    var uid = localStorage.getItem('bazar_firebase_uid');
+    var ind = document.getElementById('aiTypingIndicator');
+    if (ind) { ind.style.display = 'flex'; }
+    var attempts = 0;
+    _ticketPollTimer = setInterval(function() {
+        attempts++;
+        if (attempts > 15 || !_currentTicketId) { _stopTicketPoll(); return; }
+        fetch(window.BAZAR_API + '/tickets/' + _currentTicketId + '?firebase_uid=' + encodeURIComponent(uid || ''), { headers: { Accept: 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var ticket = data.ticket || {};
+                var msgs   = ticket.messages || [];
+                if (msgs.length > afterMsgCount) {
+                    _stopTicketPoll();
+                    _renderTicketMessages(ticket, msgs);
+                    var msgsEl = document.getElementById('detailMessages');
+                    if (msgsEl) msgsEl.lastElementChild && msgsEl.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    setTimeout(refreshTicketNavBadge, 300);
+                }
+            })
+            .catch(function() {});
+    }, 2000);
+}
 
 function refreshTicketNavBadge() {
     var uid = localStorage.getItem('bazar_firebase_uid');
@@ -3041,6 +3109,7 @@ function renderTicketList(tickets, container) {
 }
 
 function openTicketDetail(ticketId) {
+    _stopTicketPoll();
     _currentTicketId = ticketId;
     var uid = localStorage.getItem('bazar_firebase_uid');
     document.getElementById('ticketListSection').style.display = 'none';
@@ -3052,35 +3121,10 @@ function openTicketDetail(ticketId) {
         .then(function(data) {
             var ticket = data.ticket || {};
             document.getElementById('detailTicketNumber').textContent = ticket.ticket_number || ('#' + ticket.id);
-            document.getElementById('detailTicketStatus').innerHTML = _ticketStatusBadge(ticket.status || 'open');
             document.getElementById('detailTicketSubject').textContent = ticket.subject || '';
             var meta = [_ticketCategoryLabel(ticket.category), ticket.created_at ? ticket.created_at.substring(0,10) : ''].filter(Boolean).join(' · ');
             document.getElementById('detailTicketMeta').textContent = meta;
-            var msgs = (ticket.messages || []);
-            var msgsEl = document.getElementById('detailMessages');
-            if (!msgs.length) {
-                msgsEl.innerHTML = '<p style="color:#9ca3af;font-size:13px;font-family:Poppins,sans-serif;">No messages yet.</p>';
-            } else {
-                msgsEl.innerHTML = msgs.map(function(m) {
-                    var senderCfg = {
-                        client: { label: 'You', bg: '#eff6ff', color: '#1d4ed8' },
-                        ai:     { label: '🤖 AI Assistant', bg: '#f0fdf4', color: '#15803d' },
-                        human:  { label: '✍️ Support Team', bg: '#fffbeb', color: '#92400e' },
-                    }[m.sender_type] || { label: m.sender_type, bg: '#f9fafb', color: '#374151' };
-                    var time = m.created_at ? m.created_at.substring(0,16).replace('T',' ') : '';
-                    return '<div style="padding:14px 16px;border-radius:10px;background:' + senderCfg.bg + ';border:1px solid rgba(0,0,0,.06);">' +
-                        '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
-                        '<strong style="font-family:Poppins,sans-serif;font-size:12px;font-weight:700;color:' + senderCfg.color + ';">' + senderCfg.label + '</strong>' +
-                        '<span style="font-family:Poppins,sans-serif;font-size:11px;color:#9ca3af;">' + time + '</span>' +
-                        '</div>' +
-                        '<p style="font-family:Poppins,sans-serif;font-size:13px;line-height:1.65;color:#374151;margin:0;white-space:pre-wrap;">' + _escHtml(m.message) + '</p>' +
-                        '</div>';
-                }).join('');
-            }
-            // Hide reply if closed
-            var replyBox = document.getElementById('ticketReplyBox');
-            if (replyBox) replyBox.style.display = ticket.status === 'closed' ? 'none' : '';
-            // Client just read this ticket — refresh nav badge (server reset client_unread)
+            _renderTicketMessages(ticket, ticket.messages || []);
             setTimeout(refreshTicketNavBadge, 300);
         })
         .catch(function() {
@@ -3089,6 +3133,7 @@ function openTicketDetail(ticketId) {
 }
 
 function showTicketList() {
+    _stopTicketPoll();
     _currentTicketId = null;
     document.getElementById('ticketDetailSection').style.display = 'none';
     document.getElementById('ticketListSection').style.display = '';
@@ -3108,10 +3153,14 @@ function sendTicketFollowup() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ ticket_id: _currentTicketId, firebase_uid: uid, message: text.trim() }),
     })
-    .then(function() {
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
         if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
         document.getElementById('ticketFollowupText').value = '';
-        openTicketDetail(_currentTicketId);
+        var ticket = data.ticket || {};
+        var msgs   = ticket.messages || [];
+        _renderTicketMessages(ticket, msgs);
+        _startTicketPolling(msgs.length);
     })
     .catch(function() {
         if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
