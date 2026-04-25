@@ -1516,9 +1516,10 @@
       var open    = panel.classList.toggle('is-open');
       overlay.classList.toggle('is-open', open);
       document.body.style.overflow = open ? 'hidden' : '';
-      if (btn) btn.textContent = open ? 'Close Chat' : 'Start Chat';
+      if (btn) { var _bs1 = btn.querySelector('#start-chat-badge'); btn.textContent = open ? 'Close Chat' : 'Start Chat'; if (_bs1) btn.appendChild(_bs1); }
       if (open) {
-         /* Clear message badges when chat is opened */
+         /* Clear start-chat badge when chat is opened */
+         var _ob = document.getElementById('start-chat-badge'); if (_ob) { _ob.textContent = '0'; _ob.style.display = 'none'; }
          if (typeof window.bazarSetMsgBadge === 'function') window.bazarSetMsgBadge(0);
          ccpInitChat(function(){
             setTimeout(function(){
@@ -1537,8 +1538,9 @@
       panel.classList.add('is-open');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-      if (btn) btn.textContent = 'Close Chat';
-      /* Clear message badges when chat is opened */
+      if (btn) { var _bs2 = btn.querySelector('#start-chat-badge'); btn.textContent = 'Close Chat'; if (_bs2) btn.appendChild(_bs2); }
+      /* Clear start-chat badge when chat is opened */
+      var _ob2 = document.getElementById('start-chat-badge'); if (_ob2) { _ob2.textContent = '0'; _ob2.style.display = 'none'; }
       if (typeof window.bazarSetMsgBadge === 'function') window.bazarSetMsgBadge(0);
       ccpInitChat(function(){
          setTimeout(function(){
@@ -1556,7 +1558,7 @@
       panel.classList.remove('is-open');
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
-      if(btn) btn.textContent = 'Start Chat';
+      if(btn) { var _bs3 = btn.querySelector('#start-chat-badge'); btn.textContent = 'Start Chat'; if (_bs3) btn.appendChild(_bs3); }
    }
    document.addEventListener('keydown', function(e){
       if(e.key === 'Escape') closeCardChat();
@@ -2064,6 +2066,71 @@ function _glbKey(e) {
       applyFavState();
       updateFavCount();
    });
+})();
+</script>
+
+<script>
+/* ── Card-specific Start Chat badge polling ── */
+(function() {
+    var _cardChatPollTimer  = null;
+    var _cardChatPollStarted = false;
+
+    function _setStartChatBadge(count) {
+        var badge = document.getElementById('start-chat-badge');
+        if (!badge) return;
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    function _pollCardUnread() {
+        var panel = document.getElementById('ccpSidePanel');
+        if (panel && panel.classList.contains('is-open')) return;
+
+        var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+        var name = localStorage.getItem('bazar_username')     || '';
+        if (!uid && !name) return;
+
+        var d = window._chatAdData;
+        if (!d || !d.adId) return;
+
+        var url = '/api/chat/convs?uid=' + encodeURIComponent(uid);
+        if (name) url += '&name=' + encodeURIComponent(name);
+
+        fetch(url)
+            .then(function(r) { return r.ok ? r.json() : { conversations: [] }; })
+            .then(function(data) {
+                var convs = data.conversations || [];
+                var conv  = null;
+                for (var i = 0; i < convs.length; i++) {
+                    if (String(convs[i].ad_id) === String(d.adId)) { conv = convs[i]; break; }
+                }
+                var unread = 0;
+                if (conv) {
+                    var isBuyer = conv.buyer_id === uid;
+                    unread = isBuyer ? (conv.unread_buyer || 0) : (conv.unread_seller || 0);
+                }
+                _setStartChatBadge(unread);
+            })
+            .catch(function() {});
+    }
+
+    function _startCardChatPoll() {
+        if (_cardChatPollStarted) return;
+        _cardChatPollStarted = true;
+        _pollCardUnread();
+        _cardChatPollTimer = setInterval(_pollCardUnread, 10000);
+    }
+
+    var _waitForAdData = setInterval(function() {
+        var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+        var name = localStorage.getItem('bazar_username')     || '';
+        if ((uid || name) && window._chatAdData && window._chatAdData.adId) {
+            clearInterval(_waitForAdData);
+            _startCardChatPoll();
+        }
+    }, 500);
+
+    setTimeout(function() { clearInterval(_waitForAdData); }, 15000);
 })();
 </script>
 </body>

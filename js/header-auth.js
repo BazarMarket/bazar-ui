@@ -148,12 +148,6 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
             byId.textContent = count;
             byId.style.display = count > 0 ? 'flex' : 'none';
         }
-        /* Mirror badge on Start Chat button (card.html) */
-        var chatBadge = document.getElementById('start-chat-badge');
-        if (chatBadge) {
-            chatBadge.textContent = count;
-            chatBadge.style.display = count > 0 ? 'flex' : 'none';
-        }
         localStorage.setItem('bazar_unread_count', count);
     }
     window.bazarSetMsgBadge = setMsgBadge;
