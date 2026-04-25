@@ -2560,6 +2560,31 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
             self._send_json(200, {'ok': True}); return
 
+        # ── /api/moderation/delete — admin deletes listing from queue + Laravel ──
+        if path_only0 == '/api/moderation/delete':
+            client_ip = self.client_address[0]
+            if client_ip not in ('127.0.0.1', '::1'):
+                self._send_json(403, {'error': 'forbidden'}); return
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            review_id = data.get('id')
+            if not review_id:
+                self._send_json(400, {'error': 'id required'}); return
+            with _chat_lock:
+                conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                conn.row_factory = sqlite3.Row
+                row = conn.execute('SELECT property_id FROM moderation_reviews WHERE id=?', (review_id,)).fetchone()
+                if row and row['property_id']:
+                    _set_property_status_internal(int(row['property_id']), 'deleted')
+                conn.execute('DELETE FROM moderation_reviews WHERE id=?', (review_id,))
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True}); return
+
         # ── /api/tickets (create ticket + Gemini AI reply) ───────────────────
         if path_only0 == '/api/tickets':
             length = int(self.headers.get('Content-Length', 0))
@@ -2776,6 +2801,47 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(502, {'error': 'gateway error'})
             return
 
+        # ── /api/properties/{id}/delete — forward to Laravel + clean mod queue ──
+        _del_m = re.match(r'^/api/properties/(\d+)/delete$', path_only)
+        if _del_m:
+            prop_id_del = int(_del_m.group(1))
+            content_len = int(self.headers.get('Content-Length', 0))
+            body_del    = self.rfile.read(content_len) if content_len > 0 else b''
+            fwd_headers = {
+                'Accept':       self.headers.get('Accept', 'application/json'),
+                'Content-Type': self.headers.get('Content-Type', 'application/json'),
+            }
+            try:
+                req = urllib.request.Request(
+                    f'{LARAVEL_API_BASE}/properties/{prop_id_del}/delete',
+                    data=body_del, headers=fwd_headers, method='POST')
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    resp_body = resp.read()
+                    resp_status = resp.status
+                    resp_ct = resp.headers.get('Content-Type', 'application/json')
+                # Clean moderation queue on success
+                if resp_status == 200:
+                    with _chat_lock:
+                        conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                        conn.execute('DELETE FROM moderation_reviews WHERE property_id=?', (prop_id_del,))
+                        conn.commit()
+                        conn.close()
+                self.send_response(resp_status)
+                self.send_header('Content-Type', resp_ct)
+                self.send_header('Content-Length', str(len(resp_body)))
+                self.end_headers()
+                self.wfile.write(resp_body)
+            except urllib.error.HTTPError as e:
+                b = e.read()
+                self.send_response(e.code)
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Content-Length', str(len(b)))
+                self.end_headers()
+                self.wfile.write(b)
+            except Exception:
+                self._send_json(502, {'error': 'gateway error'})
+            return
+
         # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
         if path_only.startswith('/api/'):
             api_path = path_only[len('/api'):]
@@ -2906,6 +2972,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     'status':            r['status'],
                     'created_at':        r['created_at'],
                     'reviewed_at':       r['reviewed_at'],
+                    'days_left':         max(0, 30 - int((time.time() - float(r['created_at'])) / 86400)),
                 })
             self._send_json(200, {'items': items, 'pending_count': pending}); return
 

@@ -39,8 +39,9 @@
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">AI flags</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Confidence</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Status</th>
-                        <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Date</th>
+                        <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Date / Expires</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Actions</th>
+                        <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,13 +143,27 @@
                                 @endif
                             </td>
 
-                            {{-- Date --}}
+                            {{-- Date + Expires --}}
                             <td style="padding:10px 12px;color:#6b7280;white-space:nowrap;font-size:12px;vertical-align:top">
                                 {{ date('d M Y', (int)$item['created_at']) }}<br>
-                                <span style="color:#9ca3af">{{ date('H:i', (int)$item['created_at']) }}</span>
+                                <span style="color:#9ca3af">{{ date('H:i', (int)$item['created_at']) }}</span><br>
+                                @php $dl = (int)($item['days_left'] ?? 0); @endphp
+                                @if($dl > 7)
+                                    <span style="margin-top:4px;display:inline-block;background:#dcfce7;color:#166534;border:1px solid #86efac;border-radius:10px;padding:2px 7px;font-size:11px;font-weight:600">
+                                        🕐 {{ $dl }}d left
+                                    </span>
+                                @elseif($dl > 0)
+                                    <span style="margin-top:4px;display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:10px;padding:2px 7px;font-size:11px;font-weight:600">
+                                        ⚠ {{ $dl }}d left
+                                    </span>
+                                @else
+                                    <span style="margin-top:4px;display:inline-block;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:10px;padding:2px 7px;font-size:11px;font-weight:600">
+                                        Expired
+                                    </span>
+                                @endif
                             </td>
 
-                            {{-- Actions --}}
+                            {{-- Actions: Approve/Reject for pending --}}
                             <td style="padding:10px 12px;white-space:nowrap;vertical-align:top">
                                 @if($item['status'] === 'pending')
                                     <div style="display:flex;flex-direction:column;gap:6px">
@@ -164,10 +179,22 @@
                                     </div>
                                 @else
                                     <span style="color:#9ca3af;font-size:11px">
-                                        {{ date('d M H:i', (int)$item['reviewed_at']) }}
+                                        {{ $item['reviewed_at'] ? date('d M H:i', (int)$item['reviewed_at']) : '—' }}
                                     </span>
                                 @endif
                             </td>
+
+                            {{-- Delete --}}
+                            <td style="padding:10px 12px;white-space:nowrap;vertical-align:top">
+                                <button wire:click="deleteItem({{ $item['id'] }})"
+                                        onclick="return confirm('Permanently delete this listing? This cannot be undone.')"
+                                        style="background:#fff;color:#dc2626;border:1px solid #fca5a5;border-radius:7px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer"
+                                        onmouseover="this.style.background='#fee2e2'"
+                                        onmouseout="this.style.background='#fff'">
+                                    🗑 Delete
+                                </button>
+                            </td>
+
                         </tr>
                     @endforeach
                 </tbody>

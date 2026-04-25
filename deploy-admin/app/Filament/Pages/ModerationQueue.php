@@ -77,7 +77,15 @@ class ModerationQueue extends Page
     public function reject(int $id): void
     {
         $this->callPython('/api/moderation/reject', ['id' => $id]);
-        $this->flash     = 'Rejected — ad set to inactive.';
+        $this->flash     = 'Rejected — ad set to rejected.';
+        $this->flashType = 'danger';
+        $this->loadQueue();
+    }
+
+    public function deleteItem(int $id): void
+    {
+        $this->callPython('/api/moderation/delete', ['id' => $id]);
+        $this->flash     = 'Listing deleted and removed from queue.';
         $this->flashType = 'danger';
         $this->loadQueue();
     }
