@@ -3052,7 +3052,7 @@
          btn.textContent = 'Submitting...';
          btn.disabled = true;
 
-         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : API_URL;
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : '/api/properties';
          fetch(submitUrl, {
             method: 'POST',
             body: formData,
@@ -3253,7 +3253,7 @@
          btn.textContent = 'Submitting...';
          btn.disabled = true;
 
-         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : API_URL;
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : '/api/properties';
          fetch(submitUrl, {
             method: 'POST',
             body: formData,
@@ -3391,7 +3391,7 @@
          btn.textContent = 'Submitting...';
          btn.disabled = true;
 
-         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : API_URL;
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : '/api/properties';
          fetch(submitUrl, {
             method: 'POST',
             body: formData,

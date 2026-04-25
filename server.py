@@ -2546,7 +2546,10 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 pass
             self._send_json(201, {'ok': True, 'ticket': ticket}); return
 
-        # ── /api/properties (POST) — AI text + image moderation ─────────────────
+        # ── /api/properties (POST) — async AI moderation ────────────────────────
+        # Flow: parse → forward to Laravel as pending → reply to client fast →
+        #       background thread runs Gemini+Vision → if clean set active,
+        #       if flagged stays pending and logged to moderation_reviews.
         path_only = self.path.split('?')[0]
         if path_only == '/api/properties':
             content_len  = int(self.headers.get('Content-Length', 0))
@@ -2582,48 +2585,16 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         raw_images = [raw_images] if raw_images else []
                 image_urls = [str(u) for u in (raw_images or []) if u]
 
-            # Run Gemini (text) + Vision (images) in parallel
-            text_result  = {}
-            image_result = {}
-
-            def _run_text():
-                nonlocal text_result
-                text_result = _gemini_moderate(title, description)
-
-            def _run_vision():
-                nonlocal image_result
-                if image_bytes_list:
-                    image_result = _vision_safesearch_bytes(image_bytes_list)
-                elif image_urls:
-                    image_result = _vision_safesearch(image_urls)
-
-            t1 = threading.Thread(target=_run_text,   daemon=True)
-            t2 = threading.Thread(target=_run_vision, daemon=True)
-            t1.start(); t2.start()
-            t1.join(timeout=25); t2.join(timeout=25)
-
-            text_flagged  = bool(text_result.get('flagged', False))
-            image_flagged = bool(image_result.get('flagged', False))
-            flagged       = text_flagged or image_flagged
-
-            all_reasons = list(text_result.get('reasons', []))
-            if image_flagged:
-                all_reasons += image_result.get('reasons', [])
-            all_confidence = max(
-                text_result.get('confidence', 0.0),
-                image_result.get('confidence', 0.0),
-            )
-
-            # Forward original body to Laravel (preserve content-type for multipart)
+            # Step 1: Forward to Laravel immediately, ALWAYS as pending.
+            # The background moderation will set it to active if clean.
             fwd_url = f'{LARAVEL_API_BASE}/properties'
             qs_str  = ('?' + self.path[len(path_only)+1:]) if '?' in self.path else ''
             fwd_url += qs_str
             fwd_headers = {
-                'Accept':       self.headers.get('Accept', 'application/json'),
-                'Content-Type': content_type or 'application/json',
+                'Accept':              self.headers.get('Accept', 'application/json'),
+                'Content-Type':        content_type or 'application/json',
+                'X-Bazar-Moderation':  'pending',
             }
-            if flagged:
-                fwd_headers['X-Bazar-Moderation'] = 'pending'
             fwd_headers = {k: v for k, v in fwd_headers.items() if v}
             try:
                 req = urllib.request.Request(fwd_url, data=body_bytes, headers=fwd_headers, method='POST')
@@ -2631,45 +2602,100 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     resp_body   = resp.read()
                     resp_status = resp.status
                     resp_ct     = resp.headers.get('Content-Type', 'application/json')
-                if flagged:
-                    try:
-                        prop    = json.loads(resp_body)
-                        prop_id = (prop.get('id') or prop.get('property_id') or
-                                   (prop.get('data') or {}).get('id') or 0)
-                        if prop_id:
-                            # Belt-and-suspenders: also call set-status directly
-                            _set_property_status_internal(prop_id, 'pending')
-                            try:
-                                prop['status'] = 'pending'
-                                resp_body = json.dumps(prop).encode()
-                            except Exception:
-                                pass
-                        with _chat_lock:
-                            conn = sqlite3.connect(MOD_DB, check_same_thread=False)
-                            conn.execute(
-                                '''INSERT INTO moderation_reviews
-                                   (property_id, title, description, firebase_uid,
-                                    ai_text_flagged, ai_reasons, ai_confidence,
-                                    ai_image_flagged, ai_image_reasons,
-                                    status, created_at)
-                                   VALUES (?,?,?,?,?,?,?,?,?,?,?)''',
-                                (prop_id, title[:500], description[:2000], firebase_uid,
-                                 1 if text_flagged  else 0,
-                                 json.dumps(all_reasons),
-                                 all_confidence,
-                                 1 if image_flagged else 0,
-                                 json.dumps(image_result.get('reasons', [])),
-                                 'pending', time.time())
-                            )
-                            conn.commit()
-                            conn.close()
-                    except Exception:
-                        pass
+
+                # Step 2: Extract prop_id for async moderation
+                prop_id = 0
+                try:
+                    prop    = json.loads(resp_body)
+                    prop_id = (prop.get('id') or prop.get('property_id') or
+                               (prop.get('data') or {}).get('id') or 0)
+                except Exception:
+                    pass
+
+                # Step 3: Reply to client right away (well within Nginx timeout)
                 self.send_response(resp_status)
                 self.send_header('Content-Type', resp_ct)
                 self.send_header('Content-Length', str(len(resp_body)))
                 self.end_headers()
                 self.wfile.write(resp_body)
+
+                # Step 4: Run AI moderation in background thread (fire and forget)
+                if prop_id:
+                    _pid   = int(prop_id)
+                    _title = title
+                    _desc  = description
+                    _uid   = firebase_uid
+                    _imgs  = list(image_bytes_list)
+                    _urls  = list(image_urls)
+
+                    def _moderate_async():
+                        try:
+                            print(f'[MODERATION] Starting async check for property {_pid}', flush=True)
+                            txt_r = {}
+                            img_r = {}
+
+                            def _rt():
+                                nonlocal txt_r
+                                txt_r = _gemini_moderate(_title, _desc)
+
+                            def _rv():
+                                nonlocal img_r
+                                if _imgs:
+                                    img_r = _vision_safesearch_bytes(_imgs)
+                                elif _urls:
+                                    img_r = _vision_safesearch(_urls)
+
+                            t1 = threading.Thread(target=_rt, daemon=True)
+                            t2 = threading.Thread(target=_rv, daemon=True)
+                            t1.start(); t2.start()
+                            t1.join(timeout=30); t2.join(timeout=30)
+
+                            txt_flagged = bool(txt_r.get('flagged', False))
+                            img_flagged = bool(img_r.get('flagged', False))
+                            flagged     = txt_flagged or img_flagged
+
+                            if not flagged:
+                                # Clean → promote to active
+                                _set_property_status_internal(_pid, 'active')
+                                print(f'[MODERATION] Property {_pid} CLEAN → set active', flush=True)
+                            else:
+                                # Flagged → stays pending, log to DB
+                                all_reasons = list(txt_r.get('reasons', []))
+                                if img_flagged:
+                                    all_reasons += img_r.get('reasons', [])
+                                all_conf = max(
+                                    txt_r.get('confidence', 0.0),
+                                    img_r.get('confidence', 0.0),
+                                )
+                                print(
+                                    f'[MODERATION] Property {_pid} FLAGGED → stays pending, '
+                                    f'reasons={all_reasons}',
+                                    flush=True,
+                                )
+                                with _chat_lock:
+                                    conn = sqlite3.connect(MOD_DB, check_same_thread=False)
+                                    conn.execute(
+                                        '''INSERT INTO moderation_reviews
+                                           (property_id, title, description, firebase_uid,
+                                            ai_text_flagged, ai_reasons, ai_confidence,
+                                            ai_image_flagged, ai_image_reasons,
+                                            status, created_at)
+                                           VALUES (?,?,?,?,?,?,?,?,?,?,?)''',
+                                        (_pid, _title[:500], _desc[:2000], _uid,
+                                         1 if txt_flagged else 0,
+                                         json.dumps(all_reasons),
+                                         all_conf,
+                                         1 if img_flagged else 0,
+                                         json.dumps(img_r.get('reasons', [])),
+                                         'pending', time.time())
+                                    )
+                                    conn.commit()
+                                    conn.close()
+                        except Exception as exc:
+                            print(f'[MODERATION] Async error for property {_pid}: {exc}', flush=True)
+
+                    threading.Thread(target=_moderate_async, daemon=True).start()
+
             except urllib.error.HTTPError as e:
                 b = e.read()
                 self.send_response(e.code)
