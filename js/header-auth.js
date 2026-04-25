@@ -302,3 +302,86 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         initHearts();
     }
 })();
+
+/* ── English-only input validation (global, all pages) ──────────────────── */
+(function () {
+    var _toast = null;
+    var _toastTimer = null;
+
+    function showEngToast() {
+        if (!_toast) {
+            _toast = document.createElement('div');
+            _toast.textContent = 'Only English characters are allowed';
+            _toast.style.cssText = [
+                'position:fixed', 'top:70px', 'right:16px', 'z-index:99999',
+                'background:#e31836', 'color:#fff', 'font-size:13px', 'font-weight:600',
+                'padding:9px 16px', 'border-radius:8px',
+                'box-shadow:0 3px 12px rgba(0,0,0,0.22)',
+                'pointer-events:none', 'transition:opacity .25s',
+                'opacity:0'
+            ].join(';');
+            document.body.appendChild(_toast);
+        }
+        _toast.style.opacity = '1';
+        clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(function () {
+            if (_toast) _toast.style.opacity = '0';
+        }, 2200);
+    }
+
+    /* Returns true if el should be validated for English-only input */
+    function shouldValidate(el) {
+        if (!el) return false;
+        var tag = el.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA') return false;
+        var type = (el.type || 'text').toLowerCase();
+        var skip = ['hidden', 'checkbox', 'radio', 'file', 'submit',
+                    'button', 'reset', 'image', 'range', 'color',
+                    'date', 'time', 'datetime-local', 'month', 'week',
+                    'number', 'tel'];
+        if (skip.indexOf(type) !== -1) return false;
+        if (el.inputMode === 'numeric' || el.inputMode === 'decimal') return false;
+        if (el.classList.contains('otp-input')) return false;
+        if (el.classList.contains('modal-number-input')) return false;
+        return true;
+    }
+
+    /* Strip non-ASCII characters from string */
+    function toEnglish(str) {
+        return str.replace(/[^\x00-\x7F]/g, '');
+    }
+
+    /* Filter on every input event (keyboard, IME, voice, autofill) */
+    document.addEventListener('input', function (e) {
+        var el = e.target;
+        if (!shouldValidate(el)) return;
+        var val = el.value;
+        if (/[^\x00-\x7F]/.test(val)) {
+            var pos = el.selectionStart || 0;
+            var filtered = toEnglish(val);
+            el.value = filtered;
+            var newPos = Math.min(pos, filtered.length);
+            try { el.setSelectionRange(newPos, newPos); } catch (_) {}
+            showEngToast();
+        }
+    }, true);
+
+    /* Also intercept paste separately to handle it before `input` fires */
+    document.addEventListener('paste', function (e) {
+        var el = e.target;
+        if (!shouldValidate(el)) return;
+        var pasted = (e.clipboardData || window.clipboardData || {}).getData('text') || '';
+        if (/[^\x00-\x7F]/.test(pasted)) {
+            e.preventDefault();
+            var filtered = toEnglish(pasted);
+            var start = el.selectionStart || 0;
+            var end   = el.selectionEnd   || 0;
+            var cur   = el.value;
+            el.value  = cur.substring(0, start) + filtered + cur.substring(end);
+            var np    = start + filtered.length;
+            try { el.setSelectionRange(np, np); } catch (_) {}
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            showEngToast();
+        }
+    }, true);
+})();
