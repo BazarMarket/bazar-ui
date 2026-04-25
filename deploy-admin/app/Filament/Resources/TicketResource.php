@@ -30,6 +30,34 @@ class TicketResource extends Resource
 
     public static function getNavigationBadgeColor(): ?string { return 'danger'; }
 
+    private static function pythonUrl(): string
+    {
+        return rtrim(env('BAZAR_PYTHON_URL', 'http://127.0.0.1:5000'), '/');
+    }
+
+    private static function getAiDraft(Ticket $record): string
+    {
+        try {
+            $url  = self::pythonUrl() . '/api/admin/ticket-suggest';
+            $data = json_encode(['ticket_id' => $record->id]);
+            $ctx  = stream_context_create([
+                'http' => [
+                    'method'        => 'POST',
+                    'header'        => "Content-Type: application/json\r\nContent-Length: " . strlen($data) . "\r\n",
+                    'content'       => $data,
+                    'timeout'       => 18,
+                    'ignore_errors' => true,
+                ],
+            ]);
+            $resp = @file_get_contents($url, false, $ctx);
+            if (!$resp) return '';
+            $json = json_decode($resp, true);
+            return $json['suggestion'] ?? '';
+        } catch (\Throwable $e) {
+            return '';
+        }
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -112,30 +140,43 @@ class TicketResource extends Resource
                             ? implode("\n\n" . str_repeat('─', 40) . "\n\n", $threadLines)
                             : 'No messages yet.';
 
-                        return [
+                        $aiDraft = self::getAiDraft($record);
+
+                        $fields = [
                             Textarea::make('thread_preview')
                                 ->label('Conversation')
                                 ->default($threadText)
                                 ->disabled()
                                 ->rows(min(count($record->messages) * 4 + 2, 14))
                                 ->extraAttributes(['style' => 'font-family:monospace;font-size:12px;background:#f9fafb;']),
-
-                            Select::make('new_status')
-                                ->label('Change Status')
-                                ->options([
-                                    'open'        => 'Open',
-                                    'ai_answered' => 'AI Answered',
-                                    'need_human'  => 'Need Human',
-                                    'replied'     => 'Replied',
-                                    'closed'      => 'Closed',
-                                ])
-                                ->default($record->status),
-
-                            Textarea::make('reply_message')
-                                ->label('Your Reply')
-                                ->placeholder('Type your reply to the customer…')
-                                ->rows(4),
                         ];
+
+                        if ($aiDraft) {
+                            $fields[] = Textarea::make('ai_draft')
+                                ->label('🤖 AI Suggested Reply')
+                                ->default($aiDraft)
+                                ->disabled()
+                                ->rows(5)
+                                ->extraAttributes(['style' => 'font-family:monospace;font-size:12px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;']);
+                        }
+
+                        $fields[] = Select::make('new_status')
+                            ->label('Change Status')
+                            ->options([
+                                'open'        => 'Open',
+                                'ai_answered' => 'AI Answered',
+                                'need_human'  => 'Need Human',
+                                'replied'     => 'Replied',
+                                'closed'      => 'Closed',
+                            ])
+                            ->default($record->status);
+
+                        $fields[] = Textarea::make('reply_message')
+                            ->label('Your Reply')
+                            ->placeholder('Type your reply to the customer…')
+                            ->rows(4);
+
+                        return $fields;
                     })
                     ->action(function (Ticket $record, array $data): void {
                         $status = $data['new_status'] ?? $record->status;

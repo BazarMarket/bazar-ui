@@ -200,6 +200,61 @@ def _gemini_reply(subject: str, message: str) -> tuple[str, bool]:
     except Exception as exc:
         return ('', True)
 
+
+def _gemini_reply_with_context(subject: str, messages: list) -> tuple[str, bool]:
+    """Call Gemini 2.5 Flash with full conversation history. Returns (reply_text, needs_human).
+    messages = list of dicts: [{sender_type, message}, ...]
+    """
+    if not GEMINI_API_KEY:
+        return ('', True)
+    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
+    contents = []
+    for msg in messages:
+        sender = msg.get('sender_type', 'client')
+        text   = msg.get('message', '').strip()
+        if not text:
+            continue
+        if sender == 'client':
+            contents.append({'role': 'user',  'parts': [{'text': text}]})
+        else:
+            contents.append({'role': 'model', 'parts': [{'text': text}]})
+    if not contents:
+        contents = [{'role': 'user', 'parts': [{'text': f'Subject: {subject}'}]}]
+    payload = {
+        'systemInstruction': {'parts': [{'text': _BAZAR_SYSTEM_PROMPT}]},
+        'contents': contents,
+        'generationConfig': {'temperature': 0.4, 'maxOutputTokens': 600},
+    }
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            result = json.loads(resp.read())
+        text = result['candidates'][0]['content']['parts'][0]['text'].strip()
+        needs_human = '[NEED_HUMAN]' in text
+        clean_text  = text.replace('[NEED_HUMAN]', '').strip()
+        return (clean_text, needs_human)
+    except Exception:
+        return ('', True)
+
+
+def _fetch_ticket_with_messages(ticket_id: int) -> dict | None:
+    """Fetch ticket + messages from Laravel. Returns dict or None."""
+    try:
+        req = urllib.request.Request(
+            f'{LARAVEL_API_BASE}/tickets/{ticket_id}?with_messages=1',
+            headers={'Accept': 'application/json'},
+            method='GET',
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return json.loads(r.read())
+    except Exception:
+        return None
+
 # ── Gemini AI content moderation ──────────────────────────────────────────────
 _MOD_PROMPT = """You are a content moderation AI for Bazar (www.bazar.uk), a UK property marketplace.
 Analyse the following property listing and determine if it violates content policies.
@@ -2659,6 +2714,86 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             except Exception:
                 pass
             self._send_json(201, {'ok': True, 'ticket': ticket}); return
+
+        # ── /api/ticket-followup — client sends follow-up, AI auto-replies ──────
+        if path_only0 == '/api/ticket-followup':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            ticket_id  = data.get('ticket_id')
+            firebase_uid = data.get('firebase_uid', '').strip()
+            followup_text = data.get('message', '').strip()
+            if not ticket_id or not followup_text or not firebase_uid:
+                self._send_json(422, {'error': 'ticket_id, firebase_uid and message required'}); return
+            # 1. Save client message + set status=open in Laravel
+            try:
+                status_req = urllib.request.Request(
+                    f'{LARAVEL_API_BASE}/tickets/{ticket_id}/status',
+                    data=json.dumps({
+                        'status': 'open',
+                        'client_followup': followup_text,
+                        'firebase_uid': firebase_uid,
+                    }).encode(),
+                    headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    method='POST',
+                )
+                with urllib.request.urlopen(status_req, timeout=10) as r:
+                    saved = json.loads(r.read())
+            except Exception as e:
+                self._send_json(500, {'error': 'failed to save message', 'detail': str(e)}); return
+            # 2. Fetch full ticket thread for context
+            def _ai_followup_reply(tid, uid):
+                ticket_data = _fetch_ticket_with_messages(tid)
+                if not ticket_data:
+                    return
+                ticket_obj = ticket_data.get('ticket', {})
+                subject    = ticket_obj.get('subject', '')
+                messages   = ticket_obj.get('messages', [])
+                if not messages:
+                    return
+                ai_text, needs_human = _gemini_reply_with_context(subject, messages)
+                new_status = 'need_human' if needs_human or not ai_text else 'ai_answered'
+                try:
+                    payload = {'status': new_status, 'ai_confidence': 'low' if needs_human else 'high'}
+                    if ai_text:
+                        payload['ai_message'] = ai_text
+                    req2 = urllib.request.Request(
+                        f'{LARAVEL_API_BASE}/tickets/{tid}/status',
+                        data=json.dumps(payload).encode(),
+                        headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
+                        method='POST',
+                    )
+                    urllib.request.urlopen(req2, timeout=10).close()
+                except Exception:
+                    pass
+            threading.Thread(target=_ai_followup_reply, args=(ticket_id, firebase_uid), daemon=True).start()
+            self._send_json(200, {'ok': True, 'ticket': saved.get('ticket', {})}); return
+
+        # ── /api/admin/ticket-suggest — IP-restricted AI draft for admin ─────────
+        if path_only0 == '/api/admin/ticket-suggest':
+            client_ip = self.client_address[0]
+            if client_ip not in ('127.0.0.1', '::1'):
+                self._send_json(403, {'error': 'forbidden'}); return
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            ticket_id = data.get('ticket_id')
+            if not ticket_id:
+                self._send_json(400, {'error': 'ticket_id required'}); return
+            ticket_data = _fetch_ticket_with_messages(int(ticket_id))
+            if not ticket_data:
+                self._send_json(404, {'error': 'ticket not found'}); return
+            ticket_obj = ticket_data.get('ticket', {})
+            subject    = ticket_obj.get('subject', '')
+            messages   = ticket_obj.get('messages', [])
+            ai_text, needs_human = _gemini_reply_with_context(subject, messages)
+            self._send_json(200, {'suggestion': ai_text, 'needs_human': needs_human}); return
 
         # ── /api/properties (POST) — async AI moderation ────────────────────────
         # Flow: parse → forward to Laravel as pending → reply to client fast →

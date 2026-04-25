@@ -3103,10 +3103,10 @@ function sendTicketFollowup() {
     var btn  = document.querySelector('#ticketReplyBox button');
     if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
 
-    fetch(window.BAZAR_API + '/tickets/' + _currentTicketId + '/status', {
+    fetch('/api/ticket-followup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ status: 'open', ai_message: '', human_message: '', firebase_uid: uid, client_followup: text.trim() }),
+        body: JSON.stringify({ ticket_id: _currentTicketId, firebase_uid: uid, message: text.trim() }),
     })
     .then(function() {
         if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
