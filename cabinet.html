@@ -2950,11 +2950,21 @@
 
 <script>
 /* ── My Tickets ── */
-var _currentTicketId  = null;
-var _ticketPollTimer  = null;
+var _currentTicketId   = null;
+var _ticketPollTimer   = null;
+var _ticketMsgCount    = 0;   // last known message count
 
 function _stopTicketPoll() {
-    if (_ticketPollTimer) { clearInterval(_ticketPollTimer); _ticketPollTimer = null; }
+    if (_ticketPollTimer) { clearTimeout(_ticketPollTimer); _ticketPollTimer = null; }
+    _hideTypingIndicator();
+}
+
+function _showTypingIndicator() {
+    var ind = document.getElementById('aiTypingIndicator');
+    if (ind) ind.style.display = 'flex';
+}
+
+function _hideTypingIndicator() {
     var ind = document.getElementById('aiTypingIndicator');
     if (ind) ind.style.display = 'none';
 }
@@ -2986,30 +2996,53 @@ function _renderTicketMessages(ticket, msgs) {
     if (replyBox) replyBox.style.display = ticket.status === 'closed' ? 'none' : '';
 }
 
-function _startTicketPolling(afterMsgCount) {
+function _startTicketPolling(msgCount, showIndicator) {
     _stopTicketPoll();
-    var uid = localStorage.getItem('bazar_firebase_uid');
-    var ind = document.getElementById('aiTypingIndicator');
-    if (ind) { ind.style.display = 'flex'; }
-    var attempts = 0;
-    _ticketPollTimer = setInterval(function() {
-        attempts++;
-        if (attempts > 15 || !_currentTicketId) { _stopTicketPoll(); return; }
+    _ticketMsgCount  = msgCount  || 0;
+    var _indicator   = !!showIndicator;
+    var _fastCount   = 0;
+    if (_indicator) _showTypingIndicator();
+
+    function _doPoll() {
+        if (!_currentTicketId) return;
+        var uid = localStorage.getItem('bazar_firebase_uid');
         fetch(window.BAZAR_API + '/tickets/' + _currentTicketId + '?firebase_uid=' + encodeURIComponent(uid || ''), { headers: { Accept: 'application/json' } })
             .then(function(r) { return r.json(); })
             .then(function(data) {
+                if (!_currentTicketId) return;
                 var ticket = data.ticket || {};
                 var msgs   = ticket.messages || [];
-                if (msgs.length > afterMsgCount) {
-                    _stopTicketPoll();
+                if (msgs.length > _ticketMsgCount) {
+                    _ticketMsgCount = msgs.length;
+                    _indicator = false;
+                    _fastCount = 0;
+                    _hideTypingIndicator();
                     _renderTicketMessages(ticket, msgs);
                     var msgsEl = document.getElementById('detailMessages');
-                    if (msgsEl) msgsEl.lastElementChild && msgsEl.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    if (msgsEl && msgsEl.lastElementChild) {
+                        msgsEl.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                     setTimeout(refreshTicketNavBadge, 300);
                 }
+                // Schedule next poll
+                if (_currentTicketId) {
+                    if (_indicator) {
+                        _fastCount++;
+                        if (_fastCount > 20) { _indicator = false; _hideTypingIndicator(); }
+                    }
+                    var delay = _indicator ? 2000 : 5000;
+                    _ticketPollTimer = setTimeout(_doPoll, delay);
+                }
             })
-            .catch(function() {});
-    }, 2000);
+            .catch(function() {
+                if (_currentTicketId) {
+                    _ticketPollTimer = setTimeout(_doPoll, 5000);
+                }
+            });
+    }
+
+    var delay = _indicator ? 2000 : 5000;
+    _ticketPollTimer = setTimeout(_doPoll, delay);
 }
 
 function refreshTicketNavBadge() {
@@ -3124,7 +3157,9 @@ function openTicketDetail(ticketId) {
             document.getElementById('detailTicketSubject').textContent = ticket.subject || '';
             var meta = [_ticketCategoryLabel(ticket.category), ticket.created_at ? ticket.created_at.substring(0,10) : ''].filter(Boolean).join(' · ');
             document.getElementById('detailTicketMeta').textContent = meta;
-            _renderTicketMessages(ticket, ticket.messages || []);
+            var msgs = ticket.messages || [];
+            _renderTicketMessages(ticket, msgs);
+            _startTicketPolling(msgs.length, false);
             setTimeout(refreshTicketNavBadge, 300);
         })
         .catch(function() {
@@ -3160,7 +3195,7 @@ function sendTicketFollowup() {
         var ticket = data.ticket || {};
         var msgs   = ticket.messages || [];
         _renderTicketMessages(ticket, msgs);
-        _startTicketPolling(msgs.length);
+        _startTicketPolling(msgs.length, true);
     })
     .catch(function() {
         if (btn) { btn.textContent = 'Send Message'; btn.disabled = false; }
