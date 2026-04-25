@@ -10,7 +10,7 @@ class ModerationQueue extends Page
 
     protected static string $routePath = '/moderation-queue';
     protected static string|\UnitEnum|null   $navigationGroup = 'Moderation';
-    protected static string|\BackedEnum|null $navigationIcon  = 'heroicon-o-shield-exclamation';
+    protected static string|\BackedEnum|null $navigationIcon  = null;
     protected static ?string $navigationLabel = 'AI Moderation';
     protected static ?int    $navigationSort  = 1;
 
