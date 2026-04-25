@@ -1659,7 +1659,7 @@
         fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
             .then(function(d) {
-                _allAdsData = d.data || [];
+                _allAdsData = (d.data || []).filter(function(a) { return a.status !== 'deleted'; });
                 _doRenderAds(_allAdsData);
                 _setupAdsFilters();
             })
