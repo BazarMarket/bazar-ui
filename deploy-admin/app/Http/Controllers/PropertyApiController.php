@@ -505,6 +505,10 @@ class PropertyApiController extends Controller
             $listingLabel = $listingLabels[$p->listing_type] ?? '';
             $category     = trim($typeLabel . ' ' . $listingLabel);
 
+            // Compute expires_at: MAX(created_at, boosted_at) + 30 days
+            $baseDate  = $p->boosted_at ?? $p->created_at;
+            $expiresAt = $baseDate ? \Carbon\Carbon::parse($baseDate)->addDays(30)->toDateTimeString() : null;
+
             return [
                 'id'            => $p->id,
                 'title'         => $p->title,
@@ -520,10 +524,69 @@ class PropertyApiController extends Controller
                 'photo'         => ($firstImage ? 'https://admin.bazar.uk/storage/' . ltrim($firstImage, '/') : null),
                 'image'         => ($firstImage ? 'https://admin.bazar.uk/storage/' . ltrim($firstImage, '/') : null),
                 'created_at'    => $p->created_at,
+                'boosted_at'    => $p->boosted_at,
+                'expires_at'    => $expiresAt,
             ];
         });
 
         return response()->json(['data' => $result]);
+    }
+
+    public function setBoost(\Illuminate\Http\Request $request, $id)
+    {
+        $isInternal = in_array($request->ip(), ['127.0.0.1', '::1', '49.13.231.137']) &&
+                      $request->header('X-Bazar-Internal') === 'moderation';
+
+        $firebaseUid = $request->input('firebase_uid');
+
+        if (!$isInternal && !$firebaseUid) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $query = \App\Models\Property::where('id', $id);
+        if (!$isInternal && $firebaseUid) {
+            $query->where('firebase_uid', $firebaseUid);
+        }
+        $property = $query->first();
+
+        if (!$property) {
+            return response()->json(['error' => 'Property not found'], 404);
+        }
+
+        $now = now();
+        $property->boosted_at = $now;
+        $property->expires_at = $now->copy()->addDays(30);
+        $property->is_top     = 1;
+        $property->save();
+
+        return response()->json([
+            'success'    => true,
+            'boosted_at' => $property->boosted_at->toDateTimeString(),
+            'expires_at' => $property->expires_at->toDateTimeString(),
+        ]);
+    }
+
+    public function autoDeleteExpired()
+    {
+        $isInternal = in_array(request()->ip(), ['127.0.0.1', '::1', '49.13.231.137']) &&
+                      request()->header('X-Bazar-Internal') === 'moderation';
+        if (!$isInternal) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $cutoff = now()->subDays(30);
+        $deleted = \App\Models\Property::where('is_pro', 0)
+            ->where('is_vip', 0)
+            ->where(function($q) use ($cutoff) {
+                $q->where(function($inner) use ($cutoff) {
+                    $inner->whereNull('boosted_at')->where('created_at', '<', $cutoff);
+                })->orWhere(function($inner) use ($cutoff) {
+                    $inner->whereNotNull('boosted_at')->where('boosted_at', '<', $cutoff);
+                });
+            })
+            ->delete();
+
+        return response()->json(['success' => true, 'deleted' => $deleted]);
     }
 
 

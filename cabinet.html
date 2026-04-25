@@ -429,17 +429,19 @@
                     <button class="cab-filter-btn" id="adsFilterActive">Active (0)</button>
                     <button class="cab-filter-btn" id="adsFilterInactive">Inactive (0)</button>
                     <button class="cab-filter-btn" id="adsFilterPending">Pending (0)</button>
+                    <button class="cab-filter-btn" id="adsFilterRejected">Rejected (0)</button>
                     <button class="cab-add-btn icon-win-plus" onclick="window.location.href='post-ad.html'">New Ad</button>
                 </div>
 
                 <div class="cab-ads-table" id="myAdsTable" style="background:transparent;overflow:visible;border:none;box-shadow:none;">
-                    <table class="cab-table" style="min-width:600px;border-collapse:separate;border-spacing:0 0;">
+                    <table class="cab-table" style="min-width:700px;border-collapse:separate;border-spacing:0 0;">
                         <thead>
                             <tr>
-                                <th style="width:40%">Ad</th>
+                                <th style="width:35%">Ad</th>
                                 <th>Category</th>
                                 <th>Price</th>
                                 <th>Views</th>
+                                <th>Subscription</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -1648,6 +1650,8 @@
         if (tab === 'my-ads') loadMyAds();
     }
 
+    var _allAdsData = [];
+    var _filtersSetup = false;
     function loadMyAds() {
         var table = document.getElementById('myAdsTable');
         if (!table) return;
@@ -1655,45 +1659,102 @@
         if (!uid) return;
         fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.json(); })
-            .then(function(d) { _doRenderAds(d.data || []); })
+            .then(function(d) {
+                _allAdsData = d.data || [];
+                _doRenderAds(_allAdsData);
+                _setupAdsFilters();
+            })
             .catch(function() {});
     }
-    function _doRenderAds(ads) {
+    function _setupAdsFilters() {
+        if (_filtersSetup) return;
+        _filtersSetup = true;
+        var filterMap = {
+            adsFilterAll:      null,
+            adsFilterActive:   'active',
+            adsFilterInactive: 'inactive',
+            adsFilterPending:  'pending',
+            adsFilterRejected: 'rejected'
+        };
+        Object.keys(filterMap).forEach(function(btnId) {
+            var btn = document.getElementById(btnId);
+            if (!btn) return;
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.cab-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var status = filterMap[btnId];
+                var filtered = status === null ? _allAdsData : _allAdsData.filter(function(a) {
+                    if (status === 'pending') return a.status === 'pending' || a.status === 'under_review';
+                    return a.status === status;
+                });
+                _doRenderAds(filtered, true);
+            });
+        });
+    }
+    function _doRenderAds(ads, skipCounts) {
         var table   = document.getElementById('myAdsTable');
         var tbody   = document.getElementById('myAdsTbody');
         if (!table) return;
 
-        // Обновляем счётчики фильтров
-        var nActive   = ads.filter(function(a){ return a.status === 'active'; }).length;
-        var nInactive = ads.filter(function(a){ return a.status === 'inactive' || a.status === 'rejected'; }).length;
-        var nPending  = ads.filter(function(a){ return a.status === 'pending' || a.status === 'under_review'; }).length;
-        var allBtn = document.getElementById('adsFilterAll');
-        var actBtn = document.getElementById('adsFilterActive');
-        var inactBtn = document.getElementById('adsFilterInactive');
-        var pendBtn = document.getElementById('adsFilterPending');
-        if (allBtn)  allBtn.textContent  = 'All (' + ads.length + ')';
-        if (actBtn)  actBtn.textContent  = 'Active (' + nActive + ')';
-        if (inactBtn) inactBtn.textContent = 'Inactive (' + nInactive + ')';
-        if (pendBtn) pendBtn.textContent = 'Pending (' + nPending + ')';
+        if (!skipCounts) {
+            var src = _allAdsData.length ? _allAdsData : ads;
+            var nActive   = src.filter(function(a){ return a.status === 'active'; }).length;
+            var nInactive = src.filter(function(a){ return a.status === 'inactive'; }).length;
+            var nPending  = src.filter(function(a){ return a.status === 'pending' || a.status === 'under_review'; }).length;
+            var nRejected = src.filter(function(a){ return a.status === 'rejected'; }).length;
+            var allBtn  = document.getElementById('adsFilterAll');
+            var actBtn  = document.getElementById('adsFilterActive');
+            var inactBtn  = document.getElementById('adsFilterInactive');
+            var pendBtn   = document.getElementById('adsFilterPending');
+            var rejBtn    = document.getElementById('adsFilterRejected');
+            if (allBtn)   allBtn.textContent   = 'All (' + src.length + ')';
+            if (actBtn)   actBtn.textContent   = 'Active (' + nActive + ')';
+            if (inactBtn) inactBtn.textContent = 'Inactive (' + nInactive + ')';
+            if (pendBtn)  pendBtn.textContent  = 'Pending (' + nPending + ')';
+            if (rejBtn)   rejBtn.textContent   = 'Rejected (' + nRejected + ')';
+        }
 
         if (ads.length === 0) {
-            if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px 0;color:#aaa;font-size:15px;">You have no ads yet. <a href="/post-ad" style="color:#ff9138;text-decoration:underline;">Post your first ad</a></td></tr>';
+            if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px 0;color:#aaa;font-size:15px;">You have no ads yet. <a href="/post-ad" style="color:#ff9138;text-decoration:underline;">Post your first ad</a></td></tr>';
             return;
         }
         var statusBadge = {
             active:       'background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;',
-            rejected:     'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db;',
+            rejected:     'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;',
             inactive:     'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db;',
             pending:      'background:#fef3c7;color:#92400e;border:1px solid #fcd34d;',
             under_review: 'background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;'
         };
         var statusLabel = {
             active:       'Active',
-            rejected:     'Inactive',
+            rejected:     'Rejected',
             inactive:     'Inactive',
             pending:      'Pending',
             under_review: 'Under Review'
         };
+
+        function _subCell(ad) {
+            var plan = 'free';
+            if (ad.is_vip) plan = 'vip';
+            else if (ad.is_pro) plan = 'pro';
+            var planColor = plan === 'vip' ? '#7c3aed' : (plan === 'pro' ? '#0369a1' : '#4b5563');
+            var planBg    = plan === 'vip' ? '#ede9fe' : (plan === 'pro' ? '#e0f2fe' : '#f3f4f6');
+            var planBdr   = plan === 'vip' ? '#c4b5fd' : (plan === 'pro' ? '#7dd3fc' : '#d1d5db');
+            var planBadge = '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:' + planBg + ';color:' + planColor + ';border:1px solid ' + planBdr + ';">' + plan.toUpperCase() + '</span>';
+            var daysHtml = '';
+            if (ad.expires_at) {
+                var expMs = new Date(ad.expires_at).getTime();
+                var nowMs = Date.now();
+                var daysLeft = Math.ceil((expMs - nowMs) / 86400000);
+                if (daysLeft > 0) {
+                    daysHtml = '<span style="font-size:11px;color:#6b7280;margin-left:4px;">' + daysLeft + 'd left</span>';
+                } else {
+                    daysHtml = '<span style="font-size:11px;color:#dc2626;margin-left:4px;">Expired</span>';
+                }
+            }
+            return planBadge + daysHtml;
+        }
+
         var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
         var html = '';
         ads.forEach(function(ad, i) {
@@ -1702,10 +1763,11 @@
             var imgStyle = 'style="width:90px;height:72px;border-radius:6px;object-fit:cover;flex-shrink:0;"';
             var titleStyle = 'style="font-weight:600;color:#111;"';
             var img = ad.photo ? '<img class="cab-ads-table-img" ' + imgStyle + ' src="' + ad.photo + '" alt="">' : '<img class="cab-ads-table-img" ' + imgStyle + ' src="/img/product.jpg" alt="">';
-            var isInactive = (ad.status === 'inactive' || ad.status === 'rejected');
+            var isInactive = (ad.status === 'inactive');
+            var isRejected = (ad.status === 'rejected');
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
-            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="5" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
+            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="6" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
             html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
@@ -1713,15 +1775,16 @@
                 '<td style="vertical-align:middle;">' + (ad.category || ad.propType || ad.type || '—') + '</td>' +
                 '<td style="vertical-align:middle;">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td style="vertical-align:middle;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
+                '<td style="vertical-align:middle;">' + _subCell(ad) + '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
                 '<tr data-ad-group="' + ad.id + '" style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
-                '<td colspan="5" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
-                  '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
-                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="bazarBoostPay(window.location.href,\'' + ad.id + '\')">Boost to Top</button>' +
-                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:10px;" onmouseover="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18)\'" onclick="adAction(\'edit\',\'' + ad.id + '\')">Edit</button>' +
-                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="adAction(\'' + deactAction + '\',\'' + ad.id + '\')">' + deactLbl + '</button>' +
-                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';this.style.boxShadow=\'\';" onclick="adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
+                '<td colspan="6" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
+                  '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
+                    (isRejected ? '' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="event.stopPropagation();bazarBoostPay(window.location.href,\'' + ad.id + '\')">Boost to Top</button>') +
+                    (isRejected ? '' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);margin-left:' + (isRejected ? '0' : '10') + 'px;" onmouseover="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18)\'" onclick="event.stopPropagation();adAction(\'edit\',\'' + ad.id + '\')">Edit</button>') +
+                    (isRejected ? '<span style="font-size:12px;color:#991b1b;font-weight:600;">Your ad was rejected by moderation. It will be automatically deleted in 30 days.</span>' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="event.stopPropagation();adAction(\'' + deactAction + '\',\'' + ad.id + '\')">' + deactLbl + '</button>') +
+                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;margin-left:auto;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';this.style.boxShadow=\'\';" onclick="event.stopPropagation();adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
                   '</div>' +
                 '</td>' +
                 '</tr>';
@@ -2437,12 +2500,33 @@
             }
         }
 
+        if (params.get('boosted') === '1') {
+            var boostSessionId = params.get('session_id');
+            var boostUid = localStorage.getItem('bazar_firebase_uid') || '';
+            if (boostSessionId && boostUid) {
+                fetch('/api/boost-complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: boostSessionId, firebase_uid: boostUid })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    if (d.listing_id) {
+                        saveLocalTxn('debit', 'Boost', 'Boost to Top — Listing #' + d.listing_id, d.amount || 1, 'paid');
+                    }
+                })
+                .catch(function() {});
+            }
+            history.replaceState(null, '', '/cabinet/my-ads');
+            switchToTab('my-ads');
+        }
+
         highlightCurrentPlan();
         var pathParts = window.location.pathname.split('/');
         var hash = pathParts.length >= 3 && pathParts[2] ? pathParts[2] : window.location.hash.replace('#', '');
         var returnTab = sessionStorage.getItem('cabReturnTab');
         if (returnTab) { sessionStorage.removeItem('cabReturnTab'); hash = returnTab; }
-        var isRedirected = params.get('payment') === 'success' || params.get('deposit') === 'success';
+        var isRedirected = params.get('payment') === 'success' || params.get('deposit') === 'success' || params.get('boosted') === '1';
         if (hash && !isRedirected) switchToTab(hash);
         else if (!hash && !isRedirected) renderFavorites();
         if (hash === 'messages') setTimeout(cabScrollToBottom, 100);

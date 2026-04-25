@@ -2339,6 +2339,60 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(500, {'success': False, 'error': str(e)})
             return
 
+        # ── /api/boost-complete ───────────────────────────────────────────────
+        if self.path == '/api/boost-complete':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+
+            session_id   = data.get('session_id', '')
+            firebase_uid = data.get('firebase_uid', '')
+
+            if not session_id:
+                self._send_json(400, {'error': 'missing session_id'}); return
+
+            try:
+                import stripe
+                stripe.api_key = STRIPE_SECRET_KEY
+                session = stripe.checkout.Session.retrieve(session_id)
+                if session.payment_status != 'paid':
+                    self._send_json(400, {'error': 'not paid'}); return
+
+                listing_id = session.metadata.get('listing_id', '')
+                source     = session.metadata.get('source', '')
+                amount_pence = session.amount_total or 0
+
+                if source != 'boost_to_top' or not listing_id:
+                    self._send_json(400, {'error': 'not a boost session'}); return
+
+                # Mark boosted in Laravel
+                url     = f'{LARAVEL_API_BASE}/properties/{listing_id}/set-boost'
+                payload = json.dumps({'firebase_uid': firebase_uid}).encode()
+                req     = urllib.request.Request(
+                    url, data=payload,
+                    headers={
+                        'Content-Type':    'application/json',
+                        'Accept':          'application/json',
+                        'X-Bazar-Internal': 'moderation',
+                    },
+                    method='POST',
+                )
+                with urllib.request.urlopen(req, timeout=8) as resp:
+                    ok = resp.status == 200
+
+                print(f'[BOOST] listing={listing_id} set-boost ok={ok}', flush=True)
+                self._send_json(200, {
+                    'success':    True,
+                    'listing_id': listing_id,
+                    'amount':     round(amount_pence / 100, 2),
+                })
+            except Exception as e:
+                self._send_json(500, {'error': str(e)})
+            return
+
         # ── /api/chat/ensure ──────────────────────────────────────────────────
         if self.path == '/api/chat/ensure':
             length = int(self.headers.get('Content-Length', 0))
@@ -3200,6 +3254,35 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         pass
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Auto-delete expired listings (free plan, 30 days since creation/boost)
+# ══════════════════════════════════════════════════════════════════════════════
+def _auto_delete_expired():
+    """Background thread: once per day, call Laravel to delete expired listings."""
+    import time as _time
+    _time.sleep(300)  # Wait 5 min after startup before first run
+    while True:
+        try:
+            url     = f'{LARAVEL_API_BASE}/properties/auto-delete-expired'
+            payload = b'{}'
+            req     = urllib.request.Request(
+                url, data=payload,
+                headers={
+                    'Content-Type':     'application/json',
+                    'Accept':           'application/json',
+                    'X-Bazar-Internal': 'moderation',
+                },
+                method='POST',
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                body = resp.read().decode('utf-8', errors='replace')
+                print(f'[AUTO-DELETE] expired listings cleaned: {body}', flush=True)
+        except Exception as exc:
+            print(f'[AUTO-DELETE] error: {exc}', flush=True)
+        _time.sleep(86400)  # Run once every 24 hours
+
+threading.Thread(target=_auto_delete_expired, daemon=True).start()
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Entry point
