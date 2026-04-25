@@ -907,7 +907,17 @@
                      </div>
                   </div>
 
-                  <!-- Bedrooms: always second field -->
+                  <!-- House type: always second field -->
+                  <div class="pa-field" id="houseTypeField" style="display:none">
+                     <span class="pa-field__label">House type:<span>*</span></span>
+                     <div class="pa-field__control pa-select-wrap">
+                        <select class="pa-select pa-empty" id="houseTypeSelect" onchange="onHouseTypeChange(this)">
+                           <option value="" selected>Select house type</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <!-- Bedrooms: always third field -->
                   <div class="pa-field" id="bedroomsField">
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
@@ -923,16 +933,6 @@
                            <option>8</option>
                            <option>9</option>
                            <option>10 and more</option>
-                        </select>
-                     </div>
-                  </div>
-
-                  <!-- House type: always third field -->
-                  <div class="pa-field" id="houseTypeField" style="display:none">
-                     <span class="pa-field__label">House type:<span>*</span></span>
-                     <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select pa-empty" id="houseTypeSelect" onchange="onHouseTypeChange(this)">
-                           <option value="" selected>Select house type</option>
                         </select>
                      </div>
                   </div>
