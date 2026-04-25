@@ -2527,16 +2527,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.row_factory = sqlite3.Row
                 row = conn.execute('SELECT property_id FROM moderation_reviews WHERE id=?', (review_id,)).fetchone()
                 if row and row['property_id']:
-                    try:
-                        req = urllib.request.Request(
-                            f'{LARAVEL_API_BASE}/properties/{row["property_id"]}',
-                            data=json.dumps({'status': 'active'}).encode(),
-                            headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
-                            method='PUT',
-                        )
-                        urllib.request.urlopen(req, timeout=5)
-                    except Exception:
-                        pass
+                    _set_property_status_internal(int(row['property_id']), 'active')
                 conn.execute('UPDATE moderation_reviews SET status=?, reviewed_at=? WHERE id=?',
                              ('approved', time.time(), review_id))
                 conn.commit()
@@ -2562,16 +2553,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.row_factory = sqlite3.Row
                 row = conn.execute('SELECT property_id FROM moderation_reviews WHERE id=?', (review_id,)).fetchone()
                 if row and row['property_id']:
-                    try:
-                        req = urllib.request.Request(
-                            f'{LARAVEL_API_BASE}/properties/{row["property_id"]}',
-                            data=json.dumps({'status': 'inactive'}).encode(),
-                            headers={'Content-Type': 'application/json', 'Accept': 'application/json'},
-                            method='PUT',
-                        )
-                        urllib.request.urlopen(req, timeout=5)
-                    except Exception:
-                        pass
+                    _set_property_status_internal(int(row['property_id']), 'rejected')
                 conn.execute('UPDATE moderation_reviews SET status=?, reviewed_at=? WHERE id=?',
                              ('rejected', time.time(), review_id))
                 conn.commit()
