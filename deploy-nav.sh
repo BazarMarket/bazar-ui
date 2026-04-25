@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-LARAVEL_ROOT="/var/www/bazar-dev/app"
+# CORRECT: Laravel root is /var/www/bazar-dev, NOT /var/www/bazar-dev/app
+LARAVEL_ROOT="/var/www/bazar-dev"
 ARCHIVE_URL="https://5598a117-b706-47f3-b730-7bfffbf33d8c-00-1eu86075dpd9f.pike.replit.dev/bazar-admin-nav.tar.gz"
 
 echo "=== Step 1: Verify Filament 5.x classes ==="
@@ -42,4 +43,4 @@ for f in PropertyResource.php PropertyResource/Pages/ListProperties.php Property
 done
 
 echo ""
-echo "=== DONE! Test at https://dev.bazar.uk/admin ==="
+echo "=== DONE! Test at https://dev.bazar.uk/dev-admin ==="

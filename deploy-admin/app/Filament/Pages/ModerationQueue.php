@@ -3,11 +3,16 @@
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
-use Filament\Navigation\NavigationItem;
 
 class ModerationQueue extends Page
 {
-    protected static string $view = 'filament.pages.moderation-queue';
+    protected string $view = 'filament.pages.moderation-queue';
+
+    protected static string $routePath = '/moderation-queue';
+    protected static string|\UnitEnum|null   $navigationGroup = 'Moderation';
+    protected static string|\BackedEnum|null $navigationIcon  = 'heroicon-o-shield-exclamation';
+    protected static ?string $navigationLabel = 'AI Moderation';
+    protected static ?int    $navigationSort  = 1;
 
     public array $items = [];
     public int $pendingCount = 0;
@@ -17,6 +22,27 @@ class ModerationQueue extends Page
     private function pythonUrl(): string
     {
         return rtrim(env('BAZAR_PYTHON_URL', 'http://127.0.0.1:5000'), '/');
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        try {
+            $url      = rtrim(env('BAZAR_PYTHON_URL', 'http://127.0.0.1:5000'), '/') . '/api/moderation/queue';
+            $context  = stream_context_create(['http' => ['timeout' => 2, 'ignore_errors' => true]]);
+            $response = file_get_contents($url, false, $context);
+            if ($response !== false) {
+                $data  = json_decode($response, true) ?? [];
+                $count = $data['pending_count'] ?? 0;
+                return $count > 0 ? (string) $count : null;
+            }
+        } catch (\Throwable $e) {
+        }
+        return null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
     }
 
     public function mount(): void
@@ -31,8 +57,8 @@ class ModerationQueue extends Page
             $context  = stream_context_create(['http' => ['timeout' => 5, 'ignore_errors' => true]]);
             $response = file_get_contents($url, false, $context);
             if ($response !== false) {
-                $data             = json_decode($response, true) ?? [];
-                $this->items      = $data['items']         ?? [];
+                $data               = json_decode($response, true) ?? [];
+                $this->items        = $data['items']         ?? [];
                 $this->pendingCount = $data['pending_count'] ?? 0;
             }
         } catch (\Throwable $e) {
@@ -75,34 +101,4 @@ class ModerationQueue extends Page
         }
     }
 
-    public static function getNavigationItems(): array
-    {
-        $pending = 0;
-        try {
-            $url      = rtrim(env('BAZAR_PYTHON_URL', 'http://127.0.0.1:5000'), '/') . '/api/moderation/queue';
-            $context  = stream_context_create(['http' => ['timeout' => 2, 'ignore_errors' => true]]);
-            $response = file_get_contents($url, false, $context);
-            if ($response !== false) {
-                $data    = json_decode($response, true) ?? [];
-                $pending = $data['pending_count'] ?? 0;
-            }
-        } catch (\Throwable $e) {
-        }
-
-        $label = $pending > 0 ? "AI Moderation ({$pending})" : 'AI Moderation';
-
-        return [
-            NavigationItem::make($label)
-                ->group('Moderation')
-                ->icon('heroicon-o-shield-exclamation')
-                ->url(static::getUrl())
-                ->isActiveWhen(fn () => request()->routeIs(static::getRouteName()))
-                ->sort(1),
-        ];
-    }
-
-    public static function getSlug(): string
-    {
-        return 'moderation-queue';
-    }
 }
