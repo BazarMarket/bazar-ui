@@ -167,10 +167,10 @@ RULES:
 """
 
 def _gemini_reply(subject: str, message: str) -> tuple[str, bool]:
-    """Call Gemini 1.5 Flash. Returns (reply_text, needs_human)."""
+    """Call Gemini 2.5 Flash. Returns (reply_text, needs_human)."""
     if not GEMINI_API_KEY:
         return ('', True)
-    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}'
+    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
     payload = {
         'systemInstruction': {'parts': [{'text': _BAZAR_SYSTEM_PROMPT}]},
         'contents': [{'role': 'user', 'parts': [{'text': f'Subject: {subject}\n\n{message}'}]}],
@@ -219,10 +219,14 @@ def _gemini_moderate(title: str, description: str) -> dict:
         description=(description or '')[:2000]
     )
     url = (f'https://generativelanguage.googleapis.com/v1beta/models/'
-           f'gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}')
+           f'gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}')
     payload = {
         'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
-        'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 200},
+        'generationConfig': {
+            'temperature': 0.1,
+            'maxOutputTokens': 300,
+            'thinkingConfig': {'thinkingBudget': 0},
+        },
     }
     try:
         req = urllib.request.Request(
@@ -237,8 +241,13 @@ def _gemini_moderate(title: str, description: str) -> dict:
         raw = raw.strip('`').strip()
         if raw.lower().startswith('json'):
             raw = raw[4:].strip()
-        return json.loads(raw)
-    except Exception:
+        parsed = json.loads(raw)
+        print(f'[MODERATION] Gemini text check: flagged={parsed.get("flagged")} '
+              f'confidence={parsed.get("confidence")} reasons={parsed.get("reasons")} '
+              f'title={title[:60]!r}', flush=True)
+        return parsed
+    except Exception as exc:
+        print(f'[MODERATION] Gemini error: {exc}', flush=True)
         return {'flagged': False, 'reasons': [], 'confidence': 0.0}
 
 # ── Google Cloud Vision SafeSearch ────────────────────────────────────────────
