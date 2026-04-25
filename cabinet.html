@@ -3006,7 +3006,10 @@ function _startTicketPolling(msgCount, showIndicator) {
     function _doPoll() {
         if (!_currentTicketId) return;
         var uid = localStorage.getItem('bazar_firebase_uid');
-        fetch(window.BAZAR_API + '/tickets/' + _currentTicketId + '?firebase_uid=' + encodeURIComponent(uid || ''), { headers: { Accept: 'application/json' } })
+        var url = window.BAZAR_API + '/tickets/' + _currentTicketId +
+                  '?firebase_uid=' + encodeURIComponent(uid || '') +
+                  '&_t=' + Date.now();
+        fetch(url, { headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' }, cache: 'no-store' })
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (!_currentTicketId) return;
@@ -3149,7 +3152,8 @@ function openTicketDetail(ticketId) {
     document.getElementById('ticketDetailSection').style.display = '';
     document.getElementById('detailMessages').innerHTML = '<p style="color:#9ca3af;font-size:13px;font-family:Poppins,sans-serif;">Loading…</p>';
 
-    fetch(window.BAZAR_API + '/tickets/' + ticketId + '?firebase_uid=' + encodeURIComponent(uid || ''), { headers: { Accept: 'application/json' } })
+    fetch(window.BAZAR_API + '/tickets/' + ticketId + '?firebase_uid=' + encodeURIComponent(uid || '') + '&_t=' + Date.now(),
+          { headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' }, cache: 'no-store' })
         .then(function(r) { return r.json(); })
         .then(function(data) {
             var ticket = data.ticket || {};
