@@ -33,14 +33,14 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
+                NavigationGroup::make('System Errors')
+                    ->collapsible()
+                    ->collapsed(),
                 NavigationGroup::make('Property')
                     ->collapsible(false),
                 NavigationGroup::make('Moderation')
                     ->icon('heroicon-o-shield-exclamation')
                     ->collapsible(),
-                NavigationGroup::make('System Errors')
-                    ->collapsible()
-                    ->collapsed(),
                 NavigationGroup::make('For Sale')
                     ->collapsible()
                     ->collapsed(),
