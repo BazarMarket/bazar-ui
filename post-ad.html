@@ -288,7 +288,7 @@
       }
       .pa-csd__opt:hover { background: #fff3e8; }
       .pa-csd__opt.selected { color: #ff9138; font-weight: 600; }
-      .pa-csd__opt--placeholder { color: #aaa; border-bottom: 1px solid #f0f0f0; }
+      .pa-csd__opt--placeholder { color: #333; border-bottom: 1px solid #f0f0f0; }
       .pa-select-wrap:has(.pa-csd)::after { display: none; }
 
       .pa-textarea {
@@ -998,7 +998,7 @@
                      <span class="pa-field__label">Building type:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="buildingTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled selected hidden>Select building type</option>
+                           <option value="" selected>Select building type</option>
                            <option>Detached</option>
                            <option>Semi-detached</option>
                            <option>Terraced</option>
