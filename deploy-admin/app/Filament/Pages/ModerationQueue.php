@@ -32,7 +32,7 @@ class ModerationQueue extends Page
             $response = file_get_contents($url, false, $context);
             if ($response !== false) {
                 $data             = json_decode($response, true) ?? [];
-                $this->items      = $data['items']        ?? [];
+                $this->items      = $data['items']         ?? [];
                 $this->pendingCount = $data['pending_count'] ?? 0;
             }
         } catch (\Throwable $e) {

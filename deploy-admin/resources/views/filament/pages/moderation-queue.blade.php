@@ -36,7 +36,7 @@
                     <tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb">
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">ID</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Ad</th>
-                        <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">AI Flags</th>
+                        <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">AI flags</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Confidence</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Status</th>
                         <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151">Date</th>
@@ -46,7 +46,9 @@
                 <tbody>
                     @foreach($items as $item)
                         <tr style="border-bottom:1px solid #f3f4f6;{{ $item['status'] === 'pending' ? 'background:#fffbeb' : '' }}">
-                            <td style="padding:10px 12px;color:#6b7280;white-space:nowrap">
+
+                            {{-- ID + link --}}
+                            <td style="padding:10px 12px;color:#6b7280;white-space:nowrap;vertical-align:top">
                                 {{ $item['id'] }}
                                 @if($item['property_id'])
                                     <br><a href="https://www.bazar.uk/{{ $item['property_id'] }}"
@@ -56,22 +58,53 @@
                                     </a>
                                 @endif
                             </td>
-                            <td style="padding:10px 12px;max-width:260px">
+
+                            {{-- Title + description --}}
+                            <td style="padding:10px 12px;max-width:240px;vertical-align:top">
                                 <div style="font-weight:600;color:#111827;margin-bottom:3px">
                                     {{ Str::limit($item['title'], 60) }}
                                 </div>
                                 <div style="color:#6b7280;font-size:12px;line-height:1.4">
-                                    {{ Str::limit($item['description'], 120) }}
+                                    {{ Str::limit($item['description'], 100) }}
                                 </div>
                             </td>
-                            <td style="padding:10px 12px;max-width:200px">
-                                @foreach($item['ai_reasons'] as $reason)
-                                    <span style="display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:4px;padding:2px 7px;font-size:11px;margin:2px 2px 2px 0">
-                                        {{ $reason }}
-                                    </span>
-                                @endforeach
+
+                            {{-- AI flags (text + image) --}}
+                            <td style="padding:10px 12px;max-width:220px;vertical-align:top">
+
+                                @if(!empty($item['ai_text_flagged']) && !empty($item['ai_reasons']))
+                                    <div style="margin-bottom:5px">
+                                        <span style="font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px">
+                                            📝 Text
+                                        </span><br>
+                                        @foreach($item['ai_reasons'] as $reason)
+                                            <span style="display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:4px;padding:2px 7px;font-size:11px;margin:2px 2px 2px 0">
+                                                {{ $reason }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                @if(!empty($item['ai_image_flagged']) && !empty($item['ai_image_reasons']))
+                                    <div>
+                                        <span style="font-size:10px;font-weight:700;color:#991b1b;text-transform:uppercase;letter-spacing:.5px">
+                                            🖼 Image
+                                        </span><br>
+                                        @foreach($item['ai_image_reasons'] as $reason)
+                                            <span style="display:inline-block;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:4px;padding:2px 7px;font-size:11px;margin:2px 2px 2px 0">
+                                                {{ $reason }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                @if(empty($item['ai_text_flagged']) && empty($item['ai_image_flagged']))
+                                    <span style="color:#9ca3af;font-size:12px">—</span>
+                                @endif
                             </td>
-                            <td style="padding:10px 12px;white-space:nowrap">
+
+                            {{-- Confidence bar --}}
+                            <td style="padding:10px 12px;white-space:nowrap;vertical-align:top">
                                 @php $conf = round(($item['ai_confidence'] ?? 0) * 100); @endphp
                                 <div style="display:flex;align-items:center;gap:6px">
                                     <div style="width:48px;height:6px;border-radius:3px;background:#e5e7eb;overflow:hidden">
@@ -79,8 +112,21 @@
                                     </div>
                                     <span style="color:#374151">{{ $conf }}%</span>
                                 </div>
+                                {{-- Source badges --}}
+                                <div style="margin-top:4px;display:flex;gap:4px">
+                                    @if(!empty($item['ai_text_flagged']))
+                                        <span title="Flagged by Gemini text moderation"
+                                              style="font-size:10px;background:#e0e7ff;color:#3730a3;border-radius:4px;padding:1px 5px">Gemini</span>
+                                    @endif
+                                    @if(!empty($item['ai_image_flagged']))
+                                        <span title="Flagged by Google Vision SafeSearch"
+                                              style="font-size:10px;background:#fce7f3;color:#9d174d;border-radius:4px;padding:1px 5px">Vision</span>
+                                    @endif
+                                </div>
                             </td>
-                            <td style="padding:10px 12px;white-space:nowrap">
+
+                            {{-- Status badge --}}
+                            <td style="padding:10px 12px;white-space:nowrap;vertical-align:top">
                                 @if($item['status'] === 'pending')
                                     <span style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:12px;padding:3px 10px;font-size:12px;font-weight:600">
                                         Pending
@@ -95,22 +141,29 @@
                                     </span>
                                 @endif
                             </td>
-                            <td style="padding:10px 12px;color:#6b7280;white-space:nowrap;font-size:12px">
-                                {{ date('d M Y H:i', (int)$item['created_at']) }}
+
+                            {{-- Date --}}
+                            <td style="padding:10px 12px;color:#6b7280;white-space:nowrap;font-size:12px;vertical-align:top">
+                                {{ date('d M Y', (int)$item['created_at']) }}<br>
+                                <span style="color:#9ca3af">{{ date('H:i', (int)$item['created_at']) }}</span>
                             </td>
-                            <td style="padding:10px 12px;white-space:nowrap">
+
+                            {{-- Actions --}}
+                            <td style="padding:10px 12px;white-space:nowrap;vertical-align:top">
                                 @if($item['status'] === 'pending')
-                                    <button wire:click="approve({{ $item['id'] }})"
-                                            style="background:#16a34a;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-right:6px">
-                                        ✓ Approve
-                                    </button>
-                                    <button wire:click="reject({{ $item['id'] }})"
-                                            onclick="return confirm('Reject this listing?')"
-                                            style="background:#dc2626;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer">
-                                        ✕ Reject
-                                    </button>
+                                    <div style="display:flex;flex-direction:column;gap:6px">
+                                        <button wire:click="approve({{ $item['id'] }})"
+                                                style="background:#16a34a;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">
+                                            ✓ Approve
+                                        </button>
+                                        <button wire:click="reject({{ $item['id'] }})"
+                                                onclick="return confirm('Reject this listing?')"
+                                                style="background:#dc2626;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer">
+                                            ✕ Reject
+                                        </button>
+                                    </div>
                                 @else
-                                    <span style="color:#9ca3af;font-size:12px">
+                                    <span style="color:#9ca3af;font-size:11px">
                                         {{ date('d M H:i', (int)$item['reviewed_at']) }}
                                     </span>
                                 @endif

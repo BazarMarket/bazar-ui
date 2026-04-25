@@ -33,6 +33,18 @@ SEO_CACHE_TTL      = 300  # seconds (5 min)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
 STRIPE_SECRET_KEY   = os.environ.get('STRIPE_SECRET_KEY', '')
 GEMINI_API_KEY      = os.environ.get('GEMINI_API_KEY', '')
+
+# ── Google Cloud Vision credentials (service account JSON) ────────────────────
+_VISION_CREDS: dict = {}
+_raw_vision_json = os.environ.get('GOOGLE_VISION_CREDENTIALS_JSON', '')
+if _raw_vision_json:
+    try:
+        _VISION_CREDS = json.loads(_raw_vision_json)
+    except Exception:
+        pass
+
+_vision_token_cache: dict = {'token': '', 'exp': 0}
+_vision_token_lock  = threading.Lock()
 CHAT_DB             = os.path.join(SITE_ROOT, 'bazar_chat.db')
 
 # ── Chat DB init ──────────────────────────────────────────────────────────────
@@ -88,19 +100,30 @@ def _init_mod_db():
         conn = sqlite3.connect(MOD_DB, check_same_thread=False)
         conn.executescript('''
             CREATE TABLE IF NOT EXISTS moderation_reviews (
-                id              INTEGER PRIMARY KEY AUTOINCREMENT,
-                property_id     INTEGER DEFAULT 0,
-                title           TEXT DEFAULT '',
-                description     TEXT DEFAULT '',
-                firebase_uid    TEXT DEFAULT '',
-                ai_text_flagged INTEGER DEFAULT 0,
-                ai_reasons      TEXT DEFAULT '[]',
-                ai_confidence   REAL DEFAULT 0.0,
-                status          TEXT DEFAULT 'pending',
-                reviewed_at     REAL DEFAULT 0,
-                created_at      REAL DEFAULT 0
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                property_id      INTEGER DEFAULT 0,
+                title            TEXT DEFAULT '',
+                description      TEXT DEFAULT '',
+                firebase_uid     TEXT DEFAULT '',
+                ai_text_flagged  INTEGER DEFAULT 0,
+                ai_reasons       TEXT DEFAULT '[]',
+                ai_confidence    REAL DEFAULT 0.0,
+                ai_image_flagged INTEGER DEFAULT 0,
+                ai_image_reasons TEXT DEFAULT '[]',
+                status           TEXT DEFAULT 'pending',
+                reviewed_at      REAL DEFAULT 0,
+                created_at       REAL DEFAULT 0
             );
         ''')
+        # Migrate existing rows (ignore errors if columns already exist)
+        for col_def in [
+            'ai_image_flagged INTEGER DEFAULT 0',
+            'ai_image_reasons TEXT DEFAULT "[]"',
+        ]:
+            try:
+                conn.execute(f'ALTER TABLE moderation_reviews ADD COLUMN {col_def}')
+            except Exception:
+                pass
         conn.commit()
         conn.close()
 
@@ -211,6 +234,109 @@ def _gemini_moderate(title: str, description: str) -> dict:
         return json.loads(raw)
     except Exception:
         return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+
+# ── Google Cloud Vision SafeSearch ────────────────────────────────────────────
+def _get_vision_token() -> str:
+    """Return a valid OAuth2 Bearer token for the Vision API. Cached 58 min."""
+    if not _VISION_CREDS:
+        return ''
+    with _vision_token_lock:
+        now = int(time.time())
+        if _vision_token_cache['token'] and now < _vision_token_cache['exp']:
+            return _vision_token_cache['token']
+        try:
+            import jwt as _jwt  # pyjwt — available on Hetzner
+            from cryptography.hazmat.primitives import serialization as _ser
+            from cryptography.hazmat.backends import default_backend as _be
+            private_key = _ser.load_pem_private_key(
+                _VISION_CREDS['private_key'].encode(),
+                password=None, backend=_be(),
+            )
+            claim = {
+                'iss':   _VISION_CREDS['client_email'],
+                'scope': 'https://www.googleapis.com/auth/cloud-vision',
+                'aud':   'https://oauth2.googleapis.com/token',
+                'iat':   now,
+                'exp':   now + 3600,
+            }
+            signed = _jwt.encode(claim, private_key, algorithm='RS256')
+            body = urllib.parse.urlencode({
+                'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion':  signed,
+            }).encode()
+            req = urllib.request.Request(
+                'https://oauth2.googleapis.com/token',
+                data=body,
+                headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                method='POST',
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                token = json.loads(resp.read()).get('access_token', '')
+            if token:
+                _vision_token_cache['token'] = token
+                _vision_token_cache['exp']   = now + 3500
+            return token
+        except Exception:
+            return ''
+
+_VISION_LEVELS = {
+    'UNKNOWN': 0, 'VERY_UNLIKELY': 1, 'UNLIKELY': 2,
+    'POSSIBLE': 3, 'LIKELY': 4, 'VERY_LIKELY': 5,
+}
+
+def _vision_safesearch(image_urls: list) -> dict:
+    """Run SafeSearch detection on up to 3 image URLs.
+    Returns {flagged, reasons, confidence}."""
+    if not image_urls or not _VISION_CREDS:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    token = _get_vision_token()
+    if not token:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    # Normalise URLs
+    checked = []
+    for u in image_urls[:3]:
+        if u and not str(u).startswith('http'):
+            u = f'https://www.bazar.uk/storage/{u}'
+        if u:
+            checked.append(str(u))
+    if not checked:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    requests_body = [
+        {'image': {'source': {'imageUri': u}},
+         'features': [{'type': 'SAFE_SEARCH_DETECTION'}]}
+        for u in checked
+    ]
+    try:
+        payload = json.dumps({'requests': requests_body}).encode()
+        req = urllib.request.Request(
+            'https://vision.googleapis.com/v1/images:annotate',
+            data=payload,
+            headers={'Content-Type': 'application/json',
+                     'Authorization': f'Bearer {token}'},
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read())
+    except Exception:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    reasons: list = []
+    max_conf = 0.0
+    for i, response in enumerate(data.get('responses', [])):
+        ss = response.get('safeSearchAnnotation', {})
+        adult    = _VISION_LEVELS.get(ss.get('adult',    'UNKNOWN'), 0)
+        violence = _VISION_LEVELS.get(ss.get('violence', 'UNKNOWN'), 0)
+        racy     = _VISION_LEVELS.get(ss.get('racy',     'UNKNOWN'), 0)
+        if adult >= 4:      # LIKELY+
+            reasons.append(f'adult content (image {i+1})')
+            max_conf = max(max_conf, adult / 5.0)
+        if violence >= 4:
+            reasons.append(f'violent content (image {i+1})')
+            max_conf = max(max_conf, violence / 5.0)
+        if racy >= 5:       # VERY_LIKELY only
+            reasons.append(f'explicit/racy content (image {i+1})')
+            max_conf = max(max_conf, racy / 5.0)
+    return {'flagged': len(reasons) > 0, 'reasons': reasons,
+            'confidence': round(max_conf, 2)}
 
 # ── In-memory SEO cache ───────────────────────────────────────────────────────
 _cache: dict = {}
@@ -2267,7 +2393,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 pass
             self._send_json(201, {'ok': True, 'ticket': ticket}); return
 
-        # ── /api/properties (POST) — AI text moderation before forwarding ───────
+        # ── /api/properties (POST) — AI text + image moderation ─────────────────
         path_only = self.path.split('?')[0]
         if path_only == '/api/properties':
             content_len = int(self.headers.get('Content-Length', 0))
@@ -2279,12 +2405,50 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             title        = str(body_data.get('title', '') or '')
             description  = str(body_data.get('description', '') or body_data.get('body', '') or '')
             firebase_uid = str(body_data.get('firebase_uid', '') or '')
-            # Run Gemini moderation (non-blocking, times out in 15s)
-            mod = _gemini_moderate(title, description)
-            flagged = bool(mod.get('flagged', False))
+            # Extract image URLs (field may be 'images', 'photos', or 'media')
+            raw_images = (body_data.get('images') or body_data.get('photos') or
+                          body_data.get('media') or [])
+            if isinstance(raw_images, str):
+                try:
+                    raw_images = json.loads(raw_images)
+                except Exception:
+                    raw_images = [raw_images] if raw_images else []
+            image_urls = [str(u) for u in (raw_images or []) if u]
+
+            # Run Gemini (text) + Vision (images) in parallel
+            text_result  = {}
+            image_result = {}
+
+            def _run_text():
+                nonlocal text_result
+                text_result = _gemini_moderate(title, description)
+
+            def _run_vision():
+                nonlocal image_result
+                image_result = _vision_safesearch(image_urls)
+
+            t1 = threading.Thread(target=_run_text,   daemon=True)
+            t2 = threading.Thread(target=_run_vision, daemon=True)
+            t1.start(); t2.start()
+            t1.join(timeout=18); t2.join(timeout=18)
+
+            text_flagged  = bool(text_result.get('flagged', False))
+            image_flagged = bool(image_result.get('flagged', False))
+            flagged       = text_flagged or image_flagged
+
+            # Combine all reasons
+            all_reasons = list(text_result.get('reasons', []))
+            if image_flagged:
+                all_reasons += image_result.get('reasons', [])
+            all_confidence = max(
+                text_result.get('confidence', 0.0),
+                image_result.get('confidence', 0.0),
+            )
+
             if flagged:
                 body_data['status'] = 'pending'
                 body_bytes = json.dumps(body_data).encode('utf-8')
+
             # Forward to Laravel
             fwd_url = f'{LARAVEL_API_BASE}/properties'
             qs_str  = ('?' + self.path[len(path_only)+1:]) if '?' in self.path else ''
@@ -2297,12 +2461,12 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 req = urllib.request.Request(fwd_url, data=body_bytes, headers=fwd_headers, method='POST')
                 with urllib.request.urlopen(req, timeout=10) as resp:
-                    resp_body = resp.read()
+                    resp_body   = resp.read()
                     resp_status = resp.status
-                    resp_ct = resp.headers.get('Content-Type', 'application/json')
+                    resp_ct     = resp.headers.get('Content-Type', 'application/json')
                 if flagged:
                     try:
-                        prop = json.loads(resp_body)
+                        prop    = json.loads(resp_body)
                         prop_id = (prop.get('id') or
                                    (prop.get('data') or {}).get('id') or 0)
                         with _chat_lock:
@@ -2311,11 +2475,16 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                                 '''INSERT INTO moderation_reviews
                                    (property_id, title, description, firebase_uid,
                                     ai_text_flagged, ai_reasons, ai_confidence,
+                                    ai_image_flagged, ai_image_reasons,
                                     status, created_at)
-                                   VALUES (?,?,?,?,?,?,?,?,?)''',
+                                   VALUES (?,?,?,?,?,?,?,?,?,?,?)''',
                                 (prop_id, title[:500], description[:2000], firebase_uid,
-                                 1, json.dumps(mod.get('reasons', [])),
-                                 mod.get('confidence', 0.0), 'pending', time.time())
+                                 1 if text_flagged  else 0,
+                                 json.dumps(all_reasons),
+                                 all_confidence,
+                                 1 if image_flagged else 0,
+                                 json.dumps(image_result.get('reasons', [])),
+                                 'pending', time.time())
                             )
                             conn.commit()
                             conn.close()
@@ -2454,16 +2623,19 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             items = []
             for r in rows:
                 items.append({
-                    'id':           r['id'],
-                    'property_id':  r['property_id'],
-                    'title':        r['title'],
-                    'description':  r['description'],
-                    'firebase_uid': r['firebase_uid'],
-                    'ai_reasons':   json.loads(r['ai_reasons'] or '[]'),
-                    'ai_confidence': r['ai_confidence'],
-                    'status':       r['status'],
-                    'created_at':   r['created_at'],
-                    'reviewed_at':  r['reviewed_at'],
+                    'id':                r['id'],
+                    'property_id':       r['property_id'],
+                    'title':             r['title'],
+                    'description':       r['description'],
+                    'firebase_uid':      r['firebase_uid'],
+                    'ai_text_flagged':   bool(r['ai_text_flagged']),
+                    'ai_image_flagged':  bool(r['ai_image_flagged'] if 'ai_image_flagged' in r.keys() else 0),
+                    'ai_reasons':        json.loads(r['ai_reasons'] or '[]'),
+                    'ai_image_reasons':  json.loads(r['ai_image_reasons'] if 'ai_image_reasons' in r.keys() else '[]') if (r['ai_image_reasons'] if 'ai_image_reasons' in r.keys() else None) else [],
+                    'ai_confidence':     r['ai_confidence'],
+                    'status':            r['status'],
+                    'created_at':        r['created_at'],
+                    'reviewed_at':       r['reviewed_at'],
                 })
             self._send_json(200, {'items': items, 'pending_count': pending}); return
 
