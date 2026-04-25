@@ -170,6 +170,8 @@
       }
       #bedroomsSelect.pa-empty { color: rgba(0,0,0,0.54); }
       #bedroomsSelect option   { color: #333; }
+      #bathroomsSelect.pa-empty { color: rgba(0,0,0,0.54); }
+      #bathroomsSelect option   { color: #333; }
       .pa-field {
          display: flex;
          align-items: flex-start;
@@ -910,7 +912,7 @@
                      <span class="pa-field__label">Bedrooms:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="bedroomsSelect" onchange="onBedroomsChange()">
-                           <option value="" disabled hidden>Select bedrooms</option>
+                           <option value="" selected>Select bedrooms</option>
                            <option>1</option>
                            <option>2</option>
                            <option>3</option>
@@ -940,7 +942,7 @@
                      <span class="pa-field__label">Bathrooms:</span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select pa-empty" id="bathroomsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                           <option value="" disabled hidden>Select bathrooms</option>
+                           <option value="" selected>Select bathrooms</option>
                            <option>1</option>
                            <option>2</option>
                            <option>3</option>
