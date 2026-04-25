@@ -2659,7 +2659,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                                 _set_property_status_internal(_pid, 'active')
                                 print(f'[MODERATION] Property {_pid} CLEAN → set active', flush=True)
                             else:
-                                # Flagged → stays pending, log to DB
+                                # Flagged → force pending (in case it was created as active), log to DB
+                                _set_property_status_internal(_pid, 'pending')
                                 all_reasons = list(txt_r.get('reasons', []))
                                 if img_flagged:
                                     all_reasons += img_r.get('reasons', [])
@@ -2668,7 +2669,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                                     img_r.get('confidence', 0.0),
                                 )
                                 print(
-                                    f'[MODERATION] Property {_pid} FLAGGED → stays pending, '
+                                    f'[MODERATION] Property {_pid} FLAGGED → forced pending, '
                                     f'reasons={all_reasons}',
                                     flush=True,
                                 )
