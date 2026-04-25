@@ -360,13 +360,14 @@ def _vision_safesearch(image_urls: list) -> dict:
         adult    = _VISION_LEVELS.get(ss.get('adult',    'UNKNOWN'), 0)
         violence = _VISION_LEVELS.get(ss.get('violence', 'UNKNOWN'), 0)
         racy     = _VISION_LEVELS.get(ss.get('racy',     'UNKNOWN'), 0)
-        if adult >= 4:      # LIKELY+
+        print(f'[VISION] Image {i+1}: adult={ss.get("adult")} violence={ss.get("violence")} racy={ss.get("racy")}', flush=True)
+        if adult >= 3:      # POSSIBLE+
             reasons.append(f'adult content (image {i+1})')
             max_conf = max(max_conf, adult / 5.0)
-        if violence >= 4:
+        if violence >= 4:   # LIKELY+
             reasons.append(f'violent content (image {i+1})')
             max_conf = max(max_conf, violence / 5.0)
-        if racy >= 5:       # VERY_LIKELY only
+        if racy >= 3:       # POSSIBLE+
             reasons.append(f'explicit/racy content (image {i+1})')
             max_conf = max(max_conf, racy / 5.0)
     return {'flagged': len(reasons) > 0, 'reasons': reasons,
@@ -422,53 +423,82 @@ def _vision_safesearch_bytes(image_bytes_list: list) -> dict:
         adult    = _VISION_LEVELS.get(ss.get('adult',    'UNKNOWN'), 0)
         violence = _VISION_LEVELS.get(ss.get('violence', 'UNKNOWN'), 0)
         racy     = _VISION_LEVELS.get(ss.get('racy',     'UNKNOWN'), 0)
-        if adult >= 4:
+        print(f'[VISION] Image {i+1}: adult={ss.get("adult")} violence={ss.get("violence")} racy={ss.get("racy")}', flush=True)
+        if adult >= 3:      # POSSIBLE+
             reasons.append(f'adult content (image {i+1})')
             max_conf = max(max_conf, adult / 5.0)
-        if violence >= 4:
+        if violence >= 4:   # LIKELY+
             reasons.append(f'violent content (image {i+1})')
             max_conf = max(max_conf, violence / 5.0)
-        if racy >= 4:
+        if racy >= 3:       # POSSIBLE+
             reasons.append(f'racy content (image {i+1})')
             max_conf = max(max_conf, racy / 5.0)
     result = {'flagged': len(reasons) > 0, 'reasons': reasons,
               'confidence': round(max_conf, 2)}
-    print(f'[MODERATION] Vision image check: flagged={result["flagged"]} '
+    print(f'[MODERATION] Vision bytes check: flagged={result["flagged"]} '
           f'confidence={result["confidence"]} reasons={result["reasons"]} '
           f'images={len(image_bytes_list)}', flush=True)
     return result
 
 
 def _parse_multipart(body_bytes: bytes, content_type: str):
-    """Parse multipart/form-data. Returns (fields_dict, image_bytes_list)."""
+    """Parse multipart/form-data manually (boundary-split).
+    Returns (fields_dict, image_bytes_list).
+    Robust against large binary payloads that confuse email.message_from_bytes."""
     try:
-        msg_bytes = (b'Content-Type: ' + content_type.encode() +
-                     b'\r\n\r\n' + body_bytes)
-        msg = email.message_from_bytes(msg_bytes)
-        fields = {}
-        images = []
-        if msg.is_multipart():
-            for part in msg.walk():
-                cd = part.get('Content-Disposition', '')
-                if not cd:
+        boundary = None
+        for seg in content_type.split(';'):
+            seg = seg.strip()
+            if seg.lower().startswith('boundary='):
+                boundary = seg[9:].strip().strip('"')
+                break
+        if not boundary:
+            return {}, []
+
+        sep = ('--' + boundary).encode()
+        fields: dict = {}
+        images: list = []
+
+        parts = body_bytes.split(sep)
+        for part in parts[1:]:          # skip preamble before first boundary
+            if part.startswith(b'--'):  # final boundary '--'
+                break
+            # Strip leading CRLF after boundary line
+            if part.startswith(b'\r\n'):
+                part = part[2:]
+            # Split headers from body
+            hdr_end = part.find(b'\r\n\r\n')
+            if hdr_end == -1:
+                continue
+            hdr_raw  = part[:hdr_end].decode('utf-8', errors='replace')
+            content  = part[hdr_end + 4:]
+            # Strip trailing CRLF that separates body from next boundary
+            if content.endswith(b'\r\n'):
+                content = content[:-2]
+
+            # Parse Content-Disposition
+            name = filename = None
+            for line in hdr_raw.split('\r\n'):
+                if not line.lower().startswith('content-disposition'):
                     continue
-                params = {}
-                for item in cd.split(';'):
-                    item = item.strip()
-                    if '=' in item:
-                        k, v = item.split('=', 1)
-                        params[k.strip().lower()] = v.strip().strip('"')
-                name     = params.get('name', '')
-                filename = params.get('filename', '')
-                payload  = part.get_payload(decode=True)
-                if not payload:
-                    continue
-                if filename:
-                    images.append(payload)
-                elif name:
-                    fields[name] = payload.decode('utf-8', errors='replace')
+                for token in line.split(';'):
+                    token = token.strip()
+                    if token.lower().startswith('name='):
+                        name = token[5:].strip().strip('"')
+                    elif token.lower().startswith('filename='):
+                        filename = token[9:].strip().strip('"')
+
+            if name is None:
+                continue
+            if filename:
+                if content:
+                    images.append(content)
+            else:
+                fields[name] = content.decode('utf-8', errors='replace')
+
         return fields, images
-    except Exception:
+    except Exception as exc:
+        print(f'[MODERATION] Multipart parse error: {exc}', flush=True)
         return {}, []
 
 
@@ -2622,6 +2652,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 title        = fields.get('title', '') or ''
                 description  = fields.get('description', '') or ''
                 firebase_uid = fields.get('firebase_uid', '') or ''
+                print(f'[MODERATION] Multipart parsed: title={repr(title[:40])} '
+                      f'images={len(image_bytes_list)} fields={list(fields.keys())}', flush=True)
             else:
                 try:
                     body_data = json.loads(body_bytes) if body_bytes else {}
