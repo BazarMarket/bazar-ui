@@ -1562,7 +1562,8 @@
 
     <script>
     (function() {
-        if (window.location.hostname !== 'www.bazar.uk') return;
+        var _h = window.location.hostname;
+        if (_h !== 'www.bazar.uk' && _h !== 'bazar.uk') return;
         var style = document.createElement('style');
         style.id = 'admin-only-hide';
         style.textContent = '[data-admin-only]{display:none!important}';
