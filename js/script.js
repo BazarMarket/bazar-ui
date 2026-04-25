@@ -165,7 +165,7 @@ window.onload = function () {
     const cardsSliders = new Swiper('.cards-sliders .swiper', {
 
         watchOverflow: true,
-        centerInsufficientSlides: true,
+        centerInsufficientSlides: false,
         slidesPerView: 'auto',
         spaceBetween: 8,
         touchStartPreventDefault: false,

@@ -2927,6 +2927,12 @@ p {
   margin-left: 6%;
   margin-right: 6%;
 }
+@media screen and (max-width: 992px) {
+  .index-body > .menu-mob {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
 .index-body > .search {
   background: transparent;
   position: relative;
