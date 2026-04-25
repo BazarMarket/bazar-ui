@@ -45,9 +45,17 @@ _VISION_CREDS: dict = {}
 _raw_vision_json = os.environ.get('GOOGLE_VISION_CREDENTIALS_JSON', '')
 if _raw_vision_json:
     try:
-        _VISION_CREDS = json.loads(_raw_vision_json)
-    except Exception:
-        pass
+        # Support both: JSON content directly OR a path to a JSON file
+        if _raw_vision_json.strip().startswith('{'):
+            _VISION_CREDS = json.loads(_raw_vision_json)
+        else:
+            _creds_path = _raw_vision_json.strip()
+            if not os.path.isabs(_creds_path):
+                _creds_path = os.path.join('/etc/bazar', _creds_path)
+            with open(_creds_path) as _f:
+                _VISION_CREDS = json.load(_f)
+    except Exception as _e:
+        print(f'[VISION] Failed to load credentials: {_e}', flush=True)
 
 _vision_token_cache: dict = {'token': '', 'exp': 0}
 _vision_token_lock  = threading.Lock()
@@ -423,8 +431,12 @@ def _vision_safesearch_bytes(image_bytes_list: list) -> dict:
         if racy >= 4:
             reasons.append(f'racy content (image {i+1})')
             max_conf = max(max_conf, racy / 5.0)
-    return {'flagged': len(reasons) > 0, 'reasons': reasons,
-            'confidence': round(max_conf, 2)}
+    result = {'flagged': len(reasons) > 0, 'reasons': reasons,
+              'confidence': round(max_conf, 2)}
+    print(f'[MODERATION] Vision image check: flagged={result["flagged"]} '
+          f'confidence={result["confidence"]} reasons={result["reasons"]} '
+          f'images={len(image_bytes_list)}', flush=True)
+    return result
 
 
 def _parse_multipart(body_bytes: bytes, content_type: str):
