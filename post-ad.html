@@ -2464,6 +2464,8 @@
 
       var conditionHiddenFor = ['Land'];
 
+      var landHiddenFields = ['bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','energyField','regBlockField','regNumField'];
+
       /* API accepts: new | resale | under_construction */
       var conditionOptions = {
          'Cars':            [{v:'new',label:'New'},{v:'resale',label:'Used'},{v:'resale',label:'Classic'}],
@@ -2563,6 +2565,12 @@
                if (bedroomsSelect) bedroomsSelect.value = '';
             }
          }
+         var isLand = (propType === 'Land');
+         landHiddenFields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = isLand ? 'none' : 'flex';
+         });
+
          updateRealEstateTitle();
          document.getElementById('paForm').classList.add('visible');
       }
