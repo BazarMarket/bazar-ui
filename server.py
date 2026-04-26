@@ -1109,7 +1109,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         # ── Breadcrumb category URL (depends on listing_type and property_type) ──
         _lt_norm = listing_type.lower() if listing_type else 'sale'
         _pt_norm = prop_type.lower() if prop_type else ''
-        if _lt_norm == 'long_rent':
+        # Rooms always navigate under /property-to-rent regardless of short/long term
+        if _pt_norm == 'room':
+            cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
+        elif _lt_norm == 'long_rent':
             cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
         elif _lt_norm == 'short_rent':
             cat_url = f'{PUBLIC_DOMAIN}/property-short-rent'
