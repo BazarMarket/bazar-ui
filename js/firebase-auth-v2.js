@@ -59,7 +59,7 @@ function switchRentType(type, btn) {
     document.getElementById('rent-short').style.display = type === 'short' ? '' : 'none';
     var showAll = document.getElementById('rent-show-all');
     if (showAll) {
-        showAll.href = type === 'short' ? '/property/for-rent/short-term' : '/property/for-rent';
+        showAll.href = type === 'short' ? '/property-short-rent' : '/property-to-rent';
     }
 }
 

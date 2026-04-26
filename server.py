@@ -1376,7 +1376,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         ]
         related_links = []
         if is_rent:
-            related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property/for-rent/short-term')]  # /property/for-rent/short-term handled separately
+            related_links = [('Looking for short-term rentals?', 'Browse short-term properties for rent', '/property-short-rent')]
             type_links = PROPERTY_TYPE_NAV
         else:
             type_links = PROPERTY_TYPE_NAV_SALE
@@ -1684,8 +1684,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'city_links':  city_links,
             'cat_label':   label,
             'related_links': [
-                ('Looking for short-term options?', f'Browse short-term {label.lower()} for rent', f'/property/{subtype}/short-term'),
-                ('Looking to buy instead?', f'Browse {label.lower()} for sale', f'/property/{subtype}/for-sale'),
+                ('Looking for short-term options?', f'Browse short-term {label.lower()} for rent', f'/property-short-rent/{subtype}'),
+                ('Looking to buy instead?', f'Browse {label.lower()} for sale', f'/property-for-sale/{subtype}'),
             ],
             'type': 'category',
         }
@@ -1752,7 +1752,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                (bc_parent_label, f'/property/{"for-rent" if is_rent else "for-sale"}'),
+                (bc_parent_label, '/property-to-rent' if is_rent else '/property-for-sale'),
                 (h1, None),
             ],
             'related_links': related_links,

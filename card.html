@@ -802,9 +802,9 @@
                       : 'Property for sale';
         var _catHref  = _pt === 'room'
                           ? (_lt === 'short_rent' ? '/rooms/short-term' : '/rooms')
-                          : _lt === 'long_rent'  ? '/property/for-rent'
-                          : _lt === 'short_rent' ? '/property/for-rent/short-term'
-                          : '/property';
+                          : _lt === 'long_rent'  ? '/property-to-rent'
+                          : _lt === 'short_rent' ? '/property-short-rent'
+                          : '/property-for-sale';
         el('bread-category').textContent = _catLabel;
         el('bread-category').href = _catHref;
       }
