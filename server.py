@@ -640,8 +640,8 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     if p in ('', 'index.html'):
         return 'homepage', {}
 
-    # card.html?id=123  (legacy URL – redirected in do_GET)
-    if p == 'card.html':
+    # card.html?id=123 or card?id=123  (legacy URL – redirected in do_GET)
+    if p in ('card.html', 'card'):
         qp = urllib.parse.parse_qs(qs)
         lid = qp.get('id', [None])[0]
         if lid:
@@ -3351,8 +3351,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(xml)
             return
 
-        # 301 redirect: card.html?id=123 → /{id}-{slug}
-        if path == '/card.html':
+        # 301 redirect: card.html?id=123 or card?id=123 → /{id}-{slug}
+        if path in ('/card.html', '/card'):
             qp = urllib.parse.parse_qs(qs)
             lid = qp.get('id', [None])[0]
             if lid and lid.isdigit():
