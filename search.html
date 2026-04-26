@@ -1341,6 +1341,7 @@
             document.querySelectorAll('#cfConstructionTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateConstructionTypeLabel();
          }
+         if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType); }
       }
       function clearHouseType(e) {
          if (e) e.stopPropagation();
@@ -1384,6 +1385,7 @@
          } else {
             bedroomsWrap.style.display = '';
          }
+         if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType); }
       }
       function clearAptType(e) {
          if (e) e.stopPropagation();
@@ -2209,7 +2211,7 @@
                 p:    priceNum  ? '£ ' + priceNum.toLocaleString('en-GB')  : '—',
                 pn:   priceNum,
                 op:   (oldPriceN && oldPriceN > priceNum) ? '£ ' + Math.round(oldPriceN).toLocaleString('en-GB') : '',
-                l:    ad.city ? ad.city + ', UK' : 'UK',
+                l:    [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
                 d:    ad.description || '',
                 dt:   fmtDate(ad.created_at),
                 n:    String(ad.id),
@@ -2462,6 +2464,28 @@
           var _df = window._bazarDistrictFilter;
           items = items.filter(function(item) {
             return (item.l || '').toLowerCase().indexOf(_df) !== -1;
+          });
+        }
+        /* Apply House sub-type filter (cfHouseTypePanel checkboxes) */
+        var _houseSubChecks = document.querySelectorAll('#cfHouseTypePanel input[type="checkbox"]:checked');
+        if (_houseSubChecks.length > 0) {
+          var _selHouseSubs = Array.prototype.map.call(_houseSubChecks, function(c) { return c.value.toLowerCase(); });
+          var _houseGenericSel = _selHouseSubs.indexOf('house') !== -1;
+          items = items.filter(function(item) {
+            var st = (item.st || '').toLowerCase();
+            if (!st) return _houseGenericSel;
+            return _selHouseSubs.indexOf(st) !== -1;
+          });
+        }
+        /* Apply Flat/Apt sub-type filter (cfAptTypePanel checkboxes) */
+        var _aptSubChecks = document.querySelectorAll('#cfAptTypePanel input[type="checkbox"]:checked');
+        if (_aptSubChecks.length > 0) {
+          var _selAptSubs = Array.prototype.map.call(_aptSubChecks, function(c) { return c.value.toLowerCase(); });
+          var _aptGenericSel = _selAptSubs.indexOf('flats') !== -1;
+          items = items.filter(function(item) {
+            var st = (item.st || '').toLowerCase();
+            if (!st) return _aptGenericSel;
+            return _selAptSubs.indexOf(st) !== -1;
           });
         }
         /* Apply Plot Type filter */
