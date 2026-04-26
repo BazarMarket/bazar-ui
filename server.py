@@ -3422,10 +3422,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         headers={'Accept': 'application/json'})
                     with urllib.request.urlopen(req, timeout=4) as r:
                         detail = json.loads(r.read().decode('utf-8'))
-                        op = detail.get('old_price')
                         with lock:
                             enriched_list[idx] = dict(enriched_list[idx])
-                            enriched_list[idx]['old_price'] = op
+                            enriched_list[idx]['old_price']    = detail.get('old_price')
+                            enriched_list[idx]['district']     = detail.get('district') or ''
+                            enriched_list[idx]['listing_type'] = detail.get('listing_type') or ''
                         # Also refresh cache so card.html gets fresh data too
                         _cache_set(f'listing_{ad_id}', detail)
                 except Exception:
