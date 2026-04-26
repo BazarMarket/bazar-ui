@@ -1317,15 +1317,16 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                      f'Ideal for temporary stays and flexible rentals.')
         desc  = intro[:160]
 
+        short_rent_url = f'{PUBLIC_DOMAIN}/property-short-rent'
         breadcrumb_schema = {
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": cat_label, "item": f'{PUBLIC_DOMAIN}/{cat}'},
+                 "name": "Property for Short-Term Rent", "item": short_rent_url},
                 {"@type": "ListItem", "position": 3,
-                 "name": "Short-Term", "item": canonical},
+                 "name": cat_label, "item": canonical},
             ]
         }
         schema = {
@@ -1356,8 +1357,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':         intro,
             'breadcrumbs':   [
                 ('Home', '/'),
-                (cat_label, f'/{cat}'),
-                ('Short-Term', None),
+                ('Property for Short-Term Rent', '/property-short-rent'),
+                (cat_label, None),
             ],
             'related_links': related_links,
             'type':          'category',
