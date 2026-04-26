@@ -1280,7 +1280,7 @@
             if (ad.bedrooms) luInfoItems += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
             if (ad.bathrooms) luInfoItems += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
             if (ad.area) luInfoItems += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
-            var luInfoBord = luInfoItems ? '<div class="card__dop"><div class="info-bord">' + luInfoItems + '</div></div>' : '';
+            var luInfoBord = '<div class="card__dop"><div class="info-bord">' + luInfoItems + '</div></div>';
             var luInfoId = needsFetch ? 'luInfo_' + ad.id : '';
             var _myUid = localStorage.getItem('bazar_firebase_uid') || '';
             html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer">' +
@@ -1358,15 +1358,12 @@
         var _opN = ad.old_price ? Number(ad.old_price) : 0;
         var _curN = Number(ad.price) || 0;
         var priceOld = (_opN && _opN > _curN) ? '<span class="price-old">£ ' + Math.round(_opN).toLocaleString('en-GB') + '</span>' : '';
-        var infoBord = '';
-        if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
-            var items = '';
-            if (ad.bedrooms) items += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
-            if (ad.bathrooms) items += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
-            if (ad.area)  items += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
-            if (ad.plot)  items += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
-            infoBord = '<div class="card__dop"><div class="info-bord">' + items + '</div></div>';
-        }
+        var _infoItemsA = '';
+        if (ad.bedrooms) _infoItemsA += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
+        if (ad.bathrooms) _infoItemsA += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
+        if (ad.area)  _infoItemsA += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
+        if (ad.plot)  _infoItemsA += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+        var infoBord = '<div class="card__dop"><div class="info-bord">' + _infoItemsA + '</div></div>';
         var cardUrl = 'card.html?id=' + ad.id;
         var _logoUid = ad.seller_firebase_uid || '';
         return '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + cardUrl + '\'}">' +
@@ -1490,15 +1487,12 @@
                     var _latOpN = ad.old_price ? Number(ad.old_price) : 0;
                     var _latCurN = Number(ad.price) || 0;
                     var priceOld = (_latOpN && _latOpN > _latCurN) ? '<span class="price-old">£ ' + Math.round(_latOpN).toLocaleString('en-GB') + '</span>' : '';
-                    var infoBord = '';
-                    if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
-                        var infoItems = '';
-                        if (ad.bedrooms) infoItems += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
-                        if (ad.bathrooms) infoItems += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
-                        if (ad.area) infoItems += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
-                        if (ad.plot) infoItems += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
-                        infoBord = '<div class="card__dop"><div class="info-bord">' + infoItems + '</div></div>';
-                    }
+                    var _infoItemsB = '';
+                    if (ad.bedrooms) _infoItemsB += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
+                    if (ad.bathrooms) _infoItemsB += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
+                    if (ad.area) _infoItemsB += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
+                    if (ad.plot) _infoItemsB += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+                    var infoBord = '<div class="card__dop"><div class="info-bord">' + _infoItemsB + '</div></div>';
                     var latCardUrl = 'card.html?id=' + ad.id;
                     var _latUid = ad.seller_firebase_uid || '';
                     html += '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latCardUrl + '\'}">' +
@@ -1528,15 +1522,12 @@
                                 : '<div class="card__stikers"></div>';
                         var imgSrc2 = ad.photo || 'img/product.jpg';
                         var price2 = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
-                        var infoBord2 = '';
-                        if (ad.bedrooms || ad.bathrooms || ad.area || ad.plot) {
-                            var ii = '';
-                            if (ad.bedrooms) ii += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
-                            if (ad.bathrooms) ii += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
-                            if (ad.area) ii += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
-                            if (ad.plot) ii += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
-                            infoBord2 = '<div class="card__dop"><div class="info-bord">' + ii + '</div></div>';
-                        }
+                        var _ii = '';
+                        if (ad.bedrooms) _ii += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
+                        if (ad.bathrooms) _ii += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
+                        if (ad.area) _ii += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
+                        if (ad.plot) _ii += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+                        var infoBord2 = '<div class="card__dop"><div class="info-bord">' + _ii + '</div></div>';
                         var latSwUrl = 'card.html?id=' + ad.id;
                         var _latSwUid = ad.seller_firebase_uid || '';
                         latestSlidesHtml += '<div class="swiper-slide"><div class="' + cardCls2 + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latSwUrl + '\'}">' +
