@@ -1098,6 +1098,35 @@
       function onTypeChange(cb) {
          if (cb.checked) saveTypeClick(cb.value);
          updateTypeLabel();
+         /* Navigate to type-specific URL based on current selection */
+         var _typeToSlug = {
+            'Flats': 'flats', 'House': 'house', 'Rooms': 'rooms',
+            'Land': 'land', 'Building': 'building', 'Office': 'office',
+            'Shop': 'shop', 'Restaurant': 'restaurant', 'Industrial': 'industrial',
+            'Hotel': 'hotel', 'Business or Investment': 'business'
+         };
+         var _modeToBase = {
+            'sale': '/property-for-sale',
+            'rent': '/property-to-rent',
+            'short-rent': '/property-short-rent'
+         };
+         var _baseUrl = _modeToBase[currentMode] || '/property-to-rent';
+         var _currentPath = window.location.pathname.replace(/\/$/, '');
+         var _onPropertyPage = (_currentPath.indexOf('/property-') === 0 ||
+                                _currentPath.indexOf('/rooms') === 0 ||
+                                _currentPath.indexOf('/flats') === 0);
+         if (_onPropertyPage) {
+            var checks = document.querySelectorAll('#cfTypePanel input[type="checkbox"]:checked');
+            var _targetUrl;
+            if (checks.length === 1 && _typeToSlug[checks[0].value]) {
+               _targetUrl = _baseUrl + '/' + _typeToSlug[checks[0].value];
+            } else if (checks.length === 0) {
+               _targetUrl = _baseUrl;
+            }
+            if (_targetUrl && _targetUrl !== _currentPath) {
+               window.location.href = _targetUrl;
+            }
+         }
       }
 
       function detectMode(catLabel) {
@@ -1260,35 +1289,6 @@
             }
          }
          updateDynamicRowVisibility();
-
-         /* Navigate to type-specific URL when exactly one type is selected */
-         var _typeToSlug = {
-            'Flats': 'flats', 'House': 'house', 'Rooms': 'rooms',
-            'Land': 'land', 'Building': 'building', 'Office': 'office',
-            'Shop': 'shop', 'Restaurant': 'restaurant', 'Industrial': 'industrial',
-            'Hotel': 'hotel', 'Business or Investment': 'business'
-         };
-         var _modeToBase = {
-            'sale': '/property-for-sale',
-            'rent': '/property-to-rent',
-            'short-rent': '/property-short-rent'
-         };
-         var _baseUrl = _modeToBase[currentMode] || '/property-to-rent';
-         var _currentPath = window.location.pathname.replace(/\/$/, '');
-         var _onPropertyPage = (_currentPath.indexOf('/property-') === 0 ||
-                                _currentPath.indexOf('/rooms') === 0 ||
-                                _currentPath.indexOf('/flats') === 0);
-         if (_onPropertyPage) {
-            var _targetUrl;
-            if (checks.length === 1 && _typeToSlug[checks[0].value]) {
-               _targetUrl = _baseUrl + '/' + _typeToSlug[checks[0].value];
-            } else if (checks.length === 0) {
-               _targetUrl = _baseUrl;
-            }
-            if (_targetUrl && _targetUrl !== _currentPath) {
-               window.location.href = _targetUrl;
-            }
-         }
       }
       function updateDynamicRowVisibility() {
          var row = document.getElementById('cfDynamicRow');
