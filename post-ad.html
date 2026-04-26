@@ -2285,7 +2285,7 @@
       var catData = {
          'real-estate': {
             'For Sale':            ['Flats', 'Studio', 'House', 'Maisonette', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment', 'Land', 'Building'],
-            'For Long-term Rent':  ['Flats', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial'],
+            'For Long-term Rent':  ['Flats', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage', 'Office', 'Shop', 'Restaurant', 'Hotel', 'Industrial', 'Land', 'Building'],
             'For Short-term Rent': ['Flats', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
          },
          'motors': {
@@ -2620,11 +2620,13 @@
       var reMainTypes = ['Flats', 'House'];
       var reHouseSubtypes = {
          'House': ['House', 'Villa', 'Maisonette', 'Townhouse', 'Bungalow', 'Cottage'],
-         'Flats': ['Flats', 'Studio', 'Penthouse', 'Duplex']
+         'Flats': ['Flats', 'Studio', 'Penthouse', 'Duplex'],
+         'Land':  ['Residential', 'Agricultural', 'Commercial', 'Industrial', 'Tourist']
       };
       var reHouseTypeLabels = {
          'House': 'House type',
-         'Flats': 'Flats type'
+         'Flats': 'Flats type',
+         'Land':  'Plot type'
       };
       var reCommercial = ['Office', 'Shop', 'Restaurant', 'Industrial', 'Hotel', 'Business or Investment'];
       var reLand = ['Land', 'Building'];

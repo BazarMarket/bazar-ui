@@ -564,6 +564,24 @@
                            <label class="cf-type-item"><input type="checkbox" value="Eco / Passive House" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Eco / Passive House</label>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfPlotTypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfPlotTypeBtn" onclick="togglePlotTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfPlotTypeLabel">Plot type</span>
+                           <span class="cf-type-clear" id="cfPlotTypeClear" onclick="clearPlotType(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfPlotTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Residential" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Residential</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Agricultural" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Agricultural</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Commercial" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Commercial</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Industrial" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Industrial</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Tourist" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Tourist</label>
+                        </div>
+                     </div>
                      <div class="cf-cat" id="cfRoomtypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfRoomtypeBtn" onclick="toggleRoomtypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfRoomtypeLabel">Room type</span>
@@ -1136,11 +1154,14 @@
             clearSubtype(null);
             clearRoomtype(null);
             clearConstructionType(null);
+            clearPlotType(null);
             document.getElementById('cfAptTypeWrap').style.display = 'none';
             document.getElementById('cfHouseTypeWrap').style.display = 'none';
             document.getElementById('cfSubtypeWrap').style.display = 'none';
             document.getElementById('cfRoomtypeWrap').style.display = 'none';
             document.getElementById('cfConstructionTypeWrap').style.display = 'none';
+            var _ptw = document.getElementById('cfPlotTypeWrap');
+            if (_ptw) _ptw.style.display = 'none';
             updateDynamicRowVisibility();
          }
          var l = label.toLowerCase();
@@ -1224,6 +1245,18 @@
             roomtypeWrap.style.display = 'none';
             document.querySelectorAll('#cfRoomtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateRoomtypeLabel();
+         }
+         var landEl = document.querySelector('#cfTypePanel input[value="Land"]');
+         var landChecked = landEl ? landEl.checked : false;
+         var plotTypeWrap = document.getElementById('cfPlotTypeWrap');
+         if (plotTypeWrap) {
+            if (landChecked) {
+               plotTypeWrap.style.display = '';
+            } else {
+               plotTypeWrap.style.display = 'none';
+               document.querySelectorAll('#cfPlotTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+               updatePlotTypeLabel();
+            }
          }
          updateDynamicRowVisibility();
       }
@@ -1392,6 +1425,40 @@
          if (e) e.stopPropagation();
          document.querySelectorAll('#cfRoomtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
          updateRoomtypeLabel();
+      }
+
+      function togglePlotTypePanel(e) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfPlotTypeBtn');
+         var panel = document.getElementById('cfPlotTypePanel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function updatePlotTypeLabel() {
+         var checks = document.querySelectorAll('#cfPlotTypePanel input[type="checkbox"]:checked');
+         var label = document.getElementById('cfPlotTypeLabel');
+         var clearBtn = document.getElementById('cfPlotTypeClear');
+         var btn = document.getElementById('cfPlotTypeBtn');
+         if (!label) return;
+         if (checks.length === 0) {
+            label.textContent = 'Plot type';
+            if (clearBtn) clearBtn.style.display = 'none';
+            btn.classList.remove('has-selection');
+         } else if (checks.length === 1) {
+            label.textContent = checks[0].value;
+            if (clearBtn) clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         } else {
+            label.textContent = checks.length + ' selected';
+            if (clearBtn) clearBtn.style.display = '';
+            btn.classList.add('has-selection');
+         }
+      }
+      function clearPlotType(e) {
+         if (e) e.stopPropagation();
+         document.querySelectorAll('#cfPlotTypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+         updatePlotTypeLabel();
       }
 
       function toggleBedroomsPanel(e) {
@@ -1933,6 +2000,12 @@
          if (ctPanel && !ctPanel.contains(e.target) && !ctBtn.contains(e.target)) {
             ctPanel.classList.remove('open');
             ctBtn.classList.remove('open');
+         }
+         var ptPanel = document.getElementById('cfPlotTypePanel');
+         var ptBtn = document.getElementById('cfPlotTypeBtn');
+         if (ptPanel && ptBtn && !ptPanel.contains(e.target) && !ptBtn.contains(e.target)) {
+            ptPanel.classList.remove('open');
+            ptBtn.classList.remove('open');
          }
          document.querySelectorAll('.cf-price-drop').forEach(function(drop){
             var pp = drop.querySelector('.cf-price-panel');
