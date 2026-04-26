@@ -694,11 +694,10 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property/shop/short-term  →  301 redirect to /property-short-rent/shop
         if parts[0] == 'property' and parts[1] in PROPERTY_SUBTYPES and parts[2] == 'short-term':
             return 'redirect_301', {'location': f'/property-short-rent/{parts[1]}'}
-        # /property/for-rent/{city} or /property/for-sale/{city}  →  property_transaction_city
+        # /property/for-rent/{city} or /property/for-sale/{city}  →  301 to clean URL
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
-            return 'property_transaction_city', {
-                'transaction': parts[1], 'city': parts[2]
-            }
+            _pfx = 'property-to-rent' if parts[1] == 'for-rent' else 'property-for-sale'
+            return 'redirect_301', {'location': f'/{_pfx}/{parts[2]}'}
         # /rooms/london/short-term  →  category_city_modifier
         if parts[2] == 'short-term':
             return 'category_city_modifier', {
@@ -729,6 +728,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property-to-rent/flats, /property-to-rent/rooms  →  category_transaction (rent)
         if parts[0] == 'property-to-rent' and parts[1] in CATEGORY_LABELS:
             return 'category_transaction', {'category': parts[1], 'transaction': 'for-rent'}
+        # /property-for-sale/{city}  →  property_transaction_city (clean URL)
+        if parts[0] == 'property-for-sale':
+            return 'property_transaction_city', {'transaction': 'for-sale', 'city': parts[1]}
+        # /property-to-rent/{city}  →  property_transaction_city (clean URL)
+        if parts[0] == 'property-to-rent':
+            return 'property_transaction_city', {'transaction': 'for-rent', 'city': parts[1]}
         # /property-short-rent/house, /property-short-rent/shop etc.  →  property_subtype_modifier
         if parts[0] == 'property-short-rent' and parts[1] in PROPERTY_SUBTYPES:
             return 'property_subtype_modifier', {'subtype': parts[1]}
@@ -1370,8 +1375,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'canonical':   canonical,
             'json_ld':     json.dumps(schema),
         })
+        _city_prefix = 'property-to-rent' if is_rent else 'property-for-sale'
         city_links = [
-            (label, f'/property/{transaction}/{slug}')
+            (label, f'/{_city_prefix}/{slug}')
             for label, slug in FLATS_POPULAR_CITIES
         ]
         related_links = []
@@ -1458,7 +1464,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         is_rent     = (transaction == 'for-rent')
         verb        = 'for Rent' if is_rent else 'for Sale'
         parent_url  = f'{PUBLIC_DOMAIN}/property-to-rent' if is_rent else f'{PUBLIC_DOMAIN}/property-for-sale'
-        canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/{city_slug}'
+        _tx_prefix  = 'property-to-rent' if is_rent else 'property-for-sale'
+        canonical   = f'{PUBLIC_DOMAIN}/{_tx_prefix}/{city_slug}'
 
         if is_rent:
             h1    = f'Property for Rent in {city}'
