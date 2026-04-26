@@ -226,7 +226,7 @@
                                 <div class="user-menu">
                                     <a href="#" class="user-menu-tel icon-tel-full" id="header-phone"></a>
                                     <hr class="user-menu__hr">
-                                    <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('settings')">My Profile</a>
+                                    <a href="#" class="user-menu-item icon-win-user" onclick="event.preventDefault();switchToTab('profile')">My Profile</a>
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">My Favorites</a>
                                     <a href="#" id="menuMyPayments" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
@@ -244,7 +244,7 @@
                                         </label>
                                     </div>
                                     <hr class="user-menu__hr">
-                                    <a href="#" class="user-menu-item icon-win-setting" onclick="event.preventDefault();switchToTab('cab-settings')">My Settings</a>
+                                    <a href="#" class="user-menu-item icon-win-setting" onclick="event.preventDefault();switchToTab('settings')">My Settings</a>
                                     <a href="#" class="user-menu-item icon-win-question" onclick="event.preventDefault();switchToTab('tickets')">My Tickets</a>
                                     <hr class="user-menu__hr">
                                     <a href="#" class="user-logout icon-win-logout" onclick="event.preventDefault();switchToTab('logout')">Log Out</a>
@@ -266,7 +266,7 @@
             <!-- Navigation -->
             <nav class="cab-nav">
                 <p class="cab-nav__group-label">Main</p>
-                <div class="cab-nav__item icon-main-home active" data-tab="settings">My Profile</div>
+                <div class="cab-nav__item icon-main-home active" data-tab="profile">My Profile</div>
                 <div class="cab-nav__item icon-win-ad" data-tab="my-ads">My Ads</div>
                 <div class="cab-nav__item icon-heart-new" data-tab="favorites">My Favorites</div>
 
@@ -275,7 +275,7 @@
                 <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Subscriptions</div>
 
                 <p class="cab-nav__group-label">System</p>
-                <div class="cab-nav__item icon-win-setting" data-tab="cab-settings">My Settings</div>
+                <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
                 <div class="cab-nav__item icon-question" data-tab="tickets" id="navTickets">My Tickets</div>
 
                 <div class="cab-nav__divider"></div>
@@ -1016,7 +1016,7 @@
             </div>
 
             <!-- ══════════════ MY SETTINGS (Edit Profile) ══════════════ -->
-            <div class="cab-panel active" data-panel="settings">
+            <div class="cab-panel active" data-panel="profile">
 
                 <div class="cab-panel__top">
                     <h1 class="cab-panel__title">My Profile</h1>
@@ -1284,7 +1284,7 @@
             </div>
 
             <!-- ══════════════ MY SETTINGS ══════════════ -->
-            <div class="cab-panel" data-panel="cab-settings">
+            <div class="cab-panel" data-panel="settings">
 
                 <div class="cab-panel__top">
                     <h1 class="cab-panel__title">My Settings</h1>

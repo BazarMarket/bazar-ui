@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabId === 'my-ads' && typeof loadMyAds === 'function') {
             loadMyAds();
         }
-        if ((tabId === 'settings' || tabId === 'cab-settings') && typeof populateProfileStats === 'function') {
+        if ((tabId === 'profile' || tabId === 'settings') && typeof populateProfileStats === 'function') {
             populateProfileStats();
         }
         if (tabId === 'tickets' && typeof loadTickets === 'function') {

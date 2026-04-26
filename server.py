@@ -670,6 +670,10 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     if p in INTERNAL_PAGES or (p + '.html') in INTERNAL_PAGES:
         return 'internal', {}
 
+    # /cabinet/* deep links (e.g. /cabinet/profile, /cabinet/settings) → serve cabinet.html
+    if p.startswith('cabinet/'):
+        return 'internal_subroute', {'file': 'cabinet.html'}
+
     # static assets – let them pass through unchanged
     if '.' in p.split('/')[-1]:
         return 'other', {}
@@ -3500,6 +3504,15 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 if os.path.isfile(actual):
                     self.path = '/' + p_clean + '.html'
             if os.path.isfile(actual):
+                super().do_GET()
+                return
+
+        # /cabinet/* deep links — serve cabinet.html directly
+        if page_type == 'internal_subroute':
+            fname = params.get('file', '')
+            actual = os.path.join(SITE_ROOT, fname)
+            if os.path.isfile(actual):
+                self.path = '/' + fname
                 super().do_GET()
                 return
 
