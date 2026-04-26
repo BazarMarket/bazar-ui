@@ -2350,7 +2350,9 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
         items = []
         for i, (label, href) in enumerate(breadcrumbs):
             is_last = (i == len(breadcrumbs) - 1)
-            safe_label = _esc(label)
+            # Strip geographic suffix for cleaner breadcrumb display (H1 already has it)
+            bc_label = label.replace(' in the UK', '').replace(' in the U.K.', '').strip()
+            safe_label = _esc(bc_label)
             if not is_last:
                 items.append(f'<li><a href="{href}">{safe_label}</a>'
                               f'<span class="icon-arrow-r"></span></li>')
@@ -2383,7 +2385,9 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         items = []
         for i, (label, href) in enumerate(breadcrumbs):
             is_last = (i == len(breadcrumbs) - 1)
-            safe_label = _esc(label)
+            # Strip geographic suffix for cleaner breadcrumb display (H1 already has it)
+            bc_label = label.replace(' in the UK', '').replace(' in the U.K.', '').strip()
+            safe_label = _esc(bc_label)
             if not is_last:
                 items.append(
                     f'<li><a href="{_attr(href)}">{safe_label}</a>'
