@@ -2258,33 +2258,32 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         if m:
             html = html[:m.start()] + hero_html + html[m.end():]
 
-    # ── Inject type links nav before </body> ─────────────────────────────────
+    # ── Inject type_links + city_links into footer__center via placeholder ───
+    seo_boxes = ''
     if type_links:
-        type_links_html = ''.join(
-            f'<a href="{_attr(href)}" style="color:#888;display:block;padding:2px 0">'
-            f'{_esc(label)}</a>'
+        links_html = ''.join(
+            f'<a href="{_attr(href)}">{_esc(label)}</a>'
             for label, href in type_links
         )
-        type_nav = (
-            f'\n<nav aria-label="Browse by type" style="font-size:13px;padding:10px 16px 4px;">'
-            f'<span style="color:#aaa;display:block;margin-bottom:4px">Browse by type:</span>'
-            f'{type_links_html}</nav>'
+        seo_boxes += (
+            f'<div class="footer__box">'
+            f'<h3 class="footer__title">Browse by type</h3>'
+            f'<div class="footer__links">{links_html}</div>'
+            f'</div>'
         )
-        html = html.replace('</body>', type_nav + '\n</body>', 1)
-
-    # ── Inject city links nav before </body> ─────────────────────────────────
     if city_links:
         links_html = ''.join(
-            f'<a href="{_attr(href)}" style="color:#888;display:block;padding:2px 0">'
+            f'<a href="{_attr(href)}">'
             f'{_esc(f"{cat_label} in {label}" if cat_label else label)}</a>'
             for label, href in city_links
         )
-        nav = (
-            f'\n<nav aria-label="Browse by city" style="font-size:13px;padding:10px 16px 20px;">'
-            f'<span style="color:#aaa;display:block;margin-bottom:4px">Popular cities:</span>'
-            f'{links_html}</nav>'
+        seo_boxes += (
+            f'<div class="footer__box">'
+            f'<h3 class="footer__title">Popular cities</h3>'
+            f'<div class="footer__links">{links_html}</div>'
+            f'</div>'
         )
-        html = html.replace('</body>', nav + '\n</body>', 1)
+    html = html.replace('<!-- FOOTER_SEO_BOXES -->', seo_boxes, 1)
 
     return html
 
