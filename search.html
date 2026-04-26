@@ -503,6 +503,24 @@
                            <label class="cf-type-item"><input type="checkbox" value="Duplex" onchange="updateAptTypeLabel()"><span class="cf-type-check"></span>Duplex</label>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfPlotTypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfPlotTypeBtn" onclick="togglePlotTypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfPlotTypeLabel">Plot type</span>
+                           <span class="cf-type-clear" id="cfPlotTypeClear" onclick="clearPlotType(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfPlotTypePanel">
+                           <label class="cf-type-item"><input type="checkbox" value="Residential land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Residential land</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Agricultural land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Agricultural land</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Commercial land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Commercial land</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Industrial land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Industrial land</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Tourist land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Tourist land</label>
+                        </div>
+                     </div>
                   </div>
                   <!-- Row 2: Dynamic smart filters (appears based on Property type selection) -->
                   <div class="cf-row cf-row-dynamic" id="cfDynamicRow" style="display:none;">
@@ -562,24 +580,6 @@
                            <label class="cf-type-item"><input type="checkbox" value="Steel Frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Steel Frame</label>
                            <div class="cf-cat-divider"></div>
                            <label class="cf-type-item"><input type="checkbox" value="Eco / Passive House" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Eco / Passive House</label>
-                        </div>
-                     </div>
-                     <div class="cf-cat" id="cfPlotTypeWrap" style="display:none;">
-                        <button class="cf-cat-btn" id="cfPlotTypeBtn" onclick="togglePlotTypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfPlotTypeLabel">Plot type</span>
-                           <span class="cf-type-clear" id="cfPlotTypeClear" onclick="clearPlotType(event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel" id="cfPlotTypePanel">
-                           <label class="cf-type-item"><input type="checkbox" value="Residential land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Residential land</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Agricultural land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Agricultural land</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Commercial land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Commercial land</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Industrial land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Industrial land</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Tourist land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Tourist land</label>
                         </div>
                      </div>
                      <div class="cf-cat" id="cfRoomtypeWrap" style="display:none;">
