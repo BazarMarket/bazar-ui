@@ -1484,6 +1484,12 @@
             if (clearBtn) clearBtn.style.display = '';
             btn.classList.add('has-selection');
          }
+         /* Re-render to apply filter */
+         if (window._bazarCurrentType) {
+            _srCurrentPage = 1;
+            renderListings(window._bazarCurrentType, true);
+            if (typeof initProductSwipers === 'function') initProductSwipers();
+         }
       }
       function clearPlotType(e) {
          if (e) e.stopPropagation();
@@ -2210,7 +2216,8 @@
                 v:    ad.views || 0,
                 stk:  stk,
                 cc:   cc,
-                cy:   ad.city ? ad.city.toUpperCase() : 'UK'
+                cy:   ad.city ? ad.city.toUpperCase() : 'UK',
+                st:   ad.sub_type || ''
               });
             });
             /* Prepend API items (newest first) before static demo items */
@@ -2443,6 +2450,16 @@
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
         items = _sortItems(items);
+        /* Apply Plot Type filter */
+        var _plotChecks = document.querySelectorAll('#cfPlotTypePanel input[type="checkbox"]:checked');
+        if (_plotChecks.length > 0) {
+          var _selectedPlots = Array.prototype.map.call(_plotChecks, function(c) { return c.value.toLowerCase(); });
+          items = items.filter(function(item) {
+            var st = (item.st || '').toLowerCase();
+            var tl = (item.t || '').toLowerCase();
+            return _selectedPlots.some(function(p) { return st === p || tl.indexOf(p) !== -1; });
+          });
+        }
         /* Paginate */
         var start = (_srCurrentPage - 1) * _srItemsPerPage;
         var pageItems = items.slice(start, start + _srItemsPerPage);
