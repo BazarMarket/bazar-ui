@@ -2529,7 +2529,8 @@
          var htList = reHouseSubtypes[propType];
          var htLabel = reHouseTypeLabels[propType] || 'House type';
          if (htList && htList.length) {
-            houseTypeField.querySelector('.pa-field__label').innerHTML = htLabel + ':<span>*</span>';
+            var _htRequired = (propType !== 'Land');
+            houseTypeField.querySelector('.pa-field__label').innerHTML = htLabel + ':' + (_htRequired ? '<span>*</span>' : '');
             houseTypeSelect.innerHTML = '<option value="" selected>Select ' + htLabel.toLowerCase() + '</option>' +
                htList.map(function(t) { return '<option>' + t + '</option>'; }).join('');
             houseTypeSelect.classList.add('pa-empty');
