@@ -1105,8 +1105,6 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'Long_rent': 'to rent', 'Short_rent': 'to rent',
         }.get(listing_type, 'for sale')
         cat_label  = f'Property {action_label}'
-        _type_label_map = {'room': 'Rooms'}
-        type_label = _type_label_map.get(prop_type.lower() if prop_type else '', prop_type.replace('_', ' ').title() if prop_type else 'Property')
 
         # ── Breadcrumb category URL (depends on listing_type and property_type) ──
         _lt_norm = listing_type.lower() if listing_type else 'sale'
@@ -1120,21 +1118,49 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         else:
             cat_url = f'{PUBLIC_DOMAIN}/property-for-sale'
 
+        # ── Sub-type label + slug (e.g. Cottage → cottage) ────────────────────
+        sub_type = listing.get('sub_type') or ''
+        if sub_type:
+            sub_label = sub_type
+            sub_slug  = re.sub(r'[^a-z0-9]+', '-', sub_type.lower()).strip('-')
+        elif _pt_norm:
+            _ptLabelMap = {'flat':'Flats','flats':'Flats','apartment':'Flats','house':'House',
+                           'studio':'Studio','room':'Rooms','land':'Land','building':'Building',
+                           'office':'Office','shop':'Shop','restaurant':'Restaurant',
+                           'industrial':'Industrial','hotel':'Hotel'}
+            _ptSlugMap  = {'flat':'flats','flats':'flats','apartment':'flats','room':'rooms'}
+            sub_slug  = _ptSlugMap.get(_pt_norm, _pt_norm)
+            sub_label = _ptLabelMap.get(sub_slug, sub_slug.replace('-',' ').title())
+        else:
+            sub_label, sub_slug = '', ''
+
         # ── JSON-LD ───────────────────────────────────────────────────────────
         real_estate_types = {'apartment', 'house', 'flat', 'room', 'villa',
                              'studio', 'bungalow', 'maisonette', 'cottage'}
         is_real_estate = prop_type.lower() in real_estate_types
 
         city_slug_url = re.sub(r'[^a-z0-9]+', '-', city.lower()).strip('-') if city else ''
-        city_url = f'{PUBLIC_DOMAIN}/property/{city_slug_url}' if city_slug_url else ''
+        dist_slug_url = re.sub(r'[^a-z0-9]+', '-', district.lower()).strip('-') if district else ''
+        _cat_rel_url  = cat_url.replace(PUBLIC_DOMAIN, '') or '/property'
+
+        # New-format breadcrumb URLs: /property-for-sale/{subtype}/{city}/{district}
+        _sub_url  = f'{_cat_rel_url}/{sub_slug}' if sub_slug and _pt_norm != 'room' else ''
+        _city_url = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
+        _dist_url = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
 
         bc_items = [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
             {"@type": "ListItem", "position": 2, "name": cat_label, "item": cat_url},
         ]
-        if city_url:
-            bc_items.append({"@type": "ListItem", "position": 3, "name": city, "item": city_url})
-        bc_items.append({"@type": "ListItem", "position": len(bc_items) + 1, "name": title, "item": canonical})
+        pos = 3
+        if sub_label and _sub_url:
+            bc_items.append({"@type": "ListItem", "position": pos, "name": sub_label, "item": f'{PUBLIC_DOMAIN}{_sub_url}'})
+            pos += 1
+        if city and _city_url:
+            bc_items.append({"@type": "ListItem", "position": pos, "name": city, "item": f'{PUBLIC_DOMAIN}{_city_url}'})
+            pos += 1
+        if district and _dist_url:
+            bc_items.append({"@type": "ListItem", "position": pos, "name": district, "item": f'{PUBLIC_DOMAIN}{_dist_url}'})
 
         breadcrumb_schema = {"@type": "BreadcrumbList", "itemListElement": bc_items}
 
@@ -1165,23 +1191,19 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 }
             }
 
-        # ── SSR blocks: visible H1 + breadcrumbs injected into body ──────────
-        _cat_rel_url = cat_url.replace(PUBLIC_DOMAIN, '') or '/property'
-        listing_breadcrumbs = [
-            ('Home', '/'),
-            (cat_label, _cat_rel_url),
-        ]
-        if city and city_slug_url:
-            if _lt_norm in ('long_rent', 'short_rent'):
-                _city_bc_url = f'/property-to-rent/{city_slug_url}'
-            else:
-                _city_bc_url = f'/property-for-sale/{city_slug_url}'
-            listing_breadcrumbs.append((city, _city_bc_url))
-        listing_breadcrumbs.append((type_label, None))
-
+        # ── SSR blocks: structured listing crumb (used by inject_ssr_body) ────
         seo['ssr'] = {
-            'prop_title':  title,
-            'breadcrumbs': listing_breadcrumbs,
+            'prop_title':    title,
+            'listing_crumb': {
+                'cat_label': cat_label,
+                'cat_url':   _cat_rel_url,
+                'sub_label': sub_label,
+                'sub_url':   _sub_url,
+                'city':      city,
+                'city_url':  _city_url,
+                'district':  district,
+                'dist_url':  _dist_url,
+            },
         }
 
         seo.update({
@@ -2273,19 +2295,63 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
     if prop_title:
         m = _RE_PROP_TITLE.search(html)
         if m:
-            # m.group(1) = attributes string e.g. ' class="card-head__title" id="prop-title"'
             html = html[:m.start()] + f'<h1{m.group(1)}>{_esc(prop_title)}</h1>' + html[m.end():]
 
     # ── Replace breadcrumb list in #breadcrumb ────────────────────────────────
-    breadcrumbs = ssr.get('breadcrumbs', [])
-    if breadcrumbs:
+    # Use structured listing_crumb if available (generates HTML with JS-compatible IDs)
+    listing_crumb = ssr.get('listing_crumb')
+    if listing_crumb:
+        items = []
+        # Home (always first, static)
+        items.append('<li><a href="/">Home</a><span class="icon-arrow-r"></span></li>')
+        # Category (e.g. "Property for Sale")
+        cl = listing_crumb.get('cat_label', '')
+        cu = listing_crumb.get('cat_url', '/')
+        if cl:
+            items.append(f'<li><a href="{_attr(cu)}" id="bread-category">{_esc(cl)}</a>'
+                         f'<span class="icon-arrow-r"></span></li>')
+        # Sub-type (e.g. "Cottage")
+        sl = listing_crumb.get('sub_label', '')
+        su = listing_crumb.get('sub_url', '')
+        if sl:
+            has_city = bool(listing_crumb.get('city', ''))
+            arrow_style = '' if has_city else ' style="display:none;"'
+            arrow = f'<span class="icon-arrow-r" id="bread-type-arrow"{arrow_style}></span>'
+            items.append(f'<li><a href="{_attr(su)}" id="bread-type">{_esc(sl)}</a>{arrow}</li>')
+        # City
+        cv = listing_crumb.get('city', '')
+        cvu = listing_crumb.get('city_url', '')
+        if cv and cvu:
+            has_dist = bool(listing_crumb.get('district', ''))
+            city_arrow = (f'<span class="icon-arrow-r" id="bread-city-arrow"></span>'
+                          if has_dist else '')
+            items.append(f'<li id="bread-city-li"><a href="{_attr(cvu)}" id="bread-city">'
+                         f'{_esc(cv)}</a>{city_arrow}</li>')
+        # District
+        dv = listing_crumb.get('district', '')
+        dvu = listing_crumb.get('dist_url', '')
+        if dv:
+            d_link = (f'<a href="{_attr(dvu)}" id="bread-district">{_esc(dv)}</a>'
+                      if dvu else f'<span id="bread-district">{_esc(dv)}</span>')
+            items.append(f'<li id="bread-district-li">{d_link}</li>')
+
+        new_ul = '<ul class="bread-custom" id="breadcrumb">\n' + \
+                 '\n'.join(f'                        {li}' for li in items) + \
+                 '\n                     </ul>'
+        m = _RE_BREADCRUMB.search(html)
+        if m:
+            html = html[:m.start()] + new_ul + html[m.end():]
+
+    elif ssr.get('breadcrumbs'):
+        # Fallback: plain breadcrumb list (used by non-listing pages if needed)
+        breadcrumbs = ssr['breadcrumbs']
         items = []
         for i, (label, href) in enumerate(breadcrumbs):
             is_last = (i == len(breadcrumbs) - 1)
             safe_label = _esc(label)
             if not is_last:
-                link = f'<a href="{href}">{safe_label}</a>'
-                items.append(f'<li>{link}<span class="icon-arrow-r"></span></li>')
+                items.append(f'<li><a href="{href}">{safe_label}</a>'
+                              f'<span class="icon-arrow-r"></span></li>')
             else:
                 items.append(f'<li><span>{safe_label}</span></li>')
         new_ul = '<ul class="bread-custom" id="breadcrumb">\n' + \
