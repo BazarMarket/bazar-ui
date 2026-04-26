@@ -2928,7 +2928,7 @@
          formData.append('property_type', propertyType);
          formData.append('sub_type', getSelectVal('houseTypeSelect'));
          var buildingTypeVal = getSelectVal('buildingTypeSelect');
-         if (buildingTypeVal) formData.append('building_type', buildingTypeVal);
+         if (buildingTypeVal) { formData.append('building_type', buildingTypeVal); } else if (_editAdId) { formData.append('building_type', ''); }
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
@@ -2962,34 +2962,34 @@
          }
 
          var condition = getSelectVal('conditionSelect');
-         if (condition) formData.append('condition', condition);
+         if (condition) { formData.append('condition', condition); } else if (_editAdId) { formData.append('condition', ''); }
 
          var floor = getSelectVal('floorSelect');
-         if (floor) formData.append('floor', floor === 'Ground floor' ? '0' : floor);
+         if (floor) { formData.append('floor', floor === 'Ground floor' ? '0' : floor); } else if (_editAdId) { formData.append('floor', ''); }
 
          var bedrooms = getSelectVal('bedroomsSelect');
-         if (bedrooms) formData.append('bedrooms', bedrooms === '10 and more' ? 10 : parseInt(bedrooms));
+         if (bedrooms) { formData.append('bedrooms', bedrooms === '10 and more' ? 10 : parseInt(bedrooms)); } else if (_editAdId) { formData.append('bedrooms', ''); }
 
          var bathrooms = getSelectVal('bathroomsSelect');
-         if (bathrooms) formData.append('bathrooms', bathrooms === '5 and more' ? 5 : parseInt(bathrooms));
+         if (bathrooms) { formData.append('bathrooms', bathrooms === '5 and more' ? 5 : parseInt(bathrooms)); } else if (_editAdId) { formData.append('bathrooms', ''); }
 
          var area = getInputVal('propertyAreaInput');
-         if (area) formData.append('covered_area', parseInt(area));
+         if (area) { formData.append('covered_area', parseInt(area)); } else if (_editAdId) { formData.append('covered_area', ''); }
 
          var year = getSelectVal('constructionYearSelect');
-         if (year && year !== 'Before 1980') formData.append('construction_year', parseInt(year));
+         if (year && year !== 'Before 1980') { formData.append('construction_year', parseInt(year)); } else if (_editAdId) { formData.append('construction_year', ''); }
 
          var energy = getSelectVal('energySelect');
-         if (energy) formData.append('energy_efficiency', energy);
+         if (energy) { formData.append('energy_efficiency', energy); } else if (_editAdId) { formData.append('energy_efficiency', ''); }
 
          var onlineViewing = getSelectVal('onlineViewingSelect');
-         if (onlineViewing) formData.append('online_viewing', onlineViewing);
+         if (onlineViewing) { formData.append('online_viewing', onlineViewing); } else if (_editAdId) { formData.append('online_viewing', ''); }
 
          var regBlock = getInputVal('regBlockInput');
-         if (regBlock) formData.append('registration_block', regBlock);
+         if (regBlock) { formData.append('registration_block', regBlock); } else if (_editAdId) { formData.append('registration_block', ''); }
 
          var regNum = getInputVal('regNumInput');
-         if (regNum) formData.append('registration_number', regNum);
+         if (regNum) { formData.append('registration_number', regNum); } else if (_editAdId) { formData.append('registration_number', ''); }
 
          var parking = getSelectVal('parkingSelect');
          var hasParking = parking && parking !== 'No' && parking !== 'None' ? '1' : '0';
@@ -3194,37 +3194,37 @@
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
-         if (condition) formData.append('condition', condition);
+         if (condition) { formData.append('condition', condition); } else if (_editAdId) { formData.append('condition', ''); }
 
-         if (make) formData.append('car_make', make);
-         if (model) formData.append('car_model', model);
-         if (carYear) formData.append('car_year', carYear);
+         if (make) { formData.append('car_make', make); } else if (_editAdId) { formData.append('car_make', ''); }
+         if (model) { formData.append('car_model', model); } else if (_editAdId) { formData.append('car_model', ''); }
+         if (carYear) { formData.append('car_year', carYear); } else if (_editAdId) { formData.append('car_year', ''); }
          var mileage = getInputVal('carMileageInput');
-         if (mileage) formData.append('mileage', mileage.replace(/,/g,''));
+         if (mileage) { formData.append('mileage', mileage.replace(/,/g,'')); } else if (_editAdId) { formData.append('mileage', ''); }
          var fuel = getSelectVal('carFuelSelect');
-         if (fuel) formData.append('fuel_type', fuel);
+         if (fuel) { formData.append('fuel_type', fuel); } else if (_editAdId) { formData.append('fuel_type', ''); }
          var transmission = getSelectVal('carTransmissionSelect');
-         if (transmission) formData.append('transmission', transmission);
+         if (transmission) { formData.append('transmission', transmission); } else if (_editAdId) { formData.append('transmission', ''); }
          var bodyType = getSelectVal('carBodyTypeSelect');
-         if (bodyType) formData.append('body_type', bodyType);
+         if (bodyType) { formData.append('body_type', bodyType); } else if (_editAdId) { formData.append('body_type', ''); }
          var colour = getSelectVal('carColourSelect');
-         if (colour) formData.append('colour', colour);
+         if (colour) { formData.append('colour', colour); } else if (_editAdId) { formData.append('colour', ''); }
          var doors = getSelectVal('carDoorsSelect');
-         if (doors) formData.append('doors', doors);
+         if (doors) { formData.append('doors', doors); } else if (_editAdId) { formData.append('doors', ''); }
          var seats = getSelectVal('carSeatsSelect');
-         if (seats) formData.append('seats', seats);
+         if (seats) { formData.append('seats', seats); } else if (_editAdId) { formData.append('seats', ''); }
          var driveType = getSelectVal('carDriveTypeSelect');
-         if (driveType) formData.append('drive_type', driveType);
+         if (driveType) { formData.append('drive_type', driveType); } else if (_editAdId) { formData.append('drive_type', ''); }
          var steering = getSelectVal('carSteeringSelect');
-         if (steering) formData.append('steering_side', steering);
+         if (steering) { formData.append('steering_side', steering); } else if (_editAdId) { formData.append('steering_side', ''); }
          var engine = getSelectVal('carEngineSelect');
-         if (engine) formData.append('engine_size', engine);
+         if (engine) { formData.append('engine_size', engine); } else if (_editAdId) { formData.append('engine_size', ''); }
          var prevOwners = getInputVal('carPrevOwnersInput');
-         if (prevOwners) formData.append('previous_owners', prevOwners);
+         if (prevOwners) { formData.append('previous_owners', prevOwners); } else if (_editAdId) { formData.append('previous_owners', ''); }
          var serviceHistory = getSelectVal('carServiceHistorySelect');
-         if (serviceHistory) formData.append('service_history', serviceHistory);
+         if (serviceHistory) { formData.append('service_history', serviceHistory); } else if (_editAdId) { formData.append('service_history', ''); }
          var mot = getSelectVal('carMotSelect');
-         if (mot) formData.append('mot_status', mot);
+         if (mot) { formData.append('mot_status', mot); } else if (_editAdId) { formData.append('mot_status', ''); }
 
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
@@ -3333,36 +3333,36 @@
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
-         if (condition) formData.append('condition', condition);
+         if (condition) { formData.append('condition', condition); } else if (_editAdId) { formData.append('condition', ''); }
 
-         if (brand) formData.append('phone_brand', brand);
-         if (model) formData.append('phone_model', model);
+         if (brand) { formData.append('phone_brand', brand); } else if (_editAdId) { formData.append('phone_brand', ''); }
+         if (model) { formData.append('phone_model', model); } else if (_editAdId) { formData.append('phone_model', ''); }
          var storage = getSelectVal('phoneStorageSelect');
-         if (storage) formData.append('phone_storage', storage);
+         if (storage) { formData.append('phone_storage', storage); } else if (_editAdId) { formData.append('phone_storage', ''); }
          var colour = getInputVal('phoneColourInput');
-         if (colour) formData.append('colour', colour);
+         if (colour) { formData.append('colour', colour); } else if (_editAdId) { formData.append('colour', ''); }
          var phoneDelivery = getSelectVal('phoneDeliverySelect');
          if (phoneDelivery) formData.append('delivery', phoneDelivery);
          var unlock = getSelectVal('phoneUnlockSelect');
-         if (unlock) formData.append('unlock_status', unlock);
+         if (unlock) { formData.append('unlock_status', unlock); } else if (_editAdId) { formData.append('unlock_status', ''); }
          var ram = getSelectVal('phoneRamSelect');
-         if (ram) formData.append('phone_ram', ram);
+         if (ram) { formData.append('phone_ram', ram); } else if (_editAdId) { formData.append('phone_ram', ''); }
          var sim = getSelectVal('phoneSimSelect');
-         if (sim) formData.append('sim_type', sim);
+         if (sim) { formData.append('sim_type', sim); } else if (_editAdId) { formData.append('sim_type', ''); }
          var network = getSelectVal('phoneNetworkSelect');
-         if (network) formData.append('network', network);
+         if (network) { formData.append('network', network); } else if (_editAdId) { formData.append('network', ''); }
          var battery = getSelectVal('phoneBatterySelect');
-         if (battery) formData.append('battery_health', battery);
+         if (battery) { formData.append('battery_health', battery); } else if (_editAdId) { formData.append('battery_health', ''); }
          var os = getSelectVal('phoneOsSelect');
-         if (os) formData.append('operating_system', os);
+         if (os) { formData.append('operating_system', os); } else if (_editAdId) { formData.append('operating_system', ''); }
          var warranty = getSelectVal('phoneWarrantySelect');
-         if (warranty) formData.append('warranty', warranty);
+         if (warranty) { formData.append('warranty', warranty); } else if (_editAdId) { formData.append('warranty', ''); }
          var box = getSelectVal('phoneBoxSelect');
-         if (box) formData.append('original_box', box);
+         if (box) { formData.append('original_box', box); } else if (_editAdId) { formData.append('original_box', ''); }
          var charger = getSelectVal('phoneChargerSelect');
-         if (charger) formData.append('charger_included', charger);
+         if (charger) { formData.append('charger_included', charger); } else if (_editAdId) { formData.append('charger_included', ''); }
          var sellerType = getSelectVal('phoneSellerTypeSelect');
-         if (sellerType) formData.append('seller_type', sellerType);
+         if (sellerType) { formData.append('seller_type', sellerType); } else if (_editAdId) { formData.append('seller_type', ''); }
 
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
