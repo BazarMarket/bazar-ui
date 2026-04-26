@@ -2133,9 +2133,14 @@ function _glbKey(e) {
    if (!favBtn) return;
    /* Apply stored state on load */
    function applyFavState() {
-      var isFav = cardId && localStorage.getItem('favorite_' + cardId) === '1';
-      favBtn.classList.toggle('icon-heart', !isFav);
-      favBtn.classList.toggle('icon-heart-full', isFav);
+      var isFav = !!(cardId && localStorage.getItem('favorite_' + cardId) === '1');
+      if (isFav) {
+         favBtn.classList.remove('icon-heart');
+         favBtn.classList.add('icon-heart-full');
+      } else {
+         favBtn.classList.remove('icon-heart-full');
+         favBtn.classList.add('icon-heart');
+      }
    }
    /* Update header badge count */
    function updateFavCount() {
@@ -2152,8 +2157,12 @@ function _glbKey(e) {
    favBtn.addEventListener('click', function(e) {
       e.preventDefault();
       if (!cardId) return;
-      var isFav = localStorage.getItem('favorite_' + cardId) === '1';
-      localStorage.setItem('favorite_' + cardId, isFav ? '0' : '1');
+      var nowFav = localStorage.getItem('favorite_' + cardId) !== '1';
+      if (nowFav) {
+         localStorage.setItem('favorite_' + cardId, '1');
+      } else {
+         localStorage.removeItem('favorite_' + cardId);
+      }
       applyFavState();
       updateFavCount();
    });
