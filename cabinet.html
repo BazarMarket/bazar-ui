@@ -434,7 +434,7 @@
                     <button class="cab-filter-btn" id="adsFilterInactive">Inactive (0)</button>
                     <button class="cab-filter-btn" id="adsFilterPending">Pending (0)</button>
                     <button class="cab-filter-btn" id="adsFilterRejected">Rejected (0)</button>
-                    <button class="cab-add-btn icon-win-plus" onclick="window.location.href='post-ad.html'">New Ad</button>
+                    <button class="cab-add-btn icon-win-plus" onclick="window.location.href='post-ad'">New Ad</button>
                 </div>
 
                 <div class="cab-ads-table" id="myAdsTable" style="background:transparent;overflow:visible;border:none;box-shadow:none;">
@@ -1641,7 +1641,7 @@
                 '<p class="cab-fav-card__price">' + fmtPrice(Number(price)) + '</p>' +
             '</div>' +
             '<div class="cab-fav-card__foot">' +
-                '<a href="card.html?id=' + id + '" class="cab-btn-sm cab-btn-sm--primary">View</a>' +
+                '<a href="card?id=' + id + '" class="cab-btn-sm cab-btn-sm--primary">View</a>' +
                 '<button class="cab-btn-sm cab-btn-sm--outline" data-fav-remove="' + id + '">Remove</button>' +
             '</div>';
         card.querySelector('[data-fav-remove]').addEventListener('click', function() {
@@ -1844,7 +1844,7 @@
     }
 
     function adAction(action, adId) {
-        if (action === 'edit') { window.location.href = 'post-ad.html?edit=' + adId; return; }
+        if (action === 'edit') { window.location.href = 'post-ad?edit=' + adId; return; }
 
         var uid = localStorage.getItem('bazar_firebase_uid') || '';
         if (!uid) { alert('Please log in.'); return; }

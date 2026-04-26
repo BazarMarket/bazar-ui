@@ -581,11 +581,11 @@
                <div class="burger-body">
                   <div class="header-old__right">
                      <div class="header-old__cell">
-                        <a href="post-ad.html" class="btn btn_mini">+ post an ad</a>
+                        <a href="post-ad" class="btn btn_mini">+ post an ad</a>
                      </div>
                      <div class="header-old__cell">
                         <div class="icons-list">
-                           <a href="messages.html" class="icon-item icon-email"><span class="icon-item__namber" id="msg-count" style="display:none">0</span></a>
+                           <a href="messages" class="icon-item icon-email"><span class="icon-item__namber" id="msg-count" style="display:none">0</span></a>
                            <a href="/cabinet#favorites" class="icon-item icon-heart"><span class="icon-item__namber" id="fav-count" style="display:none">0</span></a>
                         </div>
                      </div>
@@ -624,7 +624,7 @@
          <div class="po-wrap">
 
             <div class="po-crumb">
-               <a href="post-ad.html">Post an Ad</a>
+               <a href="post-ad">Post an Ad</a>
                <span class="po-crumb__sep">›</span>
                <span>Choose plan</span>
             </div>
@@ -873,7 +873,7 @@
          if (plan === 'free') {
             var uid   = localStorage.getItem('bazar_firebase_uid');
             var adId  = (new URLSearchParams(window.location.search)).get('ad_id') || '';
-            if (!adId) { window.location.href = 'cabinet.html#my-ads'; return; }
+            if (!adId) { window.location.href = 'cabinet#my-ads'; return; }
             var freeBtn = document.getElementById('freeBtn');
             if (freeBtn) { freeBtn.textContent = 'Publishing…'; freeBtn.disabled = true; }
             fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
@@ -883,10 +883,10 @@
             })
             .then(function(r) { return r.json(); })
             .then(function(data) {
-               window.location.href = 'card.html?id=' + adId;
+               window.location.href = 'card?id=' + adId;
             })
             .catch(function() {
-               window.location.href = 'card.html?id=' + adId;
+               window.location.href = 'card?id=' + adId;
             });
             return;
          }
@@ -942,7 +942,7 @@
          .then(function(r) { return r.json(); })
          .then(function(data) {
             if (data.success) {
-               window.location.href = 'card.html?id=' + adId;
+               window.location.href = 'card?id=' + adId;
             } else {
                alert(data.error || 'Error. Please try again.');
                if (btn) { btn.textContent = orig; btn.disabled = false; }
@@ -968,8 +968,8 @@
                   headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                   body: JSON.stringify({ firebase_uid: uid, plan: sPlan })
                })
-               .then(function() { window.location.href = 'card.html?id=' + adId; })
-               .catch(function() { window.location.href = 'card.html?id=' + adId; });
+               .then(function() { window.location.href = 'card?id=' + adId; })
+               .catch(function() { window.location.href = 'card?id=' + adId; });
                return true;
             }
             return false;

@@ -155,7 +155,7 @@ var MS = {
   },
 
   showInfoWindow: function(listing, overlay) {
-    var html = '<div class="ms-info" onclick="window.location.href=\'card.html\'">' +
+    var html = '<div class="ms-info" onclick="window.location.href=\'card\'">' +
       '<img class="ms-info-img" src="' + listing.img + '" alt="">' +
       '<div class="ms-info-body">' +
       '<div class="ms-info-price">' + this.formatPriceFull(listing) + '</div>' +

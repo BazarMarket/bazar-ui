@@ -600,6 +600,7 @@ INTERNAL_PAGES = {
     'cabinet.html', 'post-ad.html', 'messages.html', 'favorites.html',
     'withdrawals.html', 'payments-policy.html', 'refund-policy.html',
     'privacy-policy.html', 'cookie-policy.html', 'terms.html',
+    'publish-options.html', 'real-estate.html', 'map-search.html',
 }
 
 
@@ -3347,7 +3348,18 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 return
 
-        # 301 redirects: static pages .html → clean URL
+        # Generic 301: /*.html → /* (preserves query string)
+        # /card.html?id=X is already handled above with special slug redirect.
+        # /index.html is left as-is (homepage, no redirect needed).
+        if path.endswith('.html') and path != '/index.html':
+            clean_path = path[:-5]
+            dest = clean_path + (f'?{qs}' if qs else '')
+            self.send_response(301)
+            self.send_header('Location', dest)
+            self.end_headers()
+            return
+
+        # Static pages: serve *.html file at clean URL
         _STATIC_PAGES = [
             'about-us', 'contact-us', 'privacy-policy', 'advertising-policy',
             'terms-and-conditions', 'cookie-policy', 'terms-of-service',
@@ -3373,7 +3385,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
         # /post-ad → serve post-ad.html directly (no SEO injection needed)
         # Served from SITE_ROOT (not cwd) with no-cache to prevent stale versions
-        if path in ('/post-ad', '/post-ad.html'):
+        if path == '/post-ad':
             html_file = os.path.join(SITE_ROOT, 'public', 'post-ad.html')
             if not os.path.isfile(html_file):
                 html_file = os.path.join(SITE_ROOT, 'post-ad.html')

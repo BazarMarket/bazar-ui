@@ -349,7 +349,7 @@ function verifyOtpCode() {
                             localStorage.setItem('bazar_plan',     data.plan || 'free');
                             closeOtpModal();
                             doLogin();
-                            window.location.href = 'post-ad.html';
+                            window.location.href = 'post-ad';
                         } else {
                             // Log in — загружаем данные и входим
                             localStorage.setItem('bazar_username', data.name);
@@ -495,7 +495,7 @@ function finishRegistration() {
     }
 
     if (isPostAd) {
-        window.location.href = 'post-ad.html';
+        window.location.href = 'post-ad';
     }
 }
 
