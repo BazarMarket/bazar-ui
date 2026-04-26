@@ -1054,6 +1054,21 @@
 
       el('spec-table').innerHTML = specs;
 
+      /* ── GA4: view_listing (fires once per page load) ── */
+      if (!window._ga4ViewFired) {
+         window._ga4ViewFired = true;
+         if (typeof gtag === 'function') {
+            gtag('event', 'view_listing', {
+               listing_id: p.id,
+               listing_title: p.title || '',
+               category: p.property_type || '',
+               city: p.city || '',
+               price: p.price || 0,
+               currency: p.currency || 'GBP'
+            });
+         }
+      }
+
       el('prop-description').textContent = (p.description || '').replace(/<[^>]*>/g, '').trim();
 
       var _curUid = localStorage.getItem('bazar_firebase_uid') || '';
@@ -1187,6 +1202,22 @@
       if(mobName) mobName.textContent = _displaySellerName;
       var mobCall = el('mob-call-btn');
       if(mobCall) mobCall.href = 'tel:' + p.seller_phone;
+
+      /* ── GA4: contact_seller tracking ── */
+      if (typeof gtag === 'function') {
+         (function() {
+            var _cId = p.id, _cTitle = p.title || '';
+            function _tc(t) { gtag('event', 'contact_seller', { listing_id: _cId, listing_title: _cTitle, contact_type: t }); }
+            var _cb = el('call-btn');
+            if (_cb) _cb.addEventListener('click', function() { _tc('phone'); });
+            if (wpLink) wpLink.addEventListener('click', function() { _tc('whatsapp'); });
+            if (tgLink) tgLink.addEventListener('click', function() { _tc('telegram'); });
+            if (vbLink) vbLink.addEventListener('click', function() { _tc('viber'); });
+            if (mobCall) mobCall.addEventListener('click', function() { _tc('phone'); });
+            var _mwp = document.querySelector('.mob-contact-popup__btn.icon-wp');
+            if (_mwp) _mwp.addEventListener('click', function() { _tc('whatsapp'); });
+         })();
+      }
 
       var _locLabel = el('location-label');
       if (_locLabel) _locLabel.innerHTML = '<b>Location:</b> ' + (p.city || '') + (p.district ? ' — ' + p.district : '');

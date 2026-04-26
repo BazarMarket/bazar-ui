@@ -3,8 +3,8 @@
 
 <head>
    <!-- Google tag (gtag.js) -->
-   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18086360543"></script>
-   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18086360543');</script>
+   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1808636054"></script>
+   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1808636054');</script>
    <meta charset="UTF-8">
    <title>Post an Ad – Bazar</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -2783,6 +2783,16 @@
 
       var API_URL = window.BAZAR_API + '/properties';
 
+      /* ── GA4 event helper ── */
+      function trackGA4Event(name, params, cb) {
+         if (typeof window.gtag !== 'function') { if (cb) cb(); return; }
+         params = params || {};
+         params.event_callback = function() { if (cb) cb(); };
+         params.event_timeout = 800;
+         window.gtag('event', name, params);
+         if (cb) setTimeout(cb, 1000);
+      }
+
       function getSelectVal(id) {
          var el = document.getElementById(id);
          if (!el) return '';
@@ -3110,8 +3120,13 @@
                   localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                }
                var _adId1 = data.property_id || '';
+               trackGA4Event('post_ad', {
+                  category: reState.cat || 'real-estate',
+                  listing_type: listingType || '',
+                  city: cityVal || ''
+               });
                if (typeof gtag === 'function') {
-                  gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(_adId1); }});
+                  gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(_adId1); }});
                   setTimeout(function(){ _goAfterPublish(_adId1); }, 1500);
                } else { _goAfterPublish(_adId1); }
             }
@@ -3275,8 +3290,13 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'car', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            trackGA4Event('post_ad', {
+               category: 'motors',
+               listing_type: reState.listingType || '',
+               city: document.getElementById('locationCity').value || ''
+            });
             if (typeof gtag === 'function') {
-               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+               gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
                setTimeout(function(){ _goAfterPublish(adId); }, 1500);
             } else { _goAfterPublish(adId); }
          })
@@ -3412,8 +3432,13 @@
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
             ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: 'phone', status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            trackGA4Event('post_ad', {
+               category: 'phones',
+               listing_type: 'sale',
+               city: document.getElementById('locationCity').value || ''
+            });
             if (typeof gtag === 'function') {
-               gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+               gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
                setTimeout(function(){ _goAfterPublish(adId); }, 1500);
             } else { _goAfterPublish(adId); }
          })
