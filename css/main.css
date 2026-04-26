@@ -315,10 +315,11 @@ body {
 .btn-phone {
   cursor: pointer;
   padding: 16px;
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   background: #ff9138;
   border-radius: 10px;
   transition: 0.3s;
@@ -328,15 +329,16 @@ body {
 }
 .btn-phone:before {
   color: #fff;
-  font-size: 32px;
-  order: 1;
-  transform: translateX(70px);
+  font-size: 28px;
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .btn-phone__body {
-  order: 2;
   flex: 1;
   text-align: center;
-  padding-left: 20px;
+  padding: 0 36px;
 }
 .btn-phone__title {
   font-family: "Poppins", sans-serif;
@@ -5709,10 +5711,6 @@ body.bazar-logged .card__heart {
     font-size: 15px;
     padding: 10px 16px;
   }
-  /* Иконка телефона — уменьшить сдвиг */
-  .btn-phone:before {
-    transform: translateX(30px);
-  }
   /* Видео — полная ширина */
   .card-grid__video {
     margin: 12px 0 0 0;
@@ -5760,9 +5758,6 @@ body.bazar-logged .card__heart {
   .btn-phone__namber,
   .phone-full {
     font-size: 15px;
-  }
-  .btn-phone:before {
-    transform: translateX(15px);
   }
   .slider-gallery-mini__img {
     height: 70px;
