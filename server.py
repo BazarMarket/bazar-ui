@@ -1093,11 +1093,11 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         if _pt_norm == 'room':
             cat_url = f'{PUBLIC_DOMAIN}/rooms/short-term' if _lt_norm == 'short_rent' else f'{PUBLIC_DOMAIN}/rooms'
         elif _lt_norm == 'long_rent':
-            cat_url = f'{PUBLIC_DOMAIN}/property/for-rent'
+            cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
         elif _lt_norm == 'short_rent':
-            cat_url = f'{PUBLIC_DOMAIN}/property/for-rent/short-term'
+            cat_url = f'{PUBLIC_DOMAIN}/property-short-rent'
         else:
-            cat_url = f'{PUBLIC_DOMAIN}/property'
+            cat_url = f'{PUBLIC_DOMAIN}/property-for-sale'
 
         # ── JSON-LD ───────────────────────────────────────────────────────────
         real_estate_types = {'apartment', 'house', 'flat', 'room', 'villa',
@@ -1152,9 +1152,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         ]
         if city and city_slug_url:
             if _lt_norm in ('long_rent', 'short_rent'):
-                _city_bc_url = f'/property/for-rent/{city_slug_url}'
+                _city_bc_url = f'/property-to-rent/{city_slug_url}'
             else:
-                _city_bc_url = f'/property/for-sale/{city_slug_url}'
+                _city_bc_url = f'/property-for-sale/{city_slug_url}'
             listing_breadcrumbs.append((city, _city_bc_url))
         listing_breadcrumbs.append((type_label, None))
 
@@ -1437,10 +1437,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':         intro,
             'breadcrumbs':   [
                 ('Home', '/'),
-                ('Property for Rent', f'/property/for-rent'),
+                ('Property for Rent', '/property-to-rent'),
                 ('Short-Term', None),
             ],
-            'related_links': [('Looking for long-term rentals?', 'Browse all properties for long-term rent', '/property/for-rent')],
+            'related_links': [('Looking for long-term rentals?', 'Browse all properties for long-term rent', '/property-to-rent')],
             'type':          'category',
         }
         return seo
@@ -1452,7 +1452,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         city        = city_slug.replace('-', ' ').title()
         is_rent     = (transaction == 'for-rent')
         verb        = 'for Rent' if is_rent else 'for Sale'
-        parent_url  = f'{PUBLIC_DOMAIN}/property/{transaction}'
+        parent_url  = f'{PUBLIC_DOMAIN}/property-to-rent' if is_rent else f'{PUBLIC_DOMAIN}/property-for-sale'
         canonical   = f'{PUBLIC_DOMAIN}/property/{transaction}/{city_slug}'
 
         if is_rent:
@@ -1501,7 +1501,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                (parent_label, f'/property/{transaction}'),
+                (parent_label, '/property-to-rent' if is_rent else '/property-for-sale'),
                 (city, None),
             ],
             'type': 'category',
@@ -1524,7 +1524,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property/for-rent'},
+                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property-to-rent'},
                 {"@type": "ListItem", "position": 3,
                  "name": h1, "item": canonical},
             ]
@@ -1557,7 +1557,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Rent', '/property/for-rent'),
+                ('Property for Rent', '/property-to-rent'),
                 (h1, None),
             ],
             'city_links':  city_links,
@@ -1584,7 +1584,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property/for-rent'},
+                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property-to-rent'},
                 {"@type": "ListItem", "position": 3,
                  "name": data.get('h1', f'{label} for Rent in the UK'), "item": parent_url},
                 {"@type": "ListItem", "position": 4,
@@ -1615,7 +1615,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Rent', '/property/for-rent'),
+                ('Property for Rent', '/property-to-rent'),
                 (data.get('h1', f'{label} for Rent in the UK'), f'/property/{subtype}'),
                 ('Short-Term', None),
             ],
@@ -1640,7 +1640,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property/for-rent'},
+                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property-to-rent'},
                 {"@type": "ListItem", "position": 3,
                  "name": h1, "item": canonical},
             ]
@@ -1673,7 +1673,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Rent', '/property/for-rent'),
+                ('Property for Rent', '/property-to-rent'),
                 (h1, None),
             ],
             'city_links':  city_links,
@@ -1699,7 +1699,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             intro            = (f'Browse {cat_label.lower()} to rent across the UK. '
                                 f'Find long-term lets from private landlords and letting agents nationwide.')
             bc_parent_label  = 'Property to Rent'
-            bc_parent_url    = f'{PUBLIC_DOMAIN}/property/for-rent'
+            bc_parent_url    = f'{PUBLIC_DOMAIN}/property-to-rent'
             related_links    = [(f'Looking to buy instead?', f'Browse {cat_label.lower()} for sale', f'/property-for-sale/{cat}')]
         else:
             canonical        = f'{PUBLIC_DOMAIN}/property-for-sale/{cat}'
@@ -1707,7 +1707,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             intro            = (f'Browse {cat_label.lower()} for sale across the UK. '
                                 f'Find the best deals on {cat_label.lower()} from private sellers and agents nationwide.')
             bc_parent_label  = 'Property for Sale'
-            bc_parent_url    = f'{PUBLIC_DOMAIN}/property/for-sale'
+            bc_parent_url    = f'{PUBLIC_DOMAIN}/property-for-sale'
             related_links    = [(f'Looking to rent instead?', f'Browse {cat_label.lower()} for rent', f'/property-to-rent/{cat}')]
 
         desc = intro[:160]
@@ -1771,7 +1771,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Property for Sale", "item": f'{PUBLIC_DOMAIN}/property/for-sale'},
+                 "name": "Property for Sale", "item": f'{PUBLIC_DOMAIN}/property-for-sale'},
                 {"@type": "ListItem", "position": 3,
                  "name": h1, "item": canonical},
             ]
@@ -1804,7 +1804,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Sale', '/property/for-sale'),
+                ('Property for Sale', '/property-for-sale'),
                 (h1, None),
             ],
             'city_links':  city_links,
@@ -1831,7 +1831,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2, "name": "Property for Sale", "item": f'{PUBLIC_DOMAIN}/property/for-sale'},
+                {"@type": "ListItem", "position": 2, "name": "Property for Sale", "item": f'{PUBLIC_DOMAIN}/property-for-sale'},
                 {"@type": "ListItem", "position": 3, "name": h1, "item": canonical},
             ]
         }
@@ -1850,7 +1850,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Sale', '/property/for-sale'),
+                ('Property for Sale', '/property-for-sale'),
                 (h1, None),
             ],
             'city_links':    [],
