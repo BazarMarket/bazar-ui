@@ -803,7 +803,7 @@
                       : _lt === 'short_rent' ? 'Property to Rent'
                       : 'Property for Sale';
         var _catHref  = _pt === 'room'
-                          ? (_lt === 'short_rent' ? '/rooms/short-term' : '/rooms')
+                          ? (_lt === 'short_rent' ? '/property-short-rent' : '/property-to-rent')
                           : _lt === 'long_rent'  ? '/property-to-rent'
                           : _lt === 'short_rent' ? '/property-short-rent'
                           : '/property-for-sale';
@@ -815,7 +815,8 @@
         var _isRE = _reTypes.indexOf(_pt) !== -1 || !!p.sub_type;
         var _subtypeSlug = '', _subtypeLabel = '';
         if (_isRE) {
-          if (p.sub_type) {
+          /* For rooms, sub_type holds room_type (Private/Shared/etc.) — use property_type for breadcrumb */
+          if (p.sub_type && _pt !== 'room') {
             _subtypeLabel = p.sub_type;
             _subtypeSlug  = p.sub_type.toLowerCase().replace(/\s+/g, '-');
           } else {

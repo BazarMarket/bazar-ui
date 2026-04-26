@@ -1109,9 +1109,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         # ── Breadcrumb category URL (depends on listing_type and property_type) ──
         _lt_norm = listing_type.lower() if listing_type else 'sale'
         _pt_norm = prop_type.lower() if prop_type else ''
-        if _pt_norm == 'room':
-            cat_url = f'{PUBLIC_DOMAIN}/rooms/short-term' if _lt_norm == 'short_rent' else f'{PUBLIC_DOMAIN}/rooms'
-        elif _lt_norm == 'long_rent':
+        if _lt_norm == 'long_rent':
             cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
         elif _lt_norm == 'short_rent':
             cat_url = f'{PUBLIC_DOMAIN}/property-short-rent'
@@ -1119,7 +1117,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             cat_url = f'{PUBLIC_DOMAIN}/property-for-sale'
 
         # ── Sub-type label + slug (e.g. Cottage → cottage) ────────────────────
-        sub_type = listing.get('sub_type') or ''
+        # For rooms, sub_type stores room_type (Private/Shared) — ignore it for breadcrumbs
+        sub_type = '' if _pt_norm == 'room' else (listing.get('sub_type') or '')
         if sub_type:
             sub_label = sub_type
             sub_slug  = re.sub(r'[^a-z0-9]+', '-', sub_type.lower()).strip('-')
@@ -1143,8 +1142,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         dist_slug_url = re.sub(r'[^a-z0-9]+', '-', district.lower()).strip('-') if district else ''
         _cat_rel_url  = cat_url.replace(PUBLIC_DOMAIN, '') or '/property'
 
-        # New-format breadcrumb URLs: /property-for-sale/{subtype}/{city}/{district}
-        _sub_url  = f'{_cat_rel_url}/{sub_slug}' if sub_slug and _pt_norm != 'room' else ''
+        # New-format breadcrumb URLs: /{transaction}/{subtype}/{city}/{district}
+        _sub_url  = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
         _city_url = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
         _dist_url = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
 
