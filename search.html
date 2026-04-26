@@ -853,12 +853,12 @@
                   <!-- SR_CAT_HERO -->
                   <div class="sr-sort">
                      <label>Sort by:</label>
-                     <select>
-                        <option>Relevance</option>
-                        <option>Price: low to high</option>
-                        <option>Price: high to low</option>
-                        <option>Newest first</option>
-                        <option>Most popular</option>
+                     <select id="srSortSelect" onchange="onSortChange()">
+                        <option value="relevance">Relevance</option>
+                        <option value="price_asc">Price: low to high</option>
+                        <option value="price_desc">Price: high to low</option>
+                        <option value="newest">Newest first</option>
+                        <option value="popular">Most popular</option>
                      </select>
                   </div>
                </div>
@@ -2299,11 +2299,33 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
+      function onSortChange() {
+        var type = window._bazarCurrentType;
+        if (type) { _srCurrentPage = 1; renderListings(type, true); }
+      }
+
+      function _sortItems(items) {
+        var sel = document.getElementById('srSortSelect');
+        var mode = sel ? sel.value : 'relevance';
+        var arr = items.slice();
+        if (mode === 'price_asc') {
+          arr.sort(function(a, b) { return (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0); });
+        } else if (mode === 'price_desc') {
+          arr.sort(function(a, b) { return (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0); });
+        } else if (mode === 'newest') {
+          arr.sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
+        } else if (mode === 'popular') {
+          arr.sort(function(a, b) { return (b.views || 0) - (a.views || 0); });
+        }
+        return arr;
+      }
+
       function renderListings(type, keepPage) {
         if (!keepPage && window._bazarCurrentType !== type) _srCurrentPage = 1;
         window._bazarCurrentType = type;
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
+        items = _sortItems(items);
         /* Paginate */
         var start = (_srCurrentPage - 1) * _srItemsPerPage;
         var pageItems = items.slice(start, start + _srItemsPerPage);
