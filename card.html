@@ -106,7 +106,9 @@
                      <ul class="bread-custom" id="breadcrumb">
                         <li><a href="/">Home</a> <span class="icon-arrow-r"></span> </li>
                         <li><a href="#" id="bread-category">Phones</a><span class="icon-arrow-r"></span></li>
-                        <li><a href="#" id="bread-type">Smartphones</a></li>
+                        <li><a href="#" id="bread-type">Smartphones</a><span class="icon-arrow-r" id="bread-type-arrow" style="display:none;"></span></li>
+                        <li id="bread-city-li" style="display:none;"><a href="#" id="bread-city"></a><span class="icon-arrow-r" id="bread-city-arrow" style="display:none;"></span></li>
+                        <li id="bread-district-li" style="display:none;"><a href="#" id="bread-district"></a></li>
                      </ul>
                      <div class="card-head card-tile">
                         <div class="card-head__left">
@@ -797,9 +799,9 @@
       if (el('bread-category')) {
         var _lt = (p.listing_type || '').toLowerCase();
         var _pt = (p.property_type || '').toLowerCase();
-        var _catLabel = _lt === 'long_rent' ? 'Property to rent'
-                      : _lt === 'short_rent' ? 'Property to rent'
-                      : 'Property for sale';
+        var _catLabel = _lt === 'long_rent' ? 'Property to Rent'
+                      : _lt === 'short_rent' ? 'Property to Rent'
+                      : 'Property for Sale';
         var _catHref  = _pt === 'room'
                           ? (_lt === 'short_rent' ? '/rooms/short-term' : '/rooms')
                           : _lt === 'long_rent'  ? '/property-to-rent'
@@ -807,8 +809,49 @@
                           : '/property-for-sale';
         el('bread-category').textContent = _catLabel;
         el('bread-category').href = _catHref;
+
+        /* Build sub-type slug and label */
+        var _reTypes = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','office','shop','restaurant','industrial','hotel','business_investment','land','building','room','flat','flats'];
+        var _isRE = _reTypes.indexOf(_pt) !== -1 || !!p.sub_type;
+        var _subtypeSlug = '', _subtypeLabel = '';
+        if (_isRE) {
+          if (p.sub_type) {
+            _subtypeLabel = p.sub_type;
+            _subtypeSlug  = p.sub_type.toLowerCase().replace(/\s+/g, '-');
+          } else {
+            var _ptMap = {'flat':'flats','apartment':'flats','flats':'flats','house':'house','studio':'studio','room':'rooms','land':'land','building':'building','office':'office','shop':'shop','restaurant':'restaurant','industrial':'industrial','hotel':'hotel'};
+            _subtypeSlug  = _ptMap[_pt] || _pt;
+            var _ptLabelMap = {'flats':'Flats','house':'House','studio':'Studio','rooms':'Rooms','land':'Land','building':'Building','office':'Office','shop':'Shop','restaurant':'Restaurant','industrial':'Industrial','hotel':'Hotel'};
+            _subtypeLabel = _ptLabelMap[_subtypeSlug] || (_subtypeSlug.charAt(0).toUpperCase() + _subtypeSlug.slice(1));
+          }
+          var _subtypeHref = _catHref + '/' + _subtypeSlug;
+          var _citySlug     = (p.city     || '').toLowerCase().replace(/\s+/g, '-');
+          var _distSlug     = (p.district || '').toLowerCase().replace(/\s+/g, '-');
+          var _cityHref     = _subtypeHref + '/' + _citySlug;
+          var _distHref     = _cityHref    + '/' + _distSlug;
+
+          if (el('bread-type')) {
+            el('bread-type').textContent = _subtypeLabel;
+            el('bread-type').href = _subtypeHref;
+          }
+          if (el('bread-type-arrow') && p.city) el('bread-type-arrow').style.display = '';
+
+          if (p.city && el('bread-city-li')) {
+            el('bread-city-li').style.display = '';
+            el('bread-city').textContent = p.city;
+            el('bread-city').href = _cityHref;
+          }
+          if (el('bread-city-arrow') && p.district) el('bread-city-arrow').style.display = '';
+
+          if (p.district && el('bread-district-li')) {
+            el('bread-district-li').style.display = '';
+            el('bread-district').textContent = p.district;
+            el('bread-district').href = _distHref;
+          }
+        } else {
+          if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_', ' ');
+        }
       }
-      if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_',' ');
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district || '';
       // Hide slash and district li when no district

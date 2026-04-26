@@ -703,9 +703,20 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_city_modifier', {
                 'category': parts[0], 'city': parts[1], 'modifier': 'short-term'
             }
+        # /property-for-sale/{subtype}/{city} or /property-to-rent/{subtype}/{city}
+        if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
+            return 'property_subtype_city', {
+                'transaction': parts[0], 'subtype': parts[1], 'city': parts[2]
+            }
         return 'category_city_district', {
             'category': parts[0], 'city': parts[1], 'district': parts[2]
         }
+    if len(parts) == 4:
+        # /property-for-sale/{subtype}/{city}/{district}
+        if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
+            return 'property_subtype_city_district', {
+                'transaction': parts[0], 'subtype': parts[1], 'city': parts[2], 'district': parts[3]
+            }
     if len(parts) == 2:
         # /property/for-rent or /property/for-sale  →  property_transaction
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale'):
@@ -1869,6 +1880,88 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'cat_label':     label,
             'related_links': [],
             'type':          'category',
+        }
+        return seo
+
+    # ── /property-for-sale/{subtype}/{city} ──────────────────────────────────
+    elif page_type == 'property_subtype_city':
+        _trans  = params.get('transaction', 'property-for-sale')
+        _sub    = params.get('subtype', '')
+        _city_s = params.get('city', '')
+        _city   = _city_s.replace('-', ' ').title()
+        _sub_label = _sub.replace('-', ' ').title()
+        _trans_label = 'for Rent' if 'rent' in _trans else 'for Sale'
+        _trans_base  = f'/{_trans}'
+        h1       = f'{_sub_label} {_trans_label} in {_city}'
+        intro    = f'Browse {_sub_label.lower()} {_trans_label.lower()} in {_city}. Find the best deals from private sellers and agents.'
+        canonical = f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'
+        desc = intro[:160]
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2, "name": _trans_label.title().replace('For ', 'Property for '), "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
+                {"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'},
+                {"@type": "ListItem", "position": 4, "name": h1, "item": canonical},
+            ]
+        }
+        schema = {"@context": "https://schema.org", "@graph": [
+            {"@type": "CollectionPage", "name": h1, "description": desc, "url": canonical, "breadcrumb": breadcrumb_schema},
+            breadcrumb_schema,
+        ]}
+        seo.update({'title': f'{h1} | Bazar UK', 'description': desc, 'canonical': canonical, 'json_ld': json.dumps(schema)})
+        seo['ssr'] = {
+            'h1': h1, 'intro': intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Sale' if 'sale' in _trans else 'Property to Rent', _trans_base),
+                (_sub_label, f'{_trans_base}/{_sub}'),
+                (h1, None),
+            ],
+            'city_links': [], 'cat_label': _sub_label, 'related_links': [], 'type': 'category',
+        }
+        return seo
+
+    # ── /property-for-sale/{subtype}/{city}/{district} ────────────────────────
+    elif page_type == 'property_subtype_city_district':
+        _trans  = params.get('transaction', 'property-for-sale')
+        _sub    = params.get('subtype', '')
+        _city_s = params.get('city', '')
+        _dist_s = params.get('district', '')
+        _city   = _city_s.replace('-', ' ').title()
+        _dist   = _dist_s.replace('-', ' ').title()
+        _sub_label = _sub.replace('-', ' ').title()
+        _trans_label = 'for Rent' if 'rent' in _trans else 'for Sale'
+        _trans_base  = f'/{_trans}'
+        h1       = f'{_sub_label} {_trans_label} in {_dist}, {_city}'
+        intro    = f'Browse {_sub_label.lower()} {_trans_label.lower()} in {_dist}, {_city}. Find local deals from private sellers and agents.'
+        canonical = f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}/{_dist_s}'
+        desc = intro[:160]
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
+                {"@type": "ListItem", "position": 2, "name": 'Property for Sale' if 'sale' in _trans else 'Property to Rent', "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
+                {"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'},
+                {"@type": "ListItem", "position": 4, "name": f'{_sub_label} in {_city}', "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'},
+                {"@type": "ListItem", "position": 5, "name": h1, "item": canonical},
+            ]
+        }
+        schema = {"@context": "https://schema.org", "@graph": [
+            {"@type": "CollectionPage", "name": h1, "description": desc, "url": canonical, "breadcrumb": breadcrumb_schema},
+            breadcrumb_schema,
+        ]}
+        seo.update({'title': f'{h1} | Bazar UK', 'description': desc, 'canonical': canonical, 'json_ld': json.dumps(schema)})
+        seo['ssr'] = {
+            'h1': h1, 'intro': intro,
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Property for Sale' if 'sale' in _trans else 'Property to Rent', _trans_base),
+                (_sub_label, f'{_trans_base}/{_sub}'),
+                (_city, f'{_trans_base}/{_sub}/{_city_s}'),
+                (h1, None),
+            ],
+            'city_links': [], 'cat_label': _sub_label, 'related_links': [], 'type': 'category',
         }
         return seo
 
@@ -3494,7 +3587,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_transaction_city',
                          'property_subtype', 'property_subtype_modifier',
                          'property_subtype_rent', 'property_subtype_sale',
-                         'property_sale_type', 'category_transaction'):
+                         'property_sale_type', 'category_transaction',
+                         'property_subtype_city', 'property_subtype_city_district'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage':       'index.html' if is_production else 'dev-index.html',

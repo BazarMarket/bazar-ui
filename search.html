@@ -2450,6 +2450,20 @@
         var items = BAZAR_LISTINGS[type];
         if (!items) return;
         items = _sortItems(items);
+        /* Apply city/district filter from URL */
+        if (window._bazarCityFilter) {
+          var _cf = window._bazarCityFilter;
+          items = items.filter(function(item) {
+            return (item.cy || '').toLowerCase().indexOf(_cf) !== -1 ||
+                   (item.l  || '').toLowerCase().indexOf(_cf) !== -1;
+          });
+        }
+        if (window._bazarDistrictFilter) {
+          var _df = window._bazarDistrictFilter;
+          items = items.filter(function(item) {
+            return (item.l || '').toLowerCase().indexOf(_df) !== -1;
+          });
+        }
         /* Apply Plot Type filter */
         var _plotChecks = document.querySelectorAll('#cfPlotTypePanel input[type="checkbox"]:checked');
         if (_plotChecks.length > 0) {
@@ -2616,18 +2630,45 @@
             var pathAutoType = null;
             if (pathCat === 'rooms' || pathSub === 'rooms') pathAutoType = 'Rooms';
             if (pathCat === 'flats' || pathSub === 'flats') pathAutoType = 'Flats';
-            /* Commercial / land subtypes detected from URL second segment */
+            /* Subtypes (including house sub-types like cottage, villa etc.) */
             var _autoSubBucketMap = {
               'restaurant': 'Restaurant', 'shop': 'Shop', 'office': 'Office',
               'industrial': 'Industrial', 'hotel': 'Hotel', 'business': 'Business or Investment',
-              'land': 'Land', 'building': 'Building', 'house': 'House', 'studio': 'Studio'
+              'land': 'Land', 'building': 'Building', 'house': 'House', 'studio': 'Studio',
+              'cottage': 'House', 'villa': 'House', 'bungalow': 'House',
+              'maisonette': 'House', 'townhouse': 'House', 'detached': 'House',
+              'semi-detached': 'House', 'terraced': 'House',
+              'penthouse': 'Flats', 'duplex': 'Flats', 'apartment': 'Flats', 'flats': 'Flats'
+            };
+            /* Map subtype slug to the exact panel value for sub-filter auto-check */
+            var _houseSubtypeMap = {
+              'cottage':'Cottage','villa':'Villa','bungalow':'Bungalow',
+              'maisonette':'Maisonette','townhouse':'Townhouse'
+            };
+            var _aptSubtypeMap = {
+              'penthouse':'Penthouse','duplex':'Duplex'
             };
             if (!pathAutoType && pathSub && _autoSubBucketMap[pathSub]) pathAutoType = _autoSubBucketMap[pathSub];
+            /* Parse city and district from URL (3rd and 4th segments) — only for property pages */
+            var _isPropertyPath = /^property-(for-sale|to-rent|short-rent)$/.test(pathCat);
+            var _pathCity     = (_isPropertyPath && pathParts[2]) ? pathParts[2].replace(/-/g, ' ').toLowerCase() : '';
+            var _pathDistrict = (_isPropertyPath && pathParts[3]) ? pathParts[3].replace(/-/g, ' ').toLowerCase() : '';
+            if (_pathCity) window._bazarCityFilter     = _pathCity;
+            if (_pathDistrict) window._bazarDistrictFilter = _pathDistrict;
+
             if (pathAutoType && !type) {
                var autoPanel = document.getElementById('cfTypePanel');
                if (autoPanel) {
                   var autoBox = autoPanel.querySelector('input[value="' + pathAutoType + '"]');
                   if (autoBox) { autoBox.checked = true; updateTypeLabel(); }
+               }
+               /* Also check matching house or flat sub-type if applicable */
+               if (_houseSubtypeMap[pathSub]) {
+                  var _htBox = document.querySelector('#cfHouseTypePanel input[value="' + _houseSubtypeMap[pathSub] + '"]');
+                  if (_htBox) { _htBox.checked = true; if (typeof updateHouseTypeLabel === 'function') updateHouseTypeLabel(); }
+               } else if (_aptSubtypeMap[pathSub]) {
+                  var _atBox = document.querySelector('#cfAptTypePanel input[value="' + _aptSubtypeMap[pathSub] + '"]');
+                  if (_atBox) { _atBox.checked = true; if (typeof updateAptTypeLabel === 'function') updateAptTypeLabel(); }
                }
                if (typeEl) typeEl.textContent = pathAutoType;
                window._bazarCurrentType = pathAutoType;
