@@ -3771,9 +3771,12 @@ p {
   padding: 16px 10px;
 }
 .card__dop {
-  min-height: 26px;
+  min-height: 42px;
   display: flex;
   align-items: center;
+}
+.card__dop .info-bord:empty {
+  display: none;
 }
 
 .card__heart {
@@ -4004,7 +4007,7 @@ body.bazar-logged .card__heart {
     gap: 6px;
   }
   .card__dop {
-    min-height: 18px;
+    min-height: 32px;
   }
   .stiker {
     font-size: 9px;
