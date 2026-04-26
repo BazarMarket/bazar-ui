@@ -2131,7 +2131,8 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _pathSub0 + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         }
 
-        var _mainFetchUrl = '/api/properties/recent-enriched' + (_transactionLt ? '?listing_type=' + _transactionLt + '&per_page=100' : '');
+        var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null);
+        var _mainFetchUrl = '/api/properties/recent-enriched' + (_effectiveLt ? '?listing_type=' + _effectiveLt + '&per_page=100' : '');
         fetch(_mainFetchUrl, { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
           .then(function(resp) {
