@@ -2258,7 +2258,7 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         if m:
             html = html[:m.start()] + hero_html + html[m.end():]
 
-    # ── Inject type_links + city_links into footer__center via placeholder ───
+    # ── Inject type_links into footer__center via placeholder ────────────────
     seo_boxes = ''
     if type_links:
         links_html = ''.join(
@@ -2271,19 +2271,28 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
             f'<div class="footer__links">{links_html}</div>'
             f'</div>'
         )
+    html = html.replace('<!-- FOOTER_SEO_BOXES -->', seo_boxes, 1)
+
+    # ── Inject city_links as "Also popular:" block before footer ─────────────
     if city_links:
-        links_html = ''.join(
-            f'<a href="{_attr(href)}">'
+        tags_html = ''.join(
+            f'<a href="{_attr(href)}" class="popular-city-tag">'
             f'{_esc(f"{cat_label} in {label}" if cat_label else label)}</a>'
             for label, href in city_links
         )
-        seo_boxes += (
-            f'<div class="footer__box">'
-            f'<h3 class="footer__title">Popular cities</h3>'
-            f'<div class="footer__links">{links_html}</div>'
+        popular_block = (
+            f'<div class="popular-cities-block">'
+            f'<div class="container">'
+            f'<div class="popular-cities-inner">'
+            f'<span class="popular-cities-label">Also popular:</span>'
+            f'<div class="popular-cities-tags">{tags_html}</div>'
+            f'</div>'
+            f'</div>'
             f'</div>'
         )
-    html = html.replace('<!-- FOOTER_SEO_BOXES -->', seo_boxes, 1)
+        html = html.replace('<!-- POPULAR_CITIES_BLOCK -->', popular_block, 1)
+    else:
+        html = html.replace('<!-- POPULAR_CITIES_BLOCK -->', '', 1)
 
     return html
 
