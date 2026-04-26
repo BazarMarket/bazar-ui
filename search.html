@@ -1990,10 +1990,30 @@
         var _pathCat0 = _pathParts0[0];
         var _pathSub0 = _pathParts0[1] || '';
         var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
-        var _extraUrl = _isRoomsPage
-          ? '/api/properties/recent-enriched?property_type=room&per_page=50'
-          : null;
         var _isLatestPage = (_pathCat0 === 'latest-updates');
+
+        /* Map URL path category to listing_type enum */
+        var _catToListingType = {
+          'property-for-sale': 'sale',
+          'property-to-rent': 'long_rent',
+          'property-short-rent': 'short_rent'
+        };
+        /* Property subtypes that need a dedicated filtered fetch */
+        var _subtypeBucketMap = {
+          'restaurant': 'Restaurant', 'shop': 'Shop', 'office': 'Office',
+          'industrial': 'Industrial', 'hotel': 'Hotel', 'business': 'Business or Investment',
+          'land': 'Land', 'building': 'Building', 'house': 'House',
+          'studio': 'Studio', 'flats': 'Flats'
+        };
+        var _isSubtypePage = !_isRoomsPage && !!(_pathSub0 && _subtypeBucketMap[_pathSub0]);
+        var _subtypeBucket = _isSubtypePage ? _subtypeBucketMap[_pathSub0] : null;
+        var _extraUrl = null;
+        if (_isRoomsPage) {
+          _extraUrl = '/api/properties/recent-enriched?property_type=room&per_page=50';
+        } else if (_isSubtypePage) {
+          var _lt = _catToListingType[_pathCat0];
+          _extraUrl = '/api/properties/recent-enriched?property_type=' + _pathSub0 + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
+        }
 
         fetch('/api/properties/recent-enriched', { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
@@ -2099,14 +2119,16 @@
               renderListings('Latest');
               if (typeof initProductSwipers === 'function') initProductSwipers();
             }
-            /* Extra fetch for path-specific category (e.g. /rooms loads all active rooms) */
+            /* Extra fetch for path-specific category (e.g. /rooms or /property-for-sale/restaurant) */
             if (_extraUrl) {
+              var _extraBucket = _isRoomsPage ? 'Rooms' : (_subtypeBucket || 'House');
+              var _extraTitle  = _isRoomsPage ? 'Room listing' : (_subtypeBucket || 'Property') + ' listing';
               fetch(_extraUrl, { headers: { 'Accept': 'application/json' } })
                 .then(function(r2) { return r2.ok ? r2.json() : null; })
                 .then(function(resp2) {
                   if (!resp2 || !resp2.data || !resp2.data.length) return;
                   var existingIds = {};
-                  (BAZAR_LISTINGS['Rooms'] || []).forEach(function(x) { if (x.id) existingIds[x.id] = true; });
+                  (BAZAR_LISTINGS[_extraBucket] || []).forEach(function(x) { if (x.id) existingIds[x.id] = true; });
                   var newItems = [];
                   resp2.data.forEach(function(ad) {
                     if (existingIds[ad.id]) return;
@@ -2116,7 +2138,7 @@
                     var priceNum2  = ad.price     ? Number(ad.price)     : 0;
                     var oldPriceN2 = ad.old_price ? Number(ad.old_price) : 0;
                     newItems.push({
-                      id: ad.id, s: (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller', t: ad.title || 'Room listing',
+                      id: ad.id, s: (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller', t: ad.title || _extraTitle,
                       imgs: [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
                       op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2).toLocaleString('en-GB') : '',
@@ -2128,9 +2150,9 @@
                     });
                   });
                   if (newItems.length) {
-                    BAZAR_LISTINGS['Rooms'] = newItems.concat(BAZAR_LISTINGS['Rooms'] || []);
+                    BAZAR_LISTINGS[_extraBucket] = newItems.concat(BAZAR_LISTINGS[_extraBucket] || []);
                     var reType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
-                    if (reType === 'Rooms') { renderListings('Rooms'); if (typeof initProductSwipers === 'function') initProductSwipers(); }
+                    if (reType === _extraBucket) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
                   }
                 })
                 .catch(function() {});
@@ -2421,6 +2443,13 @@
             var pathAutoType = null;
             if (pathCat === 'rooms' || pathSub === 'rooms') pathAutoType = 'Rooms';
             if (pathCat === 'flats' || pathSub === 'flats') pathAutoType = 'Flats';
+            /* Commercial / land subtypes detected from URL second segment */
+            var _autoSubBucketMap = {
+              'restaurant': 'Restaurant', 'shop': 'Shop', 'office': 'Office',
+              'industrial': 'Industrial', 'hotel': 'Hotel', 'business': 'Business or Investment',
+              'land': 'Land', 'building': 'Building', 'house': 'House', 'studio': 'Studio'
+            };
+            if (!pathAutoType && pathSub && _autoSubBucketMap[pathSub]) pathAutoType = _autoSubBucketMap[pathSub];
             if (pathAutoType && !type) {
                var autoPanel = document.getElementById('cfTypePanel');
                if (autoPanel) {
