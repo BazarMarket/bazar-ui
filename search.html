@@ -2007,6 +2007,8 @@
         };
         var _isSubtypePage = !_isRoomsPage && !!(_pathSub0 && _subtypeBucketMap[_pathSub0]);
         var _subtypeBucket = _isSubtypePage ? _subtypeBucketMap[_pathSub0] : null;
+        var _isTransactionPage = !_isRoomsPage && !_isSubtypePage && !!_catToListingType[_pathCat0];
+        var _transactionLt = _isTransactionPage ? _catToListingType[_pathCat0] : null;
         var _extraUrl = null;
         if (_isRoomsPage) {
           _extraUrl = '/api/properties/recent-enriched?property_type=room&per_page=50';
@@ -2015,7 +2017,8 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _pathSub0 + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         }
 
-        fetch('/api/properties/recent-enriched', { headers: { 'Accept': 'application/json' } })
+        var _mainFetchUrl = '/api/properties/recent-enriched' + (_transactionLt ? '?listing_type=' + _transactionLt + '&per_page=100' : '');
+        fetch(_mainFetchUrl, { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
           .then(function(resp) {
             if (!resp || !resp.data || !resp.data.length) return;
@@ -2100,6 +2103,20 @@
               BAZAR_LISTINGS[bucket] = apiByBucket[bucket].concat(BAZAR_LISTINGS[bucket]);
             }
             if (typeof _loadAdCount === 'function') _loadAdCount();
+            /* Transaction pages (/property-for-sale, /property-to-rent, /property-short-rent):
+               combine all fetched results into one list and render */
+            if (_isTransactionPage) {
+              var _txAll = [];
+              Object.keys(apiByBucket).forEach(function(k) {
+                if (Array.isArray(apiByBucket[k])) _txAll = _txAll.concat(apiByBucket[k]);
+              });
+              _txAll.sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
+              BAZAR_LISTINGS['PropertyAll'] = _txAll;
+              window._bazarCurrentType = 'PropertyAll';
+              renderListings('PropertyAll');
+              if (typeof initProductSwipers === 'function') initProductSwipers();
+              return;
+            }
             /* Re-render if a type filter is already selected (via URL or user interaction) */
             var urlType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
             if (urlType) {
