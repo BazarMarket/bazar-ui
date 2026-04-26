@@ -3708,7 +3708,7 @@ p {
 .card__head {
   padding: 10px 12px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   flex: 1 1 100%;
 }
@@ -3719,6 +3719,7 @@ p {
   border-radius: 100px;
   overflow: hidden;
   position: relative;
+  align-self: center;
 }
 .card__logo img {
   width: 100%;
