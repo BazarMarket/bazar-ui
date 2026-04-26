@@ -1196,6 +1196,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         # ── SSR blocks: structured listing crumb (used by inject_ssr_body) ────
         seo['ssr'] = {
             'prop_title':    title,
+            'listing_id':    str(lid),
             'listing_crumb': {
                 'cat_label': cat_label,
                 'cat_url':   _cat_rel_url,
@@ -2291,6 +2292,13 @@ def inject_seo(html: str, seo_head: str) -> str:
 def inject_ssr_body(html: str, ssr: dict) -> str:
     """Inject visible H1 and breadcrumbs into the body so Googlebot
     sees real content without waiting for JavaScript."""
+
+    # ── Inject listing ID as window.__cid so JS can reliably access it ────────
+    listing_id = ssr.get('listing_id', '')
+    if listing_id:
+        cid_script = f'<script>window.__cid="{listing_id}";</script>'
+        # Insert right after opening <body> tag
+        html = re.sub(r'(<body[^>]*>)', r'\1' + cid_script, html, count=1)
 
     # ── Replace placeholder title in #prop-title ──────────────────────────────
     prop_title = ssr.get('prop_title', '')

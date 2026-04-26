@@ -2122,24 +2122,32 @@ function _glbKey(e) {
 <script src="js/header-auth.js?v=12"></script>
 <script>
 (function() {
-   var params = new URLSearchParams(window.location.search);
-   var cardId = params.get('id');
+   /* Prefer SSR-injected ID, fall back to URL parsing */
+   var cardId = (window.__cid && String(window.__cid)) || null;
+   if (!cardId) {
+      var params = new URLSearchParams(window.location.search);
+      cardId = params.get('id');
+   }
    if (!cardId) {
       var _m = window.location.pathname.match(/^\/(\d+)(?:-[^/]+)?$/)
              || window.location.pathname.match(/\/listing\/(\d+)/);
       if (_m) cardId = _m[1];
    }
-   var favBtn = document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
-   if (!favBtn) return;
+   function getFavBtn() {
+      return document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
+   }
+   if (!getFavBtn()) return;
    /* Apply stored state on load */
    function applyFavState() {
+      var btn = getFavBtn();
+      if (!btn) return;
       var isFav = !!(cardId && localStorage.getItem('favorite_' + cardId) === '1');
       if (isFav) {
-         favBtn.classList.remove('icon-heart');
-         favBtn.classList.add('icon-heart-full');
+         btn.classList.remove('icon-heart');
+         btn.classList.add('icon-heart-full');
       } else {
-         favBtn.classList.remove('icon-heart-full');
-         favBtn.classList.add('icon-heart');
+         btn.classList.remove('icon-heart-full');
+         btn.classList.add('icon-heart');
       }
    }
    /* Update header badge count */
@@ -2154,7 +2162,11 @@ function _glbKey(e) {
    }
    applyFavState();
    updateFavCount();
-   favBtn.addEventListener('click', function(e) {
+   /* Use event delegation so click always works even if element is re-rendered */
+   document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.card-nav__item .link-icon');
+      if (!btn || (!btn.classList.contains('icon-heart') && !btn.classList.contains('icon-heart-full'))) return;
+      if (btn.classList.contains('icon-location') || btn.classList.contains('popup-link')) return;
       e.preventDefault();
       if (!cardId) return;
       var nowFav = localStorage.getItem('favorite_' + cardId) !== '1';
