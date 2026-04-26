@@ -2603,8 +2603,9 @@
          reState.subtype = sel.value;
          var bedroomsField = document.getElementById('bedroomsField');
          if (bedroomsField) {
-            bedroomsField.style.display = (sel.value === 'Studio') ? 'none' : 'flex';
-            if (sel.value === 'Studio') {
+            var hideBeds = (sel.value === 'Studio') || bedroomsHiddenFor.includes(reState.propType);
+            bedroomsField.style.display = hideBeds ? 'none' : 'flex';
+            if (hideBeds) {
                reState.bedrooms = '';
                var bs = document.getElementById('bedroomsSelect');
                if (bs) bs.value = '';
