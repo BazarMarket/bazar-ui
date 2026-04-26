@@ -239,6 +239,8 @@
                                             <a href="/property-to-rent/restaurant" class="menu-sub__links">Restaurant</a>
                                             <a href="/property-to-rent/industrial" class="menu-sub__links">Industrial</a>
                                             <a href="/property-to-rent/hotel" class="menu-sub__links">Hotel</a>
+                                            <a href="/property-to-rent/land" class="menu-sub__links">Land</a>
+                                            <a href="/property-to-rent/building" class="menu-sub__links">Building</a>
                                         </div>
                                         <div class="menu-sub__body" id="rent-short" style="display:none">
                                             <a href="/property-short-rent/flats" class="menu-sub__links">Flats</a>
@@ -1621,11 +1623,58 @@
         if (_sugIdx >= 0) _sugItems[_sugIdx].el.classList.add('ss-active');
     }
 
+    var _staticCatMap = {
+        'land':       [{label:'Land to Rent',      url:'/property-to-rent/land'},
+                       {label:'Land for Sale',      url:'/property-for-sale/land'}],
+        'building':   [{label:'Buildings to Rent',  url:'/property-to-rent/building'},
+                       {label:'Buildings for Sale',  url:'/property-for-sale/building'}],
+        'flats':      [{label:'Flats to Rent',      url:'/property-to-rent/flats'},
+                       {label:'Flats for Sale',      url:'/property-for-sale/flats'}],
+        'flat':       [{label:'Flats to Rent',      url:'/property-to-rent/flats'},
+                       {label:'Flats for Sale',      url:'/property-for-sale/flats'}],
+        'house':      [{label:'Houses to Rent',     url:'/property-to-rent/house'},
+                       {label:'Houses for Sale',    url:'/property-for-sale/house'}],
+        'rooms':      [{label:'Rooms to Rent',      url:'/property-to-rent/rooms'}],
+        'room':       [{label:'Rooms to Rent',      url:'/property-to-rent/rooms'}],
+        'office':     [{label:'Office to Rent',     url:'/property-to-rent/office'},
+                       {label:'Office for Sale',    url:'/property-for-sale/office'}],
+        'shop':       [{label:'Shops to Rent',      url:'/property-to-rent/shop'},
+                       {label:'Shops for Sale',     url:'/property-for-sale/shop'}],
+        'restaurant': [{label:'Restaurant to Rent', url:'/property-to-rent/restaurant'}],
+        'industrial': [{label:'Industrial to Rent', url:'/property-to-rent/industrial'}],
+        'hotel':      [{label:'Hotel to Rent',      url:'/property-to-rent/hotel'}]
+    };
+
+    function getStaticCats(q) {
+        var key = q.toLowerCase().trim();
+        for (var k in _staticCatMap) {
+            if (key === k || key.indexOf(k) === 0 || k.indexOf(key) === 0) {
+                return _staticCatMap[k];
+            }
+        }
+        return [];
+    }
+
     function fetchSuggest(q) {
+        var staticCats = getStaticCats(q);
         fetch('/api/search/suggest?q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } })
             .then(function(r){ return r.json(); })
-            .then(function(d){ renderSuggest(q, d); })
-            .catch(function(){ hideSuggest(); });
+            .then(function(d){
+                if (staticCats.length) {
+                    var merged = staticCats.filter(function(sc){
+                        return !(d.categories||[]).some(function(bc){ return bc.url === sc.url; });
+                    }).concat(d.categories || []);
+                    d.categories = merged;
+                }
+                renderSuggest(q, d);
+            })
+            .catch(function(){
+                if (staticCats.length) {
+                    renderSuggest(q, {categories: staticCats, listings: []});
+                } else {
+                    hideSuggest();
+                }
+            });
     }
 
     function renderSuggest(q, d) {
