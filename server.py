@@ -2258,35 +2258,39 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
         if m:
             html = html[:m.start()] + hero_html + html[m.end():]
 
-    # ── Inject type_links into footer__center via placeholder ────────────────
-    seo_boxes = ''
+    # ── Footer SEO placeholder — now empty (type_links moved before footer) ──
+    html = html.replace('<!-- FOOTER_SEO_BOXES -->', '', 1)
+
+    # ── Inject type_links + city_links as block before footer ─────────────────
+    rows = []
     if type_links:
-        links_html = ''.join(
-            f'<a href="{_attr(href)}">{_esc(label)}</a>'
+        type_tags = ''.join(
+            f'<a href="{_attr(href)}" class="popular-city-tag">{_esc(label)}</a>'
             for label, href in type_links
         )
-        seo_boxes += (
-            f'<div class="footer__box">'
-            f'<h3 class="footer__title">Browse by type</h3>'
-            f'<div class="footer__links">{links_html}</div>'
+        rows.append(
+            f'<div class="popular-cities-inner">'
+            f'<span class="popular-cities-label">Browse by type:</span>'
+            f'<div class="popular-cities-tags">{type_tags}</div>'
             f'</div>'
         )
-    html = html.replace('<!-- FOOTER_SEO_BOXES -->', seo_boxes, 1)
-
-    # ── Inject city_links as "Also popular:" block before footer ─────────────
     if city_links:
-        tags_html = ''.join(
+        city_tags = ''.join(
             f'<a href="{_attr(href)}" class="popular-city-tag">'
             f'{_esc(f"{cat_label} in {label}" if cat_label else label)}</a>'
             for label, href in city_links
         )
+        rows.append(
+            f'<div class="popular-cities-inner">'
+            f'<span class="popular-cities-label">Also popular:</span>'
+            f'<div class="popular-cities-tags">{city_tags}</div>'
+            f'</div>'
+        )
+    if rows:
         popular_block = (
             f'<div class="popular-cities-block">'
             f'<div class="container">'
-            f'<div class="popular-cities-inner">'
-            f'<span class="popular-cities-label">Also popular:</span>'
-            f'<div class="popular-cities-tags">{tags_html}</div>'
-            f'</div>'
+            + ''.join(rows) +
             f'</div>'
             f'</div>'
         )
