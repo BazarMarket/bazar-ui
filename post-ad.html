@@ -3834,13 +3834,13 @@
             if (eLat) formData.append('exact_latitude', eLat);
             if (eLng) formData.append('exact_longitude', eLng);
             var bedrooms = document.getElementById('bedroomsSelect').value;
-            if (bedrooms) formData.append('bedrooms', bedrooms);
+            formData.append('bedrooms', bedrooms || '');
             var bathrooms = document.getElementById('bathroomsSelect').value;
-            if (bathrooms) formData.append('bathrooms', bathrooms);
+            formData.append('bathrooms', bathrooms || '');
             var condition = document.getElementById('conditionSelect').value;
-            if (condition) formData.append('condition', condition);
+            formData.append('condition', condition || '');
             var sub_type = (document.getElementById('houseTypeSelect') || {}).value;
-            if (sub_type) formData.append('sub_type', sub_type);
+            formData.append('sub_type', sub_type || '');
             /* Room type checkboxes override houseTypeSelect for room ads */
             var _rtField = document.getElementById('roomTypeField');
             if (_rtField && _rtField.style.display !== 'none') {
@@ -3849,11 +3849,11 @@
                formData.set('sub_type', _rtUpdateVals.join(', '));
             }
             var btype = (document.getElementById('buildingTypeSelect') || {}).value;
-            if (btype) formData.append('building_type', btype);
+            formData.append('building_type', btype || '');
             var floor = (document.getElementById('floorSelect') || {}).value;
             formData.append('floor', floor ? (floor === 'Ground floor' ? '0' : floor) : '');
             var area = getInputVal('propertyAreaInput');
-            if (area) formData.append('covered_area', area);
+            formData.append('covered_area', area || '');
             var hasWa = document.getElementById('whatsappCheck');
             var hasTg = document.getElementById('telegramCheck');
             var hasVb = document.getElementById('viberCheck');
@@ -3956,21 +3956,21 @@
             var make  = (document.getElementById('carMakeSelect')||{}).value;
             var model = (document.getElementById('carModelSelect')||{}).value || getInputVal('carModelOtherInput');
             var year  = (document.getElementById('carYearSelect')||{}).value;
-            if (make)  formData.append('car_make',  make);
-            if (model) formData.append('car_model', model);
-            if (year)  formData.append('car_year',  year);
+            formData.append('car_make',  make  || '');
+            formData.append('car_model', model || '');
+            formData.append('car_year',  year  || '');
             var fuel  = (document.getElementById('fuelTypeSelect')||{}).value;
             var trans = (document.getElementById('transmissionSelect')||{}).value;
             var body  = (document.getElementById('bodyTypeSelect')||{}).value;
             var col   = (document.getElementById('colourSelect')||{}).value;
             var mil   = getInputVal('mileageInput');
-            if (fuel)  formData.append('fuel_type',     fuel);
-            if (trans) formData.append('transmission',  trans);
-            if (body)  formData.append('body_type',     body);
-            if (col)   formData.append('colour',        col);
-            if (mil)   formData.append('mileage',       mil);
+            formData.append('fuel_type',     fuel  || '');
+            formData.append('transmission',  trans || '');
+            formData.append('body_type',     body  || '');
+            formData.append('colour',        col   || '');
+            formData.append('mileage',       mil   || '');
             var condition = (document.getElementById('conditionSelect')||{}).value;
-            if (condition) formData.append('condition', condition);
+            formData.append('condition', condition || '');
             var hasWa = document.getElementById('whatsappCheck');
             var hasTg = document.getElementById('telegramCheck');
             var hasVb = document.getElementById('viberCheck');
@@ -4011,9 +4011,9 @@
             var brand   = (document.getElementById('phoneBrandSelect')||{}).value;
             var model2  = (document.getElementById('phoneModelSelect')||{}).value || getInputVal('phoneModelOtherInput');
             var storage = (document.getElementById('phoneStorageSelect')||{}).value;
-            if (brand)   formData.append('phone_brand',   brand);
-            if (model2)  formData.append('phone_model',   model2);
-            if (storage) formData.append('phone_storage', storage);
+            formData.append('phone_brand',   brand   || '');
+            formData.append('phone_model',   model2  || '');
+            formData.append('phone_storage', storage || '');
             var hasWa = document.getElementById('whatsappCheck');
             var hasTg = document.getElementById('telegramCheck');
             var hasVb = document.getElementById('viberCheck');
