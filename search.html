@@ -2134,8 +2134,15 @@
           'land': 'Land', 'building': 'Building', 'house': 'House',
           'studio': 'Studio', 'flats': 'Flats'
         };
-        var _isSubtypePage = !_isRoomsPage && !!(_pathSub0 && _subtypeBucketMap[_pathSub0]);
-        var _subtypeBucket = _isSubtypePage ? _subtypeBucketMap[_pathSub0] : null;
+        /* Compound sub_type slugs: map to parent property_type for API + bucket for display */
+        var _subTypeSlugMap = {
+          'industrial-land':   {pt: 'land', bucket: 'Land', st: 'Industrial land'},
+          'commercial-land':   {pt: 'land', bucket: 'Land', st: 'Commercial land'},
+          'agricultural-land': {pt: 'land', bucket: 'Land', st: 'Agricultural land'}
+        };
+        var _subTypeConfig = !_isRoomsPage && _pathSub0 ? (_subTypeSlugMap[_pathSub0] || null) : null;
+        var _isSubtypePage = !_isRoomsPage && !!(_pathSub0 && (_subtypeBucketMap[_pathSub0] || _subTypeConfig));
+        var _subtypeBucket = _isSubtypePage ? (_subtypeBucketMap[_pathSub0] || (_subTypeConfig ? _subTypeConfig.bucket : null)) : null;
         var _isTransactionPage = !_isRoomsPage && !_isSubtypePage && !!_catToListingType[_pathCat0];
         var _transactionLt = _isTransactionPage ? _catToListingType[_pathCat0] : null;
         var _extraUrl = null;
@@ -2144,7 +2151,8 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=room&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         } else if (_isSubtypePage) {
           var _lt = _catToListingType[_pathCat0];
-          _extraUrl = '/api/properties/recent-enriched?property_type=' + _pathSub0 + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
+          var _apiPt = _subTypeConfig ? _subTypeConfig.pt : _pathSub0;
+          _extraUrl = '/api/properties/recent-enriched?property_type=' + _apiPt + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         }
 
         var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null);
@@ -2474,6 +2482,13 @@
             return (item.l || '').toLowerCase().indexOf(_df) !== -1;
           });
         }
+        /* Apply sub_type filter for compound slug pages (e.g. /industrial-land) — only for the locked bucket */
+        if (window._bazarSubTypeFilter && window._bazarSubTypeBucket && type === window._bazarSubTypeBucket) {
+          var _stf = window._bazarSubTypeFilter.toLowerCase();
+          items = items.filter(function(item) {
+            return item.st && item.st.toLowerCase() === _stf;
+          });
+        }
         /* Apply House sub-type filter (cfHouseTypePanel checkboxes) */
         var _houseSubChecks = document.querySelectorAll('#cfHouseTypePanel input[type="checkbox"]:checked');
         if (_houseSubChecks.length > 0) {
@@ -2670,8 +2685,19 @@
               'cottage': 'House', 'villa': 'House', 'bungalow': 'House',
               'maisonette': 'House', 'townhouse': 'House', 'detached': 'House',
               'semi-detached': 'House', 'terraced': 'House',
-              'penthouse': 'Flats', 'duplex': 'Flats', 'apartment': 'Flats', 'flats': 'Flats'
+              'penthouse': 'Flats', 'duplex': 'Flats', 'apartment': 'Flats', 'flats': 'Flats',
+              'industrial-land': 'Land', 'commercial-land': 'Land', 'agricultural-land': 'Land'
             };
+            /* Sub_type value filter for compound slug pages */
+            var _autoSubTypeFilterMap = {
+              'industrial-land': 'Industrial land',
+              'commercial-land': 'Commercial land',
+              'agricultural-land': 'Agricultural land'
+            };
+            if (_autoSubTypeFilterMap[pathSub]) {
+              window._bazarSubTypeFilter       = _autoSubTypeFilterMap[pathSub];
+              window._bazarSubTypeBucket       = _autoSubBucketMap[pathSub]; // e.g. 'Land'
+            }
             /* Map subtype slug to the exact panel value for sub-filter auto-check */
             var _houseSubtypeMap = {
               'cottage':'Cottage','villa':'Villa','bungalow':'Bungalow',
