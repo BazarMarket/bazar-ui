@@ -29,12 +29,12 @@
       .sr-cat-hero { flex: 1; min-width: 0; padding: 0 !important; }
       .sr-cat-hero .sr-cat-h1 { margin: 0 0 4px !important; }
       .sr-cat-hero .sr-cat-intro { margin: 0 !important; }
-      .sr-sort { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+      .sr-sort { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-right: -48px; }
       .sr-sort label { font-family: "Poppins", sans-serif; font-size: 13px; color: #999; white-space: nowrap; }
       .sr-sort select { border: 1px solid #e8e8e8; border-radius: 8px; padding: 5px 10px; font-family: "Poppins", sans-serif; font-size: 13px; color: #1a1a1a; outline: none; cursor: pointer; background: #fff; }
       .sr-sort select:focus { border-color: #ff9138; }
-      .sr-results-wrap { display: flex; gap: 0; align-items: flex-start; }
-      .sr-view-sidebar { display: flex; flex-direction: column; gap: 4px; padding-right: 14px; flex-shrink: 0; }
+      .sr-results-wrap { display: flex; gap: 0; align-items: flex-start; position: relative; }
+      .sr-view-sidebar { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; position: absolute; left: -55px; top: 4px; z-index: 10; }
       .sr-results-main { flex: 1; min-width: 0; }
       .sr-view-btn { width: 41px; height: 41px; border: 1px solid #e8e8e8; border-radius: 8px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
       .sr-view-btn:hover { border-color: #9ca3af; }
@@ -203,8 +203,7 @@
          .product__title { font-size: 18px !important; }
          .product__desc { display: none !important; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(3, 1fr); }
-         .sr-results-wrap { flex-direction: column; }
-         .sr-view-sidebar { display: flex; flex-direction: row; gap: 8px; padding-right: 0; padding-bottom: 14px; }
+         .sr-view-sidebar { display: none; }
       }
 
       /* ── Tablet small / large phone (≤768px) ── */
@@ -280,7 +279,7 @@
          .sr-sort label { font-size: 12px; }
          .sr-sort select { font-size: 12px; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-         .sr-view-sidebar { display: flex; flex-direction: row; gap: 8px; padding-right: 0; padding-bottom: 12px; }
+         .sr-view-sidebar { display: none; }
          #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 100%; }
          .cf-chips { gap: 6px; margin-top: 8px; padding-top: 8px; }
          .cf-tag { font-size: 12px; padding: 4px 10px; }
@@ -2057,10 +2056,24 @@
       });
 
       function alignGridWidth() {
+         var cf = document.querySelector('.cf-block');
          var gv = document.getElementById('sr-grid-view');
-         if (!gv || !gv.classList.contains('active')) return;
-         gv.style.marginLeft = '';
-         gv.style.width = '';
+         var rm = document.querySelector('.sr-results-main');
+         var sb = document.querySelector('.sr-view-sidebar');
+         if (!cf || !gv || !rm || !gv.classList.contains('active')) return;
+         var cfR = cf.getBoundingClientRect();
+         var rmR = rm.getBoundingClientRect();
+         var leftAdj = rmR.left - cfR.left;
+         gv.style.marginLeft = (-leftAdj + 80) + 'px';
+         gv.style.width = Math.floor(cfR.width * 0.91) + 'px';
+         if (sb) {
+            var sbW = sb.getBoundingClientRect().width;
+            // Anchor sidebar right edge to (grid left - 55px gap) = constant position
+            // gridLeft from viewport = cfR.left + 80
+            // sidebarLeft from viewport = cfR.left + 80 - 55 - sbW
+            // sidebarLeft from sr-results-wrap (rmR.left) = above - rmR.left
+            sb.style.left = (cfR.left + 80 + 2 - sbW - rmR.left) + 'px';
+         }
       }
       function setView(type) {
          var listView = document.querySelector('.list-products__body');
@@ -2075,7 +2088,9 @@
             requestAnimationFrame(alignGridWidth);
          } else {
             var gv = document.getElementById('sr-grid-view');
+            var sb = document.querySelector('.sr-view-sidebar');
             if (gv) { gv.style.marginLeft = ''; gv.style.width = ''; }
+            if (sb) { sb.style.left = ''; }
             listView.classList.remove('hidden');
             gridView.classList.remove('active');
             btnList.classList.add('active');
