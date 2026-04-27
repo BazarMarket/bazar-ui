@@ -1165,6 +1165,13 @@
         var planOk   = curPlan === 'free' || curPlan === 'pro';
         if ((_demoCard === '1') || (canBoost && isOwner && planOk)) {
           boostWrap.style.display = '';
+          var boostLink = boostWrap.querySelector('.card-head__boost');
+          if (boostLink) {
+            boostLink.onclick = function() {
+              bazarBoostPay(window.location.href, String(p.id));
+              return false;
+            };
+          }
         }
       })();
 
@@ -2241,6 +2248,29 @@ function _glbKey(e) {
     }, 500);
 
     setTimeout(function() { clearInterval(_waitForAdData); }, 15000);
+})();
+</script>
+
+<script>
+(function() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('boosted') !== '1') return;
+    var sessionId = params.get('session_id');
+    var uid = localStorage.getItem('bazar_firebase_uid') || '';
+    if (!sessionId || !uid) return;
+    history.replaceState(null, '', window.location.pathname);
+    fetch('/api/boost-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, firebase_uid: uid })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+        if (d && d.success) {
+            console.log('[BOOST] Payment recorded ok listing=' + d.listing_id + ' amount=' + d.amount);
+        }
+    })
+    .catch(function() {});
 })();
 </script>
 </body>
