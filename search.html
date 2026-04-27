@@ -2344,7 +2344,7 @@
         }).join('');
         var sellerBg = item.cc === 'card_red' ? '#e31836' : item.cc === 'card_orange' ? '#ffae49' : '';
         var sellerNameColor = sellerBg ? 'color:#fff;' : '';
-        var sellerStyle = sellerBg ? 'background:'+sellerBg+';padding:8px 14px;border-radius:6px 6px 0 0;margin:0 -24px 8px -24px;' : '';
+        var sellerStyle = sellerBg ? 'background:'+sellerBg+';padding:8px 14px;border-radius:6px 6px 0 0;margin:0 -14px 8px -16px;' : '';
         var currentUser = localStorage.getItem('bazar_username') || '';
         var currentPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
         var _dgL = new URLSearchParams(window.location.search).get('boost_demo');
