@@ -2482,13 +2482,6 @@
             return (item.l || '').toLowerCase().indexOf(_df) !== -1;
           });
         }
-        /* Apply sub_type filter for compound slug pages (e.g. /industrial-land) — only for the locked bucket */
-        if (window._bazarSubTypeFilter && window._bazarSubTypeBucket && type === window._bazarSubTypeBucket) {
-          var _stf = window._bazarSubTypeFilter.toLowerCase();
-          items = items.filter(function(item) {
-            return item.st && item.st.toLowerCase() === _stf;
-          });
-        }
         /* Apply House sub-type filter (cfHouseTypePanel checkboxes) */
         var _houseSubChecks = document.querySelectorAll('#cfHouseTypePanel input[type="checkbox"]:checked');
         if (_houseSubChecks.length > 0) {
@@ -2688,16 +2681,6 @@
               'penthouse': 'Flats', 'duplex': 'Flats', 'apartment': 'Flats', 'flats': 'Flats',
               'industrial-land': 'Land', 'commercial-land': 'Land', 'agricultural-land': 'Land'
             };
-            /* Sub_type value filter for compound slug pages */
-            var _autoSubTypeFilterMap = {
-              'industrial-land': 'Industrial land',
-              'commercial-land': 'Commercial land',
-              'agricultural-land': 'Agricultural land'
-            };
-            if (_autoSubTypeFilterMap[pathSub]) {
-              window._bazarSubTypeFilter       = _autoSubTypeFilterMap[pathSub];
-              window._bazarSubTypeBucket       = _autoSubBucketMap[pathSub]; // e.g. 'Land'
-            }
             /* Map subtype slug to the exact panel value for sub-filter auto-check */
             var _houseSubtypeMap = {
               'cottage':'Cottage','villa':'Villa','bungalow':'Bungalow',
