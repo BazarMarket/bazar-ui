@@ -203,7 +203,8 @@
          .product__title { font-size: 18px !important; }
          .product__desc { display: none !important; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(3, 1fr); }
-         .sr-view-sidebar { display: none; }
+         .sr-results-wrap { padding-top: 58px; }
+         .sr-view-sidebar { display: flex; flex-direction: row; gap: 8px; padding-right: 0; left: 0; top: 0; }
       }
 
       /* ── Tablet small / large phone (≤768px) ── */
@@ -279,7 +280,7 @@
          .sr-sort label { font-size: 12px; }
          .sr-sort select { font-size: 12px; }
          .sr-grid-view .cards__grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-         .sr-view-sidebar { display: none; }
+         .sr-view-sidebar { display: flex; flex-direction: row; gap: 8px; padding-right: 0; left: 0; top: 0; }
          #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 100%; }
          .cf-chips { gap: 6px; margin-top: 8px; padding-top: 8px; }
          .cf-tag { font-size: 12px; padding: 4px 10px; }
@@ -2061,6 +2062,11 @@
          var rm = document.querySelector('.sr-results-main');
          var sb = document.querySelector('.sr-view-sidebar');
          if (!cf || !gv || !rm || !gv.classList.contains('active')) return;
+         if (window.innerWidth <= 992) {
+            gv.style.marginLeft = '';
+            gv.style.width = '';
+            return;
+         }
          var cfR = cf.getBoundingClientRect();
          var rmR = rm.getBoundingClientRect();
          var leftAdj = rmR.left - cfR.left;
@@ -2068,10 +2074,6 @@
          gv.style.width = Math.floor(cfR.width * 0.91) + 'px';
          if (sb) {
             var sbW = sb.getBoundingClientRect().width;
-            // Anchor sidebar right edge to (grid left - 55px gap) = constant position
-            // gridLeft from viewport = cfR.left + 80
-            // sidebarLeft from viewport = cfR.left + 80 - 55 - sbW
-            // sidebarLeft from sr-results-wrap (rmR.left) = above - rmR.left
             sb.style.left = (cfR.left + 80 + 2 - sbW - rmR.left) + 'px';
          }
       }
