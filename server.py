@@ -2669,6 +2669,25 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     ok = resp.status == 200
 
                 print(f'[BOOST] listing={listing_id} set-boost ok={ok}', flush=True)
+
+                # Record boost payment in Laravel database
+                try:
+                    pay_payload = json.dumps({'session_id': session_id, 'firebase_uid': firebase_uid}).encode()
+                    pay_req = urllib.request.Request(
+                        f'{LARAVEL_API_BASE}/boost-complete',
+                        data=pay_payload,
+                        headers={
+                            'Content-Type':     'application/json',
+                            'Accept':           'application/json',
+                            'X-Bazar-Internal': 'moderation',
+                        },
+                        method='POST',
+                    )
+                    with urllib.request.urlopen(pay_req, timeout=8) as pay_resp:
+                        print(f'[BOOST] boost-complete payment recorded status={pay_resp.status}', flush=True)
+                except Exception as pay_err:
+                    print(f'[BOOST] boost-complete payment record error: {pay_err}', flush=True)
+
                 self._send_json(200, {
                     'success':    True,
                     'listing_id': listing_id,
