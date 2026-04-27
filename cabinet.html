@@ -1979,6 +1979,8 @@
             if (vipBtn) vipBtn.textContent = 'Upgrade to VIP — £14.00';
         }
         if (plan === 'pro' || plan === 'vip') {
+            var _localDays = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+            if (_localDays > 0) _applySubMeta(plan, _localDays, 0);
             var uid = localStorage.getItem('bazar_firebase_uid');
             if (uid) {
                 fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
@@ -1992,8 +1994,11 @@
                             highlightCurrentPlan();
                             return;
                         }
+                        /* Prefer higher value (localStorage may have accumulated days not yet reflected by server) */
+                        var finalDays = Math.max(daysLeft, parseInt(localStorage.getItem('bazar_days_left') || '0', 10));
+                        localStorage.setItem('bazar_days_left', finalDays);
                         var listings = parseInt(d.sub_listings || d.subscription_listings || 0, 10);
-                        _applySubMeta(plan, daysLeft, listings);
+                        _applySubMeta(plan, finalDays, listings);
                     })
                     .catch(function() {});
             }
@@ -2472,7 +2477,10 @@
             var planPrice = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
-                if (paidDays > 0) localStorage.setItem('bazar_days_left', paidDays);
+                if (paidDays > 0) {
+                    var _prevDays = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+                    localStorage.setItem('bazar_days_left', _prevDays + paidDays);
+                }
                 planPrice = paidPlan === 'pro' ? 10 : 20;
                 planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
                 /* Activate the ad on the server — retry up to 5x if plan not yet updated */
