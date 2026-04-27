@@ -2639,61 +2639,32 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             if not session_id:
                 self._send_json(400, {'error': 'missing session_id'}); return
 
+            # Forward to Laravel which handles Stripe verification,
+            # property boost marking, and payment record creation
             try:
-                import stripe
-                stripe.api_key = STRIPE_SECRET_KEY
-                session = stripe.checkout.Session.retrieve(session_id)
-                if session.payment_status != 'paid':
-                    self._send_json(400, {'error': 'not paid'}); return
-
-                listing_id = session.metadata.get('listing_id', '')
-                source     = session.metadata.get('source', '')
-                amount_pence = session.amount_total or 0
-
-                if source != 'boost_to_top' or not listing_id:
-                    self._send_json(400, {'error': 'not a boost session'}); return
-
-                # Mark boosted in Laravel
-                url     = f'{LARAVEL_API_BASE}/properties/{listing_id}/set-boost'
-                payload = json.dumps({'firebase_uid': firebase_uid}).encode()
-                req     = urllib.request.Request(
-                    url, data=payload,
+                pay_payload = json.dumps({'session_id': session_id, 'firebase_uid': firebase_uid}).encode()
+                pay_req = urllib.request.Request(
+                    f'{LARAVEL_API_BASE}/boost-complete',
+                    data=pay_payload,
                     headers={
-                        'Content-Type':    'application/json',
-                        'Accept':          'application/json',
+                        'Content-Type':     'application/json',
+                        'Accept':           'application/json',
                         'X-Bazar-Internal': 'moderation',
                     },
                     method='POST',
                 )
-                with urllib.request.urlopen(req, timeout=8) as resp:
-                    ok = resp.status == 200
-
-                print(f'[BOOST] listing={listing_id} set-boost ok={ok}', flush=True)
-
-                # Record boost payment in Laravel database
-                try:
-                    pay_payload = json.dumps({'session_id': session_id, 'firebase_uid': firebase_uid}).encode()
-                    pay_req = urllib.request.Request(
-                        f'{LARAVEL_API_BASE}/boost-complete',
-                        data=pay_payload,
-                        headers={
-                            'Content-Type':     'application/json',
-                            'Accept':           'application/json',
-                            'X-Bazar-Internal': 'moderation',
-                        },
-                        method='POST',
-                    )
-                    with urllib.request.urlopen(pay_req, timeout=8) as pay_resp:
-                        print(f'[BOOST] boost-complete payment recorded status={pay_resp.status}', flush=True)
-                except Exception as pay_err:
-                    print(f'[BOOST] boost-complete payment record error: {pay_err}', flush=True)
-
-                self._send_json(200, {
-                    'success':    True,
-                    'listing_id': listing_id,
-                    'amount':     round(amount_pence / 100, 2),
-                })
+                with urllib.request.urlopen(pay_req, timeout=15) as pay_resp:
+                    result_body = pay_resp.read().decode('utf-8')
+                    result = json.loads(result_body)
+                    listing_id = result.get('listing_id', '')
+                    print(f'[BOOST] boost-complete ok listing={listing_id}', flush=True)
+                    self._send_json(200, result)
+            except urllib.error.HTTPError as e:
+                err_body = e.read().decode('utf-8') if e.fp else ''
+                print(f'[BOOST] boost-complete Laravel error {e.code}: {err_body}', flush=True)
+                self._send_json(e.code, json.loads(err_body) if err_body else {'error': 'upstream error'})
             except Exception as e:
+                print(f'[BOOST] boost-complete error: {e}', flush=True)
                 self._send_json(500, {'error': str(e)})
             return
 
