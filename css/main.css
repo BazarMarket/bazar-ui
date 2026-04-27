@@ -2656,12 +2656,12 @@ body {
   align-items: center;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
   color: #1d1d1b;
   line-height: 130%;
 }
 .details-item:before {
-  font-size: 20px;
+  font-size: 22px;
   color: #6b7280;
   margin: 0 6px 0 0;
 }
