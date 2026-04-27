@@ -2550,8 +2550,10 @@ body {
 .product__info {
   margin: 10px 0 0;
   padding: 6px 10px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  align-self: flex-start;
+  width: fit-content;
   background: #f3f4f6;
   border-radius: 8px;
   gap: 12px;
