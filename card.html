@@ -1061,7 +1061,7 @@
       } else {
          /* ── Real estate — form order ── */
          if (ptype !== 'room' && p.building_type) specs += specRow('Building type', p.building_type);
-         if (ptype !== 'room' && p.sub_type) specs += specRow('House type', p.sub_type);
+         if (ptype !== 'room' && p.sub_type) specs += specRow(ptype === 'land' ? 'Plot type' : 'House type', p.sub_type);
          specs += specRow('Number of Bedrooms', p.bedrooms);
          specs += specRow('Number of Bathrooms', p.bathrooms);
          if (ptype === 'room' && p.sub_type) specs += specRow('Room type', p.sub_type);
