@@ -2548,14 +2548,16 @@ body {
   line-height: 130%;
 }
 .product__info {
-  margin: 10px 0;
-  padding: 10px 0;
-  border-top: 1px solid #f2f2f2;
+  margin: 10px 0 0;
+  padding: 6px 10px;
   display: flex;
   align-items: center;
+  background: #f3f4f6;
+  border-radius: 8px;
+  gap: 12px;
 }
 .product__info .details-item:not(:last-child) {
-  margin-right: 10px;
+  margin-right: 0;
 }
 .product__right {
   flex: 0 0 32%;
@@ -2659,9 +2661,6 @@ body {
   font-size: 14px;
   color: #1d1d1b;
   line-height: 130%;
-  background: #f3f4f6;
-  border-radius: 6px;
-  padding: 3px 8px 3px 6px;
 }
 .details-item:before {
   font-size: 20px;
