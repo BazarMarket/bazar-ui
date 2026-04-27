@@ -2659,11 +2659,14 @@ body {
   font-size: 14px;
   color: #1d1d1b;
   line-height: 130%;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 3px 8px 3px 6px;
 }
 .details-item:before {
   font-size: 20px;
-  color: #8c8c8c;
-  margin: 0 7px 0 0;
+  color: #1a1a1a;
+  margin: 0 6px 0 0;
 }
 
 .product-gallery__img {
