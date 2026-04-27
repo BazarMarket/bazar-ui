@@ -799,14 +799,12 @@
       if (el('bread-category')) {
         var _lt = (p.listing_type || '').toLowerCase();
         var _pt = (p.property_type || '').toLowerCase();
-        var _catLabel = _lt === 'long_rent' ? 'Property to Rent'
-                      : _lt === 'short_rent' ? 'Property to Rent'
+        var _catLabel = _lt === 'short_rent' ? 'Property for Short-Term Rent'
+                      : _lt === 'long_rent'  ? 'Property to Rent'
                       : 'Property for Sale';
-        var _catHref  = _pt === 'room'
-                          ? '/property-to-rent'
-                          : _lt === 'long_rent'  ? '/property-to-rent'
-                          : _lt === 'short_rent' ? '/property-short-rent'
-                          : '/property-for-sale';
+        var _catHref  = _lt === 'short_rent' ? '/property-short-rent'
+                      : (_lt === 'long_rent' || _pt === 'room') ? '/property-to-rent'
+                      : '/property-for-sale';
         el('bread-category').textContent = _catLabel;
         el('bread-category').href = _catHref;
 

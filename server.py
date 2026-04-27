@@ -1109,13 +1109,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         # ── Breadcrumb category URL (depends on listing_type and property_type) ──
         _lt_norm = listing_type.lower() if listing_type else 'sale'
         _pt_norm = prop_type.lower() if prop_type else ''
-        # Rooms always navigate under /property-to-rent regardless of short/long term
-        if _pt_norm == 'room':
-            cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
-        elif _lt_norm == 'long_rent':
-            cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
-        elif _lt_norm == 'short_rent':
+        if _lt_norm == 'short_rent':
             cat_url = f'{PUBLIC_DOMAIN}/property-short-rent'
+        elif _lt_norm == 'long_rent' or _pt_norm == 'room':
+            cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
         else:
             cat_url = f'{PUBLIC_DOMAIN}/property-for-sale'
 
@@ -1916,7 +1913,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         _city_s = params.get('city', '')
         _city   = _city_s.replace('-', ' ').title()
         _sub_label = _sub.replace('-', ' ').title()
-        _trans_label = 'for Rent' if 'rent' in _trans else 'for Sale'
+        _is_short = (_trans == 'property-short-rent')
+        _trans_label = 'for Short-Term Rent' if _is_short else ('for Rent' if 'rent' in _trans else 'for Sale')
+        _trans_cat   = 'Property for Short-Term Rent' if _is_short else ('Property for Sale' if 'sale' in _trans else 'Property to Rent')
         _trans_base  = f'/{_trans}'
         h1       = f'{_sub_label} {_trans_label} in {_city}'
         intro    = f'Browse {_sub_label.lower()} {_trans_label.lower()} in {_city}. Find the best deals from private sellers and agents.'
@@ -1926,7 +1925,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2, "name": _trans_label.title().replace('For ', 'Property for '), "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
+                {"@type": "ListItem", "position": 2, "name": _trans_cat, "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
                 {"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'},
                 {"@type": "ListItem", "position": 4, "name": h1, "item": canonical},
             ]
@@ -1940,7 +1939,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'h1': h1, 'intro': intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Sale' if 'sale' in _trans else 'Property to Rent', _trans_base),
+                (_trans_cat, _trans_base),
                 (_sub_label, f'{_trans_base}/{_sub}'),
                 (h1, None),
             ],
@@ -1957,7 +1956,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         _city   = _city_s.replace('-', ' ').title()
         _dist   = _dist_s.replace('-', ' ').title()
         _sub_label = _sub.replace('-', ' ').title()
-        _trans_label = 'for Rent' if 'rent' in _trans else 'for Sale'
+        _is_short = (_trans == 'property-short-rent')
+        _trans_label = 'for Short-Term Rent' if _is_short else ('for Rent' if 'rent' in _trans else 'for Sale')
+        _trans_cat   = 'Property for Short-Term Rent' if _is_short else ('Property for Sale' if 'sale' in _trans else 'Property to Rent')
         _trans_base  = f'/{_trans}'
         h1       = f'{_sub_label} {_trans_label} in {_dist}, {_city}'
         intro    = f'Browse {_sub_label.lower()} {_trans_label.lower()} in {_dist}, {_city}. Find local deals from private sellers and agents.'
@@ -1967,7 +1968,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2, "name": 'Property for Sale' if 'sale' in _trans else 'Property to Rent', "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
+                {"@type": "ListItem", "position": 2, "name": _trans_cat, "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
                 {"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'},
                 {"@type": "ListItem", "position": 4, "name": f'{_sub_label} in {_city}', "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'},
                 {"@type": "ListItem", "position": 5, "name": h1, "item": canonical},
@@ -1982,7 +1983,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'h1': h1, 'intro': intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Sale' if 'sale' in _trans else 'Property to Rent', _trans_base),
+                (_trans_cat, _trans_base),
                 (_sub_label, f'{_trans_base}/{_sub}'),
                 (_city, f'{_trans_base}/{_sub}/{_city_s}'),
                 (h1, None),
