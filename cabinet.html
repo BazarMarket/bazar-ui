@@ -2470,18 +2470,19 @@
         }
 
         if (params.get('payment') === 'success') {
-            var paidPlan  = params.get('plan');
-            var paidDays  = parseInt(params.get('days') || '0', 10);
-            var paidAdId  = params.get('ad_id') || '';
-            var sessionId = params.get('session_id');
-            var planPrice = 0, planLabel = '';
+            var paidPlan   = params.get('plan');
+            var paidDays   = parseInt(params.get('days') || '0', 10);
+            var paidAmount = parseFloat(params.get('amount') || '0');
+            var paidAdId   = params.get('ad_id') || '';
+            var sessionId  = params.get('session_id');
+            var planPrice  = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
                 if (paidDays > 0) {
                     var _prevDays = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
                     localStorage.setItem('bazar_days_left', _prevDays + paidDays);
                 }
-                planPrice = paidPlan === 'pro' ? 10 : 20;
+                planPrice = paidAmount > 0 ? paidAmount : (paidPlan === 'pro' ? 7 : 14);
                 planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
                 /* Activate the ad on the server — retry up to 5x if plan not yet updated */
                 if (paidAdId) {
@@ -2538,7 +2539,7 @@
                     if (data.success && data.plan) {
                         var lbl = data.plan === 'pro' ? 'PRO' : 'VIP';
                         var dur = data.duration_days || (data.plan === 'pro' ? 14 : 30);
-                        var prc = data.plan === 'pro' ? 7 : 14;
+                        var prc = data.amount > 0 ? data.amount : (paidAmount > 0 ? paidAmount : (data.plan === 'pro' ? 7 : 14));
                         saveLocalTxn('debit', 'Subscription', 'Subscription — ' + lbl + ' Plan — ' + dur + ' Days', prc, 'paid');
                         _applyPlanFromServer(data.plan);
                     } else {
