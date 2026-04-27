@@ -527,6 +527,27 @@
                            <label class="cf-type-item"><input type="checkbox" value="Tourist land" onchange="updatePlotTypeLabel()"><span class="cf-type-check"></span>Tourist land</label>
                         </div>
                      </div>
+                     <div class="cf-cat" id="cfRoomtypeWrap" style="display:none;">
+                        <button class="cf-cat-btn" id="cfRoomtypeBtn" onclick="toggleRoomtypePanel(event)">
+                           <span class="cf-cat-btn-label" id="cfRoomtypeLabel">Room type</span>
+                           <span class="cf-type-clear" id="cfRoomtypeClear" onclick="clearRoomtype(event)" style="display:none;">&times;</span>
+                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <div class="cf-cat-panel" id="cfRoomtypePanel">
+                           <div class="cf-type-group-label">Room type</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Private" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Private</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Shared" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Shared</label>
+                           <div class="cf-type-group-label">Features</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Ensuite" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Ensuite</label>
+                           <div class="cf-type-group-label">Costs</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Bills included" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Bills included</label>
+                           <div class="cf-cat-divider"></div>
+                           <label class="cf-type-item"><input type="checkbox" value="Bills excluded" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Bills excluded</label>
+                           <div class="cf-type-group-label">Rules</div>
+                           <label class="cf-type-item"><input type="checkbox" value="Couples allowed" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Couples allowed</label>
+                        </div>
+                     </div>
                   </div>
                   <!-- Row 2: Dynamic smart filters (appears based on Property type selection) -->
                   <div class="cf-row cf-row-dynamic" id="cfDynamicRow" style="display:none;">
@@ -586,27 +607,6 @@
                            <label class="cf-type-item"><input type="checkbox" value="Steel Frame" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Steel Frame</label>
                            <div class="cf-cat-divider"></div>
                            <label class="cf-type-item"><input type="checkbox" value="Eco / Passive House" onchange="updateConstructionTypeLabel()"><span class="cf-type-check"></span>Eco / Passive House</label>
-                        </div>
-                     </div>
-                     <div class="cf-cat" id="cfRoomtypeWrap" style="display:none;">
-                        <button class="cf-cat-btn" id="cfRoomtypeBtn" onclick="toggleRoomtypePanel(event)">
-                           <span class="cf-cat-btn-label" id="cfRoomtypeLabel">Room type</span>
-                           <span class="cf-type-clear" id="cfRoomtypeClear" onclick="clearRoomtype(event)" style="display:none;">&times;</span>
-                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <div class="cf-cat-panel" id="cfRoomtypePanel">
-                           <div class="cf-type-group-label">Room type</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Private" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Private</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Shared" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Shared</label>
-                           <div class="cf-type-group-label">Features</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Ensuite" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Ensuite</label>
-                           <div class="cf-type-group-label">Costs</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Bills included" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Bills included</label>
-                           <div class="cf-cat-divider"></div>
-                           <label class="cf-type-item"><input type="checkbox" value="Bills excluded" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Bills excluded</label>
-                           <div class="cf-type-group-label">Rules</div>
-                           <label class="cf-type-item"><input type="checkbox" value="Couples allowed" onchange="updateRoomtypeLabel()"><span class="cf-type-check"></span>Couples allowed</label>
                         </div>
                      </div>
                   </div>
