@@ -4938,6 +4938,7 @@ body.bazar-logged .card__heart {
 }
 .category-mob-slider .swiper {
   overflow: visible;
+  margin-left: 0 !important;
 }
 .category-mob-slider .swiper-slide {
   width: auto;
