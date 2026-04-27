@@ -2057,24 +2057,10 @@
       });
 
       function alignGridWidth() {
-         var cf = document.querySelector('.cf-block');
          var gv = document.getElementById('sr-grid-view');
-         var rm = document.querySelector('.sr-results-main');
-         var sb = document.querySelector('.sr-view-sidebar');
-         if (!cf || !gv || !rm || !gv.classList.contains('active')) return;
-         var cfR = cf.getBoundingClientRect();
-         var rmR = rm.getBoundingClientRect();
-         var leftAdj = rmR.left - cfR.left;
-         gv.style.marginLeft = (-leftAdj + 80) + 'px';
-         gv.style.width = Math.floor(cfR.width * 0.91) + 'px';
-         if (sb) {
-            var sbW = sb.getBoundingClientRect().width;
-            // Anchor sidebar right edge to (grid left - 55px gap) = constant position
-            // gridLeft from viewport = cfR.left + 80
-            // sidebarLeft from viewport = cfR.left + 80 - 55 - sbW
-            // sidebarLeft from sr-results-wrap (rmR.left) = above - rmR.left
-            sb.style.left = (cfR.left + 80 + 2 - sbW - rmR.left) + 'px';
-         }
+         if (!gv || !gv.classList.contains('active')) return;
+         gv.style.marginLeft = '';
+         gv.style.width = '';
       }
       function setView(type) {
          var listView = document.querySelector('.list-products__body');
@@ -2089,9 +2075,7 @@
             requestAnimationFrame(alignGridWidth);
          } else {
             var gv = document.getElementById('sr-grid-view');
-            var sb = document.querySelector('.sr-view-sidebar');
             if (gv) { gv.style.marginLeft = ''; gv.style.width = ''; }
-            if (sb) { sb.style.left = ''; }
             listView.classList.remove('hidden');
             gridView.classList.remove('active');
             btnList.classList.add('active');
