@@ -1435,7 +1435,7 @@
     <script>
     /* Load Rooms for Rent section from API */
     (function() {
-        fetch('/api/properties/recent-enriched?property_type=room', { headers: { 'Accept': 'application/json' } })
+        fetch('/api/properties/recent-enriched?property_type=room&listing_type=rent', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(resp) {
                 if (!resp || !resp.data) return;
