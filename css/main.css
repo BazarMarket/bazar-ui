@@ -4945,6 +4945,12 @@ body.bazar-logged .card__heart {
 }
 
 /* ------- адаптация ------- */
+@media screen and (max-width: 992px) {
+  .category-mob.margin {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+}
 /* ------- end ------- */
 /* Стили для -------- */
 /* ------- адаптация ------- */
