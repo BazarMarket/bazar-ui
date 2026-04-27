@@ -2931,6 +2931,13 @@ p {
     margin-left: 0;
     margin-right: 0;
   }
+  .index-body > .search {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .index-body > .search .container {
+    padding: 0 16px;
+  }
 }
 .index-body > .search {
   background: transparent;
