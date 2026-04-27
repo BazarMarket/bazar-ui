@@ -4950,6 +4950,9 @@ body.bazar-logged .card__heart {
     margin-top: 12px;
     margin-bottom: 12px;
   }
+  .category-mob .container {
+    padding: 0 16px;
+  }
 }
 /* ------- end ------- */
 /* Стили для -------- */
