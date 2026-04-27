@@ -1435,22 +1435,26 @@
     <script>
     /* Load Rooms for Rent section from API */
     (function() {
-        fetch('/api/properties/recent-enriched?property_type=room&listing_type=rent', { headers: { 'Accept': 'application/json' } })
+        fetch('/api/properties/recent-enriched?property_type=room&listing_type=long_rent', { headers: { 'Accept': 'application/json' } })
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(resp) {
                 if (!resp || !resp.data) return;
                 var grid = document.getElementById('roomsGrid');
                 if (!grid) return;
-                if (!resp.data.length) { grid.closest('.cards').style.display = 'none'; return; }
+                var filtered = resp.data.filter(function(ad) {
+                    var lt = (ad.listing_type || '').toLowerCase();
+                    return lt !== 'short_rent' && lt !== 'short-rent';
+                });
+                if (!filtered.length) { grid.closest('.cards').style.display = 'none'; return; }
                 var html = '';
-                resp.data.forEach(function(ad) { html += buildIndexCard(ad); });
+                filtered.forEach(function(ad) { html += buildIndexCard(ad); });
                 grid.innerHTML = html;
                 if (typeof _loadCardAvatars === 'function') _loadCardAvatars();
                 /* mobile swiper */
                 var swiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
                 if (swiperWrapper) {
                     var slidesHtml = '';
-                    resp.data.forEach(function(ad) {
+                    filtered.forEach(function(ad) {
                         slidesHtml += '<div class="swiper-slide">' + buildIndexCard(ad) + '</div>';
                     });
                     swiperWrapper.innerHTML = slidesHtml;
