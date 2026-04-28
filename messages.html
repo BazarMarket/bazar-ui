@@ -440,11 +440,17 @@ function cabOpenRealChat(convId) {
                         .then(function(r) { return r.ok ? r.json() : null; })
                         .then(function(d) {
                             if (!d || _activeConvId !== capturedConvId) return;
-                            var photo = (d.photos && d.photos[0]) ? d.photos[0] : (d.photo || '');
+                            var photo = (d.images && d.images[0]) ? d.images[0] : (d.image || d.photo || '');
                             if (photo) {
                                 imgEl.src = photo;
                                 /* Update local cache so the next open in this session is instant */
                                 if (_allConvs[capturedConvId]) _allConvs[capturedConvId].ad_photo = photo;
+                                /* Persist photo to server DB so future loads skip the extra fetch */
+                                fetch('/api/chat/update-photo', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ conv_id: capturedConvId, photo: photo })
+                                }).catch(function() {});
                             }
                         })
                         .catch(function() {});

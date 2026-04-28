@@ -2705,6 +2705,28 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
             self._send_json(200, {'ok': True, 'conv_id': cid}); return
 
+        # ── /api/chat/update-photo ────────────────────────────────────────────
+        if self.path == '/api/chat/update-photo':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            cid   = data.get('conv_id', '')
+            photo = data.get('photo', '')
+            if not cid or not photo:
+                self._send_json(400, {'error': 'missing fields'}); return
+            with _chat_lock:
+                conn = _chat_db()
+                conn.execute(
+                    "UPDATE conversations SET ad_photo=? WHERE id=? AND (ad_photo='' OR ad_photo IS NULL OR ad_photo LIKE '%product.jpg%')",
+                    (photo, cid)
+                )
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True}); return
+
         # ── /api/chat/send ────────────────────────────────────────────────────
         if self.path == '/api/chat/send':
             length = int(self.headers.get('Content-Length', 0))

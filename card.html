@@ -1322,7 +1322,7 @@
           adId:       String(p.id || ''),
           adTitle:    p.title || '',
           adUrl:      window.location.pathname,
-          adPhoto:    (p.photos && p.photos[0]) ? p.photos[0] : '',
+          adPhoto:    (p.images && p.images[0]) ? p.images[0] : (p.image || ''),
           adPrice:    p.price ? ('£ ' + p.price) : '',
           sellerName: _displaySellerName || ''
       };
