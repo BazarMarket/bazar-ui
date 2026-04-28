@@ -2464,6 +2464,7 @@
     overflow: hidden;
     flex-shrink: 0;
     border: 2px solid #f0f0f0;
+    position: relative;
 }
 
 .cab-mob-profile__avatar img {
