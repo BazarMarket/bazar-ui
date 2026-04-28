@@ -3309,6 +3309,17 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         path          = parsed.path
         qs            = parsed.query
 
+        # bare bazar.uk (no www) → 301 to www.bazar.uk so Firebase auth works
+        if host in ('bazar.uk', 'bazar.uk:80', 'bazar.uk:443'):
+            dest = 'https://www.bazar.uk' + path
+            if qs:
+                dest += '?' + qs
+            self.send_response(301)
+            self.send_header('Location', dest)
+            self.send_header('Content-Length', '0')
+            self.end_headers()
+            return
+
         # /admin/* → redirect to admin.bazar.uk (strip /admin prefix)
         if path == '/admin' or path.startswith('/admin/'):
             sub = path[len('/admin'):]  # '' or '/login' or '/users/...'
