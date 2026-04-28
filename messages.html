@@ -428,7 +428,28 @@ function cabOpenRealChat(convId) {
             document.getElementById('cabRealAdTitle').textContent = conv.ad_title;
             document.getElementById('cabRealAdTitle').href  = conv.ad_url || '#';
             document.getElementById('cabRealAdPrice').textContent = conv.ad_price || '';
-            if (conv.ad_photo) document.getElementById('cabRealAdImg').src = conv.ad_photo;
+            /* Set stored photo immediately if it is a real photo (not a template) */
+            var _adImgEl = document.getElementById('cabRealAdImg');
+            var _storedPhoto = conv.ad_photo || '';
+            var _isTemplate = !_storedPhoto || _storedPhoto.indexOf('product.jpg') !== -1 || _storedPhoto.indexOf('dev.bazar') !== -1;
+            if (!_isTemplate) { _adImgEl.src = _storedPhoto; }
+            /* Always fetch current photo from the listing API — iron guarantee */
+            if (conv.ad_id) {
+                (function(capturedConvId, imgEl) {
+                    fetch('/api/properties/' + conv.ad_id, { headers: { Accept: 'application/json' } })
+                        .then(function(r) { return r.ok ? r.json() : null; })
+                        .then(function(d) {
+                            if (!d || _activeConvId !== capturedConvId) return;
+                            var photo = (d.photos && d.photos[0]) ? d.photos[0] : (d.photo || '');
+                            if (photo) {
+                                imgEl.src = photo;
+                                /* Update local cache so the next open in this session is instant */
+                                if (_allConvs[capturedConvId]) _allConvs[capturedConvId].ad_photo = photo;
+                            }
+                        })
+                        .catch(function() {});
+                })(convId, _adImgEl);
+            }
         } else {
             adSection.style.display = 'none';
         }

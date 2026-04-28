@@ -2695,6 +2695,12 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     new_seller = data.get('seller_name', '')
                     if new_seller:
                         conn.execute('UPDATE conversations SET seller_name=? WHERE id=?', (new_seller, cid))
+                    new_photo = data.get('ad_photo', '')
+                    if new_photo and 'product.jpg' not in new_photo and 'dev.bazar' not in new_photo:
+                        conn.execute(
+                            "UPDATE conversations SET ad_photo=? WHERE id=? AND (ad_photo='' OR ad_photo IS NULL OR ad_photo LIKE '%product.jpg%' OR ad_photo LIKE '%dev.bazar%')",
+                            (new_photo, cid)
+                        )
                 conn.commit()
                 conn.close()
             self._send_json(200, {'ok': True, 'conv_id': cid}); return
