@@ -4645,12 +4645,92 @@ body.bazar-logged .card__heart {
 }
 @media screen and (max-width: 992px) {
   .cards-sliders .swiper-slide {
-    width: 290px;
+    width: 200px;
   }
 }
 @media screen and (max-width: 576px) {
   .cards-sliders .swiper-slide {
-    width: 220px;
+    width: 165px;
+  }
+}
+
+/* ── Mobile card redesign: Airbnb image · Bazaraki info · Ozon heart ── */
+@media screen and (max-width: 992px) {
+  .cards__sliders .card {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 0;
+    justify-content: flex-start;
+  }
+  .cards__sliders .card__img {
+    order: -1;
+    padding-bottom: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .cards__sliders .card__down {
+    order: 0;
+    padding: 8px 2px 2px 2px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 2px;
+  }
+  .cards__sliders .card__dop {
+    display: none;
+  }
+  .cards__sliders .card__head {
+    order: 1;
+    padding: 0 2px 6px 2px;
+    background: transparent !important;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+  .cards__sliders .card__logo {
+    display: none;
+  }
+  .cards__sliders .card__info {
+    text-align: left;
+  }
+  .cards__sliders .card__name {
+    font-size: 11px;
+    text-align: left;
+    color: #666;
+    font-weight: 400;
+    white-space: normal;
+    line-height: 1.3;
+  }
+  .cards__sliders .card__label {
+    display: none;
+  }
+  .cards__sliders .price-new {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .cards__sliders .card__heart {
+    display: flex !important;
+    opacity: 1 !important;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: rgba(0, 0, 0, 0.45);
+  }
+  .cards__sliders .card__heart::after {
+    display: none;
+  }
+  .cards__sliders .card__heart.active {
+    color: #e31836;
+  }
+  .cards__sliders .card:hover .card__heart {
+    opacity: 1 !important;
   }
 }
 
