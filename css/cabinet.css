@@ -2395,3 +2395,205 @@
     transition: background .15s;
 }
 .cab-row-btn:hover { background: #58a82e; }
+
+/* ═══════════════════════════════════════════════════
+   MOBILE CABINET  (≤ 992px)
+═══════════════════════════════════════════════════ */
+@media (max-width: 992px) {
+
+    /* Full-width layout */
+    .cab-layout {
+        flex-direction: column;
+        min-height: unset;
+    }
+
+    /* Content fills full width, add bottom padding for bottom nav */
+    .cab-content {
+        width: 100%;
+        min-width: 0;
+        padding-bottom: 72px;
+    }
+
+    /* Panel padding adjustments */
+    .cab-panel__top {
+        padding: 16px 16px 10px;
+    }
+    .cab-panel {
+        padding-bottom: 16px;
+    }
+
+    /* Stat cards go 2-column on mobile */
+    .cab-stat-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 0 12px 12px;
+    }
+
+    /* Two-column box collapses to one column */
+    .cab-two-col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 0 12px;
+    }
+
+    /* Box tweaks */
+    .cab-box {
+        margin: 0;
+    }
+}
+
+/* ── Mobile profile card (avatar + name + balance) ── */
+.cab-mob-profile {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.cab-mob-profile__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px 10px;
+}
+
+.cab-mob-profile__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #f0f0f0;
+}
+
+.cab-mob-profile__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cab-mob-profile__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cab-mob-profile__name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cab-mob-profile__plan {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #f76b1c;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 1px;
+}
+
+.cab-mob-profile__balance {
+    background: #fff4e8;
+    color: #f76b1c;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ── Mobile horizontal tab bar ── */
+.cab-mob-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 0 12px 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.cab-mob-tabs::-webkit-scrollbar { display: none; }
+
+.cab-mob-tab {
+    flex-shrink: 0;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    background: #f4f4f4;
+    cursor: pointer;
+    transition: background .18s, color .18s;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.cab-mob-tab.active {
+    background: #f76b1c;
+    color: #fff;
+    font-weight: 600;
+}
+
+.cab-mob-tab:hover:not(.active) {
+    background: #ffe8d6;
+    color: #f76b1c;
+}
+
+/* ── Mobile bottom navigation ── */
+.cab-mob-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 58px;
+    background: #fff;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 500;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.cab-mob-bottom__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex: 1;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1.2;
+    min-height: 44px;
+}
+
+.cab-mob-bottom__item::before {
+    font-size: 22px;
+    color: #888;
+    transition: color .18s;
+}
+
+.cab-mob-bottom__item:hover,
+.cab-mob-bottom__item:hover::before {
+    color: #f76b1c;
+}
+
+.cab-mob-bottom__item.active::before,
+.cab-mob-bottom__item.active {
+    color: #f76b1c;
+    font-weight: 600;
+}

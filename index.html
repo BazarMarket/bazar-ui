@@ -174,7 +174,7 @@
             <a href="#" class="menu-mob__item icon-glass">Search</a>
             <a href="#" class="menu-mob__item icon-heart-new">Favorites</a>
             <a href="#" class="menu-mob__item icon-add">New AD</a>
-            <a href="#" class="menu-mob__item icon-user-big">Profile</a>
+            <a href="#" class="menu-mob__item icon-user-big" onclick="handleMobileProfile(event)">Profile</a>
         </div>
 
 
@@ -1111,6 +1111,23 @@
     <script type="text/javascript" src="js/script.js?v=4"></script>
     <script src="js/firebase-auth-v2.js?v=4"></script>
     <script>
+        function handleMobileProfile(e) {
+            e.preventDefault();
+            if (localStorage.getItem('bazar_firebase_uid')) {
+                window.location.href = '/cabinet';
+            } else {
+                if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
+            }
+        }
+        (function() {
+            var p = new URLSearchParams(window.location.search);
+            if (p.get('login') === '1') {
+                history.replaceState(null, '', '/');
+                setTimeout(function() {
+                    if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
+                }, 300);
+            }
+        })();
         function _updateSearchPlaceholder(n) {
             if (!n) return;
             var el = document.getElementById('mainSearchInput');

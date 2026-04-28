@@ -261,7 +261,7 @@
     <div class="cab-layout">
 
         <!-- ─────────────────── SIDEBAR ─────────────────── -->
-        <aside class="cab-sidebar">
+        <aside class="cab-sidebar before992">
 
             <!-- Navigation -->
             <nav class="cab-nav">
@@ -291,6 +291,31 @@
             </nav>
 
         </aside>
+
+        <!-- ─────────────────── MOBILE PROFILE CARD + TABS ─────────────────── -->
+        <div class="cab-mob-profile after992">
+            <div class="cab-mob-profile__user">
+                <div class="cab-mob-profile__avatar" id="mobCabAvatar">
+                    <img src="/icon/man.svg" class="img-cover" alt="" id="mobCabAvatarImg">
+                </div>
+                <div class="cab-mob-profile__info">
+                    <div class="cab-mob-profile__name" id="mobCabName">—</div>
+                    <div class="cab-mob-profile__plan" id="mobCabPlan">Free</div>
+                </div>
+                <div class="cab-mob-profile__balance" onclick="switchToTab('payments')">
+                    £ <span id="mobCabBalance">0</span>
+                </div>
+            </div>
+            <div class="cab-mob-tabs" id="cabMobTabs">
+                <div class="cab-mob-tab active" data-mob-tab="profile">Profile</div>
+                <div class="cab-mob-tab" data-mob-tab="my-ads">My Ads</div>
+                <div class="cab-mob-tab" data-mob-tab="favorites">Favorites</div>
+                <div class="cab-mob-tab" data-mob-tab="payments">Payments</div>
+                <div class="cab-mob-tab" data-mob-tab="subscriptions">Plans</div>
+                <div class="cab-mob-tab" data-mob-tab="settings">Settings</div>
+                <div class="cab-mob-tab" data-mob-tab="tickets">Support</div>
+            </div>
+        </div>
 
         <!-- ─────────────────── CONTENT ─────────────────── -->
         <main class="cab-content" style="background:#f5f5f5;">
@@ -3514,5 +3539,57 @@ function clearLocalAndRedirect() {
 document.getElementById('dangerModal').addEventListener('click', function(e) {
     if (e.target === this) closeDangerModal();
 });
+
+/* ── Mobile tab bar wiring ── */
+(function() {
+    function syncMobTabs(tabId) {
+        document.querySelectorAll('.cab-mob-tab').forEach(function(t) {
+            t.classList.toggle('active', t.dataset.mobTab === tabId);
+        });
+        var activeEl = document.querySelector('.cab-mob-tab.active');
+        if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    document.querySelectorAll('.cab-mob-tab').forEach(function(t) {
+        t.addEventListener('click', function() {
+            var tab = this.dataset.mobTab;
+            syncMobTabs(tab);
+            switchToTab(tab);
+        });
+    });
+
+    var _origSwitchToTab = window.switchToTab;
+    window.switchToTab = function(tab) {
+        syncMobTabs(tab);
+        if (typeof _origSwitchToTab === 'function') _origSwitchToTab(tab);
+    };
+
+    function _initMobCabProfile() {
+        var name = localStorage.getItem('bazar_username') || '';
+        var plan = localStorage.getItem('bazar_plan') || 'Free';
+        var avatar = localStorage.getItem('bazar_avatar') || '';
+        var balance = localStorage.getItem('bazar_balance') || '0';
+        var el = document.getElementById('mobCabName'); if (el) el.textContent = name;
+        var pel = document.getElementById('mobCabPlan'); if (pel) pel.textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+        var bel = document.getElementById('mobCabBalance'); if (bel) bel.textContent = parseFloat(balance || 0).toFixed(2);
+        var img = document.getElementById('mobCabAvatarImg');
+        if (img && avatar) img.src = avatar;
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', _initMobCabProfile);
+    } else {
+        _initMobCabProfile();
+    }
+})();
 </script>
+
+<!-- ─── MOBILE BOTTOM NAV (cabinet) ─── -->
+<div class="cab-mob-bottom after992">
+    <a href="/" class="cab-mob-bottom__item icon-main-home">Home</a>
+    <div class="cab-mob-bottom__item icon-win-ad" onclick="switchToTab('my-ads')">My Ads</div>
+    <a href="/post-ad" class="cab-mob-bottom__item icon-add">New AD</a>
+    <a href="/messages" class="cab-mob-bottom__item icon-email">Messages</a>
+    <div class="cab-mob-bottom__item icon-win-logout" onclick="switchToTab('logout')">Logout</div>
+</div>
+
 </body></html>
