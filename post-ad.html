@@ -160,6 +160,66 @@
       .pa-form.visible {
          display: block;
       }
+
+      /* ---- Мобильный пошаговый wizard (< 768px) ---- */
+      @media (max-width: 767px) {
+         .cat-cols {
+            display: block;
+         }
+         .cat-col {
+            max-height: none;
+            border-right: none;
+            padding: 4px 0;
+         }
+         #mainCats { flex: none; }
+         /* По умолчанию на мобильном: скрываем subCats / subSubCats */
+         #subCats, #subSubCats { display: none; }
+         /* Шаг 2: показываем subCats */
+         .cat-cols.mob-step-sub #mainCats   { display: none; }
+         .cat-cols.mob-step-sub #subCats    { display: block; }
+         .cat-cols.mob-step-sub #subSubCats { display: none; }
+         /* Шаг 3: показываем subSubCats */
+         .cat-cols.mob-step-subsub #mainCats   { display: none; }
+         .cat-cols.mob-step-subsub #subCats    { display: none; }
+         .cat-cols.mob-step-subsub #subSubCats { display: block; }
+         /* Кнопка «Назад» */
+         .mob-back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px 8px;
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #f7941d;
+            cursor: pointer;
+            border-bottom: 1px solid #ececec;
+            margin-bottom: 2px;
+         }
+         /* cat-item на мобильном — полная ширина */
+         .cat-item { white-space: normal; }
+         /* Метка выбранного пути (breadcrumb) */
+         .mob-crumb {
+            font-family: "Poppins", sans-serif;
+            font-size: 12px;
+            color: #999;
+            padding: 6px 14px 4px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 4px;
+         }
+         /* Форма на мобильном: поля в столбик */
+         .pa-field {
+            flex-direction: column;
+            gap: 6px;
+         }
+         .pa-field__label {
+            min-width: unset;
+            max-width: unset;
+            text-align: left;
+            padding-top: 0;
+            font-size: 13px;
+         }
+      }
       .pa-form .pa-section {
          padding-left: 16px;
       }
@@ -2380,6 +2440,34 @@
          }
       };
 
+      function _isMobile() { return window.innerWidth < 768; }
+
+      function _mobGoBack(step) {
+         var cols = document.querySelector('.cat-cols');
+         if (!cols) return;
+         if (step === 1) {
+            cols.classList.remove('mob-step-sub', 'mob-step-subsub');
+         } else if (step === 2) {
+            cols.classList.remove('mob-step-subsub');
+            cols.classList.add('mob-step-sub');
+         }
+         document.getElementById('paForm').classList.remove('visible');
+      }
+
+      function _mobInjectBack(containerId, label, backStep) {
+         var el = document.getElementById(containerId);
+         if (!el) return;
+         var existing = el.querySelector('.mob-back-btn');
+         if (existing) existing.remove();
+         var btn = document.createElement('div');
+         btn.className = 'mob-back-btn';
+         btn.innerHTML = '&#8592; ' + label;
+         btn.onclick = function() { _mobGoBack(backStep); };
+         el.insertBefore(btn, el.firstChild);
+         var existingCrumb = el.querySelector('.mob-crumb');
+         if (existingCrumb) existingCrumb.remove();
+      }
+
       function selectCat(el) {
          document.querySelectorAll('#mainCats .cat-item').forEach(c => c.classList.remove('active'));
          el.classList.add('active');
@@ -2420,6 +2508,15 @@
          if (subtypeField) subtypeField.style.display = 'none';
          if (condField) condField.style.display = 'flex';
          onCatFieldsChange();
+         /* Mobile wizard: перейти к шагу 2 */
+         if (_isMobile() && hasSubcats) {
+            var cols = document.querySelector('.cat-cols');
+            if (cols) {
+               cols.classList.remove('mob-step-subsub');
+               cols.classList.add('mob-step-sub');
+            }
+            _mobInjectBack('subCats', 'Back', 1);
+         }
          updateRealEstateTitle();
       }
 
@@ -2440,6 +2537,7 @@
             activatePhoneFields();
             document.getElementById('subtypeField').style.display = 'none';
             document.getElementById('paForm').classList.add('visible');
+            if (_isMobile()) { setTimeout(function(){ document.getElementById('paForm').scrollIntoView({behavior:'smooth',block:'start'}); }, 100); }
             return;
          }
          deactivatePhoneFields();
@@ -2448,8 +2546,24 @@
          var subSubList = (catData[cat] && catData[cat][sub]) || [];
          if (subSubList.length > 0) {
             document.getElementById('paForm').classList.remove('visible');
+            /* Mobile wizard: перейти к шагу 3 */
+            if (_isMobile()) {
+               var cols = document.querySelector('.cat-cols');
+               if (cols) {
+                  cols.classList.remove('mob-step-sub');
+                  cols.classList.add('mob-step-subsub');
+               }
+               _mobInjectBack('subSubCats', 'Back', 2);
+               var crumb = document.createElement('div');
+               crumb.className = 'mob-crumb';
+               crumb.textContent = el.textContent.trim();
+               var subSubEl = document.getElementById('subSubCats');
+               var backBtn = subSubEl ? subSubEl.querySelector('.mob-back-btn') : null;
+               if (backBtn) subSubEl.insertBefore(crumb, backBtn.nextSibling);
+            }
          } else {
             document.getElementById('paForm').classList.add('visible');
+            if (_isMobile()) { setTimeout(function(){ document.getElementById('paForm').scrollIntoView({behavior:'smooth',block:'start'}); }, 100); }
          }
       }
 
@@ -2574,6 +2688,7 @@
 
          updateRealEstateTitle();
          document.getElementById('paForm').classList.add('visible');
+         if (_isMobile()) { setTimeout(function(){ document.getElementById('paForm').scrollIntoView({behavior:'smooth',block:'start'}); }, 100); }
       }
 
       function toggleRtDropdown() {
