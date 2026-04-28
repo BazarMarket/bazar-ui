@@ -3370,7 +3370,7 @@ function submitNewTicket() {
     if (errEl) errEl.style.display = 'none';
     if (btn) { btn.textContent = 'Submitting…'; btn.disabled = true; }
 
-    fetch(window.BAZAR_API + '/tickets', {
+    fetch('/api/tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ firebase_uid: uid, customer_name: name, customer_email: email, subject: subject, category: category, message: message }),
