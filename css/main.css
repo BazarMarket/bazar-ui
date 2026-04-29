@@ -4723,6 +4723,9 @@ body.bazar-logged .card__heart {
     margin-top: 2px;
     line-height: 1.3;
   }
+  .cards__sliders .card__name[data-lt="1"] {
+    display: none;
+  }
   .cards__sliders .price-new {
     font-size: 14px;
     font-weight: 700;

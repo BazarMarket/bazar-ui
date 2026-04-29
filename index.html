@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
     <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/main.css?v=124" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/main.css?v=125" type="text/css"> <!-- Основные стили темы  -->
     <link rel="icon" type="image/png" href="favicon.png?v=12">
 </head>
 
@@ -1402,11 +1402,11 @@
         var _catFallback = _bzLtLabel[(ad.listing_type || '').toLowerCase()] || '';
         var _cardNameText = ad.title || _catFallback;
         var _ltLabel = _catFallback ? '<span class="card__lt-label">' + _catFallback + '</span>' : '';
-        if (_catFallback && _cardNameText === _catFallback) _cardNameText = '';
+        var _nameIsLt = (_catFallback && _cardNameText === _catFallback) ? ' data-lt="1"' : '';
         return '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + cardUrl + '\'}">' +
             '<a href="' + cardUrl + '" class="card-link" aria-label="View listing"></a>' +
             '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_logoUid ? 'data-uid="' + _logoUid + '"' : '') + ' alt=""></div>' +
-            '<div class="card__info"><p class="card__name">' + _cardNameText + '</p>' +
+            '<div class="card__info"><p class="card__name"' + _nameIsLt + '>' + _cardNameText + '</p>' +
             '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
             '<div class="card__img">' + stiker +
             '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
