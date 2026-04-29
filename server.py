@@ -751,6 +751,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property-short-rent/flats, /property-short-rent/rooms  →  category_modifier
         if parts[0] == 'property-short-rent' and parts[1] in CATEGORY_LABELS:
             return 'category_modifier', {'category': parts[1], 'modifier': 'short-term'}
+        # /property-short-rent/{anything} → property_subtype_modifier (catch-all)
+        if parts[0] == 'property-short-rent':
+            return 'property_subtype_modifier', {'subtype': parts[1]}
         # /flats/for-sale, /rooms/for-sale  →  301 redirect to /property-for-sale/{cat}
         if parts[1] == 'for-sale' and parts[0] in CATEGORY_LABELS:
             return 'redirect_301', {'location': f'/property-for-sale/{parts[0]}'}
@@ -1453,9 +1456,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Property for Rent", "item": parent_url},
-                {"@type": "ListItem", "position": 3,
-                 "name": "Short-Term", "item": canonical},
+                 "name": "Property for Short-Term Rent", "item": canonical},
             ]
         }
         schema = {
@@ -1482,8 +1483,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':         intro,
             'breadcrumbs':   [
                 ('Home', '/'),
-                ('Property for Rent', '/property-to-rent'),
-                ('Short-Term', None),
+                ('Property for Short-Term Rent', None),
             ],
             'related_links': [('Looking for long-term rentals?', 'Browse all properties for long-term rent', '/property-to-rent')],
             'type':          'category',
@@ -1624,17 +1624,16 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         parent_url = f'{PUBLIC_DOMAIN}/property-to-rent/{subtype}'
         desc      = intro[:160]
 
+        short_rent_url = f'{PUBLIC_DOMAIN}/property-short-rent'
         breadcrumb_schema = {
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1,
                  "name": "Home", "item": PUBLIC_DOMAIN},
                 {"@type": "ListItem", "position": 2,
-                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property-to-rent'},
+                 "name": "Property for Short-Term Rent", "item": short_rent_url},
                 {"@type": "ListItem", "position": 3,
-                 "name": data.get('h1', f'{label} for Rent in the UK'), "item": parent_url},
-                {"@type": "ListItem", "position": 4,
-                 "name": "Short-Term", "item": canonical},
+                 "name": label, "item": canonical},
             ]
         }
         schema = {
@@ -1661,11 +1660,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro':       intro,
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Property for Rent', '/property-to-rent'),
-                (data.get('h1', f'{label} for Rent in the UK'), f'/property/{subtype}'),
-                ('Short-Term', None),
+                ('Property for Short-Term Rent', '/property-short-rent'),
+                (label, None),
             ],
-            'related_links': [(f'Looking for long-term options?', f'Browse all {label.lower()} for rent', f'/property/{subtype}')],
+            'related_links': [(f'Looking for long-term options?', f'Browse all {label.lower()} for rent', f'/property-to-rent/{subtype}')],
             'type':        'category',
         }
         return seo
