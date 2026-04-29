@@ -46,6 +46,77 @@
         .cab-msgs-loading {
             padding: 24px; text-align: center; color: #bbb; font-size: 14px;
         }
+
+        /* ── Mobile back button (hidden on desktop) ── */
+        .cab-mob-back {
+            display: none;
+            background: none; border: none; font-size: 22px; cursor: pointer;
+            padding: 0 10px 0 0; color: #1a1a1a; align-items: center;
+            flex-shrink: 0; line-height: 1;
+        }
+
+        @media (max-width: 767px) {
+            body { overflow: hidden; }
+
+            /* Shrink page to fit between header and bottom nav */
+            .msgs-page {
+                padding: 0;
+                height: calc(100vh - 56px);
+            }
+
+            /* Strip desktop card styling */
+            .cab-msgs-wrap {
+                border: none; border-radius: 0; box-shadow: none;
+                height: 100%; min-height: 0; flex-direction: column;
+            }
+
+            /* Conversation list — full width, visible by default */
+            .cab-msgs-list {
+                width: 100%; border-right: none;
+                flex: 1; min-height: 0;
+            }
+
+            /* Chat pane — hidden until conversation selected */
+            .cab-msgs-chat {
+                display: none !important;
+                position: fixed; top: 0; left: 0; right: 0; bottom: 56px;
+                z-index: 200; background: #fff; flex-direction: column;
+            }
+
+            /* When chat is open: show chat, hide list */
+            body.mob-chat-active .cab-msgs-chat {
+                display: flex !important;
+            }
+            body.mob-chat-active .cab-msgs-list {
+                display: none;
+            }
+
+            /* Show back button on mobile */
+            .cab-mob-back {
+                display: flex;
+            }
+
+            /* Resize chat head for mobile */
+            .cab-chat-head {
+                padding: 10px 12px;
+            }
+            .cab-chat-head__ad {
+                display: none !important;
+            }
+
+            /* Mobile bottom nav (same as index.html) */
+            .mob-msgs-nav {
+                position: fixed; bottom: 0; left: 0; right: 0; height: 56px;
+                background: #fff; border-top: 1px solid #e8e8e8;
+                display: flex; align-items: center; justify-content: space-around;
+                z-index: 300;
+            }
+        }
+
+        /* Hide mobile nav on desktop */
+        @media (min-width: 768px) {
+            .mob-msgs-nav { display: none; }
+        }
     </style>
 </head>
 
@@ -144,6 +215,7 @@
                 <!-- Dynamic real chat pane -->
                 <div class="cab-chat-content" id="cab-chat-real" style="display:none;flex-direction:column;height:100%;">
                     <div class="cab-chat-head">
+                        <button class="cab-mob-back" onclick="cabMobBack()" aria-label="Back">&#8592;</button>
                         <img class="cab-chat-head__avatar" src="/icon/man.svg" alt="" id="cabRealAvatar">
                         <div>
                             <div class="cab-chat-head__name" id="cabRealHeadName"></div>
@@ -207,6 +279,7 @@
                 <!-- Support chat (static) -->
                 <div class="cab-chat-content" id="cab-chat-support" style="display:none;">
                     <div class="cab-chat-head">
+                        <button class="cab-mob-back" onclick="cabMobBack()" aria-label="Back">&#8592;</button>
                         <div class="cab-chat-head__avatar cab-chat-head__avatar--b">B</div>
                         <div>
                             <div class="cab-chat-head__name">Bazar Support</div>
@@ -233,6 +306,15 @@
 
 </div>
 <!-- end wrapper -->
+
+<!-- Mobile bottom nav -->
+<nav class="mob-msgs-nav">
+    <a href="/" class="menu-mob__item icon-main-home">Home</a>
+    <a href="/messages" class="menu-mob__item icon-chat-full" style="color:#ff9138;">Messages</a>
+    <a href="#" class="menu-mob__item icon-heart-new" onclick="window.location.href='/cabinet#favorites'">Favorites</a>
+    <a href="/post-ad" class="menu-mob__item icon-add">New AD</a>
+    <a href="#" class="menu-mob__item icon-user-big" onclick="window.location.href='/cabinet#profile'">Profile</a>
+</nav>
 
 <script>
 /* ═══════════════════════════════════════════════════
@@ -412,6 +494,7 @@ function cabOpenRealChat(convId) {
     realEl.style.display = 'flex';
     realEl.style.flexDirection = 'column';
     realEl.style.height = '100%';
+    document.body.classList.add('mob-chat-active');
 
     if (conv) {
         /* fill header */
@@ -581,6 +664,17 @@ function cabOpenChat(id) {
         if (b) b.scrollTop = b.scrollHeight;
     }
     document.getElementById('cabMsgEmpty').style.display = 'none';
+    document.body.classList.add('mob-chat-active');
+}
+
+function cabMobBack() {
+    document.body.classList.remove('mob-chat-active');
+    document.querySelectorAll('.cab-chat-content').forEach(function (el) { el.style.display = 'none'; });
+    document.querySelectorAll('[data-conv]').forEach(function (el) { el.classList.remove('active'); });
+    document.querySelectorAll('.cab-conv-item:not([data-conv])').forEach(function (el) { el.classList.remove('active'); });
+    document.getElementById('cabMsgEmpty').style.display = '';
+    if (_unsubMsgs) { _unsubMsgs.unsub(); _unsubMsgs = null; }
+    _activeConvId = null;
 }
 
 function cabSendToActive(input) {
