@@ -1574,6 +1574,7 @@
                         var _ltFallback2 = _bzLtLabel[(ad.listing_type || '').toLowerCase()] || '';
                         var _ltNameText2 = ad.title || _ltFallback2;
                         var _ltIsLt2 = (_ltFallback2 && _ltNameText2 === _ltFallback2) ? ' data-lt="1"' : '';
+                        var _ltLabel2 = (_ltIsLt2 && _ltFallback2) ? '<span class="card__lt-label">' + _ltFallback2 + '</span>' : '';
                         latestSlidesHtml += '<div class="swiper-slide"><div class="' + cardCls2 + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + latSwUrl + '\'}">' +
                             '<a href="' + latSwUrl + '" class="card-link" aria-label="View listing"></a>' +
                             '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_latSwUid ? 'data-uid="' + _latSwUid + '"' : '') + ' alt=""></div>' +
@@ -1582,7 +1583,7 @@
                             '<div class="card__img">' + stiker2 +
                             '<img src="' + imgSrc2 + '" alt="" class="img-cover" loading="lazy">' +
                             '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
-                            '<div class="card__down"><div class="card__prices"><span class="price-new">' + price2 + '</span></div>' + infoBord2 + '</div>' +
+                            '<div class="card__down"><div class="card__prices"><span class="price-new">' + price2 + '</span></div>' + _ltLabel2 + infoBord2 + '</div>' +
                             '</div></div>';
                     });
                     latestSwiperWrapper.innerHTML = latestSlidesHtml;
