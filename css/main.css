@@ -3788,6 +3788,9 @@ p {
 .card__dop .info-bord:empty {
   display: none;
 }
+.card__lt-label {
+  display: none;
+}
 
 .card__heart {
   display: none;
@@ -4698,11 +4701,27 @@ body.bazar-logged .card__heart {
     text-align: left;
     color: #1a1a1a;
     font-weight: 400;
-    white-space: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
     line-height: 1.3;
   }
   .cards__sliders .card__label {
     display: none;
+  }
+  .cards__sliders .card__lt-label {
+    display: block;
+    font-size: 10px;
+    color: #888;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    margin-top: 2px;
+    line-height: 1.3;
   }
   .cards__sliders .price-new {
     font-size: 14px;

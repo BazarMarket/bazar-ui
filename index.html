@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
     <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/main.css?v=123" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/main.css?v=124" type="text/css"> <!-- Основные стили темы  -->
     <link rel="icon" type="image/png" href="favicon.png?v=12">
 </head>
 
@@ -1401,6 +1401,7 @@
         var _logoUid = ad.seller_firebase_uid || '';
         var _catFallback = _bzLtLabel[(ad.listing_type || '').toLowerCase()] || '';
         var _cardNameText = ad.title || _catFallback;
+        var _ltLabel = _catFallback ? '<span class="card__lt-label">' + _catFallback + '</span>' : '';
         return '<div class="' + cardCls + '" style="position:relative;cursor:pointer" onclick="if(!event.target.closest(\'.card__heart\')){window.location.href=\'' + cardUrl + '\'}">' +
             '<a href="' + cardUrl + '" class="card-link" aria-label="View listing"></a>' +
             '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_logoUid ? 'data-uid="' + _logoUid + '"' : '') + ' alt=""></div>' +
@@ -1409,7 +1410,7 @@
             '<div class="card__img">' + stiker +
             '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
             '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
-            '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + infoBord + '</div>' +
+            '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + _ltLabel + infoBord + '</div>' +
             '</div>';
     }
     function bazarBoostPay(returnUrl, listingId) {
