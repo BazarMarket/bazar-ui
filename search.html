@@ -2212,13 +2212,6 @@
             var apiByBucket = {};
             resp.data.forEach(function(ad) {
               var bucket = guessCategory(ad.property_type, ad.title);
-              /* For compound land sub-type pages (e.g. tourist-land), skip
-                 land items that don't match the exact sub_type */
-              if (_subTypeConfig && _subTypeConfig.st && bucket === _subTypeConfig.bucket) {
-                var adSt = (ad.sub_type || '').toLowerCase().trim();
-                var expSt = _subTypeConfig.st.toLowerCase().trim();
-                if (adSt !== expSt) return;
-              }
               if (!apiByBucket[bucket]) apiByBucket[bucket] = [];
               var stk = [];
               if (ad.is_vip) stk.push('VIP');
@@ -2299,12 +2292,6 @@
                   var newItems = [];
                   resp2.data.forEach(function(ad) {
                     if (existingIds[ad.id]) return;
-                    /* For compound land sub-type pages, filter by sub_type */
-                    if (_subTypeConfig && _subTypeConfig.st) {
-                      var adSt2 = (ad.sub_type || '').toLowerCase().trim();
-                      var expSt2 = _subTypeConfig.st.toLowerCase().trim();
-                      if (adSt2 !== expSt2) return;
-                    }
                     var imgSrc = ad.photo || 'img/product.jpg';
                     if (!imgSrc || imgSrc.indexOf('dev.bazar.uk') !== -1) imgSrc = 'img/product.jpg';
                     var stk = []; if (ad.is_vip) stk.push('VIP'); if (ad.is_pro) stk.push('PRO');
@@ -2733,9 +2720,6 @@
                } else if (_aptSubtypeMap[pathSub]) {
                   var _atBox = document.querySelector('#cfAptTypePanel input[value="' + _aptSubtypeMap[pathSub] + '"]');
                   if (_atBox) { _atBox.checked = true; if (typeof updateAptTypeLabel === 'function') updateAptTypeLabel(); }
-               } else if (_landSubtypeMap[pathSub]) {
-                  var _ltBox = document.querySelector('#cfPlotTypePanel input[value="' + _landSubtypeMap[pathSub] + '"]');
-                  if (_ltBox) { _ltBox.checked = true; if (typeof updatePlotTypeLabel === 'function') updatePlotTypeLabel(); }
                }
                if (typeEl) typeEl.textContent = pathAutoType;
                window._bazarCurrentType = pathAutoType;
