@@ -2138,7 +2138,9 @@
         var _subTypeSlugMap = {
           'industrial-land':   {pt: 'land', bucket: 'Land', st: 'Industrial land'},
           'commercial-land':   {pt: 'land', bucket: 'Land', st: 'Commercial land'},
-          'agricultural-land': {pt: 'land', bucket: 'Land', st: 'Agricultural land'}
+          'agricultural-land': {pt: 'land', bucket: 'Land', st: 'Agricultural land'},
+          'tourist-land':      {pt: 'land', bucket: 'Land', st: 'Tourist land'},
+          'residential-land':  {pt: 'land', bucket: 'Land', st: 'Residential land'}
         };
         var _subTypeConfig = !_isRoomsPage && _pathSub0 ? (_subTypeSlugMap[_pathSub0] || null) : null;
         var _isSubtypePage = !_isRoomsPage && !!(_pathSub0 && (_subtypeBucketMap[_pathSub0] || _subTypeConfig));
@@ -2210,6 +2212,13 @@
             var apiByBucket = {};
             resp.data.forEach(function(ad) {
               var bucket = guessCategory(ad.property_type, ad.title);
+              /* For compound land sub-type pages (e.g. tourist-land), skip
+                 land items that don't match the exact sub_type */
+              if (_subTypeConfig && _subTypeConfig.st && bucket === _subTypeConfig.bucket) {
+                var adSt = (ad.sub_type || '').toLowerCase().trim();
+                var expSt = _subTypeConfig.st.toLowerCase().trim();
+                if (adSt !== expSt) return;
+              }
               if (!apiByBucket[bucket]) apiByBucket[bucket] = [];
               var stk = [];
               if (ad.is_vip) stk.push('VIP');
@@ -2290,6 +2299,12 @@
                   var newItems = [];
                   resp2.data.forEach(function(ad) {
                     if (existingIds[ad.id]) return;
+                    /* For compound land sub-type pages, filter by sub_type */
+                    if (_subTypeConfig && _subTypeConfig.st) {
+                      var adSt2 = (ad.sub_type || '').toLowerCase().trim();
+                      var expSt2 = _subTypeConfig.st.toLowerCase().trim();
+                      if (adSt2 !== expSt2) return;
+                    }
                     var imgSrc = ad.photo || 'img/product.jpg';
                     if (!imgSrc || imgSrc.indexOf('dev.bazar.uk') !== -1) imgSrc = 'img/product.jpg';
                     var stk = []; if (ad.is_vip) stk.push('VIP'); if (ad.is_pro) stk.push('PRO');
@@ -2679,7 +2694,8 @@
               'maisonette': 'House', 'townhouse': 'House', 'detached': 'House',
               'semi-detached': 'House', 'terraced': 'House',
               'penthouse': 'Flats', 'duplex': 'Flats', 'apartment': 'Flats', 'flats': 'Flats',
-              'industrial-land': 'Land', 'commercial-land': 'Land', 'agricultural-land': 'Land'
+              'industrial-land': 'Land', 'commercial-land': 'Land', 'agricultural-land': 'Land',
+              'tourist-land': 'Land', 'residential-land': 'Land'
             };
             /* Map subtype slug to the exact panel value for sub-filter auto-check */
             var _houseSubtypeMap = {
@@ -2688,6 +2704,13 @@
             };
             var _aptSubtypeMap = {
               'penthouse':'Penthouse','duplex':'Duplex'
+            };
+            var _landSubtypeMap = {
+              'tourist-land':     'Tourist land',
+              'residential-land': 'Residential land',
+              'agricultural-land':'Agricultural land',
+              'commercial-land':  'Commercial land',
+              'industrial-land':  'Industrial land'
             };
             if (!pathAutoType && pathSub && _autoSubBucketMap[pathSub]) pathAutoType = _autoSubBucketMap[pathSub];
             /* Parse city and district from URL (3rd and 4th segments) — only for property pages */
@@ -2710,6 +2733,9 @@
                } else if (_aptSubtypeMap[pathSub]) {
                   var _atBox = document.querySelector('#cfAptTypePanel input[value="' + _aptSubtypeMap[pathSub] + '"]');
                   if (_atBox) { _atBox.checked = true; if (typeof updateAptTypeLabel === 'function') updateAptTypeLabel(); }
+               } else if (_landSubtypeMap[pathSub]) {
+                  var _ltBox = document.querySelector('#cfPlotTypePanel input[value="' + _landSubtypeMap[pathSub] + '"]');
+                  if (_ltBox) { _ltBox.checked = true; if (typeof updatePlotTypeLabel === 'function') updatePlotTypeLabel(); }
                }
                if (typeEl) typeEl.textContent = pathAutoType;
                window._bazarCurrentType = pathAutoType;
