@@ -101,6 +101,15 @@ def _init_chat_db():
             CREATE INDEX IF NOT EXISTS idx_msgs_conv ON messages(conv_id, id);
             CREATE INDEX IF NOT EXISTS idx_convs_buyer   ON conversations(buyer_id);
             CREATE INDEX IF NOT EXISTS idx_convs_seller  ON conversations(seller_name);
+            CREATE TABLE IF NOT EXISTS property_comments (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                property_id TEXT NOT NULL,
+                uid         TEXT DEFAULT '',
+                username    TEXT DEFAULT 'Anonymous',
+                text        TEXT NOT NULL,
+                created_at  REAL DEFAULT 0
+            );
+            CREATE INDEX IF NOT EXISTS idx_comments_prop ON property_comments(property_id, id);
         ''')
         conn.commit()
         conn.close()
@@ -2879,6 +2888,52 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
             self._send_json(200, {'ok': True}); return
 
+        # ── /api/comments ─────────────────────────────────────────────────────
+        if path_only0 == '/api/comments':
+            # GET /api/comments?property_id=X
+            if self.command == 'GET':
+                prop_id = qs.get('property_id', [''])[0].strip()
+                if not prop_id:
+                    self._send_json(400, {'error': 'property_id required'}); return
+                with _chat_lock:
+                    conn = _chat_db()
+                    rows = conn.execute(
+                        'SELECT id, username, text, created_at FROM property_comments '
+                        'WHERE property_id=? ORDER BY id ASC', (prop_id,)
+                    ).fetchall()
+                    conn.close()
+                result = [{'id': r['id'], 'username': r['username'],
+                           'text': r['text'], 'created_at': r['created_at']} for r in rows]
+                self._send_json(200, {'comments': result}); return
+            # POST /api/comments
+            if self.command == 'POST':
+                length = int(self.headers.get('Content-Length', 0))
+                body   = self.rfile.read(length)
+                try:
+                    data = json.loads(body) if body else {}
+                except Exception:
+                    data = {}
+                prop_id  = str(data.get('property_id', '')).strip()
+                text     = str(data.get('text', '')).strip()
+                username = str(data.get('username', 'Anonymous')).strip()[:80] or 'Anonymous'
+                uid      = str(data.get('uid', '')).strip()[:128]
+                if not prop_id or not text:
+                    self._send_json(400, {'error': 'property_id and text required'}); return
+                if len(text) > 2000:
+                    self._send_json(400, {'error': 'Comment too long'}); return
+                now = time.time()
+                with _chat_lock:
+                    conn = _chat_db()
+                    conn.execute(
+                        'INSERT INTO property_comments (property_id, uid, username, text, created_at) '
+                        'VALUES (?,?,?,?,?)', (prop_id, uid, username, text, now)
+                    )
+                    conn.commit()
+                    row_id = conn.execute('SELECT last_insert_rowid()').fetchone()[0]
+                    conn.close()
+                self._send_json(200, {'ok': True, 'id': row_id,
+                                      'username': username, 'created_at': now}); return
+
         # ── /api/tickets (create ticket + Gemini AI reply) ───────────────────
         if path_only0 == '/api/tickets':
             length = int(self.headers.get('Content-Length', 0))
@@ -3406,7 +3461,23 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 })
             self._send_json(200, {'items': items, 'pending_count': pending}); return
 
-        # ── /api/chat/msgs ────────────────────────────────────────────────────
+        # ── /api/comments (GET) ───────────────────────────────────────────────
+        if path == '/api/comments':
+            params  = urllib.parse.parse_qs(qs)
+            prop_id = params.get('property_id', [''])[0].strip()
+            if not prop_id:
+                self._send_json(400, {'error': 'property_id required'}); return
+            with _chat_lock:
+                conn = _chat_db()
+                rows = conn.execute(
+                    'SELECT id, username, text, created_at FROM property_comments '
+                    'WHERE property_id=? ORDER BY id ASC', (prop_id,)
+                ).fetchall()
+                conn.close()
+            result = [{'id': r['id'], 'username': r['username'],
+                       'text': r['text'], 'created_at': r['created_at']} for r in rows]
+            self._send_json(200, {'comments': result}); return
+
         if path == '/api/chat/msgs':
             params = urllib.parse.parse_qs(qs)
             cid   = params.get('conv_id', [None])[0]

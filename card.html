@@ -2040,44 +2040,105 @@ function submitEmailForm(e) {
 <script src="js/chat.js?v=3"></script>
 <script src="js/firebase-auth-v2.js?v=4"></script>
 <script>
-function submitComment() {
-    var textarea = document.querySelector('.comment-form__textarea');
-    var text = textarea ? textarea.value.trim() : '';
-    if (!text) return;
+/* ── Comments helpers ─────────────────────────────────────────────────── */
+var _commentColors = ['#ff9138','#3ecb60','#2aabee','#e55a00','#8e44ad','#e74c3c'];
+var _commentMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    var name  = localStorage.getItem('bazar_username') || 'Anonymous';
-    var initial = name.charAt(0).toUpperCase();
-    var colors  = ['#ff9138','#3ecb60','#2aabee','#e55a00','#8e44ad','#e74c3c'];
-    var color   = colors[Math.floor(Math.random() * colors.length)];
-    var now     = new Date();
-    var months  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+function _commentPropId() {
+    return new URLSearchParams(window.location.search).get('id') || '';
+}
 
-    var list    = document.getElementById('comments-list');
-    var empty   = document.getElementById('comments-empty');
-    if (empty) empty.remove();
-
-    var item = document.createElement('div');
+function _buildCommentItem(username, text, ts) {
+    var initial = (username || 'A').charAt(0).toUpperCase();
+    var color   = _commentColors[initial.charCodeAt(0) % _commentColors.length];
+    var d       = ts ? new Date(ts * 1000) : new Date();
+    var dateStr = d.getDate() + ' ' + _commentMonths[d.getMonth()] + ' ' + d.getFullYear();
+    var item    = document.createElement('div');
     item.className = 'comment-item';
     item.innerHTML =
         '<div class="comment-item__avatar" style="background:' + color + '">' + initial + '</div>' +
         '<div class="comment-item__body">' +
             '<div class="comment-item__head">' +
-                '<span class="comment-item__name">' + name + '</span>' +
+                '<span class="comment-item__name">' + String(username || 'Anonymous').replace(/</g,'&lt;') + '</span>' +
                 '<span class="comment-item__date">' + dateStr + '</span>' +
             '</div>' +
-            '<p class="comment-item__text">' + text.replace(/</g,'&lt;') + '</p>' +
+            '<p class="comment-item__text">' + String(text || '').replace(/</g,'&lt;') + '</p>' +
         '</div>';
-    list.appendChild(item);
-
-    var count = list.querySelectorAll('.comment-item').length;
-    var badge = document.getElementById('comments-count');
-    if (badge) badge.textContent = count;
-    var badgeMob = document.getElementById('comments-count-mob');
-    if (badgeMob) badgeMob.textContent = count;
-
-    textarea.value = '';
+    return item;
 }
+
+function _updateCommentCount(n) {
+    var b1 = document.getElementById('comments-count');
+    var b2 = document.getElementById('comments-count-mob');
+    if (b1) b1.textContent = n;
+    if (b2) b2.textContent = n;
+}
+
+function loadComments() {
+    var propId = _commentPropId();
+    if (!propId) return;
+    fetch('/api/comments?property_id=' + encodeURIComponent(propId))
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(d) {
+            if (!d || !d.comments) return;
+            var list  = document.getElementById('comments-list');
+            var empty = document.getElementById('comments-empty');
+            if (!list) return;
+            if (empty) empty.remove();
+            list.innerHTML = '';
+            d.comments.forEach(function(c) {
+                list.appendChild(_buildCommentItem(c.username, c.text, c.created_at));
+            });
+            _updateCommentCount(d.comments.length);
+            if (!d.comments.length) {
+                var p = document.createElement('p');
+                p.id = 'comments-empty';
+                p.className = 'comments-empty';
+                p.style = 'color:#aaa;font-size:14px;padding:16px 0;text-align:center;';
+                p.textContent = 'No comments yet. Be the first to leave one!';
+                list.appendChild(p);
+            }
+        })
+        .catch(function() {});
+}
+
+function submitComment() {
+    var textarea = document.querySelector('.comment-form__textarea');
+    var text = textarea ? textarea.value.trim() : '';
+    if (!text) return;
+
+    var propId = _commentPropId();
+    if (!propId) return;
+
+    var name = localStorage.getItem('bazar_username') || 'Anonymous';
+    var uid  = localStorage.getItem('bazar_firebase_uid') || '';
+
+    var btn = document.getElementById('commentSubmitBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ property_id: propId, text: text, username: name, uid: uid })
+    })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+        if (!d || !d.ok) return;
+        var list  = document.getElementById('comments-list');
+        var empty = document.getElementById('comments-empty');
+        if (empty) empty.remove();
+        list.appendChild(_buildCommentItem(name, text, d.created_at));
+        var count = list.querySelectorAll('.comment-item').length;
+        _updateCommentCount(count);
+        textarea.value = '';
+    })
+    .catch(function() {})
+    .finally(function() {
+        if (btn) { btn.disabled = false; btn.textContent = 'Submit'; }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', loadComments);
 </script>
 
 <!-- Custom Gallery Lightbox -->
