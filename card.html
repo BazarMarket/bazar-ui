@@ -2045,7 +2045,10 @@ var _commentColors = ['#ff9138','#3ecb60','#2aabee','#e55a00','#8e44ad','#e74c3c
 var _commentMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function _commentPropId() {
-    return new URLSearchParams(window.location.search).get('id') || '';
+    var fromQS = new URLSearchParams(window.location.search).get('id');
+    if (fromQS) return fromQS;
+    var m = window.location.pathname.match(/^\/(\d+)(?:-|\/|$)/);
+    return m ? m[1] : '';
 }
 
 function _buildCommentItem(username, text, ts) {
