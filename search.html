@@ -1294,6 +1294,28 @@
                updatePlotTypeLabel();
             }
          }
+         /* Hide Land-irrelevant filters */
+         var _landHideIds = ['cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfYearFromWrap','cfYearToWrap','cfFeaturesWrap'];
+         _landHideIds.forEach(function(id){
+            var el = document.getElementById(id);
+            if (!el) return;
+            if (landChecked) {
+               el.style.display = 'none';
+               el.querySelectorAll('input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+               /* reset labels */
+               var lbl = el.querySelector('[id$="Label"]');
+               if (lbl) {
+                  var map = {cfBedroomsWrap:'Bedrooms',cfBathroomsWrap:'Bathrooms',cfConditionWrap:'Condition',cfYearFromWrap:'Construction year min',cfYearToWrap:'Construction year max',cfFeaturesWrap:'Key features'};
+                  lbl.textContent = map[id] || lbl.textContent;
+               }
+               var clr = el.querySelector('[id$="Clear"],[id$="Cross"]');
+               if (clr) clr.style.display = 'none';
+               var btn = el.querySelector('button');
+               if (btn) btn.classList.remove('has-selection');
+            } else {
+               el.style.display = '';
+            }
+         });
          updateDynamicRowVisibility();
       }
       function updateDynamicRowVisibility() {
