@@ -4278,12 +4278,6 @@
                }
             });
 
-            var photoGrid = document.getElementById('photoPreviewGrid');
-            if (photoGrid) {
-               Array.from(photoGrid.children).forEach(function(box) {
-                  if (box._paFile) formData.append('images[]', box._paFile);
-               });
-            }
             _doUpdate(formData);
          };
 
@@ -4333,12 +4327,6 @@
             formData.append('has_telegram', (hasTg && hasTg.checked) ? '1' : '0');
             formData.append('has_viber',    (hasVb && hasVb.checked) ? '1' : '0');
             formData.append('has_email',    (hasEm && hasEm.checked) ? '1' : '0');
-            var photoGrid = document.getElementById('photoPreviewGrid');
-            if (photoGrid) {
-               Array.from(photoGrid.children).forEach(function(box) {
-                  if (box._paFile) formData.append('images[]', box._paFile);
-               });
-            }
             _doUpdate(formData);
          };
 
@@ -4376,12 +4364,6 @@
             formData.append('has_telegram', (hasTg && hasTg.checked) ? '1' : '0');
             formData.append('has_viber',    (hasVb && hasVb.checked) ? '1' : '0');
             formData.append('has_email',    (hasEm && hasEm.checked) ? '1' : '0');
-            var photoGrid = document.getElementById('photoPreviewGrid');
-            if (photoGrid) {
-               Array.from(photoGrid.children).forEach(function(box) {
-                  if (box._paFile) formData.append('images[]', box._paFile);
-               });
-            }
             _doUpdate(formData);
          };
       }
