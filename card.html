@@ -2386,25 +2386,38 @@ function _glbKey(e) {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-end !important;
-    min-width: 90px !important;
+    min-width: 0 !important;
+    max-width: 55% !important;
+    overflow: hidden !important;
   }
+  /* Two prices: main = red */
   .card-price__right .price-last-new {
     font-family: "Poppins", sans-serif !important;
     font-weight: 700 !important;
-    font-size: 26px !important;
-    color: #1d1d1b !important;
+    font-size: 30px !important;
+    color: #e53935 !important;
     line-height: 1.1 !important;
+    word-break: break-all !important;
+    text-align: right !important;
   }
+  /* Two prices: old = black, red strikethrough */
   .card-price__right .price-last-old {
     font-family: "Poppins", sans-serif !important;
-    font-size: 14px !important;
-    color: #aaa !important;
+    font-size: 15px !important;
+    color: #1d1d1b !important;
     text-decoration: line-through !important;
+    text-decoration-color: #e53935 !important;
+    text-align: right !important;
+  }
+  /* Single price: black */
+  .card-price.card-price--single-price .card-price__right .price-last-new {
+    color: #1d1d1b !important;
   }
   .card-price__right .price-negotiable {
     font-family: "Poppins", sans-serif !important;
     font-size: 11px !important;
     color: #888 !important;
+    text-align: right !important;
   }
 
   /* ── Map section ── */
