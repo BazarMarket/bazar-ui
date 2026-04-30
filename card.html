@@ -2340,49 +2340,71 @@ function _glbKey(e) {
   .slider-gallery-big__img { height: 260px !important; }
   .card-gallery__mini { display: none !important; }
 
-  /* ── Mobile meta bar (heart / views / date) ── */
-  #mob-meta-bar {
-    display: flex !important;
-    align-items: center;
-    padding: 10px 16px;
-    background: #fff;
-    gap: 14px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  #mob-meta-bar .mmb-heart {
-    display: flex; align-items: center; gap: 5px;
-    font-family: "Poppins", sans-serif; font-size: 14px; color: #555;
-    cursor: pointer; text-decoration: none;
-  }
-  #mob-meta-bar .mmb-heart.link-icon::before { font-size: 22px; color: #888; }
-  #mob-meta-bar .mmb-right {
-    margin-left: auto; display: flex; align-items: center; gap: 14px;
-    font-family: "Poppins", sans-serif; font-size: 13px; color: #888;
-  }
-  #mob-meta-bar .mmb-views,
-  #mob-meta-bar .mmb-date { display: flex; align-items: center; gap: 4px; }
-  #mob-meta-bar .mmb-views .info-icon::before,
-  #mob-meta-bar .mmb-date .info-icon::before { font-size: 15px; }
-
-  /* ── Mobile price block ── */
-  #mob-price-block {
-    padding: 12px 16px 4px;
+  /* ── Mobile title + location block ── */
+  #mob-title-loc {
+    padding: 12px 16px 10px;
     background: #fff;
   }
-  #mob-price-block .mpb-price {
-    font-family: "Poppins", sans-serif; font-weight: 700; font-size: 26px; color: #1d1d1b; margin: 0 0 4px;
+  #mob-title-loc .mtl-title {
+    font-family: "Poppins", sans-serif; font-weight: 600; font-size: 17px;
+    color: #1d1d1b; margin: 0 0 5px; line-height: 1.35;
   }
-  #mob-price-block .mpb-price-old {
-    font-family: "Poppins", sans-serif; font-size: 16px; color: #aaa; text-decoration: line-through; margin: 0 0 2px;
-  }
-  #mob-price-block .mpb-negotiable {
-    font-family: "Poppins", sans-serif; font-size: 12px; color: #888; margin: 0 0 6px;
-  }
-  #mob-price-block .mpb-title {
-    font-family: "Poppins", sans-serif; font-weight: 600; font-size: 17px; color: #1d1d1b; margin: 0 0 4px; line-height: 1.35;
-  }
-  #mob-price-block .mpb-location {
+  #mob-title-loc .mtl-location {
     font-family: "Poppins", sans-serif; font-size: 13px; color: #888; margin: 0;
+  }
+
+  /* ── Card-price block (moved from right column) ── */
+  .card-price {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 14px 16px !important;
+    background: #fff !important;
+  }
+  .card-price__info {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+  .card-price__info .info-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-family: "Poppins", sans-serif !important;
+    font-size: 13px !important;
+    color: #555 !important;
+  }
+  .card-price__info .info-icon::before {
+    color: #ff9138 !important;
+    font-size: 14px !important;
+  }
+  .card-price__right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    min-width: 90px !important;
+  }
+  .card-price__right .price-last-new {
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 26px !important;
+    color: #1d1d1b !important;
+    line-height: 1.1 !important;
+  }
+  .card-price__right .price-last-old {
+    font-family: "Poppins", sans-serif !important;
+    font-size: 14px !important;
+    color: #aaa !important;
+    text-decoration: line-through !important;
+  }
+  .card-price__right .price-negotiable {
+    font-family: "Poppins", sans-serif !important;
+    font-size: 11px !important;
+    color: #888 !important;
   }
 
   /* ── Map section ── */
@@ -2437,7 +2459,7 @@ function _glbKey(e) {
   #mob-btns .mbb-phone-sub { font-size: 13px; font-weight: 400; opacity: 0.85; }
 
   /* ── Separator lines between sections ── */
-  #mob-meta-bar, #mob-price-block, .card-grid__map-section,
+  #mob-title-loc, .card-price, .card-grid__map-section,
   .card-grid__description, .card-grid__left .card-tab,
   .card-grid__video, #mob-btns {
     border-bottom: 6px solid #f4f4f4;
@@ -2451,53 +2473,22 @@ function _glbKey(e) {
   if (window.innerWidth > 767) return;
 
   document.addEventListener('DOMContentLoaded', function() {
-    var left   = document.querySelector('.card-grid__left');
-    var right  = document.querySelector('.card-grid__right');
-    if (!left || !right) return;
+    var left  = document.querySelector('.card-grid__left');
+    var right = document.querySelector('.card-grid__right');
+    if (!left) return;
 
-    /* ── 1. Build mobile meta bar (heart / views / date) ── */
-    var heartEl  = right.querySelector('.card-nav .icon-heart') || document.querySelector('.card-nav .icon-heart');
-    var viewsEl  = right.querySelector('.info-icon.icon-eye')   || document.querySelector('.info-icon.icon-eye');
-    var dateEl   = document.getElementById('prop-date');
+    /* ── 1. Title + location block ── */
+    var mobTitleLoc = document.createElement('div');
+    mobTitleLoc.id = 'mob-title-loc';
+    mobTitleLoc.innerHTML =
+      '<p class="mtl-title"    id="mtl-title"></p>' +
+      '<p class="mtl-location" id="mtl-location"></p>';
 
-    var metaBar = document.createElement('div');
-    metaBar.id = 'mob-meta-bar';
+    /* ── 2. Move card-price from right column ── */
+    var cardPrice = right ? right.querySelector('.card-price') : null;
 
-    /* Clone the heart link and add it to meta bar */
-    var heartClone = heartEl ? heartEl.cloneNode(true) : document.createElement('a');
-    heartClone.className = (heartClone.className || '') + ' mmb-heart';
-    heartClone.innerHTML = (heartClone.innerHTML || '') + '<span id="mob-fav-count"></span>';
-
-    /* Build views & date spans using existing icon classes */
-    var viewsSpan = document.createElement('span');
-    viewsSpan.className = 'mmb-views';
-    viewsSpan.innerHTML = '<span class="info-icon icon-eye" style="font-size:13px;color:#888;padding:0;line-height:1;"></span><span id="mob-views-count"></span>';
-
-    var dateSpan = document.createElement('span');
-    dateSpan.className = 'mmb-date';
-    dateSpan.innerHTML = '<span class="info-icon icon-calendar" style="font-size:13px;color:#888;padding:0;line-height:1;"></span><span id="mob-date-str"></span>';
-
-    var mmRight = document.createElement('div');
-    mmRight.className = 'mmb-right';
-    mmRight.appendChild(viewsSpan);
-    mmRight.appendChild(dateSpan);
-
-    metaBar.appendChild(heartClone);
-    metaBar.appendChild(mmRight);
-
-    /* ── 2. Build mobile price + title block ── */
-    var priceBlock = document.createElement('div');
-    priceBlock.id = 'mob-price-block';
-    priceBlock.innerHTML =
-      '<p class="mpb-price-old" id="mpb-price-old" style="display:none"></p>' +
-      '<p class="mpb-price"     id="mpb-price-new"></p>' +
-      '<p class="mpb-negotiable" id="mpb-negotiable" style="display:none">Negotiable</p>' +
-      '<p class="mpb-title"     id="mpb-title"></p>' +
-      '<p class="mpb-location"  id="mpb-location"></p>';
-
-    /* ── 3. Build mobile buttons ── */
+    /* ── 3. Mobile buttons ── */
     var origStartBtn = document.getElementById('ccpStartBtn');
-    var origCallBtn  = document.getElementById('call-btn');
     var startOnclick = origStartBtn ? origStartBtn.getAttribute('onclick') || '' : '';
 
     var mobBtns = document.createElement('div');
@@ -2513,69 +2504,41 @@ function _glbKey(e) {
         '</span>' +
       '</button>';
 
-    /* ── 4. Collect existing left-column elements ── */
+    /* ── 4. Collect left-column elements ── */
     var gallery     = left.querySelector('.card-grid__gallery');
     var description = left.querySelector('.card-grid__description');
     var tab         = left.querySelector('.card-tab');
     var video       = left.querySelector('.card-grid__video');
     var mapSection  = left.querySelector('.card-grid__map-section');
 
-    /* ── 5. Rebuild left column in mobile order ── */
+    /* ── 5. Rebuild left column ── */
     left.innerHTML = '';
     if (gallery)     left.appendChild(gallery);
-    left.appendChild(metaBar);
-    left.appendChild(priceBlock);
+    left.appendChild(mobTitleLoc);
+    if (cardPrice)   left.appendChild(cardPrice);
     if (mapSection)  left.appendChild(mapSection);
     if (description) left.appendChild(description);
     if (tab)         left.appendChild(tab);
     if (video)       left.appendChild(video);
     left.appendChild(mobBtns);
 
-    /* ── 6. Sync data from existing elements once they are populated ── */
+    /* ── 6. Sync data ── */
     function syncMobData() {
-      /* Views */
-      var viewsSrc = document.querySelector('.card-price .info-icon.icon-eye');
-      if (viewsSrc) {
-        var vt = (viewsSrc.textContent || '').trim();
-        document.getElementById('mob-views-count').textContent = vt;
-      }
-      /* Date */
-      var dateSrc = document.getElementById('prop-date');
-      if (dateSrc) document.getElementById('mob-date-str').textContent = (dateSrc.textContent || '').trim();
-
-      /* Price */
-      var priceNewEl = document.getElementById('price-new');
-      var priceOldEl = document.getElementById('price-old');
-      var negEl      = document.getElementById('price-negotiable');
-      if (priceNewEl) {
-        var pt = (priceNewEl.textContent || '').trim();
-        var mpn = document.getElementById('mpb-price-new');
-        if (mpn && pt) mpn.textContent = pt;
-      }
-      if (priceOldEl) {
-        var po = (priceOldEl.textContent || '').trim();
-        var mpo = document.getElementById('mpb-price-old');
-        if (mpo && po) { mpo.textContent = po; mpo.style.display = ''; }
-      }
-      if (negEl && (negEl.textContent || '').trim()) {
-        var mn = document.getElementById('mpb-negotiable');
-        if (mn) mn.style.display = '';
-      }
-
       /* Title */
       var titleEl = document.getElementById('prop-title');
-      var mt = document.getElementById('mpb-title');
-      if (titleEl && mt) mt.textContent = (titleEl.textContent || '').trim();
+      var mtl = document.getElementById('mtl-title');
+      if (titleEl && mtl && !mtl.textContent.trim())
+        mtl.textContent = (titleEl.textContent || '').trim();
 
       /* Location */
       var cityEl = document.getElementById('prop-city-link');
       var distEl = document.getElementById('prop-district-link');
-      var ml = document.getElementById('mpb-location');
-      if (ml) {
-        var locParts = [];
-        if (cityEl && cityEl.textContent.trim()) locParts.push(cityEl.textContent.trim());
-        if (distEl && distEl.textContent.trim()) locParts.push(distEl.textContent.trim());
-        ml.textContent = locParts.join(', ');
+      var mll = document.getElementById('mtl-location');
+      if (mll && !mll.textContent.trim()) {
+        var parts = [];
+        if (cityEl && cityEl.textContent.trim()) parts.push(cityEl.textContent.trim());
+        if (distEl && distEl.textContent.trim()) parts.push(distEl.textContent.trim());
+        mll.textContent = parts.join(', ');
       }
 
       /* Phone sub-label */
@@ -2589,23 +2552,8 @@ function _glbKey(e) {
           mobSub.textContent = maskedEl.textContent.trim();
         }
       }
-
-      /* Fav count */
-      var favBadgeSrc = document.querySelector('.card-fav-count, .fav-count, [id*="fav-count"]');
-      var mobFav = document.getElementById('mob-fav-count');
-      if (mobFav && favBadgeSrc) mobFav.textContent = favBadgeSrc.textContent.trim();
-
-      /* Mirror start-chat badge to mobile button */
-      var srcBadge = document.getElementById('start-chat-badge');
-      var mobBadge = document.getElementById('mob-chat-badge');
-      if (srcBadge && mobBadge) {
-        mobBadge.style.display    = srcBadge.style.display;
-        mobBadge.textContent      = srcBadge.textContent;
-        mobBadge.style.background = srcBadge.style.background;
-      }
     }
 
-    /* Run immediately and also poll until data appears */
     syncMobData();
     var _sync = setInterval(syncMobData, 300);
     setTimeout(function() { clearInterval(_sync); }, 8000);
