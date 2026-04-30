@@ -250,7 +250,7 @@ window.onload = function () {
 
 
     //ИНПУТ МАСКА ДЛЯ ТЕЛЕФОНА  =============================================================================================================
-    const telInput = document.querySelectorAll('input[type="tel"]');
+    const telInput = document.querySelectorAll('input[type="tel"]:not(.modal-number-input)');
     var im = new Inputmask("9999 999999");
     im.mask(telInput);
 
