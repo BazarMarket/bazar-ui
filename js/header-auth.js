@@ -397,3 +397,31 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         }
     }, true);
 })();
+
+/* ── Mobile bottom-nav handlers (global, available on all pages) ── */
+if (typeof window._bzIsLoggedIn !== 'function') {
+    window._bzIsLoggedIn = function() {
+        return !!(localStorage.getItem('bazar_firebase_uid') && localStorage.getItem('bazar_username'));
+    };
+}
+if (typeof window.handleMobileProfile !== 'function') {
+    window.handleMobileProfile = function(e) {
+        e.preventDefault();
+        if (_bzIsLoggedIn()) { window.location.href = '/cabinet'; }
+        else if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
+    };
+}
+if (typeof window.handleMobileFavorites !== 'function') {
+    window.handleMobileFavorites = function(e) {
+        e.preventDefault();
+        if (_bzIsLoggedIn()) { window.location.href = '/cabinet/favorites'; }
+        else if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
+    };
+}
+if (typeof window.handleMobileMessages !== 'function') {
+    window.handleMobileMessages = function(e) {
+        e.preventDefault();
+        if (_bzIsLoggedIn()) { window.location.href = '/messages'; }
+        else if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
+    };
+}
