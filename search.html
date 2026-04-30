@@ -2224,7 +2224,7 @@
                 id:   ad.id,
                 s:    (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller',
                 t:    ad.title || 'Property listing',
-                imgs: [imgSrc],
+                imgs: (ad.images && ad.images.length > 0) ? ad.images : [imgSrc],
                 info: _buildInfoFromAd(ad),
                 p:    priceNum  ? '£ ' + priceNum.toLocaleString('en-GB')  : '—',
                 pn:   priceNum,
@@ -2299,7 +2299,7 @@
                     var oldPriceN2 = ad.old_price ? Number(ad.old_price) : 0;
                     newItems.push({
                       id: ad.id, s: (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller', t: ad.title || _extraTitle,
-                      imgs: [imgSrc], info: _buildInfoFromAd(ad),
+                      imgs: (ad.images && ad.images.length > 0) ? ad.images : [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
                       pn: priceNum2,
                       op: (oldPriceN2 && oldPriceN2 > priceNum2) ? '£ ' + Math.round(oldPriceN2).toLocaleString('en-GB') : '',
