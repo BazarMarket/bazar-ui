@@ -292,13 +292,21 @@
          .mob-crumb    { display: none !important; }
 
          /* Form fields stacked on mobile */
-         .pa-field { flex-direction: column; gap: 6px; }
+         .pa-field { flex-direction: column; gap: 6px; align-items: stretch; }
          .pa-field__label {
             min-width: unset;
             max-width: unset;
             text-align: left;
             padding-top: 0;
             font-size: 13px;
+         }
+         .pa-field__control,
+         .pa-field__control--wide { width: 100%; max-width: 100%; }
+
+         /* Reduce form section padding on mobile */
+         .pa-form .pa-section {
+            padding: 16px 16px 20px;
+            margin: 0 0 10px;
          }
       }
       .pa-form .pa-section {
