@@ -206,12 +206,21 @@ window.onload = function () {
         loop: true,
         watchOverflow: true,
         centerInsufficientSlides: true,
-        autoHeight: true,
-        slidesPerView: 1,
-        spaceBetween: 10,
+        autoHeight: false,
+        slidesPerView: 1.12,
+        spaceBetween: 6,
 
+        pagination: {
+            el: '.slider-gallery-big .swiper-pagination',
+            clickable: true,
+        },
 
-
+        breakpoints: {
+            768: {
+                slidesPerView: 1,
+                spaceBetween: 10,
+            }
+        },
 
         // навигация
 

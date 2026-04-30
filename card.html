@@ -176,6 +176,7 @@
                                        </div>
                                        <div class="button-prev icon-arrow-l"></div>
                                        <div class="button-next icon-arrow-r"></div>
+                                       <div class="swiper-pagination"></div>
                                     </div>
                                  </div>
                               </div>
@@ -2339,6 +2340,29 @@ function _glbKey(e) {
   /* ── Gallery ── */
   .slider-gallery-big__img { height: 260px !important; }
   .card-gallery__mini { display: none !important; }
+  /* Peek at next slide */
+  .card-grid__gallery { overflow: hidden !important; }
+  .slider-gallery-big .swiper { overflow: visible !important; }
+  /* Hide arrows on mobile */
+  .slider-gallery-big .button-prev,
+  .slider-gallery-big .button-next { display: none !important; }
+  /* Pagination dots */
+  .slider-gallery-big .swiper-pagination {
+    bottom: 10px !important;
+    z-index: 20 !important;
+  }
+  .slider-gallery-big .swiper-pagination-bullet {
+    background: #fff !important;
+    opacity: 0.55 !important;
+    width: 7px !important; height: 7px !important;
+    transition: all 0.2s !important;
+  }
+  .slider-gallery-big .swiper-pagination-bullet-active {
+    background: #fff !important;
+    opacity: 1 !important;
+    width: 22px !important;
+    border-radius: 4px !important;
+  }
 
   /* ── Mobile title + location block ── */
   #mob-title-loc {
