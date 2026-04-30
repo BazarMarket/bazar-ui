@@ -666,37 +666,12 @@
          gap: 8px 16px;
          padding: 4px 0;
       }
-      .pa-feat-top { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px 16px; padding: 4px 0; }
-      .pa-feat-groups { display: none; margin-top: 12px; }
-      .pa-feat-groups.open { display: block; }
-      .pa-feat-group { margin-bottom: 10px; }
-      .pa-feat-group__title {
-         font-family: 'Poppins', sans-serif;
-         font-size: 11px;
-         font-weight: 600;
-         text-transform: uppercase;
-         letter-spacing: .4px;
-         color: #bbb;
-         margin: 0 0 6px;
+      /* Key features dropdown — scrollable panel */
+      .pa-feat-dropdown {
+         max-height: 420px;
+         overflow-y: auto;
+         overscroll-behavior: contain;
       }
-      .pa-feat-group__items { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px 16px; }
-      .pa-feat-more {
-         display: inline-flex;
-         align-items: center;
-         gap: 5px;
-         margin-top: 10px;
-         font-family: 'Poppins', sans-serif;
-         font-size: 12px;
-         font-weight: 500;
-         color: #ff9138;
-         cursor: pointer;
-         background: none;
-         border: none;
-         padding: 0;
-      }
-      .pa-feat-more:hover { text-decoration: underline; }
-      .pa-feat-more svg { transition: transform .2s; }
-      .pa-feat-more.open svg { transform: rotate(180deg); }
       /* Room type dropdown */
       .pa-rt-wrap { position: relative; width: 100%; }
       .pa-rt-btn {
@@ -727,9 +702,7 @@
          font-family: 'Poppins', sans-serif; font-size: 14px; color: #222; cursor: pointer;
       }
       .pa-rt-item input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
-      .pa-checkboxes label,
-      .pa-feat-top label,
-      .pa-feat-group__items label {
+      .pa-checkboxes label {
          display: flex;
          align-items: center;
          gap: 7px;
@@ -739,9 +712,7 @@
          cursor: pointer;
          white-space: nowrap;
       }
-      .pa-checkboxes label input[type="checkbox"],
-      .pa-feat-top label input[type="checkbox"],
-      .pa-feat-group__items label input[type="checkbox"] {
+      .pa-checkboxes label input[type="checkbox"] {
          width: 13px;
          height: 13px;
          flex-shrink: 0;
@@ -1739,72 +1710,60 @@
                   <div class="pa-field" id="includedField" style="display:none">
                      <span class="pa-field__label">Key features:</span>
                      <div class="pa-field__control">
-                        <div class="pa-feat-top">
-                           <label><input type="checkbox"> Garden</label>
-                           <label><input type="checkbox"> Elevator</label>
-                           <label><input type="checkbox"> Security system</label>
-                           <label><input type="checkbox"> Balcony</label>
-                           <label><input type="checkbox"> Swimming pool</label>
-                           <label><input type="checkbox"> Central heating</label>
-                           <label><input type="checkbox"> Terrace</label>
-                           <label><input type="checkbox"> Veranda</label>
-                           <label><input type="checkbox"> Storage room</label>
-                        </div>
-
-                        <div class="pa-feat-groups" id="featGroups">
-                           <div class="pa-feat-group">
-                              <p class="pa-feat-group__title">Outdoor</p>
-                              <div class="pa-feat-group__items">
-                                 <label><input type="checkbox"> Roof garden</label>
-                                 <label><input type="checkbox"> BBQ</label>
-                                 <label><input type="checkbox"> Playground</label>
+                        <div class="pa-rt-wrap" id="paFeatWrap">
+                           <button type="button" class="pa-rt-btn" id="paFeatBtn" onclick="toggleFeatDropdown()">
+                              <span id="paFeatLabel">Key features</span>
+                              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="#ff9138" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                           </button>
+                           <div class="pa-rt-dropdown pa-feat-dropdown" id="paFeatDropdown">
+                              <div class="pa-rt-group">
+                                 <p class="pa-rt-group__title">Outdoor</p>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Garden</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Balcony</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Terrace</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Veranda</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Roof garden</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> BBQ</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Playground</label>
                               </div>
-                           </div>
-                           <div class="pa-feat-group">
-                              <p class="pa-feat-group__title">Building</p>
-                              <div class="pa-feat-group__items">
-                                 <label><input type="checkbox"> Attic/Loft</label>
-                                 <label><input type="checkbox"> Double glazing</label>
+                              <div class="pa-rt-group">
+                                 <p class="pa-rt-group__title">Building</p>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Elevator</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Security system</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Storage room</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Attic/Loft</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Double glazing</label>
                               </div>
-                           </div>
-                           <div class="pa-feat-group">
-                              <p class="pa-feat-group__title">Comfort</p>
-                              <div class="pa-feat-group__items">
-                                 <label><input type="checkbox"> Fireplace</label>
-                                 <label><input type="checkbox"> Heating floor</label>
-                                 <label><input type="checkbox"> Smart home</label>
-                                 <label><input type="checkbox"> Wi-Fi</label>
+                              <div class="pa-rt-group">
+                                 <p class="pa-rt-group__title">Comfort</p>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Central heating</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Swimming pool</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Fireplace</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Heating floor</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Smart home</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Wi-Fi</label>
                               </div>
-                           </div>
-                           <div class="pa-feat-group">
-                              <p class="pa-feat-group__title">Interior</p>
-                              <div class="pa-feat-group__items">
-                                 <label><input type="checkbox"> Built-in kitchen</label>
-                                 <label><input type="checkbox"> Dishwasher</label>
-                                 <label><input type="checkbox"> Washing machine</label>
-                                 <label><input type="checkbox"> Fridge</label>
-                                 <label><input type="checkbox"> TV</label>
-                                 <label><input type="checkbox"> Shower cabin</label>
-                                 <label><input type="checkbox"> Bath</label>
+                              <div class="pa-rt-group">
+                                 <p class="pa-rt-group__title">Interior</p>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Built-in kitchen</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Dishwasher</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Washing machine</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Fridge</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> TV</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Shower cabin</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Bath</label>
                               </div>
-                           </div>
-                           <div class="pa-feat-group">
-                              <p class="pa-feat-group__title">Lifestyle</p>
-                              <div class="pa-feat-group__items">
-                                 <label><input type="checkbox"> Sauna</label>
-                                 <label><input type="checkbox"> Jacuzzi</label>
-                                 <label><input type="checkbox"> Gym</label>
-                                 <label><input type="checkbox"> Tennis court</label>
-                                 <label><input type="checkbox"> Home cinema</label>
-                                 <label><input type="checkbox"> Solar panel</label>
+                              <div class="pa-rt-group">
+                                 <p class="pa-rt-group__title">Lifestyle</p>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Gym</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Sauna</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Jacuzzi</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Tennis court</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Home cinema</label>
+                                 <label class="pa-rt-item"><input type="checkbox" onchange="updateFeatLabel()"> Solar panel</label>
                               </div>
                            </div>
                         </div>
-
-                        <button type="button" class="pa-feat-more" id="featMoreBtn" onclick="toggleFeatMore()">
-                           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2,4 6,8 10,4"/></svg>
-                           Show more features
-                        </button>
                      </div>
                   </div>
 
@@ -2993,13 +2952,29 @@
          input.setSelectionRange(pos + diff, pos + diff);
       }
 
-      function toggleFeatMore() {
-         var groups = document.getElementById('featGroups');
-         var btn = document.getElementById('featMoreBtn');
-         var open = groups.classList.toggle('open');
+      function toggleFeatDropdown() {
+         var btn = document.getElementById('paFeatBtn');
+         var dd  = document.getElementById('paFeatDropdown');
+         if (!btn || !dd) return;
+         var open = dd.classList.toggle('open');
          btn.classList.toggle('open', open);
-         btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="' + (open ? '2,8 6,4 10,8' : '2,4 6,8 10,4') + '"/></svg> ' + (open ? 'Show less' : 'Show more features');
       }
+      function updateFeatLabel() {
+         var checked = Array.from(document.querySelectorAll('#paFeatDropdown input[type="checkbox"]:checked'))
+            .map(function(cb) { return cb.parentElement.textContent.trim(); });
+         var lbl = document.getElementById('paFeatLabel');
+         if (lbl) lbl.textContent = checked.length ? checked.join(', ') : 'Key features';
+      }
+      /* Close Key features dropdown on outside click */
+      document.addEventListener('click', function(e) {
+         var wrap = document.getElementById('paFeatWrap');
+         if (wrap && !wrap.contains(e.target)) {
+            var dd = document.getElementById('paFeatDropdown');
+            var btn = document.getElementById('paFeatBtn');
+            if (dd) dd.classList.remove('open');
+            if (btn) btn.classList.remove('open');
+         }
+      });
 
       function _getPhotoLimit() {
          var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
@@ -3963,6 +3938,7 @@
                var label = cb.parentElement.textContent.trim();
                if (label in featMap) cb.checked = !!featMap[label];
             });
+            if (typeof updateFeatLabel === 'function') updateFeatLabel();
          })();
 
          /* Building/house type */
