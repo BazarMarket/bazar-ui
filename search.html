@@ -292,6 +292,21 @@
          #cfTypeBtn .cf-cat-btn-label, #cfSubtypeBtn .cf-cat-btn-label { max-width: 100%; }
          .cf-chips { gap: 6px; margin-top: 8px; padding-top: 8px; }
          .cf-tag { font-size: 12px; padding: 4px 10px; }
+
+         /* ── Mobile List View — Bazaraki style ── */
+         .list-products__body { margin: 0; }
+         .list-products__body .product { padding: 0 !important; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; gap: 0; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+         .list-products__body .product__left .product__gallery { aspect-ratio: 16/9; border-radius: 0; }
+         .list-products__body .product__seller { display: none !important; }
+         .list-products__body .product__center { padding: 10px 12px 12px; display: flex; flex-direction: column; }
+         .list-products__body .product__price-row { order: 1; margin: 0 0 3px; }
+         .list-products__body .product__price-row .price-start { font-size: 20px; }
+         .list-products__body .product__title { order: 2; font-size: 14px !important; margin: 0 0 4px !important; line-height: 1.35 !important; }
+         .list-products__body .product .info-bord { order: 3; margin: 2px 0 4px !important; }
+         .list-products__body .product__text { order: 4; font-size: 13px !important; margin: 2px 0 !important; }
+         .list-products__body .product__desc { display: none !important; }
+         .list-products__body .product__info { order: 6; margin-top: 6px !important; padding-top: 6px !important; border-top: 1px solid #f0f0f0 !important; }
+         .list-products__body .card__heart { opacity: 1 !important; }
       }
 
       /* ── Very small mobile (≤400px) ── */
