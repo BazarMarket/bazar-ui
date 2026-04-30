@@ -4598,6 +4598,7 @@
          </div>
          <p class="lm-hint">Drag the pin to set the exact location</p>
          <div id="locMapContainer"></div>
+         <p id="lmGeoError" style="display:none;margin:0;padding:6px 16px;font-size:12px;color:#e53935;background:#fff3f3;border-top:1px solid #ffd0d0;text-align:center;"></p>
          <div class="lm-footer">
             <button class="lm-btn-myloc" onclick="useMyExactLocation()">📡 Use my location</button>
             <button class="lm-btn-cancel" onclick="closeLocationMap()">Cancel</button>
@@ -4803,9 +4804,20 @@
          closeLocationMap();
       }
 
+      function _lmShowGeoError(msg) {
+         var el = document.getElementById('lmGeoError');
+         if (!el) return;
+         el.textContent = msg;
+         el.style.display = 'block';
+         clearTimeout(el._hideTimer);
+         el._hideTimer = setTimeout(function() { el.style.display = 'none'; }, 4000);
+      }
+
       function useMyExactLocation() {
-         if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); return; }
+         if (!navigator.geolocation) { _lmShowGeoError('Geolocation is not supported by your browser.'); return; }
          navigator.geolocation.getCurrentPosition(function(pos) {
+            var el = document.getElementById('lmGeoError');
+            if (el) el.style.display = 'none';
             var lat = pos.coords.latitude, lng = pos.coords.longitude;
             var newPos = { lat: lat, lng: lng };
             _locMap.setCenter(newPos);
@@ -4819,7 +4831,7 @@
                }
             });
          }, function() {
-            alert('Could not get your location. Please allow location access.');
+            _lmShowGeoError('Could not get your location. Please allow location access in browser settings.');
          });
       }
    </script>
