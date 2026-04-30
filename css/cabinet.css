@@ -2598,3 +2598,11 @@
     color: #f76b1c;
     font-weight: 600;
 }
+@media screen and (max-width: 767px) {
+    .cab-mob-profile__balance {
+        display: none !important;
+    }
+    .cab-add-btn {
+        display: none !important;
+    }
+}
