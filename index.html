@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
     <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-    <link rel="stylesheet" href="css/main.css?v=206" type="text/css"> <!-- Основные стили темы  -->
+    <link rel="stylesheet" href="css/main.css?v=207" type="text/css"> <!-- Основные стили темы  -->
     <link rel="icon" type="image/png" href="favicon.png?v=12">
     <style>@media(max-width:767px){.logo{display:block!important}}</style>
 </head>
@@ -1360,6 +1360,11 @@
                     /* Update photo in DOM immediately */
                     var imgEl = document.getElementById('luImg_' + adId);
                     if (imgEl && firstImg) imgEl.src = firstImg;
+                    /* Store all images for hover segments */
+                    if (imgEl && d.images && d.images.length > 1) {
+                        var _cid = imgEl.closest('.card__img');
+                        if (_cid) _cid.setAttribute('data-imgs', d.images.join(','));
+                    }
                     /* Update info-bord in DOM immediately */
                     var infoEl = document.getElementById('luInfo_' + adId);
                     if (infoEl && (apiBeds || apiBaths || apiArea)) {
@@ -1428,7 +1433,7 @@
             '<div class="card__head"><div class="card__logo"><img class="img-cover" src="icon/man.png" ' + (_logoUid ? 'data-uid="' + _logoUid + '"' : '') + ' alt=""></div>' +
             '<div class="card__info"><p class="card__name"' + _nameIsLt + '>' + _cardNameText + '</p>' +
             '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
-            '<div class="card__img">' + stiker +
+            '<div class="card__img"' + (ad.images && ad.images.length > 1 ? ' data-imgs="' + ad.images.join(',') + '"' : '') + '>' + stiker +
             '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
             '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
             '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + _ltLabel + infoBord + '</div>' +
@@ -1635,7 +1640,7 @@
     })();
     </script>
 
-<script src="js/header-auth.js?v=12"></script>
+<script src="js/header-auth.js?v=14"></script>
 
 <style>
 .search-suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e5e7eb;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.13);z-index:9999;overflow:hidden;max-height:420px;overflow-y:auto}

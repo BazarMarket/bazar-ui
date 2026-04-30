@@ -425,3 +425,67 @@ if (typeof window.handleMobileMessages !== 'function') {
         else if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
     };
 }
+
+/* ── Card image hover segments (desktop only) ── */
+(function() {
+    if (window.innerWidth < 768) return;
+
+    function getImgDiv(target) {
+        return target.closest ? target.closest('.card__img[data-imgs]') : null;
+    }
+    function buildSegs(imgDiv, imgs) {
+        var segs = imgDiv.querySelector('.card-img-segs');
+        if (segs) return segs;
+        segs = document.createElement('div');
+        segs.className = 'card-img-segs';
+        var w = Math.min(imgs.length, 8);
+        segs.style.width = (w * 22 + (w - 1) * 4) + 'px';
+        for (var i = 0; i < imgs.length; i++) {
+            var s = document.createElement('span');
+            s.className = 'card-img-seg' + (i === 0 ? ' active' : '');
+            segs.appendChild(s);
+        }
+        imgDiv.appendChild(segs);
+        return segs;
+    }
+    function setActive(segs, idx) {
+        var els = segs.querySelectorAll('.card-img-seg');
+        els.forEach(function(s, i) { s.classList.toggle('active', i === idx); });
+    }
+
+    document.addEventListener('mouseenter', function(e) {
+        var imgDiv = getImgDiv(e.target);
+        if (!imgDiv) return;
+        var imgs = imgDiv.getAttribute('data-imgs').split(',').filter(Boolean);
+        if (imgs.length < 2) return;
+        var segs = buildSegs(imgDiv, imgs);
+        segs.classList.add('visible');
+        var img = imgDiv.querySelector('img.img-cover');
+        if (img && !imgDiv._origSrc) imgDiv._origSrc = img.src;
+    }, true);
+
+    document.addEventListener('mousemove', function(e) {
+        var imgDiv = getImgDiv(e.target);
+        if (!imgDiv) return;
+        var segs = imgDiv.querySelector('.card-img-segs');
+        if (!segs || !segs.classList.contains('visible')) return;
+        var imgs = imgDiv.getAttribute('data-imgs').split(',').filter(Boolean);
+        if (imgs.length < 2) return;
+        var rect = imgDiv.getBoundingClientRect();
+        var pct  = (e.clientX - rect.left) / rect.width;
+        var idx  = Math.max(0, Math.min(imgs.length - 1, Math.floor(pct * imgs.length)));
+        var img  = imgDiv.querySelector('img.img-cover');
+        if (img && img.src !== imgs[idx]) img.src = imgs[idx];
+        setActive(segs, idx);
+    });
+
+    document.addEventListener('mouseleave', function(e) {
+        var imgDiv = getImgDiv(e.target);
+        if (!imgDiv) return;
+        if (imgDiv.contains(e.relatedTarget)) return;
+        var segs = imgDiv.querySelector('.card-img-segs');
+        if (segs) { segs.classList.remove('visible'); setActive(segs, 0); }
+        var img = imgDiv.querySelector('img.img-cover');
+        if (img && imgDiv._origSrc) { img.src = imgDiv._origSrc; imgDiv._origSrc = null; }
+    }, true);
+})();

@@ -6182,3 +6182,27 @@ body:not(.bazar-logged) #header-logged-in {
     flex-shrink: 0;
   }
 }
+
+/* ── Card image hover segments (Bazaraki style) ── */
+.card-img-segs {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 4px;
+  z-index: 5;
+  pointer-events: none;
+}
+.card-img-segs.visible { display: flex; }
+.card-img-seg {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.45);
+  flex: 1 1 0;
+  min-width: 18px;
+  max-width: 48px;
+  transition: background 0.12s;
+}
+.card-img-seg.active { background: #ff9138; }

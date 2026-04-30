@@ -12,7 +12,7 @@
    <meta name="keywords" content="">
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css">
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css">
-   <link rel="stylesheet" href="css/main.css?v=206" type="text/css">
+   <link rel="stylesheet" href="css/main.css?v=207" type="text/css">
    <link rel="icon" type="image/png" href="favicon.png?v=12">
    <style>
       /* ── Page layout ── */
@@ -2394,7 +2394,7 @@
           '<a href="'+gHref+'" class="card-link" aria-label="View listing"></a>'+
           '<div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div>'+
           '<div class="card__info"><p class="card__name">'+shortT+'</p><p class="card__label">'+item.cy+'</p></div></div>'+
-          '<div class="card__img"><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
+          '<div class="card__img"'+(item.imgs && item.imgs.length > 1 ? ' data-imgs="'+item.imgs.join(',')+'"' : '')+'><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
           '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
@@ -2962,7 +2962,7 @@
          if (el) el.placeholder = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
       }
    </script>
-<script src="js/header-auth.js?v=12"></script>
+<script src="js/header-auth.js?v=14"></script>
 
 <div class="menu-mob after992">
    <a href="/" class="menu-mob__item icon-main-home">Home</a>
