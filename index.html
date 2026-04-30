@@ -1109,11 +1109,14 @@
     <script type="text/javascript" src="js/inputmask.min.js"></script>
     <script type="text/javascript" src="js/fslightbox.js"></script>
     <script type="text/javascript" src="js/script.js?v=5"></script>
-    <script src="js/firebase-auth-v2.js?v=4"></script>
+    <script src="js/firebase-auth-v2.js?v=5"></script>
     <script>
+        function _bzIsLoggedIn() {
+            return !!(localStorage.getItem('bazar_firebase_uid') && localStorage.getItem('bazar_username'));
+        }
         function handleMobileProfile(e) {
             e.preventDefault();
-            if (localStorage.getItem('bazar_firebase_uid')) {
+            if (_bzIsLoggedIn()) {
                 window.location.href = '/cabinet';
             } else {
                 if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
@@ -1121,7 +1124,7 @@
         }
         function handleMobileFavorites(e) {
             e.preventDefault();
-            if (localStorage.getItem('bazar_firebase_uid')) {
+            if (_bzIsLoggedIn()) {
                 window.location.href = '/cabinet/favorites';
             } else {
                 if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
@@ -1129,7 +1132,7 @@
         }
         function handleMobileMessages(e) {
             e.preventDefault();
-            if (localStorage.getItem('bazar_firebase_uid')) {
+            if (_bzIsLoggedIn()) {
                 window.location.href = '/messages';
             } else {
                 if (typeof openCreateAccountModal === 'function') openCreateAccountModal();

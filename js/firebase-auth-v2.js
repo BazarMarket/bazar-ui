@@ -92,20 +92,21 @@ function doLogin() {
 }
 
 function clearUserLocalData() {
-    var keys = [
-        'bazar_username', 'bazar_phone', 'bazar_gender', 'bazar_plan',
-        'bazar_firebase_uid', 'bazar_uid', 'bazar_email', 'bazar_address',
-        'bazar_balance', 'bazar_local_txns', 'bazar_withdrew', 'bazar_avatar',
-        'bazar_unread_count'
-    ];
-    keys.forEach(function(k) { localStorage.removeItem(k); });
-    var favKeys = [];
+    var toDelete = [];
     for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && k.indexOf('favorite_') === 0) favKeys.push(k);
+        if (k && (k.indexOf('bazar_') === 0 || k.indexOf('favorite_') === 0)) {
+            toDelete.push(k);
+        }
     }
-    favKeys.forEach(function(k) { localStorage.removeItem(k); });
+    toDelete.forEach(function(k) { localStorage.removeItem(k); });
 }
+
+window.addEventListener('pageshow', function(e) {
+    if (e.persisted && !localStorage.getItem('bazar_firebase_uid')) {
+        doLogout();
+    }
+});
 
 function doLogout() {
     clearUserLocalData();
