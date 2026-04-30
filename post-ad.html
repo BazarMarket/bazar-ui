@@ -4810,11 +4810,10 @@
          el.textContent = msg;
          el.style.display = 'block';
          clearTimeout(el._hideTimer);
-         el._hideTimer = setTimeout(function() { el.style.display = 'none'; }, 4000);
+         el._hideTimer = setTimeout(function() { el.style.display = 'none'; }, 7000);
       }
 
-      function useMyExactLocation() {
-         if (!navigator.geolocation) { _lmShowGeoError('Geolocation is not supported by your browser.'); return; }
+      function _lmDoGetPosition() {
          navigator.geolocation.getCurrentPosition(function(pos) {
             var el = document.getElementById('lmGeoError');
             if (el) el.style.display = 'none';
@@ -4823,16 +4822,36 @@
             _locMap.setCenter(newPos);
             _locMap.setZoom(15);
             _locMarker.setPosition(newPos);
-
             var geocoder = new google.maps.Geocoder();
             geocoder.geocode({ location: newPos }, function(results, status) {
                if (status === 'OK' && results[0]) {
                   document.getElementById('lmSearchInput').value = results[0].formatted_address;
                }
             });
-         }, function() {
-            _lmShowGeoError('Could not get your location. Please allow location access in browser settings.');
-         });
+         }, function(err) {
+            if (err.code === 1) {
+               _lmShowGeoError('Location access denied. To enable: open browser Settings → Site Settings → Location → Allow for bazar.uk.');
+            } else {
+               _lmShowGeoError('Could not determine your location. Please try again or search manually.');
+            }
+         }, { timeout: 10000 });
+      }
+
+      function useMyExactLocation() {
+         if (!navigator.geolocation) { _lmShowGeoError('Your browser does not support geolocation.'); return; }
+         if (navigator.permissions) {
+            navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+               if (result.state === 'denied') {
+                  _lmShowGeoError('Location access is blocked. Go to browser Settings → Site Settings → Location and allow access for bazar.uk.');
+               } else {
+                  _lmDoGetPosition();
+               }
+            }).catch(function() {
+               _lmDoGetPosition();
+            });
+         } else {
+            _lmDoGetPosition();
+         }
       }
    </script>
 <script src="js/header-auth.js?v=11"></script>
