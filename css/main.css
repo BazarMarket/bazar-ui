@@ -4784,6 +4784,24 @@ body.bazar-logged .card__heart {
   }
 }
 
+@media screen and (max-width: 767px) {
+  .card__prices {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+  }
+  .price-old {
+    font-size: 11px;
+  }
+  .cards__sliders .price-old,
+  .cards__sliders .price-last-old {
+    display: inline-block !important;
+    font-size: 11px;
+  }
+}
+
 .long-filter {
   display: flex;
   align-items: center;
