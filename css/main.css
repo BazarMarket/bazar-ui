@@ -6184,6 +6184,7 @@ body:not(.bazar-logged) #header-logged-in {
 }
 
 /* ── Card image hover segments (Bazaraki style) ── */
+.product-gallery { position: relative; }
 .card-img-segs {
   position: absolute;
   bottom: 8px;
