@@ -1355,6 +1355,40 @@
        if (btn) { btn.textContent = 'Boost to Top'; btn.style.pointerEvents = ''; }
      });
    }
+
+   /* ── Show / Hide phone ── */
+   function showPhone(e, el) {
+      if (e) e.stopPropagation();
+      var masked = document.getElementById('phone-masked');
+      var full   = document.getElementById('phone-full');
+      if (!full) return;
+      var revealed = full.style.display !== 'none';
+      if (revealed) {
+         /* hide */
+         full.style.display = 'none';
+         if (masked) masked.style.display = '';
+         /* reset desktop button text */
+         var btnSpan = el ? el.querySelector('.btn-phone__text') : null;
+         if (btnSpan) btnSpan.textContent = 'Show Phone';
+         /* reset mobile button */
+         var mobLabel = document.querySelector('#mob-btns .mbb-phone-text > span:first-child');
+         var mobSub   = document.getElementById('mob-phone-sub');
+         if (mobLabel) mobLabel.textContent = 'Show Phone';
+         if (mobSub && masked) mobSub.textContent = masked.textContent;
+      } else {
+         /* reveal */
+         if (masked) masked.style.display = 'none';
+         full.style.display = '';
+         /* update desktop button text */
+         var btnSpan = el ? el.querySelector('.btn-phone__text') : null;
+         if (btnSpan) btnSpan.textContent = full.textContent;
+         /* update mobile button */
+         var mobLabel = document.querySelector('#mob-btns .mbb-phone-text > span:first-child');
+         var mobSub   = document.getElementById('mob-phone-sub');
+         if (mobLabel) mobLabel.textContent = 'Hide Phone';
+         if (mobSub) mobSub.textContent = full.textContent;
+      }
+   }
    </script>
 
    <!-- ═══════════ GALLERY LIGHTBOX STYLES ═══════════ -->
