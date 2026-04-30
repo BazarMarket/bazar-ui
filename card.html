@@ -2391,25 +2391,26 @@ function _glbKey(e) {
   /* ── Gallery ── */
   .slider-gallery-big__img { height: 260px !important; }
   .card-gallery__mini { display: none !important; }
-  /* Peek at next slide */
-  .card-grid__gallery { overflow: hidden !important; }
+  /* Peek at next slide — clip only horizontal, allow pagination below */
+  .card-grid__gallery { overflow-x: hidden !important; overflow-y: visible !important; }
+  .card-grid__gallery .card-tile { padding-bottom: 30px !important; }
   .slider-gallery-big .swiper { overflow: visible !important; }
   /* Hide arrows on mobile */
   .slider-gallery-big .button-prev,
   .slider-gallery-big .button-next { display: none !important; }
-  /* Pagination dots */
+  /* Pagination dots — below the photo */
   .slider-gallery-big .swiper-pagination {
-    bottom: 10px !important;
+    bottom: -22px !important;
     z-index: 20 !important;
   }
   .slider-gallery-big .swiper-pagination-bullet {
-    background: #fff !important;
-    opacity: 0.55 !important;
+    background: #ccc !important;
+    opacity: 1 !important;
     width: 7px !important; height: 7px !important;
     transition: all 0.2s !important;
   }
   .slider-gallery-big .swiper-pagination-bullet-active {
-    background: #fff !important;
+    background: #ff9138 !important;
     opacity: 1 !important;
     width: 22px !important;
     border-radius: 4px !important;
