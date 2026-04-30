@@ -320,7 +320,7 @@ function openOtpModal(phoneNumber) {
     document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
     document.getElementById('otpModal').classList.add('modal-overlay--active');
     document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
-    document.querySelectorAll('.otp-input')[0].focus();
+    document.querySelectorAll('.otp-input')[0].focus({ preventScroll: true });
     var rb = document.getElementById('otpReportBtn');
     if (rb) rb.style.display = 'none';
     startOtpTimer();
@@ -383,7 +383,7 @@ function verifyOtpCode() {
             errEl.textContent = 'Wrong code. Please try again.';
             errEl.style.display = 'block';
             document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
-            document.querySelectorAll('.otp-input')[0].focus();
+            document.querySelectorAll('.otp-input')[0].focus({ preventScroll: true });
         });
 }
 
@@ -422,7 +422,7 @@ function resendOtpCode() {
         .then(function(result) {
             confirmationResult = result;
             document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
-            document.querySelectorAll('.otp-input')[0].focus();
+            document.querySelectorAll('.otp-input')[0].focus({ preventScroll: true });
             startOtpTimer();
         })
         .catch(function(error) {
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '');
             if (this.value && index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
+                otpInputs[index + 1].focus({ preventScroll: true });
             }
             if (this.value && index === otpInputs.length - 1) {
                 verifyOtpCode();
@@ -590,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace' && !this.value && index > 0) {
-                otpInputs[index - 1].focus();
+                otpInputs[index - 1].focus({ preventScroll: true });
             }
         });
     });

@@ -6163,3 +6163,22 @@ body.bazar-logged .card__heart {
 body:not(.bazar-logged) #header-logged-in {
   display: none !important;
 }
+
+/* ---- OTP modal: fix keyboard-induced jumping on mobile ---- */
+@media screen and (max-width: 767px) {
+  #otpModal {
+    align-items: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    padding-top: 0;
+    /* Remove bottom:0 effect — use only top-anchored fixed position */
+    bottom: auto;
+    min-height: 100%;
+  }
+  #otpModal .modal-card {
+    margin: 32px 16px 24px;
+    max-width: calc(100% - 32px);
+    width: 100%;
+    flex-shrink: 0;
+  }
+}
