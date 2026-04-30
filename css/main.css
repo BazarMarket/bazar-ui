@@ -3116,6 +3116,11 @@ p {
     display: none;
   }
 }
+@media screen and (max-width: 767px) {
+  .logo {
+    display: none !important;
+  }
+}
 @media screen and (max-width: 370px) {
   .menu-mob {
     padding: 14px 20px;
