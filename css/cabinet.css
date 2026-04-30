@@ -2605,4 +2605,8 @@
     .cab-add-btn {
         display: none !important;
     }
+    #adsFilterPending,
+    #adsFilterRejected {
+        display: none !important;
+    }
 }
