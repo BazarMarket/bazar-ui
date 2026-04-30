@@ -1282,6 +1282,22 @@
             document.querySelectorAll('#cfRoomtypePanel input[type="checkbox"]').forEach(function(c){ c.checked = false; });
             updateRoomtypeLabel();
          }
+         /* Hide Bedrooms for Rooms */
+         var bedroomsWrap = document.getElementById('cfBedroomsWrap');
+         if (bedroomsWrap) {
+            if (roomChecked) {
+               bedroomsWrap.style.display = 'none';
+               bedroomsWrap.querySelectorAll('input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+               var bedroomsLbl = document.getElementById('cfBedroomsLabel');
+               if (bedroomsLbl) bedroomsLbl.textContent = 'Bedrooms';
+               var bedroomsClear = document.getElementById('cfBedroomsClear');
+               if (bedroomsClear) bedroomsClear.style.display = 'none';
+               var bedroomsBtn = document.getElementById('cfBedroomsBtn');
+               if (bedroomsBtn) bedroomsBtn.classList.remove('has-selection');
+            } else {
+               bedroomsWrap.style.display = '';
+            }
+         }
          var landEl = document.querySelector('#cfTypePanel input[value="Land"]');
          var landChecked = landEl ? landEl.checked : false;
          var plotTypeWrap = document.getElementById('cfPlotTypeWrap');
@@ -1313,6 +1329,8 @@
                var btn = el.querySelector('button');
                if (btn) btn.classList.remove('has-selection');
             } else {
+               /* Don't restore cfBedroomsWrap if Rooms is selected */
+               if (id === 'cfBedroomsWrap' && roomChecked) return;
                el.style.display = '';
             }
          });
