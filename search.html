@@ -296,8 +296,19 @@
          /* ── Mobile List View — Bazaraki style ── */
          .list-products__body { margin: 0; }
          .list-products__body .product { padding: 0 !important; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; gap: 0; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
-         .list-products__body .product__left .product__gallery { border-radius: 0; aspect-ratio: 16/10; }
-         .list-products__body .product__left .product-gallery__img img { object-position: center top !important; }
+         .list-products__body .product__left .product__gallery { border-radius: 0; aspect-ratio: auto !important; height: auto !important; }
+         .list-products__body .product__left .product-gallery,
+         .list-products__body .product__left .product-gallery .swiper,
+         .list-products__body .product__left .product-gallery .swiper-wrapper,
+         .list-products__body .product__left .product-gallery .swiper-slide,
+         .list-products__body .product__left .product-gallery__img { height: auto !important; }
+         .list-products__body .product__left .product-gallery__img img {
+            position: static !important;
+            width: 100% !important;
+            height: auto !important;
+            object-fit: initial !important;
+            display: block !important;
+         }
          .list-products__body .product__seller { display: none !important; }
          .list-products__body .product__center { padding: 10px 12px 12px; display: flex; flex-direction: column; }
          .list-products__body .product__price-row { order: 1; margin: 0 0 3px; }
