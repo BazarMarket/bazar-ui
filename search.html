@@ -296,12 +296,7 @@
          /* ── Mobile List View — Bazaraki style ── */
          .list-products__body { margin: 0; }
          .list-products__body .product { padding: 0 !important; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; gap: 0; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
-         .list-products__body .product__left .product__gallery { border-radius: 0; aspect-ratio: auto !important; height: auto !important; }
-         .list-products__body .product__left .product-gallery,
-         .list-products__body .product__left .product-gallery .swiper,
-         .list-products__body .product__left .product-gallery .swiper-wrapper,
-         .list-products__body .product__left .product-gallery .swiper-slide,
-         .list-products__body .product__left .product-gallery__img { height: auto !important; }
+         .list-products__body .product__left .product__gallery { border-radius: 0; aspect-ratio: auto; }
          .list-products__body .product__left .product-gallery__img img {
             position: static !important;
             width: 100% !important;
@@ -2612,6 +2607,8 @@
             pag.style.display = 'none';
           }
         }
+        /* On mobile list view, replace Swiper galleries with simple images */
+        if (typeof simplifyMobileListImages === 'function') simplifyMobileListImages();
       }
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
@@ -2622,6 +2619,34 @@
             watchOverflow: false,
             pagination: { el: el.querySelector('.swiper-pagination'), type: 'bullets', clickable: true, dynamicBullets: false }
           });
+        });
+      }
+
+      /* For mobile list view: replace Swiper galleries with plain <img> so photos show at natural proportions */
+      function simplifyMobileListImages() {
+        if (window.innerWidth > 576) return;
+        document.querySelectorAll('.list-products__body .product__gallery').forEach(function(gallery) {
+          var firstImg = gallery.querySelector('img');
+          var firstLink = gallery.querySelector('.product-gallery__img');
+          if (!firstImg || gallery.dataset.simplified) return;
+          gallery.dataset.simplified = '1';
+          var href = firstLink ? firstLink.getAttribute('href') : '#';
+          var img = document.createElement('img');
+          img.src = firstImg.src;
+          img.alt = '';
+          img.style.cssText = 'width:100%;height:auto;display:block;';
+          var a = document.createElement('a');
+          a.href = href;
+          a.style.cssText = 'display:block;line-height:0;';
+          a.appendChild(img);
+          /* Keep stiker and heart (they are siblings of .product-gallery inside .product__gallery) */
+          var stiker = gallery.querySelector('.product__stiker');
+          var heart = gallery.querySelector('.card__heart');
+          gallery.innerHTML = '';
+          gallery.style.cssText = 'position:relative;';
+          gallery.appendChild(a);
+          if (stiker) gallery.appendChild(stiker);
+          if (heart) gallery.appendChild(heart);
         });
       }
 
