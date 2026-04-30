@@ -80,6 +80,14 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
                         /* Keep local plan, just refresh badge */
                         applyPlanBadge(localPlan, parseInt(localStorage.getItem('bazar_days_left') || '0', 10));
                     }
+                    if (d.avatar) {
+                        try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
+                        var avEl = document.getElementById('header-avatar') || document.querySelector('.user-link__photo');
+                        if (avEl) {
+                            var avImg = avEl.querySelector('img') || (avEl.tagName === 'IMG' ? avEl : null);
+                            if (avImg) avImg.src = d.avatar;
+                        }
+                    }
                 })
                 .catch(function() {});
         }

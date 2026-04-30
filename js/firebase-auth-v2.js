@@ -352,6 +352,7 @@ function verifyOtpCode() {
                             localStorage.setItem('bazar_username', data.name);
                             localStorage.setItem('bazar_gender',   data.gender);
                             localStorage.setItem('bazar_plan',     data.plan || 'free');
+                            if (data.avatar) localStorage.setItem('bazar_avatar', data.avatar);
                             closeOtpModal();
                             doLogin();
                             window.location.href = 'post-ad';
@@ -360,6 +361,7 @@ function verifyOtpCode() {
                             localStorage.setItem('bazar_username', data.name);
                             localStorage.setItem('bazar_gender',   data.gender);
                             localStorage.setItem('bazar_plan',     data.plan || 'free');
+                            if (data.avatar) localStorage.setItem('bazar_avatar', data.avatar);
                             closeOtpModal();
                             doLogin();
                         }
