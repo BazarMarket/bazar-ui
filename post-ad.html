@@ -291,6 +291,12 @@
          .mob-back-btn { display: none !important; }
          .mob-crumb    { display: none !important; }
 
+         /* Bottom nav: active icon highlight */
+         .pa-bn-active, .pa-bn-active:before { color: #ff9138 !important; }
+
+         /* Extra bottom padding so the form isn't hidden behind the fixed nav */
+         body { padding-bottom: 70px; }
+
          /* Submit button — single-line on mobile */
          .pa-btn-submit { white-space: nowrap; }
 
@@ -4854,6 +4860,14 @@
          }
       }
    </script>
+<div class="menu-mob after992" id="pa-bottom-nav">
+   <a href="/" class="menu-mob__item icon-main-home">Home</a>
+   <a href="/cabinet#my-ads" class="menu-mob__item icon-win-ad">My Ads</a>
+   <a href="/post-ad" class="menu-mob__item icon-add pa-bn-active">New AD</a>
+   <a href="/messages" class="menu-mob__item icon-chat-full">Messages</a>
+   <a href="#" class="menu-mob__item icon-win-logout" onclick="if(window.doLogout){doLogout();}else{window.location='/cabinet/logout';}return false;">Logout</a>
+</div>
+
 <script src="js/header-auth.js?v=11"></script>
 </body>
 </html>
