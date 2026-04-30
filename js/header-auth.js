@@ -436,9 +436,14 @@ if (typeof window.handleMobileMessages !== 'function') {
         return target.closest ? target.closest('.card__img') : null;
     }
     function getListingId(imgDiv) {
-        var card = imgDiv.closest('.card, [class*="card"]');
-        if (!card) return null;
-        var link = card.querySelector('a.card-link');
+        /* Walk up to find the card root (has class "card", not "card__*") */
+        var el = imgDiv.parentElement;
+        while (el && el !== document.body) {
+            if (el.classList && el.classList.contains('card')) break;
+            el = el.parentElement;
+        }
+        if (!el || !el.classList.contains('card')) return null;
+        var link = el.querySelector('a.card-link');
         if (!link) return null;
         var m = (link.getAttribute('href') || '').match(/[?&]id=(\d+)/);
         return m ? m[1] : null;
@@ -498,6 +503,8 @@ if (typeof window.handleMobileMessages !== 'function') {
     document.addEventListener('mouseover', function(e) {
         var imgDiv = getCardImgDiv(e.target);
         if (!imgDiv) return;
+        var segs = imgDiv.querySelector('.card-img-segs');
+        if (segs && segs.classList.contains('visible')) return;
         if (imgDiv.getAttribute('data-imgs')) {
             activateSegs(imgDiv);
         } else {
