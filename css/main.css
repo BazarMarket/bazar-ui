@@ -1051,8 +1051,7 @@ body {
   background: #ffae49;
 }
 .product-gallery .pagination-custom {
-  display: block !important;
-  visibility: visible !important;
+  display: none !important;
 }
 
 /* -блок управления слайдера */
