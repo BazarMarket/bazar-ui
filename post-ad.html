@@ -672,6 +672,18 @@
          overflow-y: auto;
          overscroll-behavior: contain;
       }
+      /* Key features button — matches pa-select appearance */
+      #paFeatBtn {
+         border: 1px solid #e4e4e4;
+         border-radius: 8px;
+         font-size: 15px;
+         color: #333;
+         box-shadow: inset 0 2px 4px rgba(0,0,0,.06);
+         padding: 11px 16px;
+      }
+      #paFeatBtn svg path { stroke: #bbb; transition: stroke .2s; }
+      #paFeatBtn.open { border-color: #ff9138; }
+      #paFeatBtn.open svg path { stroke: #ff9138; }
       /* Room type dropdown */
       .pa-rt-wrap { position: relative; width: 100%; }
       .pa-rt-btn {
@@ -1712,7 +1724,7 @@
                      <div class="pa-field__control">
                         <div class="pa-rt-wrap" id="paFeatWrap">
                            <button type="button" class="pa-rt-btn" id="paFeatBtn" onclick="toggleFeatDropdown()">
-                              <span id="paFeatLabel">Key features</span>
+                              <span id="paFeatLabel">Select key features</span>
                               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="#ff9138" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                            </button>
                            <div class="pa-rt-dropdown pa-feat-dropdown" id="paFeatDropdown">
@@ -2963,7 +2975,7 @@
          var checked = Array.from(document.querySelectorAll('#paFeatDropdown input[type="checkbox"]:checked'))
             .map(function(cb) { return cb.parentElement.textContent.trim(); });
          var lbl = document.getElementById('paFeatLabel');
-         if (lbl) lbl.textContent = checked.length ? checked.join(', ') : 'Key features';
+         if (lbl) lbl.textContent = checked.length ? checked.join(', ') : 'Select key features';
       }
       /* Close Key features dropdown on outside click */
       document.addEventListener('click', function(e) {
