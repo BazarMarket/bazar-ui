@@ -291,8 +291,7 @@
          .mob-back-btn { display: none !important; }
          .mob-crumb    { display: none !important; }
 
-         /* Submit button — centered and single-line on mobile */
-         .pa-submit-row { padding-left: 0; justify-content: center; }
+         /* Submit button — single-line on mobile */
          .pa-btn-submit { white-space: nowrap; }
 
          /* Form fields: label left, control right */
@@ -912,8 +911,15 @@
       .pa-submit-row {
          display: flex;
          align-items: center;
+         justify-content: center;
          gap: 20px;
-         padding: 8px 0 0 180px;
+         padding: 8px 0 0;
+      }
+      @media (min-width: 768px) {
+         .pa-submit-row {
+            justify-content: flex-start;
+            padding-left: 180px;
+         }
       }
       .pa-btn-submit {
          padding: 14px 40px;
