@@ -6187,8 +6187,8 @@ body:not(.bazar-logged) #header-logged-in {
 .card-img-segs {
   position: absolute;
   bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 8px;
+  right: 8px;
   display: none;
   align-items: center;
   gap: 4px;
@@ -6199,10 +6199,8 @@ body:not(.bazar-logged) #header-logged-in {
 .card-img-seg {
   height: 3px;
   border-radius: 2px;
-  background: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.55);
   flex: 1 1 0;
-  min-width: 18px;
-  max-width: 48px;
   transition: background 0.12s;
 }
 .card-img-seg.active { background: #ff9138; }
