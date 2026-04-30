@@ -245,7 +245,10 @@
          .cf-block { padding: 0 4%; }
          .cf-block-outer { padding: 10px 0; }
          .cf-row1 { flex-direction: column; align-items: stretch; gap: 6px; }
-         .cf-search { max-width: 100% !important; flex: 1 1 auto; }
+         .cf-search { max-width: 100% !important; flex: 0 0 auto !important; width: 100%; }
+         .cf-row-extra .cf-price-joined { width: 100%; }
+         .cf-row-extra .cf-cat { width: 100%; }
+         .cf-row-extra .cf-cat .cf-cat-btn { width: 100%; }
          .cf-row1 .cf-cat { width: 100%; }
          .cf-row1 .cf-cat .cf-cat-btn { width: 100%; }
          .cf-row { flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; }
@@ -3002,6 +3005,21 @@
          if (el) el.placeholder = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
       }
    </script>
+<script>
+  (function(){
+    if(window.innerWidth>576)return;
+    var moreRow=document.getElementById('cfMoreRow');
+    if(!moreRow)return;
+    var sellerWrap=document.getElementById('cfSellerWrap');
+    var ref=sellerWrap||moreRow.firstChild;
+    var condition=document.getElementById('cfConditionWrap');
+    if(condition&&condition.parentNode)moreRow.insertBefore(condition,ref);
+    var areaMin=document.getElementById('cfAreaMinWrap');
+    if(areaMin){var areaJoined=areaMin.closest('.cf-price-joined');if(areaJoined)moreRow.insertBefore(areaJoined,ref);}
+    var yearFrom=document.getElementById('cfYearFromWrap');
+    if(yearFrom){var yearJoined=yearFrom.closest('.cf-price-joined');if(yearJoined)moreRow.insertBefore(yearJoined,ref);}
+  })();
+</script>
 <script src="js/header-auth.js?v=16"></script>
 
 <div class="menu-mob after992">
