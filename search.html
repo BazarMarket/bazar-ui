@@ -3068,7 +3068,12 @@
   }
   document.addEventListener('mouseover',function(e){
     var d=findImgDiv(e.target);
-    if(d&&d!==_cur)show(d);
+    if(d){
+      if(d!==_cur){if(_cur)hide(_cur);show(d);}
+    } else if(_cur){
+      var curContainer=isListGallery(_cur)?_cur.closest('.product'):_cur.closest('.card');
+      if(!curContainer||!curContainer.contains(e.target))hide(_cur);
+    }
   });
   document.addEventListener('mousemove',function(e){
     var d=_cur;if(!d)return;
