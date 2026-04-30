@@ -3047,10 +3047,29 @@ p {
   color: #96a3b0;
   line-height: normal;
   text-align: center;
+  position: relative;
 }
 .menu-mob__item:before {
   font-size: 24px;
   color: #96a3b0;
+}
+.mob-nav-badge {
+  position: absolute;
+  top: -2px;
+  right: calc(50% - 22px);
+  background: #ff0000;
+  color: #fff;
+  border-radius: 10px;
+  min-width: 16px;
+  height: 16px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  padding: 0 4px;
+  box-sizing: border-box;
+  pointer-events: none;
 }
 
 /* ------- адаптация ------- */

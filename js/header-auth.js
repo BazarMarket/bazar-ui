@@ -142,6 +142,11 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
             badge.textContent = count;
             badge.style.display = count > 0 ? 'flex' : 'none';
         }
+        var mobBadge = document.getElementById('mob-fav-badge');
+        if (mobBadge) {
+            mobBadge.textContent = count;
+            mobBadge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
         return count;
     }
 
@@ -155,6 +160,11 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.locati
         if (byId) {
             byId.textContent = count;
             byId.style.display = count > 0 ? 'flex' : 'none';
+        }
+        var mobBadge = document.getElementById('mob-msg-badge');
+        if (mobBadge) {
+            mobBadge.textContent = count;
+            mobBadge.style.display = count > 0 ? 'inline-block' : 'none';
         }
         localStorage.setItem('bazar_unread_count', count);
     }
