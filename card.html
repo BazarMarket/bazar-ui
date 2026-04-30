@@ -2151,6 +2151,15 @@ document.addEventListener('DOMContentLoaded', loadComments);
 </div>
 <script>
 var _glbIndex = 0;
+var _glbTouchX = null;
+function _glbTouchStart(e) { _glbTouchX = e.touches[0].clientX; }
+function _glbTouchEnd(e) {
+   if (_glbTouchX === null) return;
+   var dx = e.changedTouches[0].clientX - _glbTouchX;
+   _glbTouchX = null;
+   if (Math.abs(dx) < 40) return;
+   galleryLightboxMove(dx < 0 ? 1 : -1);
+}
 function openGalleryLightbox(idx) {
    var imgs = window._galleryImages || [];
    if (!imgs.length) return;
@@ -2160,6 +2169,8 @@ function openGalleryLightbox(idx) {
    document.body.style.overflow = 'hidden';
    _glbRender();
    document.addEventListener('keydown', _glbKey);
+   lb.addEventListener('touchstart', _glbTouchStart, {passive: true});
+   lb.addEventListener('touchend', _glbTouchEnd, {passive: true});
 }
 function _glbRender() {
    var imgs = window._galleryImages || [];
@@ -2174,9 +2185,12 @@ function galleryLightboxMove(dir) {
    _glbRender();
 }
 function closeGalleryLightbox() {
-   document.getElementById('galleryLightbox').style.display = 'none';
+   var lb = document.getElementById('galleryLightbox');
+   lb.style.display = 'none';
    document.body.style.overflow = '';
    document.removeEventListener('keydown', _glbKey);
+   lb.removeEventListener('touchstart', _glbTouchStart);
+   lb.removeEventListener('touchend', _glbTouchEnd);
 }
 function _glbKey(e) {
    if (e.key === 'Escape') closeGalleryLightbox();
