@@ -135,7 +135,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         if (daysEl) {
             if (plan === 'free') {
                 daysEl.textContent = '30d';
-                daysEl.style.display = '';
+                daysEl.style.display = 'inline';
             } else if (daysLeft > 0) {
                 daysEl.textContent = daysLeft + 'd';
                 daysEl.style.display = '';
