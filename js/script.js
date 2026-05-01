@@ -657,6 +657,10 @@ window.onload = function () {
         });
     }
 
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { cloasePopup(); }
+    });
+
     //ПОПАП ОКНА  ------ ------------------------ end
 
 
