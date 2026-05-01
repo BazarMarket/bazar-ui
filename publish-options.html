@@ -646,10 +646,10 @@
                <!-- FREE -->
                <div class="po-card po-card--free" onclick="selectPlan('free')">
                   <span class="po-plan-badge po-plan-badge--free">Free</span>
-                  <p class="po-plan-name">✔ Free listing</p>
+                  <p class="po-plan-name" id="freePlanName">✔ Free listing</p>
                   <p class="po-position">Standard placement in category</p>
                   <div class="po-price"><span class="po-price__free">Free</span></div>
-                  <p class="po-price__note">Active for 30 days</p>
+                  <p class="po-price__note" id="freeActiveDays">Active for 30 days</p>
                   <hr class="po-divider">
                   <ul class="po-features">
                      <li>Listed in search results</li>
@@ -658,7 +658,7 @@
                      <li class="po-feat--dim">No priority placement</li>
                      <li class="po-feat--dim">No highlight or badge</li>
                   </ul>
-                  <button class="po-btn po-btn--free" onclick="publishAd('free')">Publish for free</button>
+                  <button class="po-btn po-btn--free" id="freeBtn" onclick="publishAd('free')">Publish for free</button>
                </div>
 
                <!-- PRO -->
@@ -1003,7 +1003,7 @@
       }
 
       function _showPlanBadges(plan, daysLeft) {
-         if (!plan || plan === 'free') return;
+         if (!plan) return;
 
          function makeActiveBadge(text) {
             var b = document.createElement('span');
@@ -1013,11 +1013,23 @@
          }
 
          function daysText(d) {
-            return d > 0 ? ' · ' + d + ' day' + (d !== 1 ? 's' : '') + ' left' : '';
+            return d > 0 ? ' \u00b7 ' + d + ' day' + (d !== 1 ? 's' : '') + ' left' : '';
          }
 
          /* Remove any previously inserted badges */
          document.querySelectorAll('.po-active-badge').forEach(function(b) { b.remove(); });
+
+         /* Free plan — always active, days from ad creation */
+         if (plan === 'free') {
+            var freeDays = (typeof window._freeDaysLeft === 'number') ? window._freeDaysLeft : 30;
+            var freeDaysEl = document.getElementById('freeActiveDays');
+            if (freeDaysEl) freeDaysEl.textContent = daysText(freeDays);
+            var freeBadge = makeActiveBadge('Active');
+            freeBadge.className = 'po-active-badge';
+            var freePlanName = document.getElementById('freePlanName');
+            if (freePlanName) freePlanName.parentNode.insertBefore(freeBadge, freePlanName);
+            return;
+         }
 
          if (plan === 'pro' || plan === 'vip') {
             var proBtn = document.getElementById('proBtn');
@@ -1056,6 +1068,20 @@
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
                if (!d || !d.title) return;
+
+               /* Calculate free days left from ad creation date */
+               if (d.created_at) {
+                  var diffDays = Math.floor((Date.now() - new Date(d.created_at).getTime()) / 86400000);
+                  window._freeDaysLeft = Math.max(0, 30 - diffDays);
+               } else {
+                  window._freeDaysLeft = 30;
+               }
+
+               /* Apply plan badges with actual ad days */
+               var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+               var curDays = curPlan === 'free' ? window._freeDaysLeft : parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+               _showPlanBadges(curPlan, curDays);
+
                var titleEl = document.getElementById('lpAdTitle');
                var cityEl  = document.getElementById('lpAdCity');
                var photoEl = document.getElementById('lpAdPhoto');
