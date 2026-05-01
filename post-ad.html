@@ -2744,10 +2744,6 @@
          var sel = document.getElementById('conditionSelect');
          if (!sel) return;
          var opts = (conditionOptions[propType] || conditionDefault).slice();
-         var lt = reState.listingType || '';
-         if (lt === 'For Long-term Rent' || lt === 'For Short-term Rent') {
-            opts = opts.filter(function(o) { return o.v !== 'new'; });
-         }
          sel.innerHTML = '<option value="">Select condition</option>' +
             opts.map(function(o) { return '<option value="' + o.v + '">' + o.label + '</option>'; }).join('');
       }
