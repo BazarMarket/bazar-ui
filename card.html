@@ -146,6 +146,7 @@
                            <div class="card-gallery card-tile">
                               <div class="card-gallery__big" style="position:relative;">
                                  <div id="prop-stiker" class="card__stikers"></div>
+                                 <button class="card__heart icon-heart" id="card-mob-fav-btn" type="button" aria-label="Add to favorites" style="display:none;opacity:1;position:absolute;top:10px;right:10px;z-index:20;"></button>
                                  <div class="slider-gallery-big">
                                     <div class="swiper">
                                        <div class="swiper-wrapper" id="gallery-big">
@@ -2252,24 +2253,31 @@ function _glbKey(e) {
              || window.location.pathname.match(/\/listing\/(\d+)/);
       if (_m) cardId = _m[1];
    }
+   /* Set data-listing-id on mobile button so header-auth.js can sync it */
+   var mobHeart = document.getElementById('card-mob-fav-btn');
+   if (mobHeart && cardId) mobHeart.dataset.listingId = cardId;
+
    function getFavBtn() {
       return document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
    }
-   if (!getFavBtn()) return;
-   /* Apply stored state on load */
+   /* Apply stored state on load — desktop + mobile buttons */
    function applyFavState() {
-      var btn = getFavBtn();
-      if (!btn) return;
       var isFav = !!(cardId && localStorage.getItem('favorite_' + cardId) === '1');
-      if (isFav) {
-         btn.classList.remove('icon-heart');
-         btn.classList.add('icon-heart-full');
-      } else {
-         btn.classList.remove('icon-heart-full');
-         btn.classList.add('icon-heart');
+      /* Desktop nav button */
+      var btn = getFavBtn();
+      if (btn) {
+         btn.classList.toggle('icon-heart', !isFav);
+         btn.classList.toggle('icon-heart-full', isFav);
+      }
+      /* Mobile gallery button */
+      var mob = document.getElementById('card-mob-fav-btn');
+      if (mob) {
+         mob.classList.toggle('active', isFav);
+         mob.classList.toggle('icon-heart', !isFav);
+         mob.classList.toggle('icon-heart-full', isFav);
       }
    }
-   /* Update header badge count */
+   /* Update badge counts (desktop header + mobile nav) */
    function updateFavCount() {
       var count = 0;
       for (var i = 0; i < localStorage.length; i++) {
@@ -2278,14 +2286,18 @@ function _glbKey(e) {
       }
       var badge = document.getElementById('fav-count');
       if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+      var mobBadge = document.getElementById('mob-fav-badge');
+      if (mobBadge) { mobBadge.textContent = count; mobBadge.style.display = count > 0 ? 'inline-block' : 'none'; }
    }
    applyFavState();
    updateFavCount();
-   /* Use event delegation so click always works even if element is re-rendered */
+   /* Click handler: desktop nav heart OR mobile gallery heart */
    document.addEventListener('click', function(e) {
-      var btn = e.target.closest('.card-nav__item .link-icon');
-      if (!btn || (!btn.classList.contains('icon-heart') && !btn.classList.contains('icon-heart-full'))) return;
-      if (btn.classList.contains('icon-location') || btn.classList.contains('popup-link')) return;
+      var isMobHeart = e.target.closest('#card-mob-fav-btn');
+      var isNavHeart = e.target.closest('.card-nav__item .link-icon');
+      if (!isMobHeart && !isNavHeart) return;
+      if (isNavHeart && (!isNavHeart.classList.contains('icon-heart') && !isNavHeart.classList.contains('icon-heart-full'))) return;
+      if (isNavHeart && (isNavHeart.classList.contains('icon-location') || isNavHeart.classList.contains('popup-link'))) return;
       e.preventDefault();
       if (!cardId) return;
       var nowFav = localStorage.getItem('favorite_' + cardId) !== '1';
@@ -2556,6 +2568,9 @@ function _glbKey(e) {
     border-bottom: 6px solid #f4f4f4;
   }
 
+  /* ── Mobile heart button on gallery ── */
+  body.bazar-logged #card-mob-fav-btn { display: block !important; }
+
 }
 </style>
 
@@ -2678,7 +2693,7 @@ function _glbKey(e) {
 <div class="menu-mob after992">
    <a href="/" class="menu-mob__item icon-main-home">Home</a>
    <a href="/messages" class="menu-mob__item icon-chat-full" onclick="handleMobileMessages(event)">Messages</a>
-   <a href="#" class="menu-mob__item icon-heart-new" onclick="handleMobileFavorites(event)">Favorites</a>
+   <a href="#" class="menu-mob__item icon-heart-new" onclick="handleMobileFavorites(event)"><span class="mob-nav-badge" id="mob-fav-badge" style="display:none">0</span>Favorites</a>
    <a href="/post-ad" class="menu-mob__item icon-add" onclick="return handlePostAd(event)">New AD</a>
    <a href="#" class="menu-mob__item icon-user-big" onclick="handleMobileProfile(event)">Profile</a>
 </div>
