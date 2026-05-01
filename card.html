@@ -146,7 +146,6 @@
                            <div class="card-gallery card-tile">
                               <div class="card-gallery__big" style="position:relative;">
                                  <div id="prop-stiker" class="card__stikers"></div>
-                                 <button class="card__heart icon-heart" id="card-mob-fav-btn" type="button" aria-label="Add to favorites" style="display:none;opacity:1;position:absolute;top:10px;right:10px;z-index:20;"></button>
                                  <div class="slider-gallery-big">
                                     <div class="swiper">
                                        <div class="swiper-wrapper" id="gallery-big">
@@ -2253,9 +2252,7 @@ function _glbKey(e) {
              || window.location.pathname.match(/\/listing\/(\d+)/);
       if (_m) cardId = _m[1];
    }
-   /* Set data-listing-id on mobile button so header-auth.js can sync it */
-   var mobHeart = document.getElementById('card-mob-fav-btn');
-   if (mobHeart && cardId) mobHeart.dataset.listingId = cardId;
+   /* data-listing-id is set on the mobile button after DOMContentLoaded creates it */
 
    function getFavBtn() {
       return document.querySelector('.card-nav__item .link-icon.icon-heart, .card-nav__item .link-icon.icon-heart-full');
@@ -2435,13 +2432,27 @@ function _glbKey(e) {
     padding: 12px 16px 10px;
     background: #fff;
   }
+  #mob-title-loc .mtl-title-row {
+    display: flex; align-items: flex-start; gap: 8px;
+  }
   #mob-title-loc .mtl-title {
     font-family: "Poppins", sans-serif; font-weight: 600; font-size: 17px;
-    color: #1d1d1b; margin: 0 0 5px; line-height: 1.35;
+    color: #1d1d1b; margin: 0 0 5px; line-height: 1.35; flex: 1 1 auto;
   }
   #mob-title-loc .mtl-location {
     font-family: "Poppins", sans-serif; font-size: 13px; color: #888; margin: 0;
   }
+  /* Heart button next to title */
+  #card-mob-fav-btn {
+    display: none;
+    flex-shrink: 0;
+    background: none; border: none; cursor: pointer;
+    font-size: 26px; color: #ccc;
+    padding: 0; margin-top: 1px;
+    line-height: 1; transition: color 0.2s;
+  }
+  body.bazar-logged #card-mob-fav-btn { display: block; }
+  #card-mob-fav-btn.icon-heart-full { color: #e31836; }
 
   /* ── Card-price block (moved from right column) ── */
   .card-price {
@@ -2568,8 +2579,6 @@ function _glbKey(e) {
     border-bottom: 6px solid #f4f4f4;
   }
 
-  /* ── Mobile heart button on gallery ── */
-  body.bazar-logged #card-mob-fav-btn { display: block !important; }
 
 }
 </style>
@@ -2587,7 +2596,10 @@ function _glbKey(e) {
     var mobTitleLoc = document.createElement('div');
     mobTitleLoc.id = 'mob-title-loc';
     mobTitleLoc.innerHTML =
-      '<p class="mtl-title"    id="mtl-title"></p>' +
+      '<div class="mtl-title-row">' +
+        '<p class="mtl-title" id="mtl-title"></p>' +
+        '<button class="icon-heart" id="card-mob-fav-btn" type="button" aria-label="Add to favorites"></button>' +
+      '</div>' +
       '<p class="mtl-location" id="mtl-location"></p>';
 
     /* ── 2. Move card-price from right column ── */
@@ -2658,6 +2670,17 @@ function _glbKey(e) {
           mobSub.textContent = maskedEl.textContent.trim();
         }
       }
+    }
+
+    /* Init mobile heart button */
+    var mobBtn = document.getElementById('card-mob-fav-btn');
+    if (mobBtn) {
+      var _cid = (window.__cid && String(window.__cid)) ||
+                 new URLSearchParams(window.location.search).get('id') || '';
+      if (_cid) mobBtn.dataset.listingId = _cid;
+      var _isFav = _cid && localStorage.getItem('favorite_' + _cid) === '1';
+      mobBtn.classList.toggle('icon-heart', !_isFav);
+      mobBtn.classList.toggle('icon-heart-full', _isFav);
     }
 
     syncMobData();
