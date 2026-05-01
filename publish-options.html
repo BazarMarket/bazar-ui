@@ -1017,12 +1017,13 @@
          if (adPlan !== 'vip' && adPlan !== 'pro' && adPlan !== 'free') adPlan = '';
 
          function _render(accountPlan, sDays) {
-            /* Show badge for the ad's own plan; use account days only for paid plans */
-            var badgePlan  = adPlan || accountPlan;
-            var badgeDays  = (badgePlan === 'pro' || badgePlan === 'vip') ? sDays : 0;
-            window._planBadgesRendered = badgePlan;
+            /* Only show badges when coming from an existing ad (?plan= is set).
+               New-ad flow (no ?plan=) shows no active badge and no button locking. */
+            if (!adPlan) return;
+            var badgeDays = (adPlan === 'pro' || adPlan === 'vip') ? sDays : 0;
+            window._planBadgesRendered = adPlan;
             window._planBadgesDays    = badgeDays;
-            _showPlanBadges(badgePlan, badgeDays);
+            _showPlanBadges(adPlan, badgeDays);
          }
 
          /* Fetch from API for accurate days; update localStorage for other pages */
@@ -1101,11 +1102,12 @@
             applyMeta(proMeta, daysLeft);
             _lockBtn(freeBtn, true, 'Your PRO plan is still active');
          } else {
-            /* Free plan — update days counter from ad creation */
+            /* Free plan — update days counter from ad creation, lock button to avoid resetting the timer */
             var freeDays = (typeof window._freeDaysLeft === 'number') ? window._freeDaysLeft : 30;
             var freeDaysEl = document.getElementById('freeActiveDays');
             if (freeDaysEl) freeDaysEl.textContent = 'Active for ' + freeDays + ' day' + (freeDays !== 1 ? 's' : '');
             if (freePill) freePill.style.display = '';
+            _lockBtn(freeBtn, true, 'Your listing is already on the Free plan');
          }
       }
 
