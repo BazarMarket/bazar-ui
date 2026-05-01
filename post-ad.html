@@ -2814,7 +2814,8 @@
          var bedroomsField = document.getElementById('bedroomsField');
          var bedroomsSelect = document.getElementById('bedroomsSelect');
          if (condField) {
-            var hide = conditionHiddenFor.includes(propType);
+            var hide = conditionHiddenFor.includes(propType) ||
+                       (propType === 'Industrial' && reState.listingType === 'For Long-term Rent');
             condField.style.display = hide ? 'none' : 'flex';
             if (!hide) setConditionOptions(propType);
          }
