@@ -1025,8 +1025,15 @@
                .then(function(d) {
                   var sPlan = (d.bazar_plan || d.plan || 'free').toLowerCase();
                   var sDays = parseInt(d.days_left || 0, 10);
-                  localStorage.setItem('bazar_plan', sPlan);
-                  if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
+                  /* Auto-expire: if paid plan ran out, revert to free */
+                  if ((sPlan === 'pro' || sPlan === 'vip') && sDays <= 0) {
+                     sPlan = 'free';
+                     localStorage.setItem('bazar_plan', 'free');
+                     localStorage.removeItem('bazar_days_left');
+                  } else {
+                     localStorage.setItem('bazar_plan', sPlan);
+                     if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
+                  }
                   _render(sPlan, sDays);
                })
                .catch(function(){ _render(plan, daysLeft); });
@@ -1035,20 +1042,32 @@
          }
       }
 
+      function _lockBtn(btn, lock, title) {
+         if (!btn) return;
+         btn.disabled         = lock;
+         btn.style.opacity    = lock ? '0.45' : '';
+         btn.style.cursor     = lock ? 'not-allowed' : '';
+         btn.title            = lock ? (title || '') : '';
+      }
+
       function _showPlanBadges(plan, daysLeft) {
          if (!plan) return;
 
-         /* Reset all pills */
+         /* Reset all pills and button locks */
          var proPill  = document.getElementById('proActivePill');
          var vipPill  = document.getElementById('vipActivePill');
          var freePill = document.getElementById('freeActivePill');
          var proMeta  = document.getElementById('proActiveMeta');
          var vipMeta  = document.getElementById('vipActiveMeta');
+         var freeBtn  = document.getElementById('freeBtn');
+         var proBtn   = document.getElementById('proBtn');
          if (proPill)  proPill.style.display  = 'none';
          if (vipPill)  vipPill.style.display  = 'none';
          if (freePill) freePill.style.display = 'none';
-         if (proMeta)  { proMeta.style.display = 'none'; proMeta.textContent = ''; }
-         if (vipMeta)  { vipMeta.style.display = 'none'; vipMeta.textContent = ''; }
+         if (proMeta)  { proMeta.style.display = 'none'; proMeta.textContent = ''; proMeta.classList.remove('po-active-meta--urgent','po-active-meta--warning'); }
+         if (vipMeta)  { vipMeta.style.display = 'none'; vipMeta.textContent = ''; vipMeta.classList.remove('po-active-meta--urgent','po-active-meta--warning'); }
+         _lockBtn(freeBtn, false);
+         _lockBtn(proBtn,  false);
 
          function applyMeta(el, days) {
             if (!el || !(days > 0)) return;
@@ -1062,9 +1081,12 @@
          if (plan === 'vip') {
             if (vipPill) vipPill.style.display = '';
             applyMeta(vipMeta, daysLeft);
+            _lockBtn(freeBtn, true, 'Your VIP plan is still active');
+            _lockBtn(proBtn,  true, 'Cannot downgrade from VIP to PRO');
          } else if (plan === 'pro') {
             if (proPill) proPill.style.display = '';
             applyMeta(proMeta, daysLeft);
+            _lockBtn(freeBtn, true, 'Your PRO plan is still active');
          } else {
             /* Free plan — update days counter from ad creation */
             var freeDays = (typeof window._freeDaysLeft === 'number') ? window._freeDaysLeft : 30;
