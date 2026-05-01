@@ -851,6 +851,16 @@
       }
       el('prop-city-link').textContent = p.city;
       el('prop-district-link').textContent = p.district || '';
+      /* Mobile subtitle location — set from real API data */
+      var _mll = document.getElementById('mtl-location');
+      if (_mll) {
+        var _mllParts = [];
+        if (p.city) _mllParts.push(p.city);
+        if (p.district) _mllParts.push(p.district);
+        _mll.textContent = _mllParts.join(', ');
+      }
+      var _mtlTitle = document.getElementById('mtl-title');
+      if (_mtlTitle) _mtlTitle.textContent = p.title || '';
       // Hide slash and district li when no district
       var _districtLi = el('prop-district-link') ? el('prop-district-link').parentElement : null;
       var _slashSpan = el('prop-city-link') ? el('prop-city-link').parentElement.querySelector('span') : null;
@@ -2653,16 +2663,7 @@ function _glbKey(e) {
       if (titleEl && mtl && !mtl.textContent.trim())
         mtl.textContent = (titleEl.textContent || '').trim();
 
-      /* Location */
-      var cityEl = document.getElementById('prop-city-link');
-      var distEl = document.getElementById('prop-district-link');
-      var mll = document.getElementById('mtl-location');
-      if (mll && !mll.textContent.trim()) {
-        var parts = [];
-        if (cityEl && cityEl.textContent.trim()) parts.push(cityEl.textContent.trim());
-        if (distEl && distEl.textContent.trim()) parts.push(distEl.textContent.trim());
-        mll.textContent = parts.join(', ');
-      }
+      /* Location filled from API data inside fetch callback */
 
       /* Phone sub-label */
       var maskedEl = document.getElementById('phone-masked');
