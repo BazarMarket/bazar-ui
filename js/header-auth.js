@@ -1,4 +1,4 @@
-window.BAZAR_API = (window.location.hostname === 'www.bazar.uk' || window.location.hostname === 'bazar.uk')
+window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
     ? 'https://admin.bazar.uk/api'
     : '/api';
 
