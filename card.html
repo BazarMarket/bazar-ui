@@ -1269,7 +1269,12 @@
       var _locLabel = el('location-label');
       if (_locLabel) _locLabel.innerHTML = '<b>Location:</b> ' + (p.city || '') + (p.district ? ' — ' + p.district : '');
 
-      var mapQ = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=' + p.map_query;
+      var _mapsKey = 'AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8';
+      var _eLat = parseFloat(p.exact_latitude);
+      var _eLng = parseFloat(p.exact_longitude);
+      var mapQ = (!isNaN(_eLat) && !isNaN(_eLng))
+        ? 'https://www.google.com/maps/embed/v1/place?key=' + _mapsKey + '&q=' + _eLat + ',' + _eLng + '&zoom=15'
+        : 'https://www.google.com/maps/embed/v1/place?key=' + _mapsKey + '&q=' + encodeURIComponent(p.map_query || (p.city || '') + ' UK');
       var mapInline = el('map-inline-iframe');
       if(mapInline) mapInline.src = mapQ;
       var mapPopup = el('map-popup-iframe');
