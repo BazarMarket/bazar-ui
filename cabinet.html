@@ -1844,7 +1844,7 @@
             var _badgeColor = _adPlan === 'vip' ? '#b45309' : (_adPlan === 'pro' ? '#ea580c' : '#16a34a');
             var _badgeBg    = _adPlan === 'vip' ? '#fffbeb' : (_adPlan === 'pro' ? '#fff7ed' : '#f0fdf4');
             var _badgeBdr   = _adPlan === 'vip' ? '#fde68a' : (_adPlan === 'pro' ? '#fed7aa' : '#86efac');
-            var _upgCell = '<div style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">' +
+            var _upgCell = '<div style="display:flex;flex-direction:column;align-items:center;gap:5px;">' +
                 '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:' + _badgeBg + ';color:' + _badgeColor + ';border:1px solid ' + _badgeBdr + ';">' + _adPlan.toUpperCase() + '</span>' +
                 '<button onclick="event.stopPropagation();showPanel(\'subscriptions\')" style="padding:3px 10px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #e0e0e0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background=\'#e87722\';this.style.color=\'#fff\';this.style.borderColor=\'#e87722\';" onmouseout="this.style.background=\'#f5f5f5\';this.style.color=\'#555\';this.style.borderColor=\'#e0e0e0\';">Upgrade</button>' +
                 '</div>';
@@ -1855,7 +1855,7 @@
                 '</td>' +
                 '<td style="vertical-align:middle;">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td style="vertical-align:middle;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
-                '<td style="vertical-align:middle;">' + _upgCell + '</td>' +
+                '<td style="vertical-align:middle;text-align:center;">' + _upgCell + '</td>' +
                 '<td style="vertical-align:middle;">' + _subCell(ad) + '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
