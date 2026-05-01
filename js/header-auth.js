@@ -80,12 +80,20 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                         /* Keep local plan, just refresh badge */
                         applyPlanBadge(localPlan, parseInt(localStorage.getItem('bazar_days_left') || '0', 10));
                     }
+                    /* Always sync gender from API so avatar is correct after cache clear */
+                    if (d.gender) {
+                        try { localStorage.setItem('bazar_gender', d.gender); } catch(ex) {}
+                    }
+                    var avEl = document.getElementById('header-avatar') || document.querySelector('.user-link__photo');
+                    var avImg = avEl ? (avEl.querySelector('img') || (avEl.tagName === 'IMG' ? avEl : null)) : null;
                     if (d.avatar) {
                         try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
-                        var avEl = document.getElementById('header-avatar') || document.querySelector('.user-link__photo');
-                        if (avEl) {
-                            var avImg = avEl.querySelector('img') || (avEl.tagName === 'IMG' ? avEl : null);
-                            if (avImg) avImg.src = d.avatar;
+                        if (avImg) avImg.src = d.avatar;
+                    } else if (d.gender && avImg) {
+                        /* No custom avatar — use gender icon from API (fixes stale male default) */
+                        var genderIcon = d.gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                        if (!avImg.src || avImg.src.indexOf('man.svg') !== -1 || avImg.src.indexOf('woman.png') !== -1) {
+                            avImg.src = genderIcon;
                         }
                     }
                 })
