@@ -2743,7 +2743,11 @@
       function setConditionOptions(propType) {
          var sel = document.getElementById('conditionSelect');
          if (!sel) return;
-         var opts = conditionOptions[propType] || conditionDefault;
+         var opts = (conditionOptions[propType] || conditionDefault).slice();
+         var lt = reState.listingType || '';
+         if (lt === 'For Long-term Rent' || lt === 'For Short-term Rent') {
+            opts = opts.filter(function(o) { return o.v !== 'new'; });
+         }
          sel.innerHTML = '<option value="">Select condition</option>' +
             opts.map(function(o) { return '<option value="' + o.v + '">' + o.label + '</option>'; }).join('');
       }
@@ -2831,6 +2835,14 @@
             var el = document.getElementById(id);
             if (el) el.style.display = isLand ? 'none' : 'flex';
          });
+         /* Industrial: hide bathrooms and key features */
+         var isIndustrial = (propType === 'Industrial');
+         if (!isLand && isIndustrial) {
+            ['bathroomsField', 'includedField'].forEach(function(id) {
+               var el = document.getElementById(id);
+               if (el) el.style.display = 'none';
+            });
+         }
 
          updateRealEstateTitle();
          document.getElementById('paForm').classList.add('visible');
