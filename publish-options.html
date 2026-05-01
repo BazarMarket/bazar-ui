@@ -966,24 +966,8 @@
          var plan     = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
          var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
          var uid      = localStorage.getItem('bazar_firebase_uid') || '';
-         var adId     = (new URLSearchParams(window.location.search)).get('ad_id') || '';
 
-         function _autoActivateIfPaid(sPlan) {
-            sPlan = (sPlan || '').toLowerCase();
-            if ((sPlan === 'pro' || sPlan === 'vip') && adId && uid) {
-               fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                  body: JSON.stringify({ firebase_uid: uid, plan: sPlan })
-               })
-               .then(function() { window.location.href = 'card?id=' + adId; })
-               .catch(function() { window.location.href = 'card?id=' + adId; });
-               return true;
-            }
-            return false;
-         }
-
-         /* Always fetch from API for accurate plan/days */
+         /* Fetch from API for accurate plan/days, then show badges only (no auto-redirect) */
          if (uid) {
             fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                .then(function(r) { return r.json(); })
@@ -992,9 +976,7 @@
                   var sDays = parseInt(d.days_left || 0, 10);
                   localStorage.setItem('bazar_plan', sPlan);
                   if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
-                  if (!_autoActivateIfPaid(sPlan)) {
-                     _showPlanBadges(sPlan, sDays);
-                  }
+                  _showPlanBadges(sPlan, sDays);
                })
                .catch(function(){ _showPlanBadges(plan, daysLeft); });
          } else {
@@ -1032,34 +1014,6 @@
             return;
          }
 
-         if (plan === 'pro' || plan === 'vip') {
-            var proBtn = document.getElementById('proBtn');
-            var proCard = document.querySelector('.po-card--pro');
-            if (proBtn && proCard) {
-               proBtn.textContent = 'Publish with PRO plan — Free';
-               proBtn.style.background = '#1a9448';
-               proBtn.onclick = function() { publishWithSubscription('pro'); };
-               var proDays = (plan === 'pro') ? daysLeft : 0;
-               var badge = makeActiveBadge('PRO active' + daysText(proDays));
-               badge.className = 'po-active-badge';
-               var proName = proCard.querySelector('.po-plan-name');
-               if (proName) proName.parentNode.insertBefore(badge, proName);
-            }
-         }
-
-         if (plan === 'vip') {
-            var vipBtn = document.getElementById('vipBtn');
-            var vipCard = document.querySelector('.po-card--vip');
-            if (vipBtn && vipCard) {
-               vipBtn.textContent = 'Publish with VIP plan — Free';
-               vipBtn.style.background = '#1a9448';
-               vipBtn.onclick = function() { publishWithSubscription('vip'); };
-               var vipBadge = makeActiveBadge('VIP active' + daysText(daysLeft));
-               vipBadge.className = 'po-active-badge';
-               var vipName = vipCard.querySelector('.po-plan-name');
-               if (vipName) vipName.parentNode.insertBefore(vipBadge, vipName);
-            }
-         }
       }
 
       function loadAdPreview() {
@@ -1078,9 +1032,9 @@
                   window._freeDaysLeft = 30;
                }
 
-               /* Apply plan badges with actual ad days */
-               var curPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-               var curDays = curPlan === 'free' ? window._freeDaysLeft : parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+               /* Apply plan badges based on this ad's own plan, not account level */
+               var curPlan = d.is_vip ? 'vip' : (d.is_pro ? 'pro' : 'free');
+               var curDays = curPlan === 'free' ? window._freeDaysLeft : 0;
                _showPlanBadges(curPlan, curDays);
 
                var titleEl = document.getElementById('lpAdTitle');
