@@ -472,6 +472,41 @@
          transform: translateY(-5px) scale(1.015);
          box-shadow: 0 12px 28px rgba(212,163,0,.22);
       }
+      .po-card-head {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         margin-bottom: 2px;
+      }
+      .po-active-pill {
+         display: inline-flex;
+         align-items: center;
+         gap: 4px;
+         background: #e8f9ec;
+         color: #259a44;
+         border: 1px solid #a8e6bc;
+         border-radius: 20px;
+         font-size: 11px;
+         font-weight: 700;
+         padding: 3px 10px;
+         letter-spacing: .3px;
+         white-space: nowrap;
+      }
+      .po-active-meta {
+         font-size: 12px;
+         font-weight: 500;
+         color: #6b7280;
+         margin: 0 0 12px;
+         padding: 6px 10px;
+         background: #f3f4f6;
+         border-radius: 8px;
+         border-left: 3px solid #d1d5db;
+         transition: background .25s, color .25s, border-left-color .25s;
+         position: relative;
+         cursor: default;
+      }
+      .po-active-meta--warning { color: #c2660a; background: #fff7ed; border-left-color: #f97316; }
+      .po-active-meta--urgent  { color: #dc2626; background: #fef2f2; border-left-color: #dc2626; }
 
       /* ── Tablet (≤ 1100px) ── */
       @media (max-width: 1100px) {
@@ -645,7 +680,10 @@
 
                <!-- FREE -->
                <div class="po-card po-card--free" onclick="selectPlan('free')">
-                  <span class="po-plan-badge po-plan-badge--free">Free</span>
+                  <div class="po-card-head">
+                     <span class="po-plan-badge po-plan-badge--free">Free</span>
+                     <span class="po-active-pill" id="freeActivePill" style="display:none">✓ Active</span>
+                  </div>
                   <p class="po-plan-name" id="freePlanName">✔ Free listing</p>
                   <p class="po-position">Standard placement in category</p>
                   <div class="po-price"><span class="po-price__free">Free</span></div>
@@ -664,10 +702,13 @@
                <!-- PRO -->
                <div class="po-card po-card--pro" onclick="selectPlan('pro')">
                   <span class="po-recommended">Most popular</span>
-                  <span class="po-plan-badge po-plan-badge--pro">
-                     <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,1 6.2,3.8 9.5,4.1 7.2,6.2 7.9,9.5 5,7.8 2.1,9.5 2.8,6.2 0.5,4.1 3.8,3.8"/></svg>
-                     PRO
-                  </span>
+                  <div class="po-card-head">
+                     <span class="po-plan-badge po-plan-badge--pro">
+                        <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,1 6.2,3.8 9.5,4.1 7.2,6.2 7.9,9.5 5,7.8 2.1,9.5 2.8,6.2 0.5,4.1 3.8,3.8"/></svg>
+                        PRO
+                     </span>
+                     <span class="po-active-pill" id="proActivePill" style="display:none">✓ Active</span>
+                  </div>
                   <p class="po-plan-name po-plan-name--pro">⭐ PRO listing</p>
                   <p class="po-position">Positions 1–5 in category</p>
                   <div class="po-price">
@@ -675,6 +716,7 @@
                      <span id="proPrice">7.00</span>
                   </div>
                   <p class="po-plan-tagline">Most popular with sellers</p>
+                  <p class="po-active-meta" id="proActiveMeta" style="display:none"></p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="setDuration('pro',3,'3.00',this)">3 days</button></div>
@@ -703,11 +745,13 @@
 
                <!-- VIP -->
                <div class="po-card po-card--vip" onclick="selectPlan('vip')">
-
-                  <span class="po-plan-badge po-plan-badge--vip">
-                     <svg width="9" height="9" viewBox="0 0 12 10" fill="currentColor"><path d="M1,9 L2.5,3 L5.5,6.5 L6,1 L6.5,6.5 L9.5,3 L11,9 Z"/></svg>
-                     VIP
-                  </span>
+                  <div class="po-card-head">
+                     <span class="po-plan-badge po-plan-badge--vip">
+                        <svg width="9" height="9" viewBox="0 0 12 10" fill="currentColor"><path d="M1,9 L2.5,3 L5.5,6.5 L6,1 L6.5,6.5 L9.5,3 L11,9 Z"/></svg>
+                        VIP
+                     </span>
+                     <span class="po-active-pill" id="vipActivePill" style="display:none">✓ Active</span>
+                  </div>
                   <p class="po-plan-name po-plan-name--vip">👑 VIP listing</p>
                   <p class="po-position" style="font-weight:500;color:#555;">Always #1 in category</p>
                   <div class="po-price">
@@ -715,6 +759,7 @@
                      <span id="vipPrice">14.00</span>
                   </div>
                   <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
+                  <p class="po-active-meta" id="vipActiveMeta" style="display:none"></p>
                   <p class="po-price__note">Choose duration:</p>
                   <div class="po-duration-row">
                      <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="setDuration('vip',3,'6.00',this)">3 days</button></div>
@@ -967,6 +1012,12 @@
          var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
          var uid      = localStorage.getItem('bazar_firebase_uid') || '';
 
+         function _render(p, d) {
+            window._planBadgesRendered = p;
+            window._planBadgesDays    = d;
+            _showPlanBadges(p, d);
+         }
+
          /* Fetch from API for accurate plan/days, then show badges only (no auto-redirect) */
          if (uid) {
             fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
@@ -976,44 +1027,51 @@
                   var sDays = parseInt(d.days_left || 0, 10);
                   localStorage.setItem('bazar_plan', sPlan);
                   if (sDays > 0) localStorage.setItem('bazar_days_left', sDays);
-                  _showPlanBadges(sPlan, sDays);
+                  _render(sPlan, sDays);
                })
-               .catch(function(){ _showPlanBadges(plan, daysLeft); });
+               .catch(function(){ _render(plan, daysLeft); });
          } else {
-            _showPlanBadges(plan, daysLeft);
+            _render(plan, daysLeft);
          }
       }
 
       function _showPlanBadges(plan, daysLeft) {
          if (!plan) return;
 
-         function makeActiveBadge(text) {
-            var b = document.createElement('span');
-            b.style.cssText = 'display:inline-flex;align-items:center;gap:5px;background:#e8f8ee;color:#1a9448;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;';
-            b.innerHTML = '&#10003; ' + text;
-            return b;
+         /* Reset all pills */
+         var proPill  = document.getElementById('proActivePill');
+         var vipPill  = document.getElementById('vipActivePill');
+         var freePill = document.getElementById('freeActivePill');
+         var proMeta  = document.getElementById('proActiveMeta');
+         var vipMeta  = document.getElementById('vipActiveMeta');
+         if (proPill)  proPill.style.display  = 'none';
+         if (vipPill)  vipPill.style.display  = 'none';
+         if (freePill) freePill.style.display = 'none';
+         if (proMeta)  { proMeta.style.display = 'none'; proMeta.textContent = ''; }
+         if (vipMeta)  { vipMeta.style.display = 'none'; vipMeta.textContent = ''; }
+
+         function applyMeta(el, days) {
+            if (!el || !(days > 0)) return;
+            el.textContent = '\u23f1 ' + days + ' day' + (days !== 1 ? 's' : '') + ' left';
+            el.style.display = '';
+            el.classList.remove('po-active-meta--urgent', 'po-active-meta--warning');
+            if (days < 10) el.classList.add('po-active-meta--urgent');
+            else if (days < 20) el.classList.add('po-active-meta--warning');
          }
 
-         function daysText(d) {
-            return d > 0 ? ' \u00b7 ' + d + ' day' + (d !== 1 ? 's' : '') + ' left' : '';
-         }
-
-         /* Remove any previously inserted badges */
-         document.querySelectorAll('.po-active-badge').forEach(function(b) { b.remove(); });
-
-         /* Free plan — always active, days from ad creation */
-         if (plan === 'free') {
+         if (plan === 'vip') {
+            if (vipPill) vipPill.style.display = '';
+            applyMeta(vipMeta, daysLeft);
+         } else if (plan === 'pro') {
+            if (proPill) proPill.style.display = '';
+            applyMeta(proMeta, daysLeft);
+         } else {
+            /* Free plan — update days counter from ad creation */
             var freeDays = (typeof window._freeDaysLeft === 'number') ? window._freeDaysLeft : 30;
             var freeDaysEl = document.getElementById('freeActiveDays');
-            if (freeDaysEl) freeDaysEl.textContent = freeDays + ' day' + (freeDays !== 1 ? 's' : '') + ' left';
-            var freeBadge = makeActiveBadge('Active');
-            freeBadge.className = 'po-active-badge';
-            freeBadge.style.cssText += ';position:absolute;top:14px;right:14px;margin-bottom:0;';
-            var freeCard = document.querySelector('.po-card--free');
-            if (freeCard) freeCard.appendChild(freeBadge);
-            return;
+            if (freeDaysEl) freeDaysEl.textContent = 'Active for ' + freeDays + ' day' + (freeDays !== 1 ? 's' : '');
+            if (freePill) freePill.style.display = '';
          }
-
       }
 
       function loadAdPreview() {
@@ -1032,10 +1090,10 @@
                   window._freeDaysLeft = 30;
                }
 
-               /* Apply plan badges based on this ad's own plan, not account level */
-               var curPlan = d.is_vip ? 'vip' : (d.is_pro ? 'pro' : 'free');
-               var curDays = curPlan === 'free' ? window._freeDaysLeft : 0;
-               _showPlanBadges(curPlan, curDays);
+               /* Days counter updated — re-run badges if already rendered */
+               if (typeof window._planBadgesRendered === 'string') {
+                  _showPlanBadges(window._planBadgesRendered, window._planBadgesDays || 0);
+               }
 
                var titleEl = document.getElementById('lpAdTitle');
                var cityEl  = document.getElementById('lpAdCity');
