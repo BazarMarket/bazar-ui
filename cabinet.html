@@ -925,118 +925,11 @@
 
                 <div class="cab-panel__top">
                     <h1 class="cab-panel__title">My Promotions</h1>
+                    <p class="cab-panel__welcome" style="margin-top:4px;color:#6b7280;font-size:14px;">Manage paid promotions for your ads. To promote a new ad, go to <a href="#" onclick="event.preventDefault();switchToTab('my-ads')" style="color:#ff9138;text-decoration:none;font-weight:600;">My Ads</a> and click "Promote to PRO · VIP".</p>
                 </div>
 
-                <div class="po-cards">
-
-                    <!-- FREE -->
-                    <div class="po-card po-card--free" onclick="cabSelectPlan(this,'free')">
-                        <div class="po-card-head">
-                            <span class="po-plan-badge po-plan-badge--free">Free</span>
-                            <span class="po-active-pill" id="freeActivePill" style="display:none">✓ Active</span>
-                        </div>
-                        <p class="po-plan-name">✔ Free listing</p>
-                        <p class="po-position">Standard placement in category</p>
-                        <div class="po-price"><span class="po-price__free">Free</span></div>
-                        <p class="po-price__note">Active for 30 days</p>
-                        <hr class="po-divider">
-                        <ul class="po-features">
-                            <li>Listed in search results</li>
-                            <li>Up to 10 photos</li>
-                            <li>Contact form &amp; phone visible</li>
-                            <li class="po-feat--dim">No priority placement</li>
-                            <li class="po-feat--dim">No highlight or badge</li>
-                        </ul>
-                        <button class="po-btn po-btn--free" id="cabFreeBtn" onclick="event.stopPropagation()">Start for free</button>
-                    </div>
-
-                    <!-- PRO -->
-                    <div class="po-card po-card--pro" onclick="cabSelectPlan(this,'pro')">
-                        <span class="po-recommended">Most popular</span>
-                        <div class="po-card-head">
-                            <span class="po-plan-badge po-plan-badge--pro">
-                                <svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,1 6.2,3.8 9.5,4.1 7.2,6.2 7.9,9.5 5,7.8 2.1,9.5 2.8,6.2 0.5,4.1 3.8,3.8"/></svg>
-                                PRO
-                            </span>
-                            <span class="po-active-pill" id="proActivePill" style="display:none">✓ Active</span>
-                        </div>
-                        <p class="po-plan-name po-plan-name--pro">⭐ PRO listing</p>
-                        <p class="po-position">Positions 1–5 in category</p>
-                        <div class="po-price">
-                            <span class="po-price__currency">£</span>
-                            <span id="cabProPrice">7.00</span>
-                        </div>
-                        <p class="po-plan-tagline">Most popular with sellers</p>
-                        <p class="po-active-meta" id="proActiveMeta" style="display:none"></p>
-                        <p class="po-price__note">Choose duration:</p>
-                        <div class="po-duration-row">
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',3,'3.00',this);event.stopPropagation()">3 days</button></div>
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',5,'4.00',this);event.stopPropagation()">5 days</button></div>
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',7,'5.00',this);event.stopPropagation()">7 days</button></div>
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',10,'6.00',this);event.stopPropagation()">10 days</button></div>
-                            <div class="po-dur-cell">
-                                <button class="po-duration-btn po-duration-btn--pro po-duration-btn--best active" onclick="cabSetDur('pro',14,'7.00',this);event.stopPropagation()">14 days</button>
-                                <span class="po-dur-label">Best value</span>
-                            </div>
-                            <div class="po-dur-cell">
-                                <button class="po-duration-btn po-duration-btn--pro" onclick="cabSetDur('pro',30,'10.00',this);event.stopPropagation()">30 days</button>
-                                <span class="po-dur-label po-dur-label--save">Save 60%</span>
-                            </div>
-                        </div>
-                        <hr class="po-divider">
-                        <ul class="po-features">
-                            <li>Priority placement in search</li>
-                            <li>Up to 20 photos</li>
-                            <li>Orange <b>PRO</b> badge on listing</li>
-                            <li>Highlighted in search results</li>
-                            <li>Contact form &amp; phone visible</li>
-                        </ul>
-                        <button class="po-btn po-btn--pro" id="cabProBtn" onclick="event.stopPropagation();startCheckout('pro')">Upgrade to PRO — £7.00</button>
-                    </div>
-
-                    <!-- VIP -->
-                    <div class="po-card po-card--vip" onclick="cabSelectPlan(this,'vip')">
-                        <div class="po-card-head">
-                            <span class="po-plan-badge po-plan-badge--vip">
-                                <svg width="9" height="9" viewBox="0 0 12 10" fill="currentColor"><path d="M1,9 L2.5,3 L5.5,6.5 L6,1 L6.5,6.5 L9.5,3 L11,9 Z"/></svg>
-                                VIP
-                            </span>
-                            <span class="po-active-pill" id="vipActivePill" style="display:none">✓ Active</span>
-                        </div>
-                        <p class="po-plan-name po-plan-name--vip">👑 VIP listing</p>
-                        <p class="po-position" style="font-weight:500;color:#555;">Always #1 in category</p>
-                        <div class="po-price">
-                            <span class="po-price__currency">£</span>
-                            <span id="cabVipPrice">14.00</span>
-                        </div>
-                        <p class="po-plan-tagline po-plan-tagline--vip">Maximum exposure</p>
-                        <p class="po-active-meta" id="vipActiveMeta" style="display:none"></p>
-                        <p class="po-price__note">Choose duration:</p>
-                        <div class="po-duration-row">
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',3,'6.00',this);event.stopPropagation()">3 days</button></div>
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',5,'8.00',this);event.stopPropagation()">5 days</button></div>
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',7,'10.00',this);event.stopPropagation()">7 days</button></div>
-                            <div class="po-dur-cell"><button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',10,'12.00',this);event.stopPropagation()">10 days</button></div>
-                            <div class="po-dur-cell">
-                                <button class="po-duration-btn po-duration-btn--vip po-duration-btn--best active" onclick="cabSetDur('vip',14,'14.00',this);event.stopPropagation()">14 days</button>
-                                <span class="po-dur-label">Best value</span>
-                            </div>
-                            <div class="po-dur-cell">
-                                <button class="po-duration-btn po-duration-btn--vip" onclick="cabSetDur('vip',30,'20.00',this);event.stopPropagation()">30 days</button>
-                                <span class="po-dur-label po-dur-label--save">Save 60%</span>
-                            </div>
-                        </div>
-                        <hr class="po-divider">
-                        <ul class="po-features">
-                            <li>Top #1 position in category</li>
-                            <li>Up to 50 photos</li>
-                            <li>Gold <b>VIP</b> badge on listing</li>
-                            <li>Featured on homepage</li>
-                            <li>Priority in search &amp; filters</li>
-                        </ul>
-                        <button class="po-btn po-btn--vip" id="cabVipBtn" onclick="event.stopPropagation();startCheckout('vip')">Upgrade to VIP — £14.00</button>
-                    </div>
-
+                <div id="promoTableWrap" style="margin-top:8px;">
+                    <div style="text-align:center;padding:40px 0;color:#aaa;font-size:14px;">Loading…</div>
                 </div>
 
             </div>
@@ -1698,7 +1591,167 @@
         if (tab === 'favorites') renderFavorites();
         if (tab === 'payments') loadPayments();
         if (tab === 'my-ads') loadMyAds();
+        if (tab === 'subscriptions') loadMyPromotions();
     }
+
+    /* ── My Promotions ─────────────────────────────────────────── */
+    function loadMyPromotions() {
+        var wrap = document.getElementById('promoTableWrap');
+        if (!wrap) return;
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid) { wrap.innerHTML = '<p style="color:#aaa;text-align:center;padding:40px 0;">Please log in to view your promotions.</p>'; return; }
+
+        wrap.innerHTML = '<div style="text-align:center;padding:40px 0;color:#aaa;font-size:14px;">Loading…</div>';
+
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/properties', { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var ads = (d.data || []).filter(function(a) { return a.status !== 'deleted'; });
+                _renderPromoTable(ads);
+            })
+            .catch(function() { wrap.innerHTML = '<p style="color:#aaa;text-align:center;padding:40px 0;">Could not load promotions. Please try again.</p>'; });
+    }
+
+    function _renderPromoTable(ads) {
+        var wrap = document.getElementById('promoTableWrap');
+        if (!wrap) return;
+
+        /* Empty state */
+        if (ads.length === 0) {
+            wrap.innerHTML = '<div style="text-align:center;padding:60px 20px;">' +
+                '<p style="font-size:16px;font-weight:600;color:#111;margin:0 0 8px;">No ads yet</p>' +
+                '<p style="font-size:14px;color:#6b7280;margin:0 0 20px;">Create your first ad, then promote it to get more views.</p>' +
+                '<a href="/post-ad" style="display:inline-block;padding:10px 24px;background:#ff9138;color:#fff;font-weight:700;border-radius:8px;text-decoration:none;font-size:14px;">+ Post an Ad</a>' +
+                '</div>';
+            return;
+        }
+
+        /* Badge helpers */
+        function planBadgeHtml(plan) {
+            var cfg = {
+                vip:  { bg:'#fffbeb', color:'#b45309', bdr:'#fde68a', label:'VIP' },
+                pro:  { bg:'#fff7ed', color:'#ea580c', bdr:'#fed7aa', label:'PRO' },
+                free: { bg:'#f0fdf4', color:'#16a34a', bdr:'#86efac', label:'FREE' }
+            };
+            var c = cfg[plan] || cfg.free;
+            return '<span style="display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;background:' + c.bg + ';color:' + c.color + ';border:1px solid ' + c.bdr + ';">' + c.label + '</span>';
+        }
+
+        function statusBadgeHtml(label, style) {
+            return '<span style="display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;' + style + '">' + label + '</span>';
+        }
+
+        /* Build table */
+        var thStyle = 'style="padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;text-align:left;border-bottom:1px solid #f0f0f0;"';
+        var html = '<table style="width:100%;border-collapse:separate;border-spacing:0;">' +
+            '<thead><tr>' +
+            '<th ' + thStyle + '>Ad</th>' +
+            '<th ' + thStyle + '>Promotion</th>' +
+            '<th ' + thStyle + '>Status</th>' +
+            '<th ' + thStyle + '>Days left</th>' +
+            '<th ' + thStyle + '>Views</th>' +
+            '<th ' + thStyle + '>Actions</th>' +
+            '</tr></thead><tbody>';
+
+        var cardStyle = 'background:#fff;box-shadow:0 0 20px rgba(0,0,0,0.07);';
+        var tdBase = 'style="padding:14px 12px;vertical-align:middle;"';
+
+        ads.forEach(function(ad, i) {
+            var plan = ad.is_vip ? 'vip' : (ad.is_pro ? 'pro' : 'free');
+
+            /* Days calculation */
+            var daysLeft = null;
+            var isExpired = false;
+            if (plan === 'pro' || plan === 'vip') {
+                if (ad.expires_at) {
+                    daysLeft = Math.ceil((new Date(ad.expires_at).getTime() - Date.now()) / 86400000);
+                    if (daysLeft <= 0) { isExpired = true; daysLeft = 0; }
+                }
+            } else {
+                var baseDate = ad.boosted_at || ad.created_at;
+                if (baseDate) {
+                    daysLeft = Math.ceil(30 - (Date.now() - new Date(baseDate).getTime()) / 86400000);
+                    if (daysLeft <= 0) { isExpired = true; daysLeft = 0; }
+                } else {
+                    daysLeft = 30;
+                }
+            }
+
+            /* Status badge */
+            var promoStatusHtml;
+            if (isExpired) {
+                promoStatusHtml = statusBadgeHtml('Expired', 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;');
+            } else {
+                promoStatusHtml = statusBadgeHtml('Active', 'background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;');
+            }
+
+            /* Days cell */
+            var daysHtml;
+            if (plan === 'free') {
+                daysHtml = daysLeft > 0
+                    ? '<span style="font-size:13px;color:#6b7280;">' + daysLeft + 'd left</span>'
+                    : '<span style="font-size:13px;color:#dc2626;">Expired</span>';
+            } else if (isExpired) {
+                daysHtml = '<span style="font-size:13px;color:#dc2626;">Expired</span>';
+            } else if (daysLeft !== null) {
+                var dColor = daysLeft < 10 ? '#dc2626' : (daysLeft < 20 ? '#d97706' : '#6b7280');
+                daysHtml = '<span style="font-size:13px;color:' + dColor + ';font-weight:600;">' + daysLeft + 'd left</span>';
+            } else {
+                daysHtml = '<span style="color:#ccc;">—</span>';
+            }
+
+            /* Actions */
+            var baseUrl = 'publish-options?ad_id=' + ad.id + '&plan=' + plan;
+            var btnStyle = 'style="padding:5px 11px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer;white-space:nowrap;border:1px solid "';
+            function actionBtn(label, url, bg, color, bdr) {
+                return '<button onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.location.href=\'' + url + '\'" ' +
+                    'style="padding:5px 11px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer;white-space:nowrap;border:1px solid ' + bdr + ';background:' + bg + ';color:' + color + ';" ' +
+                    'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.15)\'" onmouseout="this.style.boxShadow=\'\'">' + label + '</button>';
+            }
+
+            var actionsHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">';
+            if (plan === 'free' || (!ad.is_pro && !ad.is_vip)) {
+                actionsHtml += actionBtn('Promote Ad', 'publish-options?ad_id=' + ad.id + '&plan=free', '#fff7ed', '#ea580c', '#fed7aa');
+            } else if (plan === 'vip' && !isExpired) {
+                actionsHtml += actionBtn('Extend VIP', baseUrl, '#fffbeb', '#b45309', '#fde68a');
+            } else if (plan === 'pro' && !isExpired) {
+                actionsHtml += actionBtn('Extend PRO', baseUrl, '#fff7ed', '#ea580c', '#fed7aa');
+                actionsHtml += actionBtn('Upgrade to VIP', 'publish-options?ad_id=' + ad.id + '&plan=pro', '#fffbeb', '#b45309', '#fde68a');
+            } else if (isExpired) {
+                actionsHtml += actionBtn('Renew Promotion', 'publish-options?ad_id=' + ad.id + '&plan=free', '#f5f5f5', '#555', '#d0d0d0');
+            }
+            actionsHtml += '</div>';
+
+            /* Thumbnail */
+            var imgHtml = ad.photo
+                ? '<img src="' + ad.photo + '" alt="" style="width:70px;height:56px;border-radius:6px;object-fit:cover;flex-shrink:0;">'
+                : '<img src="/img/product.jpg" alt="" style="width:70px;height:56px;border-radius:6px;object-fit:cover;flex-shrink:0;">';
+
+            var rowRadius = i === 0
+                ? 'border-radius:10px 10px 0 0;'
+                : (i === ads.length - 1 ? 'border-radius:0 0 10px 10px;' : '');
+
+            if (i > 0) html += '<tr><td colspan="6" style="height:14px;background:transparent;padding:0;border:none;"></td></tr>';
+
+            html += '<tr style="' + cardStyle + 'cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
+                '<td ' + tdBase + ' style="padding:14px 12px;vertical-align:middle;border-radius:10px 0 0 10px;">' +
+                  '<div style="display:flex;align-items:center;gap:10px;">' + imgHtml +
+                    '<div><div style="font-weight:600;color:#111;font-size:13px;line-height:1.3;">' + (ad.title || '—') + '</div>' +
+                    (ad.price ? '<div style="font-size:12px;color:#6b7280;margin-top:2px;">£ ' + Number(ad.price).toLocaleString() + '</div>' : '') +
+                  '</div></div>' +
+                '</td>' +
+                '<td ' + tdBase + '>' + planBadgeHtml(plan) + '</td>' +
+                '<td ' + tdBase + '>' + promoStatusHtml + '</td>' +
+                '<td ' + tdBase + '>' + daysHtml + '</td>' +
+                '<td ' + tdBase + ' style="padding:14px 12px;vertical-align:middle;color:#374151;font-size:13px;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
+                '<td ' + tdBase + ' style="padding:14px 12px;vertical-align:middle;border-radius:0 10px 10px 0;" onclick="event.stopPropagation();">' + actionsHtml + '</td>' +
+                '</tr>';
+        });
+
+        html += '</tbody></table>';
+        wrap.innerHTML = html;
+    }
+    /* ────────────────────────────────────────────────────────── */
 
     var _allAdsData = [];
     var _filtersSetup = false;
