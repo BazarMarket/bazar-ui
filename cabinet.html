@@ -1844,9 +1844,15 @@
             var _badgeColor = _adPlan === 'vip' ? '#b45309' : (_adPlan === 'pro' ? '#ea580c' : '#16a34a');
             var _badgeBg    = _adPlan === 'vip' ? '#fffbeb' : (_adPlan === 'pro' ? '#fff7ed' : '#f0fdf4');
             var _badgeBdr   = _adPlan === 'vip' ? '#fde68a' : (_adPlan === 'pro' ? '#fed7aa' : '#86efac');
-            var _upgCell = '<div style="display:flex;flex-direction:column;align-items:center;gap:5px;">' +
-                '<button onclick="event.stopPropagation();showPanel(\'subscriptions\')" style="padding:4px 10px;font-size:11px;font-weight:600;border-radius:6px;border:none;background:#e87722;color:#fff;cursor:pointer;white-space:nowrap;" onmouseover="this.style.opacity=\'0.85\';" onmouseout="this.style.opacity=\'1\';">Upgrade to PRO</button>' +
-                '<button onclick="event.stopPropagation();showPanel(\'subscriptions\')" style="padding:4px 10px;font-size:11px;font-weight:600;border-radius:6px;border:none;background:linear-gradient(135deg,#c99a10 0%,#a07208 100%);color:#fff;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(180,130,10,.3);" onmouseover="this.style.background=\'linear-gradient(135deg,#b88c0e 0%,#8f6507 100%)\';" onmouseout="this.style.background=\'linear-gradient(135deg,#c99a10 0%,#a07208 100%)\';">Upgrade to VIP</button>' +
+            var _upgCell = '<div style="display:flex;flex-direction:column;align-items:center;gap:10px;">' +
+                '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">' +
+                  '<button onclick="event.stopPropagation();showPanel(\'subscriptions\')" style="padding:4px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1.5px solid #e87722;background:#fff;color:#e87722;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background=\'#fff7f0\';" onmouseout="this.style.background=\'#fff\';">Upgrade to PRO</button>' +
+                  '<span style="font-size:10px;color:#9ca3af;">Top 5 positions</span>' +
+                '</div>' +
+                '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">' +
+                  '<button onclick="event.stopPropagation();showPanel(\'subscriptions\')" style="padding:5px 12px;font-size:11px;font-weight:700;border-radius:6px;border:none;background:linear-gradient(135deg,#c99a10 0%,#a07208 100%);color:#fff;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(180,130,10,.35);" onmouseover="this.style.background=\'linear-gradient(135deg,#b88c0e 0%,#8f6507 100%)\';" onmouseout="this.style.background=\'linear-gradient(135deg,#c99a10 0%,#a07208 100%)\';">Upgrade to VIP</button>' +
+                  '<span style="font-size:10px;color:#a07208;font-weight:600;">Always #1 🔥</span>' +
+                '</div>' +
                 '</div>';
             if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="6" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
             html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
