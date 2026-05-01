@@ -756,20 +756,20 @@
                            <img id="lpLogo" loading="lazy" class="img-cover" src="icon/man.svg" alt="">
                         </div>
                         <div class="card__info">
-                           <p class="card__name">Villa for Sale in Tsada</p>
-                           <p class="card__label">PAPHOS</p>
+                           <p class="card__name" id="lpAdTitle">Villa for Sale in Tsada</p>
+                           <p class="card__label" id="lpAdCity">PAPHOS</p>
                         </div>
                      </div>
                      <div class="card__img">
                         <div class="card__stikers" id="lpStikers"></div>
-                        <img loading="lazy" class="img-cover" src="img/product.jpg" alt="Villa for Sale">
+                        <img loading="lazy" class="img-cover" id="lpAdPhoto" src="img/product.jpg" alt="">
                      </div>
                      <div class="card__down">
                         <div class="card__prices">
-                           <span class="price-new">£ 1,049.00</span>
+                           <span class="price-new" id="lpAdPrice">£ 1,049.00</span>
                         </div>
                         <div class="card__dop">
-                           <div class="info-bord">
+                           <div class="info-bord" id="lpAdFeatures">
                               <span class="info-bord__item icon-bead">2 beds</span>
                               <span class="info-bord__item icon-bath">2 bath</span>
                               <span class="info-bord__item icon-house-area">153 m²</span>
@@ -849,13 +849,16 @@
          featBar.classList.remove('visible');
          placement.classList.remove('visible');
 
+         /* Use actual user avatar */
+         var _av = localStorage.getItem('bazar_avatar');
+         var _gn = localStorage.getItem('bazar_gender');
+         logo.src = _av || (_gn === 'female' ? 'icon/woman.png' : 'icon/man.svg');
+
          if (currentPlan === 'free') {
-            logo.src = 'icon/man.svg';
             planEl.textContent = '\u2714 Free listing';
             planEl.className = 'po-lp-plan-name';
             durEl.textContent = 'Standard listing \u2022 30 days';
          } else if (currentPlan === 'pro') {
-            logo.src = 'icon/man.svg';
             panel.classList.add('is-pro');
             card.className = 'card card_orange';
             stikers.innerHTML = '<span class="stiker stiker_top">PRO</span>';
@@ -863,7 +866,6 @@
             planEl.className = 'po-lp-plan-name is-pro';
             durEl.textContent = 'Priority in search \u2022 ' + currentDays.pro + ' days';
          } else if (currentPlan === 'vip') {
-            logo.src = 'icon/pafilia.png';
             panel.classList.add('is-vip');
             card.className = 'card card_gold';
             stikers.innerHTML = '<span class="stiker stiker_vip">VIP</span>';
@@ -1047,9 +1049,38 @@
          }
       }
 
+      function loadAdPreview() {
+         var adId = (new URLSearchParams(window.location.search)).get('ad_id') || '';
+         if (!adId) return;
+         fetch(window.BAZAR_API + '/properties/' + adId)
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(d) {
+               if (!d || !d.title) return;
+               var titleEl = document.getElementById('lpAdTitle');
+               var cityEl  = document.getElementById('lpAdCity');
+               var photoEl = document.getElementById('lpAdPhoto');
+               var priceEl = document.getElementById('lpAdPrice');
+               var featEl  = document.getElementById('lpAdFeatures');
+               if (titleEl) titleEl.textContent = d.title;
+               if (cityEl)  cityEl.textContent  = (d.city || '').toUpperCase();
+               if (photoEl && d.images && d.images.length) photoEl.src = d.images[0];
+               if (priceEl) priceEl.textContent = '\u00A3 ' + (d.price ? Number(d.price).toLocaleString() : '\u2014');
+               if (featEl) {
+                  var feats = '';
+                  if (d.bedrooms)     feats += '<span class="info-bord__item icon-bead">'       + d.bedrooms + ' beds</span>';
+                  if (d.bathrooms)    feats += '<span class="info-bord__item icon-bath">'        + d.bathrooms + ' bath</span>';
+                  if (d.covered_area) feats += '<span class="info-bord__item icon-house-area">'  + d.covered_area + ' m\u00B2</span>';
+                  if (d.plot_area)    feats += '<span class="info-bord__item icon-Plot">'        + d.plot_area + ' m\u00B2</span>';
+                  if (feats) featEl.innerHTML = feats;
+               }
+            })
+            .catch(function() {});
+      }
+
       document.addEventListener('DOMContentLoaded', function() {
          selectPlan('pro');
          applyExistingPlan();
+         loadAdPreview();
       });
    </script>
 <script src="js/header-auth.js?v=13"></script>
