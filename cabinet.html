@@ -1644,15 +1644,22 @@
         var html = '<table style="width:100%;border-collapse:separate;border-spacing:0;">' +
             '<thead><tr>' +
             '<th ' + thStyle + '>Ad</th>' +
-            '<th ' + thStyle + '>Promotion</th>' +
-            '<th ' + thStyle + '>Status</th>' +
+            '<th ' + thStyle + '>Subscription</th>' +
             '<th ' + thStyle + '>Days left</th>' +
             '<th ' + thStyle + '>Views</th>' +
-            '<th ' + thStyle + '>Actions</th>' +
+            '<th ' + thStyle + '>Promotion</th>' +
+            '<th ' + thStyle + ' title="Instantly move your ad to the top of search results">Top Placement</th>' +
             '</tr></thead><tbody>';
 
         var cardStyle = 'background:#fff;box-shadow:0 0 20px rgba(0,0,0,0.07);';
         var tdBase = 'style="padding:14px 12px;vertical-align:middle;"';
+
+        /* Uniform gray style — matches "Promote to PRO · VIP" from My Ads */
+        function promoBtn(label, url) {
+            return '<button onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.location.href=\'' + url + '\'" ' +
+                'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" ' +
+                'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">' + label + '</button>';
+        }
 
         ads.forEach(function(ad, i) {
             var plan = ad.is_vip ? 'vip' : (ad.is_pro ? 'pro' : 'free');
@@ -1675,63 +1682,36 @@
                 }
             }
 
-            /* Status badge */
-            var promoStatusHtml;
-            if (isExpired) {
-                promoStatusHtml = statusBadgeHtml('Expired', 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;');
-            } else {
-                promoStatusHtml = statusBadgeHtml('Active', 'background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;');
-            }
-
             /* Days cell */
             var daysHtml;
-            if (plan === 'free') {
-                daysHtml = daysLeft > 0
-                    ? '<span style="font-size:13px;color:#6b7280;">' + daysLeft + 'd left</span>'
-                    : '<span style="font-size:13px;color:#dc2626;">Expired</span>';
-            } else if (isExpired) {
+            if (isExpired) {
                 daysHtml = '<span style="font-size:13px;color:#dc2626;">Expired</span>';
             } else if (daysLeft !== null) {
-                var dColor = daysLeft < 10 ? '#dc2626' : (daysLeft < 20 ? '#d97706' : '#6b7280');
-                daysHtml = '<span style="font-size:13px;color:' + dColor + ';font-weight:600;">' + daysLeft + 'd left</span>';
+                var dColor = (plan !== 'free' && daysLeft < 10) ? '#dc2626' : ((plan !== 'free' && daysLeft < 20) ? '#d97706' : '#6b7280');
+                daysHtml = '<span style="font-size:13px;color:' + dColor + ';">' + daysLeft + 'd left</span>';
             } else {
                 daysHtml = '<span style="color:#ccc;">—</span>';
             }
 
-            /* Actions */
+            /* Promotion cell — all buttons same gray style */
+            var promoCellHtml;
             var baseUrl = 'publish-options?ad_id=' + ad.id + '&plan=' + plan;
-            var btnStyle = 'style="padding:5px 11px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer;white-space:nowrap;border:1px solid "';
-            function actionBtn(label, url, bg, color, bdr) {
-                return '<button onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.location.href=\'' + url + '\'" ' +
-                    'style="padding:5px 11px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer;white-space:nowrap;border:1px solid ' + bdr + ';background:' + bg + ';color:' + color + ';" ' +
-                    'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.15)\'" onmouseout="this.style.boxShadow=\'\'">' + label + '</button>';
-            }
-
-            var actionsHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">';
-            if (plan === 'free' || (!ad.is_pro && !ad.is_vip)) {
-                actionsHtml += actionBtn('Promote Ad', 'publish-options?ad_id=' + ad.id + '&plan=free', '#fff7ed', '#ea580c', '#fed7aa');
-            } else if (plan === 'vip' && !isExpired) {
-                actionsHtml += actionBtn('Extend VIP', baseUrl, '#fffbeb', '#b45309', '#fde68a');
+            if (plan === 'vip' && !isExpired) {
+                promoCellHtml = promoBtn('Extend VIP', baseUrl);
             } else if (plan === 'pro' && !isExpired) {
-                actionsHtml += actionBtn('Extend PRO', baseUrl, '#fff7ed', '#ea580c', '#fed7aa');
-                actionsHtml += actionBtn('Upgrade to VIP', 'publish-options?ad_id=' + ad.id + '&plan=pro', '#fffbeb', '#b45309', '#fde68a');
+                promoCellHtml = promoBtn('Extend PRO', baseUrl) +
+                    '<span style="display:inline-block;width:6px;"></span>' +
+                    promoBtn('Upgrade to VIP', 'publish-options?ad_id=' + ad.id + '&plan=pro');
             } else if (isExpired) {
-                actionsHtml += actionBtn('Renew Promotion', 'publish-options?ad_id=' + ad.id + '&plan=free', '#f5f5f5', '#555', '#d0d0d0');
+                promoCellHtml = promoBtn('Renew Promotion', 'publish-options?ad_id=' + ad.id + '&plan=free');
+            } else {
+                promoCellHtml = promoBtn('Promote to PRO \u00B7 VIP', 'publish-options?ad_id=' + ad.id + '&plan=free');
             }
-            /* Boost to Top — always available */
-            actionsHtml += '<button onclick="event.stopPropagation();bazarBoostPay(window.location.href,\'' + ad.id + '\')" ' +
-                'style="padding:5px 11px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer;white-space:nowrap;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;" ' +
-                'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.15)\'" onmouseout="this.style.boxShadow=\'\'">Boost to Top</button>';
-            actionsHtml += '</div>';
 
             /* Thumbnail */
             var imgHtml = ad.photo
                 ? '<img src="' + ad.photo + '" alt="" style="width:70px;height:56px;border-radius:6px;object-fit:cover;flex-shrink:0;">'
                 : '<img src="/img/product.jpg" alt="" style="width:70px;height:56px;border-radius:6px;object-fit:cover;flex-shrink:0;">';
-
-            var rowRadius = i === 0
-                ? 'border-radius:10px 10px 0 0;'
-                : (i === ads.length - 1 ? 'border-radius:0 0 10px 10px;' : '');
 
             if (i > 0) html += '<tr><td colspan="6" style="height:14px;background:transparent;padding:0;border:none;"></td></tr>';
 
@@ -1743,10 +1723,14 @@
                   '</div></div>' +
                 '</td>' +
                 '<td ' + tdBase + '>' + planBadgeHtml(plan) + '</td>' +
-                '<td ' + tdBase + '>' + promoStatusHtml + '</td>' +
                 '<td ' + tdBase + '>' + daysHtml + '</td>' +
                 '<td ' + tdBase + ' style="padding:14px 12px;vertical-align:middle;color:#374151;font-size:13px;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
-                '<td ' + tdBase + ' style="padding:14px 12px;vertical-align:middle;border-radius:0 10px 10px 0;" onclick="event.stopPropagation();">' + actionsHtml + '</td>' +
+                '<td ' + tdBase + ' onclick="event.stopPropagation();">' + promoCellHtml + '</td>' +
+                '<td ' + tdBase + ' style="padding:14px 12px;vertical-align:middle;border-radius:0 10px 10px 0;" onclick="event.stopPropagation();">' +
+                  '<button onclick="bazarBoostPay(window.location.href,\'' + ad.id + '\')" ' +
+                  'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;white-space:nowrap;" ' +
+                  'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">Boost to Top</button>' +
+                '</td>' +
                 '</tr>';
         });
 
