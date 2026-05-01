@@ -2736,8 +2736,8 @@
           'flats':      [{label:'Flats to Rent',url:'/property-to-rent/flats'},{label:'Flats for Sale',url:'/property-for-sale/flats'}],
           'flat':       [{label:'Flats to Rent',url:'/property-to-rent/flats'},{label:'Flats for Sale',url:'/property-for-sale/flats'}],
           'house':      [{label:'Houses to Rent',url:'/property-to-rent/house'},{label:'Houses for Sale',url:'/property-for-sale/house'}],
-          'rooms':      [{label:'Rooms to Rent',url:'/property-to-rent/rooms'}],
-          'room':       [{label:'Rooms to Rent',url:'/property-to-rent/rooms'}],
+          'rooms':      [{label:'Rooms to Rent',url:'/property-to-rent/rooms'},{label:'Rooms for short-term rent',url:'/property-short-rent/rooms'}],
+          'room':       [{label:'Rooms to Rent',url:'/property-to-rent/rooms'},{label:'Rooms for short-term rent',url:'/property-short-rent/rooms'}],
           'office':     [{label:'Office to Rent',url:'/property-to-rent/office'},{label:'Office for Sale',url:'/property-for-sale/office'}],
           'shop':       [{label:'Shops to Rent',url:'/property-to-rent/shop'},{label:'Shops for Sale',url:'/property-for-sale/shop'}],
           'restaurant': [{label:'Restaurant to Rent',url:'/property-to-rent/restaurant'}],
@@ -2835,14 +2835,15 @@
             var cats = getStaticCats(q);
             var listings = getLocalListings(q);
             /* Also try API for more listings */
+            function _normCatUrl(u){return (u||'').toLowerCase().replace(/\/rooms?$/,'/rooms').replace(/\/$/,'');}
             fetch('/api/search/suggest?q=' + encodeURIComponent(q), {headers:{'Accept':'application/json'}})
               .then(function(r){return r.json();})
               .then(function(d){
-                var apiCats = d.categories || [];
-                var merged = cats.filter(function(sc){ return !apiCats.some(function(bc){return bc.url===sc.url;}); }).concat(apiCats);
+                var apiCats = (d.categories || []).filter(function(bc){ return !cats.some(function(sc){return _normCatUrl(bc.url)===_normCatUrl(sc.url);}); });
+                var mergedCats = cats.concat(apiCats);
                 var apiListings = (d.listings || []).map(function(p){ return {title:p.title,city:p.city,price:p.price,url:p.url}; });
                 var allListings = listings.concat(apiListings.filter(function(al){ return !listings.some(function(ll){return ll.url===al.url;}); })).slice(0,5);
-                renderSuggest(merged, allListings);
+                renderSuggest(mergedCats, allListings);
               })
               .catch(function(){ renderSuggest(cats, listings); });
             applyTextFilter(q);

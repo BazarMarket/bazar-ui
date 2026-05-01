@@ -1701,8 +1701,10 @@
                        {label:'Flats for Sale',      url:'/property-for-sale/flats'}],
         'house':      [{label:'Houses to Rent',     url:'/property-to-rent/house'},
                        {label:'Houses for Sale',    url:'/property-for-sale/house'}],
-        'rooms':      [{label:'Rooms to Rent',      url:'/property-to-rent/rooms'}],
-        'room':       [{label:'Rooms to Rent',      url:'/property-to-rent/rooms'}],
+        'rooms':      [{label:'Rooms to Rent',           url:'/property-to-rent/rooms'},
+                       {label:'Rooms for short-term rent', url:'/property-short-rent/rooms'}],
+        'room':       [{label:'Rooms to Rent',           url:'/property-to-rent/rooms'},
+                       {label:'Rooms for short-term rent', url:'/property-short-rent/rooms'}],
         'office':     [{label:'Office to Rent',     url:'/property-to-rent/office'},
                        {label:'Office for Sale',    url:'/property-for-sale/office'}],
         'shop':       [{label:'Shops to Rent',      url:'/property-to-rent/shop'},
@@ -1722,17 +1724,17 @@
         return [];
     }
 
+    function _normCatUrl(u) { return (u||'').toLowerCase().replace(/\/rooms?$/, '/rooms').replace(/\/$/, ''); }
+
     function fetchSuggest(q) {
         var staticCats = getStaticCats(q);
         fetch('/api/search/suggest?q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } })
             .then(function(r){ return r.json(); })
             .then(function(d){
-                if (staticCats.length) {
-                    var merged = staticCats.filter(function(sc){
-                        return !(d.categories||[]).some(function(bc){ return bc.url === sc.url; });
-                    }).concat(d.categories || []);
-                    d.categories = merged;
-                }
+                var apiCats = (d.categories || []).filter(function(bc){
+                    return !staticCats.some(function(sc){ return _normCatUrl(bc.url) === _normCatUrl(sc.url); });
+                });
+                d.categories = staticCats.concat(apiCats);
                 renderSuggest(q, d);
             })
             .catch(function(){
