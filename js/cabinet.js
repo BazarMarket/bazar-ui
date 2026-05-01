@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tabId === 'tickets' && typeof loadTickets === 'function') {
             loadTickets();
         }
+        if (tabId === 'subscriptions' && typeof loadMyPromotions === 'function') {
+            loadMyPromotions();
+        }
     }
 
     window._cabSwitchTab = switchTab;
