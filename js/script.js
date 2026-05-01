@@ -1201,7 +1201,11 @@ window.onload = function () {
         var daysEl = document.getElementById('subDaysEl');
         if (!daysEl) return;
         daysEl.textContent = '';
-        if (plan === 'pro' || plan === 'vip') {
+        daysEl.style.display = '';
+        if (plan === 'free') {
+            daysEl.textContent = '30d';
+            daysEl.style.display = 'inline';
+        } else if (plan === 'pro' || plan === 'vip') {
             var uid = localStorage.getItem('bazar_firebase_uid');
             if (uid) {
                 fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
