@@ -2005,6 +2005,11 @@ body {
 .card-tab__item.active {
   display: block;
 }
+.card-tab__text {
+  color: #333;
+  line-height: 1.75;
+  font-size: 15px;
+}
 .card-tab__btn-mob {
   display: none;
 }
