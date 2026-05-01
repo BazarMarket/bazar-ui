@@ -1023,11 +1023,12 @@
          if (plan === 'free') {
             var freeDays = (typeof window._freeDaysLeft === 'number') ? window._freeDaysLeft : 30;
             var freeDaysEl = document.getElementById('freeActiveDays');
-            if (freeDaysEl) freeDaysEl.textContent = daysText(freeDays);
+            if (freeDaysEl) freeDaysEl.textContent = freeDays + ' day' + (freeDays !== 1 ? 's' : '') + ' left';
             var freeBadge = makeActiveBadge('Active');
             freeBadge.className = 'po-active-badge';
-            var freePlanName = document.getElementById('freePlanName');
-            if (freePlanName) freePlanName.parentNode.insertBefore(freeBadge, freePlanName);
+            freeBadge.style.cssText += ';position:absolute;top:14px;right:14px;margin-bottom:0;';
+            var freeCard = document.querySelector('.po-card--free');
+            if (freeCard) freeCard.appendChild(freeBadge);
             return;
          }
 
