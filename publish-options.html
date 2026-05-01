@@ -1008,26 +1008,33 @@
       }
 
       function applyExistingPlan() {
-         var plan     = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-         var daysLeft = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
          var uid      = localStorage.getItem('bazar_firebase_uid') || '';
 
-         function _render(p, d) {
-            window._planBadgesRendered = p;
-            window._planBadgesDays    = d;
-            _showPlanBadges(p, d);
+         /* adPlan = the plan of THIS specific ad (passed via ?plan= from My Ads).
+            Badges and button locking must reflect the ad's own plan, not the account plan. */
+         var urlParams = new URLSearchParams(window.location.search);
+         var adPlan    = (urlParams.get('plan') || '').toLowerCase();
+         if (adPlan !== 'vip' && adPlan !== 'pro' && adPlan !== 'free') adPlan = '';
+
+         function _render(accountPlan, sDays) {
+            /* Show badge for the ad's own plan; use account days only for paid plans */
+            var badgePlan  = adPlan || accountPlan;
+            var badgeDays  = (badgePlan === 'pro' || badgePlan === 'vip') ? sDays : 0;
+            window._planBadgesRendered = badgePlan;
+            window._planBadgesDays    = badgeDays;
+            _showPlanBadges(badgePlan, badgeDays);
          }
 
-         /* Fetch from API for accurate plan/days, then show badges only (no auto-redirect) */
+         /* Fetch from API for accurate days; update localStorage for other pages */
          if (uid) {
             fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                .then(function(r) { return r.json(); })
                .then(function(d) {
                   var sPlan = (d.bazar_plan || d.plan || 'free').toLowerCase();
                   var sDays = parseInt(d.days_left || 0, 10);
-                  /* Auto-expire: if paid plan ran out, revert to free */
+                  /* Auto-expire account plan if ran out */
                   if ((sPlan === 'pro' || sPlan === 'vip') && sDays <= 0) {
-                     sPlan = 'free';
+                     sPlan = 'free'; sDays = 0;
                      localStorage.setItem('bazar_plan', 'free');
                      localStorage.removeItem('bazar_days_left');
                   } else {
@@ -1036,9 +1043,15 @@
                   }
                   _render(sPlan, sDays);
                })
-               .catch(function(){ _render(plan, daysLeft); });
+               .catch(function(){
+                  var p = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+                  var d = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+                  _render(p, d);
+               });
          } else {
-            _render(plan, daysLeft);
+            var p = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+            var d = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
+            _render(p, d);
          }
       }
 
