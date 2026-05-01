@@ -2780,7 +2780,12 @@
                    Also prune pending entries from localStorage so they don't accumulate. */
                 var localVisible = localTxns.filter(function(t) { return t.status !== 'pending'; });
                 try { localStorage.setItem('bazar_local_txns', JSON.stringify(localVisible)); } catch(e) {}
-                var allTxns = localVisible.concat(apiTxns);
+                /* Deduplicate: drop local entries whose description matches any API entry */
+                var apiDescs = apiTxns.map(function(t){ return (t.description||'').trim().toLowerCase(); });
+                var localDeduped = localVisible.filter(function(t){
+                    return !apiDescs.includes((t.description||'').trim().toLowerCase());
+                });
+                var allTxns = localDeduped.concat(apiTxns);
                 renderAll(allTxns, data.total_spent || '0.00');
             })
             .catch(function() {
