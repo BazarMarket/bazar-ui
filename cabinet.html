@@ -469,7 +469,7 @@
                                 <th style="width:42%">Ad</th>
                                 <th>Price</th>
                                 <th>Views</th>
-                                <th>Subscription</th>
+                                <th>Upgrade</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -1819,7 +1819,11 @@
                     }
                 }
             }
-            return '<div style="display:flex;align-items:center;gap:6px;">' + planBadge + daysHtml + '</div>';
+            var upgradeBtn = '<button onclick="event.stopPropagation();showPanel(\'subscriptions\')" style="margin-top:5px;display:block;padding:3px 10px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #e0e0e0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background=\'#e87722\';this.style.color=\'#fff\';this.style.borderColor=\'#e87722\';" onmouseout="this.style.background=\'#f5f5f5\';this.style.color=\'#555\';this.style.borderColor=\'#e0e0e0\';">Upgrade</button>';
+            return '<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">' +
+                '<div style="display:flex;align-items:center;gap:6px;">' + planBadge + daysHtml + '</div>' +
+                upgradeBtn +
+                '</div>';
         }
 
         var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
