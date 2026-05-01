@@ -1724,16 +1724,25 @@
         return [];
     }
 
-    function _normCatUrl(u) { return (u||'').toLowerCase().replace(/\/rooms?$/, '/rooms').replace(/\/$/, ''); }
+    function _normCatUrl(u) {
+        return (u||'').toLowerCase().replace(/^https?:\/\/[^\/]+/,'').replace(/\/rooms?$/, '/rooms').replace(/\/$/, '');
+    }
+    function _normCatLabel(s) {
+        return (s||'').toLowerCase().replace(/\s+/g,'').replace(/rooms?/g,'room').replace(/flats?/g,'flat');
+    }
+    function _catIsDup(bc, staticCats) {
+        var bcUrl = _normCatUrl(bc.url), bcLbl = _normCatLabel(bc.label);
+        return staticCats.some(function(sc) {
+            return _normCatUrl(sc.url) === bcUrl || _normCatLabel(sc.label) === bcLbl;
+        });
+    }
 
     function fetchSuggest(q) {
         var staticCats = getStaticCats(q);
         fetch('/api/search/suggest?q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } })
             .then(function(r){ return r.json(); })
             .then(function(d){
-                var apiCats = (d.categories || []).filter(function(bc){
-                    return !staticCats.some(function(sc){ return _normCatUrl(bc.url) === _normCatUrl(sc.url); });
-                });
+                var apiCats = (d.categories || []).filter(function(bc){ return !_catIsDup(bc, staticCats); });
                 d.categories = staticCats.concat(apiCats);
                 renderSuggest(q, d);
             })

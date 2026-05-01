@@ -2835,11 +2835,13 @@
             var cats = getStaticCats(q);
             var listings = getLocalListings(q);
             /* Also try API for more listings */
-            function _normCatUrl(u){return (u||'').toLowerCase().replace(/\/rooms?$/,'/rooms').replace(/\/$/,'');}
+            function _normCatUrl(u){return (u||'').toLowerCase().replace(/^https?:\/\/[^\/]+/,'').replace(/\/rooms?$/,'/rooms').replace(/\/$/,'');}
+            function _normCatLabel(s){return (s||'').toLowerCase().replace(/\s+/g,'').replace(/rooms?/g,'room').replace(/flats?/g,'flat');}
+            function _catIsDup(bc,statics){var bu=_normCatUrl(bc.url),bl=_normCatLabel(bc.label);return statics.some(function(sc){return _normCatUrl(sc.url)===bu||_normCatLabel(sc.label)===bl;});}
             fetch('/api/search/suggest?q=' + encodeURIComponent(q), {headers:{'Accept':'application/json'}})
               .then(function(r){return r.json();})
               .then(function(d){
-                var apiCats = (d.categories || []).filter(function(bc){ return !cats.some(function(sc){return _normCatUrl(bc.url)===_normCatUrl(sc.url);}); });
+                var apiCats = (d.categories || []).filter(function(bc){ return !_catIsDup(bc, cats); });
                 var mergedCats = cats.concat(apiCats);
                 var apiListings = (d.listings || []).map(function(p){ return {title:p.title,city:p.city,price:p.price,url:p.url}; });
                 var allListings = listings.concat(apiListings.filter(function(al){ return !listings.some(function(ll){return ll.url===al.url;}); })).slice(0,5);
