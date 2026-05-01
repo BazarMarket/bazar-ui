@@ -3457,9 +3457,9 @@ p {
   padding: 8px 10px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   border-radius: 8px;
   background: #f4f6fa;
+  gap: 0;
 }
 .subscription__title {
   margin: 0;
@@ -3479,6 +3479,9 @@ p {
   transition: 0.3s;
 }
 
+.subscription__title {
+  flex: 1;
+}
 .subscription__stiker {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
@@ -3489,7 +3492,7 @@ p {
   border-radius: 4px;
   padding: 4px 8px;
   text-align: center;
-  margin: 0;
+  margin: 0 6px 0 0;
 }
 .subscription__stiker--vip {
   background: #d4a017;
