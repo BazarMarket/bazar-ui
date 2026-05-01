@@ -3497,21 +3497,39 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         # ── /api/chat/convs ───────────────────────────────────────────────────
         if path == '/api/chat/convs':
             params = urllib.parse.parse_qs(qs)
-            uid  = params.get('uid', [None])[0]
-            name = params.get('name', [None])[0]
+            uid   = params.get('uid',   [None])[0]
+            name  = params.get('name',  [None])[0]
+            since_raw = params.get('since', [None])[0]
+            since = None
+            try:
+                if since_raw: since = float(since_raw)
+            except (ValueError, TypeError):
+                pass
             if not uid and not name:
                 self._send_json(400, {'error': 'missing uid'}); return
             with _chat_lock:
                 conn = _chat_db()
                 if uid and name:
-                    rows = conn.execute(
-                        'SELECT * FROM conversations WHERE buyer_id=? OR seller_name=? ORDER BY last_time DESC',
-                        (uid, name)
-                    ).fetchall()
+                    if since:
+                        rows = conn.execute(
+                            'SELECT * FROM conversations WHERE (buyer_id=? OR seller_name=?) AND last_time>=? ORDER BY last_time DESC',
+                            (uid, name, since)
+                        ).fetchall()
+                    else:
+                        rows = conn.execute(
+                            'SELECT * FROM conversations WHERE buyer_id=? OR seller_name=? ORDER BY last_time DESC',
+                            (uid, name)
+                        ).fetchall()
                 elif uid:
-                    rows = conn.execute(
-                        'SELECT * FROM conversations WHERE buyer_id=? ORDER BY last_time DESC', (uid,)
-                    ).fetchall()
+                    if since:
+                        rows = conn.execute(
+                            'SELECT * FROM conversations WHERE buyer_id=? AND last_time>=? ORDER BY last_time DESC',
+                            (uid, since)
+                        ).fetchall()
+                    else:
+                        rows = conn.execute(
+                            'SELECT * FROM conversations WHERE buyer_id=? ORDER BY last_time DESC', (uid,)
+                        ).fetchall()
                 else:
                     rows = conn.execute(
                         'SELECT * FROM conversations WHERE seller_name=? ORDER BY last_time DESC', (name,)

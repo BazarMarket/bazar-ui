@@ -84,6 +84,10 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                     if (d.gender) {
                         try { localStorage.setItem('bazar_gender', d.gender); } catch(ex) {}
                     }
+                    /* Store account creation timestamp to filter old conversations */
+                    if (d.created_at_ts) {
+                        try { localStorage.setItem('bazar_account_since', String(d.created_at_ts)); } catch(ex) {}
+                    }
                     var avEl = document.getElementById('header-avatar') || document.querySelector('.user-link__photo');
                     var avImg = avEl ? (avEl.querySelector('img') || (avEl.tagName === 'IMG' ? avEl : null)) : null;
                     if (d.avatar) {

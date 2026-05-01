@@ -40,6 +40,8 @@ window.BAZAR_CHAT = (function () {
     function getConvs(uid, sellerName) {
         var url = BASE + '/convs?uid=' + encodeURIComponent(uid || '');
         if (sellerName) url += '&name=' + encodeURIComponent(sellerName);
+        var since = localStorage.getItem('bazar_account_since');
+        if (since) url += '&since=' + encodeURIComponent(since);
         return fetch(url).then(function (r) { return r.ok ? r.json() : { conversations: [] }; });
     }
 
