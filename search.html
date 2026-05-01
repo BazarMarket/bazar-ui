@@ -327,6 +327,17 @@
          .cf-search { border-radius: 10px; }
       }
       [data-admin-only] { display: none !important; }
+      .search-suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e5e7eb;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.13);z-index:9999;overflow:hidden;max-height:420px;overflow-y:auto}
+      .search-suggest__section{padding:8px 0 4px}
+      .search-suggest__head{padding:2px 16px 4px;font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em}
+      .search-suggest__item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:background .12s;text-decoration:none;color:#1a1a1a;font-size:14px}
+      .search-suggest__item:hover,.search-suggest__item.ss-active{background:#fff7f0}
+      .search-suggest__icon{width:28px;height:28px;border-radius:8px;background:#fff0e6;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+      .search-suggest__icon svg{width:14px;height:14px}
+      .search-suggest__label{flex:1;min-width:0}
+      .search-suggest__sub{font-size:12px;color:#888;margin-top:1px}
+      .search-suggest__arrow{color:#ccc;font-size:13px;flex-shrink:0}
+      .search-suggest__divider{height:1px;background:#f3f3f3;margin:4px 0}
    </style>
    <script>
       (function() {
@@ -434,8 +445,9 @@
                      <div class="cf-ctrl cf-search" style="flex: 1 1 300px; max-width: 560px; position:relative;">
                         <div class="cf-search-q">
                            <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                           <input type="text" id="mainSearchInput" value="" placeholder="Search ads" oninput="onMainSearchInput()" onkeydown="onMainSearchKey(event)">
+                           <input type="text" id="mainSearchInput" value="" placeholder="Search ads" autocomplete="off" oninput="onMainSearchInput()" onkeydown="onMainSearchKey(event)" onfocus="if(this.value.length>=2)onMainSearchInput()">
                         </div>
+                        <div id="searchSuggestDrop" class="search-suggest" style="display:none"></div>
                         <div style="position:relative;">
                         <input type="text" class="cf-search-loc" id="searchLocationInput" placeholder="All locations" autocomplete="off" onfocus="showSearchLocDropdown()" oninput="onSearchLocInput()">
                         <div class="loc-dropdown" id="searchLocDropdown">
@@ -2714,15 +2726,148 @@
          toSel.innerHTML   = htmlT;
       })();
 
-      function onMainSearchInput() {
-        var q = (document.getElementById('mainSearchInput').value || '').trim();
-        window._bazarTextQ = q || null;
-        _srCurrentPage = 1;
-        if (window._bazarCurrentType) renderListings(window._bazarCurrentType, true);
-      }
-      function onMainSearchKey(e) {
-        if (e.key === 'Enter') { e.preventDefault(); onMainSearchInput(); }
-      }
+      /* ── Search suggest ── */
+      (function(){
+        var _sugTimer = null, _sugIdx = -1, _sugItems = [];
+
+        var _staticCatMap = {
+          'land':       [{label:'Land to Rent',url:'/property-to-rent/land'},{label:'Land for Sale',url:'/property-for-sale/land'}],
+          'building':   [{label:'Buildings to Rent',url:'/property-to-rent/building'},{label:'Buildings for Sale',url:'/property-for-sale/building'}],
+          'flats':      [{label:'Flats to Rent',url:'/property-to-rent/flats'},{label:'Flats for Sale',url:'/property-for-sale/flats'}],
+          'flat':       [{label:'Flats to Rent',url:'/property-to-rent/flats'},{label:'Flats for Sale',url:'/property-for-sale/flats'}],
+          'house':      [{label:'Houses to Rent',url:'/property-to-rent/house'},{label:'Houses for Sale',url:'/property-for-sale/house'}],
+          'rooms':      [{label:'Rooms to Rent',url:'/property-to-rent/rooms'}],
+          'room':       [{label:'Rooms to Rent',url:'/property-to-rent/rooms'}],
+          'office':     [{label:'Office to Rent',url:'/property-to-rent/office'},{label:'Office for Sale',url:'/property-for-sale/office'}],
+          'shop':       [{label:'Shops to Rent',url:'/property-to-rent/shop'},{label:'Shops for Sale',url:'/property-for-sale/shop'}],
+          'restaurant': [{label:'Restaurant to Rent',url:'/property-to-rent/restaurant'}],
+          'industrial': [{label:'Industrial to Rent',url:'/property-to-rent/industrial'}],
+          'hotel':      [{label:'Hotel to Rent',url:'/property-to-rent/hotel'}]
+        };
+
+        function _esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+        function getStaticCats(q) {
+          var key = q.toLowerCase().trim();
+          for (var k in _staticCatMap) {
+            if (key === k || key.indexOf(k) === 0 || k.indexOf(key) === 0) return _staticCatMap[k];
+          }
+          return [];
+        }
+
+        function getLocalListings(q) {
+          if (typeof BAZAR_LISTINGS === 'undefined') return [];
+          var key = q.toLowerCase();
+          var results = [];
+          Object.keys(BAZAR_LISTINGS).forEach(function(bucket) {
+            (BAZAR_LISTINGS[bucket] || []).forEach(function(item) {
+              if (results.length >= 5) return;
+              var title = (item.t || '').toLowerCase();
+              var loc   = (item.l || item.cy || '').toLowerCase();
+              if (title.indexOf(key) !== -1 || loc.indexOf(key) !== -1) {
+                results.push({title: item.t || '', city: item.l || item.cy || '', price: item.p || '', url: item.id ? 'card.html?id=' + item.id : '#'});
+              }
+            });
+          });
+          var seen = {};
+          return results.filter(function(r){ if(seen[r.url])return false; seen[r.url]=1; return true; }).slice(0,5);
+        }
+
+        function renderSuggest(cats, listings) {
+          var drop = document.getElementById('searchSuggestDrop');
+          if (!drop) return;
+          if (!cats.length && !listings.length) { hideSuggest(); return; }
+          var html = '';
+          if (cats.length) {
+            html += '<div class="search-suggest__section"><div class="search-suggest__head">Categories</div>';
+            cats.forEach(function(c) {
+              html += '<a class="search-suggest__item" href="' + c.url + '">' +
+                '<span class="search-suggest__icon"><svg viewBox="0 0 16 16" fill="none" stroke="#ff9138" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h6"/></svg></span>' +
+                '<span class="search-suggest__label">' + _esc(c.label) + '</span>' +
+                '<span class="search-suggest__arrow">›</span></a>';
+            });
+            html += '</div>';
+          }
+          if (listings.length) {
+            if (cats.length) html += '<div class="search-suggest__divider"></div>';
+            html += '<div class="search-suggest__section"><div class="search-suggest__head">Properties</div>';
+            listings.forEach(function(p) {
+              var price = p.price ? '£' + Number(p.price).toLocaleString('en-GB') : '';
+              html += '<a class="search-suggest__item" href="' + p.url + '">' +
+                '<span class="search-suggest__icon"><svg viewBox="0 0 16 16" fill="none" stroke="#ff9138" stroke-width="1.5"><path d="M1 7L8 1l7 6v7H1V7z"/></svg></span>' +
+                '<span class="search-suggest__label">' + _esc(p.title) +
+                  (p.city ? '<div class="search-suggest__sub">' + _esc(p.city) + (price ? ' · ' + price : '') + '</div>' : '') +
+                '</span>' +
+                '<span class="search-suggest__arrow">›</span></a>';
+            });
+            html += '</div>';
+          }
+          drop.innerHTML = html;
+          drop.style.display = 'block';
+          _sugIdx = -1;
+        }
+
+        function hideSuggest() {
+          var drop = document.getElementById('searchSuggestDrop');
+          if (drop) drop.style.display = 'none';
+          _sugIdx = -1;
+        }
+
+        function moveSuggest(dir) {
+          var els = document.querySelectorAll('#searchSuggestDrop .search-suggest__item');
+          _sugItems = Array.from(els).map(function(el){ return {url: el.getAttribute('href'), el: el}; });
+          _sugItems.forEach(function(it){ it.el.classList.remove('ss-active'); });
+          _sugIdx = Math.max(-1, Math.min(_sugItems.length - 1, _sugIdx + dir));
+          if (_sugIdx >= 0) _sugItems[_sugIdx].el.classList.add('ss-active');
+        }
+
+        function applyTextFilter(q) {
+          window._bazarTextQ = q || null;
+          _srCurrentPage = 1;
+          if (window._bazarCurrentType) renderListings(window._bazarCurrentType, true);
+        }
+
+        window.onMainSearchInput = function() {
+          var q = (document.getElementById('mainSearchInput').value || '').trim();
+          clearTimeout(_sugTimer);
+          if (q.length < 2) { hideSuggest(); applyTextFilter(null); return; }
+          _sugTimer = setTimeout(function() {
+            var cats = getStaticCats(q);
+            var listings = getLocalListings(q);
+            /* Also try API for more listings */
+            fetch('/api/search/suggest?q=' + encodeURIComponent(q), {headers:{'Accept':'application/json'}})
+              .then(function(r){return r.json();})
+              .then(function(d){
+                var apiCats = d.categories || [];
+                var merged = cats.filter(function(sc){ return !apiCats.some(function(bc){return bc.url===sc.url;}); }).concat(apiCats);
+                var apiListings = (d.listings || []).map(function(p){ return {title:p.title,city:p.city,price:p.price,url:p.url}; });
+                var allListings = listings.concat(apiListings.filter(function(al){ return !listings.some(function(ll){return ll.url===al.url;}); })).slice(0,5);
+                renderSuggest(merged, allListings);
+              })
+              .catch(function(){ renderSuggest(cats, listings); });
+            applyTextFilter(q);
+          }, 220);
+        };
+
+        window.onMainSearchKey = function(e) {
+          var drop = document.getElementById('searchSuggestDrop');
+          if (!drop || drop.style.display === 'none') {
+            if (e.key === 'Enter') { e.preventDefault(); applyTextFilter((document.getElementById('mainSearchInput').value||'').trim()); }
+            return;
+          }
+          if (e.key === 'ArrowDown') { e.preventDefault(); moveSuggest(1); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); moveSuggest(-1); }
+          else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (_sugIdx >= 0 && _sugItems[_sugIdx]) window.location.href = _sugItems[_sugIdx].url;
+            else { hideSuggest(); applyTextFilter((document.getElementById('mainSearchInput').value||'').trim()); }
+          } else if (e.key === 'Escape') { hideSuggest(); }
+        };
+
+        document.addEventListener('click', function(e) {
+          if (!e.target.closest('.cf-search')) hideSuggest();
+        });
+      })();
 
       (function initFromUrl() {
          var params = new URLSearchParams(window.location.search);
