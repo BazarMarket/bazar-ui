@@ -1135,6 +1135,7 @@
                                 <div class="input-custom" style="position:relative;">
                                     <label>My Address</label>
                                     <input id="fieldAddress" type="text" placeholder="Enter your city or address..." value="" autocomplete="off" onfocus="showAddressDropdown()" oninput="showAddressDropdown()">
+
                                     <div id="addressDropdown" style="display:none;position:absolute;left:0;right:0;background:#fff;border:1.5px solid #e0e0e0;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.10);z-index:200;margin-top:4px;overflow:hidden;">
                                         <div onclick="detectMyLocation()" id="myLocationBtn" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-family:Poppins,sans-serif;font-size:13px;font-weight:700;color:#e87722;" onmouseover="this.style.background='#fff8f2'" onmouseout="this.style.background=''">
                                             <span style="font-size:16px;">📍</span> My Location
@@ -1147,6 +1148,13 @@
                                         <div onclick="pickCity('Bristol')"     style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px;color:#333;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background=''"><span style="color:#aaa;font-size:15px;">📍</span> Bristol</div>
                                     </div>
                                     <p id="locationStatus" style="font-size:12px;color:#808080;margin:4px 0 0;display:none;"></p>
+                                </div>
+                                <div class="input-custom">
+                                    <label>Gender</label>
+                                    <select id="fieldGender" style="width:100%;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:Poppins,sans-serif;font-size:14px;color:#2b2b2b;background:#fff;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;height:44px;">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -2050,6 +2058,7 @@
         var elPh      = document.getElementById('fieldPhone');
         var elEmail   = document.getElementById('fieldEmail');
         var elAddr    = document.getElementById('fieldAddress');
+        var elGender  = document.getElementById('fieldGender');
 
         if (elName)     elName.textContent     = name;
         if (elPhone)    elPhone.textContent    = phone;
@@ -2060,6 +2069,7 @@
         if (elPh)      elPh.value            = phone;
         if (elEmail)   elEmail.value         = email;
         if (elAddr)    elAddr.value          = address;
+        if (elGender)  elGender.value        = gender;
 
         var csPhone = document.getElementById('csPhoneDisplay');
         if (csPhone && phone) csPhone.textContent = phone;
@@ -2104,8 +2114,9 @@
                             var elW2 = document.getElementById('cabWelcomeNameProfile');
                             if (elW2) elW2.textContent = d.name;
                         }
-                        if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail) elEmail.value = d.email; }
-                        if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)  elAddr.value  = d.address; }
+                        if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail)  elEmail.value  = d.email; }
+                        if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)   elAddr.value   = d.address; }
+                        if (d.gender)  { localStorage.setItem('bazar_gender', d.gender);   if (elGender) elGender.value = d.gender; }
                         if (d.member_since) {
                             localStorage.setItem('bazar_joined', d.member_since);
                             var elMs = document.getElementById('csMemberSince');
@@ -2328,6 +2339,7 @@
                 var lastName  = ((document.getElementById('fieldLastName')  || {}).value || '').trim();
                 var email     = (document.getElementById('fieldEmail')   || {}).value || '';
                 var address   = (document.getElementById('fieldAddress') || {}).value || '';
+                var gender    = (document.getElementById('fieldGender')  || {}).value || 'male';
                 var saveBtn   = profileForm.querySelector('button[type="submit"]');
                 var orig      = saveBtn ? saveBtn.textContent : 'Save Changes';
                 if (saveBtn) { saveBtn.textContent = 'Saving...'; saveBtn.disabled = true; }
@@ -2344,9 +2356,16 @@
                 }
                 localStorage.setItem('bazar_email',   email);
                 localStorage.setItem('bazar_address', address);
+                localStorage.setItem('bazar_gender',  gender);
+                /* Update header avatar if no custom photo */
+                var savedAv = localStorage.getItem('bazar_avatar');
+                if (!savedAv) {
+                    var hAvImg = document.querySelector('#header-avatar img, .user-link__photo img');
+                    if (hAvImg) hAvImg.src = gender === 'female' ? '/icon/woman.png' : '/icon/man.svg';
+                }
 
                 if (uid) {
-                    var payload = { email: email, address: address };
+                    var payload = { email: email, address: address, gender: gender };
                     if (fullName) payload.name = fullName;
                     fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
                         method: 'PATCH',
