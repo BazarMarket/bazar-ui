@@ -1784,11 +1784,8 @@
         };
 
         function _subCell(ad) {
-            // Customer account plan takes priority over per-listing flags
-            var acctPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-            var plan = 'free';
-            if (acctPlan === 'vip' || ad.is_vip) plan = 'vip';
-            else if (acctPlan === 'pro' || ad.is_pro) plan = 'pro';
+            // Plan is per-listing — never inherit from account
+            var plan = ad.is_vip ? 'vip' : (ad.is_pro ? 'pro' : 'free');
 
             var planColor = plan === 'vip' ? '#b45309' : (plan === 'pro' ? '#ea580c' : '#16a34a');
             var planBg    = plan === 'vip' ? '#fffbeb' : (plan === 'pro' ? '#fff7ed' : '#f0fdf4');
@@ -1797,27 +1794,20 @@
 
             var daysHtml = '';
             if (plan === 'pro' || plan === 'vip') {
-                // For paid subscriptions: use account-level days from cache or localStorage
-                var profStats = {};
-                try { profStats = JSON.parse(localStorage.getItem('bazar_prof_stats') || '{}'); } catch(e) {}
-                var subDays = parseInt(profStats.days || localStorage.getItem('bazar_days_left') || '0', 10);
-                if (subDays > 0) {
-                    daysHtml = '<span style="font-size:11px;color:#6b7280;">' + subDays + 'd left</span>';
-                } else if (ad.expires_at) {
-                    var expMs = new Date(ad.expires_at).getTime();
-                    var dLeft = Math.ceil((expMs - Date.now()) / 86400000);
+                // Paid plan: days from this ad's expires_at
+                if (ad.expires_at) {
+                    var dLeft = Math.ceil((new Date(ad.expires_at).getTime() - Date.now()) / 86400000);
                     if (dLeft > 0) daysHtml = '<span style="font-size:11px;color:#6b7280;">' + dLeft + 'd left</span>';
+                    else daysHtml = '<span style="font-size:11px;color:#dc2626;">Expired</span>';
                 }
             } else {
-                // Free plan: use listing expires_at
-                if (ad.expires_at) {
-                    var expMs2 = new Date(ad.expires_at).getTime();
-                    var daysLeft2 = Math.ceil((expMs2 - Date.now()) / 86400000);
-                    if (daysLeft2 > 0) {
-                        daysHtml = '<span style="font-size:11px;color:#6b7280;">' + daysLeft2 + 'd left</span>';
-                    } else {
-                        daysHtml = '<span style="font-size:11px;color:#dc2626;">Expired</span>';
-                    }
+                // Free plan: 30 days from ad creation
+                if (ad.created_at) {
+                    var dFree = Math.ceil(30 - (Date.now() - new Date(ad.created_at).getTime()) / 86400000);
+                    if (dFree > 0) daysHtml = '<span style="font-size:11px;color:#6b7280;">' + dFree + 'd left</span>';
+                    else daysHtml = '<span style="font-size:11px;color:#dc2626;">Expired</span>';
+                } else {
+                    daysHtml = '<span style="font-size:11px;color:#6b7280;">30d left</span>';
                 }
             }
             return '<div style="display:flex;align-items:center;gap:6px;">' + planBadge + daysHtml + '</div>';
@@ -1836,9 +1826,8 @@
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
             var _adPlan = (function(a){
-                var ap = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-                if (ap === 'vip' || a.is_vip) return 'vip';
-                if (ap === 'pro' || a.is_pro) return 'pro';
+                if (a.is_vip) return 'vip';
+                if (a.is_pro) return 'pro';
                 return 'free';
             })(ad);
             var _badgeColor = _adPlan === 'vip' ? '#b45309' : (_adPlan === 'pro' ? '#ea580c' : '#16a34a');
