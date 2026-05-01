@@ -1070,8 +1070,8 @@
          /* ── Real estate — form order ── */
          if (ptype !== 'room' && p.building_type) specs += specRow('Building type', p.building_type);
          if (ptype !== 'room' && p.sub_type) specs += specRow(ptype === 'land' ? 'Plot type' : 'House type', p.sub_type);
-         specs += specRow('Number of Bedrooms', p.bedrooms);
-         specs += specRow('Number of Bathrooms', p.bathrooms);
+         specs += specRow('Number of Bedrooms', p.bedrooms != null ? (parseInt(p.bedrooms) >= 10 ? String(p.bedrooms).replace(/\+$/,'') + '+' : p.bedrooms) : p.bedrooms);
+         specs += specRow('Number of Bathrooms', p.bathrooms != null ? (parseInt(p.bathrooms) >= 5  ? String(p.bathrooms).replace(/\+$/,'') + '+' : p.bathrooms) : p.bathrooms);
          if (ptype === 'room' && p.sub_type) specs += specRow('Room type', p.sub_type);
          specs += specRow('Condition', condLabel[p.condition] || p.condition);
          specs += specRow('Floor', (p.floor === 0 || p.floor === '0') ? 'Ground floor' : p.floor);
