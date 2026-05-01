@@ -1139,7 +1139,11 @@
       }
 
       document.addEventListener('DOMContentLoaded', function() {
-         selectPlan('pro');
+         /* Pre-select card based on ?plan= URL param (passed from My Ads) */
+         var urlParams  = new URLSearchParams(window.location.search);
+         var initPlan   = (urlParams.get('plan') || 'pro').toLowerCase();
+         if (initPlan !== 'vip' && initPlan !== 'pro' && initPlan !== 'free') initPlan = 'pro';
+         selectPlan(initPlan);
          applyExistingPlan();
          loadAdPreview();
       });
