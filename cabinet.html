@@ -2641,12 +2641,70 @@
         window._cabDur[plan] = { days: days, pence: Math.round(parseFloat(price) * 100) };
     }
 
+    var _planLevel = { free: 0, pro: 1, vip: 2 };
+
+    function closeUpgradeWarning() {
+        var m = document.getElementById('upgradeWarningModal');
+        if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
+    function _doCheckout(plan) {
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        var btnId = plan === 'pro' ? 'cabProBtn' : 'cabVipBtn';
+        var btn = document.getElementById(btnId);
+        var origText = btn ? btn.textContent : '';
+        if (btn) { btn.textContent = 'Redirecting...'; btn.disabled = true; }
+        var dur = window._cabDur[plan] || (plan === 'pro' ? { days: 14, pence: 700 } : { days: 14, pence: 1400 });
+        fetch(window.BAZAR_API + '/stripe/checkout/plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ firebase_uid: uid, plan: plan, days: dur.days, amount_pence: dur.pence })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success && data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Payment error: ' + (data.error || 'Please try again.'));
+                if (btn) { btn.textContent = origText; btn.disabled = false; }
+            }
+        })
+        .catch(function() {
+            alert('Connection error. Please try again.');
+            if (btn) { btn.textContent = origText; btn.disabled = false; }
+        });
+    }
+
     function startCheckout(plan) {
         var uid = localStorage.getItem('bazar_firebase_uid');
         if (!uid || uid === 'test_uid_123') {
             alert('Please log in to upgrade your plan.');
             return;
         }
+
+        var currentPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var isUpgrade = (_planLevel[plan] || 0) > (_planLevel[currentPlan] || 0);
+
+        if (isUpgrade && currentPlan !== 'free') {
+            /* Show warning modal */
+            var daysLeft = (localStorage.getItem('bazar_plan_days') || '').replace(/\D/g,'');
+            var fromLabel = currentPlan.toUpperCase();
+            var toLabel   = plan.toUpperCase();
+            document.getElementById('uwmTitle').textContent = 'Upgrading to ' + toLabel + ' listing';
+            document.getElementById('uwmBody').textContent =
+                'Your active ' + fromLabel + ' plan' +
+                (daysLeft ? ' (' + daysLeft + ' days remaining)' : '') +
+                ' will be cancelled and replaced with ' + toLabel + '. You will be charged only for the new ' + toLabel + ' plan.';
+            var m = document.getElementById('upgradeWarningModal');
+            m.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.getElementById('uwmConfirmBtn').onclick = function() {
+                closeUpgradeWarning();
+                _doCheckout(plan);
+            };
+            return;
+        }
+
         var btnId = plan === 'pro' ? 'cabProBtn' : 'cabVipBtn';
         var btn = document.getElementById(btnId);
         var origText = btn ? btn.textContent : '';
@@ -3616,4 +3674,19 @@ function cabDoLogout() {
     <div class="cab-mob-bottom__item icon-win-logout" onclick="switchToTab('logout')">Logout</div>
 </div>
 
+<!-- Upgrade warning modal -->
+<div id="upgradeWarningModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:420px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.18);position:relative;">
+    <div style="font-size:22px;margin-bottom:4px;">⚠️</div>
+    <h3 style="margin:0 0 10px;font-size:18px;font-weight:700;color:#1a1a1a;" id="uwmTitle">Upgrade plan</h3>
+    <p style="margin:0 0 20px;font-size:14px;color:#444;line-height:1.6;" id="uwmBody"></p>
+    <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:10px 14px;margin-bottom:22px;font-size:13px;color:#7a5800;">
+      💰 Unused days will be refunded to your wallet when the wallet feature becomes available.
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button onclick="closeUpgradeWarning()" style="flex:1;padding:12px;border:1.5px solid #ddd;border-radius:8px;background:#fff;font-size:14px;font-weight:600;color:#555;cursor:pointer;">Cancel</button>
+      <button id="uwmConfirmBtn" style="flex:1;padding:12px;border:none;border-radius:8px;background:#f97316;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">Continue to payment</button>
+    </div>
+  </div>
+</div>
 </body></html>
