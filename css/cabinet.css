@@ -2309,8 +2309,9 @@
     margin: 4px 0 0;
 }
 @media (max-width: 900px) {
-    .po-cards { grid-template-columns: 1fr; gap: 14px; }
-    .po-card--pro { order: -2; }
+    .po-cards { grid-template-columns: 1fr; gap: 20px; }
+    .po-card--pro { order: -2; transform: none; }
+    .po-card--pro:hover { transform: translateY(-3px) scale(1.015); }
     .po-card--vip { order: -1; }
 }
 
