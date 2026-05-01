@@ -2007,10 +2007,8 @@ body {
 }
 .card-tab__text {
   color: #2b2b2b;
-  line-height: 1.6;
+  line-height: 1.75;
   font-size: 15px;
-  padding-top: 6px;
-  max-width: 700px;
 }
 .card-tab__btn-mob {
   display: none;
