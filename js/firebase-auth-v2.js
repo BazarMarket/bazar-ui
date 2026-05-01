@@ -344,36 +344,50 @@ function verifyOtpCode() {
             if (uid)   localStorage.setItem('bazar_firebase_uid', uid);
 
             // Проверяем: есть ли аккаунт в базе?
+            function handleCustomerData(data) {
+                if (data.exists) {
+                    if (modalMode === 'post-ad') {
+                        localStorage.setItem('bazar_username', data.name);
+                        localStorage.setItem('bazar_gender',   data.gender);
+                        localStorage.setItem('bazar_plan',     data.plan || 'free');
+                        if (data.avatar) localStorage.setItem('bazar_avatar', data.avatar);
+                        closeOtpModal();
+                        doLogin();
+                        window.location.href = 'post-ad';
+                    } else {
+                        localStorage.setItem('bazar_username', data.name);
+                        localStorage.setItem('bazar_gender',   data.gender);
+                        localStorage.setItem('bazar_plan',     data.plan || 'free');
+                        if (data.avatar) localStorage.setItem('bazar_avatar', data.avatar);
+                        closeOtpModal();
+                        doLogin();
+                    }
+                } else {
+                    // Новый пользователь — показываем форму профиля
+                    openProfileModal();
+                }
+            }
+            function showNetworkError() {
+                var errEl = document.getElementById('otpError');
+                if (errEl) {
+                    errEl.textContent = 'Connection error. Please check your internet and try again.';
+                    errEl.style.display = 'block';
+                }
+                document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
+                var firstInp = document.querySelectorAll('.otp-input')[0];
+                if (firstInp) firstInp.focus({ preventScroll: true });
+            }
             fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (data.exists) {
-                        if (modalMode === 'post-ad') {
-                            // Post an Ad + уже зарегистрирован — логиним и сразу переходим
-                            localStorage.setItem('bazar_username', data.name);
-                            localStorage.setItem('bazar_gender',   data.gender);
-                            localStorage.setItem('bazar_plan',     data.plan || 'free');
-                            if (data.avatar) localStorage.setItem('bazar_avatar', data.avatar);
-                            closeOtpModal();
-                            doLogin();
-                            window.location.href = 'post-ad';
-                        } else {
-                            // Log in — загружаем данные и входим
-                            localStorage.setItem('bazar_username', data.name);
-                            localStorage.setItem('bazar_gender',   data.gender);
-                            localStorage.setItem('bazar_plan',     data.plan || 'free');
-                            if (data.avatar) localStorage.setItem('bazar_avatar', data.avatar);
-                            closeOtpModal();
-                            doLogin();
-                        }
-                    } else {
-                        // Новый пользователь — показываем форму профиля
-                        openProfileModal();
-                    }
-                })
+                .then(handleCustomerData)
                 .catch(function() {
-                    // Ошибка сети — показываем форму на всякий случай
-                    openProfileModal();
+                    // Ошибка сети — повторяем один раз через 2 сек
+                    setTimeout(function() {
+                        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
+                            .then(function(r) { return r.json(); })
+                            .then(handleCustomerData)
+                            .catch(showNetworkError);
+                    }, 2000);
                 });
         })
         .catch(function(error) {
