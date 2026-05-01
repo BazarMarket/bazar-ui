@@ -129,7 +129,10 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         badge.style.fontSize = '12px';
 
         if (daysEl) {
-            if (daysLeft > 0 && plan !== 'free') {
+            if (plan === 'free') {
+                daysEl.textContent = '30d';
+                daysEl.style.display = '';
+            } else if (daysLeft > 0) {
                 daysEl.textContent = daysLeft + 'd';
                 daysEl.style.display = '';
             } else {
