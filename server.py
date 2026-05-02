@@ -3396,9 +3396,20 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     _ap_plan = _ap_json.get('plan', '')
                     _ap_dur  = int(_ap_json.get('duration_days', 30))
                     if _ap_plan and _ap_ad_id:
-                        _ap_exp = time.time() + _ap_dur * 86400
                         with _chat_lock:
                             _apc = sqlite3.connect(CHAT_DB)
+                            _apc.row_factory = sqlite3.Row
+                            # If existing plan is still active, extend from its expires_at
+                            # (not from now) so remaining days are preserved
+                            _ap_existing = _apc.execute(
+                                'SELECT expires_at FROM listing_plans WHERE ad_id=?',
+                                (_ap_ad_id,)).fetchone()
+                            _ap_base = time.time()
+                            if _ap_existing:
+                                _ap_existing_exp = float(_ap_existing['expires_at'])
+                                if _ap_existing_exp > _ap_base:
+                                    _ap_base = _ap_existing_exp  # extend from existing expiry
+                            _ap_exp = _ap_base + _ap_dur * 86400
                             _apc.execute(
                                 'INSERT OR REPLACE INTO listing_plans '
                                 '(ad_id, plan, activated_at, duration_days, expires_at) '
