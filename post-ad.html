@@ -4112,7 +4112,20 @@
                         localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                      }
                   } catch(e){}
-                  window.location.href = 'card?id=' + adId;
+                  /* Check per-ad plan: FREE → show Choose Plan; PRO/VIP → go straight to card */
+                  fetch('/api/ad-plan/' + adId)
+                     .then(function(pr) { return pr.json(); })
+                     .then(function(pd) {
+                        var adPlan = (pd.plan || 'free').toLowerCase();
+                        if (adPlan === 'pro' || adPlan === 'vip') {
+                           window.location.href = 'card?id=' + adId;
+                        } else {
+                           window.location.href = 'publish-options?ad_id=' + adId;
+                        }
+                     })
+                     .catch(function() {
+                        window.location.href = 'publish-options?ad_id=' + adId;
+                     });
                } else {
                   alert(data.message || data.error || 'Error saving changes');
                }

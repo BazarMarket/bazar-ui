@@ -3505,6 +3505,27 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'googleMapsApiKey': GOOGLE_MAPS_API_KEY})
             return
 
+        # ── /api/ad-plan/<adId> — return current plan for a specific ad ────────
+        _apm_get = re.match(r'^/api/ad-plan/(\d+)$', path)
+        if _apm_get:
+            _ap_id = _apm_get.group(1)
+            try:
+                with _chat_lock:
+                    _apc = _chat_db()
+                    _apr = _apc.execute(
+                        'SELECT plan, expires_at FROM listing_plans WHERE ad_id=?',
+                        (_ap_id,)).fetchone()
+                    _apc.close()
+                _now = time.time()
+                if _apr and float(_apr['expires_at']) > _now:
+                    _plan = _apr['plan']
+                else:
+                    _plan = 'free'
+                self._send_json(200, {'plan': _plan, 'ad_id': _ap_id})
+            except Exception as _e:
+                self._send_json(200, {'plan': 'free', 'ad_id': _ap_id})
+            return
+
         # ── /api/stats ────────────────────────────────────────────────────────
         if path == '/api/stats':
             # Short 30-second cache so count updates quickly after add/delete
