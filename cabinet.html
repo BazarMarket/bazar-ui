@@ -2094,6 +2094,8 @@
         var apiBase = (window.location.hostname === 'www.bazar.uk')
             ? window.BAZAR_API + '/stripe/checkout/boost'
             : '/api/boost-checkout';
+        /* Save listing id before Stripe redirect so boost-complete can pin it even if API is slow */
+        if (listingId) localStorage.setItem('bazar_boost_pending_id', String(listingId));
         fetch(apiBase, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2102,9 +2104,9 @@
         .then(function(r){ return r.json(); })
         .then(function(d){
             if (d.success && d.url) { window.location.href = d.url; }
-            else { alert('Payment error: ' + (d.error || 'Unknown error')); }
+            else { localStorage.removeItem('bazar_boost_pending_id'); alert('Payment error: ' + (d.error || 'Unknown error')); }
         })
-        .catch(function(){ alert('Could not connect to payment server. Please try again.'); });
+        .catch(function(){ localStorage.removeItem('bazar_boost_pending_id'); alert('Could not connect to payment server. Please try again.'); });
     }
 
     function adAction(action, adId) {
@@ -2992,6 +2994,16 @@
         if (params.get('boosted') === '1') {
             var boostSessionId = params.get('session_id');
             var boostUid = localStorage.getItem('bazar_firebase_uid') || '';
+            /* Fallback: listing id saved to localStorage before Stripe redirect */
+            var _boostFallbackId = localStorage.getItem('bazar_boost_pending_id') || '';
+            localStorage.removeItem('bazar_boost_pending_id');
+
+            function _doBoostReturn(pinnedId) {
+                if (pinnedId) localStorage.setItem('bazar_pinned_top_ad', String(pinnedId));
+                history.replaceState(null, '', '/cabinet/my-ads');
+                switchToTab('my-ads');
+            }
+
             if (boostSessionId && boostUid) {
                 fetch('/api/boost-complete', {
                     method: 'POST',
@@ -3000,16 +3012,21 @@
                 })
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
-                    if (d.listing_id) {
-                        saveLocalTxn('debit', 'Boost', 'Boost to Top — Listing #' + d.listing_id, d.amount || 1, 'paid');
-                        localStorage.setItem('bazar_boost_ts_' + d.listing_id, Date.now());
-                        localStorage.setItem('bazar_pinned_top_ad', String(d.listing_id));
+                    var lid = d.listing_id || _boostFallbackId;
+                    if (lid) {
+                        saveLocalTxn('debit', 'Boost', 'Boost to Top — Listing #' + lid, d.amount || 1, 'paid');
+                        localStorage.setItem('bazar_boost_ts_' + lid, Date.now());
                     }
+                    _doBoostReturn(lid);
                 })
-                .catch(function() {});
+                .catch(function() {
+                    /* API failed — still pin using fallback id and navigate */
+                    _doBoostReturn(_boostFallbackId);
+                });
+            } else {
+                /* No session_id — use fallback id directly */
+                _doBoostReturn(_boostFallbackId);
             }
-            history.replaceState(null, '', '/cabinet/my-ads');
-            switchToTab('my-ads');
         }
 
         highlightCurrentPlan();
