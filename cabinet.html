@@ -463,12 +463,14 @@
                 </div>
 
                 <div class="cab-ads-table" id="myAdsTable" style="background:transparent;overflow:visible;border:none;box-shadow:none;">
-                    <table class="cab-table" style="min-width:600px;border-collapse:separate;border-spacing:0 0;">
+                    <table class="cab-table" style="min-width:800px;border-collapse:separate;border-spacing:0 0;">
                         <thead>
                             <tr>
-                                <th style="width:50%">Ad</th>
+                                <th style="width:35%">Ad</th>
                                 <th>Price</th>
                                 <th>Views</th>
+                                <th>Promotion</th>
+                                <th>Subscription</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -1840,18 +1842,50 @@
             var isRejected = (ad.status === 'rejected');
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
-            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="4" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
+
+            /* Plan / Subscription */
+            var _adPlan = ad.is_vip ? 'vip' : (ad.is_pro ? 'pro' : 'free');
+            var _planColors = { vip: { bg:'#fffbeb', color:'#b45309', border:'#fde68a' }, pro: { bg:'#fff7ed', color:'#ea580c', border:'#fed7aa' }, free: { bg:'#f0fdf4', color:'#166534', border:'#bbf7d0' } };
+            var _pc = _planColors[_adPlan];
+            var planBadge = '<span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:' + _pc.bg + ';color:' + _pc.color + ';border:1px solid ' + _pc.border + ';">' + _adPlan.toUpperCase() + '</span>';
+
+            /* Days left for subscription */
+            var _daysLeft = '';
+            if (_adPlan === 'vip' || _adPlan === 'pro') {
+                if (ad.expires_at) {
+                    var _dl = Math.ceil((new Date(ad.expires_at).getTime() - Date.now()) / 86400000);
+                    if (_dl > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;">' + _dl + 'd left</span>';
+                }
+            } else {
+                var _base = ad.boosted_at || ad.created_at;
+                if (_base) {
+                    var _dl2 = Math.ceil(30 - (Date.now() - new Date(_base).getTime()) / 86400000);
+                    if (_dl2 > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;">' + _dl2 + 'd left</span>';
+                }
+            }
+
+            /* Promotion button — gray uniform style */
+            var _promoUrl = 'publish-options?ad_id=' + ad.id + '&plan=' + _adPlan;
+            var _promoLabel = _adPlan === 'vip' ? 'Extend VIP' : (_adPlan === 'pro' ? 'Extend PRO' : 'Promote to PRO \u00B7 VIP');
+            var promoBtnHtml = '<button onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'' + _promoUrl + '\'" ' +
+                'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" ' +
+                'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">' + _promoLabel + '</button>';
+
+            if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="6" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
             html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
                   '<div style="display:flex;align-items:center;gap:10px;">' + img + '<span class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</span></div>' +
                 '</td>' +
                 '<td style="vertical-align:middle;">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</td>' +
                 '<td style="vertical-align:middle;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
+                '<td style="vertical-align:middle;" onclick="event.stopPropagation();">' + promoBtnHtml + '</td>' +
+                '<td style="vertical-align:middle;">' + planBadge + _daysLeft + '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
                 '<tr data-ad-group="' + ad.id + '" style="' + cardStyle + 'border-radius:0 0 10px 10px;">' +
-                '<td colspan="4" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
+                '<td colspan="6" style="display:table-cell;width:100%;border-radius:0 0 10px 10px;background:#f4f4f5;padding:10px 16px;">' +
                   '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
+                    '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="event.stopPropagation();bazarBoostPay(window.location.href,\'' + ad.id + '\')">Boost to Top</button>' +
                     (isRejected ? '' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:none;background:#e8e8e8;color:#555;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);" onmouseover="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'inset 0 0 0 1px rgba(0,0,0,0.18)\'" onclick="event.stopPropagation();adAction(\'edit\',\'' + ad.id + '\')">Edit</button>') +
                     (isRejected ? '<span style="font-size:12px;color:#991b1b;font-weight:600;">Your ad was rejected by moderation. It will be automatically deleted in 30 days.</span>' : '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'" onclick="event.stopPropagation();adAction(\'' + deactAction + '\',\'' + ad.id + '\')">' + deactLbl + '</button>') +
                     '<button style="padding:5px 12px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#fff;color:#555;cursor:pointer;" onmouseover="this.style.background=\'#ffeaea\';this.style.color=\'#c0392b\';this.style.borderColor=\'#e0b0b0\';this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\';" onmouseout="this.style.background=\'#fff\';this.style.color=\'#555\';this.style.borderColor=\'#d0d0d0\';this.style.boxShadow=\'\';" onclick="event.stopPropagation();adAction(\'delete\',\'' + ad.id + '\')">Delete</button>' +
