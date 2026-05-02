@@ -1830,6 +1830,27 @@
             under_review: 'Under Review'
         };
 
+        /* ── Boost to Top button with 24h cooldown ─────────────── */
+        function _boostBtnHtml(adId, boostedAt) {
+            var cooldown = 24 * 3600 * 1000;
+            var now = Date.now();
+            var lsTs  = parseInt(localStorage.getItem('bazar_boost_ts_' + adId) || '0', 10);
+            var apiTs = boostedAt ? new Date(boostedAt).getTime() : 0;
+            var last  = Math.max(lsTs, apiTs);
+            var remaining = cooldown - (now - last);
+            if (last > 0 && remaining > 0) {
+                var h = Math.floor(remaining / 3600000);
+                var m = Math.floor((remaining % 3600000) / 60000);
+                var label = h > 0 ? 'Next boost in ' + h + 'h ' + m + 'm' : 'Next boost in ' + m + 'm';
+                return '<button disabled title="You can boost this ad again in ' + (h > 0 ? h + 'h ' + m + 'm' : m + 'm') + '" ' +
+                    'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #e5e7eb;background:#f9fafb;color:#9ca3af;cursor:not-allowed;white-space:nowrap;">' +
+                    label + '</button>';
+            }
+            return '<button onclick="bazarBoostPay(window.location.href,\'' + adId + '\')" ' +
+                'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" ' +
+                'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">Boost to Top</button>';
+        }
+
         var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
         var html = '';
         ads.forEach(function(ad, i) {
@@ -1885,9 +1906,7 @@
                 '<td style="vertical-align:middle;text-align:center;">' + planBadge + _daysLeft + '</td>' +
                 '<td style="vertical-align:middle;text-align:center;" onclick="event.stopPropagation();">' + promoBtnHtml + '</td>' +
                 '<td style="vertical-align:middle;text-align:center;" onclick="event.stopPropagation();">' +
-                  '<button onclick="bazarBoostPay(window.location.href,\'' + ad.id + '\')" ' +
-                  'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" ' +
-                  'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">Boost to Top</button>' +
+                  _boostBtnHtml(ad.id, ad.boosted_at) +
                 '</td>' +
                 '<td style="border-radius:0 10px 0 0;vertical-align:middle;text-align:center;"><span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;' + sb + '">' + sl + '</span></td>' +
                 '</tr>' +
@@ -2660,6 +2679,7 @@
                 .then(function(d) {
                     if (d.listing_id) {
                         saveLocalTxn('debit', 'Boost', 'Boost to Top — Listing #' + d.listing_id, d.amount || 1, 'paid');
+                        localStorage.setItem('bazar_boost_ts_' + d.listing_id, Date.now());
                     }
                 })
                 .catch(function() {});
