@@ -2692,6 +2692,19 @@
             }
         };
 
+        function _showAvatarError(msg) {
+            var el = document.getElementById('avatarModerationError');
+            if (!el) {
+                el = document.createElement('p');
+                el.id = 'avatarModerationError';
+                el.style.cssText = 'color:#e53e3e;font-size:12px;margin:6px 0 0;text-align:center;';
+                var hint = document.querySelector('.cab-avatar-hint');
+                if (hint) hint.parentNode.insertBefore(el, hint.nextSibling);
+            }
+            el.textContent = msg;
+            setTimeout(function() { if (el) el.textContent = ''; }, 6000);
+        }
+
         function compressAndSaveAvatar(file) {
             if (!file || !file.type.match(/image\/.*/)) return;
             var reader = new FileReader();
@@ -2708,16 +2721,45 @@
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                     var dataUrl = canvas.toDataURL('image/jpeg', 0.80);
-                    try { localStorage.setItem('bazar_avatar', dataUrl); } catch(ex) {}
-                    applyAvatar(dataUrl);
-                    var uid = localStorage.getItem('bazar_firebase_uid');
-                    if (uid) {
-                        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            body: JSON.stringify({ avatar: dataUrl })
-                        }).catch(function() {});
-                    }
+
+                    // ── AI moderation before saving ──
+                    fetch('/api/moderate-avatar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: dataUrl })
+                    })
+                    .then(function(r) { return r.json(); })
+                    .then(function(res) {
+                        if (res.flagged) {
+                            _showAvatarError('This photo was rejected: ' + (res.reason || 'inappropriate content') + '. Please choose a different image.');
+                            if (avatarInput) avatarInput.value = '';
+                            return;
+                        }
+                        // Passed — save and display
+                        try { localStorage.setItem('bazar_avatar', dataUrl); } catch(ex) {}
+                        applyAvatar(dataUrl);
+                        var uid = localStorage.getItem('bazar_firebase_uid');
+                        if (uid) {
+                            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                body: JSON.stringify({ avatar: dataUrl })
+                            }).catch(function() {});
+                        }
+                    })
+                    .catch(function() {
+                        // API unavailable — fail open, allow upload
+                        try { localStorage.setItem('bazar_avatar', dataUrl); } catch(ex) {}
+                        applyAvatar(dataUrl);
+                        var uid = localStorage.getItem('bazar_firebase_uid');
+                        if (uid) {
+                            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                body: JSON.stringify({ avatar: dataUrl })
+                            }).catch(function() {});
+                        }
+                    });
                 };
                 img.src = e.target.result;
             };

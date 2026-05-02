@@ -3382,6 +3382,43 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(500, {'error': str(e)})
             return
 
+        # ── /api/moderate-avatar — SafeSearch check for profile avatar uploads ──
+        if path_only == '/api/moderate-avatar':
+            _ma_cl = int(self.headers.get('Content-Length', 0))
+            _ma_body = self.rfile.read(_ma_cl) if _ma_cl > 0 else b''
+            try:
+                _ma_data = json.loads(_ma_body) if _ma_body else {}
+                _ma_img  = _ma_data.get('image', '')  # data:image/...;base64,...
+                if not _ma_img:
+                    self._send_json(400, {'ok': False, 'error': 'no image'})
+                    return
+                # Strip data URL prefix → raw bytes
+                if ',' in _ma_img:
+                    _ma_b64 = _ma_img.split(',', 1)[1]
+                else:
+                    _ma_b64 = _ma_img
+                try:
+                    _ma_bytes = base64.b64decode(_ma_b64)
+                except Exception:
+                    self._send_json(400, {'ok': False, 'error': 'invalid base64'})
+                    return
+                _ma_result = _vision_safesearch_bytes([_ma_bytes])
+                if _ma_result.get('flagged'):
+                    _ma_reasons = _ma_result.get('reasons', [])
+                    print(f'[AVATAR-MOD] BLOCKED — {_ma_reasons}', flush=True)
+                    self._send_json(200, {
+                        'ok': False,
+                        'flagged': True,
+                        'reason': ', '.join(_ma_reasons) or 'inappropriate content',
+                    })
+                else:
+                    self._send_json(200, {'ok': True, 'flagged': False})
+            except Exception as e:
+                print(f'[AVATAR-MOD] error: {e}', flush=True)
+                # On error — allow the upload (fail open, don't block users on API outage)
+                self._send_json(200, {'ok': True, 'flagged': False})
+            return
+
         # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
         if path_only.startswith('/api/'):
             api_path = path_only[len('/api'):]
