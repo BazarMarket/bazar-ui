@@ -1962,6 +1962,10 @@
 
         var cardStyle = 'background:#fff;box-shadow:0px 0px 30px rgba(0,0,0,0.1);';
         var html = '';
+        /* Per-ad plan cache — read once outside the loop */
+        var _adPlansCache = {};
+        try { _adPlansCache = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}'); } catch(e) {}
+
         ads.forEach(function(ad, i) {
             var sb = statusBadge[ad.status] || statusBadge['pending'];
             var sl = statusLabel[ad.status] || ad.status;
@@ -1973,8 +1977,9 @@
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
 
-            /* Plan / Subscription */
-            var _adPlan = ad.is_vip ? 'vip' : (ad.is_pro ? 'pro' : 'free');
+            /* Plan / Subscription — use API flags first, fall back to localStorage per-ad cache */
+            var _cachedAdPlan = (_adPlansCache[String(ad.id)] || {}).plan || 'free';
+            var _adPlan = ad.is_vip ? 'vip' : (ad.is_pro ? 'pro' : _cachedAdPlan);
             var _planColors = { vip: { bg:'#fffbeb', color:'#b45309', border:'#fde68a' }, pro: { bg:'#fff7ed', color:'#ea580c', border:'#fed7aa' }, free: { bg:'#f0fdf4', color:'#166534', border:'#bbf7d0' } };
             var _pc = _planColors[_adPlan];
             var planBadge = '<span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:' + _pc.bg + ';color:' + _pc.color + ';border:1px solid ' + _pc.border + ';">' + _adPlan.toUpperCase() + '</span>';
@@ -2730,6 +2735,12 @@
                 /* Activate the ad on the server — retry up to 5x if plan not yet updated */
                 if (paidAdId) {
                     var _uid = localStorage.getItem('bazar_firebase_uid') || '';
+                    /* Persist per-ad plan so My Ads badge shows correctly */
+                    try {
+                        var _adPlans = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}');
+                        _adPlans[paidAdId] = { plan: paidPlan, days: paidDays || 14 };
+                        localStorage.setItem('bazar_ad_plans', JSON.stringify(_adPlans));
+                    } catch(e) {}
                     function _activateAd(attemptsLeft) {
                         fetch(window.BAZAR_API + '/properties/' + paidAdId + '/activate-plan', {
                             method: 'POST',
@@ -2790,19 +2801,23 @@
                         var lbl = data.plan === 'pro' ? 'PRO' : 'VIP';
                         var dur = data.duration_days || (data.plan === 'pro' ? 14 : 30);
                         var prc = data.amount > 0 ? data.amount : (paidAmount > 0 ? paidAmount : (data.plan === 'pro' ? 7 : 14));
-                        saveLocalTxn('debit', 'Subscription', 'Subscription — ' + lbl + ' Plan — ' + dur + ' Days', prc, 'paid');
+                        var _txnDesc = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + ' — ' + lbl + ' — ' + dur + ' Days';
+                        saveLocalTxn('debit', 'Promotion', _txnDesc, prc, 'paid');
                         _applyPlanFromServer(data.plan);
                     } else {
-                        if (planLabel) saveLocalTxn('debit', 'Subscription', 'Subscription — ' + planLabel + ' Plan', planPrice, 'paid');
+                        var _txnDesc2 = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + (planLabel ? ' — ' + planLabel : '');
+                        if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc2, planPrice, 'paid');
                         _fetchPlanFromCustomerApi(_payUid, 4);
                     }
                 })
                 .catch(function() {
-                    if (planLabel) saveLocalTxn('debit', 'Subscription', 'Subscription — ' + planLabel + ' Plan', planPrice, 'paid');
+                    var _txnDesc3 = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + (planLabel ? ' — ' + planLabel : '');
+                    if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc3, planPrice, 'paid');
                     _fetchPlanFromCustomerApi(_payUid, 4);
                 });
             } else {
-                if (planLabel) saveLocalTxn('debit', 'Subscription', 'Subscription — ' + planLabel + ' Plan', planPrice, 'paid');
+                var _txnDesc4 = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + (planLabel ? ' — ' + planLabel : '');
+                if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc4, planPrice, 'paid');
                 _fetchPlanFromCustomerApi(_payUid, 4);
             }
         }
