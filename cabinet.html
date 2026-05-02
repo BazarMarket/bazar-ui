@@ -2843,6 +2843,18 @@
             sessionStorage.removeItem('bazar_pending_plan');
             sessionStorage.removeItem('bazar_pending_days');
             sessionStorage.removeItem('bazar_pending_amount');
+
+            /* Determine return destination — prefer localStorage (survives Stripe cross-origin hop)
+               over sessionStorage (may be cleared by browser during external redirect) */
+            var _payReturnSrc = localStorage.getItem('bazar_pay_return')
+                             || sessionStorage.getItem('cabReturnTab')
+                             || '';
+            var _lsPayAdId    = localStorage.getItem('bazar_pay_ad_id') || '';
+            localStorage.removeItem('bazar_pay_return');
+            localStorage.removeItem('bazar_pay_ad_id');
+            sessionStorage.removeItem('cabReturnTab');
+            if (!paidAdId && _lsPayAdId) paidAdId = _lsPayAdId;
+
             var planPrice  = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
@@ -2878,32 +2890,25 @@
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            /* Determine return destination — prefer localStorage (survives Stripe redirect)
-               over sessionStorage (may be cleared by browser during cross-origin hops) */
-            var _payReturnSrc = localStorage.getItem('bazar_pay_return')
-                             || sessionStorage.getItem('cabReturnTab')
-                             || '';
-            var _lsPayAdId    = localStorage.getItem('bazar_pay_ad_id') || '';
-            localStorage.removeItem('bazar_pay_return');
-            localStorage.removeItem('bazar_pay_ad_id');
-            sessionStorage.removeItem('cabReturnTab');
-            /* Use localStorage adId as extra fallback if URL/sessionStorage lost it */
-            if (!paidAdId && _lsPayAdId) paidAdId = _lsPayAdId;
-            if (paidAdId) {
-                if (_payReturnSrc === 'my-ads') {
-                    /* Came from My Ads → return there, pin updated ad to top */
-                    localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
-                    history.replaceState(null, '', '/cabinet/my-ads');
-                    switchToTab('my-ads');
-                } else {
-                    /* Came from Post an Ad (new listing) → open the ad's card */
-                    window.location.href = 'card?id=' + paidAdId;
+
+            /* Navigate to the correct destination — always called AFTER saveLocalTxn */
+            function _doPaymentReturn() {
+                if (paidAdId) {
+                    if (_payReturnSrc === 'my-ads') {
+                        /* Came from My Ads → return there, pin updated ad to top */
+                        localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
+                        history.replaceState(null, '', '/cabinet/my-ads');
+                        switchToTab('my-ads');
+                    } else {
+                        /* Came from Post an Ad (new listing) → open the ad's card */
+                        window.location.href = 'card?id=' + paidAdId;
+                    }
+                    return;
                 }
-                return;
+                var _payReturnTab = _payReturnSrc || 'my-ads';
+                history.replaceState(null, '', '/cabinet/' + _payReturnTab);
+                switchToTab(_payReturnTab);
             }
-            var _payReturnTab = _payReturnSrc || 'my-ads';
-            history.replaceState(null, '', '/cabinet/' + _payReturnTab);
-            switchToTab(_payReturnTab);
 
             function _applyPlanFromServer(plan) {
                 if (!plan || plan === (localStorage.getItem('bazar_plan') || 'free')) return;
@@ -2947,18 +2952,21 @@
                         if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc2, planPrice, 'paid');
                         _fetchPlanFromCustomerApi(_payUid, 4);
                     }
+                    _doPaymentReturn();
                 })
                 .catch(function() {
                     var _dur3 = paidDays || 30;
                     var _txnDesc3 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur3 + ' Days' : '');
                     if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc3, planPrice, 'paid');
                     _fetchPlanFromCustomerApi(_payUid, 4);
+                    _doPaymentReturn();
                 });
             } else {
                 var _dur4 = paidDays || 30;
                 var _txnDesc4 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur4 + ' Days' : '');
                 if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc4, planPrice, 'paid');
                 _fetchPlanFromCustomerApi(_payUid, 4);
+                _doPaymentReturn();
             }
         }
 
