@@ -3132,6 +3132,16 @@
          if (cb) setTimeout(cb, 1000);
       }
 
+      var _PA_PROFANITY = ['fuck','shit','cunt','bitch','asshole','bastard','dickhead','motherfucker','wanker','twat','bollocks','arsehole','prick','cock','damn','slut','whore','nigger','faggot','retard'];
+      function _paHasProfanity(text) {
+         var lower = (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, '');
+         var words = lower.split(/\s+/);
+         for (var i = 0; i < words.length; i++) {
+            if (_PA_PROFANITY.indexOf(words[i]) !== -1) return true;
+         }
+         return false;
+      }
+
       function getSelectVal(id) {
          var el = document.getElementById(id);
          if (!el) return '';
@@ -3239,6 +3249,7 @@
 
          var description = getInputVal('descriptionInput');
          if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
+         if (_paHasProfanity(description)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
          formData.append('description', getInputVal('descriptionInput'));
          formData.append('listing_type', listingType);
          formData.append('property_type', propertyType);
@@ -3512,6 +3523,7 @@
          if (exactLng) formData.append('exact_longitude', exactLng);
          var description = getInputVal('descriptionInput');
          if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
+         if (_paHasProfanity(description)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
@@ -3656,6 +3668,7 @@
          if (locationLng) formData.append('longitude', locationLng);
          var description = getInputVal('descriptionInput');
          if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
+         if (_paHasProfanity(description)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
@@ -4159,6 +4172,7 @@
             formData.append('seller_name',  sellerName);
             formData.append('seller_phone', sellerPhone);
             var desc = getInputVal('descriptionInput');
+            if (desc && _paHasProfanity(desc)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
             if (desc) formData.append('description', desc);
             var city = document.getElementById('locationCity').value;
             var country = document.getElementById('locationCountry') ? document.getElementById('locationCountry').value : 'United Kingdom';
@@ -4288,6 +4302,7 @@
             formData.append('seller_name',   sellerName);
             formData.append('seller_phone',  sellerPhone);
             var desc = getInputVal('descriptionInput');
+            if (desc && _paHasProfanity(desc)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
             if (desc) formData.append('description', desc);
             var city = document.getElementById('locationCity').value;
             if (city) formData.append('city', city); else formData.append('city', 'United Kingdom');
@@ -4337,6 +4352,7 @@
             formData.append('seller_name',   sellerName);
             formData.append('seller_phone',  sellerPhone);
             var desc = getInputVal('descriptionInput');
+            if (desc && _paHasProfanity(desc)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
             if (desc) formData.append('description', desc);
             var city = document.getElementById('locationCity').value;
             if (city) formData.append('city', city); else formData.append('city', 'United Kingdom');
