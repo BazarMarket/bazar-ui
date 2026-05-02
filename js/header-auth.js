@@ -95,16 +95,23 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                     }
                     var avEl = document.getElementById('header-avatar') || document.querySelector('.user-link__photo');
                     var avImg = avEl ? (avEl.querySelector('img') || (avEl.tagName === 'IMG' ? avEl : null)) : null;
-                    if (d.avatar) {
+                    /* Only trust avatar/gender from API if server.py confirmed it from SQLite (gender_from_db).
+                       Without that flag, local localStorage is authoritative — prevents Laravel's
+                       default 'male' avatar from overwriting a user's chosen gender on every page load. */
+                    if (d.avatar && d.gender_from_db) {
                         try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
                         if (avImg) avImg.src = d.avatar;
-                    } else {
-                        /* Use gender from localStorage (just updated if gender_from_db) */
+                    } else if (!d.gender_from_db) {
+                        /* Server hasn't confirmed gender yet — keep local choice, just re-apply it */
                         var _curGender = localStorage.getItem('bazar_gender') || 'male';
                         var genderIcon = _curGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-                        if (avImg && (!avImg.src || avImg.src.indexOf('man.svg') !== -1 || avImg.src.indexOf('woman.png') !== -1)) {
-                            avImg.src = genderIcon;
-                        }
+                        try { localStorage.removeItem('bazar_avatar'); } catch(ex) {}
+                        if (avImg) avImg.src = genderIcon;
+                    } else {
+                        /* gender_from_db but no custom avatar — use gender icon */
+                        var _curGender2 = localStorage.getItem('bazar_gender') || 'male';
+                        var genderIcon2 = _curGender2 === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                        if (avImg) avImg.src = genderIcon2;
                     }
                 })
                 .catch(function() {});

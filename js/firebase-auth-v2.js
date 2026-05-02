@@ -554,6 +554,13 @@ function finishRegistration() {
                 plan: localStorage.getItem('bazar_plan') || 'free',
             })
         }).catch(function() {});
+
+        /* Save gender to server.py's authoritative SQLite DB so ALL pages show correct avatar */
+        fetch('/api/save-gender', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid: uid, gender: selectedGender })
+        }).catch(function() {});
     }
 
     if (isPostAd) {
