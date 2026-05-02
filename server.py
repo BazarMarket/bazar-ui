@@ -73,8 +73,8 @@ def _chat_db():
 def _init_chat_db():
     with _chat_lock:
         conn = _chat_db()
-        conn.executescript('''
-            CREATE TABLE IF NOT EXISTS conversations (
+        stmts = [
+            '''CREATE TABLE IF NOT EXISTS conversations (
                 id          TEXT PRIMARY KEY,
                 ad_id       TEXT DEFAULT '',
                 ad_title    TEXT DEFAULT '',
@@ -88,8 +88,8 @@ def _init_chat_db():
                 last_time   REAL DEFAULT 0,
                 unread_seller INTEGER DEFAULT 0,
                 unread_buyer  INTEGER DEFAULT 0
-            );
-            CREATE TABLE IF NOT EXISTS messages (
+            )''',
+            '''CREATE TABLE IF NOT EXISTS messages (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 conv_id     TEXT NOT NULL,
                 sender_id   TEXT DEFAULT '',
@@ -97,27 +97,37 @@ def _init_chat_db():
                 text        TEXT DEFAULT '',
                 time        REAL DEFAULT 0,
                 type        TEXT DEFAULT 'text'
-            );
-            CREATE INDEX IF NOT EXISTS idx_msgs_conv ON messages(conv_id, id);
-            CREATE INDEX IF NOT EXISTS idx_convs_buyer   ON conversations(buyer_id);
-            CREATE INDEX IF NOT EXISTS idx_convs_seller  ON conversations(seller_name);
-            CREATE TABLE IF NOT EXISTS property_comments (
+            )''',
+            'CREATE INDEX IF NOT EXISTS idx_msgs_conv ON messages(conv_id, id)',
+            'CREATE INDEX IF NOT EXISTS idx_convs_buyer ON conversations(buyer_id)',
+            'CREATE INDEX IF NOT EXISTS idx_convs_seller ON conversations(seller_name)',
+            '''CREATE TABLE IF NOT EXISTS property_comments (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 property_id TEXT NOT NULL,
                 uid         TEXT DEFAULT '',
                 username    TEXT DEFAULT 'Anonymous',
                 text        TEXT NOT NULL,
                 created_at  REAL DEFAULT 0
-            );
-            CREATE INDEX IF NOT EXISTS idx_comments_prop ON property_comments(property_id, id);
-            CREATE TABLE IF NOT EXISTS listing_plans (
+            )''',
+            'CREATE INDEX IF NOT EXISTS idx_comments_prop ON property_comments(property_id, id)',
+            '''CREATE TABLE IF NOT EXISTS listing_plans (
                 ad_id         TEXT PRIMARY KEY,
                 plan          TEXT DEFAULT 'free',
                 activated_at  REAL DEFAULT 0,
                 duration_days INTEGER DEFAULT 30,
                 expires_at    REAL DEFAULT 0
-            );
-        ''')
+            )''',
+            '''CREATE TABLE IF NOT EXISTS customer_profiles (
+                uid        TEXT PRIMARY KEY,
+                gender     TEXT DEFAULT 'male',
+                updated_at REAL DEFAULT 0
+            )''',
+        ]
+        for s in stmts:
+            try:
+                conn.execute(s)
+            except Exception:
+                pass
         conn.commit()
         conn.close()
 
@@ -3720,6 +3730,19 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     body        = resp.read()
                     status      = resp.status
                     content_type = resp.headers.get('Content-Type', 'application/json')
+                # ── Override avatar for /api/customers/{uid} based on gender ──
+                _cust_m = re.match(r'^/customers/([^/?]+)$', api_path)
+                if _cust_m and 'application/json' in content_type:
+                    try:
+                        _cd = json.loads(body)
+                        if isinstance(_cd, dict):
+                            _gender = (_cd.get('gender') or 'male').lower()
+                            _avatar = _cd.get('avatar') or ''
+                            if not _avatar:
+                                _cd['avatar'] = '/icon/woman.png' if _gender == 'female' else '/icon/man.svg'
+                                body = json.dumps(_cd).encode()
+                    except Exception:
+                        pass
                 self.send_response(status)
                 self.send_header('Content-Type', content_type)
                 self.send_header('Content-Length', str(len(body)))

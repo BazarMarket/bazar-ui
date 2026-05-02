@@ -1495,10 +1495,11 @@
             fetch('/api/customers/' + uid, { headers: { 'Accept': 'application/json' } })
                 .then(function(r) { return r.ok ? r.json() : null; })
                 .then(function(cust) {
-                    if (!cust || !cust.avatar) return;
-                    _avatarCache[uid] = cust.avatar;
+                    if (!cust) return;
+                    var _av = cust.avatar || (cust.gender === 'female' ? '/icon/woman.png' : '/icon/man.svg');
+                    _avatarCache[uid] = _av;
                     document.querySelectorAll('img[data-uid="' + uid + '"]').forEach(function(el) {
-                        el.src = cust.avatar;
+                        el.src = _av;
                     });
                 })
                 .catch(function() {});
