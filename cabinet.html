@@ -45,7 +45,7 @@
         }
         .txn-filter-input:focus { border-color: #f76b1c; background: #fff; }
         input[type="date"].txn-filter-input { width: 130px; }
-        .txn-time-desktop { color: #999; font-size: 11px; }
+        .txn-time-desktop { color: inherit; font-size: inherit; }
         @media (max-width: 768px) { .txn-time-desktop { display: none; } }
         input[type="text"].txn-filter-input { width: 160px; }
         .txn-filter-select {
@@ -3177,8 +3177,9 @@
         var desc = (t.description || '—')
             .replace(/^Subscription\s*[-—]\s*/i, 'Promotion — ')
             .replace(/\s+Plan\s*[-—]/gi, ' —');
-        var _tStr = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());})(new Date(t.ts)) : '');
-        var _timeSpan = _tStr ? '<span class="txn-time-desktop"> ' + _tStr + '</span>' : '';
+        var _tStr = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes());})(new Date(t.ts)) : '');
+        if (_tStr.length > 5) _tStr = _tStr.slice(0, 5);
+        var _timeSpan = _tStr ? '<span class="txn-time-desktop"> | ' + _tStr + '</span>' : '';
         return '<tr>' +
             '<td class="cab-table__date">' + (t.date || '—') + _timeSpan + '</td>' +
             '<td style="text-align:center">' + typeIcon + '</td>' +
@@ -3223,8 +3224,9 @@
             var statusBadge = t.status === 'pending'
                 ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">Processing</span>'
                 : '';
-            var _tStr2 = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());})(new Date(t.ts)) : '');
-            var _ts = _tStr2 ? '<span class="txn-time-desktop"> ' + _tStr2 + '</span>' : '';
+            var _tStr2 = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes());})(new Date(t.ts)) : '');
+            if (_tStr2.length > 5) _tStr2 = _tStr2.slice(0, 5);
+            var _ts = _tStr2 ? '<span class="txn-time-desktop"> | ' + _tStr2 + '</span>' : '';
             return '<tr><td class="cab-table__date">' + (t.date||'—') + _ts + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
         }
 
