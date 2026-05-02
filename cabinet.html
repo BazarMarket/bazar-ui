@@ -2613,8 +2613,10 @@
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            history.replaceState(null, '', '/cabinet/subscriptions');
-            switchToTab('subscriptions');
+            var _payReturnTab = sessionStorage.getItem('cabReturnTab') || 'subscriptions';
+            sessionStorage.removeItem('cabReturnTab');
+            history.replaceState(null, '', '/cabinet/' + _payReturnTab);
+            switchToTab(_payReturnTab);
 
             function _applyPlanFromServer(plan) {
                 if (!plan || plan === (localStorage.getItem('bazar_plan') || 'free')) return;
