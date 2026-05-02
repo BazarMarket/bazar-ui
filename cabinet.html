@@ -566,7 +566,8 @@
                         </div>
                         <select id="txnOpFilter" class="txn-filter-select">
                             <option value="">All operations</option>
-                            <option value="Subscription">Subscription</option>
+                            <option value="Promotion">Promotion</option>
+                            <option value="Boost">Boost</option>
                         </select>
                         <div class="txn-filters__search">
                             <span class="txn-filters__search-icon">🔍</span>
@@ -2805,7 +2806,7 @@
                     /* Persist per-ad plan so My Ads badge shows correctly */
                     try {
                         var _adPlans = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}');
-                        _adPlans[paidAdId] = { plan: paidPlan, days: paidDays || 14 };
+                        _adPlans[paidAdId] = { plan: paidPlan, days: paidDays || 30 };
                         localStorage.setItem('bazar_ad_plans', JSON.stringify(_adPlans));
                         localStorage.setItem('bazar_last_paid_ad_id', paidAdId);
                     } catch(e) {}
@@ -2814,7 +2815,7 @@
                         fetch('/api/properties/' + paidAdId + '/activate-plan', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan })
+                            body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan, duration_days: paidDays || 30 })
                         }).then(function(r) {
                             if (r.status === 403 && attemptsLeft > 0) {
                                 setTimeout(function() { _activateAd(attemptsLeft - 1); }, 4000);
@@ -2868,24 +2869,27 @@
                 .then(function(data) {
                     if (data.success && data.plan) {
                         var lbl = data.plan === 'pro' ? 'PRO' : 'VIP';
-                        var dur = data.duration_days || (data.plan === 'pro' ? 14 : 30);
+                        var dur = paidDays || data.duration_days || 30;
                         var prc = data.amount > 0 ? data.amount : (paidAmount > 0 ? paidAmount : (data.plan === 'pro' ? 7 : 14));
                         var _txnDesc = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + lbl + ' — ' + dur + ' Days';
                         saveLocalTxn('debit', 'Promotion', _txnDesc, prc, 'paid');
                         _applyPlanFromServer(data.plan);
                     } else {
-                        var _txnDesc2 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '');
+                        var _dur2 = paidDays || 30;
+                        var _txnDesc2 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur2 + ' Days' : '');
                         if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc2, planPrice, 'paid');
                         _fetchPlanFromCustomerApi(_payUid, 4);
                     }
                 })
                 .catch(function() {
-                    var _txnDesc3 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '');
+                    var _dur3 = paidDays || 30;
+                    var _txnDesc3 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur3 + ' Days' : '');
                     if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc3, planPrice, 'paid');
                     _fetchPlanFromCustomerApi(_payUid, 4);
                 });
             } else {
-                var _txnDesc4 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '');
+                var _dur4 = paidDays || 30;
+                var _txnDesc4 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur4 + ' Days' : '');
                 if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc4, planPrice, 'paid');
                 _fetchPlanFromCustomerApi(_payUid, 4);
             }
@@ -3195,21 +3199,16 @@
                     });
                 })(apiTxns);
 
-                /* Deduplicate: drop local entries whose description or (amount+date) matches an API entry */
-                var apiDescs = apiTxns.map(function(t){ return (t.description||'').trim().toLowerCase(); });
+                /* Deduplicate: when API has payment records, drop ALL local debit Promotion/Subscription
+                   entries — the API is source of truth for paid transactions.
+                   Only keep local credit entries and non-promotion debits (e.g. Boost). */
                 var localDeduped = localVisible.filter(function(t){
-                    /* Exact description match */
-                    if (apiDescs.includes((t.description||'').trim().toLowerCase())) return false;
-                    /* Same-day same-amount promotion → same payment, different description wording */
-                    var tAmt = parseFloat(t.amount || 0).toFixed(2);
-                    var isPromoLocal = /promotion/i.test(t.description || '');
-                    if (isPromoLocal) {
-                        var dup = apiTxns.some(function(a) {
-                            return parseFloat(a.amount || 0).toFixed(2) === tAmt
-                                && (a.isoDate || '').slice(0,10) === (t.isoDate || '').slice(0,10);
-                        });
-                        if (dup) return false;
+                    if (t.type === 'debit' && /^(promotion|subscription)/i.test(t.operation || t.description || '')) {
+                        return false;
                     }
+                    /* Also drop by exact description match */
+                    var apiDescs = apiTxns.map(function(a){ return (a.description||'').trim().toLowerCase(); });
+                    if (apiDescs.includes((t.description||'').trim().toLowerCase())) return false;
                     return true;
                 });
                 var allTxns = localDeduped.concat(apiTxns);
