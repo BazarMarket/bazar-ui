@@ -2275,6 +2275,17 @@
             fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
+                    if (!d.exists) {
+                        /* Account deleted/not found — wipe stale chat history and badges */
+                        fetch('/api/chat/clear-uid', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ firebase_uid: uid })
+                        }).catch(function() {});
+                        localStorage.removeItem('bazar_unread_msgs');
+                        localStorage.removeItem('bazar_unread_count');
+                        if (window.setBazarUnread) setBazarUnread(0);
+                    }
                     if (d.exists) {
                         if (d.name) {
                             localStorage.setItem('bazar_username', d.name);

@@ -2768,6 +2768,33 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
             self._send_json(200, {'ok': True, 'id': msg_id}); return
 
+        # ── /api/chat/clear-uid — wipe all chat history for a Firebase UID ──
+        if self.path == '/api/chat/clear-uid':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                self._send_json(400, {'error': 'bad json'}); return
+            uid = data.get('firebase_uid', '').strip()
+            if not uid:
+                self._send_json(400, {'error': 'missing firebase_uid'}); return
+            with _chat_lock:
+                conn = _chat_db()
+                # Delete all messages in conversations where this user is buyer
+                conv_ids = [r[0] for r in conn.execute(
+                    'SELECT id FROM conversations WHERE buyer_id=?', (uid,)
+                ).fetchall()]
+                if conv_ids:
+                    conn.execute(
+                        'DELETE FROM messages WHERE conv_id IN (%s)' % ','.join('?' * len(conv_ids)),
+                        conv_ids
+                    )
+                conn.execute('DELETE FROM conversations WHERE buyer_id=?', (uid,))
+                conn.commit()
+                conn.close()
+            self._send_json(200, {'ok': True, 'cleared': len(conv_ids)}); return
+
         # ── /api/chat/read ────────────────────────────────────────────────────
         if self.path == '/api/chat/read':
             length = int(self.headers.get('Content-Length', 0))

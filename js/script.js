@@ -1161,7 +1161,7 @@ window.onload = function () {
 
     function getCount() {
         var v = localStorage.getItem(KEY);
-        return v === null ? 2 : Math.max(0, parseInt(v, 10) || 0);
+        return v === null ? 0 : Math.max(0, parseInt(v, 10) || 0);
     }
 
     function applyBadges(n) {
