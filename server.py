@@ -3801,16 +3801,24 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 _lp_c = sqlite3.connect(CHAT_DB, check_same_thread=False)
                 _lp_rows = _lp_c.execute(
-                    'SELECT ad_id, plan FROM listing_plans WHERE expires_at > ?',
+                    'SELECT ad_id, plan, expires_at FROM listing_plans WHERE expires_at > ?',
                     (time.time(),)).fetchall()
                 _lp_c.close()
-                _local_plans = {str(r[0]): r[1] for r in _lp_rows}
+                _local_plans = {str(r[0]): {'plan': r[1], 'expires_at': r[2]} for r in _lp_rows}
             except Exception:
                 pass
             for ad in enriched_list:
                 lp = _local_plans.get(str(ad.get('id', '')))
-                ad['is_vip'] = (lp == 'vip')
-                ad['is_pro'] = (lp == 'pro')
+                if lp:
+                    ad['is_vip']    = (lp['plan'] == 'vip')
+                    ad['is_pro']    = (lp['plan'] == 'pro')
+                    # Convert Unix seconds → ISO string so JS new Date() parses correctly
+                    import datetime as _dt
+                    ad['expires_at'] = _dt.datetime.utcfromtimestamp(lp['expires_at']).strftime('%Y-%m-%dT%H:%M:%S.000000Z')
+                else:
+                    ad['is_vip']    = False
+                    ad['is_pro']    = False
+                    # Leave expires_at as-is for free ads
 
             # ── STEP 2: fetch extra detail fields (old_price, images, district) per ad ──
             # These threads MUST NOT touch is_vip / is_pro.
@@ -3886,6 +3894,37 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     body        = resp.read()
                     status      = resp.status
                     content_type = resp.headers.get('Content-Type', 'application/json')
+                # ── Override expires_at for /api/properties/{id} from SQLite listing_plans ──
+                _prop_m = re.match(r'^/properties/(\d+)$', api_path)
+                if _prop_m and 'application/json' in content_type:
+                    try:
+                        _pd = json.loads(body)
+                        if isinstance(_pd, dict):
+                            _pid = _prop_m.group(1)
+                            with _chat_lock:
+                                _lp_conn = _chat_db()
+                                _lp_row  = _lp_conn.execute(
+                                    'SELECT plan, expires_at FROM listing_plans WHERE ad_id=? AND expires_at > ?',
+                                    (_pid, time.time())
+                                ).fetchone()
+                                _lp_conn.close()
+                            if _lp_row:
+                                _lp_plan = _lp_row[0]
+                                _lp_exp  = float(_lp_row[1])
+                                import datetime as _dt
+                                _pd['is_pro']    = (_lp_plan == 'pro')
+                                _pd['is_vip']    = (_lp_plan == 'vip')
+                                # Convert Unix seconds → ISO string so JS new Date() parses correctly
+                                _pd['expires_at'] = _dt.datetime.utcfromtimestamp(_lp_exp).strftime('%Y-%m-%dT%H:%M:%S.000000Z')
+                                _pd['days_left']  = max(0, round((_lp_exp - time.time()) / 86400))
+                            else:
+                                _pd['is_pro']    = False
+                                _pd['is_vip']    = False
+                                _pd['expires_at'] = None
+                                _pd['days_left']  = 0
+                            body = json.dumps(_pd).encode()
+                    except Exception:
+                        pass
                 # ── Override gender+avatar for /api/customers/{uid} from SQLite ──
                 _cust_m = re.match(r'^/customers/([^/?]+)$', api_path)
                 if _cust_m and 'application/json' in content_type:
