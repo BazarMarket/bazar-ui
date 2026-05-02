@@ -2551,7 +2551,7 @@
         var dateStr = pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
         var isoDate = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
         var timeStr = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-        txns.unshift({ date: dateStr, isoDate: isoDate, time: timeStr, operation: operation || 'Payment', description: description, type: type, amount: parseFloat(amount).toFixed(2), status: status });
+        txns.unshift({ date: dateStr, isoDate: isoDate, time: timeStr, ts: d.getTime(), operation: operation || 'Payment', description: description, type: type, amount: parseFloat(amount).toFixed(2), status: status });
         localStorage.setItem('bazar_local_txns', JSON.stringify(txns));
     }
 
@@ -3158,7 +3158,8 @@
         var desc = (t.description || '—')
             .replace(/^Subscription\s*[-—]\s*/i, 'Promotion — ')
             .replace(/\s+Plan\s*[-—]/gi, ' —');
-        var _timeSpan = t.time ? '<span class="txn-time-desktop"> ' + t.time + '</span>' : '';
+        var _tStr = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());})(new Date(t.ts)) : '');
+        var _timeSpan = _tStr ? '<span class="txn-time-desktop"> ' + _tStr + '</span>' : '';
         return '<tr>' +
             '<td class="cab-table__date">' + (t.date || '—') + _timeSpan + '</td>' +
             '<td style="text-align:center">' + typeIcon + '</td>' +
@@ -3203,7 +3204,8 @@
             var statusBadge = t.status === 'pending'
                 ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">Processing</span>'
                 : '';
-            var _ts = t.time ? '<span class="txn-time-desktop"> ' + t.time + '</span>' : '';
+            var _tStr2 = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());})(new Date(t.ts)) : '');
+            var _ts = _tStr2 ? '<span class="txn-time-desktop"> ' + _tStr2 + '</span>' : '';
             return '<tr><td class="cab-table__date">' + (t.date||'—') + _ts + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
         }
 
