@@ -3016,7 +3016,7 @@
                 .then(function(d) {
                     var lid = d.listing_id || _boostFallbackId;
                     if (lid) {
-                        saveLocalTxn('debit', 'Boost', 'Boost to Top — Listing #' + lid, d.amount || 1, 'paid');
+                        saveLocalTxn('debit', 'Boost', 'Boost to Top — ID ' + lid, d.amount || 1, 'paid');
                         localStorage.setItem('bazar_boost_ts_' + lid, Date.now());
                     }
                     _doBoostReturn(lid);
@@ -3176,7 +3176,8 @@
         /* Normalise legacy "Subscription" descriptions from the API */
         var desc = (t.description || '—')
             .replace(/^Subscription\s*[-—]\s*/i, 'Promotion — ')
-            .replace(/\s+Plan\s*[-—]/gi, ' —');
+            .replace(/\s+Plan\s*[-—]/gi, ' —')
+            .replace(/Boost to Top\s*[-—]\s*Listing\s*#\s*/gi, 'Boost to Top — ID ');
         var _tStr = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes());})(new Date(t.ts)) : '');
         if (_tStr.length > 5) _tStr = _tStr.slice(0, 5);
         var _timeSpan = _tStr ? '<span class="txn-time-desktop"> | ' + _tStr + '</span>' : '';
@@ -3227,7 +3228,8 @@
             var _tStr2 = t.time || (t.ts ? (function(d){var p=function(n){return n<10?'0'+n:n};return p(d.getHours())+':'+p(d.getMinutes());})(new Date(t.ts)) : '');
             if (_tStr2.length > 5) _tStr2 = _tStr2.slice(0, 5);
             var _ts = _tStr2 ? '<span class="txn-time-desktop"> | ' + _tStr2 + '</span>' : '';
-            return '<tr><td class="cab-table__date">' + (t.date||'—') + _ts + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
+            var _desc2 = (t.description||'—').replace(/Boost to Top\s*[-—]\s*Listing\s*#\s*/gi, 'Boost to Top — ID ');
+            return '<tr><td class="cab-table__date">' + (t.date||'—') + _ts + '</td><td>' + _desc2 + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
         }
 
         function renderAll(allTxns, totalSpent) {
