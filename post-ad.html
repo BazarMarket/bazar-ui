@@ -3200,41 +3200,8 @@
       });
 
       function _goAfterPublish(adId) {
-         var uid = localStorage.getItem('bazar_firebase_uid') || '';
-         function _activateAndGo(plan) {
-            fetch(window.BAZAR_API + '/properties/' + adId + '/activate-plan', {
-               method: 'POST',
-               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-               body: JSON.stringify({ firebase_uid: uid, plan: plan })
-            })
-            .then(function() { window.location.href = 'card?id=' + adId; })
-            .catch(function() { window.location.href = 'card?id=' + adId; });
-         }
-         function _decide(plan) {
-            plan = (plan || '').toLowerCase();
-            if (plan === 'pro' || plan === 'vip') {
-               _activateAndGo(plan);
-            } else {
-               window.location.href = 'publish-options?ad_id=' + adId;
-            }
-         }
-         // Always fetch fresh plan from server so VIP/PRO users skip the plan page
-         if (uid) {
-            fetch(window.BAZAR_API + '/customers/' + uid, {
-               headers: { 'Accept': 'application/json' }
-            })
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(d) {
-               var freshPlan = (d && (d.bazar_plan || d.plan)) || '';
-               if (freshPlan) localStorage.setItem('bazar_plan', freshPlan);
-               _decide(freshPlan || localStorage.getItem('bazar_plan'));
-            })
-            .catch(function() {
-               _decide(localStorage.getItem('bazar_plan'));
-            });
-         } else {
-            _decide(localStorage.getItem('bazar_plan'));
-         }
+         /* Always show the choose-plan form for every new ad — no automatic plan activation */
+         window.location.href = 'publish-options?ad_id=' + adId;
       }
 
       function submitProperty() {
