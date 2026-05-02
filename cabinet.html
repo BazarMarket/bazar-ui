@@ -1868,6 +1868,16 @@
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 _allAdsData = (d.data || []).filter(function(a) { return a.status !== 'deleted'; });
+                /* ── Pin recently boosted/upgraded ad to top ── */
+                var _pinnedTopId = localStorage.getItem('bazar_pinned_top_ad') || '';
+                if (_pinnedTopId) {
+                    _allAdsData.sort(function(a, b) {
+                        if (String(a.id) === _pinnedTopId) return -1;
+                        if (String(b.id) === _pinnedTopId) return 1;
+                        return 0;
+                    });
+                    localStorage.removeItem('bazar_pinned_top_ad');
+                }
                 _doRenderAds(_allAdsData);
                 _setupAdsFilters();
                 /* Enrich each ad with per-ad is_pro/is_vip from the card endpoint (parallel) */
@@ -2868,9 +2878,11 @@
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            /* If payment was for a specific new ad — go to that card, not subscriptions */
+            /* If payment was for a specific ad — return to my-ads with that ad pinned to top */
             if (paidAdId) {
-                window.location.href = 'card?id=' + paidAdId;
+                localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
+                history.replaceState(null, '', '/cabinet/my-ads');
+                switchToTab('my-ads');
                 return;
             }
             var _payReturnTab = sessionStorage.getItem('cabReturnTab') || 'my-ads';
@@ -2949,6 +2961,7 @@
                     if (d.listing_id) {
                         saveLocalTxn('debit', 'Boost', 'Boost to Top — Listing #' + d.listing_id, d.amount || 1, 'paid');
                         localStorage.setItem('bazar_boost_ts_' + d.listing_id, Date.now());
+                        localStorage.setItem('bazar_pinned_top_ad', String(d.listing_id));
                     }
                 })
                 .catch(function() {});
