@@ -2027,8 +2027,8 @@
                     var _dl = Math.ceil((new Date(ad.expires_at).getTime() - Date.now()) / 86400000);
                     if (_dl > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;white-space:nowrap;">' + _dl + 'd left</span>';
                 } else {
-                    /* API doesn't return expires_at — use account-level days from localStorage */
-                    var _localDl = parseInt((_adPlansCache[String(ad.id)] || {}).days || localStorage.getItem('bazar_days_left') || '0', 10);
+                    /* API doesn't return expires_at — use per-ad cache only (never global counter) */
+                    var _localDl = parseInt((_adPlansCache[String(ad.id)] || {}).days || '0', 10);
                     if (_localDl > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;white-space:nowrap;">' + _localDl + 'd left</span>';
                 }
             } else {
@@ -2794,10 +2794,8 @@
             var planPrice  = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
-                if (paidDays > 0) {
-                    var _prevDays = parseInt(localStorage.getItem('bazar_days_left') || '0', 10);
-                    localStorage.setItem('bazar_days_left', _prevDays + paidDays);
-                }
+                /* Do NOT accumulate bazar_days_left globally — plans are per-ad, not account-wide.
+                   Per-ad days are tracked in bazar_ad_plans[adId].days instead. */
                 planPrice = paidAmount > 0 ? paidAmount : (paidPlan === 'pro' ? 7 : 14);
                 planLabel = paidPlan === 'pro' ? 'PRO' : 'VIP';
                 /* Activate the ad on the server — retry up to 5x if plan not yet updated */
