@@ -2878,15 +2878,22 @@
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            /* If payment was for a specific ad — return to my-ads with that ad pinned to top */
+            /* Read source BEFORE consuming it — determines where to return after payment */
+            var _payReturnTab = sessionStorage.getItem('cabReturnTab') || '';
+            sessionStorage.removeItem('cabReturnTab');
             if (paidAdId) {
-                localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
-                history.replaceState(null, '', '/cabinet/my-ads');
-                switchToTab('my-ads');
+                if (_payReturnTab === 'my-ads') {
+                    /* Came from My Ads → return there, pin updated ad to top */
+                    localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
+                    history.replaceState(null, '', '/cabinet/my-ads');
+                    switchToTab('my-ads');
+                } else {
+                    /* Came from Post an Ad (new listing) → open the ad's card */
+                    window.location.href = 'card?id=' + paidAdId;
+                }
                 return;
             }
-            var _payReturnTab = sessionStorage.getItem('cabReturnTab') || 'my-ads';
-            sessionStorage.removeItem('cabReturnTab');
+            _payReturnTab = _payReturnTab || 'my-ads';
             history.replaceState(null, '', '/cabinet/' + _payReturnTab);
             switchToTab(_payReturnTab);
 
