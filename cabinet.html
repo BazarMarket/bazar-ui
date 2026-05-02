@@ -2843,22 +2843,22 @@
                         var lbl = data.plan === 'pro' ? 'PRO' : 'VIP';
                         var dur = data.duration_days || (data.plan === 'pro' ? 14 : 30);
                         var prc = data.amount > 0 ? data.amount : (paidAmount > 0 ? paidAmount : (data.plan === 'pro' ? 7 : 14));
-                        var _txnDesc = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + ' — ' + lbl + ' — ' + dur + ' Days';
+                        var _txnDesc = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + lbl + ' — ' + dur + ' Days';
                         saveLocalTxn('debit', 'Promotion', _txnDesc, prc, 'paid');
                         _applyPlanFromServer(data.plan);
                     } else {
-                        var _txnDesc2 = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + (planLabel ? ' — ' + planLabel : '');
+                        var _txnDesc2 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '');
                         if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc2, planPrice, 'paid');
                         _fetchPlanFromCustomerApi(_payUid, 4);
                     }
                 })
                 .catch(function() {
-                    var _txnDesc3 = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + (planLabel ? ' — ' + planLabel : '');
+                    var _txnDesc3 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '');
                     if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc3, planPrice, 'paid');
                     _fetchPlanFromCustomerApi(_payUid, 4);
                 });
             } else {
-                var _txnDesc4 = 'Promotion' + (paidAdId ? ' (ID ' + paidAdId + ')' : '') + (planLabel ? ' — ' + planLabel : '');
+                var _txnDesc4 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '');
                 if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc4, planPrice, 'paid');
                 _fetchPlanFromCustomerApi(_payUid, 4);
             }
@@ -3131,13 +3131,18 @@
                 var _proAdIds = Object.keys(_adPlansCache); /* all ad IDs with a paid plan */
                 apiTxns = apiTxns.map(function(t) {
                     var rawDesc = (t.description || '').toLowerCase();
-                    var isPromo = /subscription|promotion/i.test(rawDesc) && !/\(id\s*\d+\)/i.test(rawDesc);
+                    var isPromo = /subscription|promotion/i.test(rawDesc) && !/— id\s*\d+/i.test(rawDesc);
                     if (isPromo && _proAdIds.length > 0) {
-                        /* Attach the matching ad_id(s) to the description */
-                        var idLabel = _proAdIds.length === 1
-                            ? '(ID ' + _proAdIds[0] + ')'
-                            : '(ID ' + _proAdIds.join(', ') + ')';
-                        return Object.assign({}, t, { description: t.description + ' ' + idLabel });
+                        /* Insert ID after "Promotion — " */
+                        var idPart = _proAdIds.length === 1
+                            ? 'ID ' + _proAdIds[0] + ' — '
+                            : 'ID ' + _proAdIds.join(', ') + ' — ';
+                        var enriched = t.description
+                            .replace(/^Subscription\s*[-—]\s*/i, 'Promotion — ')
+                            .replace(/\s+Plan\s*[-—]/gi, ' —');
+                        /* Insert idPart right after "Promotion — " */
+                        enriched = enriched.replace(/^(Promotion\s*[-—]\s*)/i, '$1' + idPart);
+                        return Object.assign({}, t, { description: enriched });
                     }
                     return t;
                 });
