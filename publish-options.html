@@ -508,6 +508,52 @@
       .po-active-meta--warning { color: #c2660a; background: #fff7ed; border-left-color: #f97316; }
       .po-active-meta--urgent  { color: #dc2626; background: #fef2f2; border-left-color: #dc2626; }
 
+      /* ── Plan-switch warning modal ── */
+      .po-warn-overlay {
+         display: none;
+         position: fixed; inset: 0; z-index: 9999;
+         background: rgba(0,0,0,.45);
+         align-items: center; justify-content: center;
+         padding: 20px;
+      }
+      .po-warn-overlay--open { display: flex; }
+      .po-warn-box {
+         background: #fff;
+         border-radius: 16px;
+         padding: 28px 28px 24px;
+         max-width: 420px; width: 100%;
+         box-shadow: 0 8px 40px rgba(0,0,0,.18);
+         font-family: 'Poppins', sans-serif;
+         text-align: center;
+      }
+      .po-warn-icon { font-size: 36px; margin-bottom: 12px; }
+      .po-warn-title {
+         font-size: 17px; font-weight: 700; color: #1a1a1a;
+         margin-bottom: 10px;
+      }
+      .po-warn-body {
+         font-size: 14px; color: #555; line-height: 1.55;
+         margin-bottom: 22px;
+      }
+      .po-warn-body strong { color: #1a1a1a; }
+      .po-warn-actions { display: flex; gap: 10px; }
+      .po-warn-cancel {
+         flex: 1; padding: 11px; border-radius: 10px;
+         border: 1.5px solid #d0d0d0; background: #fff;
+         color: #555; font-size: 14px; font-weight: 600;
+         cursor: pointer; font-family: inherit;
+         transition: background .15s;
+      }
+      .po-warn-cancel:hover { background: #f5f5f5; }
+      .po-warn-confirm {
+         flex: 1; padding: 11px; border-radius: 10px;
+         border: none; background: #ff9138;
+         color: #fff; font-size: 14px; font-weight: 700;
+         cursor: pointer; font-family: inherit;
+         transition: opacity .15s;
+      }
+      .po-warn-confirm:hover { opacity: .88; }
+
       /* ── Tablet (≤ 1100px) ── */
       @media (max-width: 1100px) {
          .po-wrap { padding: 20px 16px 48px; }
@@ -922,6 +968,37 @@
          }
       }
 
+      /* ── Plan-switch warning modal logic ── */
+      var _poWarnCallback = null;
+      (function() {
+         var overlay = null, cancelBtn = null, confirmBtn = null;
+         function _init() {
+            overlay    = document.getElementById('poWarnOverlay');
+            cancelBtn  = document.getElementById('poWarnCancel');
+            confirmBtn = document.getElementById('poWarnConfirm');
+            if (cancelBtn)  cancelBtn.onclick  = function() { overlay.classList.remove('po-warn-overlay--open'); _poWarnCallback = null; };
+            if (confirmBtn) confirmBtn.onclick = function() { overlay.classList.remove('po-warn-overlay--open'); if (_poWarnCallback) _poWarnCallback(); _poWarnCallback = null; };
+            if (overlay)    overlay.addEventListener('click', function(e) { if (e.target === overlay) { overlay.classList.remove('po-warn-overlay--open'); _poWarnCallback = null; } });
+         }
+         document.addEventListener('DOMContentLoaded', _init);
+      })();
+
+      function _showPlanSwitchWarning(currentPlanName, remainingDays, newPlanName, onConfirm) {
+         var overlay = document.getElementById('poWarnOverlay');
+         var title   = document.getElementById('poWarnTitle');
+         var body    = document.getElementById('poWarnBody');
+         if (!overlay) { onConfirm(); return; }
+         var cur = currentPlanName.toUpperCase();
+         var nw  = newPlanName.toUpperCase();
+         if (title) title.textContent = 'Switch to ' + nw + '?';
+         if (body)  body.innerHTML =
+            'You still have <strong>' + remainingDays + ' day' + (remainingDays !== 1 ? 's' : '') + ' left</strong> on your <strong>' + cur + '</strong> plan.<br><br>' +
+            'If you switch to <strong>' + nw + '</strong> now, your remaining ' + cur + ' days will be lost.<br><br>' +
+            'Are you sure you want to continue?';
+         _poWarnCallback = onConfirm;
+         overlay.classList.add('po-warn-overlay--open');
+      }
+
       function publishAd(plan) {
          if (plan === 'free') {
             var uid   = localStorage.getItem('bazar_firebase_uid');
@@ -952,6 +1029,24 @@
          var btnId = plan === 'pro' ? 'proBtn' : 'vipBtn';
          var btn = document.getElementById(btnId);
          var origText = btn ? btn.textContent : '';
+
+         /* ── Show warning if switching FROM an active paid plan to a DIFFERENT paid plan ── */
+         var _existingPlan = (window._planBadgesRendered || '').toLowerCase();
+         var _existingDays = parseInt(window._planBadgesDays || 0, 10);
+         var _isPaidSwitch = (_existingPlan === 'pro' || _existingPlan === 'vip') &&
+                             _existingDays > 0 &&
+                             _existingPlan !== plan;
+         if (_isPaidSwitch) {
+            _showPlanSwitchWarning(_existingPlan, _existingDays, plan, function() {
+               _doPaidPublish(plan, uid, adId, btn, origText);
+            });
+            return;
+         }
+
+         _doPaidPublish(plan, uid, adId, btn, origText);
+      }
+
+      function _doPaidPublish(plan, uid, adId, btn, origText) {
          if (btn) { btn.textContent = 'Redirecting…'; btn.disabled = true; }
          var days  = currentDays[plan]  || 14;
          var price = currentPrice[plan] || (plan === 'pro' ? '7.00' : '14.00');
@@ -1171,6 +1266,19 @@
       });
    </script>
 <script src="js/header-auth.js?v=13"></script>
+<!-- ── Plan-switch warning modal ── -->
+<div class="po-warn-overlay" id="poWarnOverlay">
+   <div class="po-warn-box">
+      <div class="po-warn-icon">⚠️</div>
+      <div class="po-warn-title" id="poWarnTitle">Switch plan?</div>
+      <div class="po-warn-body" id="poWarnBody"></div>
+      <div class="po-warn-actions">
+         <button class="po-warn-cancel" id="poWarnCancel">Cancel</button>
+         <button class="po-warn-confirm" id="poWarnConfirm">Yes, continue</button>
+      </div>
+   </div>
+</div>
+
 <div class="menu-mob after992">
    <a href="/" class="menu-mob__item icon-main-home">Home</a>
    <a href="/messages" class="menu-mob__item icon-chat-full" onclick="handleMobileMessages(event)">Messages</a>
