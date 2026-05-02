@@ -2563,8 +2563,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        /* Apply cached admin flag immediately (before API response) */
-        _applySubNavVisibility(localStorage.getItem('bazar_is_admin') === '1');
+        /* Always hide Subscriptions on load — shown only if API confirms is_admin */
+        _applySubNavVisibility(false);
         populateUserData();
         updateFavCount();
         updateWalletDisplay();
