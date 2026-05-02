@@ -283,6 +283,58 @@ def _fetch_ticket_with_messages(ticket_id: int) -> dict | None:
         return None
 
 # ── Gemini AI content moderation ──────────────────────────────────────────────
+_COMMENT_MOD_PROMPT = """You are a content moderation AI for Bazar (www.bazar.uk), a UK property marketplace.
+Analyse the following user comment and determine if it violates content policies.
+
+Policy violations to detect:
+1. Profanity or offensive language (swearing, insults, vulgar words)
+2. Hate speech or discrimination
+3. Sexual or explicit content
+4. Spam or advertising
+5. Threats or harassment
+
+Comment: {comment}
+
+Respond ONLY with valid JSON, no markdown, no explanation:
+{{"flagged": true, "reasons": ["short reason"], "confidence": 0.9}}
+If comment is acceptable: {{"flagged": false, "reasons": [], "confidence": 0.95}}"""
+
+def _gemini_moderate_comment(comment: str) -> dict:
+    """Run Gemini text moderation on a user comment."""
+    if not GEMINI_API_KEY:
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+    prompt = _COMMENT_MOD_PROMPT.format(comment=(comment or '')[:1000])
+    url = (f'https://generativelanguage.googleapis.com/v1beta/models/'
+           f'gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}')
+    payload = {
+        'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
+        'generationConfig': {
+            'temperature': 0.1,
+            'maxOutputTokens': 200,
+            'thinkingConfig': {'thinkingBudget': 0},
+        },
+    }
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            result = json.loads(resp.read())
+        raw = result['candidates'][0]['content']['parts'][0]['text'].strip()
+        raw = raw.strip('`').strip()
+        if raw.lower().startswith('json'):
+            raw = raw[4:].strip()
+        parsed = json.loads(raw)
+        print(f'[COMMENT-MOD] flagged={parsed.get("flagged")} '
+              f'reasons={parsed.get("reasons")} text={comment[:60]!r}', flush=True)
+        return parsed
+    except Exception as exc:
+        print(f'[COMMENT-MOD] Gemini error: {exc}', flush=True)
+        return {'flagged': False, 'reasons': [], 'confidence': 0.0}
+
 _MOD_PROMPT = """You are a content moderation AI for Bazar (www.bazar.uk), a UK property marketplace.
 Analyse the following property listing and determine if it violates content policies.
 
@@ -2965,6 +3017,15 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     self._send_json(400, {'error': 'property_id and text required'}); return
                 if len(text) > 2000:
                     self._send_json(400, {'error': 'Comment too long'}); return
+                # ── AI moderation ──
+                _cm_result = _gemini_moderate_comment(text)
+                if _cm_result.get('flagged'):
+                    _cm_reasons = _cm_result.get('reasons', [])
+                    self._send_json(200, {
+                        'ok': False,
+                        'flagged': True,
+                        'reason': ', '.join(_cm_reasons) or 'inappropriate content',
+                    }); return
                 now = time.time()
                 with _chat_lock:
                     conn = _chat_db()

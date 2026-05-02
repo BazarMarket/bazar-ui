@@ -2156,10 +2156,40 @@ function loadComments() {
         .catch(function() {});
 }
 
+var _PROFANITY = ['fuck','shit','cunt','bitch','asshole','bastard','dickhead','motherfucker','wanker','twat','bollocks','arsehole','prick','cock','damn','slut','whore','nigger','faggot','retard'];
+
+function _commentHasProfanity(text) {
+    var lower = text.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+    var words = lower.split(/\s+/);
+    for (var i = 0; i < words.length; i++) {
+        if (_PROFANITY.indexOf(words[i]) !== -1) return true;
+    }
+    return false;
+}
+
+function _showCommentError(msg) {
+    var el = document.getElementById('commentModerationError');
+    if (!el) {
+        el = document.createElement('p');
+        el.id = 'commentModerationError';
+        el.style.cssText = 'color:#e53e3e;font-size:12px;margin:6px 0 0;';
+        var btn = document.getElementById('commentSubmitBtn');
+        if (btn && btn.parentNode) btn.parentNode.insertBefore(el, btn.nextSibling);
+    }
+    el.textContent = msg;
+    setTimeout(function() { if (el) el.textContent = ''; }, 6000);
+}
+
 function submitComment() {
     var textarea = document.querySelector('.comment-form__textarea');
     var text = textarea ? textarea.value.trim() : '';
     if (!text) return;
+
+    // ── Client-side instant profanity check ──
+    if (_commentHasProfanity(text)) {
+        _showCommentError('Your comment contains inappropriate language. Please revise it before submitting.');
+        return;
+    }
 
     var propId = _commentPropId();
     if (!propId) return;
@@ -2168,7 +2198,7 @@ function submitComment() {
     var uid  = localStorage.getItem('bazar_firebase_uid') || '';
 
     var btn = document.getElementById('commentSubmitBtn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
 
     fetch('/api/comments', {
         method: 'POST',
@@ -2177,7 +2207,12 @@ function submitComment() {
     })
     .then(function(r) { return r.ok ? r.json() : null; })
     .then(function(d) {
-        if (!d || !d.ok) return;
+        if (!d) return;
+        if (d.flagged) {
+            _showCommentError('Your comment was rejected: ' + (d.reason || 'inappropriate content') + '. Please revise it.');
+            return;
+        }
+        if (!d.ok) return;
         var list  = document.getElementById('comments-list');
         var empty = document.getElementById('comments-empty');
         if (empty) empty.remove();
