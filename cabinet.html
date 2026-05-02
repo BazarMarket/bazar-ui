@@ -3156,60 +3156,48 @@
                 var localVisible = localTxns.filter(function(t) { return t.status !== 'pending'; });
                 try { localStorage.setItem('bazar_local_txns', JSON.stringify(localVisible)); } catch(e) {}
 
-                /* Enrich API promotion entries with ad_id from bazar_ad_plans cache */
-                var _adPlansCache = {};
-                try { _adPlansCache = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}'); } catch(e) {}
-                var _proAdIds = Object.keys(_adPlansCache); /* all ad IDs with a paid plan */
-                if (!_proAdIds.length) {
-                    var _lpi = localStorage.getItem('bazar_last_paid_ad_id') || '';
-                    if (_lpi) _proAdIds = [_lpi];
-                }
+                /* LOCAL Promotion entries are source of truth for plan/ad-id/days description.
+                   API (Laravel) entries may have wrong plan label or no ad ID.
+                   Strategy: keep local Promotion entries; drop API Promotion/Subscription entries
+                   that have a matching local entry (same amount + same day). */
+                var _localPromoKeys = {};
+                localVisible.forEach(function(t) {
+                    if (t.type === 'debit' && /^promotion/i.test(t.operation || '')) {
+                        var _k = parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10);
+                        _localPromoKeys[_k] = true;
+                    }
+                });
+
+                /* Drop API Subscription/Promotion entries already covered by a local entry */
+                apiTxns = apiTxns.filter(function(t) {
+                    var isSubOrPromo = /subscription|promotion/i.test(t.type || '')
+                        || /^(subscription|promotion)/i.test((t.description || '').trim());
+                    if (isSubOrPromo) {
+                        var _k = parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10);
+                        if (_localPromoKeys[_k]) return false;
+                    }
+                    return true;
+                });
+
+                /* For remaining API Promotion entries (no local match), enrich with last paid ad ID only */
+                var _lastPaidId = localStorage.getItem('bazar_last_paid_ad_id') || '';
                 apiTxns = apiTxns.map(function(t) {
                     var rawDesc = (t.description || '').toLowerCase();
                     var isPromo = /subscription|promotion/i.test(rawDesc) && !/— id\s*\d+/i.test(rawDesc);
-                    if (isPromo && _proAdIds.length > 0) {
-                        /* Insert ID after "Promotion — " */
-                        var idPart = _proAdIds.length === 1
-                            ? 'ID ' + _proAdIds[0] + ' — '
-                            : 'ID ' + _proAdIds.join(', ') + ' — ';
+                    if (isPromo && _lastPaidId) {
                         var enriched = t.description
                             .replace(/^Subscription\s*[-—]\s*/i, 'Promotion — ')
                             .replace(/\s+Plan\s*[-—]/gi, ' —');
-                        /* Insert idPart right after "Promotion — " */
-                        enriched = enriched.replace(/^(Promotion\s*[-—]\s*)/i, '$1' + idPart);
+                        enriched = enriched.replace(/^(Promotion\s*[-—]\s*)/i, '$1ID ' + _lastPaidId + ' — ');
                         return Object.assign({}, t, { description: enriched });
                     }
                     return t;
                 });
 
-                /* Deduplicate within API: if Subscription entry has matching Promotion (same day+amount) — drop Subscription */
-                apiTxns = (function(txns) {
-                    var promoKeys = {};
-                    txns.forEach(function(t) {
-                        var isP = /^promotion/i.test(t.type || '') || /^promotion/i.test((t.description || '').split('—')[0].trim());
-                        if (isP) {
-                            promoKeys[parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10)] = true;
-                        }
-                    });
-                    return txns.filter(function(t) {
-                        if (/^subscription/i.test(t.type || '')) {
-                            if (promoKeys[parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10)]) return false;
-                        }
-                        return true;
-                    });
-                })(apiTxns);
-
-                /* Deduplicate: when API has payment records, drop ALL local debit Promotion/Subscription
-                   entries — the API is source of truth for paid transactions.
-                   Only keep local credit entries and non-promotion debits (e.g. Boost). */
+                /* Drop local entries that exactly match an API entry (e.g. Boost already in API) */
+                var _apiDescs = apiTxns.map(function(a){ return (a.description||'').trim().toLowerCase(); });
                 var localDeduped = localVisible.filter(function(t){
-                    if (t.type === 'debit' && /^(promotion|subscription)/i.test(t.operation || t.description || '')) {
-                        return false;
-                    }
-                    /* Also drop by exact description match */
-                    var apiDescs = apiTxns.map(function(a){ return (a.description||'').trim().toLowerCase(); });
-                    if (apiDescs.includes((t.description||'').trim().toLowerCase())) return false;
-                    return true;
+                    return !_apiDescs.includes((t.description||'').trim().toLowerCase());
                 });
                 var allTxns = localDeduped.concat(apiTxns);
                 renderAll(allTxns, data.total_spent || '0.00');
