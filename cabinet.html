@@ -2831,7 +2831,7 @@
             var paidPlan   = params.get('plan');
             var paidDays   = parseInt(params.get('days') || '0', 10);
             var paidAmount = parseFloat(params.get('amount') || '0');
-            var paidAdId   = params.get('ad_id') || sessionStorage.getItem('bazar_pending_ad_id') || '';
+            var paidAdId   = params.get('ad_id') || sessionStorage.getItem('bazar_pending_ad_id') || localStorage.getItem('bazar_pay_ad_id') || '';
             var sessionId  = params.get('session_id');
             /* Restore plan/days/amount from sessionStorage if not in URL (Stripe return) */
             if (!paidPlan && sessionStorage.getItem('bazar_pending_plan')) {
