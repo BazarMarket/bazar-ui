@@ -45,6 +45,8 @@
         }
         .txn-filter-input:focus { border-color: #f76b1c; background: #fff; }
         input[type="date"].txn-filter-input { width: 130px; }
+        .txn-time-desktop { color: #999; font-size: 11px; }
+        @media (max-width: 768px) { .txn-time-desktop { display: none; } }
         input[type="text"].txn-filter-input { width: 160px; }
         .txn-filter-select {
             height: 34px;
@@ -2548,7 +2550,8 @@
         var pad = function(n) { return n < 10 ? '0' + n : n; };
         var dateStr = pad(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
         var isoDate = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
-        txns.unshift({ date: dateStr, isoDate: isoDate, operation: operation || 'Payment', description: description, type: type, amount: parseFloat(amount).toFixed(2), status: status });
+        var timeStr = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        txns.unshift({ date: dateStr, isoDate: isoDate, time: timeStr, operation: operation || 'Payment', description: description, type: type, amount: parseFloat(amount).toFixed(2), status: status });
         localStorage.setItem('bazar_local_txns', JSON.stringify(txns));
     }
 
@@ -3155,8 +3158,9 @@
         var desc = (t.description || '—')
             .replace(/^Subscription\s*[-—]\s*/i, 'Promotion — ')
             .replace(/\s+Plan\s*[-—]/gi, ' —');
+        var _timeSpan = t.time ? '<span class="txn-time-desktop"> ' + t.time + '</span>' : '';
         return '<tr>' +
-            '<td class="cab-table__date">' + (t.date || '—') + '</td>' +
+            '<td class="cab-table__date">' + (t.date || '—') + _timeSpan + '</td>' +
             '<td style="text-align:center">' + typeIcon + '</td>' +
             '<td>' + op + '</td>' +
             '<td>' + desc + statusBadge + '</td>' +
@@ -3199,7 +3203,8 @@
             var statusBadge = t.status === 'pending'
                 ? ' <span style="font-size:10px;background:#fff3cd;color:#856404;border-radius:4px;padding:1px 5px;margin-left:4px">Processing</span>'
                 : '';
-            return '<tr><td class="cab-table__date">' + (t.date||'—') + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
+            var _ts = t.time ? '<span class="txn-time-desktop"> ' + t.time + '</span>' : '';
+            return '<tr><td class="cab-table__date">' + (t.date||'—') + _ts + '</td><td>' + (t.description||'—') + statusBadge + '</td><td class="' + amtClass + '">' + sign + t.amount + '</td></tr>';
         }
 
         function renderAll(allTxns, totalSpent) {
