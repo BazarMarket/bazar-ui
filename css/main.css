@@ -3454,7 +3454,8 @@ p {
 }
 
 .subscription {
-  padding: 8px 10px;
+  padding: 8px 32px;
+  margin: 0 -32px;
   display: flex;
   align-items: center;
   border-radius: 8px;
