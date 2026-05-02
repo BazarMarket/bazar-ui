@@ -3124,10 +3124,40 @@
                    Also prune pending entries from localStorage so they don't accumulate. */
                 var localVisible = localTxns.filter(function(t) { return t.status !== 'pending'; });
                 try { localStorage.setItem('bazar_local_txns', JSON.stringify(localVisible)); } catch(e) {}
-                /* Deduplicate: drop local entries whose description matches any API entry */
+
+                /* Enrich API promotion entries with ad_id from bazar_ad_plans cache */
+                var _adPlansCache = {};
+                try { _adPlansCache = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}'); } catch(e) {}
+                var _proAdIds = Object.keys(_adPlansCache); /* all ad IDs with a paid plan */
+                apiTxns = apiTxns.map(function(t) {
+                    var rawDesc = (t.description || '').toLowerCase();
+                    var isPromo = /subscription|promotion/i.test(rawDesc) && !/\(id\s*\d+\)/i.test(rawDesc);
+                    if (isPromo && _proAdIds.length > 0) {
+                        /* Attach the matching ad_id(s) to the description */
+                        var idLabel = _proAdIds.length === 1
+                            ? '(ID ' + _proAdIds[0] + ')'
+                            : '(ID ' + _proAdIds.join(', ') + ')';
+                        return Object.assign({}, t, { description: t.description + ' ' + idLabel });
+                    }
+                    return t;
+                });
+
+                /* Deduplicate: drop local entries whose description or (amount+date) matches an API entry */
                 var apiDescs = apiTxns.map(function(t){ return (t.description||'').trim().toLowerCase(); });
                 var localDeduped = localVisible.filter(function(t){
-                    return !apiDescs.includes((t.description||'').trim().toLowerCase());
+                    /* Exact description match */
+                    if (apiDescs.includes((t.description||'').trim().toLowerCase())) return false;
+                    /* Same-day same-amount promotion → same payment, different description wording */
+                    var tAmt = parseFloat(t.amount || 0).toFixed(2);
+                    var isPromoLocal = /promotion/i.test(t.description || '');
+                    if (isPromoLocal) {
+                        var dup = apiTxns.some(function(a) {
+                            return parseFloat(a.amount || 0).toFixed(2) === tAmt
+                                && (a.isoDate || '').slice(0,10) === (t.isoDate || '').slice(0,10);
+                        });
+                        if (dup) return false;
+                    }
+                    return true;
                 });
                 var allTxns = localDeduped.concat(apiTxns);
                 renderAll(allTxns, data.total_spent || '0.00');
