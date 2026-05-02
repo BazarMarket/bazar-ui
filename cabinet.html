@@ -230,8 +230,8 @@
                                     <a href="#" class="user-menu-item icon-win-ad" onclick="event.preventDefault();switchToTab('my-ads')">My Ads</a>
                                     <a href="#" class="user-menu-item icon-heart" onclick="event.preventDefault();switchToTab('favorites')">My Favorites</a>
                                     <a href="#" id="menuMyPayments" class="user-menu-item icon-win-wallet" onclick="event.preventDefault();switchToTab('payments')">My Payments</a>
-                                    <a href="#" onclick="event.preventDefault();switchToTab('my-ads')" style="display:contents;text-decoration:none;color:inherit;"><div class="subscription">
-                                       <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">My Promotion</p>
+                                    <a href="#" id="dropSubscriptions" onclick="event.preventDefault();switchToTab('subscriptions')" style="display:none;text-decoration:none;color:inherit;"><div class="subscription">
+                                       <p class="subscription__title"><img src="icon/subscription.svg?v=3" height="32" style="flex-shrink:0;width:auto" alt="">My Subscription</p>
                                        <span class="subscription__stiker" id="subPlanBadge">Free</span>
                                        <span class="subscription__days" id="subDaysEl"></span>
                                     </div></a>
@@ -272,7 +272,7 @@
 
                 <p class="cab-nav__group-label">Account</p>
                 <div id="navMyPayments" class="cab-nav__item icon-win-wallet" data-tab="payments">My Payments</div>
-                <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions">My Promotions</div>
+                <div class="cab-nav__item icon-calendar-upd" data-tab="subscriptions" id="navSubscriptions" style="display:none">My Subscriptions</div>
 
                 <p class="cab-nav__group-label">System</p>
                 <div class="cab-nav__item icon-win-setting" data-tab="settings">My Settings</div>
@@ -311,7 +311,7 @@
                 <div class="cab-mob-tab" data-mob-tab="my-ads">My Ads</div>
                 <div class="cab-mob-tab" data-mob-tab="favorites">Favorites</div>
                 <div class="cab-mob-tab" data-mob-tab="payments">Payments</div>
-                <div class="cab-mob-tab" data-mob-tab="subscriptions">Promotions</div>
+                <div class="cab-mob-tab" data-mob-tab="subscriptions" id="mobSubscriptions" style="display:none">Subscriptions</div>
                 <div class="cab-mob-tab" data-mob-tab="settings">Settings</div>
                 <div class="cab-mob-tab" data-mob-tab="tickets">Tickets</div>
             </div>
@@ -924,7 +924,7 @@
             <div class="cab-panel" data-panel="subscriptions">
 
                 <div class="cab-panel__top">
-                    <h1 class="cab-panel__title">My Promotions</h1>
+                    <h1 class="cab-panel__title">My Subscriptions</h1>
                 </div>
 
                 <!-- Pricing cards -->
@@ -2311,10 +2311,24 @@
                             profC.days = dLeft;
                             try { localStorage.setItem('bazar_prof_stats', JSON.stringify(profC)); } catch(e) {}
                         }
+                        /* Admin-only: show My Subscriptions nav items */
+                        var isAdmin = d.is_admin === true || d.is_admin === 1 || d.role === 'admin' || d.role === 'super-admin';
+                        localStorage.setItem('bazar_is_admin', isAdmin ? '1' : '0');
+                        _applySubNavVisibility(isAdmin);
                     }
                 })
                 .catch(function() {});
         }
+    }
+
+    function _applySubNavVisibility(isAdmin) {
+        var show = isAdmin ? '' : 'none';
+        var navEl  = document.getElementById('navSubscriptions');
+        var mobEl  = document.getElementById('mobSubscriptions');
+        var dropEl = document.getElementById('dropSubscriptions');
+        if (navEl)  navEl.style.display  = show;
+        if (mobEl)  mobEl.style.display  = show;
+        if (dropEl) dropEl.style.display = isAdmin ? 'contents' : 'none';
     }
 
     function updateWalletDisplay() {
@@ -2484,6 +2498,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        /* Apply cached admin flag immediately (before API response) */
+        _applySubNavVisibility(localStorage.getItem('bazar_is_admin') === '1');
         populateUserData();
         updateFavCount();
         updateWalletDisplay();
