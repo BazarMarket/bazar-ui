@@ -3360,6 +3360,28 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(502, {'error': 'gateway error'})
             return
 
+        # ── /api/save-gender — persist gender in our SQLite (authoritative) ──
+        if path_only == '/api/save-gender':
+            _sg_cl = int(self.headers.get('Content-Length', 0))
+            _sg_body = self.rfile.read(_sg_cl) if _sg_cl > 0 else b''
+            try:
+                _sg_data = json.loads(_sg_body) if _sg_body else {}
+                _sg_uid    = _sg_data.get('uid', '').strip()
+                _sg_gender = _sg_data.get('gender', '').strip().lower()
+                if _sg_uid and _sg_gender in ('male', 'female'):
+                    with _chat_lock:
+                        _sg_conn = _chat_db()
+                        _sg_conn.execute(
+                            'INSERT OR REPLACE INTO customer_profiles (uid, gender, updated_at) VALUES (?,?,?)',
+                            (_sg_uid, _sg_gender, time.time()))
+                        _sg_conn.commit(); _sg_conn.close()
+                    self._send_json(200, {'ok': True})
+                else:
+                    self._send_json(400, {'error': 'missing uid or invalid gender'})
+            except Exception as e:
+                self._send_json(500, {'error': str(e)})
+            return
+
         # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
         if path_only.startswith('/api/'):
             api_path = path_only[len('/api'):]
@@ -3730,17 +3752,31 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     body        = resp.read()
                     status      = resp.status
                     content_type = resp.headers.get('Content-Type', 'application/json')
-                # ── Override avatar for /api/customers/{uid} based on gender ──
+                # ── Override gender+avatar for /api/customers/{uid} from SQLite ──
                 _cust_m = re.match(r'^/customers/([^/?]+)$', api_path)
                 if _cust_m and 'application/json' in content_type:
                     try:
                         _cd = json.loads(body)
                         if isinstance(_cd, dict):
-                            _gender = (_cd.get('gender') or 'male').lower()
+                            _cuid = _cust_m.group(1)
+                            # Check our authoritative customer_profiles table
+                            with _chat_lock:
+                                _cg_conn = _chat_db()
+                                _cg_row  = _cg_conn.execute(
+                                    'SELECT gender FROM customer_profiles WHERE uid=?', (_cuid,)
+                                ).fetchone()
+                                _cg_conn.close()
+                            if _cg_row:
+                                # We have a stored gender — authoritative, mark it
+                                _gender = _cg_row[0]
+                                _cd['gender']         = _gender
+                                _cd['gender_from_db'] = True
+                            else:
+                                _gender = (_cd.get('gender') or 'male').lower()
                             _avatar = _cd.get('avatar') or ''
                             if not _avatar:
                                 _cd['avatar'] = '/icon/woman.png' if _gender == 'female' else '/icon/man.svg'
-                                body = json.dumps(_cd).encode()
+                            body = json.dumps(_cd).encode()
                     except Exception:
                         pass
                 self.send_response(status)

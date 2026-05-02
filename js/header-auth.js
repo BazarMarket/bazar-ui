@@ -54,7 +54,8 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         /* Fetch fresh data from API */
         var uid = localStorage.getItem('bazar_firebase_uid') || '';
         if (uid) {
-            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
+            /* Use proxy path — server.py overrides gender from its authoritative SQLite DB */
+            fetch('/api/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.ok ? r.json() : {}; })
                 .then(function(d) {
                     if (!d.exists) return;
@@ -80,8 +81,12 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                         /* Keep local plan, just refresh badge */
                         applyPlanBadge(localPlan, parseInt(localStorage.getItem('bazar_days_left') || '0', 10));
                     }
-                    /* Always sync gender from API so avatar is correct after cache clear */
-                    if (d.gender) {
+                    /* Update gender ONLY if server.py confirmed it from its DB (gender_from_db flag).
+                       This prevents Laravel's default 'male' from overwriting a user's chosen gender. */
+                    if (d.gender && d.gender_from_db) {
+                        try { localStorage.setItem('bazar_gender', d.gender); } catch(ex) {}
+                    } else if (d.gender && !localStorage.getItem('bazar_gender')) {
+                        /* No local gender at all (fresh install) — use API as initial fallback */
                         try { localStorage.setItem('bazar_gender', d.gender); } catch(ex) {}
                     }
                     /* Store account creation timestamp to filter old conversations */
@@ -93,10 +98,11 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                     if (d.avatar) {
                         try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
                         if (avImg) avImg.src = d.avatar;
-                    } else if (d.gender && avImg) {
-                        /* No custom avatar — use gender icon from API (fixes stale male default) */
-                        var genderIcon = d.gender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-                        if (!avImg.src || avImg.src.indexOf('man.svg') !== -1 || avImg.src.indexOf('woman.png') !== -1) {
+                    } else {
+                        /* Use gender from localStorage (just updated if gender_from_db) */
+                        var _curGender = localStorage.getItem('bazar_gender') || 'male';
+                        var genderIcon = _curGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
+                        if (avImg && (!avImg.src || avImg.src.indexOf('man.svg') !== -1 || avImg.src.indexOf('woman.png') !== -1)) {
                             avImg.src = genderIcon;
                         }
                     }

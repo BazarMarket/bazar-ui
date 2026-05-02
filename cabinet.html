@@ -2316,7 +2316,8 @@
 
         var uid = localStorage.getItem('bazar_firebase_uid');
         if (uid) {
-            fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
+            /* Use proxy — server.py overrides gender from authoritative SQLite DB */
+            fetch('/api/customers/' + encodeURIComponent(uid))
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     if (!d.exists) {
@@ -2345,7 +2346,17 @@
                         }
                         if (d.email)   { localStorage.setItem('bazar_email', d.email);     if (elEmail)  elEmail.value  = d.email; }
                         if (d.address) { localStorage.setItem('bazar_address', d.address); if (elAddr)   elAddr.value   = d.address; }
-                        if (d.gender)  { localStorage.setItem('bazar_gender', d.gender);   if (elGender) elGender.value = d.gender; }
+                        /* Only trust gender from server.py's DB (gender_from_db flag) to prevent
+                           Laravel's default 'male' from overwriting the user's chosen gender */
+                        if (d.gender && d.gender_from_db) {
+                            localStorage.setItem('bazar_gender', d.gender);
+                            if (elGender) elGender.value = d.gender;
+                        } else if (d.gender && !localStorage.getItem('bazar_gender')) {
+                            localStorage.setItem('bazar_gender', d.gender);
+                            if (elGender) elGender.value = d.gender;
+                        } else if (elGender && localStorage.getItem('bazar_gender')) {
+                            elGender.value = localStorage.getItem('bazar_gender');
+                        }
                         if (d.member_since) {
                             localStorage.setItem('bazar_joined', d.member_since);
                             var elMs = document.getElementById('csMemberSince');
@@ -2610,6 +2621,13 @@
                 if (uid) {
                     var payload = { email: email, address: address, gender: gender };
                     if (fullName) payload.name = fullName;
+                    /* Also persist gender in server.py SQLite (authoritative) so it
+                       survives browser cache clears and new devices */
+                    fetch('/api/save-gender', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ uid: uid, gender: gender })
+                    }).catch(function() {});
                     fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid), {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
