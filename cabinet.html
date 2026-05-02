@@ -2760,8 +2760,18 @@
             var paidPlan   = params.get('plan');
             var paidDays   = parseInt(params.get('days') || '0', 10);
             var paidAmount = parseFloat(params.get('amount') || '0');
-            var paidAdId   = params.get('ad_id') || '';
+            var paidAdId   = params.get('ad_id') || sessionStorage.getItem('bazar_pending_ad_id') || '';
             var sessionId  = params.get('session_id');
+            /* Restore plan/days/amount from sessionStorage if not in URL (Stripe return) */
+            if (!paidPlan && sessionStorage.getItem('bazar_pending_plan')) {
+                paidPlan   = sessionStorage.getItem('bazar_pending_plan');
+                paidDays   = parseInt(sessionStorage.getItem('bazar_pending_days') || '0', 10);
+                paidAmount = parseFloat(sessionStorage.getItem('bazar_pending_amount') || '0');
+            }
+            sessionStorage.removeItem('bazar_pending_ad_id');
+            sessionStorage.removeItem('bazar_pending_plan');
+            sessionStorage.removeItem('bazar_pending_days');
+            sessionStorage.removeItem('bazar_pending_amount');
             var planPrice  = 0, planLabel = '';
             if (paidPlan === 'pro' || paidPlan === 'vip') {
                 localStorage.setItem('bazar_plan', paidPlan);
