@@ -1869,6 +1869,42 @@
                 _allAdsData = (d.data || []).filter(function(a) { return a.status !== 'deleted'; });
                 _doRenderAds(_allAdsData);
                 _setupAdsFilters();
+                /* Enrich each ad with per-ad is_pro/is_vip from the card endpoint (parallel) */
+                var _adPlansCache = {};
+                try { _adPlansCache = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}'); } catch(e) {}
+                var pending = _allAdsData.length;
+                if (!pending) return;
+                var changed = false;
+                _allAdsData.forEach(function(ad) {
+                    fetch('/api/properties/' + ad.id, { headers: { 'Accept': 'application/json' } })
+                        .then(function(r) { return r.json(); })
+                        .then(function(detail) {
+                            var newPlan = detail.is_vip ? 'vip' : (detail.is_pro ? 'pro' : 'free');
+                            var cached  = (_adPlansCache[String(ad.id)] || {}).plan || 'free';
+                            if (newPlan !== cached) {
+                                if (newPlan !== 'free') {
+                                    _adPlansCache[String(ad.id)] = { plan: newPlan, days: detail.days_left || 30 };
+                                } else {
+                                    delete _adPlansCache[String(ad.id)];
+                                }
+                                changed = true;
+                            }
+                            /* Also update the ad object in-place */
+                            ad.is_pro = detail.is_pro;
+                            ad.is_vip = detail.is_vip;
+                            ad.expires_at = detail.expires_at || ad.expires_at;
+                        })
+                        .catch(function() {})
+                        .finally(function() {
+                            pending--;
+                            if (pending === 0) {
+                                if (changed) {
+                                    try { localStorage.setItem('bazar_ad_plans', JSON.stringify(_adPlansCache)); } catch(e) {}
+                                }
+                                _doRenderAds(_allAdsData, true);
+                            }
+                        });
+                });
             })
             .catch(function() {});
     }
@@ -1977,13 +2013,11 @@
             var deactLbl = isInactive ? 'Activate' : 'Deactivate';
             var deactAction = isInactive ? 'activate' : 'deactivate';
 
-            /* Plan / Subscription — use API flags first, then per-ad cache, then account plan */
-            var _cachedAdPlan = (_adPlansCache[String(ad.id)] || {}).plan || '';
-            var _accountPlan  = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+            /* Plan / Subscription — per-ad only: API flags → per-ad cache → FREE */
+            var _cachedAdPlan = (_adPlansCache[String(ad.id)] || {}).plan || 'free';
             var _adPlan = ad.is_vip ? 'vip'
                         : ad.is_pro ? 'pro'
-                        : _cachedAdPlan ? _cachedAdPlan
-                        : _accountPlan;
+                        : _cachedAdPlan;
             var _planColors = { vip: { bg:'#fffbeb', color:'#b45309', border:'#fde68a' }, pro: { bg:'#fff7ed', color:'#ea580c', border:'#fed7aa' }, free: { bg:'#f0fdf4', color:'#166534', border:'#bbf7d0' } };
             var _pc = _planColors[_adPlan];
             var planBadge = '<span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:' + _pc.bg + ';color:' + _pc.color + ';border:1px solid ' + _pc.border + ';">' + _adPlan.toUpperCase() + '</span>';
