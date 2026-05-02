@@ -2052,7 +2052,7 @@
             /* Promotion button — gray uniform style */
             var _promoUrl = 'publish-options?ad_id=' + ad.id + '&plan=' + _adPlan;
             var _promoLabel = _adPlan === 'vip' ? 'Extend VIP' : (_adPlan === 'pro' ? 'Extend PRO' : 'Promote to PRO \u00B7 VIP');
-            var promoBtnHtml = '<button onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'' + _promoUrl + '\'" ' +
+            var promoBtnHtml = '<button onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');localStorage.setItem(\'bazar_pay_return\',\'my-ads\');localStorage.setItem(\'bazar_pay_ad_id\',\'' + ad.id + '\');window.location.href=\'' + _promoUrl + '\'" ' +
                 'style="padding:5px 12px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #d0d0d0;background:#f5f5f5;color:#555;cursor:pointer;white-space:nowrap;" ' +
                 'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">' + _promoLabel + '</button>';
 
@@ -2878,11 +2878,19 @@
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            /* Read source BEFORE consuming it — determines where to return after payment */
-            var _payReturnTab = sessionStorage.getItem('cabReturnTab') || '';
+            /* Determine return destination — prefer localStorage (survives Stripe redirect)
+               over sessionStorage (may be cleared by browser during cross-origin hops) */
+            var _payReturnSrc = localStorage.getItem('bazar_pay_return')
+                             || sessionStorage.getItem('cabReturnTab')
+                             || '';
+            var _lsPayAdId    = localStorage.getItem('bazar_pay_ad_id') || '';
+            localStorage.removeItem('bazar_pay_return');
+            localStorage.removeItem('bazar_pay_ad_id');
             sessionStorage.removeItem('cabReturnTab');
+            /* Use localStorage adId as extra fallback if URL/sessionStorage lost it */
+            if (!paidAdId && _lsPayAdId) paidAdId = _lsPayAdId;
             if (paidAdId) {
-                if (_payReturnTab === 'my-ads') {
+                if (_payReturnSrc === 'my-ads') {
                     /* Came from My Ads → return there, pin updated ad to top */
                     localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
                     history.replaceState(null, '', '/cabinet/my-ads');
@@ -2893,7 +2901,7 @@
                 }
                 return;
             }
-            _payReturnTab = _payReturnTab || 'my-ads';
+            var _payReturnTab = _payReturnSrc || 'my-ads';
             history.replaceState(null, '', '/cabinet/' + _payReturnTab);
             switchToTab(_payReturnTab);
 
