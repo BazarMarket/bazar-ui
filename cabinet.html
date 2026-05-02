@@ -1694,11 +1694,13 @@
 
     function switchToTab(tab) {
         if (typeof window._cabSwitchTab === 'function') {
+            /* cabinet.js switchTab already calls loadMyAds/loadPayments/renderFavorites/loadMyPromotions */
             window._cabSwitchTab(tab);
-        } else {
-            var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
-            if (item) item.click();
+            return;
         }
+        /* Fallback: cabinet.js not yet loaded — trigger nav item click or call directly */
+        var item = document.querySelector('.cab-nav__item[data-tab="' + tab + '"]');
+        if (item) item.click();
         if (tab === 'favorites') renderFavorites();
         if (tab === 'payments') loadPayments();
         if (tab === 'my-ads') loadMyAds();
