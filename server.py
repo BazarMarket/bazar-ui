@@ -3661,7 +3661,29 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             if not recent or not isinstance(recent.get('data'), list):
                 self._send_json(200, recent or {'data': []})
                 return
-            enriched_list = list(recent['data'])
+            # Make independent copies of each ad dict so we never mutate the cache
+            enriched_list = [dict(ad) for ad in recent['data']]
+
+            # ── STEP 1: apply per-ad plan overrides FIRST (no lock needed — read-only SQLite) ──
+            # ALWAYS reset is_vip/is_pro to False for every ad; only trust our local DB,
+            # never trust Laravel's account-level subscription flags.
+            _local_plans = {}
+            try:
+                _lp_c = sqlite3.connect(CHAT_DB, check_same_thread=False)
+                _lp_rows = _lp_c.execute(
+                    'SELECT ad_id, plan FROM listing_plans WHERE expires_at > ?',
+                    (time.time(),)).fetchall()
+                _lp_c.close()
+                _local_plans = {str(r[0]): r[1] for r in _lp_rows}
+            except Exception:
+                pass
+            for ad in enriched_list:
+                lp = _local_plans.get(str(ad.get('id', '')))
+                ad['is_vip'] = (lp == 'vip')
+                ad['is_pro'] = (lp == 'pro')
+
+            # ── STEP 2: fetch extra detail fields (old_price, images, district) per ad ──
+            # These threads MUST NOT touch is_vip / is_pro.
             lock = threading.Lock()
             def _fetch_old_price(idx, ad_id):
                 try:
@@ -3670,14 +3692,13 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         headers={'Accept': 'application/json'})
                     with urllib.request.urlopen(req, timeout=4) as r:
                         detail = json.loads(r.read().decode('utf-8'))
-                        with lock:
-                            enriched_list[idx] = dict(enriched_list[idx])
-                            enriched_list[idx]['old_price']    = detail.get('old_price')
-                            enriched_list[idx]['district']     = detail.get('district') or ''
-                            enriched_list[idx]['listing_type'] = detail.get('listing_type') or ''
-                            enriched_list[idx]['images']       = detail.get('images') or []
-                        # Also refresh cache so card.html gets fresh data too
-                        _cache_set(f'listing_{ad_id}', detail)
+                    with lock:
+                        enriched_list[idx]['old_price']    = detail.get('old_price')
+                        enriched_list[idx]['district']     = detail.get('district') or ''
+                        enriched_list[idx]['listing_type'] = detail.get('listing_type') or ''
+                        enriched_list[idx]['images']       = detail.get('images') or []
+                    # Refresh per-listing cache so card.html gets fresh data too
+                    _cache_set(f'listing_{ad_id}', detail)
                 except Exception:
                     pass
             threads = []
@@ -3690,24 +3711,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     threads.append(t)
             for t in threads:
                 t.join(timeout=5)
-            # ALWAYS override is_pro/is_vip from our per-ad listing_plans DB.
-            # Reset every ad to false first — never trust Laravel's account-level flags.
-            try:
-                with _chat_lock:
-                    _lp_c = sqlite3.connect(CHAT_DB)
-                    _lp_rows = _lp_c.execute(
-                        'SELECT ad_id, plan FROM listing_plans WHERE expires_at > ?',
-                        (time.time(),)).fetchall()
-                    _lp_c.close()
-                _local_plans = {str(r[0]): r[1] for r in _lp_rows}
-                for i, ad in enumerate(enriched_list):
-                    aid = str(ad.get('id', ''))
-                    lp  = _local_plans.get(aid)          # None if no paid plan
-                    enriched_list[i] = dict(enriched_list[i])
-                    enriched_list[i]['is_pro'] = (lp == 'pro')
-                    enriched_list[i]['is_vip'] = (lp == 'vip')
-            except Exception:
-                pass
+
             recent['data'] = enriched_list
             self._send_json(200, recent)
             return
