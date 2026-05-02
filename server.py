@@ -3690,7 +3690,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     threads.append(t)
             for t in threads:
                 t.join(timeout=5)
-            # Override is_pro/is_vip from our local per-listing plans DB
+            # ALWAYS override is_pro/is_vip from our per-ad listing_plans DB.
+            # Reset every ad to false first — never trust Laravel's account-level flags.
             try:
                 with _chat_lock:
                     _lp_c = sqlite3.connect(CHAT_DB)
@@ -3699,13 +3700,12 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         (time.time(),)).fetchall()
                     _lp_c.close()
                 _local_plans = {str(r[0]): r[1] for r in _lp_rows}
-                if _local_plans:
-                    for i, ad in enumerate(enriched_list):
-                        aid = str(ad.get('id', ''))
-                        if aid in _local_plans:
-                            enriched_list[i] = dict(enriched_list[i])
-                            enriched_list[i]['is_pro'] = (_local_plans[aid] == 'pro')
-                            enriched_list[i]['is_vip'] = (_local_plans[aid] == 'vip')
+                for i, ad in enumerate(enriched_list):
+                    aid = str(ad.get('id', ''))
+                    lp  = _local_plans.get(aid)          # None if no paid plan
+                    enriched_list[i] = dict(enriched_list[i])
+                    enriched_list[i]['is_pro'] = (lp == 'pro')
+                    enriched_list[i]['is_vip'] = (lp == 'vip')
             except Exception:
                 pass
             recent['data'] = enriched_list

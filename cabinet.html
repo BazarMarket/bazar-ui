@@ -2810,7 +2810,8 @@
                         localStorage.setItem('bazar_last_paid_ad_id', paidAdId);
                     } catch(e) {}
                     function _activateAd(attemptsLeft) {
-                        fetch(window.BAZAR_API + '/properties/' + paidAdId + '/activate-plan', {
+                        /* Use relative path so server.py intercepts and saves to listing_plans DB */
+                        fetch('/api/properties/' + paidAdId + '/activate-plan', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                             body: JSON.stringify({ firebase_uid: _uid, plan: paidPlan })
