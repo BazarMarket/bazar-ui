@@ -1881,14 +1881,11 @@
                         .then(function(detail) {
                             var newPlan = detail.is_vip ? 'vip' : (detail.is_pro ? 'pro' : 'free');
                             var cached  = (_adPlansCache[String(ad.id)] || {}).plan || 'free';
-                            if (newPlan !== cached) {
-                                if (newPlan !== 'free') {
-                                    _adPlansCache[String(ad.id)] = { plan: newPlan, days: detail.days_left || 30 };
-                                } else {
-                                    delete _adPlansCache[String(ad.id)];
-                                }
+                            if (newPlan !== 'free' && newPlan !== cached) {
+                                _adPlansCache[String(ad.id)] = { plan: newPlan, days: detail.days_left || 30 };
                                 changed = true;
                             }
+                            /* Never delete cached plan when API returns free — local payment receipt is authoritative */
                             /* Also update the ad object in-place */
                             ad.is_pro = detail.is_pro;
                             ad.is_vip = detail.is_vip;
@@ -2782,6 +2779,7 @@
                         var _adPlans = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}');
                         _adPlans[paidAdId] = { plan: paidPlan, days: paidDays || 14 };
                         localStorage.setItem('bazar_ad_plans', JSON.stringify(_adPlans));
+                        localStorage.setItem('bazar_last_paid_ad_id', paidAdId);
                     } catch(e) {}
                     function _activateAd(attemptsLeft) {
                         fetch(window.BAZAR_API + '/properties/' + paidAdId + '/activate-plan', {
@@ -3129,6 +3127,10 @@
                 var _adPlansCache = {};
                 try { _adPlansCache = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}'); } catch(e) {}
                 var _proAdIds = Object.keys(_adPlansCache); /* all ad IDs with a paid plan */
+                if (!_proAdIds.length) {
+                    var _lpi = localStorage.getItem('bazar_last_paid_ad_id') || '';
+                    if (_lpi) _proAdIds = [_lpi];
+                }
                 apiTxns = apiTxns.map(function(t) {
                     var rawDesc = (t.description || '').toLowerCase();
                     var isPromo = /subscription|promotion/i.test(rawDesc) && !/— id\s*\d+/i.test(rawDesc);
@@ -3146,6 +3148,23 @@
                     }
                     return t;
                 });
+
+                /* Deduplicate within API: if Subscription entry has matching Promotion (same day+amount) — drop Subscription */
+                apiTxns = (function(txns) {
+                    var promoKeys = {};
+                    txns.forEach(function(t) {
+                        var isP = /^promotion/i.test(t.type || '') || /^promotion/i.test((t.description || '').split('—')[0].trim());
+                        if (isP) {
+                            promoKeys[parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10)] = true;
+                        }
+                    });
+                    return txns.filter(function(t) {
+                        if (/^subscription/i.test(t.type || '')) {
+                            if (promoKeys[parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10)]) return false;
+                        }
+                        return true;
+                    });
+                })(apiTxns);
 
                 /* Deduplicate: drop local entries whose description or (amount+date) matches an API entry */
                 var apiDescs = apiTxns.map(function(t){ return (t.description||'').trim().toLowerCase(); });
