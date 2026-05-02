@@ -2747,7 +2747,12 @@
                 }
             }
             if (window.updatePlanBadge) updatePlanBadge();
-            var _payReturnTab = sessionStorage.getItem('cabReturnTab') || 'subscriptions';
+            /* If payment was for a specific new ad — go to that card, not subscriptions */
+            if (paidAdId) {
+                window.location.href = 'card?id=' + paidAdId;
+                return;
+            }
+            var _payReturnTab = sessionStorage.getItem('cabReturnTab') || 'my-ads';
             sessionStorage.removeItem('cabReturnTab');
             history.replaceState(null, '', '/cabinet/' + _payReturnTab);
             switchToTab(_payReturnTab);
