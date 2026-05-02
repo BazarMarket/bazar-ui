@@ -1058,13 +1058,18 @@
          .then(function(r) { return r.json(); })
          .then(function(data) {
             if (data.success && data.url) {
-               /* Save ad_id + plan before Stripe redirect — success URL may not include them */
-               if (adId) {
-                  sessionStorage.setItem('bazar_pending_ad_id',   adId);
-                  sessionStorage.setItem('bazar_pending_plan',     plan);
-                  sessionStorage.setItem('bazar_pending_days',     String(days));
-                  sessionStorage.setItem('bazar_pending_amount',   String(price));
-               }
+               /* Save payment context before Stripe redirect.
+                  sessionStorage may be cleared by browser during cross-origin hop,
+                  so we duplicate everything to localStorage which always survives. */
+               var _saveId = adId || '';
+               sessionStorage.setItem('bazar_pending_ad_id',   _saveId);
+               sessionStorage.setItem('bazar_pending_plan',     plan);
+               sessionStorage.setItem('bazar_pending_days',     String(days));
+               sessionStorage.setItem('bazar_pending_amount',   String(price));
+               localStorage.setItem('bazar_pending_ad_id',    _saveId);
+               localStorage.setItem('bazar_pending_plan',      plan);
+               localStorage.setItem('bazar_pending_days',      String(days));
+               localStorage.setItem('bazar_pending_amount',    String(price));
                window.location.href = data.url;
             } else {
                alert('Payment error: ' + (data.error || 'Please try again.'));

@@ -2831,18 +2831,28 @@
             var paidPlan   = params.get('plan');
             var paidDays   = parseInt(params.get('days') || '0', 10);
             var paidAmount = parseFloat(params.get('amount') || '0');
-            var paidAdId   = params.get('ad_id') || sessionStorage.getItem('bazar_pending_ad_id') || localStorage.getItem('bazar_pay_ad_id') || '';
+            var paidAdId   = params.get('ad_id') || sessionStorage.getItem('bazar_pending_ad_id') || localStorage.getItem('bazar_pay_ad_id') || localStorage.getItem('bazar_pending_ad_id') || '';
             var sessionId  = params.get('session_id');
-            /* Restore plan/days/amount from sessionStorage if not in URL (Stripe return) */
+            /* Restore plan/days/amount — try sessionStorage first, then localStorage fallback.
+               sessionStorage may be wiped by browser during cross-origin Stripe redirect. */
             if (!paidPlan && sessionStorage.getItem('bazar_pending_plan')) {
                 paidPlan   = sessionStorage.getItem('bazar_pending_plan');
                 paidDays   = parseInt(sessionStorage.getItem('bazar_pending_days') || '0', 10);
                 paidAmount = parseFloat(sessionStorage.getItem('bazar_pending_amount') || '0');
             }
+            if (!paidPlan && localStorage.getItem('bazar_pending_plan')) {
+                paidPlan   = localStorage.getItem('bazar_pending_plan');
+                paidDays   = parseInt(localStorage.getItem('bazar_pending_days') || '0', 10);
+                paidAmount = parseFloat(localStorage.getItem('bazar_pending_amount') || '0');
+            }
             sessionStorage.removeItem('bazar_pending_ad_id');
             sessionStorage.removeItem('bazar_pending_plan');
             sessionStorage.removeItem('bazar_pending_days');
             sessionStorage.removeItem('bazar_pending_amount');
+            localStorage.removeItem('bazar_pending_ad_id');
+            localStorage.removeItem('bazar_pending_plan');
+            localStorage.removeItem('bazar_pending_days');
+            localStorage.removeItem('bazar_pending_amount');
 
             /* Determine return destination — prefer localStorage (survives Stripe cross-origin hop)
                over sessionStorage (may be cleared by browser during external redirect) */
@@ -2948,23 +2958,29 @@
                         _applyPlanFromServer(data.plan);
                     } else {
                         var _dur2 = paidDays || 30;
-                        var _txnDesc2 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur2 + ' Days' : '');
-                        if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc2, planPrice, 'paid');
+                        var _lbl2 = planLabel || (paidPlan === 'pro' ? 'PRO' : paidPlan === 'vip' ? 'VIP' : 'Plan');
+                        var _prc2 = planPrice > 0 ? planPrice : paidAmount;
+                        var _txnDesc2 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + _lbl2 + ' — ' + _dur2 + ' Days';
+                        saveLocalTxn('debit', 'Promotion', _txnDesc2, _prc2, 'paid');
                         _fetchPlanFromCustomerApi(_payUid, 4);
                     }
                     _doPaymentReturn();
                 })
                 .catch(function() {
                     var _dur3 = paidDays || 30;
-                    var _txnDesc3 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur3 + ' Days' : '');
-                    if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc3, planPrice, 'paid');
+                    var _lbl3 = planLabel || (paidPlan === 'pro' ? 'PRO' : paidPlan === 'vip' ? 'VIP' : 'Plan');
+                    var _prc3 = planPrice > 0 ? planPrice : paidAmount;
+                    var _txnDesc3 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + _lbl3 + ' — ' + _dur3 + ' Days';
+                    saveLocalTxn('debit', 'Promotion', _txnDesc3, _prc3, 'paid');
                     _fetchPlanFromCustomerApi(_payUid, 4);
                     _doPaymentReturn();
                 });
             } else {
                 var _dur4 = paidDays || 30;
-                var _txnDesc4 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + (planLabel || '') + (planLabel ? ' — ' + _dur4 + ' Days' : '');
-                if (planLabel) saveLocalTxn('debit', 'Promotion', _txnDesc4, planPrice, 'paid');
+                var _lbl4 = planLabel || (paidPlan === 'pro' ? 'PRO' : paidPlan === 'vip' ? 'VIP' : 'Plan');
+                var _prc4 = planPrice > 0 ? planPrice : paidAmount;
+                var _txnDesc4 = 'Promotion — ' + (paidAdId ? 'ID ' + paidAdId + ' — ' : '') + _lbl4 + ' — ' + _dur4 + ' Days';
+                saveLocalTxn('debit', 'Promotion', _txnDesc4, _prc4, 'paid');
                 _fetchPlanFromCustomerApi(_payUid, 4);
                 _doPaymentReturn();
             }
