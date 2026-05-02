@@ -110,6 +110,13 @@ def _init_chat_db():
                 created_at  REAL DEFAULT 0
             );
             CREATE INDEX IF NOT EXISTS idx_comments_prop ON property_comments(property_id, id);
+            CREATE TABLE IF NOT EXISTS listing_plans (
+                ad_id         TEXT PRIMARY KEY,
+                plan          TEXT DEFAULT 'free',
+                activated_at  REAL DEFAULT 0,
+                duration_days INTEGER DEFAULT 30,
+                expires_at    REAL DEFAULT 0
+            );
         ''')
         conn.commit()
         conn.close()
@@ -3346,6 +3353,55 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE
         if path_only.startswith('/api/'):
             api_path = path_only[len('/api'):]
+            # ── Intercept activate-plan to track per-listing plans locally ──
+            _apm = re.match(r'^/properties/(\d+)/activate-plan$', api_path)
+            if _apm:
+                _ap_ad_id = _apm.group(1)
+                try:
+                    _ap_cl = int(self.headers.get('Content-Length', 0))
+                    _ap_body = self.rfile.read(_ap_cl) if _ap_cl > 0 else b''
+                    _ap_json = json.loads(_ap_body) if _ap_body else {}
+                    _ap_plan = _ap_json.get('plan', '')
+                    _ap_dur  = int(_ap_json.get('duration_days', 30))
+                    if _ap_plan and _ap_ad_id:
+                        _ap_exp = time.time() + _ap_dur * 86400
+                        with _chat_lock:
+                            _apc = sqlite3.connect(CHAT_DB)
+                            _apc.execute(
+                                'INSERT OR REPLACE INTO listing_plans '
+                                '(ad_id, plan, activated_at, duration_days, expires_at) '
+                                'VALUES (?,?,?,?,?)',
+                                (_ap_ad_id, _ap_plan, time.time(), _ap_dur, _ap_exp))
+                            _apc.commit(); _apc.close()
+                except Exception:
+                    pass
+                # Forward the original body to Laravel
+                try:
+                    _fwd_url = f'{LARAVEL_API_BASE}{api_path}'
+                    _fwd_h = {
+                        'Accept':       self.headers.get('Accept', 'application/json'),
+                        'Content-Type': self.headers.get('Content-Type', 'application/json'),
+                    }
+                    _fwd_req = urllib.request.Request(_fwd_url, data=_ap_body, headers=_fwd_h, method='POST')
+                    with urllib.request.urlopen(_fwd_req, timeout=5) as _fwd_r:
+                        _fwd_body = _fwd_r.read()
+                        _fwd_status = _fwd_r.status
+                        _fwd_ct = _fwd_r.headers.get('Content-Type', 'application/json')
+                    self.send_response(_fwd_status)
+                    self.send_header('Content-Type', _fwd_ct)
+                    self.send_header('Content-Length', str(len(_fwd_body)))
+                    self.end_headers()
+                    self.wfile.write(_fwd_body)
+                except urllib.error.HTTPError as e:
+                    _eb = e.read()
+                    self.send_response(e.code)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Content-Length', str(len(_eb)))
+                    self.end_headers()
+                    self.wfile.write(_eb)
+                except Exception:
+                    self._send_json(502, {'error': 'api unavailable'})
+                return
             qs       = self.path[len(path_only)+1:] if '?' in self.path else ''
             qs_str   = ('?' + qs) if qs else ''
             url      = f'{LARAVEL_API_BASE}{api_path}{qs_str}'
@@ -3602,6 +3658,24 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     threads.append(t)
             for t in threads:
                 t.join(timeout=5)
+            # Override is_pro/is_vip from our local per-listing plans DB
+            try:
+                with _chat_lock:
+                    _lp_c = sqlite3.connect(CHAT_DB)
+                    _lp_rows = _lp_c.execute(
+                        'SELECT ad_id, plan FROM listing_plans WHERE expires_at > ?',
+                        (time.time(),)).fetchall()
+                    _lp_c.close()
+                _local_plans = {str(r[0]): r[1] for r in _lp_rows}
+                if _local_plans:
+                    for i, ad in enumerate(enriched_list):
+                        aid = str(ad.get('id', ''))
+                        if aid in _local_plans:
+                            enriched_list[i] = dict(enriched_list[i])
+                            enriched_list[i]['is_pro'] = (_local_plans[aid] == 'pro')
+                            enriched_list[i]['is_vip'] = (_local_plans[aid] == 'vip')
+            except Exception:
+                pass
             recent['data'] = enriched_list
             self._send_json(200, recent)
             return

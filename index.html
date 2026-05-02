@@ -1394,6 +1394,16 @@
 
     <script>
     /* Shared card builder for index page sections */
+    /* Returns 'pro'/'vip'/'free' if ad belongs to logged-in user (uses per-ad localStorage cache),
+       or null if it's someone else's ad (use API is_pro/is_vip in that case). */
+    function _bzOwnAdPlan(ad) {
+        var myUid = localStorage.getItem('bazar_firebase_uid') || '';
+        if (!myUid || !ad.seller_firebase_uid || ad.seller_firebase_uid !== myUid) return null;
+        var plans = {};
+        try { plans = JSON.parse(localStorage.getItem('bazar_ad_plans') || '{}'); } catch(e) {}
+        var p = plans[String(ad.id)];
+        return p ? (p.plan || 'free') : 'free';
+    }
     var _bzLtLabel = {
         'long_rent': 'Rooms for long term rent', 'long-rent': 'Rooms for long term rent',
         'for_sale': 'Property for Sale', 'sale': 'Property for Sale',
@@ -1401,15 +1411,18 @@
         'rent': 'Property to Rent'
     };
     function buildIndexCard(ad) {
-        var cardCls = ad.is_vip ? 'card card_red' : ad.is_pro ? 'card card_orange' : 'card';
+        var _ownPlan = _bzOwnAdPlan(ad);
+        var _isVip = _ownPlan !== null ? (_ownPlan === 'vip') : !!ad.is_vip;
+        var _isPro = _ownPlan !== null ? (_ownPlan === 'pro') : !!ad.is_pro;
+        var cardCls = _isVip ? 'card card_red' : _isPro ? 'card card_orange' : 'card';
         var _cu = localStorage.getItem('bazar_username') || '';
-        var _cp = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var _cp = (_ownPlan !== null ? _ownPlan : (localStorage.getItem('bazar_plan') || 'free')).toLowerCase();
         var _dgi = new URLSearchParams(window.location.search).get('boost_demo');
-        var _showBoostI = (_cu && (_cp === 'free' || _cp === 'pro') && ad.seller_name === _cu && !ad.is_vip) || (_dgi === '1' && !ad.is_vip);
+        var _showBoostI = (_cu && (_cp === 'free' || _cp === 'pro') && ad.seller_name === _cu && !_isVip) || (_dgi === '1' && !_isVip);
         var boostBtnI = _showBoostI ? '<button class="card__boost-btn" onclick="event.stopPropagation();event.preventDefault();bazarBoostPay(window.location.href,\''+ad.id+'\');">Boost to Top</button>' : '';
-        var _stikerSpan = ad.is_vip
+        var _stikerSpan = _isVip
             ? '<span class="stiker stiker_vip">VIP</span>'
-            : ad.is_pro ? '<span class="stiker stiker_top">PRO</span>' : '';
+            : _isPro ? '<span class="stiker stiker_top">PRO</span>' : '';
         var stiker = '<div class="card__stikers">' + _stikerSpan + boostBtnI + '</div>';
         var imgSrc = ad.photo || 'img/product.jpg';
         var price  = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
@@ -1466,8 +1479,9 @@
         imgs.forEach(function(img) {
             var uid = img.getAttribute('data-uid');
             if (!uid) return;
-            if (myUid && uid === myUid && myAvatar) {
-                img.src = myAvatar;
+            if (myUid && uid === myUid) {
+                var _av = myAvatar || (localStorage.getItem('bazar_gender') === 'female' ? '/icon/woman.png' : '/icon/man.svg');
+                img.src = _av;
             } else if (_avatarCache[uid]) {
                 img.src = _avatarCache[uid];
             } else if (!toFetch[uid]) {
@@ -1542,10 +1556,13 @@
                 if (!grid) return;
                 var html = '';
                 resp.data.forEach(function(ad) {
-                    var cardCls = ad.is_vip ? 'card card_red' : ad.is_pro ? 'card card_orange' : 'card';
-                    var stiker = ad.is_vip
+                    var _latOwnPlan = _bzOwnAdPlan(ad);
+                    var _latIsVip = _latOwnPlan !== null ? (_latOwnPlan === 'vip') : !!ad.is_vip;
+                    var _latIsPro = _latOwnPlan !== null ? (_latOwnPlan === 'pro') : !!ad.is_pro;
+                    var cardCls = _latIsVip ? 'card card_red' : _latIsPro ? 'card card_orange' : 'card';
+                    var stiker = _latIsVip
                         ? '<div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>'
-                        : ad.is_pro
+                        : _latIsPro
                             ? '<div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>'
                             : '<div class="card__stikers"></div>';
                     var imgSrc = ad.photo || 'img/product.jpg';
@@ -1580,10 +1597,13 @@
                 if (latestSwiperWrapper) {
                     var latestSlidesHtml = '';
                     resp.data.forEach(function(ad) {
-                        var cardCls2 = ad.is_vip ? 'card card_red' : ad.is_pro ? 'card card_orange' : 'card';
-                        var stiker2 = ad.is_vip
+                        var _swOwnPlan = _bzOwnAdPlan(ad);
+                        var _swIsVip = _swOwnPlan !== null ? (_swOwnPlan === 'vip') : !!ad.is_vip;
+                        var _swIsPro = _swOwnPlan !== null ? (_swOwnPlan === 'pro') : !!ad.is_pro;
+                        var cardCls2 = _swIsVip ? 'card card_red' : _swIsPro ? 'card card_orange' : 'card';
+                        var stiker2 = _swIsVip
                             ? '<div class="card__stikers"><span class="stiker stiker_vip">VIP</span></div>'
-                            : ad.is_pro
+                            : _swIsPro
                                 ? '<div class="card__stikers"><span class="stiker stiker_top">PRO</span></div>'
                                 : '<div class="card__stikers"></div>';
                         var imgSrc2 = ad.photo || 'img/product.jpg';
