@@ -1127,7 +1127,11 @@
             /* Only show badges when coming from an existing ad (?plan= is set).
                New-ad flow (no ?plan=) shows no active badge and no button locking. */
             if (!adPlan) return;
-            var badgeDays = (adPlan === 'pro' || adPlan === 'vip') ? sDays : 0;
+            /* Prefer ad-specific days_left (from /properties/{id}) over account-level */
+            var daysToShow = (typeof window._adSpecificDaysLeft === 'number')
+                             ? window._adSpecificDaysLeft
+                             : sDays;
+            var badgeDays = (adPlan === 'pro' || adPlan === 'vip') ? daysToShow : 0;
             window._planBadgesRendered = adPlan;
             window._planBadgesDays    = badgeDays;
             _showPlanBadges(adPlan, badgeDays);
@@ -1234,9 +1238,20 @@
                   window._freeDaysLeft = 30;
                }
 
-               /* Days counter updated — re-run badges if already rendered */
+               /* Store ad-specific PRO/VIP days_left (from SQLite listing_plans via server.py).
+                  This is more accurate than the account-level days_left from /customers/{uid}. */
+               var _apiAdDays = parseInt(d.days_left || 0, 10);
+               if ((adPlan === 'pro' || adPlan === 'vip') && _apiAdDays >= 0) {
+                  window._adSpecificDaysLeft = _apiAdDays;
+               }
+
+               /* Re-render badges with corrected (ad-specific) days if _render() already ran */
                if (typeof window._planBadgesRendered === 'string') {
-                  _showPlanBadges(window._planBadgesRendered, window._planBadgesDays || 0);
+                  var _correctedDays = (typeof window._adSpecificDaysLeft === 'number')
+                                       ? window._adSpecificDaysLeft
+                                       : (window._planBadgesDays || 0);
+                  window._planBadgesDays = _correctedDays;
+                  _showPlanBadges(window._planBadgesRendered, _correctedDays);
                }
 
                var titleEl = document.getElementById('lpAdTitle');
