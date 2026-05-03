@@ -1995,13 +1995,29 @@ function openEmailPopup() {
    /* pre-fill from localStorage */
    var savedName  = localStorage.getItem('bazar_username') || '';
    var savedPhone = localStorage.getItem('bazar_phone') || '';
-   var savedEmail = localStorage.getItem('bazar_email') || '';
    document.getElementById('ep-name').value  = savedName;
    document.getElementById('ep-phone').value = savedPhone;
+   /* pre-fill email — always fetch fresh from API so profile changes are reflected */
    var epEmail = document.getElementById('ep-email');
-   epEmail.value = savedEmail;
-   if (savedEmail) { epEmail.setAttribute('readonly',''); epEmail.style.background='#f3f3f3'; epEmail.style.cursor='default'; }
-   else { epEmail.removeAttribute('readonly'); epEmail.style.background=''; epEmail.style.cursor=''; }
+   function _applyEmail(email) {
+      epEmail.value = email || '';
+      if (email) { epEmail.setAttribute('readonly',''); epEmail.style.background='#f3f3f3'; epEmail.style.cursor='default'; }
+      else { epEmail.removeAttribute('readonly'); epEmail.style.background=''; epEmail.style.cursor=''; }
+   }
+   _applyEmail(localStorage.getItem('bazar_email') || '');
+   var uid = localStorage.getItem('bazar_firebase_uid');
+   if (uid) {
+      fetch('/api/customers/' + encodeURIComponent(uid))
+         .then(function(r){ return r.json(); })
+         .then(function(d){
+            if (d.exists) {
+               var freshEmail = d.email || '';
+               if (freshEmail) localStorage.setItem('bazar_email', freshEmail);
+               _applyEmail(freshEmail);
+            }
+         })
+         .catch(function(){});
+   }
    popup.classList.add('active');
    document.body.style.overflow = 'hidden';
 }
