@@ -1928,6 +1928,9 @@
    margin: 0 0 20px 0;
 }
 .email-popup__req { color: #e53935; }
+.input-custom__error { display: none; color: #e53935; font-size: 12px; margin: 4px 0 0; }
+.input-custom.error .input-custom__error { display: block; }
+.input-custom.error input { border-color: #e53935 !important; }
 .email-popup__footer {
    display: flex;
    justify-content: flex-end;
@@ -1992,8 +1995,13 @@ function openEmailPopup() {
    /* pre-fill from localStorage */
    var savedName  = localStorage.getItem('bazar_username') || '';
    var savedPhone = localStorage.getItem('bazar_phone') || '';
+   var savedEmail = localStorage.getItem('bazar_email') || '';
    document.getElementById('ep-name').value  = savedName;
    document.getElementById('ep-phone').value = savedPhone;
+   var epEmail = document.getElementById('ep-email');
+   epEmail.value = savedEmail;
+   if (savedEmail) { epEmail.setAttribute('readonly',''); epEmail.style.background='#f3f3f3'; epEmail.style.cursor='default'; }
+   else { epEmail.removeAttribute('readonly'); epEmail.style.background=''; epEmail.style.cursor=''; }
    popup.classList.add('active');
    document.body.style.overflow = 'hidden';
 }
