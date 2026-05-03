@@ -3272,7 +3272,6 @@
          wrapper.style.display = hasEmail ? '' : 'none';
          if (!hasEmail && chk) chk.checked = false;
          if (hasEmail) {
-            if (chk && !chk.checked) chk.checked = true;
             localStorage.setItem('bazar_email', val.trim());
          }
       }
