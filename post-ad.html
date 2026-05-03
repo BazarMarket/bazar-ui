@@ -3243,7 +3243,6 @@
          var nameEl  = document.getElementById('sellerNameInput');
          var phoneEl = document.getElementById('sellerPhoneInput');
          var emailEl = document.getElementById('sellerEmailInput');
-         var hint    = document.getElementById('contactLockHint');
 
          if (nameEl && name) {
             nameEl.value = name;
@@ -3258,9 +3257,26 @@
                emailEl.value = email;
                emailEl.setAttribute('readonly', '');
                _syncEmailCheckbox(email);
+            } else {
+               var uid = localStorage.getItem('bazar_firebase_uid');
+               if (uid && !emailEl.getAttribute('data-profile-fetched')) {
+                  emailEl.setAttribute('data-profile-fetched', '1');
+                  fetch('/api/customers/' + encodeURIComponent(uid))
+                     .then(function(r) { return r.json(); })
+                     .then(function(d) {
+                        if (d.exists && d.email) {
+                           localStorage.setItem('bazar_email', d.email);
+                           if (!emailEl.value) {
+                              emailEl.value = d.email;
+                              emailEl.setAttribute('readonly', '');
+                              _syncEmailCheckbox(d.email);
+                           }
+                        }
+                     })
+                     .catch(function() {});
+               }
             }
          }
-         if (hint) hint.style.display = (name || email) ? '' : 'none';
       }
 
       /* ── Email checkbox visibility + cross-page sync ── */
