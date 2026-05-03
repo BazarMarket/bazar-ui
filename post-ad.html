@@ -1907,7 +1907,7 @@
                      <span class="pa-field__label">Images:<span>*</span></span>
                      <div class="pa-field__control">
                         <input type="file" id="photoInput" accept="image/jpeg,image/png" multiple style="display:none" onchange="onPhotosSelected(this)">
-                        <div class="pa-upload-zone" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.style.borderColor='#ff9138'" ondragleave="this.style.borderColor=''" ondrop="event.preventDefault();this.style.borderColor='';onPhotosSelected({files:event.dataTransfer.files})">
+                        <div class="pa-upload-zone" id="paUploadZone" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.style.borderColor='#ff9138'" ondragleave="this.style.borderColor=''" ondrop="event.preventDefault();this.style.borderColor='';onPhotosSelected({files:event.dataTransfer.files})">
                            <svg class="pa-upload-zone__icon" viewBox="0 0 40 40" fill="none" stroke-linecap="round">
                               <circle cx="20" cy="20" r="16" fill="#ff9138" stroke="#ff9138" stroke-width="2"/>
                               <line x1="20" y1="12" x2="20" y2="28" stroke="#fff" stroke-width="2.5"/>
@@ -3369,7 +3369,7 @@
 
          var photoGridCheck = document.getElementById('photoPreviewGrid');
          var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
-         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'photoInput'); return; }
+         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'paUploadZone'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -3576,7 +3576,7 @@
 
          var photoGridCheck = document.getElementById('photoPreviewGrid');
          var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
-         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'photoInput'); return; }
+         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'paUploadZone'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -3720,7 +3720,7 @@
 
          var photoGridCheck = document.getElementById('photoPreviewGrid');
          var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
-         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'photoInput'); return; }
+         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'paUploadZone'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
