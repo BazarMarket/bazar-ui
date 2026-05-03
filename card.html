@@ -1295,7 +1295,7 @@
         var _rawVideo = p.video_url || '';
         var _embedUrl = '';
         if (_rawVideo) {
-          var _ytMatch = _rawVideo.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+          var _ytMatch = _rawVideo.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{11})/);
           if (_ytMatch) _embedUrl = 'https://www.youtube.com/embed/' + _ytMatch[1];
         }
         if (_embedUrl) {

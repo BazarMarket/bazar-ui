@@ -4160,7 +4160,7 @@
                         localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
                      }
                   } catch(e){}
-                  window.location.href = 'cabinet#my-ads';
+                  window.location.href = 'card?id=' + adId;
                } else {
                   alert(data.message || data.error || 'Error saving changes');
                }
