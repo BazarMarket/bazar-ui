@@ -1872,16 +1872,12 @@
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 _allAdsData = (d.data || []).filter(function(a) { return a.status !== 'deleted'; });
-                /* ── Pin recently boosted/upgraded ad to top ── */
-                var _pinnedTopId = localStorage.getItem('bazar_pinned_top_ad') || '';
-                if (_pinnedTopId) {
-                    _allAdsData.sort(function(a, b) {
-                        if (String(a.id) === _pinnedTopId) return -1;
-                        if (String(b.id) === _pinnedTopId) return 1;
-                        return 0;
-                    });
-                    localStorage.removeItem('bazar_pinned_top_ad');
-                }
+                /* ── Sort by last-paid timestamp (persistent across refreshes) ── */
+                _allAdsData.sort(function(a, b) {
+                    var tsA = parseInt(localStorage.getItem('bazar_ad_updated_ts_' + a.id) || '0', 10);
+                    var tsB = parseInt(localStorage.getItem('bazar_ad_updated_ts_' + b.id) || '0', 10);
+                    return tsB - tsA;
+                });
                 _doRenderAds(_allAdsData);
                 _setupAdsFilters();
                 /* Enrich each ad with per-ad is_pro/is_vip from the card endpoint (parallel) */
@@ -2911,9 +2907,9 @@
             /* Navigate to the correct destination — always called AFTER saveLocalTxn */
             function _doPaymentReturn() {
                 if (paidAdId) {
+                        localStorage.setItem('bazar_ad_updated_ts_' + paidAdId, String(Date.now()));
                     if (_payReturnSrc === 'my-ads') {
-                        /* Came from My Ads → return there, pin updated ad to top */
-                        localStorage.setItem('bazar_pinned_top_ad', String(paidAdId));
+                        /* Came from My Ads → return there, timestamp already saved above */
                         history.replaceState(null, '', '/cabinet/my-ads');
                         switchToTab('my-ads');
                     } else {
@@ -3001,7 +2997,7 @@
             localStorage.removeItem('bazar_boost_pending_id');
 
             function _doBoostReturn(pinnedId) {
-                if (pinnedId) localStorage.setItem('bazar_pinned_top_ad', String(pinnedId));
+                if (pinnedId) localStorage.setItem('bazar_ad_updated_ts_' + pinnedId, String(Date.now()));
                 history.replaceState(null, '', '/cabinet/my-ads');
                 switchToTab('my-ads');
             }
