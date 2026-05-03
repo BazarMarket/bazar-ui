@@ -3280,7 +3280,18 @@
                 /* LOCAL Promotion entries are source of truth for plan/ad-id/days description.
                    API (Laravel) entries may have wrong plan label or no ad ID.
                    Strategy: keep local Promotion entries; drop API Promotion/Subscription entries
-                   that have a matching local entry (same amount + same day). */
+                   that have a matching local entry (same amount + same day).
+                   NOTE: API entries do NOT have isoDate — only human "03 May 2026" date.
+                   We parse that into ISO format for reliable dedup key matching. */
+                function _parseApiIso(dateStr) {
+                    if (!dateStr) return '';
+                    var _mo = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+                    var _m = String(dateStr).match(/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/);
+                    if (!_m) return '';
+                    var _mm = _mo[_m[2].slice(0,3)] || '00';
+                    return _m[3] + '-' + _mm + '-' + (_m[1].length < 2 ? '0' : '') + _m[1];
+                }
+
                 var _localPromoKeys = {};
                 localVisible.forEach(function(t) {
                     if (t.type === 'debit' && /^promotion/i.test(t.operation || '')) {
@@ -3289,12 +3300,14 @@
                     }
                 });
 
-                /* Drop API Subscription/Promotion entries already covered by a local entry */
+                /* Drop API Subscription/Promotion entries already covered by a local entry.
+                   Use parsed isoDate for API entries (API only provides human-readable date). */
                 apiTxns = apiTxns.filter(function(t) {
                     var isSubOrPromo = /subscription|promotion/i.test(t.type || '')
                         || /^(subscription|promotion)/i.test((t.description || '').trim());
                     if (isSubOrPromo) {
-                        var _k = parseFloat(t.amount||0).toFixed(2) + '|' + (t.isoDate||'').slice(0,10);
+                        var _apiIso = t.isoDate || _parseApiIso(t.date || '');
+                        var _k = parseFloat(t.amount||0).toFixed(2) + '|' + _apiIso;
                         if (_localPromoKeys[_k]) return false;
                     }
                     return true;
@@ -3315,10 +3328,17 @@
                     return t;
                 });
 
-                /* Drop local entries that exactly match an API entry (e.g. Boost already in API) */
-                var _apiDescs = apiTxns.map(function(a){ return (a.description||'').trim().toLowerCase(); });
-                var localDeduped = localVisible.filter(function(t){
-                    return !_apiDescs.includes((t.description||'').trim().toLowerCase());
+                /* Drop local entries that match an API entry by BOTH description AND date.
+                   Date-sensitive matching prevents multiple same-day payments from being
+                   incorrectly deduplicated against entries from different days. */
+                var _apiDescDateKeys = {};
+                apiTxns.forEach(function(a) {
+                    var _iso = a.isoDate || _parseApiIso(a.date || '');
+                    _apiDescDateKeys[(a.description||'').trim().toLowerCase() + '|' + _iso] = true;
+                });
+                var localDeduped = localVisible.filter(function(t) {
+                    var _k = (t.description||'').trim().toLowerCase() + '|' + (t.isoDate||'').slice(0,10);
+                    return !_apiDescDateKeys[_k];
                 });
                 var allTxns = localDeduped.concat(apiTxns);
                 renderAll(allTxns, data.total_spent || '0.00');
