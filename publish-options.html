@@ -1231,7 +1231,10 @@
       function loadAdPreview() {
          var adId = (new URLSearchParams(window.location.search)).get('ad_id') || '';
          if (!adId) return;
-         fetch(window.BAZAR_API + '/properties/' + adId)
+         /* Use relative /api/ URL so request goes through www.bazar.uk → server.py,
+            which injects days_left from SQLite listing_plans. Direct admin.bazar.uk/api
+            bypasses server.py and returns days_left=null from Laravel. */
+         fetch('/api/properties/' + adId)
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
                if (!d || !d.title) return;
@@ -1249,7 +1252,7 @@
                   NOTE: adPlan is local to applyExistingPlan(), so we re-read it from URL here. */
                var _lpAdPlan = (new URLSearchParams(window.location.search).get('plan') || '').toLowerCase();
                var _apiAdDays = parseInt(d.days_left || 0, 10);
-               if ((_lpAdPlan === 'pro' || _lpAdPlan === 'vip') && _apiAdDays >= 0) {
+               if ((_lpAdPlan === 'pro' || _lpAdPlan === 'vip') && _apiAdDays > 0) {
                   window._adSpecificDaysLeft = _apiAdDays;
                }
 
