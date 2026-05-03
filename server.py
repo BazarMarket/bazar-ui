@@ -352,6 +352,71 @@ Respond ONLY with valid JSON, no markdown, no explanation:
 {{"flagged": true, "reasons": ["short reason"], "confidence": 0.9}}
 If content is acceptable: {{"flagged": false, "reasons": [], "confidence": 0.95}}"""
 
+_YT_MOD_PROMPT = """You are a content moderator for Bazar (www.bazar.uk), a UK marketplace for properties, cars, phones, and electronics.
+A user wants to attach a YouTube video to their marketplace listing.
+
+Video title: {title}
+Channel/author: {author}
+
+Decide if this video is suitable as a supporting media attachment for a product or property listing.
+
+BLOCK if the video appears to be:
+- Adult, sexual, or pornographic content
+- A music track, song, or music video (including concert recordings, karaoke, lyric videos)
+- A full-length movie, TV episode, or documentary
+- Unrelated entertainment (movie trailers unrelated to a product being sold, TV show clips, vlogs)
+
+ALLOW if the video appears to be:
+- A product demo, unboxing, hands-on review, or test drive
+- A game trailer, gameplay footage, or game review (for someone selling a game)
+- A property walkthrough, virtual tour, or real estate presentation
+- An instructional or how-to video directly related to a product
+- Any video that clearly supports what someone is trying to sell or rent
+
+Reply ONLY with valid JSON, no markdown, no explanation:
+{{"ok": true, "reason": ""}}
+or
+{{"ok": false, "reason": "short English explanation for the user"}}"""
+
+def _gemini_moderate_youtube(title: str, author: str) -> dict:
+    """Check YouTube video title/author against content policy. Returns {ok, reason}."""
+    if not GEMINI_API_KEY:
+        return {'ok': True, 'reason': ''}
+    prompt = _YT_MOD_PROMPT.format(
+        title=(title or '')[:200],
+        author=(author or '')[:100],
+    )
+    url = (f'https://generativelanguage.googleapis.com/v1beta/models/'
+           f'gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}')
+    payload = {
+        'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
+        'generationConfig': {
+            'temperature': 0.1,
+            'maxOutputTokens': 100,
+            'thinkingConfig': {'thinkingBudget': 0},
+        },
+    }
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode(),
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read())
+        raw = result['candidates'][0]['content']['parts'][0]['text'].strip()
+        raw = raw.strip('`').strip()
+        if raw.lower().startswith('json'):
+            raw = raw[4:].strip()
+        parsed = json.loads(raw)
+        print(f'[YT-MOD] ok={parsed.get("ok")} reason={parsed.get("reason")!r} '
+              f'title={title[:60]!r}', flush=True)
+        return parsed
+    except Exception as exc:
+        print(f'[YT-MOD] Gemini error: {exc}', flush=True)
+        return {'ok': True, 'reason': ''}
+
 def _gemini_moderate(title: str, description: str) -> dict:
     """Run Gemini text moderation. Returns dict with flagged, reasons, confidence."""
     if not GEMINI_API_KEY:
@@ -3478,6 +3543,47 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 print(f'[AVATAR-MOD] error: {e}', flush=True)
                 # On error — allow the upload (fail open, don't block users on API outage)
                 self._send_json(200, {'ok': True, 'flagged': False})
+            return
+
+        # ── /api/validate-youtube — oEmbed existence check + Gemini content moderation ──
+        if path_only == '/api/validate-youtube':
+            _vy_cl   = int(self.headers.get('Content-Length', 0))
+            _vy_body = self.rfile.read(_vy_cl) if _vy_cl > 0 else b''
+            try:
+                _vy_data = json.loads(_vy_body) if _vy_body else {}
+                _vy_url  = (_vy_data.get('url') or '').strip()
+                if not _vy_url:
+                    self._send_json(200, {'ok': True}); return
+                # Extract video ID (watch, shorts, youtu.be)
+                _vy_m = re.search(
+                    r'(?:youtube\.com/(?:watch\?v=|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})',
+                    _vy_url)
+                if not _vy_m:
+                    self._send_json(200, {'ok': False,
+                        'reason': 'Invalid YouTube URL — please use a youtube.com/watch or youtu.be link'})
+                    return
+                _vy_vid = _vy_m.group(1)
+                # oEmbed — fails for private / deleted / age-restricted videos
+                _vy_oembed = (f'https://www.youtube.com/oembed'
+                              f'?url=https://www.youtube.com/watch?v={_vy_vid}&format=json')
+                try:
+                    _vy_req = urllib.request.Request(
+                        _vy_oembed, headers={'User-Agent': 'Mozilla/5.0 BazarBot/1.0'})
+                    with urllib.request.urlopen(_vy_req, timeout=8) as _vy_r:
+                        _vy_meta = json.loads(_vy_r.read())
+                    _vy_title  = _vy_meta.get('title', '')
+                    _vy_author = _vy_meta.get('author_name', '')
+                except Exception:
+                    self._send_json(200, {'ok': False,
+                        'reason': 'This video is unavailable, private, or age-restricted '
+                                  'and cannot be added to your listing'})
+                    return
+                # Gemini content classification
+                _vy_result = _gemini_moderate_youtube(_vy_title, _vy_author)
+                self._send_json(200, _vy_result)
+            except Exception as _vy_e:
+                print(f'[YT-MOD] endpoint error: {_vy_e}', flush=True)
+                self._send_json(200, {'ok': True})  # fail open — never block on API outage
             return
 
         # Generic POST proxy → forward any unhandled /api/* POST to LARAVEL_API_BASE

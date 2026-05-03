@@ -1927,7 +1927,8 @@
                   <div class="pa-field">
                      <span class="pa-field__label">YouTube:</span>
                      <div class="pa-field__control">
-                        <input class="pa-input" id="youtubeInput" type="text" placeholder="https://youtube.com/...">
+                        <input class="pa-input" id="youtubeInput" type="text" placeholder="https://youtube.com/..." onblur="validateYouTubeUrl(this.value)">
+                        <div id="youtubeError" style="display:none;color:#dc2626;font-size:13px;margin-top:6px;padding:6px 10px;background:#fef2f2;border-radius:6px;border:1px solid #fecaca;"></div>
                      </div>
                   </div>
 
@@ -3216,7 +3217,36 @@
          window.location.href = 'publish-options?ad_id=' + adId;
       }
 
-      function submitProperty() {
+      /* ── YouTube URL validation via oEmbed + Gemini ── */
+      async function validateYouTubeUrl(url) {
+         var errEl = document.getElementById('youtubeError');
+         var inEl  = document.getElementById('youtubeInput');
+         if (errEl) errEl.style.display = 'none';
+         if (!url || !url.trim()) return true;
+         if (!/youtube\.com\/watch|youtu\.be\/|youtube\.com\/shorts\//.test(url)) {
+            if (errEl) { errEl.textContent = 'Please enter a valid YouTube link (e.g. youtube.com/watch?v=…)'; errEl.style.display = ''; }
+            if (inEl) inEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+         }
+         try {
+            var r = await fetch('/api/validate-youtube', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ url: url })
+            });
+            var d = await r.json();
+            if (!d.ok) {
+               if (errEl) { errEl.textContent = d.reason || 'This video cannot be added to your listing.'; errEl.style.display = ''; }
+               if (inEl) inEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+               return false;
+            }
+            return true;
+         } catch (e) {
+            return true; // fail open on network error
+         }
+      }
+
+      async function submitProperty() {
          if (reState.cat === 'motors' && isCarSubtype) {
             submitCar();
             return;
@@ -3377,6 +3407,7 @@
             });
          }
 
+         if (!(await validateYouTubeUrl(youtube))) return;
          var btn = document.querySelector('.pa-btn-submit');
          btn.textContent = 'Submitting...';
          btn.disabled = true;
@@ -3474,7 +3505,7 @@
          });
       }
 
-      function submitCar() {
+      async function submitCar() {
          var title = getInputVal('titleInput');
          var price = getInputVal('priceInput').replace(/\./g, '');
          var sellerName = getInputVal('sellerNameInput');
@@ -3584,6 +3615,7 @@
             });
          }
 
+         if (!(await validateYouTubeUrl(youtube))) return;
          var btn = document.querySelector('.pa-btn-submit');
          btn.textContent = 'Submitting...';
          btn.disabled = true;
@@ -3625,7 +3657,7 @@
          });
       }
 
-      function submitPhone() {
+      async function submitPhone() {
          var title = getInputVal('titleInput');
          var price = getInputVal('priceInput').replace(/\./g, '');
          var sellerName = getInputVal('sellerNameInput');
@@ -3728,6 +3760,7 @@
             });
          }
 
+         if (!(await validateYouTubeUrl(youtube))) return;
          var btn = document.querySelector('.pa-btn-submit');
          btn.textContent = 'Submitting...';
          btn.disabled = true;
@@ -4072,7 +4105,9 @@
          var origSubmitCar   = window.submitCar;
          var origSubmitPhone = window.submitPhone;
 
-         function _doUpdate(formData) {
+         async function _doUpdate(formData) {
+            var _ytUrl = (formData.get('video_url') || '').trim();
+            if (!(await validateYouTubeUrl(_ytUrl))) return;
             var btn = document.querySelector('.pa-btn-submit');
             if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
             formData.append('firebase_uid', firebaseUid);
