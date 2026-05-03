@@ -4025,8 +4025,11 @@
          /* Contact */
          _setVal('sellerNameInput',  d.seller_name  || '');
          _setVal('sellerPhoneInput', d.seller_phone || '');
-         _setVal('sellerEmailInput', d.seller_email || '');
-         _syncEmailCheckbox(d.seller_email || '');
+         /* Profile email takes priority over ad's stored email (profile may have been updated) */
+         var _profileEmail = localStorage.getItem('bazar_email') || '';
+         var _editEmail = _profileEmail || d.seller_email || '';
+         _setVal('sellerEmailInput', _editEmail);
+         _syncEmailCheckbox(_editEmail);
          /* Lock contact fields in edit mode — change via My Profile only */
          (function() {
             var _nEl = document.getElementById('sellerNameInput');
