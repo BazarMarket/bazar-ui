@@ -3271,9 +3271,6 @@
          var hasEmail = !!(val && val.trim());
          wrapper.style.display = hasEmail ? '' : 'none';
          if (!hasEmail && chk) chk.checked = false;
-         if (hasEmail) {
-            localStorage.setItem('bazar_email', val.trim());
-         }
       }
 
       /* ── YouTube URL validation via oEmbed + Gemini ── */
@@ -3441,7 +3438,7 @@
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
          var sellerEmail = getInputVal('sellerEmailInput');
-         if (sellerEmail) formData.append('seller_email', sellerEmail);
+         if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
 
          var hasWhatsapp = document.getElementById('whatsappCheck');
          var hasTelegram = document.getElementById('telegramCheck');
@@ -3652,7 +3649,7 @@
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
          var sellerEmail = getInputVal('sellerEmailInput');
-         if (sellerEmail) formData.append('seller_email', sellerEmail);
+         if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
          var hasWhatsapp = document.getElementById('whatsappCheck');
          var hasTelegram = document.getElementById('telegramCheck');
          var hasViber    = document.getElementById('viberCheck');
@@ -3797,7 +3794,7 @@
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
          var sellerEmail = getInputVal('sellerEmailInput');
-         if (sellerEmail) formData.append('seller_email', sellerEmail);
+         if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
          var hasWhatsapp = document.getElementById('whatsappCheck');
          var hasTelegram = document.getElementById('telegramCheck');
          var hasViber    = document.getElementById('viberCheck');
@@ -4019,11 +4016,14 @@
             var _nEl = document.getElementById('sellerNameInput');
             var _pEl = document.getElementById('sellerPhoneInput');
             var _eEl = document.getElementById('sellerEmailInput');
-            var _hint = document.getElementById('contactLockHint');
+            /* Remove any readonly set by _lockContactFields before ad data loaded */
+            if (_nEl) _nEl.removeAttribute('readonly');
+            if (_pEl) _pEl.removeAttribute('readonly');
+            if (_eEl) _eEl.removeAttribute('readonly');
+            /* Re-lock based on actual ad values */
             if (_nEl && _nEl.value) _nEl.setAttribute('readonly', '');
             if (_pEl && _pEl.value) _pEl.setAttribute('readonly', '');
             if (_eEl && _eEl.value) _eEl.setAttribute('readonly', '');
-            if (_hint) _hint.style.display = '';
          })();
          _setCheck('whatsappCheck', d.has_whatsapp);
          _setCheck('telegramCheck', d.has_telegram);
