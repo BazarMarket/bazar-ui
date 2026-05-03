@@ -3497,16 +3497,19 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         with _chat_lock:
                             _apc = sqlite3.connect(CHAT_DB)
                             _apc.row_factory = sqlite3.Row
-                            # If existing plan is still active, extend from its expires_at
-                            # (not from now) so remaining days are preserved
+                            # If existing plan is still active AND same plan type, extend
+                            # from its expires_at so remaining days are preserved.
+                            # If switching to a DIFFERENT plan (e.g. PRO→VIP), start fresh
+                            # from now — do NOT carry over remaining days from the old plan.
                             _ap_existing = _apc.execute(
-                                'SELECT expires_at FROM listing_plans WHERE ad_id=?',
+                                'SELECT plan, expires_at FROM listing_plans WHERE ad_id=?',
                                 (_ap_ad_id,)).fetchone()
                             _ap_base = time.time()
                             if _ap_existing:
-                                _ap_existing_exp = float(_ap_existing['expires_at'])
-                                if _ap_existing_exp > _ap_base:
-                                    _ap_base = _ap_existing_exp  # extend from existing expiry
+                                _ap_existing_plan = _ap_existing['plan']
+                                _ap_existing_exp  = float(_ap_existing['expires_at'])
+                                if _ap_existing_exp > _ap_base and _ap_existing_plan == _ap_plan:
+                                    _ap_base = _ap_existing_exp  # same plan — extend
                             _ap_exp = _ap_base + _ap_dur * 86400
                             _apc.execute(
                                 'INSERT OR REPLACE INTO listing_plans '
