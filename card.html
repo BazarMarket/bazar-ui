@@ -1981,7 +1981,8 @@
 <script>
 function openEmailPopup() {
    /* If not logged in — open Create account modal instead */
-   if (!localStorage.getItem('bazar_firebase_uid')) {
+   var uid = localStorage.getItem('bazar_firebase_uid');
+   if (!uid) {
       openCreateAccountModal();
       return;
    }
@@ -1990,36 +1991,41 @@ function openEmailPopup() {
    var succ  = document.getElementById('email-popup-success');
    form.style.display = '';
    succ.style.display = 'none';
-   /* remove any validation errors */
    form.querySelectorAll('.input-custom').forEach(function(el){ el.classList.remove('error'); });
-   /* pre-fill from localStorage */
+   /* pre-fill name/phone from localStorage */
    var savedName  = localStorage.getItem('bazar_username') || '';
    var savedPhone = localStorage.getItem('bazar_phone') || '';
    document.getElementById('ep-name').value  = savedName;
    document.getElementById('ep-phone').value = savedPhone;
-   /* pre-fill email — always fetch fresh from API so profile changes are reflected */
    var epEmail = document.getElementById('ep-email');
    function _applyEmail(email) {
       epEmail.value = email || '';
       if (email) { epEmail.setAttribute('readonly',''); epEmail.style.background='#f3f3f3'; epEmail.style.cursor='default'; }
       else { epEmail.removeAttribute('readonly'); epEmail.style.background=''; epEmail.style.cursor=''; }
    }
-   _applyEmail(localStorage.getItem('bazar_email') || '');
-   var uid = localStorage.getItem('bazar_firebase_uid');
-   if (uid) {
-      fetch('/api/customers/' + encodeURIComponent(uid))
-         .then(function(r){ return r.json(); })
-         .then(function(d){
-            if (d.exists) {
-               var freshEmail = d.email || '';
-               if (freshEmail) localStorage.setItem('bazar_email', freshEmail);
-               _applyEmail(freshEmail);
-            }
-         })
-         .catch(function(){});
+   function _openPopup() {
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
    }
-   popup.classList.add('active');
-   document.body.style.overflow = 'hidden';
+   /* Always fetch fresh email from API — wait for it before showing popup */
+   fetch('/api/customers/' + encodeURIComponent(uid))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+         if (d && d.exists) {
+            var freshEmail = d.email || '';
+            if (freshEmail) localStorage.setItem('bazar_email', freshEmail);
+            else localStorage.removeItem('bazar_email');
+            _applyEmail(freshEmail);
+         } else {
+            _applyEmail(localStorage.getItem('bazar_email') || '');
+         }
+      })
+      .catch(function(){
+         _applyEmail(localStorage.getItem('bazar_email') || '');
+      })
+      .finally(function(){
+         _openPopup();
+      });
 }
 function closeEmailPopup() {
    document.getElementById('popup-email').classList.remove('active');
