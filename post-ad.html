@@ -1977,7 +1977,7 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Email:</span>
                      <div class="pa-field__control">
-                        <input class="pa-input" id="sellerEmailInput" type="email" placeholder="your@email.com">
+                        <input class="pa-input" id="sellerEmailInput" type="email" placeholder="your@email.com" oninput="_syncEmailCheckbox(this.value)">
                      </div>
                   </div>
 
@@ -1988,7 +1988,7 @@
                            <label><input type="checkbox" id="whatsappCheck"> WhatsApp</label>
                            <label><input type="checkbox" id="telegramCheck"> Telegram</label>
                            <label><input type="checkbox" id="viberCheck"> Viber</label>
-                           <label><input type="checkbox" id="emailCheck"> Email</label>
+                           <label id="emailCheckWrapper" style="display:none"><input type="checkbox" id="emailCheck"> Email</label>
                         </div>
                      </div>
                   </div>
@@ -2025,6 +2025,12 @@
          } else {
             var first = document.querySelector('#mainCats .cat-item[data-cat="real-estate"]');
             if (first) { first.classList.add('active'); selectCat(first); }
+         }
+         /* Pre-fill email from saved profile (for new ads) */
+         var _savedEmail = localStorage.getItem('bazar_email') || '';
+         if (_savedEmail) {
+            var _emailEl = document.getElementById('sellerEmailInput');
+            if (_emailEl) { _emailEl.value = _savedEmail; _syncEmailCheckbox(_savedEmail); }
          }
          /* Edit mode: run AFTER reset so pre-fill is not wiped */
          var _editParams = new URLSearchParams(window.location.search);
@@ -3217,6 +3223,20 @@
          window.location.href = 'publish-options?ad_id=' + adId;
       }
 
+      /* ── Email checkbox visibility + cross-page sync ── */
+      function _syncEmailCheckbox(val) {
+         var wrapper = document.getElementById('emailCheckWrapper');
+         var chk     = document.getElementById('emailCheck');
+         if (!wrapper) return;
+         var hasEmail = !!(val && val.trim());
+         wrapper.style.display = hasEmail ? '' : 'none';
+         if (!hasEmail && chk) chk.checked = false;
+         if (hasEmail) {
+            if (chk && !chk.checked) chk.checked = true;
+            localStorage.setItem('bazar_email', val.trim());
+         }
+      }
+
       /* ── YouTube URL validation via oEmbed + Gemini ── */
       async function validateYouTubeUrl(url) {
          var errEl = document.getElementById('youtubeError');
@@ -3954,6 +3974,7 @@
          _setVal('sellerNameInput',  d.seller_name  || '');
          _setVal('sellerPhoneInput', d.seller_phone || '');
          _setVal('sellerEmailInput', d.seller_email || '');
+         _syncEmailCheckbox(d.seller_email || '');
          _setCheck('whatsappCheck', d.has_whatsapp);
          _setCheck('telegramCheck', d.has_telegram);
          _setCheck('viberCheck',    d.has_viber);
