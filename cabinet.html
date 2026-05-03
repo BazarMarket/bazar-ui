@@ -2629,7 +2629,7 @@
                     var wName2 = document.getElementById('cabWelcomeNameProfile');
                     if (wName2) wName2.textContent = fullName;
                 }
-                localStorage.setItem('bazar_email',   email);
+                if (email) localStorage.setItem('bazar_email', email);
                 localStorage.setItem('bazar_address', address);
                 localStorage.setItem('bazar_gender',  gender);
                 /* Update header avatar if no custom photo */

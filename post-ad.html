@@ -4231,6 +4231,8 @@
                if (btn) { btn.textContent = 'Save Changes'; btn.disabled = false; }
                if (data.success) {
                   /* Update local cache */
+                  var _savedEmail = (formData.get('seller_email') || '').trim();
+                  if (_savedEmail) localStorage.setItem('bazar_email', _savedEmail);
                   try {
                      var ads = JSON.parse(localStorage.getItem('bazar_my_ads') || '[]');
                      var idx = ads.findIndex(function(a){ return String(a.id) === String(adId); });
