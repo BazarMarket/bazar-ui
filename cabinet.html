@@ -1872,12 +1872,15 @@
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 _allAdsData = (d.data || []).filter(function(a) { return a.status !== 'deleted'; });
-                /* ── Sort by last-paid timestamp (persistent across refreshes) ── */
-                _allAdsData.sort(function(a, b) {
-                    var tsA = parseInt(localStorage.getItem('bazar_ad_updated_ts_' + a.id) || '0', 10);
-                    var tsB = parseInt(localStorage.getItem('bazar_ad_updated_ts_' + b.id) || '0', 10);
-                    return tsB - tsA;
-                });
+                /* ── Sort: local payment timestamp → API updated_at/created_at → id ── */
+                function _adSortTs(ad) {
+                    var local = parseInt(localStorage.getItem('bazar_ad_updated_ts_' + ad.id) || '0', 10);
+                    if (local) return local;
+                    var api = new Date(ad.updated_at || ad.created_at || 0).getTime();
+                    if (api && !isNaN(api)) return api;
+                    return parseInt(ad.id || 0, 10);
+                }
+                _allAdsData.sort(function(a, b) { return _adSortTs(b) - _adSortTs(a); });
                 _doRenderAds(_allAdsData);
                 _setupAdsFilters();
                 /* Enrich each ad with per-ad is_pro/is_vip from the card endpoint (parallel) */
