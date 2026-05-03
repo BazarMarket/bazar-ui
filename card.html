@@ -1992,11 +1992,6 @@ function openEmailPopup() {
    form.style.display = '';
    succ.style.display = 'none';
    form.querySelectorAll('.input-custom').forEach(function(el){ el.classList.remove('error'); });
-   /* pre-fill name/phone from localStorage */
-   var savedName  = localStorage.getItem('bazar_username') || '';
-   var savedPhone = localStorage.getItem('bazar_phone') || '';
-   document.getElementById('ep-name').value  = savedName;
-   document.getElementById('ep-phone').value = savedPhone;
    var epEmail = document.getElementById('ep-email');
    function _applyEmail(email) {
       epEmail.value = email || '';
@@ -2007,20 +2002,31 @@ function openEmailPopup() {
       popup.classList.add('active');
       document.body.style.overflow = 'hidden';
    }
-   /* Always fetch fresh email from API — wait for it before showing popup */
+   /* Always fetch fresh profile from API — fills name/phone/email from DB,
+      ignoring potentially stale localStorage values */
    fetch('/api/customers/' + encodeURIComponent(uid))
       .then(function(r){ return r.json(); })
       .then(function(d){
          if (d && d.exists) {
             var freshEmail = d.email || '';
+            var freshName  = d.name  || '';
+            var freshPhone = d.phone || '';
             if (freshEmail) localStorage.setItem('bazar_email', freshEmail);
             else localStorage.removeItem('bazar_email');
+            if (freshName)  localStorage.setItem('bazar_username', freshName);
+            if (freshPhone) localStorage.setItem('bazar_phone', freshPhone);
+            document.getElementById('ep-name').value  = freshName  || localStorage.getItem('bazar_username') || '';
+            document.getElementById('ep-phone').value = freshPhone || localStorage.getItem('bazar_phone')    || '';
             _applyEmail(freshEmail);
          } else {
+            document.getElementById('ep-name').value  = localStorage.getItem('bazar_username') || '';
+            document.getElementById('ep-phone').value = localStorage.getItem('bazar_phone')    || '';
             _applyEmail(localStorage.getItem('bazar_email') || '');
          }
       })
       .catch(function(){
+         document.getElementById('ep-name').value  = localStorage.getItem('bazar_username') || '';
+         document.getElementById('ep-phone').value = localStorage.getItem('bazar_phone')    || '';
          _applyEmail(localStorage.getItem('bazar_email') || '');
       })
       .finally(function(){
