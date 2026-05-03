@@ -431,6 +431,21 @@
          outline: none;
          border-color: #ff9138;
       }
+      .pa-input[readonly] {
+         background: #f5f5f5;
+         color: #555;
+         cursor: default;
+         border-color: #e4e4e4;
+      }
+      .pa-input[readonly]:focus { border-color: #e4e4e4; }
+      .pa-contact-hint {
+         font-size: 12px;
+         color: #aaa;
+         margin-top: 10px;
+         text-align: right;
+      }
+      .pa-contact-hint a { color: #ff9138; text-decoration: none; }
+      .pa-contact-hint a:hover { text-decoration: underline; }
       .pa-select-wrap {
          position: relative;
       }
@@ -1981,6 +1996,10 @@
                      </div>
                   </div>
 
+                  <div id="contactLockHint" class="pa-contact-hint" style="display:none">
+                     <a href="/cabinet/profile">Change name or email in My Profile →</a>
+                  </div>
+
                   <div class="pa-field">
                      <span class="pa-field__label">Messengers:</span>
                      <div class="pa-field__control">
@@ -2026,12 +2045,8 @@
             var first = document.querySelector('#mainCats .cat-item[data-cat="real-estate"]');
             if (first) { first.classList.add('active'); selectCat(first); }
          }
-         /* Pre-fill email from saved profile (for new ads) */
-         var _savedEmail = localStorage.getItem('bazar_email') || '';
-         if (_savedEmail) {
-            var _emailEl = document.getElementById('sellerEmailInput');
-            if (_emailEl) { _emailEl.value = _savedEmail; _syncEmailCheckbox(_savedEmail); }
-         }
+         /* Lock/pre-fill contact fields from profile (for new ads) */
+         _lockContactFields();
          /* Edit mode: run AFTER reset so pre-fill is not wiped */
          var _editParams = new URLSearchParams(window.location.search);
          var _editId = _editParams.get('edit');
@@ -3223,6 +3238,35 @@
          window.location.href = 'publish-options?ad_id=' + adId;
       }
 
+      /* ── Lock contact fields from profile + cross-page sync ── */
+      function _lockContactFields() {
+         var name  = localStorage.getItem('bazar_username') || '';
+         var phone = localStorage.getItem('bazar_phone')   || '';
+         var email = localStorage.getItem('bazar_email')   || '';
+
+         var nameEl  = document.getElementById('sellerNameInput');
+         var phoneEl = document.getElementById('sellerPhoneInput');
+         var emailEl = document.getElementById('sellerEmailInput');
+         var hint    = document.getElementById('contactLockHint');
+
+         if (nameEl && name) {
+            nameEl.value = name;
+            nameEl.setAttribute('readonly', '');
+         }
+         if (phoneEl && phone) {
+            phoneEl.value = phone;
+            phoneEl.setAttribute('readonly', '');
+         }
+         if (emailEl) {
+            if (email) {
+               emailEl.value = email;
+               emailEl.setAttribute('readonly', '');
+               _syncEmailCheckbox(email);
+            }
+         }
+         if (hint) hint.style.display = (name || email) ? '' : 'none';
+      }
+
       /* ── Email checkbox visibility + cross-page sync ── */
       function _syncEmailCheckbox(val) {
          var wrapper = document.getElementById('emailCheckWrapper');
@@ -3975,6 +4019,17 @@
          _setVal('sellerPhoneInput', d.seller_phone || '');
          _setVal('sellerEmailInput', d.seller_email || '');
          _syncEmailCheckbox(d.seller_email || '');
+         /* Lock contact fields in edit mode — change via My Profile only */
+         (function() {
+            var _nEl = document.getElementById('sellerNameInput');
+            var _pEl = document.getElementById('sellerPhoneInput');
+            var _eEl = document.getElementById('sellerEmailInput');
+            var _hint = document.getElementById('contactLockHint');
+            if (_nEl && _nEl.value) _nEl.setAttribute('readonly', '');
+            if (_pEl && _pEl.value) _pEl.setAttribute('readonly', '');
+            if (_eEl && _eEl.value) _eEl.setAttribute('readonly', '');
+            if (_hint) _hint.style.display = '';
+         })();
          _setCheck('whatsappCheck', d.has_whatsapp);
          _setCheck('telegramCheck', d.has_telegram);
          _setCheck('viberCheck',    d.has_viber);
@@ -4516,15 +4571,8 @@
             }
          }
 
-         // Auto-fill contact details from user profile
-         if (name) {
-            var nameEl = document.getElementById('sellerNameInput');
-            if (nameEl && !nameEl.value) nameEl.value = name;
-         }
-         if (phone) {
-            var phoneEl = document.getElementById('sellerPhoneInput');
-            if (phoneEl && !phoneEl.value) phoneEl.value = phone;
-         }
+         // Auto-fill and lock contact details from user profile
+         _lockContactFields();
 
          /* Edit mode is initialized in pageshow handler (after form reset) */
       });
