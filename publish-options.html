@@ -1122,11 +1122,18 @@
          var adPlan    = (urlParams.get('plan') || '').toLowerCase();
          if (adPlan !== 'vip' && adPlan !== 'pro' && adPlan !== 'free') adPlan = '';
 
+         /* ?days= is passed directly from My Ads (most reliable source — already calculated
+            from expires_at). Use it immediately so badges are correct even before API responds. */
+         var _urlDays = parseInt(urlParams.get('days') || '0', 10);
+         if ((adPlan === 'pro' || adPlan === 'vip') && _urlDays > 0) {
+            window._adSpecificDaysLeft = _urlDays;
+         }
+
          function _render(accountPlan, sDays) {
             /* Only show badges when coming from an existing ad (?plan= is set).
                New-ad flow (no ?plan=) shows no active badge and no button locking. */
             if (!adPlan) return;
-            /* Prefer ad-specific days_left (from /properties/{id}) over account-level */
+            /* Prefer ad-specific days (from ?days= URL param or /properties/{id}) over account-level */
             var daysToShow = (typeof window._adSpecificDaysLeft === 'number')
                              ? window._adSpecificDaysLeft
                              : sDays;
