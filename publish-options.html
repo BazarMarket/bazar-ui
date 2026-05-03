@@ -1238,9 +1238,11 @@
                }
 
                /* Store ad-specific PRO/VIP days_left (from SQLite listing_plans via server.py).
-                  This is more accurate than the account-level days_left from /customers/{uid}. */
+                  This is more accurate than the account-level days_left from /customers/{uid}.
+                  NOTE: adPlan is local to applyExistingPlan(), so we re-read it from URL here. */
+               var _lpAdPlan = (new URLSearchParams(window.location.search).get('plan') || '').toLowerCase();
                var _apiAdDays = parseInt(d.days_left || 0, 10);
-               if ((adPlan === 'pro' || adPlan === 'vip') && _apiAdDays >= 0) {
+               if ((_lpAdPlan === 'pro' || _lpAdPlan === 'vip') && _apiAdDays >= 0) {
                   window._adSpecificDaysLeft = _apiAdDays;
                }
 
