@@ -3237,10 +3237,10 @@
          var sellerName = getInputVal('sellerNameInput');
          var sellerPhone = getInputVal('sellerPhoneInput');
 
-         if (!title) { alert('Please enter the Ad Title.'); return; }
-         if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
-         if (!sellerName) { alert('Please enter your Name.'); return; }
-         if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+         if (!title) { showValidationError('Please enter the Ad Title.', 'titleInput'); return; }
+         if (!price || parseInt(price) <= 0) { showValidationError('Please enter the Price.', 'priceInput'); return; }
+         if (!sellerName) { showValidationError('Please enter your Name.', 'sellerNameInput'); return; }
+         if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
 
          var formData = new FormData();
          formData.append('title', title);
@@ -3248,8 +3248,8 @@
          if (firebaseUid) formData.append('firebase_uid', firebaseUid);
 
          var description = getInputVal('descriptionInput');
-         if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
-         if (_paHasProfanity(description)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
+         if (!description || !description.trim()) { showValidationError('Please enter the Description.', 'descriptionInput'); return; }
+         if (_paHasProfanity(description)) { showValidationError('Your description contains inappropriate language. Please revise it before submitting.', 'descriptionInput'); return; }
          formData.append('description', getInputVal('descriptionInput'));
          formData.append('listing_type', listingType);
          formData.append('property_type', propertyType);
@@ -3262,7 +3262,7 @@
          if (window._clearOldPrice) formData.append('clear_old_price', '1');
          formData.append('country', 'United Kingdom');
          var locationCity = document.getElementById('locationCity').value;
-         if (!locationCity) { alert('Please select a location.'); return; }
+         if (!locationCity) { showValidationError('Please select a location.', 'locationInput'); return; }
          formData.append('city', locationCity);
          var locationPostcode = document.getElementById('locationPostcode').value;
          if (locationPostcode) formData.append('postal_code', locationPostcode);
@@ -3369,7 +3369,7 @@
 
          var photoGridCheck = document.getElementById('photoPreviewGrid');
          var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
-         if (!_editAdId && !hasNewImages) { alert('Please add at least one photo.'); return; }
+         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'photoInput'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -3485,13 +3485,13 @@
          if (model === 'Other') model = getInputVal('carModelOtherInput');
          var carYear = getSelectVal('carYearSelect');
 
-         if (!title) { alert('Please enter the Ad Title.'); return; }
-         if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
-         if (!sellerName) { alert('Please enter your Name.'); return; }
-         if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+         if (!title) { showValidationError('Please enter the Ad Title.', 'titleInput'); return; }
+         if (!price || parseInt(price) <= 0) { showValidationError('Please enter the Price.', 'priceInput'); return; }
+         if (!sellerName) { showValidationError('Please enter your Name.', 'sellerNameInput'); return; }
+         if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
 
          var locationCity = document.getElementById('locationCity').value;
-         if (!locationCity) { alert('Please select a location.'); return; }
+         if (!locationCity) { showValidationError('Please select a location.', 'locationInput'); return; }
 
          var listingType = (reState.listingType === 'For Long-term Rent' || reState.listingType === 'For Short-term Rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale';
 
@@ -3522,8 +3522,8 @@
          if (exactLat) formData.append('exact_latitude', exactLat);
          if (exactLng) formData.append('exact_longitude', exactLng);
          var description = getInputVal('descriptionInput');
-         if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
-         if (_paHasProfanity(description)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
+         if (!description || !description.trim()) { showValidationError('Please enter the Description.', 'descriptionInput'); return; }
+         if (_paHasProfanity(description)) { showValidationError('Your description contains inappropriate language. Please revise it before submitting.', 'descriptionInput'); return; }
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
@@ -3576,7 +3576,7 @@
 
          var photoGridCheck = document.getElementById('photoPreviewGrid');
          var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
-         if (!_editAdId && !hasNewImages) { alert('Please add at least one photo.'); return; }
+         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'photoInput'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -3631,13 +3631,13 @@
          var sellerName = getInputVal('sellerNameInput');
          var sellerPhone = getInputVal('sellerPhoneInput');
 
-         if (!title) { alert('Please enter the Ad Title.'); return; }
-         if (!price || parseInt(price) <= 0) { alert('Please enter the Price.'); return; }
-         if (!sellerName) { alert('Please enter your Name.'); return; }
-         if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+         if (!title) { showValidationError('Please enter the Ad Title.', 'titleInput'); return; }
+         if (!price || parseInt(price) <= 0) { showValidationError('Please enter the Price.', 'priceInput'); return; }
+         if (!sellerName) { showValidationError('Please enter your Name.', 'sellerNameInput'); return; }
+         if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
 
          var locationCity = document.getElementById('locationCity').value;
-         if (!locationCity) { alert('Please select a location.'); return; }
+         if (!locationCity) { showValidationError('Please select a location.', 'locationInput'); return; }
 
          var brand = getSelectVal('phoneBrandSelect');
          var modelSel = document.getElementById('phoneModelSelect');
@@ -3667,8 +3667,8 @@
          if (locationLat) formData.append('latitude', locationLat);
          if (locationLng) formData.append('longitude', locationLng);
          var description = getInputVal('descriptionInput');
-         if (!description || !description.trim()) { alert('Please enter the Description.'); return; }
-         if (_paHasProfanity(description)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
+         if (!description || !description.trim()) { showValidationError('Please enter the Description.', 'descriptionInput'); return; }
+         if (_paHasProfanity(description)) { showValidationError('Your description contains inappropriate language. Please revise it before submitting.', 'descriptionInput'); return; }
          formData.append('description', getInputVal('descriptionInput'));
 
          var condition = getSelectVal('conditionSelect');
@@ -3720,7 +3720,7 @@
 
          var photoGridCheck = document.getElementById('photoPreviewGrid');
          var hasNewImages = photoGridCheck && Array.from(photoGridCheck.children).some(function(b){ return b._paFile; });
-         if (!_editAdId && !hasNewImages) { alert('Please add at least one photo.'); return; }
+         if (!_editAdId && !hasNewImages) { showValidationError('Please add at least one photo.', 'photoInput'); return; }
          var photoGrid = document.getElementById('photoPreviewGrid');
          if (photoGrid) {
             Array.from(photoGrid.children).forEach(function(box) {
@@ -4161,7 +4161,7 @@
             var sellerPhone = getInputVal('sellerPhoneInput');
             if (!title)       { alert('Please enter a title.'); return; }
             if (!sellerName)  { alert('Please enter your Name.'); return; }
-            if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+            if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
             var formData = new FormData();
             formData.append('title',        title);
             formData.append('listing_type', listingType);
@@ -4292,7 +4292,7 @@
             var sellerName  = getInputVal('sellerNameInput');
             var sellerPhone = getInputVal('sellerPhoneInput');
             if (!sellerName)  { alert('Please enter your Name.'); return; }
-            if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+            if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
             var formData = new FormData();
             formData.append('title',         title);
             formData.append('property_type', 'car');
@@ -4342,7 +4342,7 @@
             var sellerName  = getInputVal('sellerNameInput');
             var sellerPhone = getInputVal('sellerPhoneInput');
             if (!sellerName)  { alert('Please enter your Name.'); return; }
-            if (!sellerPhone) { alert('Please enter your Phone number.'); return; }
+            if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
             var formData = new FormData();
             formData.append('title',         title);
             formData.append('property_type', 'mobile_phone');
@@ -4859,5 +4859,43 @@
 </div>
 
 <script src="js/header-auth.js?v=13"></script>
+
+<!-- ── Validation modal ── -->
+<div id="paValModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;padding:36px 28px 28px;max-width:380px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.22);text-align:center;font-family:Poppins,sans-serif;">
+    <div style="width:52px;height:52px;background:#fff4e6;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;">⚠️</div>
+    <p id="paValMsg" style="font-size:15px;font-weight:600;color:#1a1a1a;margin:0 0 24px;line-height:1.5;"></p>
+    <button id="paValClose" style="padding:11px 36px;background:#ff9138;color:#fff;font-family:Poppins,sans-serif;font-size:14px;font-weight:700;border:none;border-radius:8px;cursor:pointer;letter-spacing:.3px;">Close</button>
+  </div>
+</div>
+<script>
+var _paValFieldId = '';
+function showValidationError(msg, fieldId) {
+    var modal = document.getElementById('paValModal');
+    document.getElementById('paValMsg').textContent = msg;
+    modal.style.display = 'flex';
+    _paValFieldId = fieldId || '';
+}
+document.addEventListener('DOMContentLoaded', function () {
+    function _paValDismiss() {
+        document.getElementById('paValModal').style.display = 'none';
+        if (_paValFieldId) {
+            var el = document.getElementById(_paValFieldId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(function () { try { el.focus(); } catch(e) {} }, 450);
+            }
+            _paValFieldId = '';
+        }
+    }
+    document.getElementById('paValClose').addEventListener('click', _paValDismiss);
+    document.getElementById('paValModal').addEventListener('click', function (e) {
+        if (e.target === this) _paValDismiss();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && document.getElementById('paValModal').style.display !== 'none') _paValDismiss();
+    });
+});
+</script>
 </body>
 </html>
