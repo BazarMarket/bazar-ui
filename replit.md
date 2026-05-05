@@ -661,6 +661,25 @@ var own = function(a,b) {
 
 ---
 
+### Spacing list-view карточек (`search.html`) — УТВЕРЖДЁН ПОЛЬЗОВАТЕЛЕМ
+
+Финальные значения отступов карточки объявления в list-view (подобраны итерационно, пользователь одобрил):
+
+```css
+/* Desktop (line ~160) */
+.product { padding: 14px 14px 0px !important; }
+
+/* Mobile (line ~271) */
+.product { padding: 10px 10px 0px !important; }
+
+/* Строка дата / ID / просмотры (line ~185) */
+.product__info { margin: 4px 0 0 !important; padding: 6px 0 0 !important; border-top: 1px solid #e5e7eb !important; }
+```
+
+**Не увеличивать** `padding-bottom` у `.product` — пользователь специально просил убрать нижний воздух. Нижняя граница карточки должна заканчиваться вплотную к строке даты.
+
+---
+
 ## Коммуникация
 
 Общаться с пользователем на русском языке.
