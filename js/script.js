@@ -1234,7 +1234,7 @@ window._checkImgPortrait = function(img) {
             while (p && !(p.className && p.className.indexOf('card__img') !== -1)) p = p.parentElement;
             wrap = p;
         }
-        if (wrap) wrap.style.background = '#e0e0e0';
+        if (wrap) wrap.style.background = '#888888';
     }
 };
 
