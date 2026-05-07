@@ -6245,7 +6245,5 @@ body:not(.bazar-logged) #header-logged-in {
 .slider-gallery-big__img .img-cover,
 .slider-gallery-mini__img .img-cover,
 .card__img .img-cover {
-  -o-object-fit: contain;
-     object-fit: contain;
   z-index: 1;
 }
