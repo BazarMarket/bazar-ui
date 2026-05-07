@@ -2076,32 +2076,36 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         _trans_label = 'for Short-Term Rent' if _is_short else ('for Rent' if 'rent' in _trans else 'for Sale')
         _trans_cat   = 'Property for Short-Term Rent' if _is_short else ('Property for Sale' if 'sale' in _trans else 'Property to Rent')
         _trans_base  = f'/{_trans}'
+        _is_flat_sub = _sub in {'studio', 'penthouse', 'duplex'}
+        _flats_base  = f'{_trans_base}/flats'
         h1       = f'{_sub_label} {_trans_label} in {_city}'
         intro    = f'Browse {_sub_label.lower()} {_trans_label.lower()} in {_city}. Find the best deals from private sellers and agents.'
         canonical = f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'
         desc = intro[:160]
-        breadcrumb_schema = {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2, "name": _trans_cat, "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
-                {"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'},
-                {"@type": "ListItem", "position": 4, "name": h1, "item": canonical},
-            ]
-        }
+        _bc_items = [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
+            {"@type": "ListItem", "position": 2, "name": _trans_cat, "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
+        ]
+        if _is_flat_sub:
+            _bc_items.append({"@type": "ListItem", "position": 3, "name": "Flats", "item": f'{PUBLIC_DOMAIN}{_flats_base}'})
+            _bc_items.append({"@type": "ListItem", "position": 4, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'})
+            _bc_items.append({"@type": "ListItem", "position": 5, "name": h1, "item": canonical})
+        else:
+            _bc_items.append({"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'})
+            _bc_items.append({"@type": "ListItem", "position": 4, "name": h1, "item": canonical})
+        breadcrumb_schema = {"@type": "BreadcrumbList", "itemListElement": _bc_items}
         schema = {"@context": "https://schema.org", "@graph": [
             {"@type": "CollectionPage", "name": h1, "description": desc, "url": canonical, "breadcrumb": breadcrumb_schema},
             breadcrumb_schema,
         ]}
         seo.update({'title': f'{h1} | Bazar UK', 'description': desc, 'canonical': canonical, 'json_ld': json.dumps(schema)})
+        _bc_crumbs = [('Home', '/'), (_trans_cat, _trans_base)]
+        if _is_flat_sub:
+            _bc_crumbs.append(('Flats', _flats_base))
+        _bc_crumbs += [(_sub_label, f'{_trans_base}/{_sub}'), (h1, None)]
         seo['ssr'] = {
             'h1': h1, 'intro': intro,
-            'breadcrumbs': [
-                ('Home', '/'),
-                (_trans_cat, _trans_base),
-                (_sub_label, f'{_trans_base}/{_sub}'),
-                (h1, None),
-            ],
+            'breadcrumbs': _bc_crumbs,
             'city_links': [], 'cat_label': _sub_label, 'related_links': [], 'type': 'category',
         }
         return seo
@@ -2119,34 +2123,42 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         _trans_label = 'for Short-Term Rent' if _is_short else ('for Rent' if 'rent' in _trans else 'for Sale')
         _trans_cat   = 'Property for Short-Term Rent' if _is_short else ('Property for Sale' if 'sale' in _trans else 'Property to Rent')
         _trans_base  = f'/{_trans}'
+        _is_flat_sub = _sub in {'studio', 'penthouse', 'duplex'}
+        _flats_base  = f'{_trans_base}/flats'
         h1       = f'{_sub_label} {_trans_label} in {_dist}, {_city}'
         intro    = f'Browse {_sub_label.lower()} {_trans_label.lower()} in {_dist}, {_city}. Find local deals from private sellers and agents.'
         canonical = f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}/{_dist_s}'
         desc = intro[:160]
-        breadcrumb_schema = {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2, "name": _trans_cat, "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
-                {"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'},
-                {"@type": "ListItem", "position": 4, "name": f'{_sub_label} in {_city}', "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'},
-                {"@type": "ListItem", "position": 5, "name": h1, "item": canonical},
-            ]
-        }
+        _bc_items = [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
+            {"@type": "ListItem", "position": 2, "name": _trans_cat, "item": f'{PUBLIC_DOMAIN}{_trans_base}'},
+        ]
+        if _is_flat_sub:
+            _bc_items.append({"@type": "ListItem", "position": 3, "name": "Flats", "item": f'{PUBLIC_DOMAIN}{_flats_base}'})
+            _bc_items.append({"@type": "ListItem", "position": 4, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'})
+            _bc_items.append({"@type": "ListItem", "position": 5, "name": f'{_sub_label} in {_city}', "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'})
+            _bc_items.append({"@type": "ListItem", "position": 6, "name": h1, "item": canonical})
+        else:
+            _bc_items.append({"@type": "ListItem", "position": 3, "name": _sub_label, "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}'})
+            _bc_items.append({"@type": "ListItem", "position": 4, "name": f'{_sub_label} in {_city}', "item": f'{PUBLIC_DOMAIN}{_trans_base}/{_sub}/{_city_s}'})
+            _bc_items.append({"@type": "ListItem", "position": 5, "name": h1, "item": canonical})
+        breadcrumb_schema = {"@type": "BreadcrumbList", "itemListElement": _bc_items}
         schema = {"@context": "https://schema.org", "@graph": [
             {"@type": "CollectionPage", "name": h1, "description": desc, "url": canonical, "breadcrumb": breadcrumb_schema},
             breadcrumb_schema,
         ]}
         seo.update({'title': f'{h1} | Bazar UK', 'description': desc, 'canonical': canonical, 'json_ld': json.dumps(schema)})
+        _bc_crumbs = [('Home', '/'), (_trans_cat, _trans_base)]
+        if _is_flat_sub:
+            _bc_crumbs.append(('Flats', _flats_base))
+        _bc_crumbs += [
+            (_sub_label, f'{_trans_base}/{_sub}'),
+            (_city, f'{_trans_base}/{_sub}/{_city_s}'),
+            (h1, None),
+        ]
         seo['ssr'] = {
             'h1': h1, 'intro': intro,
-            'breadcrumbs': [
-                ('Home', '/'),
-                (_trans_cat, _trans_base),
-                (_sub_label, f'{_trans_base}/{_sub}'),
-                (_city, f'{_trans_base}/{_sub}/{_city_s}'),
-                (h1, None),
-            ],
+            'breadcrumbs': _bc_crumbs,
             'city_links': [], 'cat_label': _sub_label, 'related_links': [], 'type': 'category',
         }
         return seo
