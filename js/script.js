@@ -1244,3 +1244,55 @@ window.onload = function () {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hideWallet);
     else hideWallet();
 })();
+
+// ── Instagram-style blurred background for listing photos ───────────────────
+(function() {
+    var CONTAINERS = '.product-gallery__img,.slider-gallery-big__img,.slider-gallery-mini__img,.card__img';
+    var SKIP = ['icon/', 'man.png', 'man.svg', 'data:'];
+
+    function setBlurBg(img) {
+        if (!img.src) return;
+        for (var i = 0; i < SKIP.length; i++) {
+            if (img.src.indexOf(SKIP[i]) >= 0) return;
+        }
+        var container = img.closest ? img.closest(CONTAINERS) : null;
+        if (!container) return;
+        container.style.setProperty('--bg-img', 'url(' + img.src + ')');
+    }
+
+    function processImg(img) {
+        if (!img.classList || !img.classList.contains('img-cover')) return;
+        if (img.complete && img.naturalWidth > 0) { setBlurBg(img); }
+        else { img.addEventListener('load', function() { setBlurBg(img); }, { once: true }); }
+    }
+
+    function scanRoot(root) {
+        var imgs = (root.querySelectorAll || function(){return[];}).call(root, CONTAINERS + ' .img-cover');
+        for (var i = 0; i < imgs.length; i++) processImg(imgs[i]);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { scanRoot(document); });
+    } else {
+        scanRoot(document);
+    }
+
+    new MutationObserver(function(muts) {
+        for (var i = 0; i < muts.length; i++) {
+            var m = muts[i];
+            if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('img-cover')) {
+                setBlurBg(m.target);
+                continue;
+            }
+            for (var j = 0; j < m.addedNodes.length; j++) {
+                var n = m.addedNodes[j];
+                if (n.nodeType !== 1) continue;
+                if (n.classList && n.classList.contains('img-cover')) processImg(n);
+                else scanRoot(n);
+            }
+        }
+    }).observe(document.documentElement, {
+        childList: true, subtree: true,
+        attributes: true, attributeFilter: ['src']
+    });
+})();

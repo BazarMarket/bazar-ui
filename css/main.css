@@ -6218,11 +6218,28 @@ body:not(.bazar-logged) #header-logged-in {
 }
 .card-img-seg.active { background: #ff9138; }
 
-/* ── Полное отображение фотографий объявлений (без обрезки) ── */
+/* ── Полное отображение фотографий объявлений — Instagram blur ── */
 .product-gallery__img,
 .slider-gallery-big__img,
 .slider-gallery-mini__img,
-.card__img { background: #f8f8f8; }
+.card__img {
+  background: #d0d0d0;
+  overflow: hidden;
+}
+
+.product-gallery__img::before,
+.slider-gallery-big__img::before,
+.slider-gallery-mini__img::before,
+.card__img::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  background-image: var(--bg-img);
+  background-size: cover;
+  background-position: center;
+  filter: blur(14px) brightness(0.62);
+  z-index: 0;
+}
 
 .product-gallery__img .img-cover,
 .slider-gallery-big__img .img-cover,
@@ -6230,4 +6247,5 @@ body:not(.bazar-logged) #header-logged-in {
 .card__img .img-cover {
   -o-object-fit: contain;
      object-fit: contain;
+  z-index: 1;
 }
