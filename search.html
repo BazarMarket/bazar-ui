@@ -1070,7 +1070,7 @@
 
    <script type="text/javascript" src="js/swiper-bundle-10.3.1.min.js"></script>
    <script type="text/javascript" src="js/inputmask.min.js"></script>
-   <script type="text/javascript" src="js/script.js?v=5"></script>
+   <script type="text/javascript" src="js/script.js?v=6"></script>
    <script>
       var typesSale = [
          'Flats', 'House', 'Land', 'Building',
@@ -2640,7 +2640,15 @@
         var listBody = document.querySelector('.list-products__body');
         if (listBody) listBody.innerHTML = pageItems.map(buildListProduct).join('');
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
-        if (gridBody) gridBody.innerHTML = pageItems.map(buildGridCard).join('');
+        if (gridBody) {
+          gridBody.innerHTML = pageItems.map(buildGridCard).join('');
+          if (window._checkImgPortrait) {
+            gridBody.querySelectorAll('.card__img .img-cover').forEach(function(img) {
+              if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
+              else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
+            });
+          }
+        }
         /* Pagination control */
         var pag = document.querySelector('.list-products__pagination');
         if (pag) {
