@@ -107,6 +107,7 @@
                      <ul class="bread-custom" id="breadcrumb">
                         <li><a href="/">Home</a> <span class="icon-arrow-r"></span> </li>
                         <li><a href="#" id="bread-category">Phones</a><span class="icon-arrow-r"></span></li>
+                        <li id="bread-parent-li" style="display:none;"><a href="#" id="bread-parent"></a><span class="icon-arrow-r" id="bread-parent-arrow"></span></li>
                         <li><a href="#" id="bread-type">Smartphones</a><span class="icon-arrow-r" id="bread-type-arrow" style="display:none;"></span></li>
                         <li id="bread-city-li" style="display:none;"><a href="#" id="bread-city"></a><span class="icon-arrow-r" id="bread-city-arrow" style="display:none;"></span></li>
                         <li id="bread-district-li" style="display:none;"><a href="#" id="bread-district"></a></li>
@@ -826,6 +827,13 @@
           var _distSlug     = (p.district || '').toLowerCase().replace(/\s+/g, '-');
           var _cityHref     = _subtypeHref + '/' + _citySlug;
           var _distHref     = _cityHref    + '/' + _distSlug;
+
+          /* Show Flats parent breadcrumb for flat sub-types (Studio, Penthouse, Duplex) */
+          var _flatSubSlugs = ['studio', 'penthouse', 'duplex'];
+          if (_flatSubSlugs.indexOf(_subtypeSlug) !== -1) {
+            if (el('bread-parent-li')) el('bread-parent-li').style.display = '';
+            if (el('bread-parent')) { el('bread-parent').textContent = 'Flats'; el('bread-parent').href = _catHref + '/flats'; }
+          }
 
           if (el('bread-type')) {
             el('bread-type').textContent = _subtypeLabel;

@@ -1295,11 +1295,19 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         _city_url = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
         _dist_url = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
 
+        # Parent level (Flats) for flat sub-types: Studio, Penthouse, Duplex
+        _flat_sub_slugs = {'studio', 'penthouse', 'duplex'}
+        parent_label = 'Flats' if sub_slug in _flat_sub_slugs else ''
+        parent_url   = f'{_cat_rel_url}/flats' if parent_label else ''
+
         bc_items = [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
             {"@type": "ListItem", "position": 2, "name": cat_label, "item": cat_url},
         ]
         pos = 3
+        if parent_label and parent_url:
+            bc_items.append({"@type": "ListItem", "position": pos, "name": parent_label, "item": f'{PUBLIC_DOMAIN}{parent_url}'})
+            pos += 1
         if sub_label and _sub_url:
             bc_items.append({"@type": "ListItem", "position": pos, "name": sub_label, "item": f'{PUBLIC_DOMAIN}{_sub_url}'})
             pos += 1
@@ -1343,14 +1351,16 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'prop_title':    title,
             'listing_id':    str(lid),
             'listing_crumb': {
-                'cat_label': cat_label,
-                'cat_url':   _cat_rel_url,
-                'sub_label': sub_label,
-                'sub_url':   _sub_url,
-                'city':      city,
-                'city_url':  _city_url,
-                'district':  district,
-                'dist_url':  _dist_url,
+                'cat_label':    cat_label,
+                'cat_url':      _cat_rel_url,
+                'parent_label': parent_label,
+                'parent_url':   parent_url,
+                'sub_label':    sub_label,
+                'sub_url':      _sub_url,
+                'city':         city,
+                'city_url':     _city_url,
+                'district':     district,
+                'dist_url':     _dist_url,
             },
         }
 
@@ -2465,7 +2475,13 @@ def inject_ssr_body(html: str, ssr: dict) -> str:
         if cl:
             items.append(f'<li><a href="{_attr(cu)}" id="bread-category">{_esc(cl)}</a>'
                          f'<span class="icon-arrow-r"></span></li>')
-        # Sub-type (e.g. "Cottage")
+        # Parent (e.g. "Flats" for Studio / Penthouse / Duplex)
+        pl = listing_crumb.get('parent_label', '')
+        pu = listing_crumb.get('parent_url', '')
+        if pl and pu:
+            items.append(f'<li id="bread-parent-li"><a href="{_attr(pu)}" id="bread-parent">{_esc(pl)}</a>'
+                         f'<span class="icon-arrow-r" id="bread-parent-arrow"></span></li>')
+        # Sub-type (e.g. "Studio")
         sl = listing_crumb.get('sub_label', '')
         su = listing_crumb.get('sub_url', '')
         if sl:
