@@ -2638,7 +2638,15 @@
         var start = (_srCurrentPage - 1) * _srItemsPerPage;
         var pageItems = items.slice(start, start + _srItemsPerPage);
         var listBody = document.querySelector('.list-products__body');
-        if (listBody) listBody.innerHTML = pageItems.map(buildListProduct).join('');
+        if (listBody) {
+          listBody.innerHTML = pageItems.map(buildListProduct).join('');
+          if (window._checkImgPortrait) {
+            listBody.querySelectorAll('.product-gallery__img img').forEach(function(img) {
+              if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
+              else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
+            });
+          }
+        }
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
         if (gridBody) {
           gridBody.innerHTML = pageItems.map(buildGridCard).join('');

@@ -1228,12 +1228,7 @@ window.onload = function () {
 window._checkImgPortrait = function(img) {
     if (img.naturalHeight > img.naturalWidth * 1.05) {
         img.style.objectFit = 'contain';
-        var wrap = img.closest ? img.closest('.card__img') : null;
-        if (!wrap) {
-            var p = img.parentElement;
-            while (p && !(p.className && p.className.indexOf('card__img') !== -1)) p = p.parentElement;
-            wrap = p;
-        }
+        var wrap = img.parentElement;
         if (wrap) wrap.style.background = '#888888';
     }
 };
