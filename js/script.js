@@ -1245,25 +1245,35 @@ window.onload = function () {
     else hideWallet();
 })();
 
-// ── Instagram-style blurred background for listing photos ───────────────────
+// ── Instagram-style blurred background for portrait listing photos ───────────
 (function() {
     var CONTAINERS = '.product-gallery__img,.slider-gallery-big__img,.slider-gallery-mini__img,.card__img';
     var SKIP = ['icon/', 'man.png', 'man.svg', 'data:'];
 
-    function setBlurBg(img) {
-        if (!img.src) return;
+    function applyFit(img) {
+        if (!img.src || !img.naturalWidth) return;
         for (var i = 0; i < SKIP.length; i++) {
             if (img.src.indexOf(SKIP[i]) >= 0) return;
         }
         var container = img.closest ? img.closest(CONTAINERS) : null;
         if (!container) return;
-        container.style.setProperty('--bg-img', 'url(' + img.src + ')');
+
+        var ratio = img.naturalWidth / img.naturalHeight;
+        if (ratio < 1.1) {
+            // Вертикальное фото — contain + размытый фон
+            img.style.objectFit = 'contain';
+            container.style.setProperty('--bg-img', 'url(' + img.src + ')');
+        } else {
+            // Горизонтальное фото — cover, без серых полос
+            img.style.objectFit = 'cover';
+            container.style.removeProperty('--bg-img');
+        }
     }
 
     function processImg(img) {
         if (!img.classList || !img.classList.contains('img-cover')) return;
-        if (img.complete && img.naturalWidth > 0) { setBlurBg(img); }
-        else { img.addEventListener('load', function() { setBlurBg(img); }, { once: true }); }
+        if (img.complete && img.naturalWidth > 0) { applyFit(img); }
+        else { img.addEventListener('load', function() { applyFit(img); }, { once: true }); }
     }
 
     function scanRoot(root) {
@@ -1281,7 +1291,7 @@ window.onload = function () {
         for (var i = 0; i < muts.length; i++) {
             var m = muts[i];
             if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('img-cover')) {
-                setBlurBg(m.target);
+                applyFit(m.target);
                 continue;
             }
             for (var j = 0; j < m.addedNodes.length; j++) {
