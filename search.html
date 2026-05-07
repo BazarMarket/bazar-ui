@@ -2503,7 +2503,7 @@
           '<div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div>'+
           '<div class="card__info"><p class="card__name">'+shortT+'</p><p class="card__label">'+item.cy+'</p></div></div>'+
           '<div class="card__img"'+(item.imgs && item.imgs.length > 1 ? ' data-imgs="'+item.imgs.join(',')+'"' : '')+'><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
-          '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover">'+
+          '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover" onload="window._checkImgPortrait&&window._checkImgPortrait(this)">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
           '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
           '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';

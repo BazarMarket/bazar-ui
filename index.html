@@ -1336,7 +1336,7 @@
                 '<div class="card__info"><p class="card__name">' + (ad.title || 'My Ad') + '</p>' +
                 '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                 '<div class="card__img">' + stiker +
-                '<img ' + (imgId ? 'id="' + imgId + '" ' : '') + 'src="' + imgSrc + '" alt="" class="img-cover">' +
+                '<img ' + (imgId ? 'id="' + imgId + '" ' : '') + 'src="' + imgSrc + '" alt="" class="img-cover" onload="window._checkImgPortrait&&window._checkImgPortrait(this)">' +
                 '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
                 '<div class="card__down"><div class="card__prices">' +
                 '<span class="price-new">£ ' + (ad.price ? Number(ad.price).toLocaleString() : '—') + '</span>' + _luPriceOld +
