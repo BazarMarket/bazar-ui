@@ -1833,17 +1833,22 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         canonical = f'{PUBLIC_DOMAIN}/property-to-rent/{subtype}'
         desc      = intro[:160]
 
-        breadcrumb_schema = {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {"@type": "ListItem", "position": 1,
-                 "name": "Home", "item": PUBLIC_DOMAIN},
-                {"@type": "ListItem", "position": 2,
-                 "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property-to-rent'},
-                {"@type": "ListItem", "position": 3,
-                 "name": h1, "item": canonical},
-            ]
-        }
+        _is_flat_subtype = subtype in {'studio', 'penthouse', 'duplex'}
+        _bc_items_rent = [
+            {"@type": "ListItem", "position": 1,
+             "name": "Home", "item": PUBLIC_DOMAIN},
+            {"@type": "ListItem", "position": 2,
+             "name": "Property for Rent", "item": f'{PUBLIC_DOMAIN}/property-to-rent'},
+        ]
+        if _is_flat_subtype:
+            _bc_items_rent.append({"@type": "ListItem", "position": 3,
+                "name": "Flats", "item": f'{PUBLIC_DOMAIN}/property-to-rent/flats'})
+            _bc_items_rent.append({"@type": "ListItem", "position": 4,
+                "name": h1, "item": canonical})
+        else:
+            _bc_items_rent.append({"@type": "ListItem", "position": 3,
+                "name": h1, "item": canonical})
+        breadcrumb_schema = {"@type": "BreadcrumbList", "itemListElement": _bc_items_rent}
         schema = {
             "@context": "https://schema.org",
             "@graph": [
@@ -1870,11 +1875,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         seo['ssr'] = {
             'h1':          h1,
             'intro':       intro,
-            'breadcrumbs': [
-                ('Home', '/'),
-                ('Property for Rent', '/property-to-rent'),
-                (h1, None),
-            ],
+            'breadcrumbs': (
+                [('Home', '/'), ('Property for Rent', '/property-to-rent'),
+                 ('Flats', '/property-to-rent/flats'), (h1, None)]
+                if _is_flat_subtype else
+                [('Home', '/'), ('Property for Rent', '/property-to-rent'), (h1, None)]
+            ),
             'city_links':  city_links,
             'cat_label':   label,
             'related_links': [
