@@ -1257,16 +1257,15 @@ window.onload = function () {
         }
         var container = img.closest ? img.closest(CONTAINERS) : null;
         if (!container) return;
-        // Размытый фон для любой ориентации — фото полностью, без серых полос
-        if (img.src) {
-            container.style.setProperty('--bg-img', 'url(' + img.src + ')');
-        }
+        container.style.setProperty('--bg-img', 'url(' + img.src + ')');
     }
 
     function processImg(img) {
         if (!img.classList || !img.classList.contains('img-cover')) return;
-        if (img.complete && img.naturalWidth > 0) { applyFit(img); }
-        else { img.addEventListener('load', function() { applyFit(img); }, { once: true }); }
+        // Ставим --bg-img сразу по src, не ждём загрузки
+        applyFit(img);
+        // Повторно после загрузки на случай изменения src (слайдер)
+        img.addEventListener('load', function() { applyFit(img); }, { once: true });
     }
 
     function scanRoot(root) {
@@ -1274,11 +1273,17 @@ window.onload = function () {
         for (var i = 0; i < imgs.length; i++) processImg(imgs[i]);
     }
 
+    function doScan() { scanRoot(document); }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() { scanRoot(document); });
+        document.addEventListener('DOMContentLoaded', doScan);
     } else {
-        scanRoot(document);
+        doScan();
     }
+    // Повторное сканирование — ловим картинки загруженные после DOMContentLoaded
+    window.addEventListener('load', doScan);
+    setTimeout(doScan, 600);
+    setTimeout(doScan, 2000);
 
     new MutationObserver(function(muts) {
         for (var i = 0; i < muts.length; i++) {
