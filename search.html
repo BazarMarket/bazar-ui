@@ -916,6 +916,7 @@
                   <ul class="bread-custom" id="srBreadcrumb">
                      <li><a href="/">Home</a><span class="icon-arrow-r"></span></li>
                      <li><a href="#" id="breadCrumbCat"></a><span class="icon-arrow-r" id="breadCrumbCatArrow"></span></li>
+                     <li id="breadCrumbParent" style="display:none;"><a href="#" id="breadCrumbParentLink">Flats</a><span class="icon-arrow-r"></span></li>
                      <li id="breadCrumbType">Search results</li>
                   </ul>
                </div>
@@ -1468,6 +1469,26 @@
             updateBedroomsLabel();
          } else {
             bedroomsWrap.style.display = '';
+         }
+         /* ── Breadcrumb parent "Flats" for flat sub-types ── */
+         var _flatSubVals = ['Studio', 'Penthouse', 'Duplex'];
+         var _checkedVals = Array.prototype.map.call(checks, function(c){ return c.value; });
+         var _onlyFlatSubs = checks.length > 0 && _checkedVals.every(function(v){ return _flatSubVals.indexOf(v) !== -1; });
+         var _bParentLi = document.getElementById('breadCrumbParent');
+         var _bParentLink = document.getElementById('breadCrumbParentLink');
+         var _bTypeEl = document.getElementById('breadCrumbType');
+         if (_bParentLi) {
+            if (_onlyFlatSubs) {
+               _bParentLi.style.display = '';
+               if (_bParentLink) {
+                  var _modeFlatsUrl = {'rent':'/property-to-rent/flats','short-rent':'/property-short-rent/flats','sale':'/property-for-sale/flats'};
+                  _bParentLink.href = _modeFlatsUrl[currentMode] || '/property-to-rent/flats';
+               }
+               if (_bTypeEl) _bTypeEl.textContent = checks.length === 1 ? checks[0].value : checks.length + ' types';
+            } else {
+               _bParentLi.style.display = 'none';
+               if (_bTypeEl && window._bazarCurrentType === 'Flats') _bTypeEl.textContent = 'Flats';
+            }
          }
          if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType); }
       }
