@@ -1591,7 +1591,7 @@
                         '<div class="card__info"><p class="card__name">' + (ad.title || '') + '</p>' +
                         '<p class="card__label">' + (ad.city ? ad.city.toUpperCase() : '') + '</p></div></div>' +
                         '<div class="card__img"' + (ad.images && ad.images.length > 1 ? ' data-imgs="' + ad.images.join(',') + '"' : '') + '>' + stiker +
-                        '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy">' +
+                        '<img src="' + imgSrc + '" alt="" class="img-cover" loading="lazy" onload="window._checkImgPortrait&&window._checkImgPortrait(this)">' +
                         '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>' +
                         '<div class="card__down"><div class="card__prices"><span class="price-new">' + price + '</span>' + priceOld + '</div>' + infoBord + '</div>' +
                         '</div>';
@@ -1599,6 +1599,12 @@
                 grid.innerHTML = html;
                 if (typeof _loadCardAvatars === 'function') _loadCardAvatars();
                 if (typeof _updateSearchPlaceholder === 'function') _updateSearchPlaceholder(resp.data.length);
+                if (window._checkImgPortrait) {
+                    grid.querySelectorAll('.card__img .img-cover').forEach(function(img) {
+                        if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
+                        else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
+                    });
+                }
                 /* mobile swiper for latest */
                 var latestSwiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
                 if (latestSwiperWrapper) {
