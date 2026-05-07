@@ -1251,9 +1251,13 @@ window.onload = function () {
     var SKIP = ['icon/', 'man.png', 'man.svg', 'data:'];
 
     function applyFit(img) {
-        if (!img.src || !img.naturalWidth) return;
+        if (!img.src) return;
         for (var i = 0; i < SKIP.length; i++) {
             if (img.src.indexOf(SKIP[i]) >= 0) return;
+        }
+        if (!img.naturalWidth) {
+            img.addEventListener('load', function() { applyFit(img); }, { once: true });
+            return;
         }
         var container = img.closest ? img.closest(CONTAINERS) : null;
         if (!container) return;
