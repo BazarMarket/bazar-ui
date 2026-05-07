@@ -6218,29 +6218,3 @@ body:not(.bazar-logged) #header-logged-in {
 }
 .card-img-seg.active { background: #ff9138; }
 
-/* ── Полное отображение фотографий объявлений — Instagram blur ── */
-.product-gallery__img,
-.slider-gallery-big__img,
-.slider-gallery-mini__img,
-.card__img {
-  overflow: hidden;
-}
-
-.bz-blur-bg {
-  position: absolute;
-  inset: -14px;
-  background-size: cover;
-  background-position: center;
-  -webkit-filter: blur(14px) brightness(0.62);
-          filter: blur(14px) brightness(0.62);
-  z-index: 0;
-}
-
-.product-gallery__img .img-cover,
-.slider-gallery-big__img .img-cover,
-.slider-gallery-mini__img .img-cover,
-.card__img .img-cover {
-  -o-object-fit: contain;
-     object-fit: contain;
-  z-index: 1;
-}
