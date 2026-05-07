@@ -71,6 +71,16 @@ A static HTML/CSS/JS classified ads marketplace website UI that will eventually 
 - **ВСЕГДА отвечать ТОЛЬКО на русском языке.** Никогда не писать на украинском, английском или другом языке. Только русский.
 - **При деплое script.js на продакшн** — блок скрытия Wallet виджета в `js/script.js` должен сохраняться. **НЕ УДАЛЯТЬ**.
 
+## SMS Рассылка (Twilio)
+
+- **Файлы SMS:** `/var/www/bazar-dev/app/Filament/Resources/Leads/LeadResource.php` и `/var/www/bazar-dev/app/Console/Commands/SendSmsLeads.php`
+- **ТОЧНЫЙ текст SMS (НЕ МЕНЯТЬ без явной просьбы пользователя):**
+  `"Hi {$greeting}, quick one - you can list your room or apartment on Bazar.uk for free. We're a new UK platform for landlords. Upload in 1 min: https://bazar.uk/post-ad"`
+- **КРИТИЧНО — запрет на спецсимволы в тексте SMS:** НИКОГДА не использовать длинное тире `—`, умные кавычки `"` `"`, или любые не-ASCII символы. Только обычный дефис `-`, прямой апостроф `'`. Причина: спецсимволы переключают SMS в Unicode-режим (70 символов/сегмент вместо 160), что утраивает стоимость ($0.065 → $0.20 за SMS).
+- **Имя:** если имя продавца ≥ 3 букв — используется имя, иначе "there". НЕ МЕНЯТЬ этот порог.
+- **Отправка:** через Artisan-команду `php artisan sms:send-property` в фоне (nohup). НЕ отправлять синхронно — будет 504 Gateway Timeout.
+- **Категория:** рассылка только по `category='property'`. НЕ смешивать с phone-лидами.
+
 ## Gotchas
 
 - **Dev Environment:** NEVER copy, deploy, modify, or sync anything to `dev.bazar.uk`. The agent works ONLY on production.
