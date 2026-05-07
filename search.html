@@ -2218,7 +2218,7 @@
           'restaurant': 'Restaurant', 'shop': 'Shop', 'office': 'Office',
           'industrial': 'Industrial', 'hotel': 'Hotel', 'business': 'Business or Investment',
           'land': 'Land', 'building': 'Building', 'house': 'House',
-          'studio': 'Studio', 'flats': 'Flats'
+          'studio': 'Flats', 'flats': 'Flats'
         };
         /* Compound sub_type slugs: map to parent property_type for API + bucket for display */
         var _subTypeSlugMap = {
@@ -2251,9 +2251,10 @@
             if (!resp || !resp.data || !resp.data.length) return;
             var categoryMap = {
               'flat': 'Flats', 'flats': 'Flats', 'apartment': 'Flats',
+              'studio': 'Flats', 'penthouse': 'Flats', 'duplex': 'Flats',
               'house': 'House', 'houses': 'House', 'cottage': 'House', 'bungalow': 'House', 'villa': 'House',
-              'maisonette': 'House', 'townhouse': 'House', 'penthouse': 'House', 'duplex': 'House',
-              'room': 'Rooms', 'rooms': 'Rooms', 'studio': 'Studio',
+              'maisonette': 'House', 'townhouse': 'House',
+              'room': 'Rooms', 'rooms': 'Rooms',
               'office': 'Office', 'shop': 'Shop', 'restaurant': 'Restaurant',
               'industrial': 'Industrial', 'hotel': 'Hotel', 'land': 'Land',
               'building': 'Building', 'business': 'Business or Investment',
@@ -2954,7 +2955,7 @@
             var _autoSubBucketMap = {
               'restaurant': 'Restaurant', 'shop': 'Shop', 'office': 'Office',
               'industrial': 'Industrial', 'hotel': 'Hotel', 'business': 'Business or Investment',
-              'land': 'Land', 'building': 'Building', 'house': 'House', 'studio': 'Studio',
+              'land': 'Land', 'building': 'Building', 'house': 'House', 'studio': 'Flats',
               'cottage': 'House', 'villa': 'House', 'bungalow': 'House',
               'maisonette': 'House', 'townhouse': 'House', 'detached': 'House',
               'semi-detached': 'House', 'terraced': 'House',

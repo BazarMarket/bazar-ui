@@ -1269,11 +1269,13 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             sub_label = sub_type
             sub_slug  = re.sub(r'[^a-z0-9]+', '-', sub_type.lower()).strip('-')
         elif _pt_norm:
-            _ptLabelMap = {'flat':'Flats','flats':'Flats','apartment':'Flats','house':'House',
-                           'studio':'Studio','room':'Rooms','land':'Land','building':'Building',
+            _ptLabelMap = {'flat':'Flats','flats':'Flats','apartment':'Flats',
+                           'studio':'Flats','penthouse':'Flats','duplex':'Flats',
+                           'house':'House','room':'Rooms','land':'Land','building':'Building',
                            'office':'Office','shop':'Shop','restaurant':'Restaurant',
                            'industrial':'Industrial','hotel':'Hotel'}
-            _ptSlugMap  = {'flat':'flats','flats':'flats','apartment':'flats','room':'rooms'}
+            _ptSlugMap  = {'flat':'flats','flats':'flats','apartment':'flats','room':'rooms',
+                           'studio':'flats','penthouse':'flats','duplex':'flats'}
             sub_slug  = _ptSlugMap.get(_pt_norm, _pt_norm)
             sub_label = _ptLabelMap.get(sub_slug, sub_slug.replace('-',' ').title())
         else:
