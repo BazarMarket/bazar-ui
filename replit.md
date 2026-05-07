@@ -97,6 +97,7 @@ A static HTML/CSS/JS classified ads marketplace website UI that will eventually 
 - **Price Formatting:** Follow the specified price formatting (e.g., `425,<sup>000</sup>£`) and color rules.
 - **Free Plan Sorting:** Free plan listings are NOT boosted to the top for the owner; they are sorted only by activity date. This logic has been restored twice and should not be altered.
 - **`search.html` List-view Spacing:** Do not increase `padding-bottom` for `.product` elements in list view; the user explicitly requested a tight layout.
+- **Portrait Image Detection (`window._checkImgPortrait`):** Функция в `js/script.js` (перед блоком Wallet widget). Срабатывает ТОЛЬКО для портретных фото (высота > ширина × 1.05) — ставит `object-fit:contain` + серый фон `#888888` на родительский контейнер. Горизонтальные фото НЕ затрагиваются. Применяется в: `index.html` (Latest Updates grid + API block), `search.html` (grid + list view), `card.html` (big gallery + mini thumbnails). НЕ УДАЛЯТЬ и не менять логику без явной просьбы.
 
 ## Pointers
 
