@@ -1257,7 +1257,16 @@ window.onload = function () {
         }
         var container = img.closest ? img.closest(CONTAINERS) : null;
         if (!container) return;
-        container.style.setProperty('--bg-img', 'url(' + img.src + ')');
+        var existing = container.querySelector('.bz-blur-bg');
+        if (existing) {
+            if (existing.getAttribute('data-src') === img.src) return;
+            existing.parentNode.removeChild(existing);
+        }
+        var blurDiv = document.createElement('div');
+        blurDiv.className = 'bz-blur-bg';
+        blurDiv.setAttribute('data-src', img.src);
+        blurDiv.style.backgroundImage = 'url(' + img.src + ')';
+        container.insertBefore(blurDiv, container.firstChild);
     }
 
     function processImg(img) {

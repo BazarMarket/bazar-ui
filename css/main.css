@@ -6223,21 +6223,16 @@ body:not(.bazar-logged) #header-logged-in {
 .slider-gallery-big__img,
 .slider-gallery-mini__img,
 .card__img {
-  background: #d0d0d0;
   overflow: hidden;
 }
 
-.product-gallery__img::before,
-.slider-gallery-big__img::before,
-.slider-gallery-mini__img::before,
-.card__img::before {
-  content: '';
+.bz-blur-bg {
   position: absolute;
   inset: -14px;
-  background-image: var(--bg-img);
   background-size: cover;
   background-position: center;
-  filter: blur(14px) brightness(0.62);
+  -webkit-filter: blur(14px) brightness(0.62);
+          filter: blur(14px) brightness(0.62);
   z-index: 0;
 }
 
@@ -6247,5 +6242,6 @@ body:not(.bazar-logged) #header-logged-in {
 .card__img .img-cover {
   -o-object-fit: contain;
      object-fit: contain;
+  position: relative;
   z-index: 1;
 }
