@@ -1255,22 +1255,11 @@ window.onload = function () {
         for (var i = 0; i < SKIP.length; i++) {
             if (img.src.indexOf(SKIP[i]) >= 0) return;
         }
-        if (!img.naturalWidth) {
-            img.addEventListener('load', function() { applyFit(img); }, { once: true });
-            return;
-        }
         var container = img.closest ? img.closest(CONTAINERS) : null;
         if (!container) return;
-
-        var ratio = img.naturalWidth / img.naturalHeight;
-        if (ratio < 1.1) {
-            // Вертикальное фото — contain + размытый фон
-            img.style.objectFit = 'contain';
+        // Размытый фон для любой ориентации — фото полностью, без серых полос
+        if (img.src) {
             container.style.setProperty('--bg-img', 'url(' + img.src + ')');
-        } else {
-            // Горизонтальное фото — cover, без серых полос
-            img.style.objectFit = 'cover';
-            container.style.removeProperty('--bg-img');
         }
     }
 
