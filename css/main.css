@@ -6242,6 +6242,5 @@ body:not(.bazar-logged) #header-logged-in {
 .card__img .img-cover {
   -o-object-fit: contain;
      object-fit: contain;
-  position: relative;
   z-index: 1;
 }
