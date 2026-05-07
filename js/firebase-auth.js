@@ -102,9 +102,17 @@ function clearUserLocalData() {
     favKeys.forEach(function(k) { localStorage.removeItem(k); });
 }
 
+function resetRecaptcha() {
+    try { if (recaptchaVerifier) { recaptchaVerifier.clear(); } } catch(e) {}
+    recaptchaVerifier = null;
+    var c = document.getElementById('recaptcha-container');
+    if (c) c.innerHTML = '';
+}
+
 function doLogout() {
     clearUserLocalData();
     auth.signOut();
+    resetRecaptcha();
     var nameEl = document.getElementById('header-username');
     if (nameEl) nameEl.textContent = '';
     var guestEl = document.getElementById('header-guest');
@@ -116,6 +124,7 @@ function doLogout() {
 
 function openLoginModal() {
     modalMode = 'login';
+    resetRecaptcha();
     document.querySelector('#createAccountModal .modal-title').textContent = 'Login / Register';
     document.getElementById('createAccountModal').classList.add('modal-overlay--active');
     document.body.style.overflow = 'hidden';
