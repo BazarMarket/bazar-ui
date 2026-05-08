@@ -1423,13 +1423,10 @@
         var cardCls = _isVip ? 'card card_red' : _isPro ? 'card card_orange' : 'card';
         var _cu = localStorage.getItem('bazar_username') || '';
         var _cp = (_ownPlan !== null ? _ownPlan : (localStorage.getItem('bazar_plan') || 'free')).toLowerCase();
-        var _dgi = new URLSearchParams(window.location.search).get('boost_demo');
-        var _showBoostI = (_cu && (_cp === 'free' || _cp === 'pro') && ad.seller_name === _cu && !_isVip) || (_dgi === '1' && !_isVip);
-        var boostBtnI = _showBoostI ? '<button class="card__boost-btn" onclick="event.stopPropagation();event.preventDefault();bazarBoostPay(window.location.href,\''+ad.id+'\');">Boost to Top</button>' : '';
         var _stikerSpan = _isVip
             ? '<span class="stiker stiker_vip">VIP</span>'
             : _isPro ? '<span class="stiker stiker_top">PRO</span>' : '';
-        var stiker = '<div class="card__stikers">' + _stikerSpan + boostBtnI + '</div>';
+        var stiker = '<div class="card__stikers">' + _stikerSpan + '</div>';
         var imgSrc = ad.photo || 'img/product.jpg';
         var price  = ad.price ? '£ ' + Number(ad.price).toLocaleString('en-GB') : '—';
         var _opN = ad.old_price ? Number(ad.old_price) : 0;
