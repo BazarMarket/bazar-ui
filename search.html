@@ -239,35 +239,20 @@
          .sr-grid-view .cards__grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       }
 
-      /* ── Mobile Filter button (hidden on desktop) ── */
-      .sr-mob-filter-btn { display: none; }
-
       /* ── Mobile (≤576px) ── */
       @media (max-width: 576px) {
-         .sr-cat-hero { display: block !important; }
+         .sr-cat-hero { display: none !important; }
          .sr-wrap { padding: 0 4%; }
          .cf-block { padding: 0 4%; }
          .cf-block-outer { padding: 10px 0; }
-         /* Hide filter rows by default on mobile — revealed by Filter button */
-         .cf-row1 .cf-cat { display: none !important; }
-         .cf-row, .cf-row-dynamic, .cf-row-extra, .cf-more-btn { display: none !important; }
-         /* When filter panel is open */
-         .cf-block-outer.mob-open .cf-row1 .cf-cat { display: flex !important; width: 100%; }
-         .cf-block-outer.mob-open .cf-row1 .cf-cat .cf-cat-btn { width: 100%; }
-         .cf-block-outer.mob-open .cf-row { display: flex !important; flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; }
-         .cf-block-outer.mob-open .cf-row-dynamic { display: flex !important; flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; }
-         .cf-block-outer.mob-open .cf-row-extra { display: block !important; }
-         .cf-block-outer.mob-open .cf-more-btn { display: flex !important; }
-         /* Filter button visible on mobile */
-         .sr-mob-filter-btn { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 20px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
-         .sr-mob-filter-btn.active { border-color: #ff9138; color: #ff9138; }
-         /* Sort row: horizontal layout with Filter button on right */
-         .sr-hero-sort { flex-direction: row !important; align-items: center !important; justify-content: space-between; }
          .cf-row1 { flex-direction: column; align-items: stretch; gap: 6px; }
          .cf-search { max-width: 100% !important; flex: 0 0 auto !important; width: 100%; }
          .cf-row-extra .cf-price-joined { width: 100%; }
          .cf-row-extra .cf-cat { width: 100%; }
          .cf-row-extra .cf-cat .cf-cat-btn { width: 100%; }
+         .cf-row1 .cf-cat { width: 100%; }
+         .cf-row1 .cf-cat .cf-cat-btn { width: 100%; }
+         .cf-row { flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; }
          .cf-row .cf-cat { width: 100%; }
          .cf-row .cf-cat .cf-cat-btn { width: 100%; }
          .cf-row select.cf-ctrl { width: 100%; flex: 1 1 auto; }
@@ -947,10 +932,6 @@
                         <option value="popular">Most popular</option>
                      </select>
                   </div>
-                  <button class="sr-mob-filter-btn" id="srMobFilterBtn" onclick="toggleMobFilters()">
-                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                     Filter
-                  </button>
                </div>
 
                <div class="sr-results-wrap">
@@ -1759,14 +1740,6 @@
          cross.style.display = 'none';
          btn.classList.remove('has-selection');
          filterYearPanels();
-      }
-
-      function toggleMobFilters() {
-         var outer = document.querySelector('.cf-block-outer');
-         var btn = document.getElementById('srMobFilterBtn');
-         if (!outer) return;
-         var isOpen = outer.classList.toggle('mob-open');
-         if (btn) btn.classList.toggle('active', isOpen);
       }
 
       function toggleMoreFilters() {
