@@ -530,7 +530,7 @@ function finishRegistration() {
     if (!name || !selectedGender) return;
     localStorage.setItem('bazar_username', name);
     localStorage.setItem('bazar_gender', selectedGender);
-    if (!localStorage.getItem('bazar_plan')) localStorage.setItem('bazar_plan', 'free');
+    localStorage.setItem('bazar_plan', 'free');
     var isPostAd = (modalMode === 'post-ad');
     closeProfileModal();
     doLogin();

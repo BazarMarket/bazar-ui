@@ -2747,9 +2747,52 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Accept')
         self.end_headers()
+
+    def _proxy_to_laravel(self, method, path, qs, body_data=None):
+        if not path.startswith('/api/'):
+            self.send_response(404)
+            self.end_headers()
+            return
+        api_path = path[4:]
+        qs_str   = ('?' + qs) if qs else ''
+        url      = f'{LARAVEL_API_BASE}{api_path}{qs_str}'
+        try:
+            fwd_headers = {k: v for k, v in {
+                'Accept':       self.headers.get('Accept', 'application/json'),
+                'Content-Type': self.headers.get('Content-Type', ''),
+            }.items() if v}
+            req = urllib.request.Request(url, data=body_data, headers=fwd_headers, method=method)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                body         = resp.read()
+                status       = resp.status
+                content_type = resp.headers.get('Content-Type', 'application/json')
+            self.send_response(status)
+            self.send_header('Content-Type', content_type)
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except urllib.error.HTTPError as e:
+            body = e.read()
+            self.send_response(e.code)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception:
+            self._send_json(502, {'error': 'api unavailable'})
+
+    def do_DELETE(self):
+        parsed = urllib.parse.urlparse(self.path)
+        self._proxy_to_laravel('DELETE', parsed.path, parsed.query)
+
+    def do_PATCH(self):
+        parsed   = urllib.parse.urlparse(self.path)
+        clen     = int(self.headers.get('Content-Length', 0))
+        body_data = self.rfile.read(clen) if clen > 0 else None
+        self._proxy_to_laravel('PATCH', parsed.path, parsed.query, body_data)
 
     # ── POST ──────────────────────────────────────────────────────────────────
     def do_POST(self):
