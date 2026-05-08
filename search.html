@@ -2696,16 +2696,16 @@
           var img = document.createElement('img');
           img.src = firstImg.src;
           img.alt = '';
-          img.style.cssText = 'width:100%;height:auto;display:block;';
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
           var a = document.createElement('a');
           a.href = href;
-          a.style.cssText = 'display:block;line-height:0;';
+          a.style.cssText = 'display:block;line-height:0;height:100%;';
           a.appendChild(img);
           /* Keep stiker and heart (they are siblings of .product-gallery inside .product__gallery) */
           var stiker = gallery.querySelector('.product__stiker');
           var heart = gallery.querySelector('.card__heart');
           gallery.innerHTML = '';
-          gallery.style.cssText = 'position:relative;';
+          gallery.style.cssText = 'position:relative;aspect-ratio:4/3;overflow:hidden;';
           gallery.appendChild(a);
           if (stiker) gallery.appendChild(stiker);
           if (heart) gallery.appendChild(heart);
