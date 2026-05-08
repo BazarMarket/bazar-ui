@@ -70,17 +70,14 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                     window.dispatchEvent(new CustomEvent('bazar:authReady', { detail: { is_admin: d.is_admin } }));
                     var plan = (d.plan || 'free').toLowerCase();
                     var daysLeft = parseInt(d.days_left || 0, 10);
-                    var localPlan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-                    var rank = { free: 0, pro: 1, vip: 2 };
-                    /* Only update if API returns equal or higher plan (never downgrade) */
-                    if ((rank[plan] || 0) >= (rank[localPlan] || 0)) {
-                        localStorage.setItem('bazar_plan', plan);
-                        if (daysLeft > 0) localStorage.setItem('bazar_days_left', daysLeft);
-                        applyPlanBadge(plan, daysLeft);
+                    /* API is always authoritative — update localStorage unconditionally */
+                    localStorage.setItem('bazar_plan', plan);
+                    if (plan === 'free' || daysLeft <= 0) {
+                        localStorage.removeItem('bazar_days_left');
                     } else {
-                        /* Keep local plan, just refresh badge */
-                        applyPlanBadge(localPlan, parseInt(localStorage.getItem('bazar_days_left') || '0', 10));
+                        localStorage.setItem('bazar_days_left', daysLeft);
                     }
+                    applyPlanBadge(plan, daysLeft);
                     /* Update gender ONLY if server.py confirmed it from its DB (gender_from_db flag).
                        This prevents Laravel's default 'male' from overwriting a user's chosen gender. */
                     if (d.gender && d.gender_from_db) {
