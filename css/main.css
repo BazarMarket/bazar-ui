@@ -3789,6 +3789,7 @@ p {
 .card__img {
   position: relative;
   padding-bottom: 70%;
+  overflow: hidden;
 }
 .card__stikers {
   position: absolute;
