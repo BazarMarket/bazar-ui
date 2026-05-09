@@ -2451,7 +2451,9 @@
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
           'property-for-sale': 'sale',
-          'property-to-rent': 'long_rent',
+          'property':          'sale',
+          'real-estate':       'sale',
+          'property-to-rent':  'long_rent',
           'property-short-rent': 'short_rent'
         };
         /* Property subtypes that need a dedicated filtered fetch */
