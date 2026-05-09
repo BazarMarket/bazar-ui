@@ -1847,67 +1847,104 @@
             minSel.appendChild(new Option('£' + v, v));
             maxSel.appendChild(new Option('£' + v + (i === vals.length - 1 ? '+' : ''), v));
          });
+         var aMin = document.getElementById('smfAreaMin'), aMax = document.getElementById('smfAreaMax');
+         if (aMin && aMax) {
+            var aVals = (typeof areaValues !== 'undefined') ? areaValues : [];
+            aVals.forEach(function(v) { aMin.appendChild(new Option(v, v)); aMax.appendChild(new Option(v, v)); });
+         }
+         var yFrom = document.getElementById('smfYearFrom'), yTo = document.getElementById('smfYearTo');
+         if (yFrom && yTo) {
+            var yVals = (typeof yearValues !== 'undefined') ? yearValues : [];
+            yVals.forEach(function(v) { yFrom.appendChild(new Option(v, v)); yTo.appendChild(new Option(v, v)); });
+         }
          _smfPricesBuilt = true;
       }
 
       function _smfSyncFromDesktop() {
-         var minLbl = document.getElementById('cfPriceMinLabel');
-         var maxLbl = document.getElementById('cfPriceMaxLabel');
-         var minSel = document.getElementById('smfPriceMin');
-         var maxSel = document.getElementById('smfPriceMax');
-         if (minSel && minLbl && minLbl.textContent !== 'Price min') {
-            Array.prototype.forEach.call(minSel.options, function(o) { if (o.text.replace(/£/g,'') === minLbl.textContent) minSel.value = o.value; });
-            minSel.classList.add('has-val');
-         } else if (minSel) { minSel.value = ''; minSel.classList.remove('has-val'); }
-         if (maxSel && maxLbl && maxLbl.textContent !== 'Price max') {
-            Array.prototype.forEach.call(maxSel.options, function(o) { if (o.text.replace(/[£+]/g,'') === maxLbl.textContent.replace(/\+/g,'')) maxSel.value = o.value; });
-            maxSel.classList.add('has-val');
-         } else if (maxSel) { maxSel.value = ''; maxSel.classList.remove('has-val'); }
+         function syncSel(selId, lblId, defaultText) {
+            var sel = document.getElementById(selId), lbl = document.getElementById(lblId);
+            if (!sel) return;
+            var txt = lbl ? lbl.textContent.trim() : '';
+            if (txt && txt !== defaultText) {
+               Array.prototype.forEach.call(sel.options, function(o) { if (o.value === txt || o.text === txt || o.text.replace(/[£+]/g,'') === txt.replace(/[£+]/g,'')) sel.value = o.value; });
+               sel.classList.add('has-val');
+            } else { sel.value = ''; sel.classList.remove('has-val'); }
+         }
+         syncSel('smfPriceMin','cfPriceMinLabel','Price min');
+         syncSel('smfPriceMax','cfPriceMaxLabel','Price max');
+         syncSel('smfAreaMin','cfAreaMinLabel','Property area min');
+         syncSel('smfAreaMax','cfAreaMaxLabel','Property area max');
+         syncSel('smfYearFrom','cfYearFromLabel','Construction year min');
+         syncSel('smfYearTo','cfYearToLabel','Construction year max');
          var bedVals = Array.prototype.map.call(document.querySelectorAll('#cfBedroomsPanel input:checked'), function(c){ return c.value; });
          document.querySelectorAll('#smfBedrooms .sr-mob-chip').forEach(function(c){ c.classList.toggle('active', bedVals.indexOf(c.textContent.trim()) !== -1); });
          var bathVals = Array.prototype.map.call(document.querySelectorAll('#cfBathroomsPanel input:checked'), function(c){ return c.value; });
          document.querySelectorAll('#smfBathrooms .sr-mob-chip').forEach(function(c){ c.classList.toggle('active', bathVals.indexOf(c.textContent.trim()) !== -1); });
          var condVals = Array.prototype.map.call(document.querySelectorAll('#cfConditionPanel input:checked'), function(c){ return c.value; });
          document.querySelectorAll('#smfCondition .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', condVals.indexOf(p.textContent.trim()) !== -1); });
+         var sellerVals = Array.prototype.map.call(document.querySelectorAll('#cfSellerPanel input:checked'), function(c){ return c.value; });
+         document.querySelectorAll('#smfSeller .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', sellerVals.indexOf(p.textContent.trim()) !== -1); });
+         var onlineSel = document.querySelector('#cfMoreRow select.cf-select-auto');
+         var onlineVal = onlineSel ? onlineSel.value : '';
+         document.querySelectorAll('#smfOnlineViewing .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', p.textContent.trim() === onlineVal); });
+         var featVals = Array.prototype.map.call(document.querySelectorAll('#cfFeaturesPanel input:checked'), function(c){ return c.value; });
+         document.querySelectorAll('#smfFeatures .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', featVals.indexOf(p.textContent.trim()) !== -1); });
       }
 
       function _smfChip(btn) { btn.classList.toggle('active'); }
       function _smfPill(btn) { btn.classList.toggle('active'); }
+      function _smfPillSingle(btn, groupId) {
+         var active = btn.classList.contains('active');
+         document.querySelectorAll('#' + groupId + ' .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
+         if (!active) btn.classList.add('active');
+      }
       function _smfPriceChange(sel) { sel.classList.toggle('has-val', !!sel.value); }
 
       function _mobFilterApply() {
          var bedVals  = Array.prototype.map.call(document.querySelectorAll('#smfBedrooms .sr-mob-chip.active'),  function(c){ return c.textContent.trim(); });
          var bathVals = Array.prototype.map.call(document.querySelectorAll('#smfBathrooms .sr-mob-chip.active'), function(c){ return c.textContent.trim(); });
          var condVals = Array.prototype.map.call(document.querySelectorAll('#smfCondition .sr-mob-pill.active'),  function(p){ return p.textContent.trim(); });
+         var sellerVals = Array.prototype.map.call(document.querySelectorAll('#smfSeller .sr-mob-pill.active'), function(p){ return p.textContent.trim(); });
+         var featVals = Array.prototype.map.call(document.querySelectorAll('#smfFeatures .sr-mob-pill.active'), function(p){ return p.textContent.trim(); });
          document.querySelectorAll('#cfBedroomsPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = bedVals.indexOf(cb.value) !== -1; });
          if (typeof updateBedroomsLabel === 'function') updateBedroomsLabel();
          document.querySelectorAll('#cfBathroomsPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = bathVals.indexOf(cb.value) !== -1; });
          if (typeof updateBathroomsLabel === 'function') updateBathroomsLabel();
          document.querySelectorAll('#cfConditionPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = condVals.indexOf(cb.value) !== -1; });
          if (typeof updateConditionLabel === 'function') updateConditionLabel();
-         var minSel = document.getElementById('smfPriceMin');
-         var maxSel = document.getElementById('smfPriceMax');
-         if (minSel && minSel.value) {
-            var minItem = null;
-            document.querySelectorAll('#cfPriceMinPanel .cf-price-item').forEach(function(i){ if (i.textContent === minSel.value) minItem = i; });
-            if (minItem && typeof selectPrice === 'function') selectPrice(minItem, 'Min');
-         } else { if (typeof clearPrice === 'function') clearPrice('Min', null); }
-         if (maxSel && maxSel.value) {
-            var maxItem = null;
-            document.querySelectorAll('#cfPriceMaxPanel .cf-price-item').forEach(function(i){ if (i.textContent.replace('+','') === maxSel.value) maxItem = i; });
-            if (maxItem && typeof selectPrice === 'function') selectPrice(maxItem, 'Max');
-         } else { if (typeof clearPrice === 'function') clearPrice('Max', null); }
+         document.querySelectorAll('#cfSellerPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = sellerVals.indexOf(cb.value) !== -1; });
+         if (typeof updateSellerLabel === 'function') updateSellerLabel();
+         document.querySelectorAll('#cfFeaturesPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = featVals.indexOf(cb.value) !== -1; });
+         if (typeof updateFeaturesLabel === 'function') updateFeaturesLabel();
+         var onlineActivePill = document.querySelector('#smfOnlineViewing .sr-mob-pill.active');
+         var onlineSel = document.querySelector('#cfMoreRow select.cf-select-auto');
+         if (onlineSel) onlineSel.value = onlineActivePill ? onlineActivePill.textContent.trim() : '';
+         function applyRangeSel(smfId, panelId, clearFn, selectFn, which) {
+            var sel = document.getElementById(smfId);
+            if (!sel) return;
+            if (sel.value) {
+               var found = null;
+               document.querySelectorAll('#' + panelId + ' .cf-price-item').forEach(function(i){ if (i.textContent.replace('+','') === sel.value.replace('+','') || i.textContent === sel.value) found = i; });
+               if (found && typeof selectFn === 'function') selectFn(found, which);
+            } else { if (typeof clearFn === 'function') clearFn(which, null); }
+         }
+         applyRangeSel('smfPriceMin','cfPriceMinPanel', clearPrice, selectPrice, 'Min');
+         applyRangeSel('smfPriceMax','cfPriceMaxPanel', clearPrice, selectPrice, 'Max');
+         applyRangeSel('smfAreaMin','cfAreaMinPanel', clearArea, selectArea, 'Min');
+         applyRangeSel('smfAreaMax','cfAreaMaxPanel', clearArea, selectArea, 'Max');
+         applyRangeSel('smfYearFrom','cfYearFromPanel', clearYear, selectYear, 'From');
+         applyRangeSel('smfYearTo','cfYearToPanel', clearYear, selectYear, 'To');
          _mobFilterClose();
          if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType); }
       }
 
       function _mobFilterClear() {
          document.querySelectorAll('#smfBedrooms .sr-mob-chip, #smfBathrooms .sr-mob-chip').forEach(function(c){ c.classList.remove('active'); });
-         document.querySelectorAll('#smfCondition .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
-         var minSel = document.getElementById('smfPriceMin');
-         var maxSel = document.getElementById('smfPriceMax');
-         if (minSel) { minSel.value = ''; minSel.classList.remove('has-val'); }
-         if (maxSel) { maxSel.value = ''; maxSel.classList.remove('has-val'); }
+         document.querySelectorAll('#smfCondition .sr-mob-pill, #smfSeller .sr-mob-pill, #smfOnlineViewing .sr-mob-pill, #smfFeatures .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
+         ['smfPriceMin','smfPriceMax','smfAreaMin','smfAreaMax','smfYearFrom','smfYearTo'].forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) { el.value = ''; el.classList.remove('has-val'); }
+         });
       }
 
       function toggleMoreFilters() {
@@ -3585,6 +3622,79 @@
                <button class="sr-mob-pill" onclick="_smfPill(this)">Resale</button>
                <button class="sr-mob-pill" onclick="_smfPill(this)">Under construction</button>
                <button class="sr-mob-pill" onclick="_smfPill(this)">Off plan</button>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Property area, m²</div>
+            <div class="sr-mob-filter-price-row">
+               <select id="smfAreaMin" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                  <option value="">Area min</option>
+               </select>
+               <select id="smfAreaMax" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                  <option value="">Area max</option>
+               </select>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Construction year</div>
+            <div class="sr-mob-filter-price-row">
+               <select id="smfYearFrom" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                  <option value="">Year min</option>
+               </select>
+               <select id="smfYearTo" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                  <option value="">Year max</option>
+               </select>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Seller</div>
+            <div class="sr-mob-pills" id="smfSeller">
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Private</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Estate Agent</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Construction</button>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Online viewing</div>
+            <div class="sr-mob-pills" id="smfOnlineViewing">
+               <button class="sr-mob-pill" onclick="_smfPillSingle(this,'smfOnlineViewing')">Yes</button>
+               <button class="sr-mob-pill" onclick="_smfPillSingle(this,'smfOnlineViewing')">No</button>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Key features</div>
+            <div class="sr-mob-pills" id="smfFeatures">
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Garden</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Elevator</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Security system</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Balcony</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Swimming pool</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Central heating</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Terrace</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Veranda</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Storage room</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Roof garden</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">BBQ</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Playground</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Attic/Loft</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Double glazing</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Fireplace</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Heating floor</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Smart home</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Wi-Fi</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Built-in kitchen</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Dishwasher</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Washing machine</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Fridge</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">TV</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Shower cabin</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Bath</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Sauna</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Jacuzzi</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Gym</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Tennis court</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Home cinema</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Solar panel</button>
             </div>
          </div>
       </div>
