@@ -412,6 +412,9 @@
       .sr-mob-filter-apply .smf-apply-sub { font-family: "Poppins",sans-serif; font-size: 11px; color: rgba(255,255,255,0.75); }
    </style>
    <script>
+      window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
+         ? 'https://admin.bazar.uk/api'
+         : '/api';
       (function() {
          fetch(window.BAZAR_API + '/is-admin', { credentials: 'include' })
             .then(function(r) { return r.json(); })
