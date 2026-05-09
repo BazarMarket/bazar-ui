@@ -763,13 +763,14 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ viewer_uid: _viewUid })
-         })
-         .then(function(r) { return r.ok ? r.json() : null; })
-         .then(function(d) {
-            var vEl = document.getElementById('prop-views');
-            if (vEl && d && typeof d.views !== 'undefined') vEl.textContent = d.views;
-         })
-         .catch(function() {});
+         }).catch(function() {});
+         fetch('/api/properties/' + id + '/views')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(d) {
+               var vEl = document.getElementById('prop-views');
+               if (vEl && d && typeof d.views !== 'undefined') vEl.textContent = d.views;
+            })
+            .catch(function() {});
       }
 
       var apiUrl = '/api/properties/' + id;

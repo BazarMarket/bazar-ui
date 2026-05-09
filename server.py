@@ -3802,6 +3802,33 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'googleMapsApiKey': GOOGLE_MAPS_API_KEY})
             return
 
+        # ── GET /api/properties/<id>/views — view count from MySQL ──────────────
+        _pv_m = re.match(r'^/api/properties/(\d+)/views$', path)
+        if _pv_m:
+            _pv_id = int(_pv_m.group(1))
+            try:
+                import pymysql
+                _pv_conn = pymysql.connect(
+                    host=os.environ.get('DB_HOST', '127.0.0.1'),
+                    user=os.environ.get('DB_USERNAME', 'bazar'),
+                    password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                    database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                    connect_timeout=3,
+                    cursorclass=pymysql.cursors.DictCursor,
+                )
+                with _pv_conn:
+                    with _pv_conn.cursor() as _pv_cur:
+                        _pv_cur.execute(
+                            'SELECT COUNT(*) AS cnt FROM property_views WHERE property_id=%s',
+                            (_pv_id,)
+                        )
+                        _pv_row = _pv_cur.fetchone()
+                        _pv_count = int(_pv_row['cnt']) if _pv_row else 0
+                self._send_json(200, {'views': _pv_count})
+            except Exception:
+                self._send_json(200, {'views': 0})
+            return
+
         # ── /api/ad-plan/<adId> — return current plan for a specific ad ────────
         _apm_get = re.match(r'^/api/ad-plan/(\d+)$', path)
         if _apm_get:
