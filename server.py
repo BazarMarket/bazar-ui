@@ -993,7 +993,7 @@ FLATS_POPULAR_CITIES = [
     ('Cardiff',      'cardiff'),
 ]
 
-PROPERTY_SUBTYPES = {'shop', 'restaurant', 'industrial', 'office', 'hotel', 'house'}
+PROPERTY_SUBTYPES = {'shop', 'restaurant', 'industrial', 'office', 'hotel', 'house', 'studio', 'penthouse', 'duplex'}
 
 PROPERTY_SUBTYPE_SEO = {
     'shop': {
