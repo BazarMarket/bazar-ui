@@ -3670,6 +3670,13 @@
          if (arrow) arrow.textContent = open ? '\u203a' : '\u2039';
          if (tog)   tog.classList.toggle('sr-mob-other-open', !open);
       }
+
+      /* Render type grid immediately on page load (counts = 0 until API responds) */
+      if (document.readyState === 'loading') {
+         document.addEventListener('DOMContentLoaded', _renderMobTypeGrid);
+      } else {
+         _renderMobTypeGrid();
+      }
    </script>
 <script>
   (function(){
