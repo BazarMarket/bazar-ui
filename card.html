@@ -382,7 +382,7 @@
                         </div>
                         <div class="card-price card-tile">
                            <div class="card-price__info">
-                              <p class="info-icon icon-eye">301</p>
+                              <p class="info-icon icon-eye" id="prop-views">—</p>
                               <p class="info-icon  icon-namber" id="prop-id">992301</p>
                               <p class="info-icon icon-truck" id="prop-delivery" style="display:none">Delivery</p>
                               <p class="info-icon icon-calendar" id="prop-date">19 03 2022 | 19:43</p>
@@ -763,7 +763,13 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ viewer_uid: _viewUid })
-         }).catch(function() {});
+         })
+         .then(function(r) { return r.ok ? r.json() : null; })
+         .then(function(d) {
+            var vEl = document.getElementById('prop-views');
+            if (vEl && d && typeof d.views !== 'undefined') vEl.textContent = d.views;
+         })
+         .catch(function() {});
       }
 
       var apiUrl = '/api/properties/' + id;
