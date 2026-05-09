@@ -2268,6 +2268,7 @@
          panel.classList.remove('open');
          btn.classList.remove('open');
          filterPricePanels();
+         if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType, true); }
       }
 
       function clearPrice(which, e) {
@@ -2285,6 +2286,7 @@
          panel.classList.remove('open');
          btn.classList.remove('open');
          filterPricePanels();
+         if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType, true); }
       }
 
       document.addEventListener('click', function(e) {
@@ -2858,6 +2860,37 @@
                    (item.d || '').toLowerCase().indexOf(_tq) !== -1 ||
                    (item.l || '').toLowerCase().indexOf(_tq) !== -1 ||
                    (item.cy || '').toLowerCase().indexOf(_tq) !== -1;
+          });
+        }
+        /* Apply price filter */
+        var _priceMinLbl = document.getElementById('cfPriceMinLabel');
+        var _priceMaxLbl = document.getElementById('cfPriceMaxLabel');
+        var _priceMinTxt = _priceMinLbl ? _priceMinLbl.textContent.trim() : '';
+        var _priceMaxTxt = _priceMaxLbl ? _priceMaxLbl.textContent.trim() : '';
+        if (_priceMinTxt && _priceMinTxt !== 'Price min') {
+          var _pMin = parsePriceNum(_priceMinTxt);
+          if (_pMin > 0) items = items.filter(function(item) { return item.pn >= _pMin; });
+        }
+        if (_priceMaxTxt && _priceMaxTxt !== 'Price max') {
+          var _pMax = parsePriceNum(_priceMaxTxt);
+          if (_pMax > 0) items = items.filter(function(item) { return item.pn <= _pMax; });
+        }
+        /* Apply bedrooms filter */
+        var _bedChecks = document.querySelectorAll('#cfBedroomsPanel input[type="checkbox"]:checked');
+        if (_bedChecks.length > 0) {
+          var _selBeds = Array.prototype.map.call(_bedChecks, function(c) { return c.value; });
+          items = items.filter(function(item) {
+            var b = String(item.b || '');
+            return _selBeds.indexOf(b) !== -1 || (_selBeds.indexOf('10+') !== -1 && parseInt(b) >= 10);
+          });
+        }
+        /* Apply bathrooms filter */
+        var _bathChecks = document.querySelectorAll('#cfBathroomsPanel input[type="checkbox"]:checked');
+        if (_bathChecks.length > 0) {
+          var _selBaths = Array.prototype.map.call(_bathChecks, function(c) { return c.value; });
+          items = items.filter(function(item) {
+            var bt = String(item.bt || '');
+            return _selBaths.indexOf(bt) !== -1;
           });
         }
         /* Paginate */
