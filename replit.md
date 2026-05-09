@@ -76,7 +76,8 @@ A static HTML/CSS/JS classified ads marketplace website UI that will eventually 
 
 - **Файлы SMS:** `/var/www/bazar-dev/app/Filament/Resources/Leads/LeadResource.php` и `/var/www/bazar-dev/app/Console/Commands/SendSmsLeads.php`
 - **ТОЧНЫЙ текст SMS (НЕ МЕНЯТЬ без явной просьбы пользователя):**
-  `"Hi {$greeting}, quick one - you can list your room or apartment on Bazar.uk for free. We're a new UK platform for landlords. Upload in 1 min: https://bazar.uk/post-ad"`
+  `"Hi {$greeting}, saw your property listing. You can also post it on Bazar.uk for free if helpful: https://bazar.uk/post-ad"`
+  *(1 сегмент при любом имени, ~113-131 символов)*
 - **КРИТИЧНО — запрет на спецсимволы в тексте SMS:** НИКОГДА не использовать длинное тире `—`, умные кавычки `"` `"`, или любые не-ASCII символы. Только обычный дефис `-`, прямой апостроф `'`. Причина: спецсимволы переключают SMS в Unicode-режим (70 символов/сегмент вместо 160), что утраивает стоимость ($0.065 → $0.20 за SMS).
 - **Имя:** если имя продавца ≥ 3 букв — используется имя, иначе "there". НЕ МЕНЯТЬ этот порог.
 - **Отправка:** через Artisan-команду `php artisan sms:send-property` в фоне (nohup). НЕ отправлять синхронно — будет 504 Gateway Timeout.
