@@ -250,7 +250,7 @@
          .sr-cat-intro, .sr-cat-related { display: none !important; }
          .sr-wrap { padding: 0 4%; }
          .cf-block { padding: 0 4%; }
-         .cf-block-outer { padding: 10px 0; }
+         .cf-block-outer { display: none !important; }
          /* Hide filter rows by default on mobile — revealed by Filter button */
          .cf-row1 .cf-cat { display: none !important; }
          .cf-row, .cf-row-dynamic, .cf-row-extra, .cf-more-btn { display: none !important; }
@@ -983,6 +983,11 @@
          <div class="sr-wrap">
             <div class="sr-results">
 
+               <div class="sr-mob-search" id="srMobSearchWrap">
+                  <span class="sr-mob-search__icon"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                  <input type="text" id="mobSearchInput" placeholder="Search ads in All UK" autocomplete="off" oninput="onMobSearchInput()" onkeydown="onMobSearchKey(event)" onfocus="if(this.value.length>=2)onMobSearchInput()">
+                  <div id="mobSearchSuggestDrop" class="search-suggest" style="display:none"></div>
+               </div>
                <div class="sr-breadcrumbs">
                   <ul class="bread-custom" id="srBreadcrumb">
                      <li><a href="/">Home</a><span class="icon-arrow-r"></span></li>
@@ -993,11 +998,6 @@
                </div>
                <div class="sr-hero-sort">
                   <!-- SR_CAT_HERO -->
-                  <div class="sr-mob-search" id="srMobSearchWrap">
-                     <span class="sr-mob-search__icon"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-                     <input type="text" id="mobSearchInput" placeholder="Search ads in All UK" autocomplete="off" oninput="onMobSearchInput()" onkeydown="onMobSearchKey(event)" onfocus="if(this.value.length>=2)onMobSearchInput()">
-                     <div id="mobSearchSuggestDrop" class="search-suggest" style="display:none"></div>
-                  </div>
                   <div id="srMobTypeGrid" class="sr-mob-type-grid"></div>
                   <div class="sr-sort-row">
                      <div class="sr-sort">
