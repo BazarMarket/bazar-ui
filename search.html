@@ -1853,11 +1853,12 @@
 
       var _smfPricesBuilt = false;
       function _smfBuildPrices() {
-         if (_smfPricesBuilt) return;
          var minSel = document.getElementById('smfPriceMin');
          var maxSel = document.getElementById('smfPriceMax');
          if (!minSel || !maxSel) return;
          var vals = (typeof priceValues !== 'undefined') ? priceValues : [];
+         while (minSel.options.length > 1) minSel.remove(1);
+         while (maxSel.options.length > 1) maxSel.remove(1);
          vals.forEach(function(v, i) {
             minSel.appendChild(new Option('£' + v, v));
             maxSel.appendChild(new Option('£' + v + (i === vals.length - 1 ? '+' : ''), v));
@@ -2193,9 +2194,12 @@
          filterAreaPanels();
       }
 
-      var priceValues = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
+      var priceValuesSale = ['50.000','75.000','100.000','150.000','200.000','250.000','300.000','400.000','500.000','600.000','750.000','800.000','1.000.000','1.250.000','1.500.000','1.750.000','2.000.000','2.500.000','3.000.000','4.000.000','5.000.000','7.500.000','10.000.000'];
+      var priceValuesRent = ['100','200','300','400','500','600','700','800','900','1.000','1.250','1.500','2.000','2.500','3.000','4.000','5.000'];
+      var priceValues = priceValuesSale;
 
       function buildPricePanels() {
+         priceValues = (currentMode === 'rent' || currentMode === 'short-rent') ? priceValuesRent : priceValuesSale;
          var minPanel = document.getElementById('cfPriceMinPanel');
          var maxPanel = document.getElementById('cfPriceMaxPanel');
          minPanel.innerHTML = priceValues.map(function(v){ return '<div class="cf-price-item" onclick="selectPrice(this,\'Min\')">' + v + '</div>'; }).join('');
@@ -3276,6 +3280,7 @@
             });
             currentMode = info.mode;
             buildTypePanel();
+            buildPricePanels(); _smfPricesBuilt = false;
             if (catLink) {
                catLink.textContent = info.catLabel;
                catLink.href = info.catUrl || '/property';
@@ -3292,6 +3297,7 @@
             });
             currentMode = info.mode;
             buildTypePanel();
+            buildPricePanels(); _smfPricesBuilt = false;
             if (catLink) { catLink.parentNode.style.display = 'none'; }
             if (catArrow) { catArrow.style.display = 'none'; }
 
