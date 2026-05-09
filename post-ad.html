@@ -977,6 +977,9 @@
       [data-admin-only] { display: none !important; }
    </style>
    <script>
+      window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
+         ? 'https://admin.bazar.uk/api'
+         : '/api';
       (function() {
          fetch(window.BAZAR_API + '/is-admin', { credentials: 'include' })
             .then(function(r) { return r.json(); })

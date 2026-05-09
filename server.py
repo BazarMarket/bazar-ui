@@ -3802,6 +3802,11 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'googleMapsApiKey': GOOGLE_MAPS_API_KEY})
             return
 
+        # ── GET /api/is-admin — always true in dev/Replit ────────────────────────
+        if path == '/api/is-admin':
+            self._send_json(200, {'admin': True})
+            return
+
         # ── GET /api/properties/<id>/views — view count from MySQL ──────────────
         _pv_m = re.match(r'^/api/properties/(\d+)/views$', path)
         if _pv_m:
