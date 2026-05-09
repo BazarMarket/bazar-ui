@@ -7,18 +7,19 @@
         try { return localStorage.getItem('bazar_phone') || ''; } catch (e) { return ''; }
     }
 
-    function send(type, message, page) {
+    function send(type, message, page, phoneOverride) {
         if (_sent >= MAX_PER_SESSION) return;
         if (!message || message.length < 3) return;
         if (message.indexOf('extension') !== -1 || message.indexOf('chrome-extension') !== -1) return;
         _sent++;
+        var phone = phoneOverride || getPhone();
         try {
             navigator.sendBeacon
-                ? navigator.sendBeacon(API, JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: getPhone() }))
+                ? navigator.sendBeacon(API, JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone }))
                 : fetch(API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: getPhone() }),
+                    body: JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone }),
                     keepalive: true
                 }).catch(function () {});
         } catch (e) {}
