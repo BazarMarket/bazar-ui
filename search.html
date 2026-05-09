@@ -3594,10 +3594,10 @@
          if (typeof BAZAR_LISTINGS === 'undefined') return;
          var pathCat = window.location.pathname.replace(/^\//, '').split('/')[0];
          var isRent  = pathCat === 'property-to-rent';
-         var isSale  = pathCat === 'property-for-sale';
+         var isSale  = pathCat === 'property-for-sale' || pathCat === 'property' || pathCat === 'real-estate';
          var isShort = pathCat === 'property-short-rent';
          if (!isRent && !isSale && !isShort) return;
-         var base = '/' + pathCat;
+         var base = isSale ? '/property-for-sale' : ('/' + pathCat);
          var mainItems, otherItems;
          if (isSale) {
             mainItems = [
