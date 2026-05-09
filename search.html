@@ -374,6 +374,16 @@
       .search-suggest__arrow{color:#ccc;font-size:13px;flex-shrink:0}
       .search-suggest__divider{height:1px;background:#f3f3f3;margin:4px 0}
 
+      /* ── Mobile search bar ── */
+      .sr-mob-search { display: none; }
+      @media (max-width: 576px) {
+         .sr-mob-search { display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 12px; padding: 0 14px; height: 48px; width: 100%; position: relative; margin-bottom: 14px; box-sizing: border-box; }
+         .sr-mob-search input { flex: 1; border: none; outline: none; font-family: "Poppins",sans-serif; font-size: 14px; color: #1a1a1a; background: transparent; min-width: 0; }
+         .sr-mob-search input::placeholder { color: #b0b7c3; }
+         .sr-mob-search__icon { flex-shrink: 0; color: #b0b7c3; display: flex; align-items: center; }
+         #mobSearchSuggestDrop { position: absolute; top: calc(100% + 6px); left: -1px; right: -1px; z-index: 9999; }
+      }
+
       /* ── Mobile filter bottom sheet ── */
       .sr-mob-filter-sheet { display: none; position: fixed; inset: 0; z-index: 9999; }
       .sr-mob-filter-sheet.open { display: block; }
@@ -983,6 +993,11 @@
                </div>
                <div class="sr-hero-sort">
                   <!-- SR_CAT_HERO -->
+                  <div class="sr-mob-search" id="srMobSearchWrap">
+                     <span class="sr-mob-search__icon"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><line x1="11.5" y1="11.5" x2="16" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                     <input type="text" id="mobSearchInput" placeholder="Search ads in All UK" autocomplete="off" oninput="onMobSearchInput()" onkeydown="onMobSearchKey(event)" onfocus="if(this.value.length>=2)onMobSearchInput()">
+                     <div id="mobSearchSuggestDrop" class="search-suggest" style="display:none"></div>
+                  </div>
                   <div id="srMobTypeGrid" class="sr-mob-type-grid"></div>
                   <div class="sr-sort-row">
                      <div class="sr-sort">
@@ -3110,6 +3125,95 @@
             else { hideSuggest(); applyTextFilter((document.getElementById('mainSearchInput').value||'').trim()); }
           } else if (e.key === 'Escape') { hideSuggest(); }
         };
+
+        /* ── Mobile search suggest ── */
+        var _mobSugIdx = -1, _mobSugItems = [], _mobSugTimer = 0;
+
+        function _renderMobSuggest(cats, listings) {
+          var drop = document.getElementById('mobSearchSuggestDrop');
+          if (!drop) return;
+          if (!cats.length && !listings.length) { _hideMobSuggest(); return; }
+          var html = '';
+          if (cats.length) {
+            html += '<div class="search-suggest__section"><div class="search-suggest__head">Categories</div>';
+            cats.forEach(function(c) {
+              html += '<a class="search-suggest__item" href="' + c.url + '">' +
+                '<span class="search-suggest__icon"><svg viewBox="0 0 16 16" fill="none" stroke="#ff9138" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h6"/></svg></span>' +
+                '<span class="search-suggest__label">' + _esc(c.label) + '</span>' +
+                '<span class="search-suggest__arrow">›</span></a>';
+            });
+            html += '</div>';
+          }
+          if (listings.length) {
+            if (cats.length) html += '<div class="search-suggest__divider"></div>';
+            html += '<div class="search-suggest__section"><div class="search-suggest__head">Properties</div>';
+            listings.forEach(function(p) {
+              var price = p.price ? '£' + Number(p.price).toLocaleString('en-GB') : '';
+              html += '<a class="search-suggest__item" href="' + p.url + '">' +
+                '<span class="search-suggest__icon"><svg viewBox="0 0 16 16" fill="none" stroke="#ff9138" stroke-width="1.5"><path d="M1 7L8 1l7 6v7H1V7z"/></svg></span>' +
+                '<span class="search-suggest__label">' + _esc(p.title) +
+                  (p.city ? '<div class="search-suggest__sub">' + _esc(p.city) + (price ? ' · ' + price : '') + '</div>' : '') +
+                '</span><span class="search-suggest__arrow">›</span></a>';
+            });
+            html += '</div>';
+          }
+          drop.innerHTML = html;
+          drop.style.display = 'block';
+          _mobSugIdx = -1;
+        }
+
+        function _hideMobSuggest() {
+          var drop = document.getElementById('mobSearchSuggestDrop');
+          if (drop) drop.style.display = 'none';
+          _mobSugIdx = -1;
+        }
+
+        window.onMobSearchInput = function() {
+          var mobInp = document.getElementById('mobSearchInput');
+          var deskInp = document.getElementById('mainSearchInput');
+          if (!mobInp) return;
+          var q = mobInp.value.trim();
+          if (deskInp) deskInp.value = mobInp.value;
+          clearTimeout(_mobSugTimer);
+          if (q.length < 2) { _hideMobSuggest(); applyTextFilter(null); return; }
+          _mobSugTimer = setTimeout(function() {
+            var cats = getStaticCats(q);
+            var listings = getLocalListings(q);
+            function _normCatUrl(u){return (u||'').toLowerCase().replace(/^https?:\/\/[^\/]+/,'').replace(/\/rooms?$/,'/rooms').replace(/\/$/,'');}
+            function _normCatLabel(s){return (s||'').toLowerCase().replace(/\s+/g,'').replace(/rooms?/g,'room').replace(/flats?/g,'flat');}
+            function _catIsDup(bc,statics){var bu=_normCatUrl(bc.url),bl=_normCatLabel(bc.label);return statics.some(function(sc){return _normCatUrl(sc.url)===bu||_normCatLabel(sc.label)===bl;});}
+            fetch('/api/search/suggest?q=' + encodeURIComponent(q), {headers:{'Accept':'application/json'}})
+              .then(function(r){return r.json();})
+              .then(function(d){
+                var apiCats = (d.categories||[]).filter(function(bc){ return !_catIsDup(bc, cats); });
+                var mergedCats = cats.concat(apiCats);
+                var apiListings = (d.listings||[]).map(function(p){ return {title:p.title,city:p.city,price:p.price,url:p.url}; });
+                var allListings = listings.concat(apiListings.filter(function(al){ return !listings.some(function(ll){return ll.url===al.url;}); })).slice(0,5);
+                _renderMobSuggest(mergedCats, allListings);
+              })
+              .catch(function(){ _renderMobSuggest(cats, listings); });
+            applyTextFilter(q);
+          }, 220);
+        };
+
+        window.onMobSearchKey = function(e) {
+          var drop = document.getElementById('mobSearchSuggestDrop');
+          if (!drop || drop.style.display === 'none') {
+            if (e.key === 'Enter') { e.preventDefault(); applyTextFilter((document.getElementById('mobSearchInput').value||'').trim()); _hideMobSuggest(); }
+            return;
+          }
+          var els = drop.querySelectorAll('.search-suggest__item');
+          _mobSugItems = Array.from(els).map(function(el){ return {url:el.getAttribute('href'),el:el}; });
+          if (e.key === 'ArrowDown') { e.preventDefault(); _mobSugItems.forEach(function(it){it.el.classList.remove('ss-active');}); _mobSugIdx = Math.min(_mobSugItems.length-1, _mobSugIdx+1); if(_mobSugIdx>=0)_mobSugItems[_mobSugIdx].el.classList.add('ss-active'); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); _mobSugItems.forEach(function(it){it.el.classList.remove('ss-active');}); _mobSugIdx = Math.max(-1, _mobSugIdx-1); if(_mobSugIdx>=0)_mobSugItems[_mobSugIdx].el.classList.add('ss-active'); }
+          else if (e.key === 'Enter') { e.preventDefault(); if (_mobSugIdx >= 0 && _mobSugItems[_mobSugIdx]) window.location.href = _mobSugItems[_mobSugIdx].url; else { _hideMobSuggest(); applyTextFilter((document.getElementById('mobSearchInput').value||'').trim()); } }
+          else if (e.key === 'Escape') { _hideMobSuggest(); }
+        };
+
+        document.addEventListener('click', function(e) {
+          var wrap = document.getElementById('srMobSearchWrap');
+          if (wrap && !wrap.contains(e.target)) _hideMobSuggest();
+        });
 
         document.addEventListener('click', function(e) {
           if (!e.target.closest('.cf-search')) hideSuggest();
