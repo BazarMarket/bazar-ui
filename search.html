@@ -3580,12 +3580,12 @@
    <script>
       function _loadAdCount() {
          if (typeof BAZAR_LISTINGS === 'undefined') return;
+         _renderMobTypeGrid();
          var n = 0;
          Object.keys(BAZAR_LISTINGS).forEach(function(k) { n += (BAZAR_LISTINGS[k] || []).length; });
          if (!n) return;
          var el = document.getElementById('mainSearchInput');
          if (el) el.placeholder = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
-         _renderMobTypeGrid();
       }
 
       function _renderMobTypeGrid() {
