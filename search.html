@@ -3599,21 +3599,39 @@
          var isShort = pathCat === 'property-short-rent';
          if (!isRent && !isSale && !isShort) return;
          var base = '/' + pathCat;
-         var mainItems = [
-            { label: 'Apartments, flats', buckets: ['Flats'], slug: 'flats' },
-            { label: 'House',             buckets: ['House'], slug: 'house' },
-            { label: 'Rooms, flatmates',  buckets: ['Rooms'], slug: 'rooms' },
-            { label: 'Office',            buckets: ['Office'], slug: 'office' },
-            { label: 'Industrial',        buckets: ['Industrial'], slug: 'industrial' }
-         ];
-         var otherItems = [
-            { label: 'Shop',                  buckets: ['Shop'], slug: 'shop' },
-            { label: 'Restaurant',            buckets: ['Restaurant'], slug: 'restaurant' },
-            { label: 'Hotel',                 buckets: ['Hotel'], slug: 'hotel' },
-            { label: 'Building',              buckets: ['Building'], slug: 'building' },
-            { label: 'Business / Investment', buckets: ['Business or Investment'], slug: 'business' },
-            { label: 'Land',                  buckets: ['Land'], slug: 'land' }
-         ];
+         var mainItems, otherItems;
+         if (isSale) {
+            mainItems = [
+               { label: 'Apartments, flats', buckets: ['Flats'], slug: 'flats' },
+               { label: 'House',             buckets: ['House'], slug: 'house' },
+               { label: 'Office',            buckets: ['Office'], slug: 'office' },
+               { label: 'Shop',              buckets: ['Shop'], slug: 'shop' },
+               { label: 'Land',              buckets: ['Land'], slug: 'land' }
+            ];
+            otherItems = [
+               { label: 'Restaurant',            buckets: ['Restaurant'], slug: 'restaurant' },
+               { label: 'Industrial',            buckets: ['Industrial'], slug: 'industrial' },
+               { label: 'Hotel',                 buckets: ['Hotel'], slug: 'hotel' },
+               { label: 'Building',              buckets: ['Building'], slug: 'building' },
+               { label: 'Business / Investment', buckets: ['Business or Investment'], slug: 'business' }
+            ];
+         } else {
+            mainItems = [
+               { label: 'Apartments, flats', buckets: ['Flats'], slug: 'flats' },
+               { label: 'House',             buckets: ['House'], slug: 'house' },
+               { label: 'Rooms, flatmates',  buckets: ['Rooms'], slug: 'rooms' },
+               { label: 'Office',            buckets: ['Office'], slug: 'office' },
+               { label: 'Industrial',        buckets: ['Industrial'], slug: 'industrial' }
+            ];
+            otherItems = [
+               { label: 'Shop',                  buckets: ['Shop'], slug: 'shop' },
+               { label: 'Restaurant',            buckets: ['Restaurant'], slug: 'restaurant' },
+               { label: 'Hotel',                 buckets: ['Hotel'], slug: 'hotel' },
+               { label: 'Building',              buckets: ['Building'], slug: 'building' },
+               { label: 'Business / Investment', buckets: ['Business or Investment'], slug: 'business' },
+               { label: 'Land',                  buckets: ['Land'], slug: 'land' }
+            ];
+         }
          function cnt(item) {
             return item.buckets.reduce(function(s, b) { return s + ((BAZAR_LISTINGS[b] || []).length); }, 0);
          }
