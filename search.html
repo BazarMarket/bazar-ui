@@ -373,6 +373,33 @@
       .search-suggest__sub{font-size:12px;color:#888;margin-top:1px}
       .search-suggest__arrow{color:#ccc;font-size:13px;flex-shrink:0}
       .search-suggest__divider{height:1px;background:#f3f3f3;margin:4px 0}
+
+      /* ── Mobile filter bottom sheet ── */
+      .sr-mob-filter-sheet { display: none; position: fixed; inset: 0; z-index: 9999; }
+      .sr-mob-filter-sheet.open { display: block; }
+      .sr-mob-filter-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+      .sr-mob-filter-panel { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; border-radius: 18px 18px 0 0; display: flex; flex-direction: column; max-height: 88vh; overflow: hidden; transform: translateY(100%); transition: transform 0.28s cubic-bezier(.32,.72,0,1); }
+      .sr-mob-filter-sheet.open .sr-mob-filter-panel { transform: translateY(0); }
+      .sr-mob-filter-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 14px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+      .sr-mob-filter-back { background: none; border: none; font-family: "Poppins",sans-serif; font-size: 17px; font-weight: 700; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 0; }
+      .sr-mob-filter-clear-btn { background: none; border: none; font-family: "Poppins",sans-serif; font-size: 14px; color: #9ca3af; cursor: pointer; padding: 0; }
+      .sr-mob-filter-body { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+      .sr-mob-filter-section { padding: 18px 20px; }
+      .sr-mob-filter-section + .sr-mob-filter-section { border-top: 1px solid #f2f2f2; }
+      .sr-mob-filter-section-label { font-family: "Poppins",sans-serif; font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 14px; }
+      .sr-mob-filter-price-row { display: flex; gap: 10px; }
+      .sr-mob-price-sel { flex: 1; height: 48px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #f7f8fa url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center; font-family: "Poppins",sans-serif; font-size: 13px; color: #6b7280; padding: 0 32px 0 12px; appearance: none; -webkit-appearance: none; }
+      .sr-mob-price-sel.has-val { color: #1a1a1a; border-color: #ff9138; }
+      .sr-mob-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+      .sr-mob-chip { min-width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid #e5e7eb; background: #fff; font-family: "Poppins",sans-serif; font-size: 13px; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0 6px; }
+      .sr-mob-chip.active { border-color: #ff9138; background: #fff5ee; color: #ff9138; }
+      .sr-mob-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+      .sr-mob-pill { padding: 9px 16px; border-radius: 24px; border: 1.5px solid #e5e7eb; background: #fff; font-family: "Poppins",sans-serif; font-size: 13px; color: #374151; cursor: pointer; }
+      .sr-mob-pill.active { border-color: #ff9138; background: #fff5ee; color: #ff9138; }
+      .sr-mob-filter-footer { padding: 12px 20px 24px; border-top: 1px solid #f0f0f0; flex-shrink: 0; }
+      .sr-mob-filter-apply { width: 100%; background: #ff9138; border: none; border-radius: 14px; padding: 13px 0 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; }
+      .sr-mob-filter-apply .smf-apply-title { font-family: "Poppins",sans-serif; font-size: 16px; font-weight: 600; color: #fff; }
+      .sr-mob-filter-apply .smf-apply-sub { font-family: "Poppins",sans-serif; font-size: 11px; color: rgba(255,255,255,0.75); }
    </style>
    <script>
       (function() {
@@ -1784,11 +1811,103 @@
       }
 
       function toggleMobFilters() {
-         var outer = document.querySelector('.cf-block-outer');
-         var btn = document.getElementById('srMobFilterBtn');
-         if (!outer) return;
-         var isOpen = outer.classList.toggle('mob-open');
-         if (btn) btn.classList.toggle('active', isOpen);
+         var sheet = document.getElementById('srMobFilterSheet');
+         if (!sheet) return;
+         if (sheet.classList.contains('open')) { _mobFilterClose(); } else { _mobFilterOpen(); }
+      }
+
+      function _mobFilterOpen() {
+         var sheet = document.getElementById('srMobFilterSheet');
+         var btn   = document.getElementById('srMobFilterBtn');
+         if (!sheet) return;
+         _smfBuildPrices();
+         _smfSyncFromDesktop();
+         sheet.classList.add('open');
+         document.body.style.overflow = 'hidden';
+         if (btn) btn.classList.add('active');
+      }
+
+      function _mobFilterClose() {
+         var sheet = document.getElementById('srMobFilterSheet');
+         var btn   = document.getElementById('srMobFilterBtn');
+         if (!sheet) return;
+         sheet.classList.remove('open');
+         document.body.style.overflow = '';
+         if (btn) btn.classList.remove('active');
+      }
+
+      var _smfPricesBuilt = false;
+      function _smfBuildPrices() {
+         if (_smfPricesBuilt) return;
+         var minSel = document.getElementById('smfPriceMin');
+         var maxSel = document.getElementById('smfPriceMax');
+         if (!minSel || !maxSel) return;
+         var vals = (typeof priceValues !== 'undefined') ? priceValues : [];
+         vals.forEach(function(v, i) {
+            minSel.appendChild(new Option('£' + v, v));
+            maxSel.appendChild(new Option('£' + v + (i === vals.length - 1 ? '+' : ''), v));
+         });
+         _smfPricesBuilt = true;
+      }
+
+      function _smfSyncFromDesktop() {
+         var minLbl = document.getElementById('cfPriceMinLabel');
+         var maxLbl = document.getElementById('cfPriceMaxLabel');
+         var minSel = document.getElementById('smfPriceMin');
+         var maxSel = document.getElementById('smfPriceMax');
+         if (minSel && minLbl && minLbl.textContent !== 'Price min') {
+            Array.prototype.forEach.call(minSel.options, function(o) { if (o.text.replace(/£/g,'') === minLbl.textContent) minSel.value = o.value; });
+            minSel.classList.add('has-val');
+         } else if (minSel) { minSel.value = ''; minSel.classList.remove('has-val'); }
+         if (maxSel && maxLbl && maxLbl.textContent !== 'Price max') {
+            Array.prototype.forEach.call(maxSel.options, function(o) { if (o.text.replace(/[£+]/g,'') === maxLbl.textContent.replace(/\+/g,'')) maxSel.value = o.value; });
+            maxSel.classList.add('has-val');
+         } else if (maxSel) { maxSel.value = ''; maxSel.classList.remove('has-val'); }
+         var bedVals = Array.prototype.map.call(document.querySelectorAll('#cfBedroomsPanel input:checked'), function(c){ return c.value; });
+         document.querySelectorAll('#smfBedrooms .sr-mob-chip').forEach(function(c){ c.classList.toggle('active', bedVals.indexOf(c.textContent.trim()) !== -1); });
+         var bathVals = Array.prototype.map.call(document.querySelectorAll('#cfBathroomsPanel input:checked'), function(c){ return c.value; });
+         document.querySelectorAll('#smfBathrooms .sr-mob-chip').forEach(function(c){ c.classList.toggle('active', bathVals.indexOf(c.textContent.trim()) !== -1); });
+         var condVals = Array.prototype.map.call(document.querySelectorAll('#cfConditionPanel input:checked'), function(c){ return c.value; });
+         document.querySelectorAll('#smfCondition .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', condVals.indexOf(p.textContent.trim()) !== -1); });
+      }
+
+      function _smfChip(btn) { btn.classList.toggle('active'); }
+      function _smfPill(btn) { btn.classList.toggle('active'); }
+      function _smfPriceChange(sel) { sel.classList.toggle('has-val', !!sel.value); }
+
+      function _mobFilterApply() {
+         var bedVals  = Array.prototype.map.call(document.querySelectorAll('#smfBedrooms .sr-mob-chip.active'),  function(c){ return c.textContent.trim(); });
+         var bathVals = Array.prototype.map.call(document.querySelectorAll('#smfBathrooms .sr-mob-chip.active'), function(c){ return c.textContent.trim(); });
+         var condVals = Array.prototype.map.call(document.querySelectorAll('#smfCondition .sr-mob-pill.active'),  function(p){ return p.textContent.trim(); });
+         document.querySelectorAll('#cfBedroomsPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = bedVals.indexOf(cb.value) !== -1; });
+         if (typeof updateBedroomsLabel === 'function') updateBedroomsLabel();
+         document.querySelectorAll('#cfBathroomsPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = bathVals.indexOf(cb.value) !== -1; });
+         if (typeof updateBathroomsLabel === 'function') updateBathroomsLabel();
+         document.querySelectorAll('#cfConditionPanel input[type="checkbox"]').forEach(function(cb){ cb.checked = condVals.indexOf(cb.value) !== -1; });
+         if (typeof updateConditionLabel === 'function') updateConditionLabel();
+         var minSel = document.getElementById('smfPriceMin');
+         var maxSel = document.getElementById('smfPriceMax');
+         if (minSel && minSel.value) {
+            var minItem = null;
+            document.querySelectorAll('#cfPriceMinPanel .cf-price-item').forEach(function(i){ if (i.textContent === minSel.value) minItem = i; });
+            if (minItem && typeof selectPrice === 'function') selectPrice(minItem, 'Min');
+         } else { if (typeof clearPrice === 'function') clearPrice('Min', null); }
+         if (maxSel && maxSel.value) {
+            var maxItem = null;
+            document.querySelectorAll('#cfPriceMaxPanel .cf-price-item').forEach(function(i){ if (i.textContent.replace('+','') === maxSel.value) maxItem = i; });
+            if (maxItem && typeof selectPrice === 'function') selectPrice(maxItem, 'Max');
+         } else { if (typeof clearPrice === 'function') clearPrice('Max', null); }
+         _mobFilterClose();
+         if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType); }
+      }
+
+      function _mobFilterClear() {
+         document.querySelectorAll('#smfBedrooms .sr-mob-chip, #smfBathrooms .sr-mob-chip').forEach(function(c){ c.classList.remove('active'); });
+         document.querySelectorAll('#smfCondition .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
+         var minSel = document.getElementById('smfPriceMin');
+         var maxSel = document.getElementById('smfPriceMax');
+         if (minSel) { minSel.value = ''; minSel.classList.remove('has-val'); }
+         if (maxSel) { maxSel.value = ''; maxSel.classList.remove('has-val'); }
       }
 
       function toggleMoreFilters() {
@@ -3409,6 +3528,74 @@
   })();
 </script>
 <script src="js/header-auth.js?v=17"></script>
+
+<!-- Mobile filter bottom sheet -->
+<div id="srMobFilterSheet" class="sr-mob-filter-sheet">
+   <div class="sr-mob-filter-backdrop" onclick="_mobFilterClose()"></div>
+   <div class="sr-mob-filter-panel">
+      <div class="sr-mob-filter-header">
+         <button class="sr-mob-filter-back" onclick="_mobFilterClose()">
+            <svg width="9" height="14" viewBox="0 0 9 14" fill="none"><path d="M8 1L1.5 7 8 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Filters
+         </button>
+         <button class="sr-mob-filter-clear-btn" onclick="_mobFilterClear()">Clear</button>
+      </div>
+      <div class="sr-mob-filter-body">
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Price, £</div>
+            <div class="sr-mob-filter-price-row">
+               <select id="smfPriceMin" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                  <option value="">Min price</option>
+               </select>
+               <select id="smfPriceMax" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                  <option value="">Max price</option>
+               </select>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Bedrooms</div>
+            <div class="sr-mob-chips" id="smfBedrooms">
+               <button class="sr-mob-chip" onclick="_smfChip(this)">1</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">2</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">3</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">4</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">5</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">6</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">7</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">8</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">9</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">10+</button>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Bathrooms</div>
+            <div class="sr-mob-chips" id="smfBathrooms">
+               <button class="sr-mob-chip" onclick="_smfChip(this)">1</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">2</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">3</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">4</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">5</button>
+               <button class="sr-mob-chip" onclick="_smfChip(this)">6</button>
+            </div>
+         </div>
+         <div class="sr-mob-filter-section">
+            <div class="sr-mob-filter-section-label">Condition</div>
+            <div class="sr-mob-pills" id="smfCondition">
+               <button class="sr-mob-pill" onclick="_smfPill(this)">New Build</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Resale</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Under construction</button>
+               <button class="sr-mob-pill" onclick="_smfPill(this)">Off plan</button>
+            </div>
+         </div>
+      </div>
+      <div class="sr-mob-filter-footer">
+         <button class="sr-mob-filter-apply" onclick="_mobFilterApply()">
+            <span class="smf-apply-title">Apply filters</span>
+            <span class="smf-apply-sub">Search</span>
+         </button>
+      </div>
+   </div>
+</div>
 
 <div class="menu-mob after992">
    <a href="/" class="menu-mob__item icon-main-home">Home</a>
