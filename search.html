@@ -276,6 +276,11 @@
          .sr-mob-type-cell:first-child { border-right: 1px solid #ebebeb; }
          .sr-mob-type-cell a { color: #374151; text-decoration: none; }
          .sr-mob-type-count { font-size: 12px; color: #9ca3af; font-weight: 500; min-width: 14px; text-align: right; flex-shrink: 0; }
+         .sr-mob-other-toggle { cursor: pointer; user-select: none; color: #374151; }
+         .sr-mob-other-toggle.sr-mob-other-open { color: #ff9138; }
+         .sr-mob-other-toggle.sr-mob-other-open .sr-mob-other-arrow { color: #ff9138; }
+         .sr-mob-other-arrow { font-style: normal; transition: color 0.15s; }
+         .sr-mob-other-rows .sr-mob-type-row { border-top: 1px solid #ebebeb; }
          .cf-row1 { flex-direction: column; align-items: stretch; gap: 6px; }
          .cf-search { max-width: 100% !important; flex: 0 0 auto !important; width: 100%; }
          .cf-row-extra .cf-price-joined { width: 100%; }
@@ -3334,27 +3339,58 @@
          var isShort = pathCat === 'property-short-rent';
          if (!isRent && !isSale && !isShort) return;
          var base = '/' + pathCat;
-         var catItems = [
+         var mainItems = [
             { label: 'Apartments, flats', buckets: ['Flats'], slug: 'flats' },
             { label: 'House',             buckets: ['House'], slug: 'house' },
-            { label: 'Rooms, flatmates',  buckets: ['Rooms'], slug: 'rooms', hideOnSale: true },
+            { label: 'Rooms, flatmates',  buckets: ['Rooms'], slug: 'rooms' },
             { label: 'Office',            buckets: ['Office'], slug: 'office' },
-            { label: 'Industrial',        buckets: ['Industrial'], slug: 'industrial' },
-            { label: 'Other \u203a',      buckets: ['Shop','Restaurant','Hotel','Building','Business or Investment','Land'], slug: '' }
+            { label: 'Industrial',        buckets: ['Industrial'], slug: 'industrial' }
          ];
-         var rows = [];
-         for (var i = 0; i < catItems.length; i += 2) {
-            var L = catItems[i];
-            var R = catItems[i + 1];
-            var lc = L.buckets.reduce(function(s, b) { return s + ((BAZAR_LISTINGS[b] || []).length); }, 0);
-            var rc = R ? R.buckets.reduce(function(s, b) { return s + ((BAZAR_LISTINGS[b] || []).length); }, 0) : 0;
-            var lHref = L.slug ? (base + '/' + L.slug) : base;
-            var rHref = R ? (R.slug ? (base + '/' + R.slug) : base) : '';
-            var lCell = '<div class="sr-mob-type-cell"><a href="' + lHref + '">' + L.label + '</a><span class="sr-mob-type-count">' + lc + '</span></div>';
-            var rCell = R ? '<div class="sr-mob-type-cell"><a href="' + rHref + '">' + R.label + '</a><span class="sr-mob-type-count">' + rc + '</span></div>' : '';
-            rows.push('<div class="sr-mob-type-row">' + lCell + rCell + '</div>');
+         var otherItems = [
+            { label: 'Shop',                  buckets: ['Shop'], slug: 'shop' },
+            { label: 'Restaurant',            buckets: ['Restaurant'], slug: 'restaurant' },
+            { label: 'Hotel',                 buckets: ['Hotel'], slug: 'hotel' },
+            { label: 'Building',              buckets: ['Building'], slug: 'building' },
+            { label: 'Business / Investment', buckets: ['Business or Investment'], slug: 'business' },
+            { label: 'Land',                  buckets: ['Land'], slug: 'land' }
+         ];
+         function cnt(item) {
+            return item.buckets.reduce(function(s, b) { return s + ((BAZAR_LISTINGS[b] || []).length); }, 0);
          }
-         grid.innerHTML = rows.join('');
+         function cell(item) {
+            return '<div class="sr-mob-type-cell"><a href="' + base + '/' + item.slug + '">' + item.label + '</a><span class="sr-mob-type-count">' + cnt(item) + '</span></div>';
+         }
+         var rows = [];
+         for (var i = 0; i < mainItems.length; i += 2) {
+            var L = mainItems[i], R = mainItems[i + 1];
+            if (R) {
+               rows.push('<div class="sr-mob-type-row">' + cell(L) + cell(R) + '</div>');
+            } else {
+               var otherCnt = otherItems.reduce(function(s, it) { return s + cnt(it); }, 0);
+               rows.push('<div class="sr-mob-type-row">' + cell(L) +
+                  '<div class="sr-mob-type-cell sr-mob-other-toggle" id="srMobOtherToggle" onclick="_toggleMobOther()">' +
+                  'Other <span class="sr-mob-other-arrow">\u203a</span>' +
+                  '<span class="sr-mob-type-count">' + otherCnt + '</span></div></div>');
+            }
+         }
+         var oRows = ['<div class="sr-mob-other-rows" id="srMobOtherRows" style="display:none">'];
+         for (var j = 0; j < otherItems.length; j += 2) {
+            var OL = otherItems[j], OR = otherItems[j + 1];
+            oRows.push('<div class="sr-mob-type-row">' + cell(OL) + (OR ? cell(OR) : '<div class="sr-mob-type-cell"></div>') + '</div>');
+         }
+         oRows.push('</div>');
+         grid.innerHTML = rows.join('') + oRows.join('');
+      }
+
+      function _toggleMobOther() {
+         var rows  = document.getElementById('srMobOtherRows');
+         var arrow = document.querySelector('.sr-mob-other-arrow');
+         var tog   = document.getElementById('srMobOtherToggle');
+         if (!rows) return;
+         var open = rows.style.display !== 'none';
+         rows.style.display = open ? 'none' : 'block';
+         if (arrow) arrow.textContent = open ? '\u203a' : '\u2039';
+         if (tog)   tog.classList.toggle('sr-mob-other-open', !open);
       }
    </script>
 <script>
