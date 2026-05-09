@@ -241,10 +241,13 @@
 
       /* ── Mobile Filter button (hidden on desktop) ── */
       .sr-mob-filter-btn { display: none; }
+      .sr-mob-type-grid { display: none; }
 
       /* ── Mobile (≤576px) ── */
       @media (max-width: 576px) {
          .sr-cat-hero { display: block !important; }
+         /* Hide intro text and related link on mobile */
+         .sr-cat-intro, .sr-cat-related { display: none !important; }
          .sr-wrap { padding: 0 4%; }
          .cf-block { padding: 0 4%; }
          .cf-block-outer { padding: 10px 0; }
@@ -261,8 +264,18 @@
          /* Filter button visible on mobile */
          .sr-mob-filter-btn { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border: 1.5px solid #e5e7eb; border-radius: 20px; background: #fff; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 500; color: #1a1a1a; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
          .sr-mob-filter-btn.active { border-color: #ff9138; color: #ff9138; }
-         /* Sort row: horizontal layout with Filter button on right */
-         .sr-hero-sort { flex-direction: row !important; align-items: center !important; justify-content: space-between; }
+         /* Hero sort: stack H1 → type grid → sort+filter row vertically */
+         .sr-hero-sort { flex-direction: column !important; align-items: stretch !important; gap: 6px; }
+         /* Sort row: sort select and filter button side by side */
+         .sr-sort-row { display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+         /* Category type grid: visible on mobile */
+         .sr-mob-type-grid { display: block !important; border: 1px solid #ebebeb; border-radius: 8px; overflow: hidden; margin: 2px 0 4px; }
+         .sr-mob-type-row { display: flex; border-bottom: 1px solid #ebebeb; }
+         .sr-mob-type-row:last-child { border-bottom: none; }
+         .sr-mob-type-cell { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; font-family: "Poppins", sans-serif; font-size: 12.5px; color: #374151; gap: 6px; }
+         .sr-mob-type-cell:first-child { border-right: 1px solid #ebebeb; }
+         .sr-mob-type-cell a { color: #374151; text-decoration: none; }
+         .sr-mob-type-count { font-size: 12px; color: #9ca3af; font-weight: 500; min-width: 14px; text-align: right; flex-shrink: 0; }
          .cf-row1 { flex-direction: column; align-items: stretch; gap: 6px; }
          .cf-search { max-width: 100% !important; flex: 0 0 auto !important; width: 100%; }
          .cf-row-extra .cf-price-joined { width: 100%; }
@@ -938,20 +951,23 @@
                </div>
                <div class="sr-hero-sort">
                   <!-- SR_CAT_HERO -->
-                  <div class="sr-sort">
-                     <label>Sort by:</label>
-                     <select id="srSortSelect" onchange="onSortChange()">
-                        <option value="relevance">Relevance</option>
-                        <option value="price_asc">Price: low to high</option>
-                        <option value="price_desc">Price: high to low</option>
-                        <option value="newest">Newest first</option>
-                        <option value="popular">Most popular</option>
-                     </select>
+                  <div id="srMobTypeGrid" class="sr-mob-type-grid"></div>
+                  <div class="sr-sort-row">
+                     <div class="sr-sort">
+                        <label>Sort by:</label>
+                        <select id="srSortSelect" onchange="onSortChange()">
+                           <option value="relevance">Relevance</option>
+                           <option value="price_asc">Price: low to high</option>
+                           <option value="price_desc">Price: high to low</option>
+                           <option value="newest">Newest first</option>
+                           <option value="popular">Most popular</option>
+                        </select>
+                     </div>
+                     <button class="sr-mob-filter-btn" id="srMobFilterBtn" onclick="toggleMobFilters()">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        Filter
+                     </button>
                   </div>
-                  <button class="sr-mob-filter-btn" id="srMobFilterBtn" onclick="toggleMobFilters()">
-                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                     Filter
-                  </button>
                </div>
 
                <div class="sr-results-wrap">
@@ -3304,6 +3320,41 @@
          if (!n) return;
          var el = document.getElementById('mainSearchInput');
          if (el) el.placeholder = 'Search ' + n.toLocaleString('en-GB') + ' ads near you';
+         _renderMobTypeGrid();
+      }
+
+      function _renderMobTypeGrid() {
+         if (window.innerWidth > 576) return;
+         var grid = document.getElementById('srMobTypeGrid');
+         if (!grid) return;
+         if (typeof BAZAR_LISTINGS === 'undefined') return;
+         var pathCat = window.location.pathname.replace(/^\//, '').split('/')[0];
+         var isRent  = pathCat === 'property-to-rent';
+         var isSale  = pathCat === 'property-for-sale';
+         var isShort = pathCat === 'property-short-rent';
+         if (!isRent && !isSale && !isShort) return;
+         var base = '/' + pathCat;
+         var catItems = [
+            { label: 'Apartments, flats', buckets: ['Flats'], slug: 'flats' },
+            { label: 'House',             buckets: ['House'], slug: 'house' },
+            { label: 'Rooms, flatmates',  buckets: ['Rooms'], slug: 'rooms', hideOnSale: true },
+            { label: 'Office',            buckets: ['Office'], slug: 'office' },
+            { label: 'Industrial',        buckets: ['Industrial'], slug: 'industrial' },
+            { label: 'Other \u203a',      buckets: ['Shop','Restaurant','Hotel','Building','Business or Investment','Land'], slug: '' }
+         ];
+         var rows = [];
+         for (var i = 0; i < catItems.length; i += 2) {
+            var L = catItems[i];
+            var R = catItems[i + 1];
+            var lc = L.buckets.reduce(function(s, b) { return s + ((BAZAR_LISTINGS[b] || []).length); }, 0);
+            var rc = R ? R.buckets.reduce(function(s, b) { return s + ((BAZAR_LISTINGS[b] || []).length); }, 0) : 0;
+            var lHref = L.slug ? (base + '/' + L.slug) : base;
+            var rHref = R ? (R.slug ? (base + '/' + R.slug) : base) : '';
+            var lCell = '<div class="sr-mob-type-cell"><a href="' + lHref + '">' + L.label + '</a><span class="sr-mob-type-count">' + lc + '</span></div>';
+            var rCell = R ? '<div class="sr-mob-type-cell"><a href="' + rHref + '">' + R.label + '</a><span class="sr-mob-type-count">' + rc + '</span></div>' : '';
+            rows.push('<div class="sr-mob-type-row">' + lCell + rCell + '</div>');
+         }
+         grid.innerHTML = rows.join('');
       }
    </script>
 <script>
