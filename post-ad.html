@@ -1224,7 +1224,7 @@
                            </select>
                         </div>
                      </div>
-                     <div class="pa-field">
+                     <div class="pa-field" id="carModelField" style="display:none">
                         <span class="pa-field__label">Model:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="carModelSelect" onchange="onCarModelChange(this)">
@@ -2400,6 +2400,14 @@
          sel.classList.toggle('pa-empty', !sel.value);
          var make = sel.value;
          var modelSel = document.getElementById('carModelSelect');
+         var modelField = document.getElementById('carModelField');
+         var otherField = document.getElementById('carModelOtherField');
+         if (!make) {
+            if (modelField) modelField.style.display = 'none';
+            if (otherField) otherField.style.display = 'none';
+            updateCarTitle();
+            return;
+         }
          var models = carMakeModels[make] || [];
          if (models.length) {
             var html = '<option value="" selected>Select model</option>';
@@ -2409,7 +2417,7 @@
             modelSel.innerHTML = '<option value="" selected>Enter model below</option>';
          }
          modelSel.classList.add('pa-empty');
-         var otherField = document.getElementById('carModelOtherField');
+         if (modelField) modelField.style.display = (make === 'Other') ? 'none' : 'flex';
          if (otherField) otherField.style.display = (make === 'Other') ? 'flex' : 'none';
          updateCarTitle();
       }
