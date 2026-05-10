@@ -2435,8 +2435,8 @@
          var titleListingType = listingType === 'For Short-term Rent' ? 'Short-rent' : listingType === 'For Long-term Rent' ? 'For Rent' : listingType;
          var parts = [];
          if (make && make !== 'Other') parts.push(make);
-         if (engine) parts.push(engine);
-         if (transmission) parts.push(transmission);
+         if (engine) parts.push(engine === 'Electric (N/A)' ? 'Electric' : engine);
+         if (transmission) parts.push(transmission === 'Semi-automatic' ? 'Semi-auto' : transmission);
          if (year) parts.push(year);
          if (titleListingType) parts.push(titleListingType);
          var suggested = parts.join(' ');
