@@ -1140,6 +1140,26 @@
                         </div>
                      </div>
                      <div class="pa-field">
+                        <span class="pa-field__label">Engine size (L):</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" selected>Select engine size</option>
+                              <option>1.0</option>
+                              <option>1.2</option>
+                              <option>1.4</option>
+                              <option>1.5</option>
+                              <option>1.6</option>
+                              <option>1.8</option>
+                              <option>2.0</option>
+                              <option>2.5</option>
+                              <option>3.0</option>
+                              <option>3.5</option>
+                              <option>4.0+</option>
+                              <option>Electric (N/A)</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
                         <span class="pa-field__label">Year:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="carYearSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
@@ -1263,26 +1283,6 @@
                               <option value="" selected>Select steering side</option>
                               <option value="RHD">Right-hand drive</option>
                               <option value="LHD">Left-hand drive</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Engine size (L):</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" selected>Select engine size</option>
-                              <option>1.0</option>
-                              <option>1.2</option>
-                              <option>1.4</option>
-                              <option>1.5</option>
-                              <option>1.6</option>
-                              <option>1.8</option>
-                              <option>2.0</option>
-                              <option>2.5</option>
-                              <option>3.0</option>
-                              <option>3.5</option>
-                              <option>4.0+</option>
-                              <option>Electric (N/A)</option>
                            </select>
                         </div>
                      </div>
