@@ -1126,20 +1126,6 @@
                         </div>
                      </div>
                      <div class="pa-field">
-                        <span class="pa-field__label">Model:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carModelSelect" onchange="onCarModelChange(this)">
-                              <option value="" selected>Select model</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field" id="carModelOtherField" style="display:none">
-                        <span class="pa-field__label">Model name:</span>
-                        <div class="pa-field__control">
-                           <input class="pa-input" id="carModelOtherInput" type="text" placeholder="Enter model name" oninput="updateCarTitle()">
-                        </div>
-                     </div>
-                     <div class="pa-field">
                         <span class="pa-field__label">Engine size (L):<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="carEngineSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
@@ -1235,6 +1221,20 @@
                               <option>Semi-automatic</option>
                               <option>CVT</option>
                            </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Model:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carModelSelect" onchange="onCarModelChange(this)">
+                              <option value="" selected>Select model</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field" id="carModelOtherField" style="display:none">
+                        <span class="pa-field__label">Model name:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carModelOtherInput" type="text" placeholder="Enter model name" oninput="updateCarTitle()">
                         </div>
                      </div>
                      <div class="pa-field">
