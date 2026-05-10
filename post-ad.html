@@ -2432,12 +2432,13 @@
          var transmission = (document.getElementById('carTransmissionSelect') || {}).value || '';
          var year = (document.getElementById('carYearSelect') || {}).value || '';
          var listingType = reState.listingType || '';
+         var titleListingType = listingType === 'For Short-term Rent' ? 'Short-rent' : listingType;
          var parts = [];
          if (make && make !== 'Other') parts.push(make);
          if (engine) parts.push(engine);
          if (transmission) parts.push(transmission);
          if (year) parts.push(year);
-         if (listingType) parts.push(listingType);
+         if (titleListingType) parts.push(titleListingType);
          var suggested = parts.join(' ');
          var hint  = document.getElementById('suggestedHint');
          var textEl = document.getElementById('suggestedText');
