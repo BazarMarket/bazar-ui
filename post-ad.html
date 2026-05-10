@@ -1115,6 +1115,207 @@
                      </div>
                   </div>
 
+                  <!-- Car-specific fields (Motors → Cars) -->
+                  <div id="carSpecificSection" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">Car Brand:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carMakeSelect" onchange="onCarMakeChange(this)">
+                              <option value="" disabled selected hidden>Select make</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Model:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carModelSelect" onchange="onCarModelChange(this)">
+                              <option value="" disabled selected hidden>Select make first</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field" id="carModelOtherField" style="display:none">
+                        <span class="pa-field__label">Model name:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carModelOtherInput" type="text" placeholder="Enter model name" oninput="updateCarTitle()">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Year:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carYearSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select year</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Mileage (miles):</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carMileageInput" type="text" inputmode="numeric" placeholder="e.g. 45000">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Fuel type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carFuelSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select fuel type</option>
+                              <option>Petrol</option>
+                              <option>Diesel</option>
+                              <option>Hybrid</option>
+                              <option>Plug-in Hybrid</option>
+                              <option>Electric</option>
+                              <option>LPG</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Transmission:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carTransmissionSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select transmission</option>
+                              <option>Automatic</option>
+                              <option>Manual</option>
+                              <option>Semi-automatic</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Body type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carBodyTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select body type</option>
+                              <option>Saloon</option>
+                              <option>Hatchback</option>
+                              <option>SUV</option>
+                              <option>Coupe</option>
+                              <option>Convertible</option>
+                              <option>Estate</option>
+                              <option>MPV</option>
+                              <option>Pickup</option>
+                              <option>Van</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Colour:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carColourSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select colour</option>
+                              <option>Black</option>
+                              <option>White</option>
+                              <option>Silver</option>
+                              <option>Grey</option>
+                              <option>Blue</option>
+                              <option>Red</option>
+                              <option>Green</option>
+                              <option>Brown</option>
+                              <option>Orange</option>
+                              <option>Yellow</option>
+                              <option>Purple</option>
+                              <option>Gold</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Doors:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carDoorsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select doors</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Seats:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carSeatsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select seats</option>
+                              <option>2</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>7</option>
+                              <option>8+</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Drive type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carDriveTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select drive type</option>
+                              <option>FWD (Front-wheel drive)</option>
+                              <option>RWD (Rear-wheel drive)</option>
+                              <option>AWD / 4WD</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Steering side:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carSteeringSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select steering side</option>
+                              <option value="RHD">Right-hand drive</option>
+                              <option value="LHD">Left-hand drive</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Engine size (L):</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select engine size</option>
+                              <option>1.0</option>
+                              <option>1.2</option>
+                              <option>1.4</option>
+                              <option>1.5</option>
+                              <option>1.6</option>
+                              <option>1.8</option>
+                              <option>2.0</option>
+                              <option>2.5</option>
+                              <option>3.0</option>
+                              <option>3.5</option>
+                              <option>4.0+</option>
+                              <option>Electric (N/A)</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Previous owners:</span>
+                        <div class="pa-field__control">
+                           <input class="pa-input" id="carPrevOwnersInput" type="text" inputmode="numeric" placeholder="e.g. 2">
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Service history:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carServiceHistorySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select service history</option>
+                              <option>Full service history</option>
+                              <option>Partial service history</option>
+                              <option>No service history</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">MOT status:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="carMotSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select MOT status</option>
+                              <option>MOT valid</option>
+                              <option>MOT expired</option>
+                              <option>Not applicable</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
                   <!-- House type: always second field -->
                   <div class="pa-field" id="houseTypeField" style="display:none">
                      <span class="pa-field__label">House type:<span>*</span></span>
@@ -1334,207 +1535,6 @@
                      <span class="pa-field__label">Year:</span>
                      <div class="pa-field__control">
                         <input class="pa-input" id="yearInput" type="text" placeholder="e.g. 2019" maxlength="4" oninput="updateSuggestedTitle()">
-                     </div>
-                  </div>
-
-                  <!-- Car-specific fields (Motors → Cars) -->
-                  <div id="carSpecificSection" style="display:none">
-                     <div class="pa-field">
-                        <span class="pa-field__label">Make:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carMakeSelect" onchange="onCarMakeChange(this)">
-                              <option value="" disabled selected hidden>Select make</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Model:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carModelSelect" onchange="onCarModelChange(this)">
-                              <option value="" disabled selected hidden>Select make first</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field" id="carModelOtherField" style="display:none">
-                        <span class="pa-field__label">Model name:</span>
-                        <div class="pa-field__control">
-                           <input class="pa-input" id="carModelOtherInput" type="text" placeholder="Enter model name" oninput="updateCarTitle()">
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Year:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carYearSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select year</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Mileage (miles):</span>
-                        <div class="pa-field__control">
-                           <input class="pa-input" id="carMileageInput" type="text" inputmode="numeric" placeholder="e.g. 45000">
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Fuel type:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carFuelSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select fuel type</option>
-                              <option>Petrol</option>
-                              <option>Diesel</option>
-                              <option>Hybrid</option>
-                              <option>Plug-in Hybrid</option>
-                              <option>Electric</option>
-                              <option>LPG</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Transmission:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carTransmissionSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select transmission</option>
-                              <option>Automatic</option>
-                              <option>Manual</option>
-                              <option>Semi-automatic</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Body type:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carBodyTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select body type</option>
-                              <option>Saloon</option>
-                              <option>Hatchback</option>
-                              <option>SUV</option>
-                              <option>Coupe</option>
-                              <option>Convertible</option>
-                              <option>Estate</option>
-                              <option>MPV</option>
-                              <option>Pickup</option>
-                              <option>Van</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Colour:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carColourSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select colour</option>
-                              <option>Black</option>
-                              <option>White</option>
-                              <option>Silver</option>
-                              <option>Grey</option>
-                              <option>Blue</option>
-                              <option>Red</option>
-                              <option>Green</option>
-                              <option>Brown</option>
-                              <option>Orange</option>
-                              <option>Yellow</option>
-                              <option>Purple</option>
-                              <option>Gold</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Doors:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carDoorsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select doors</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
-                              <option>5</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Seats:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carSeatsSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select seats</option>
-                              <option>2</option>
-                              <option>4</option>
-                              <option>5</option>
-                              <option>7</option>
-                              <option>8+</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Drive type:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carDriveTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select drive type</option>
-                              <option>FWD (Front-wheel drive)</option>
-                              <option>RWD (Rear-wheel drive)</option>
-                              <option>AWD / 4WD</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Steering side:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carSteeringSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select steering side</option>
-                              <option value="RHD">Right-hand drive</option>
-                              <option value="LHD">Left-hand drive</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Engine size (L):</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select engine size</option>
-                              <option>1.0</option>
-                              <option>1.2</option>
-                              <option>1.4</option>
-                              <option>1.5</option>
-                              <option>1.6</option>
-                              <option>1.8</option>
-                              <option>2.0</option>
-                              <option>2.5</option>
-                              <option>3.0</option>
-                              <option>3.5</option>
-                              <option>4.0+</option>
-                              <option>Electric (N/A)</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Previous owners:</span>
-                        <div class="pa-field__control">
-                           <input class="pa-input" id="carPrevOwnersInput" type="text" inputmode="numeric" placeholder="e.g. 2">
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Service history:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carServiceHistorySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select service history</option>
-                              <option>Full service history</option>
-                              <option>Partial service history</option>
-                              <option>No service history</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">MOT status:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carMotSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select MOT status</option>
-                              <option>MOT valid</option>
-                              <option>MOT expired</option>
-                              <option>Not applicable</option>
-                           </select>
-                        </div>
                      </div>
                   </div>
 
