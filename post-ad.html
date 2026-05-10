@@ -1118,7 +1118,7 @@
                   <!-- Car-specific fields (Motors → Cars) -->
                   <div id="carSpecificSection" style="display:none">
                      <div class="pa-field">
-                        <span class="pa-field__label">Car Brand:</span>
+                        <span class="pa-field__label">Car Brand:<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="carMakeSelect" onchange="onCarMakeChange(this)">
                               <option value="" selected>Select car brand</option>
@@ -1140,9 +1140,9 @@
                         </div>
                      </div>
                      <div class="pa-field">
-                        <span class="pa-field__label">Engine size (L):</span>
+                        <span class="pa-field__label">Engine size (L):<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <select class="pa-select pa-empty" id="carEngineSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
                               <option value="" selected>Select engine size</option>
                               <option>Electric (N/A)</option>
                               <option>0.4L</option>
@@ -1218,7 +1218,7 @@
                         </div>
                      </div>
                      <div class="pa-field">
-                        <span class="pa-field__label">Year:</span>
+                        <span class="pa-field__label">Year:<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="carYearSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
                               <option value="" selected>Select year</option>
@@ -1226,9 +1226,9 @@
                         </div>
                      </div>
                      <div class="pa-field">
-                        <span class="pa-field__label">Transmission:</span>
+                        <span class="pa-field__label">Transmission:<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="carTransmissionSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <select class="pa-select pa-empty" id="carTransmissionSelect" onchange="updateCarTitle(); this.classList.toggle('pa-empty',!this.value)">
                               <option value="" selected>Select transmission</option>
                               <option>Automatic</option>
                               <option>Manual</option>
@@ -2428,11 +2428,17 @@
          if (model === 'Other') {
             model = (document.getElementById('carModelOtherInput') || {}).value || '';
          }
+         var engine = (document.getElementById('carEngineSelect') || {}).value || '';
+         var transmission = (document.getElementById('carTransmissionSelect') || {}).value || '';
          var year = (document.getElementById('carYearSelect') || {}).value || '';
+         var listingType = reState.listingType || '';
          var parts = [];
          if (make && make !== 'Other') parts.push(make);
-         if (model) parts.push(model);
+         if (model && model !== 'Other') parts.push(model);
+         if (engine) parts.push(engine);
+         if (transmission) parts.push(transmission);
          if (year) parts.push(year);
+         if (listingType) parts.push(listingType);
          var suggested = parts.join(' ');
          var hint  = document.getElementById('suggestedHint');
          var textEl = document.getElementById('suggestedText');
