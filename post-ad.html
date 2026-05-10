@@ -2267,7 +2267,7 @@
       function initCarMakeSelect() {
          var sel = document.getElementById('carMakeSelect');
          if (!sel) return;
-         var html = '<option value="" disabled selected hidden>Select make</option>';
+         var html = '<option value="" selected>Select car brand</option>';
          Object.keys(carMakeModels).forEach(function(make) {
             html += '<option value="' + make + '">' + make + '</option>';
          });
