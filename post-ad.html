@@ -2311,7 +2311,8 @@
       }
 
       function updateCarTitle() {
-         if (userEditedTitle) return;
+         var isLockedMode = reState.cat === 'motors' &&
+            (reState.listingType === 'For Sale' || reState.listingType === 'For Short-term Rent');
          var make = (document.getElementById('carMakeSelect') || {}).value || '';
          var modelSel = document.getElementById('carModelSelect');
          var model = modelSel ? modelSel.value : '';
@@ -2326,6 +2327,17 @@
          var suggested = parts.join(' ');
          var hint  = document.getElementById('suggestedHint');
          var textEl = document.getElementById('suggestedText');
+         if (isLockedMode) {
+            var titleInput = document.getElementById('titleInput');
+            if (titleInput) {
+               titleInput.setAttribute('readonly', true);
+               titleInput.placeholder = '';
+               if (suggested) titleInput.value = suggested;
+            }
+            if (hint) hint.style.display = 'none';
+            return;
+         }
+         if (userEditedTitle) return;
          if (!hint || !textEl) return;
          if (suggested) {
             textEl.textContent = suggested;
@@ -2364,6 +2376,11 @@
          isCarSubtype = false;
          var carSec = document.getElementById('carSpecificSection');
          if (carSec) carSec.style.display = 'none';
+         var titleInput = document.getElementById('titleInput');
+         if (titleInput) {
+            titleInput.removeAttribute('readonly');
+            titleInput.placeholder = catPlaceholders[reState.cat] || 'Enter a title';
+         }
       }
 
       function computeSuggested() {
@@ -2865,6 +2882,15 @@
          }
 
          updateRealEstateTitle();
+         if (reState.cat === 'motors' && (reState.listingType === 'For Sale' || reState.listingType === 'For Short-term Rent')) {
+            var _listingLabel = reState.listingType === 'For Short-term Rent' ? 'for short-term rent' : 'for sale';
+            var _titleInput = document.getElementById('titleInput');
+            if (_titleInput) {
+               _titleInput.setAttribute('readonly', true);
+               _titleInput.placeholder = '';
+               _titleInput.value = propType + ' ' + _listingLabel;
+            }
+         }
          document.getElementById('paForm').classList.add('visible');
          if (_isMobile()) _mobShowForm();
       }
