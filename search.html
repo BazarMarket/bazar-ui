@@ -859,8 +859,8 @@
                      </select>
                   </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
-                  <div class="cf-row">
-                     <div class="cf-price-joined">
+                  <div class="cf-row" id="cfPropertyRow4">
+                     <div class="cf-price-joined" id="cfAreaJoined">
                         <div class="cf-cat" id="cfAreaMinWrap">
                            <button class="cf-cat-btn" id="cfAreaMinBtn" onclick="toggleAreaPanel('Min',event)">
                               <span class="cf-cat-btn-label" id="cfAreaMinLabel">Property area min</span>
@@ -879,7 +879,7 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfAreaMaxPanel"></div>
                         </div>
                      </div>
-                     <div class="cf-price-joined">
+                     <div class="cf-price-joined" id="cfYearJoined">
                         <div class="cf-cat" id="cfYearFromWrap">
                            <button class="cf-cat-btn" id="cfYearFromBtn" onclick="toggleYearPanel('From',event)">
                               <span class="cf-cat-btn-label" id="cfYearFromLabel">Construction year min</span>
@@ -1329,6 +1329,12 @@
          var isMotors = l.indexOf('motors') !== -1;
          var motorsRow = document.getElementById('cfMotorsRow');
          if (motorsRow) motorsRow.style.display = isMotors ? '' : 'none';
+         /* Show/hide property vs motors filters */
+         var _propFilterIds = ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'];
+         _propFilterIds.forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) el.style.display = isMotors ? 'none' : '';
+         });
 
          /* Navigate to the category URL */
          var targetUrl = catUrlMap[label];
@@ -2456,7 +2462,7 @@
         var _pathSub0 = _pathParts0[1] || '';
         var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
         var _isLatestPage = (_pathCat0 === 'latest-updates');
-        var _isCarPage = (_pathCat0 === 'cars');
+        var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale');
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -3374,6 +3380,36 @@
                catLink.textContent = info.catLabel;
                catLink.href = info.catUrl || '/property';
             }
+         } else if (pathCat === 'motors-for-sale') {
+            /* Motors-for-sale page: set category UI and show car filters */
+            document.getElementById('cfCatLabel').textContent = 'Motors for Sale';
+            var imgEl = document.getElementById('cfCatImg');
+            imgEl.src = 'img/cat/image3.png'; imgEl.style.display = '';
+            document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i){
+               i.classList.remove('active');
+               if (i.textContent.trim() === 'Motors for Sale') i.classList.add('active');
+            });
+            /* Show motors row, hide property-specific filters */
+            var _mRow = document.getElementById('cfMotorsRow');
+            if (_mRow) _mRow.style.display = '';
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            /* Pre-select make from URL segment (e.g. /motors-for-sale/bmw) */
+            var _makeSeg = pathParts[1] || '';
+            if (_makeSeg) {
+               var makeSelect = document.getElementById('cfMotorsMake');
+               if (makeSelect) {
+                  var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
+                  for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
+                     if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
+                        makeSelect.selectedIndex = _mi; break;
+                     }
+                  }
+               }
+            }
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
          } else if (pathCatMap[pathCat]) {
             var info = catMap[pathCatMap[pathCat]];
             document.getElementById('cfCatLabel').textContent = info.label;
@@ -3429,8 +3465,8 @@
             if (_pathCity) window._bazarCityFilter     = _pathCity;
             if (_pathDistrict) window._bazarDistrictFilter = _pathDistrict;
 
-            /* Cars path: /cars, /cars/{make}, /cars/{make}/{city}, /cars/{make}/{city}/{district} */
-            if (pathCat === 'cars') {
+            /* Cars path: /motors-for-sale, /motors-for-sale/{make}/{city}/{district} */
+            if (pathCat === 'cars' || pathCat === 'motors-for-sale') {
               pathAutoType = 'Cars';
               /* Also read from SSR-injected window.__bazarCarData */
               var _bcd = window.__bazarCarData || {};
