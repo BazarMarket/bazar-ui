@@ -868,7 +868,7 @@
           el('bread-category').href = _carCatHref;
 
           /* "Cars" parent crumb */
-          if (el('bread-parent-li')) el('bread-parent-li').style.display = '';
+          if (el('bread-parent-li')) el('bread-parent-li').removeAttribute('style');
           if (el('bread-parent'))    { el('bread-parent').textContent = 'Cars'; el('bread-parent').href = _carCatHref; }
 
           /* Brand crumb */
