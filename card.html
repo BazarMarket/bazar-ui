@@ -860,6 +860,40 @@
             el('bread-district').textContent = p.district;
             el('bread-district').href = _distHref;
           }
+        } else if (_pt === 'car') {
+          /* ── Cars breadcrumb: Home > Motors for Sale > Cars > BMW > London > District ── */
+          var _carCatLabel = (_lt === 'rent' || _lt === 'long_rent' || _lt === 'short_rent') ? 'Motors to Rent' : 'Motors for Sale';
+          var _carCatHref  = (_lt === 'rent' || _lt === 'long_rent' || _lt === 'short_rent') ? '/cars/for-rent' : '/cars';
+          el('bread-category').textContent = _carCatLabel;
+          el('bread-category').href = _carCatHref;
+
+          /* "Cars" parent crumb */
+          if (el('bread-parent-li')) el('bread-parent-li').style.display = '';
+          if (el('bread-parent'))    { el('bread-parent').textContent = 'Cars'; el('bread-parent').href = _carCatHref; }
+
+          /* Brand crumb */
+          if (el('bread-type')) {
+            el('bread-type').textContent = p.car_make || 'Other';
+            el('bread-type').href = _carCatHref + (p.car_make ? '?make=' + encodeURIComponent(p.car_make) : '');
+          }
+
+          /* City crumb */
+          var _carCitySlug = (p.city || '').toLowerCase().replace(/\s+/g, '-');
+          if (p.city && el('bread-city-li')) {
+            if (el('bread-type-arrow')) el('bread-type-arrow').style.display = '';
+            el('bread-city-li').style.display = '';
+            el('bread-city').textContent = p.city;
+            el('bread-city').href = _carCatHref + '/' + _carCitySlug;
+          }
+
+          /* District crumb */
+          if (p.district && el('bread-district-li')) {
+            if (el('bread-city-arrow')) el('bread-city-arrow').style.display = '';
+            var _carDistSlug = (p.district || '').toLowerCase().replace(/\s+/g, '-');
+            el('bread-district-li').style.display = '';
+            el('bread-district').textContent = p.district;
+            el('bread-district').href = _carCatHref + '/' + _carCitySlug + '/' + _carDistSlug;
+          }
         } else {
           if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_', ' ');
         }
