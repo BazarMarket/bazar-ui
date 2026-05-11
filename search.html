@@ -755,26 +755,6 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
-                     <!-- Motors: Year min/max (joined) — shown when Motors selected -->
-                     <div class="cf-price-joined" id="cfMotorsYearJoined" style="display:none">
-                        <div class="cf-cat cf-price-drop">
-                           <button class="cf-cat-btn" id="cfMotorsYearMinBtn" onclick="toggleMotorsYearPanel(event,'Min')">
-                              <span class="cf-cat-btn-label" id="cfMotorsYearMinLabel">Year min</span>
-                              <svg class="cf-arrow-icon" id="cfMotorsYearMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                              <svg class="cf-clear-icon" id="cfMotorsYearMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearMotorsYear('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
-                           </button>
-                           <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMinPanel"></div>
-                        </div>
-                        <div class="cf-price-divider"></div>
-                        <div class="cf-cat cf-price-drop">
-                           <button class="cf-cat-btn" id="cfMotorsYearMaxBtn" onclick="toggleMotorsYearPanel(event,'Max')">
-                              <span class="cf-cat-btn-label" id="cfMotorsYearMaxLabel">Year max</span>
-                              <svg class="cf-arrow-icon" id="cfMotorsYearMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                              <svg class="cf-clear-icon" id="cfMotorsYearMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearMotorsYear('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
-                           </button>
-                           <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMaxPanel"></div>
-                        </div>
-                     </div>
                      <div class="cf-cat" id="cfBedroomsWrap">
                         <button class="cf-cat-btn" id="cfBedroomsBtn" onclick="toggleBedroomsPanel(event)">
                            <span class="cf-cat-btn-label" id="cfBedroomsLabel">Bedrooms</span>
@@ -844,7 +824,28 @@
                            <label class="cf-type-item"><input type="checkbox" value="Off plan" onchange="updateConditionLabel()"><span class="cf-type-check"></span>Off plan</label>
                         </div>
                      </div>
-                     <!-- Motors row 2: model + fuel + transmission (shown in price row when Motors selected) -->
+                  </div>
+                  <!-- Motors row 2: year min/max + model + fuel + transmission (visible when Motors selected) -->
+                  <div class="cf-row" id="cfMotorsRow2" style="display:none">
+                     <div class="cf-price-joined" id="cfMotorsYearJoined">
+                        <div class="cf-cat cf-price-drop">
+                           <button class="cf-cat-btn" id="cfMotorsYearMinBtn" onclick="toggleMotorsYearPanel(event,'Min')">
+                              <span class="cf-cat-btn-label" id="cfMotorsYearMinLabel">Year min</span>
+                              <svg class="cf-arrow-icon" id="cfMotorsYearMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfMotorsYearMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearMotorsYear('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMinPanel"></div>
+                        </div>
+                        <div class="cf-price-divider"></div>
+                        <div class="cf-cat cf-price-drop">
+                           <button class="cf-cat-btn" id="cfMotorsYearMaxBtn" onclick="toggleMotorsYearPanel(event,'Max')">
+                              <span class="cf-cat-btn-label" id="cfMotorsYearMaxLabel">Year max</span>
+                              <svg class="cf-arrow-icon" id="cfMotorsYearMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfMotorsYearMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearMotorsYear('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMaxPanel"></div>
+                        </div>
+                     </div>
                      <select class="cf-ctrl" id="cfMotorsModel" style="display:none">
                         <option value="">Any model</option>
                      </select>
@@ -858,7 +859,7 @@
                         <option>Automatic</option><option>Manual</option><option>Semi-automatic</option>
                      </select>
                   </div>
-                  <!-- Motors filter row (visible when Motors category selected) — body type + year + mileage -->
+                  <!-- Motors row 3: body type + mileage (visible when Motors selected) -->
                   <div class="cf-row" id="cfMotorsRow" style="display:none">
                      <select class="cf-ctrl" id="cfMotorsBodyType">
                         <option value="">Any body type</option>
@@ -1345,6 +1346,8 @@
          var isMotors = l.indexOf('motors') !== -1;
          var motorsRow = document.getElementById('cfMotorsRow');
          if (motorsRow) motorsRow.style.display = isMotors ? '' : 'none';
+         var motorsRow2 = document.getElementById('cfMotorsRow2');
+         if (motorsRow2) motorsRow2.style.display = isMotors ? '' : 'none';
          /* Show/hide property vs motors filters */
          var _propFilterIds = ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'];
          _propFilterIds.forEach(function(id){
@@ -3481,6 +3484,8 @@
             /* Show motors row + motors-specific filters, hide property-specific filters */
             var _mRow = document.getElementById('cfMotorsRow');
             if (_mRow) _mRow.style.display = '';
+            var _mRow2 = document.getElementById('cfMotorsRow2');
+            if (_mRow2) _mRow2.style.display = '';
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
