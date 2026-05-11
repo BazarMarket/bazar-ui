@@ -2195,10 +2195,10 @@ function submitEmailForm(e) {
 <div id="recaptcha-container"></div>
 
 <script src="js/error-logger.js?v=1"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
-<script src="js/chat.js?v=3"></script>
-<script src="js/firebase-auth-v2.js?v=7"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js" defer></script>
+<script src="js/chat.js?v=3" defer></script>
+<script src="js/firebase-auth-v2.js?v=7" defer></script>
 <script>
 /* ── Comments helpers ─────────────────────────────────────────────────── */
 var _commentColors = ['#ff9138','#3ecb60','#2aabee','#e55a00','#8e44ad','#e74c3c'];
@@ -2770,16 +2770,29 @@ function _glbKey(e) {
 
     var mobBtns = document.createElement('div');
     mobBtns.id = 'mob-btns';
-    mobBtns.innerHTML =
-      '<button class="mbb-chat icon-chat"' +
-        (startOnclick ? ' onclick="' + startOnclick + '"' : '') +
-        '>Start Chat</button>' +
-      '<button class="mbb-phone icon-phone" onclick="showPhone(event,document.getElementById(\'call-btn\'))">' +
-        '<span class="mbb-phone-text">' +
-          '<span>Show Phone</span>' +
-          '<span class="mbb-phone-sub" id="mob-phone-sub">+44 xxxx xxxxxx</span>' +
-        '</span>' +
-      '</button>';
+
+    var chatBtn = document.createElement('button');
+    chatBtn.className = 'mbb-chat icon-chat';
+    chatBtn.textContent = 'Start Chat';
+    if (startOnclick) {
+      chatBtn.addEventListener('click', function(e) { eval(startOnclick); });
+    }
+
+    var phoneBtn = document.createElement('button');
+    phoneBtn.className = 'mbb-phone icon-phone';
+    phoneBtn.innerHTML =
+      '<span class="mbb-phone-text">' +
+        '<span>Show Phone</span>' +
+        '<span class="mbb-phone-sub" id="mob-phone-sub">+44 xxxx xxxxxx</span>' +
+      '</span>';
+    phoneBtn.addEventListener('click', function(e) {
+      if (typeof showPhone === 'function') {
+        showPhone(e, document.getElementById('call-btn'));
+      }
+    });
+
+    mobBtns.appendChild(chatBtn);
+    mobBtns.appendChild(phoneBtn);
 
     /* ── 4. Collect left-column elements ── */
     var gallery     = left.querySelector('.card-grid__gallery');
