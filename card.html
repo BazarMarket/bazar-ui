@@ -1435,6 +1435,7 @@
    }
 
    /* ── Show / Hide phone ── */
+   var _phoneConvFired = false;
    function showPhone(e, el) {
       if (e) e.stopPropagation();
       var masked = document.getElementById('phone-masked');
@@ -1465,6 +1466,15 @@
          var mobSub   = document.getElementById('mob-phone-sub');
          if (mobLabel) mobLabel.textContent = 'Hide Phone';
          if (mobSub) mobSub.textContent = full.textContent;
+         /* Google Ads outbound click conversion — once per page */
+         if (!_phoneConvFired && typeof gtag === 'function') {
+            _phoneConvFired = true;
+            gtag('event', 'conversion', {
+               'send_to': 'AW-1808636054/Prn-CPy5m5scEN_rn7BD',
+               'value': 1.0,
+               'currency': 'GBP'
+            });
+         }
       }
    }
    </script>

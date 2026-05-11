@@ -534,7 +534,7 @@ function finishRegistration() {
     var isPostAd = (modalMode === 'post-ad');
     closeProfileModal();
     doLogin();
-    if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-18086360543/PRn-CPy5m5scEN_rn7BD'});
+    if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD'});
 
     var firebaseUser = auth.currentUser;
     var uid   = (firebaseUser && firebaseUser.uid) ? firebaseUser.uid : localStorage.getItem('bazar_firebase_uid');
