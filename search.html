@@ -2456,6 +2456,7 @@
         var _pathSub0 = _pathParts0[1] || '';
         var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
         var _isLatestPage = (_pathCat0 === 'latest-updates');
+        var _isCarPage = (_pathCat0 === 'cars');
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -2483,10 +2484,14 @@
         var _subTypeConfig = !_isRoomsPage && _pathSub0 ? (_subTypeSlugMap[_pathSub0] || null) : null;
         var _isSubtypePage = !_isRoomsPage && !!(_pathSub0 && (_subtypeBucketMap[_pathSub0] || _subTypeConfig));
         var _subtypeBucket = _isSubtypePage ? (_subtypeBucketMap[_pathSub0] || (_subTypeConfig ? _subTypeConfig.bucket : null)) : null;
-        var _isTransactionPage = !_isRoomsPage && !_isSubtypePage && !!_catToListingType[_pathCat0];
+        var _isTransactionPage = !_isRoomsPage && !_isSubtypePage && !_isCarPage && !!_catToListingType[_pathCat0];
         var _transactionLt = _isTransactionPage ? _catToListingType[_pathCat0] : null;
         var _extraUrl = null;
-        if (_isRoomsPage) {
+        if (_isCarPage) {
+          var _carRent = (_pathSub0 === 'for-rent');
+          var _lt = _carRent ? 'long_rent' : null;
+          _extraUrl = '/api/properties/recent-enriched?property_type=car&per_page=100' + (_lt ? '&listing_type=' + _lt : '');
+        } else if (_isRoomsPage) {
           var _lt = _catToListingType[_pathCat0];
           _extraUrl = '/api/properties/recent-enriched?property_type=room&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         } else if (_isSubtypePage) {
@@ -2576,7 +2581,8 @@
                 stk:  stk,
                 cc:   cc,
                 cy:   ad.city ? ad.city.toUpperCase() : 'UK',
-                st:   ad.sub_type || ''
+                st:   ad.sub_type || '',
+                mk:   ad.car_make || ''
               });
             });
             /* Prepend API items (newest first) before static demo items */
@@ -2618,10 +2624,16 @@
               renderListings('Latest');
               if (typeof initProductSwipers === 'function') initProductSwipers();
             }
+            /* Car pages: after main fetch, render Cars type immediately */
+            if (_isCarPage && BAZAR_LISTINGS['Cars']) {
+              window._bazarCurrentType = 'Cars';
+              renderListings('Cars');
+              if (typeof initProductSwipers === 'function') initProductSwipers();
+            }
             /* Extra fetch for path-specific category (e.g. /rooms or /property-for-sale/restaurant) */
             if (_extraUrl) {
-              var _extraBucket = _isRoomsPage ? 'Rooms' : (_subtypeBucket || 'House');
-              var _extraTitle  = _isRoomsPage ? 'Room listing' : (_subtypeBucket || 'Property') + ' listing';
+              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_subtypeBucket || 'House'));
+              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_subtypeBucket || 'Property') + ' listing');
               fetch(_extraUrl, { headers: { 'Accept': 'application/json' } })
                 .then(function(r2) { return r2.ok ? r2.json() : null; })
                 .then(function(resp2) {
@@ -2646,7 +2658,8 @@
                       d: ad.description || '', dt: fmtDate(ad.created_at),
                       n: String(ad.id), v: ad.views || 0, stk: stk,
                       cc: ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '',
-                      cy: ad.city ? ad.city.toUpperCase() : 'UK'
+                      cy: ad.city ? ad.city.toUpperCase() : 'UK',
+                      mk: ad.car_make || ''
                     });
                   });
                   if (newItems.length) {
@@ -2821,6 +2834,13 @@
           var _df = window._bazarDistrictFilter;
           items = items.filter(function(item) {
             return (item.l || '').toLowerCase().indexOf(_df) !== -1;
+          });
+        }
+        if (window._bazarCarMakeFilter) {
+          var _mf = window._bazarCarMakeFilter;
+          items = items.filter(function(item) {
+            return (item.mk || '').toLowerCase().indexOf(_mf) !== -1 ||
+                   (item.t  || '').toLowerCase().indexOf(_mf) !== -1;
           });
         }
         /* Apply House sub-type filter (cfHouseTypePanel checkboxes) */
@@ -3375,6 +3395,21 @@
             var _pathDistrict = (_isPropertyPath && pathParts[3]) ? pathParts[3].replace(/-/g, ' ').toLowerCase() : '';
             if (_pathCity) window._bazarCityFilter     = _pathCity;
             if (_pathDistrict) window._bazarDistrictFilter = _pathDistrict;
+
+            /* Cars path: /cars, /cars/{make}, /cars/{make}/{city}, /cars/{make}/{city}/{district} */
+            if (pathCat === 'cars') {
+              pathAutoType = 'Cars';
+              /* Also read from SSR-injected window.__bazarCarData */
+              var _bcd = window.__bazarCarData || {};
+              var _carRentPath = (pathParts[1] === 'for-rent');
+              var _carMakeIdx  = _carRentPath ? 2 : 1;
+              var _carMakeSlug = _bcd.make || pathParts[_carMakeIdx] || '';
+              var _carCitySlug = _bcd.city || pathParts[_carMakeIdx + 1] || '';
+              var _carDistSlug = _bcd.district || pathParts[_carMakeIdx + 2] || '';
+              if (_carMakeSlug) window._bazarCarMakeFilter = _carMakeSlug.replace(/-/g, ' ').toLowerCase();
+              if (_carCitySlug) window._bazarCityFilter     = _carCitySlug.replace(/-/g, ' ').toLowerCase();
+              if (_carDistSlug) window._bazarDistrictFilter = _carDistSlug.replace(/-/g, ' ').toLowerCase();
+            }
 
             if (pathAutoType && !type) {
                var autoPanel = document.getElementById('cfTypePanel');

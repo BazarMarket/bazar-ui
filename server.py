@@ -846,6 +846,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_city_modifier', {
                 'category': parts[0], 'city': parts[1], 'modifier': 'short-term'
             }
+        # /cars/{make}/{city}
+        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+            return 'cars_make_city', {'make': parts[1], 'city': parts[2]}
+        # /cars/for-rent/{make}
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'cars_make', {'make': parts[2], 'is_rent': True}
         # /property-for-sale/{subtype}/{city} or /property-to-rent/{subtype}/{city}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city', {
@@ -855,6 +861,16 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             'category': parts[0], 'city': parts[1], 'district': parts[2]
         }
     if len(parts) == 4:
+        # /cars/{make}/{city}/{district}
+        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+            return 'cars_make_city_district', {
+                'make': parts[1], 'city': parts[2], 'district': parts[3]
+            }
+        # /cars/for-rent/{make}/{city}
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'cars_make_city_district', {
+                'make': parts[2], 'city': parts[3], 'district': '', 'is_rent': True
+            }
         # /property-for-sale/{subtype}/{city}/{district}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city_district', {
@@ -908,6 +924,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_modifier', {
                 'category': parts[0], 'modifier': 'short-term'
             }
+        # /cars/{make}  (for-rent already handled as category above)
+        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+            return 'cars_make', {'make': parts[1]}
         return 'category_city', {'category': parts[0], 'city': parts[1]}
     if len(parts) == 1:
         # /flats, /rooms  →  301 redirect to /property-to-rent/{cat}
@@ -2349,6 +2368,59 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         }
         return seo
 
+    # ── Cars: make / make+city / make+city+district ───────────────────────────
+    elif page_type in ('cars_make', 'cars_make_city', 'cars_make_city_district'):
+        make_slug    = params.get('make', '')
+        city_slug    = params.get('city', '')
+        district_slug= params.get('district', '')
+        is_rent      = bool(params.get('is_rent', False))
+        make   = make_slug.replace('-', ' ').title()
+        city   = city_slug.replace('-', ' ').title()
+        district = district_slug.replace('-', ' ').title()
+
+        cat_label    = 'Motors to Rent' if is_rent else 'Motors for Sale'
+        action       = 'to rent' if is_rent else 'for sale'
+        _cat_url     = '/cars/for-rent' if is_rent else '/cars'
+
+        if district and city:
+            h1 = f'{make} cars {action} in {district}, {city}'
+            canonical = f'{PUBLIC_DOMAIN}{_cat_url}/{make_slug}/{city_slug}/{district_slug}'
+        elif city:
+            h1 = f'{make} cars {action} in {city}'
+            canonical = f'{PUBLIC_DOMAIN}{_cat_url}/{make_slug}/{city_slug}'
+        else:
+            h1 = f'{make} cars {action}'
+            canonical = f'{PUBLIC_DOMAIN}{_cat_url}/{make_slug}'
+
+        intro = (f'Browse {make} cars {action}'
+                 + (f' in {district}, {city}' if district and city else
+                    f' in {city}' if city else ' in the UK')
+                 + ' on Bazar UK classifieds.')
+
+        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (make, f'{_cat_url}/{make_slug}')]
+        if city:
+            breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
+        if district:
+            breadcrumbs.append((district, None))
+
+        _robots = 'index, follow' if not district else 'noindex, follow'
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': intro,
+            'canonical':   canonical,
+            'robots':      _robots,
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': breadcrumbs,
+            'type':        'category',
+            'car_make':    make_slug,
+            'car_city':    city_slug,
+            'car_district': district_slug,
+        }
+        return seo
+
     # ── Search (noindex always) ───────────────────────────────────────────────
     elif page_type == 'latest_updates':
         seo.update({
@@ -2578,6 +2650,15 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
     cat_label      = ssr.get('cat_label', '')
     related_links  = ssr.get('related_links', [])
     type_links     = ssr.get('type_links', [])
+
+    # ── Inject window.__bazarCarData for car category pages ──────────────────
+    car_make     = ssr.get('car_make', '')
+    car_city     = ssr.get('car_city', '')
+    car_district = ssr.get('car_district', '')
+    if car_make or (h1 and 'cars' in h1.lower()):
+        _cd = json.dumps({'make': car_make, 'city': car_city, 'district': car_district})
+        car_script = f'<script>window.__bazarCarData={_cd};</script>'
+        html = re.sub(r'(<body[^>]*>)', r'\1' + car_script, html, count=1)
 
     # ── Build replacement srBreadcrumb ────────────────────────────────────────
     if breadcrumbs:
@@ -4353,7 +4434,9 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_subtype', 'property_subtype_modifier',
                          'property_subtype_rent', 'property_subtype_sale',
                          'property_sale_type', 'category_transaction',
-                         'property_subtype_city', 'property_subtype_city_district'):
+                         'property_subtype_city', 'property_subtype_city_district',
+                         'cars_make', 'cars_make_city', 'cars_make_city_district',
+                         'cars_rent', 'cars_rent_make', 'cars_rent_make_city'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage':       'index.html' if is_production else 'dev-index.html',
