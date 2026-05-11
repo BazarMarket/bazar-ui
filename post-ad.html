@@ -2425,7 +2425,7 @@
 
       function updateCarTitle() {
          var isLockedMode = reState.cat === 'motors' &&
-            (reState.listingType === 'For Sale' || reState.listingType === 'For Short-term Rent');
+            (reState.listingType === 'For Sale' || reState.listingType === 'For Short-term Rent' || reState.listingType === 'For Long-term Rent');
          var make = (document.getElementById('carMakeSelect') || {}).value || '';
          var modelSel = document.getElementById('carModelSelect');
          var model = modelSel ? modelSel.value : '';
@@ -3001,8 +3001,8 @@
          }
 
          updateRealEstateTitle();
-         if (reState.cat === 'motors' && (reState.listingType === 'For Sale' || reState.listingType === 'For Short-term Rent')) {
-            var _listingLabel = reState.listingType === 'For Short-term Rent' ? 'for short-term rent' : 'for sale';
+         if (reState.cat === 'motors' && (reState.listingType === 'For Sale' || reState.listingType === 'For Short-term Rent' || reState.listingType === 'For Long-term Rent')) {
+            var _listingLabel = reState.listingType === 'For Short-term Rent' ? 'for short-term rent' : reState.listingType === 'For Long-term Rent' ? 'for long-term rent' : 'for sale';
             var _titleInput = document.getElementById('titleInput');
             if (_titleInput) {
                _titleInput.setAttribute('readonly', true);
@@ -3743,6 +3743,13 @@
 
          var locationCity = document.getElementById('locationCity').value;
          if (!locationCity) { showValidationError('Please select a location.', 'locationInput'); return; }
+
+         if (!make) { showValidationError('Please select a Car Brand.', 'carMakeSelect'); return; }
+         if (!carYear) { showValidationError('Please select a Year.', 'carYearSelect'); return; }
+         var _carEngine = getSelectVal('carEngineSelect');
+         if (!_carEngine) { showValidationError('Please select an Engine size.', 'carEngineSelect'); return; }
+         var _carTransmission = getSelectVal('carTransmissionSelect');
+         if (!_carTransmission) { showValidationError('Please select a Transmission.', 'carTransmissionSelect'); return; }
 
          var listingType = (reState.listingType === 'For Long-term Rent' || reState.listingType === 'For Short-term Rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale';
 
