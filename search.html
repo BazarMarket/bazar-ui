@@ -755,6 +755,26 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
+                     <!-- Motors: Year min/max (joined) — shown when Motors selected -->
+                     <div class="cf-price-joined" id="cfMotorsYearJoined" style="display:none">
+                        <div class="cf-cat cf-price-drop">
+                           <button class="cf-cat-btn" id="cfMotorsYearMinBtn" onclick="toggleMotorsYearPanel(event,'Min')">
+                              <span class="cf-cat-btn-label" id="cfMotorsYearMinLabel">Year min</span>
+                              <svg class="cf-arrow-icon" id="cfMotorsYearMinArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfMotorsYearMinCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearMotorsYear('Min',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMinPanel"></div>
+                        </div>
+                        <div class="cf-price-divider"></div>
+                        <div class="cf-cat cf-price-drop">
+                           <button class="cf-cat-btn" id="cfMotorsYearMaxBtn" onclick="toggleMotorsYearPanel(event,'Max')">
+                              <span class="cf-cat-btn-label" id="cfMotorsYearMaxLabel">Year max</span>
+                              <svg class="cf-arrow-icon" id="cfMotorsYearMaxArrow" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              <svg class="cf-clear-icon" id="cfMotorsYearMaxCross" width="11" height="11" viewBox="0 0 12 12" fill="none" style="display:none;" onclick="clearMotorsYear('Max',event)"><path d="M2 2l8 8M10 2l-8 8" stroke="#9ca3af" stroke-width="1.6" stroke-linecap="round"/></svg>
+                           </button>
+                           <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMaxPanel"></div>
+                        </div>
+                     </div>
                      <div class="cf-cat" id="cfBedroomsWrap">
                         <button class="cf-cat-btn" id="cfBedroomsBtn" onclick="toggleBedroomsPanel(event)">
                            <span class="cf-cat-btn-label" id="cfBedroomsLabel">Bedrooms</span>
@@ -845,12 +865,6 @@
                         <option>Saloon</option><option>Hatchback</option><option>SUV</option>
                         <option>Coupe</option><option>Convertible</option><option>Estate</option>
                         <option>MPV</option><option>Pickup</option><option>Van</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfMotorsYearFrom">
-                        <option value="">Year from</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfMotorsYearTo">
-                        <option value="">Year to</option>
                      </select>
                      <select class="cf-ctrl" id="cfMotorsMileage">
                         <option value="">Max mileage</option>
@@ -1338,7 +1352,7 @@
             if (el) el.style.display = isMotors ? 'none' : '';
          });
          /* Show/hide motors-specific filters */
-         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission'];
+         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined'];
          _motorOnlyIds.forEach(function(id){
             var el = document.getElementById(id);
             if (el) el.style.display = isMotors ? '' : 'none';
@@ -2371,6 +2385,14 @@
                ab.classList.remove('open');
             }
          });
+         ['Min','Max'].forEach(function(w) {
+            var myp = document.getElementById('cfMotorsYear' + w + 'Panel');
+            var myb = document.getElementById('cfMotorsYear' + w + 'Btn');
+            if (myp && !myp.contains(e.target) && !myb.contains(e.target)) {
+               myp.classList.remove('open');
+               myb.classList.remove('open');
+            }
+         });
          var fPanel = document.getElementById('cfFeaturesPanel');
          var fBtn = document.getElementById('cfFeaturesBtn');
          if (fPanel && !fPanel.contains(e.target) && !fBtn.contains(e.target)) {
@@ -3079,20 +3101,79 @@
          modelSel.innerHTML = html;
       }
 
-      (function initMotorsYearSelects() {
+      /* Motors year min/max panel functions */
+      var _motorsYearValues = (function() {
          var curYear = new Date().getFullYear();
-         var fromSel = document.getElementById('cfMotorsYearFrom');
-         var toSel   = document.getElementById('cfMotorsYearTo');
-         if (!fromSel || !toSel) return;
-         var htmlF = '<option value="">Year from</option>';
-         var htmlT = '<option value="">Year to</option>';
-         for (var y = curYear + 1; y >= 1970; y--) {
-            htmlF += '<option value="' + y + '">' + y + '</option>';
-            htmlT += '<option value="' + y + '">' + y + '</option>';
-         }
-         fromSel.innerHTML = htmlF;
-         toSel.innerHTML   = htmlT;
+         var vals = [];
+         for (var y = curYear + 1; y >= 1970; y--) vals.push(String(y));
+         return vals;
       })();
+      function buildMotorsYearPanels() {
+         ['Min','Max'].forEach(function(which) {
+            var panel = document.getElementById('cfMotorsYear' + which + 'Panel');
+            if (!panel) return;
+            panel.innerHTML = _motorsYearValues.map(function(v) {
+               return '<div class="cf-price-item" onclick="selectMotorsYear(this,\'' + which + '\')">' + v + '</div>';
+            }).join('');
+         });
+      }
+      function toggleMotorsYearPanel(e, which) {
+         e.stopPropagation();
+         var btn = document.getElementById('cfMotorsYear' + which + 'Btn');
+         var panel = document.getElementById('cfMotorsYear' + which + 'Panel');
+         var open = !panel.classList.contains('open');
+         panel.classList.toggle('open', open);
+         btn.classList.toggle('open', open);
+      }
+      function filterMotorsYearPanels() {
+         var minLabel = document.getElementById('cfMotorsYearMinLabel').textContent;
+         var maxLabel = document.getElementById('cfMotorsYearMaxLabel').textContent;
+         var hasMin = minLabel !== 'Year min';
+         var hasMax = maxLabel !== 'Year max';
+         var minVal = hasMin ? parseInt(minLabel, 10) : null;
+         var maxVal = hasMax ? parseInt(maxLabel, 10) : null;
+         document.getElementById('cfMotorsYearMaxPanel').querySelectorAll('.cf-price-item').forEach(function(item) {
+            var v = parseInt(item.textContent, 10);
+            item.style.display = (minVal !== null && v < minVal) ? 'none' : '';
+         });
+         document.getElementById('cfMotorsYearMinPanel').querySelectorAll('.cf-price-item').forEach(function(item) {
+            var v = parseInt(item.textContent, 10);
+            item.style.display = (maxVal !== null && v > maxVal) ? 'none' : '';
+         });
+      }
+      function selectMotorsYear(el, which) {
+         var label = document.getElementById('cfMotorsYear' + which + 'Label');
+         var arrow = document.getElementById('cfMotorsYear' + which + 'Arrow');
+         var cross = document.getElementById('cfMotorsYear' + which + 'Cross');
+         var btn   = document.getElementById('cfMotorsYear' + which + 'Btn');
+         var panel = document.getElementById('cfMotorsYear' + which + 'Panel');
+         panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
+         el.classList.add('active');
+         label.textContent = el.textContent;
+         arrow.style.display = 'none';
+         cross.style.display = '';
+         btn.classList.add('has-selection');
+         panel.classList.remove('open');
+         btn.classList.remove('open');
+         filterMotorsYearPanels();
+      }
+      function clearMotorsYear(which, e) {
+         if (e) { e.stopPropagation(); e.preventDefault(); }
+         var label = document.getElementById('cfMotorsYear' + which + 'Label');
+         var arrow = document.getElementById('cfMotorsYear' + which + 'Arrow');
+         var cross = document.getElementById('cfMotorsYear' + which + 'Cross');
+         var btn   = document.getElementById('cfMotorsYear' + which + 'Btn');
+         var panel = document.getElementById('cfMotorsYear' + which + 'Panel');
+         label.textContent = which === 'Min' ? 'Year min' : 'Year max';
+         arrow.style.display = '';
+         cross.style.display = 'none';
+         btn.classList.remove('has-selection');
+         panel.querySelectorAll('.cf-price-item').forEach(function(i){ i.classList.remove('active'); });
+         panel.classList.remove('open');
+         btn.classList.remove('open');
+         filterMotorsYearPanels();
+      }
+      buildMotorsYearPanels();
 
       /* ── Search suggest ── */
       (function(){
@@ -3403,7 +3484,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /motors-for-sale/bmw) */
