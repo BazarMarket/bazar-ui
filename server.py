@@ -2690,10 +2690,16 @@ def inject_ssr_category(html: str, ssr: dict) -> str:
             bc_label = label.replace(' in the UK', '').replace(' in the U.K.', '').strip()
             safe_label = _esc(bc_label)
             if not is_last:
-                items.append(
-                    f'<li><a href="{_attr(href)}">{safe_label}</a>'
-                    f'<span class="icon-arrow-r"></span></li>'
-                )
+                if href:
+                    items.append(
+                        f'<li><a href="{_attr(href)}">{safe_label}</a>'
+                        f'<span class="icon-arrow-r"></span></li>'
+                    )
+                else:
+                    items.append(
+                        f'<li><span>{safe_label}</span>'
+                        f'<span class="icon-arrow-r"></span></li>'
+                    )
             else:
                 items.append(f'<li>{safe_label}</li>')
         new_ul = ('<ul class="bread-custom" id="srBreadcrumb">' +
