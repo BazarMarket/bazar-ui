@@ -755,6 +755,19 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfPriceMaxPanel"></div>
                         </div>
                      </div>
+                     <!-- Motors: model + fuel + transmission (shown when Motors selected) -->
+                     <select class="cf-ctrl" id="cfMotorsModel" style="display:none">
+                        <option value="">Any model</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsFuel" style="display:none">
+                        <option value="">Any fuel</option>
+                        <option>Petrol</option><option>Diesel</option><option>Hybrid</option>
+                        <option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfMotorsTransmission" style="display:none">
+                        <option value="">Any transmission</option>
+                        <option>Automatic</option><option>Manual</option><option>Semi-automatic</option>
+                     </select>
                      <div class="cf-cat" id="cfBedroomsWrap">
                         <button class="cf-cat-btn" id="cfBedroomsBtn" onclick="toggleBedroomsPanel(event)">
                            <span class="cf-cat-btn-label" id="cfBedroomsLabel">Bedrooms</span>
@@ -846,28 +859,13 @@
                            <div class="cf-cat-panel cf-price-panel" id="cfMotorsYearMaxPanel"></div>
                         </div>
                      </div>
-                     <select class="cf-ctrl" id="cfMotorsModel" style="display:none">
-                        <option value="">Any model</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfMotorsFuel" style="display:none">
-                        <option value="">Any fuel</option>
-                        <option>Petrol</option><option>Diesel</option><option>Hybrid</option>
-                        <option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfMotorsTransmission" style="display:none">
-                        <option value="">Any transmission</option>
-                        <option>Automatic</option><option>Manual</option><option>Semi-automatic</option>
-                     </select>
-                  </div>
-                  <!-- Motors row 3: body type + mileage (visible when Motors selected) -->
-                  <div class="cf-row" id="cfMotorsRow" style="display:none">
-                     <select class="cf-ctrl" id="cfMotorsBodyType">
+                     <select class="cf-ctrl" id="cfMotorsBodyType" style="display:none">
                         <option value="">Any body type</option>
                         <option>Saloon</option><option>Hatchback</option><option>SUV</option>
                         <option>Coupe</option><option>Convertible</option><option>Estate</option>
                         <option>MPV</option><option>Pickup</option><option>Van</option>
                      </select>
-                     <select class="cf-ctrl" id="cfMotorsMileage">
+                     <select class="cf-ctrl" id="cfMotorsMileage" style="display:none">
                         <option value="">Max mileage</option>
                         <option value="5000">5,000</option><option value="10000">10,000</option>
                         <option value="20000">20,000</option><option value="30000">30,000</option>
@@ -1344,8 +1342,6 @@
          }
          var l = label.toLowerCase();
          var isMotors = l.indexOf('motors') !== -1;
-         var motorsRow = document.getElementById('cfMotorsRow');
-         if (motorsRow) motorsRow.style.display = isMotors ? '' : 'none';
          var motorsRow2 = document.getElementById('cfMotorsRow2');
          if (motorsRow2) motorsRow2.style.display = isMotors ? '' : 'none';
          /* Show/hide property vs motors filters */
@@ -1355,7 +1351,7 @@
             if (el) el.style.display = isMotors ? 'none' : '';
          });
          /* Show/hide motors-specific filters */
-         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined'];
+         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'];
          _motorOnlyIds.forEach(function(id){
             var el = document.getElementById(id);
             if (el) el.style.display = isMotors ? '' : 'none';
@@ -3482,14 +3478,12 @@
                if (i.textContent.trim() === 'Motors for Sale') i.classList.add('active');
             });
             /* Show motors row + motors-specific filters, hide property-specific filters */
-            var _mRow = document.getElementById('cfMotorsRow');
-            if (_mRow) _mRow.style.display = '';
             var _mRow2 = document.getElementById('cfMotorsRow2');
             if (_mRow2) _mRow2.style.display = '';
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /motors-for-sale/bmw) */
