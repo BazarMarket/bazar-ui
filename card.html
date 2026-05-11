@@ -1058,18 +1058,18 @@
       if (ptype === 'car') {
          /* ── Cars — form order ── */
          specs += specRow('Make', p.car_make);
-         specs += specRow('Model', p.car_model);
+         if (p.engine_size) specs += specRow('Engine size', p.engine_size);
          specs += specRow('Year', p.car_year);
+         specs += specRow('Transmission', p.transmission);
+         specs += specRow('Model', p.car_model);
          if (p.mileage) specs += specRow('Mileage', p.mileage + ' miles');
          specs += specRow('Fuel type', p.fuel_type);
-         specs += specRow('Transmission', p.transmission);
          specs += specRow('Body type', p.body_type);
          specs += specRow('Colour', p.colour);
          specs += specRow('Doors', p.doors);
          specs += specRow('Seats', p.seats);
          specs += specRow('Drive type', p.drive_type);
          specs += specRow('Steering side', p.steering_side);
-         if (p.engine_size) specs += specRow('Engine size', p.engine_size + ' L');
          specs += specRow('Previous owners', p.previous_owners);
          specs += specRow('Service history', p.service_history);
          specs += specRow('MOT status', p.mot_status);
