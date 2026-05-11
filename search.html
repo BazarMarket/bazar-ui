@@ -605,6 +605,18 @@
                         </button>
                         <div class="cf-cat-panel" id="cfTypePanel"></div>
                      </div>
+                     <!-- Motors: Any brand (make) — shown when Motors category selected -->
+                     <select class="cf-ctrl" id="cfMotorsMake" onchange="onCfMotorsMakeChange(this)" style="display:none">
+                        <option value="">Any brand</option>
+                        <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option>
+                        <option>Volkswagen</option><option>Ford</option><option>Toyota</option>
+                        <option>Nissan</option><option>Honda</option><option>Kia</option>
+                        <option>Hyundai</option><option>Peugeot</option><option>Renault</option>
+                        <option>Skoda</option><option>Vauxhall</option><option>Land Rover</option>
+                        <option>Jaguar</option><option>Mini</option><option>Tesla</option>
+                        <option>Volvo</option><option>Lexus</option><option>Porsche</option>
+                        <option>SEAT</option><option>Other</option>
+                     </select>
                      <div class="cf-cat" id="cfAptTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfAptTypeBtn" onclick="toggleAptTypePanel(event)">
                            <span class="cf-cat-btn-label" id="cfAptTypeLabel">Flats type</span>
@@ -812,32 +824,22 @@
                            <label class="cf-type-item"><input type="checkbox" value="Off plan" onchange="updateConditionLabel()"><span class="cf-type-check"></span>Off plan</label>
                         </div>
                      </div>
-                  </div>
-                  <!-- Motors filter row (visible when Motors category selected) -->
-                  <div class="cf-row" id="cfMotorsRow" style="display:none">
-                     <select class="cf-ctrl" id="cfMotorsMake" onchange="onCfMotorsMakeChange(this)">
-                        <option value="">Any make</option>
-                        <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option>
-                        <option>Volkswagen</option><option>Ford</option><option>Toyota</option>
-                        <option>Nissan</option><option>Honda</option><option>Kia</option>
-                        <option>Hyundai</option><option>Peugeot</option><option>Renault</option>
-                        <option>Skoda</option><option>Vauxhall</option><option>Land Rover</option>
-                        <option>Jaguar</option><option>Mini</option><option>Tesla</option>
-                        <option>Volvo</option><option>Lexus</option><option>Porsche</option>
-                        <option>SEAT</option><option>Other</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfMotorsModel">
+                     <!-- Motors row 2: model + fuel + transmission (shown in price row when Motors selected) -->
+                     <select class="cf-ctrl" id="cfMotorsModel" style="display:none">
                         <option value="">Any model</option>
                      </select>
-                     <select class="cf-ctrl" id="cfMotorsFuel">
+                     <select class="cf-ctrl" id="cfMotorsFuel" style="display:none">
                         <option value="">Any fuel</option>
                         <option>Petrol</option><option>Diesel</option><option>Hybrid</option>
                         <option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option>
                      </select>
-                     <select class="cf-ctrl" id="cfMotorsTransmission">
+                     <select class="cf-ctrl" id="cfMotorsTransmission" style="display:none">
                         <option value="">Any transmission</option>
                         <option>Automatic</option><option>Manual</option><option>Semi-automatic</option>
                      </select>
+                  </div>
+                  <!-- Motors filter row (visible when Motors category selected) — body type + year + mileage -->
+                  <div class="cf-row" id="cfMotorsRow" style="display:none">
                      <select class="cf-ctrl" id="cfMotorsBodyType">
                         <option value="">Any body type</option>
                         <option>Saloon</option><option>Hatchback</option><option>SUV</option>
@@ -1334,6 +1336,12 @@
          _propFilterIds.forEach(function(id){
             var el = document.getElementById(id);
             if (el) el.style.display = isMotors ? 'none' : '';
+         });
+         /* Show/hide motors-specific filters */
+         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission'];
+         _motorOnlyIds.forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) el.style.display = isMotors ? '' : 'none';
          });
 
          /* Navigate to the category URL */
@@ -3389,11 +3397,14 @@
                i.classList.remove('active');
                if (i.textContent.trim() === 'Motors for Sale') i.classList.add('active');
             });
-            /* Show motors row, hide property-specific filters */
+            /* Show motors row + motors-specific filters, hide property-specific filters */
             var _mRow = document.getElementById('cfMotorsRow');
             if (_mRow) _mRow.style.display = '';
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /motors-for-sale/bmw) */
             var _makeSeg = pathParts[1] || '';
