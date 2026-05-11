@@ -2566,6 +2566,7 @@
               var oldPriceN = ad.old_price ? Number(ad.old_price) : 0;
               apiByBucket[bucket].push({
                 id:   ad.id,
+                uid:  ad.seller_firebase_uid || '',
                 s:    (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller',
                 t:    ad.title || 'Property listing',
                 imgs: (ad.images && ad.images.length > 0) ? ad.images : [imgSrc],
@@ -2649,7 +2650,8 @@
                     var priceNum2  = ad.price     ? Number(ad.price)     : 0;
                     var oldPriceN2 = ad.old_price ? Number(ad.old_price) : 0;
                     newItems.push({
-                      id: ad.id, s: (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller', t: ad.title || _extraTitle,
+                      id: ad.id, uid: ad.seller_firebase_uid || '',
+                      s: (ad.seller_firebase_uid && ad.seller_firebase_uid === localStorage.getItem('bazar_firebase_uid') ? (localStorage.getItem('bazar_username') || ad.seller_name) : ad.seller_name) || 'Bazar Seller', t: ad.title || _extraTitle,
                       imgs: (ad.images && ad.images.length > 0) ? ad.images : [imgSrc], info: _buildInfoFromAd(ad),
                       p:  priceNum2  ? '£ ' + priceNum2.toLocaleString('en-GB')  : '—',
                       pn: priceNum2,
@@ -2722,7 +2724,7 @@
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button>'+
           '</div></div>'+
           '<div class="product__center">'+
-          '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span>'+boostBtn+'</div>'+
+          '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""'+(item.uid?' data-uid="'+item.uid+'"':'')+' onerror="this.src=\'icon/man.svg\'"><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span>'+boostBtn+'</div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
           '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
           '<div class="product__price-row"><span class="price-start">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
@@ -2744,7 +2746,7 @@
         var gHref = item.id ? 'card.html?id=' + item.id : 'card.html';
         return '<div class="card '+(item.cc||'')+'" style="position:relative;cursor:pointer">'+
           '<a href="'+gHref+'" class="card-link" aria-label="View listing"></a>'+
-          '<div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""></div>'+
+          '<div class="card__head"><div class="card__logo"><img loading="lazy" class="img-cover" src="icon/man.png" alt=""'+(item.uid?' data-uid="'+item.uid+'"':'')+' onerror="this.src=\'icon/man.png\'"></div>'+
           '<div class="card__info"><p class="card__name">'+shortT+'</p><p class="card__label">'+item.cy+'</p></div></div>'+
           '<div class="card__img"'+(item.imgs && item.imgs.length > 1 ? ' data-imgs="'+item.imgs.join(',')+'"' : '')+'><div class="card__stikers">'+_buildStikersG(item.stk)+boostBtnG+'</div>'+
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover" onload="window._checkImgPortrait&&window._checkImgPortrait(this)">'+
@@ -2952,7 +2954,38 @@
         }
         /* On mobile list view, replace Swiper galleries with simple images */
         if (typeof simplifyMobileListImages === 'function') simplifyMobileListImages();
+        /* Load seller avatars asynchronously */
+        _loadSellerAvatars();
       }
+
+      /* ── Lazy-load seller avatars from /api/customers/{uid} ── */
+      var _avatarCache = {};
+      function _loadSellerAvatars() {
+        var imgs = document.querySelectorAll('img[data-uid]');
+        var uids = {};
+        imgs.forEach(function(img) { var u = img.getAttribute('data-uid'); if (u) uids[u] = true; });
+        Object.keys(uids).forEach(function(uid) {
+          if (_avatarCache[uid]) {
+            /* already fetched — apply immediately */
+            if (_avatarCache[uid] !== 'none') {
+              document.querySelectorAll('img[data-uid="'+uid+'"]').forEach(function(img) { img.src = _avatarCache[uid]; });
+            }
+            return;
+          }
+          _avatarCache[uid] = 'pending';
+          fetch((window.BAZAR_API || '/api') + '/customers/' + encodeURIComponent(uid))
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+              var av = data && data.avatar ? data.avatar : '';
+              _avatarCache[uid] = av || 'none';
+              if (av) {
+                document.querySelectorAll('img[data-uid="'+uid+'"]').forEach(function(img) { img.src = av; });
+              }
+            })
+            .catch(function() { _avatarCache[uid] = 'none'; });
+        });
+      }
+
       function initProductSwipers() {
         document.querySelectorAll('.product-gallery .swiper:not(.swiper-initialized)').forEach(function(el) {
           new Swiper(el, {
