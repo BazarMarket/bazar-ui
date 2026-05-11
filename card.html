@@ -2746,7 +2746,7 @@ function _glbKey(e) {
 (function() {
   if (window.innerWidth > 767) return;
 
-  document.addEventListener('DOMContentLoaded', function() {
+  function _initMobLayout() {
     var left  = document.querySelector('.card-grid__left');
     var right = document.querySelector('.card-grid__right');
     if (!left) return;
@@ -2786,8 +2786,34 @@ function _glbKey(e) {
         '<span class="mbb-phone-sub" id="mob-phone-sub">+44 xxxx xxxxxx</span>' +
       '</span>';
     phoneBtn.addEventListener('click', function(e) {
-      if (typeof showPhone === 'function') {
-        showPhone(e, document.getElementById('call-btn'));
+      var masked = document.getElementById('phone-masked');
+      var full   = document.getElementById('phone-full');
+      if (!full) return;
+      var revealed = full.style.display !== 'none';
+      var mobLabel = phoneBtn.querySelector('.mbb-phone-text > span:first-child');
+      var mobSub   = document.getElementById('mob-phone-sub');
+      if (revealed) {
+        full.style.display = 'none';
+        if (masked) masked.style.display = '';
+        if (mobLabel) mobLabel.textContent = 'Show Phone';
+        if (mobSub && masked) mobSub.textContent = masked.textContent;
+      } else {
+        if (masked) masked.style.display = 'none';
+        full.style.display = '';
+        if (mobLabel) mobLabel.textContent = 'Hide Phone';
+        if (mobSub) mobSub.textContent = full.textContent;
+        /* sync desktop button text */
+        var callBtn = document.getElementById('call-btn');
+        var btnSpan = callBtn ? callBtn.querySelector('.btn-phone__title') : null;
+        if (btnSpan) btnSpan.textContent = full.textContent;
+        /* Google Ads conversion — once per page */
+        if (!window._phoneConvFired && typeof gtag === 'function') {
+          window._phoneConvFired = true;
+          gtag('event', 'conversion', {
+            'send_to': 'AW-1808636054/Prn-CPy5m5scEN_rn7BD',
+            'value': 1.0, 'currency': 'GBP'
+          });
+        }
       }
     });
 
@@ -2849,7 +2875,13 @@ function _glbKey(e) {
     syncMobData();
     var _sync = setInterval(syncMobData, 300);
     setTimeout(function() { clearInterval(_sync); }, 8000);
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _initMobLayout);
+  } else {
+    _initMobLayout();
+  }
 })();
 </script>
 
