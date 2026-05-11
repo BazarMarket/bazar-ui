@@ -1245,60 +1245,72 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             og_image = img if img.startswith('http') else f'{PUBLIC_DOMAIN}/storage/{img}'
 
         # ── Breadcrumb labels ─────────────────────────────────────────────────
+        _lt_norm = listing_type.lower() if listing_type else 'sale'
+        _pt_norm = prop_type.lower() if prop_type else ''
         action_label = {
             'sale': 'for sale', 'long_rent': 'to rent',
             'short_rent': 'to rent', 'Sale': 'for sale',
             'Long_rent': 'to rent', 'Short_rent': 'to rent',
         }.get(listing_type, 'for sale')
-        cat_label  = f'Property {action_label}'
-
-        # ── Breadcrumb category URL (depends on listing_type and property_type) ──
-        _lt_norm = listing_type.lower() if listing_type else 'sale'
-        _pt_norm = prop_type.lower() if prop_type else ''
-        if _lt_norm == 'short_rent':
-            cat_url = f'{PUBLIC_DOMAIN}/property-short-rent'
-        elif _lt_norm == 'long_rent' or _pt_norm == 'room':
-            cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
-        else:
-            cat_url = f'{PUBLIC_DOMAIN}/property-for-sale'
-
-        # ── Sub-type label + slug (e.g. Cottage → cottage) ────────────────────
-        # For rooms, sub_type stores room_type (Private/Shared) — ignore it for breadcrumbs
-        sub_type = '' if _pt_norm == 'room' else (listing.get('sub_type') or '')
-        if sub_type:
-            sub_label = sub_type
-            sub_slug  = re.sub(r'[^a-z0-9]+', '-', sub_type.lower()).strip('-')
-        elif _pt_norm:
-            _ptLabelMap = {'flat':'Flats','flats':'Flats','apartment':'Flats',
-                           'studio':'Flats','penthouse':'Flats','duplex':'Flats',
-                           'house':'House','room':'Rooms','land':'Land','building':'Building',
-                           'office':'Office','shop':'Shop','restaurant':'Restaurant',
-                           'industrial':'Industrial','hotel':'Hotel'}
-            _ptSlugMap  = {'flat':'flats','flats':'flats','apartment':'flats','room':'rooms',
-                           'studio':'flats','penthouse':'flats','duplex':'flats'}
-            sub_slug  = _ptSlugMap.get(_pt_norm, _pt_norm)
-            sub_label = _ptLabelMap.get(sub_slug, sub_slug.replace('-',' ').title())
-        else:
-            sub_label, sub_slug = '', ''
-
-        # ── JSON-LD ───────────────────────────────────────────────────────────
-        real_estate_types = {'apartment', 'house', 'flat', 'room', 'villa',
-                             'studio', 'bungalow', 'maisonette', 'cottage'}
-        is_real_estate = prop_type.lower() in real_estate_types
 
         city_slug_url = re.sub(r'[^a-z0-9]+', '-', city.lower()).strip('-') if city else ''
         dist_slug_url = re.sub(r'[^a-z0-9]+', '-', district.lower()).strip('-') if district else ''
-        _cat_rel_url  = cat_url.replace(PUBLIC_DOMAIN, '') or '/property'
 
-        # New-format breadcrumb URLs: /{transaction}/{subtype}/{city}/{district}
-        _sub_url  = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
-        _city_url = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
-        _dist_url = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
+        # ── Cars: custom breadcrumb ───────────────────────────────────────────
+        if _pt_norm == 'car':
+            is_rent = _lt_norm in ('long_rent', 'short_rent', 'rent')
+            cat_label   = 'Motors to Rent' if is_rent else 'Motors for Sale'
+            _cat_rel_url = '/cars/for-rent' if is_rent else '/cars'
+            cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
+            parent_label = 'Cars'
+            parent_url   = _cat_rel_url
+            car_make     = listing.get('car_make') or ''
+            sub_label    = car_make
+            sub_slug     = re.sub(r'[^a-z0-9]+', '-', car_make.lower()).strip('-') if car_make else ''
+            _sub_url     = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
+            _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
+            _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
+            is_real_estate = False
 
-        # Parent level (Flats) for flat sub-types: Studio, Penthouse, Duplex
-        _flat_sub_slugs = {'studio', 'penthouse', 'duplex'}
-        parent_label = 'Flats' if sub_slug in _flat_sub_slugs else ''
-        parent_url   = f'{_cat_rel_url}/flats' if parent_label else ''
+        # ── Property: existing breadcrumb logic ───────────────────────────────
+        else:
+            cat_label  = f'Property {action_label}'
+            if _lt_norm == 'short_rent':
+                cat_url = f'{PUBLIC_DOMAIN}/property-short-rent'
+            elif _lt_norm == 'long_rent' or _pt_norm == 'room':
+                cat_url = f'{PUBLIC_DOMAIN}/property-to-rent'
+            else:
+                cat_url = f'{PUBLIC_DOMAIN}/property-for-sale'
+
+            sub_type = '' if _pt_norm == 'room' else (listing.get('sub_type') or '')
+            if sub_type:
+                sub_label = sub_type
+                sub_slug  = re.sub(r'[^a-z0-9]+', '-', sub_type.lower()).strip('-')
+            elif _pt_norm:
+                _ptLabelMap = {'flat':'Flats','flats':'Flats','apartment':'Flats',
+                               'studio':'Flats','penthouse':'Flats','duplex':'Flats',
+                               'house':'House','room':'Rooms','land':'Land','building':'Building',
+                               'office':'Office','shop':'Shop','restaurant':'Restaurant',
+                               'industrial':'Industrial','hotel':'Hotel'}
+                _ptSlugMap  = {'flat':'flats','flats':'flats','apartment':'flats','room':'rooms',
+                               'studio':'flats','penthouse':'flats','duplex':'flats'}
+                sub_slug  = _ptSlugMap.get(_pt_norm, _pt_norm)
+                sub_label = _ptLabelMap.get(sub_slug, sub_slug.replace('-',' ').title())
+            else:
+                sub_label, sub_slug = '', ''
+
+            real_estate_types = {'apartment', 'house', 'flat', 'room', 'villa',
+                                 'studio', 'bungalow', 'maisonette', 'cottage'}
+            is_real_estate = prop_type.lower() in real_estate_types
+
+            _cat_rel_url  = cat_url.replace(PUBLIC_DOMAIN, '') or '/property'
+            _sub_url  = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
+            _city_url = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
+            _dist_url = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
+
+            _flat_sub_slugs = {'studio', 'penthouse', 'duplex'}
+            parent_label = 'Flats' if sub_slug in _flat_sub_slugs else ''
+            parent_url   = f'{_cat_rel_url}/flats' if parent_label else ''
 
         bc_items = [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": PUBLIC_DOMAIN},
