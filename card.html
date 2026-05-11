@@ -1057,6 +1057,7 @@
 
       if (ptype === 'car') {
          /* ── Cars — form order ── */
+         var carCondLabel = {new:'New', resale:'Used'};
          specs += specRow('Make', p.car_make);
          if (p.engine_size) specs += specRow('Engine size', p.engine_size);
          specs += specRow('Year', p.car_year);
@@ -1073,7 +1074,7 @@
          specs += specRow('Previous owners', p.previous_owners);
          specs += specRow('Service history', p.service_history);
          specs += specRow('MOT status', p.mot_status);
-         specs += specRow('Condition', condLabel[p.condition] || p.condition);
+         specs += specRow('Condition', carCondLabel[p.condition] || p.condition);
 
       } else if (ptype === 'phone') {
          /* ── Phones — form order ── */
