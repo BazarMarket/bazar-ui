@@ -822,6 +822,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         return 'other', {}
 
     parts = [x for x in p.split('/') if x]
+    if len(parts) == 5:
+        # /cars/for-rent/{make}/{city}/{district}
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'cars_make_city_district', {
+                'make': parts[2], 'city': parts[3], 'district': parts[4], 'is_rent': True
+            }
     if len(parts) == 3:
         # /property/for-rent/short-term  →  property_transaction_modifier
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale') and parts[2] == 'short-term':
