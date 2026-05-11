@@ -2412,7 +2412,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                     f' in {city}' if city else ' in the UK')
                  + ' on Bazar UK classifieds.')
 
-        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (make, f'{_cat_url}/{make_slug}')]
+        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', _cat_url), (make, f'{_cat_url}/{make_slug}')]
         if city:
             breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
         if district:
