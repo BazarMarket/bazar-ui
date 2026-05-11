@@ -951,7 +951,7 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
 # ══════════════════════════════════════════════════════════════════════════════
 CATEGORY_LABELS = {
     'property':    'Property',    'real-estate': 'Property',
-    'cars':        'Cars',        'motors':      'Motors',
+    'cars':        'Motors for Sale', 'motors':  'Motors',
     'vehicles':    'Vehicles',    'rooms':       'Rooms',
     'flats':       'Flats',
     'jobs':        'Jobs',        'electronics': 'Electronics',
@@ -964,7 +964,7 @@ CATEGORY_LABELS = {
 # Verb phrase used in title/H1: "Cars for sale" / "Rooms to rent" / "Jobs"
 CATEGORY_ACTION = {
     'property':  'for sale',   'real-estate': 'for sale',
-    'cars':      'for sale',   'motors':      'for sale',
+    'cars':      '',           'motors':      'for sale',
     'vehicles':  'for sale',   'rooms':       'to rent',
     'flats':     'for Rent',
     'jobs':      '',           'electronics': 'for sale',
@@ -978,7 +978,7 @@ CATEGORY_ACTION = {
 CATEGORY_INTROS = {
     'property':    'Browse property listings across the UK — flats, houses, villas and more.',
     'real-estate': 'Browse property listings across the UK — flats, houses, villas and more.',
-    'cars':        'Browse new and used car listings across the UK from private sellers and dealers.',
+    'cars':        'Browse new and used motors for sale across the UK from private sellers and dealers.',
     'motors':      'Browse motors and vehicles for sale across the UK on Bazar.',
     'vehicles':    'Browse vehicles for sale across the UK — cars, vans, bikes and more.',
     'rooms':       'Find rooms to rent across the UK. Short-term and long-term rentals available.',
