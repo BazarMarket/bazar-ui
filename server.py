@@ -936,6 +936,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_modifier', {
                 'category': parts[0], 'modifier': 'short-term'
             }
+        # /motors-for-sale/cars  →  cars category page
+        if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
+            return 'cars_category', {}
         # /motors-for-sale/{make}
         if parts[0] == 'motors-for-sale':
             return 'cars_make', {'make': parts[1]}
@@ -2418,7 +2421,8 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                     f' in {city}' if city else ' in the UK')
                  + ' on Bazar UK classifieds.')
 
-        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', _cat_url), (make, f'{_cat_url}/{make_slug}')]
+        _cars_cat_url = '/cars/for-rent' if is_rent else '/motors-for-sale/cars'
+        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', _cars_cat_url), (make, f'{_cat_url}/{make_slug}')]
         if city:
             breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
         if district:
@@ -2439,6 +2443,25 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'car_make':    make_slug,
             'car_city':    city_slug,
             'car_district': district_slug,
+        }
+        return seo
+
+    elif page_type == 'cars_category':
+        seo.update({
+            'title':       'Cars for Sale in the UK | Bazar UK',
+            'description': 'Browse cars for sale across the UK on Bazar UK classifieds.',
+            'canonical':   f'{PUBLIC_DOMAIN}/motors-for-sale/cars',
+            'robots':      'index, follow',
+        })
+        seo['ssr'] = {
+            'h1':    'Cars for Sale in the UK',
+            'intro': 'Browse new and used cars for sale across the UK from private sellers and dealers.',
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Motors for Sale', '/motors-for-sale'),
+                ('Cars', None),
+            ],
+            'type': 'category',
         }
         return seo
 
@@ -4463,6 +4486,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_sale_type', 'category_transaction',
                          'property_subtype_city', 'property_subtype_city_district',
                          'cars_make', 'cars_make_city', 'cars_make_city_district',
+                         'cars_category',
                          'cars_rent', 'cars_rent_make', 'cars_rent_make_city'):
             # Determine which HTML file to serve
             html_filename = {
