@@ -4324,6 +4324,7 @@
                   _setSelect('carServiceHistorySelect', d.service_history || '');
                   _setSelect('carMotSelect',            d.mot_status   || '');
                   if (d.mileage)          _setVal('carMileageInput',    d.mileage);
+                  updateCarTitle();
                }, 300);
             }, 400);
          }
