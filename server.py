@@ -846,9 +846,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_city_modifier', {
                 'category': parts[0], 'city': parts[1], 'modifier': 'short-term'
             }
-        # /cars/{make}/{city}
-        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+        # /motors-for-sale/{make}/{city}
+        if parts[0] == 'motors-for-sale':
             return 'cars_make_city', {'make': parts[1], 'city': parts[2]}
+        # Legacy /cars/{make}/{city} → 301
+        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+            return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}/{parts[2]}'}
         # /cars/for-rent/{make}
         if parts[0] == 'cars' and parts[1] == 'for-rent':
             return 'cars_make', {'make': parts[2], 'is_rent': True}
@@ -861,11 +864,14 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             'category': parts[0], 'city': parts[1], 'district': parts[2]
         }
     if len(parts) == 4:
-        # /cars/{make}/{city}/{district}
-        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+        # /motors-for-sale/{make}/{city}/{district}
+        if parts[0] == 'motors-for-sale':
             return 'cars_make_city_district', {
                 'make': parts[1], 'city': parts[2], 'district': parts[3]
             }
+        # Legacy /cars/{make}/{city}/{district} → 301
+        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+            return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}/{parts[2]}/{parts[3]}'}
         # /cars/for-rent/{make}/{city}
         if parts[0] == 'cars' and parts[1] == 'for-rent':
             return 'cars_make_city_district', {
@@ -924,9 +930,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_modifier', {
                 'category': parts[0], 'modifier': 'short-term'
             }
-        # /cars/{make}  (for-rent already handled as category above)
-        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+        # /motors-for-sale/{make}
+        if parts[0] == 'motors-for-sale':
             return 'cars_make', {'make': parts[1]}
+        # Legacy /cars/{make} → 301
+        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+            return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}'}
         return 'category_city', {'category': parts[0], 'city': parts[1]}
     if len(parts) == 1:
         # /flats, /rooms  →  301 redirect to /property-to-rent/{cat}
@@ -941,6 +950,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property-short-rent  →  property_transaction_modifier
         if parts[0] == 'property-short-rent':
             return 'property_transaction_modifier', {'transaction': 'for-rent'}
+        # /motors-for-sale  →  category cars
+        if parts[0] == 'motors-for-sale':
+            return 'category', {'category': 'cars'}
+        # Legacy /cars → 301 redirect
+        if parts[0] == 'cars':
+            return 'redirect_301', {'location': '/motors-for-sale'}
         return 'category', {'category': parts[0]}
 
     return 'other', {}
@@ -1279,7 +1294,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         if _pt_norm == 'car':
             is_rent = _lt_norm in ('long_rent', 'short_rent', 'rent')
             cat_label   = 'Motors to Rent' if is_rent else 'Motors for Sale'
-            _cat_rel_url = '/cars/for-rent' if is_rent else '/cars'
+            _cat_rel_url = '/cars/for-rent' if is_rent else '/motors-for-sale'
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
             parent_label = 'Cars'
             parent_url   = _cat_rel_url
@@ -2380,7 +2395,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
         cat_label    = 'Motors to Rent' if is_rent else 'Motors for Sale'
         action       = 'to rent' if is_rent else 'for sale'
-        _cat_url     = '/cars/for-rent' if is_rent else '/cars'
+        _cat_url     = '/cars/for-rent' if is_rent else '/motors-for-sale'
 
         if district and city:
             h1 = f'{make} cars {action} in {district}, {city}'
