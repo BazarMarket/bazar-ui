@@ -1349,7 +1349,7 @@
          var motorsRow2 = document.getElementById('cfMotorsRow2');
          if (motorsRow2) motorsRow2.style.display = isMotors ? '' : 'none';
          /* Show/hide property vs motors filters */
-         var _propFilterIds = ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'];
+         var _propFilterIds = ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'];
          _propFilterIds.forEach(function(id){
             var el = document.getElementById(id);
             if (el) el.style.display = isMotors ? 'none' : '';
@@ -3486,7 +3486,7 @@
             /* Show motors row + motors-specific filters, hide property-specific filters */
             var _mRow2 = document.getElementById('cfMotorsRow2');
             if (_mRow2) _mRow2.style.display = '';
-            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined'].forEach(function(id){
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
             ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
