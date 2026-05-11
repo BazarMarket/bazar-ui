@@ -815,13 +815,32 @@
             <section class="cards margin">
                 <div class="container">
                     <div class="cards__head">
+                        <h2 class="cards__title">Latest updates</h2>
+                        <a href="/latest-updates" class="cards__show-all">&#8594;</a>
+                    </div>
+                    <div class="cards__body">
+                        <div class="cards__grid before992" id="latestGrid">
+                        </div>
+
+                        <div class="cards__sliders after992">
+                            <div class="cards-sliders">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="hr-block">
+
+            <section class="cards margin">
+                <div class="container">
+                    <div class="cards__head">
                         <h2 class="cards__title">Rooms for Rent in the UK</h2>
                         <a href="/rooms" class="cards__show-all">&#8594;</a>
-                        <!-- <div class="long-filter">
-                            <a href="#" class="long-filter__item active">FREE</a>
-                            <a href="#" class="long-filter__item">VIP</a>
-                            <a href="#" class="long-filter__item">TOP</a>
-                        </div> -->
                     </div>
                     <div class="cards__body">
                         <div class="cards__grid before992" id="roomsGrid">
@@ -844,16 +863,11 @@
             <section class="cards margin">
                 <div class="container">
                     <div class="cards__head">
-                        <h2 class="cards__title">Latest updates</h2>
-                        <a href="/latest-updates" class="cards__show-all">&#8594;</a>
-                        <!-- <div class="long-filter">
-                            <a href="#" class="long-filter__item active">FREE</a>
-                            <a href="#" class="long-filter__item">VIP</a>
-                            <a href="#" class="long-filter__item">TOP</a>
-                        </div> -->
+                        <h2 class="cards__title">Motors for Sale in the UK</h2>
+                        <a href="/cars" class="cards__show-all">&#8594;</a>
                     </div>
                     <div class="cards__body">
-                        <div class="cards__grid before992" id="latestGrid">
+                        <div class="cards__grid before992" id="carsGrid">
                         </div>
 
                         <div class="cards__sliders after992">
@@ -1522,6 +1536,41 @@
                 var filtered = resp.data.filter(function(ad) {
                     var lt = (ad.listing_type || '').toLowerCase();
                     return lt !== 'short_rent' && lt !== 'short-rent';
+                });
+                if (!filtered.length) { grid.closest('.cards').style.display = 'none'; return; }
+                var html = '';
+                filtered.forEach(function(ad) { html += buildIndexCard(ad); });
+                grid.innerHTML = html;
+                if (typeof _loadCardAvatars === 'function') _loadCardAvatars();
+                /* mobile swiper */
+                var swiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
+                if (swiperWrapper) {
+                    var slidesHtml = '';
+                    filtered.forEach(function(ad) {
+                        slidesHtml += '<div class="swiper-slide">' + buildIndexCard(ad) + '</div>';
+                    });
+                    swiperWrapper.innerHTML = slidesHtml;
+                    var _doUpdateSw = function(sws) { sws.forEach(function(sw) { try { sw.update(); } catch(e) {} }); };
+                    if (window._bzCardSwipers) { _doUpdateSw(window._bzCardSwipers); }
+                    else { window._bzSwipersUpdateQueue = window._bzSwipersUpdateQueue || []; window._bzSwipersUpdateQueue.push(_doUpdateSw); }
+                }
+            })
+            .catch(function() {});
+    })();
+    </script>
+
+    <script>
+    /* Load Motors for Sale section from API */
+    (function() {
+        fetch('/api/properties/recent-enriched?property_type=car&listing_type=sale', { headers: { 'Accept': 'application/json' } })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(resp) {
+                if (!resp || !resp.data) return;
+                var grid = document.getElementById('carsGrid');
+                if (!grid) return;
+                var filtered = resp.data.filter(function(ad) {
+                    var lt = (ad.listing_type || '').toLowerCase();
+                    return lt !== 'rent' && lt !== 'long_rent' && lt !== 'short_rent';
                 });
                 if (!filtered.length) { grid.closest('.cards').style.display = 'none'; return; }
                 var html = '';
