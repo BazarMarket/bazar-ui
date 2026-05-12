@@ -1452,7 +1452,7 @@
         var dateStr = _relTimeIdx(ad.created_at) || '—';
         return '<div class="card__dop"><div class="car-meta-row">' +
             '<span class="car-meta-row__date"><span class="icon-calendar"></span>' + dateStr + '</span>' +
-            '<span class="car-meta-row__sep">/</span>' +
+            '<span class="car-meta-row__sep">|</span>' +
             '<span class="car-meta-row__views"><span class="icon-eye"></span>' + views + '</span>' +
             '</div></div>';
     }
@@ -1777,7 +1777,7 @@
 .car-meta-row{display:flex;align-items:center;justify-content:flex-end;gap:6px;background:#f3f4f6;border-radius:8px;padding:4px 8px;font-family:"Poppins",sans-serif;font-weight:400;color:#1d1d1b}
 .car-meta-row__date{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:13px}
 .car-meta-row__date .icon-calendar{font-size:20px;line-height:1;color:#6b7280}
-.car-meta-row__sep{opacity:.4;font-size:14px;flex-shrink:0}
+.car-meta-row__sep{opacity:.3;font-size:12px;flex-shrink:0;font-weight:300}
 .car-meta-row__views{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:13px}
 .car-meta-row__views .icon-eye{font-size:20px;line-height:1;color:#6b7280}
 </style>
