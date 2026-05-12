@@ -892,7 +892,7 @@
           var _carMakeSlug = (p.car_make || '').toLowerCase().replace(/\s+/g, '-');
           if (el('bread-type')) {
             el('bread-type').textContent = p.car_make || 'Other';
-            el('bread-type').href = _carCatHref + (_carMakeSlug ? '/' + _carMakeSlug : '');
+            el('bread-type').href = _carsParentHref + (_carMakeSlug ? '/' + _carMakeSlug : '');
           }
 
           /* City crumb */
@@ -901,7 +901,7 @@
             if (el('bread-type-arrow')) el('bread-type-arrow').style.display = '';
             el('bread-city-li').style.display = '';
             el('bread-city').textContent = p.city;
-            el('bread-city').href = _carCatHref + (_carMakeSlug ? '/' + _carMakeSlug : '') + '/' + _carCitySlug;
+            el('bread-city').href = _carsParentHref + (_carMakeSlug ? '/' + _carMakeSlug : '') + '/' + _carCitySlug;
           }
 
           /* District crumb */
@@ -910,7 +910,7 @@
             var _carDistSlug = (p.district || '').toLowerCase().replace(/\s+/g, '-');
             el('bread-district-li').style.display = '';
             el('bread-district').textContent = p.district;
-            el('bread-district').href = _carCatHref + (_carMakeSlug ? '/' + _carMakeSlug : '') + '/' + _carCitySlug + '/' + _carDistSlug;
+            el('bread-district').href = _carsParentHref + (_carMakeSlug ? '/' + _carMakeSlug : '') + '/' + _carCitySlug + '/' + _carDistSlug;
           }
         } else {
           if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_', ' ');
