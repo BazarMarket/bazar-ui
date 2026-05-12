@@ -1449,11 +1449,10 @@
     }
     function _carMetaHtml(ad) {
         var views = (ad.views !== undefined && ad.views !== null) ? Number(ad.views) : 0;
-        var dateStr = _relTimeIdx(ad.created_at);
-        return '<div class="card__dop"><div class="car-meta-row">' +
-            '<span class="car-meta-row__date">' + (dateStr || '—') + '</span>' +
-            '<span class="car-meta-row__sep">/</span>' +
-            '<span class="car-meta-row__views"><span class="icon-eye"></span>' + views + '</span>' +
+        var dateStr = _relTimeIdx(ad.created_at) || '—';
+        return '<div class="card__dop"><div class="info-bord">' +
+            '<span class="info-bord__item icon-calendar">' + dateStr + '</span>' +
+            '<span class="info-bord__item icon-eye">' + views + '</span>' +
             '</div></div>';
     }
     function buildIndexCard(ad) {
