@@ -877,8 +877,8 @@
           el('bread-category').href = _carCatHref;
 
           /* "Cars" parent crumb — context-specific label per rental type */
-          var _carsParentLabel = (_lt === 'short_rent') ? 'Cars for Short Rent'
-                               : (_lt === 'rent' || _lt === 'long_rent') ? 'Cars for Rent'
+          var _carsParentLabel = (_lt === 'short_rent') ? 'Cars for Short-Term Rent'
+                               : (_lt === 'rent' || _lt === 'long_rent') ? 'Cars to Rent'
                                : 'Cars for Sale';
           var _carsParentHref  = (_lt === 'short_rent') ? '/cars/for-short-term-rent'
                                : (_lt === 'rent' || _lt === 'long_rent') ? '/cars/for-rent'

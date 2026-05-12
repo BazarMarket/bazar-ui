@@ -1334,10 +1334,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
             # Context-specific "Cars" label so the crumb makes sense per category
             if _is_short_rent:
-                parent_label = 'Cars for Short Rent'
+                parent_label = 'Cars for Short-Term Rent'
                 parent_url   = '/cars/for-short-term-rent'
             elif _is_long_rent:
-                parent_label = 'Cars for Rent'
+                parent_label = 'Cars to Rent'
                 parent_url   = '/cars/for-rent'
             else:
                 parent_label = 'Cars for Sale'
@@ -2468,10 +2468,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
         # Cars sub-label: context-specific so clicking it makes sense
         if is_short_rent:
-            _cars_label = 'Cars for Short Rent'
+            _cars_label = 'Cars for Short-Term Rent'
             _cars_url   = '/cars/for-short-term-rent'
         elif is_rent:
-            _cars_label = 'Cars for Rent'
+            _cars_label = 'Cars to Rent'
             _cars_url   = '/cars/for-rent'
         else:
             _cars_label = 'Cars for Sale'
