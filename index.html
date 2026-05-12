@@ -1637,10 +1637,18 @@
                     var _latCurN = Number(ad.price) || 0;
                     var priceOld = (_latOpN && _latOpN > _latCurN) ? '<span class="price-old">£ ' + Math.round(_latOpN).toLocaleString('en-GB') + '</span>' : '';
                     var _infoItemsB = '';
-                    if (ad.bedrooms) _infoItemsB += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
-                    if (ad.bathrooms) _infoItemsB += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
-                    if (ad.area) _infoItemsB += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
-                    if (ad.plot) _infoItemsB += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+                    if ((ad.property_type || '').toLowerCase() === 'car') {
+                        var _lcv = (ad.views !== undefined && ad.views !== null) ? Number(ad.views) : 0;
+                        var _lcdStr = '';
+                        if (ad.created_at) { var _lcd = new Date(ad.created_at); if (!isNaN(_lcd.getTime())) { _lcdStr = ('0'+_lcd.getDate()).slice(-2) + '.' + ('0'+(_lcd.getMonth()+1)).slice(-2) + '.' + String(_lcd.getFullYear()).slice(-2); } }
+                        _infoItemsB += '<span class="info-bord__item icon-eye">' + _lcv + '</span>';
+                        if (_lcdStr) _infoItemsB += '<span class="info-bord__item icon-calendar">' + _lcdStr + '</span>';
+                    } else {
+                        if (ad.bedrooms) _infoItemsB += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
+                        if (ad.bathrooms) _infoItemsB += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
+                        if (ad.area) _infoItemsB += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
+                        if (ad.plot) _infoItemsB += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+                    }
                     var infoBord = '<div class="card__dop"><div class="info-bord">' + _infoItemsB + '</div></div>';
                     var latCardUrl = 'card.html?id=' + ad.id;
                     var _latUid = ad.seller_firebase_uid || '';
@@ -1684,10 +1692,18 @@
                         var _curN2 = Number(ad.price) || 0;
                         var priceOld2 = (_opN2 && _opN2 > _curN2) ? '<span class="price-old">£ ' + Math.round(_opN2).toLocaleString('en-GB') + '</span>' : '';
                         var _ii = '';
-                        if (ad.bedrooms) _ii += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
-                        if (ad.bathrooms) _ii += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
-                        if (ad.area) _ii += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
-                        if (ad.plot) _ii += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+                        if ((ad.property_type || '').toLowerCase() === 'car') {
+                            var _scv = (ad.views !== undefined && ad.views !== null) ? Number(ad.views) : 0;
+                            var _scdStr = '';
+                            if (ad.created_at) { var _scd = new Date(ad.created_at); if (!isNaN(_scd.getTime())) { _scdStr = ('0'+_scd.getDate()).slice(-2) + '.' + ('0'+(_scd.getMonth()+1)).slice(-2) + '.' + String(_scd.getFullYear()).slice(-2); } }
+                            _ii += '<span class="info-bord__item icon-eye">' + _scv + '</span>';
+                            if (_scdStr) _ii += '<span class="info-bord__item icon-calendar">' + _scdStr + '</span>';
+                        } else {
+                            if (ad.bedrooms) _ii += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
+                            if (ad.bathrooms) _ii += '<span class="info-bord__item icon-bath">' + ad.bathrooms + ' bath</span>';
+                            if (ad.area) _ii += '<span class="info-bord__item icon-house-area">' + ad.area + ' m2</span>';
+                            if (ad.plot) _ii += '<span class="info-bord__item icon-Plot">' + ad.plot + ' m2</span>';
+                        }
                         var infoBord2 = '<div class="card__dop"><div class="info-bord">' + _ii + '</div></div>';
                         var latSwUrl = 'card.html?id=' + ad.id;
                         var _latSwUid = ad.seller_firebase_uid || '';
