@@ -3640,6 +3640,44 @@
             }
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
+         } else if (pathCat === 'motors-for-rent') {
+            document.getElementById('cfCatLabel').textContent = 'Motors to Rent';
+            var imgEl = document.getElementById('cfCatImg');
+            imgEl.src = 'img/cat/image4.png'; imgEl.style.display = '';
+            document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i){
+               i.classList.remove('active');
+               if (i.textContent.trim() === 'Motors to Rent') i.classList.add('active');
+            });
+            var _mRow2 = document.getElementById('cfMotorsRow2');
+            if (_mRow2) _mRow2.style.display = '';
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = '';
+            });
+            currentMode = 'rent'; buildPricePanels(); _smfPricesBuilt = false;
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
+         } else if (pathCat === 'motors-for-short-term-rent') {
+            document.getElementById('cfCatLabel').textContent = 'Motors for short-term rent';
+            var imgEl = document.getElementById('cfCatImg');
+            imgEl.src = 'img/cat/image4.png'; imgEl.style.display = '';
+            document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i){
+               i.classList.remove('active');
+               if (i.textContent.trim() === 'Motors for short-term rent') i.classList.add('active');
+            });
+            var _mRow2 = document.getElementById('cfMotorsRow2');
+            if (_mRow2) _mRow2.style.display = '';
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = '';
+            });
+            currentMode = 'short-rent'; buildPricePanels(); _smfPricesBuilt = false;
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
          } else if (pathCat === 'cars' && pathSub === 'for-rent') {
             /* Motors to Rent page: set category UI and show car filters */
             document.getElementById('cfCatLabel').textContent = 'Motors to Rent';
@@ -3671,6 +3709,7 @@
                   }
                }
             }
+            currentMode = 'rent'; buildPricePanels(); _smfPricesBuilt = false;
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
          } else if (pathCat === 'cars' && pathSub === 'for-short-term-rent') {
@@ -3701,6 +3740,7 @@
                   }
                }
             }
+            currentMode = 'short-rent'; buildPricePanels(); _smfPricesBuilt = false;
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
          } else if (pathCatMap[pathCat]) {
