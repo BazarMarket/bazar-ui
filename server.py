@@ -4199,6 +4199,9 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         enriched_list[idx]['listing_type'] = detail.get('listing_type') or ''
                         enriched_list[idx]['images']       = detail.get('images') or []
                         enriched_list[idx]['car_make']     = detail.get('car_make') or ''
+                        enriched_list[idx]['views']        = detail.get('views_count') or detail.get('views') or 0
+                        if detail.get('created_at') and not enriched_list[idx].get('created_at'):
+                            enriched_list[idx]['created_at'] = detail.get('created_at')
                     # Refresh per-listing cache so card.html gets fresh data too
                     _cache_set(f'listing_{ad_id}', detail)
                 except Exception:
