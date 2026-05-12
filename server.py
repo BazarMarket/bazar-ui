@@ -2521,17 +2521,17 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
     elif page_type == 'cars_rent':
         seo.update({
-            'title':       'Motors to Rent in the UK | Bazar UK',
+            'title':       'Cars to Rent in the UK | Bazar UK',
             'description': 'Browse cars for long-term rent across the UK on Bazar UK classifieds.',
             'canonical':   f'{PUBLIC_DOMAIN}/cars/for-rent',
             'robots':      'index, follow',
         })
         seo['ssr'] = {
-            'h1':    'Motors to Rent in the UK',
+            'h1':    'Cars to Rent in the UK',
             'intro': 'Browse cars available for long-term rent across the UK from private sellers and dealers.',
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Motors to Rent', None),
+                ('Cars to Rent', None),
             ],
             'type': 'category',
         }
