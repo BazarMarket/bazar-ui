@@ -1332,14 +1332,16 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 cat_label    = 'Motors for Sale'
                 _cat_rel_url = '/motors-for-sale'
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
-            # For sale: "Cars" links to /motors-for-sale/cars (different from category)
-            # For rent/short_rent: no "Cars" crumb (same URL as category = confusing)
-            if not _is_short_rent and not _is_long_rent:
-                parent_label = 'Cars'
-                parent_url   = '/motors-for-sale/cars'
+            # Context-specific "Cars" label so the crumb makes sense per category
+            if _is_short_rent:
+                parent_label = 'Cars for Short Rent'
+                parent_url   = '/cars/for-short-term-rent'
+            elif _is_long_rent:
+                parent_label = 'Cars for Rent'
+                parent_url   = '/cars/for-rent'
             else:
-                parent_label = ''
-                parent_url   = ''
+                parent_label = 'Cars for Sale'
+                parent_url   = '/motors-for-sale/cars'
             car_make     = listing.get('car_make') or ''
             sub_label    = car_make
             sub_slug     = re.sub(r'[^a-z0-9]+', '-', car_make.lower()).strip('-') if car_make else ''
@@ -2464,12 +2466,17 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                     f' in {city}' if city else ' in the UK')
                  + ' on Bazar UK classifieds.')
 
-        # For sale: Home > Motors for Sale > Cars > {Make}
-        # For rent/short_rent: Home > Motors to Rent > {Make}  (no "Cars" — same URL as parent)
-        if is_short_rent or is_rent:
-            breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (make, f'{_cat_url}/{make_slug}')]
+        # Cars sub-label: context-specific so clicking it makes sense
+        if is_short_rent:
+            _cars_label = 'Cars for Short Rent'
+            _cars_url   = '/cars/for-short-term-rent'
+        elif is_rent:
+            _cars_label = 'Cars for Rent'
+            _cars_url   = '/cars/for-rent'
         else:
-            breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', '/motors-for-sale/cars'), (make, f'{_cat_url}/{make_slug}')]
+            _cars_label = 'Cars for Sale'
+            _cars_url   = '/motors-for-sale/cars'
+        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (_cars_label, _cars_url), (make, f'{_cat_url}/{make_slug}')]
         if city:
             breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
         if district:

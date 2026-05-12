@@ -876,15 +876,16 @@
           el('bread-category').textContent = _carCatLabel;
           el('bread-category').href = _carCatHref;
 
-          /* "Cars" parent crumb — only for sale (rent URLs duplicate the category) */
-          var _showCarsParent = (_lt !== 'short_rent' && _lt !== 'rent' && _lt !== 'long_rent');
+          /* "Cars" parent crumb — context-specific label per rental type */
+          var _carsParentLabel = (_lt === 'short_rent') ? 'Cars for Short Rent'
+                               : (_lt === 'rent' || _lt === 'long_rent') ? 'Cars for Rent'
+                               : 'Cars for Sale';
+          var _carsParentHref  = (_lt === 'short_rent') ? '/cars/for-short-term-rent'
+                               : (_lt === 'rent' || _lt === 'long_rent') ? '/cars/for-rent'
+                               : '/motors-for-sale/cars';
           if (el('bread-parent-li')) {
-            if (_showCarsParent) {
-              el('bread-parent-li').removeAttribute('style');
-              if (el('bread-parent')) { el('bread-parent').textContent = 'Cars'; el('bread-parent').href = '/motors-for-sale/cars'; }
-            } else {
-              el('bread-parent-li').style.display = 'none';
-            }
+            el('bread-parent-li').removeAttribute('style');
+            if (el('bread-parent')) { el('bread-parent').textContent = _carsParentLabel; el('bread-parent').href = _carsParentHref; }
           }
 
           /* Brand crumb */
