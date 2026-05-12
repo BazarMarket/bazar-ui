@@ -857,6 +857,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_city_modifier', {
                 'category': parts[0], 'city': parts[1], 'modifier': 'short-term'
             }
+        # /motors-for-sale/cars/{make} → redirect (old URL after Cars for Sale page)
+        if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
+            return 'redirect_301', {'location': f'/motors-for-sale/{parts[2]}'}
         # /motors-for-sale/{make}/{city}
         if parts[0] == 'motors-for-sale':
             return 'cars_make_city', {'make': parts[1], 'city': parts[2]}
@@ -878,6 +881,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             'category': parts[0], 'city': parts[1], 'district': parts[2]
         }
     if len(parts) == 4:
+        # /motors-for-sale/cars/{make}/{city} → redirect
+        if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
+            return 'redirect_301', {'location': f'/motors-for-sale/{parts[2]}/{parts[3]}'}
         # /motors-for-sale/{make}/{city}/{district}
         if parts[0] == 'motors-for-sale':
             return 'cars_make_city_district', {
