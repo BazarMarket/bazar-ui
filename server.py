@@ -1340,21 +1340,24 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 cat_label     = 'Motors for Sale'
                 _cat_rel_url  = '/motors-for-sale'
                 _cars_rel_url = '/motors-for-sale/cars'
+                _make_url_base = '/motors-for-sale'
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
             # Context-specific "Cars" sub-label (one level below the motors parent)
             if _is_short_rent:
-                parent_label = 'Cars for Short-Term Rent'
-                parent_url   = _cars_rel_url
+                parent_label   = 'Cars for Short-Term Rent'
+                parent_url     = _cars_rel_url
+                _make_url_base = _cars_rel_url
             elif _is_long_rent:
-                parent_label = 'Cars to Rent'
-                parent_url   = _cars_rel_url
+                parent_label   = 'Cars to Rent'
+                parent_url     = _cars_rel_url
+                _make_url_base = _cars_rel_url
             else:
-                parent_label = 'Cars for Sale'
-                parent_url   = _cars_rel_url
+                parent_label   = 'Cars for Sale'
+                parent_url     = _cars_rel_url
             car_make     = listing.get('car_make') or ''
             sub_label    = car_make
             sub_slug     = re.sub(r'[^a-z0-9]+', '-', car_make.lower()).strip('-') if car_make else ''
-            _sub_url     = f'{_cars_rel_url}/{sub_slug}' if sub_slug else ''
+            _sub_url     = f'{_make_url_base}/{sub_slug}' if sub_slug else ''
             _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
             _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
             is_real_estate = False
@@ -2461,7 +2464,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             cat_label  = 'Motors for Sale'
             action     = 'for sale'
             _cat_url   = '/motors-for-sale'
-            _cars_base = '/motors-for-sale/cars'
+            _cars_base = '/motors-for-sale'
 
         if district and city:
             h1 = f'{make} cars {action} in {district}, {city}'
