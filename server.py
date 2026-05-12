@@ -2543,6 +2543,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'intro': 'Browse cars available for long-term rent across the UK from private sellers and dealers.',
             'breadcrumbs': [
                 ('Home', '/'),
+                ('Motors to Rent', '/motors-for-rent'),
                 ('Cars to Rent', None),
             ],
             'type': 'category',
@@ -2551,17 +2552,18 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
     elif page_type == 'cars_short_rent':
         seo.update({
-            'title':       'Motors for Short-Term Rent in the UK | Bazar UK',
+            'title':       'Cars for Short-Term Rent in the UK | Bazar UK',
             'description': 'Browse cars for short-term rent across the UK on Bazar UK classifieds.',
             'canonical':   f'{PUBLIC_DOMAIN}/cars/for-short-term-rent',
             'robots':      'index, follow',
         })
         seo['ssr'] = {
-            'h1':    'Motors for Short-Term Rent in the UK',
+            'h1':    'Cars for Short-Term Rent in the UK',
             'intro': 'Browse cars available for short-term rent across the UK from private sellers and dealers.',
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Motors for Short-Term Rent', None),
+                ('Motors for Short-Term Rent', '/motors-for-short-term-rent'),
+                ('Cars for Short-Term Rent', None),
             ],
             'type': 'category',
         }
