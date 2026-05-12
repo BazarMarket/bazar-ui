@@ -3507,6 +3507,39 @@
             }
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
+         } else if (pathCat === 'cars' && pathSub === 'for-rent') {
+            /* Motors to Rent page: set category UI and show car filters */
+            document.getElementById('cfCatLabel').textContent = 'Motors to Rent';
+            var imgEl = document.getElementById('cfCatImg');
+            imgEl.src = 'img/cat/image4.png'; imgEl.style.display = '';
+            document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i){
+               i.classList.remove('active');
+               if (i.textContent.trim() === 'Motors to Rent') i.classList.add('active');
+            });
+            /* Show motors row + motors-specific filters, hide property-specific filters */
+            var _mRow2 = document.getElementById('cfMotorsRow2');
+            if (_mRow2) _mRow2.style.display = '';
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = '';
+            });
+            /* Pre-select make from URL segment (e.g. /cars/for-rent/bugatti) */
+            var _makeSeg = pathParts[2] || '';
+            if (_makeSeg) {
+               var makeSelect = document.getElementById('cfMotorsMake');
+               if (makeSelect) {
+                  var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
+                  for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
+                     if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
+                        makeSelect.selectedIndex = _mi; break;
+                     }
+                  }
+               }
+            }
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
          } else if (pathCatMap[pathCat]) {
             var info = catMap[pathCatMap[pathCat]];
             document.getElementById('cfCatLabel').textContent = info.label;
