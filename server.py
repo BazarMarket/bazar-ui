@@ -2525,7 +2525,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'breadcrumbs': [
                 ('Home', '/'),
                 ('Motors for Sale', '/motors-for-sale'),
-                ('Cars', None),
+                ('Cars for Sale', None),
             ],
             'type': 'category',
         }
