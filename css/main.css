@@ -1949,6 +1949,48 @@ body {
   border-radius: 7px;
   overflow: hidden;
 }
+/* Car thumbnail meta bar */
+.car-thumb-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 7px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.62));
+  font-size: 11px;
+  color: #fff;
+  line-height: 1;
+  pointer-events: none;
+  gap: 4px;
+  font-family: "Poppins", sans-serif;
+}
+.car-thumb-meta__date {
+  white-space: nowrap;
+  font-size: 10.5px;
+  letter-spacing: 0.01em;
+}
+.car-thumb-meta__sep {
+  opacity: 0.55;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.car-thumb-meta__views {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+  font-size: 10.5px;
+}
+.car-thumb-meta__views .icon-eye {
+  font-size: 11px;
+  line-height: 1;
+}
+.car-thumb-meta__views .icon-eye::before {
+  color: #fff;
+}
 
 /* end--------------------*/
 /* Стили блока .card-description  */

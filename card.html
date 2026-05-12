@@ -10,7 +10,7 @@
    <meta name="keywords" content="">
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-   <link rel="stylesheet" href="css/main.css?v=212" type="text/css"> <!-- Основные стили темы  -->
+   <link rel="stylesheet" href="css/main.css?v=213" type="text/css"> <!-- Основные стили темы  -->
    <link rel="stylesheet" href="css/cabinet.css?v=2" type="text/css">
    <link rel="icon" type="image/png" href="favicon.png?v=12">
 </head>
@@ -767,8 +767,13 @@
          fetch('/api/properties/' + id + '/views')
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
-               var vEl = document.getElementById('prop-views');
-               if (vEl && d && typeof d.views !== 'undefined') vEl.textContent = d.views;
+               if (d && typeof d.views !== 'undefined') {
+                  window._carThumbViewsCount = d.views;
+                  var vEl = document.getElementById('prop-views');
+                  if (vEl) vEl.textContent = d.views;
+                  var tEl = document.getElementById('car-thumb-views');
+                  if (tEl) tEl.textContent = d.views;
+               }
             })
             .catch(function() {});
       }
@@ -1066,11 +1071,45 @@
          // Store images for lightbox
          window._galleryImages = allImgs;
       }
+      function _relTime(raw) {
+         if (!raw) return '';
+         var d = new Date(raw.replace(' ', 'T'));
+         if (isNaN(d)) return '';
+         var now = new Date();
+         var diff = Math.floor((now - d) / 86400000);
+         if (diff <= 0)  return 'Today';
+         if (diff === 1) return 'Yesterday';
+         if (diff <= 3)  return diff + ' days ago';
+         if (diff <= 10) return '1 week ago';
+         if (diff <= 17) return '2 weeks ago';
+         if (diff <= 24) return '3 weeks ago';
+         var months = Math.floor(diff / 30);
+         if (months < 1)  return '1 month ago';
+         if (months === 1) return '1 month ago';
+         if (months < 12) return months + ' months ago';
+         var years = Math.floor(months / 12);
+         return years === 1 ? '1 year ago' : years + ' years ago';
+      }
+
       var miniWrap = document.getElementById('gallery-mini');
       if (miniWrap && allImgs.length) {
-         miniWrap.innerHTML = allImgs.map(function(src) {
-            return '<div class="swiper-slide slider-gallery-mini__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover"></div>';
+         var _isCar = (ptype === 'car');
+         var _thumbDate = _isCar ? _relTime(p.created_at) : '';
+         miniWrap.innerHTML = allImgs.map(function(src, idx) {
+            var overlay = (_isCar && idx === 0)
+               ? '<div class="car-thumb-meta">' +
+                    '<span class="car-thumb-meta__date">' + _thumbDate + '</span>' +
+                    '<span class="car-thumb-meta__sep">/</span>' +
+                    '<span class="car-thumb-meta__views"><span class="icon-eye"></span><span id="car-thumb-views">—</span></span>' +
+                 '</div>'
+               : '';
+            return '<div class="swiper-slide slider-gallery-mini__img"><img src="' + src + '" alt="' + p.title + '" class="img-cover">' + overlay + '</div>';
          }).join('');
+         /* Apply views if fetch already resolved before gallery rendered */
+         if (_isCar && typeof window._carThumbViewsCount !== 'undefined') {
+            var tEl2 = document.getElementById('car-thumb-views');
+            if (tEl2) tEl2.textContent = window._carThumbViewsCount;
+         }
          if (window._checkImgPortrait) {
             miniWrap.querySelectorAll('.slider-gallery-mini__img img').forEach(function(img) {
                if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
