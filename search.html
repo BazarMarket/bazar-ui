@@ -2530,7 +2530,7 @@
         var _extraUrl = null;
         if (_isCarPage) {
           var _carRent = (_pathSub0 === 'for-rent');
-          var _lt = _carRent ? 'long_rent' : 'sale';
+          var _lt = _carRent ? 'rent' : 'sale';
           _extraUrl = '/api/properties/recent-enriched?property_type=car&per_page=100' + (_lt ? '&listing_type=' + _lt : '');
         } else if (_isRoomsPage) {
           var _lt = _catToListingType[_pathCat0];
@@ -2541,7 +2541,7 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _apiPt + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         }
 
-        var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_pathSub0 === 'for-rent' ? 'long_rent' : 'sale') : null);
+        var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_pathSub0 === 'for-rent' ? 'rent' : 'sale') : null);
         var _mainFetchUrl = '/api/properties/recent-enriched' + (_effectiveLt ? '?listing_type=' + _effectiveLt + '&per_page=100' : '');
         fetch(_mainFetchUrl, { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
