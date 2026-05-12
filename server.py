@@ -823,6 +823,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
 
     parts = [x for x in p.split('/') if x]
     if len(parts) == 5:
+        # /motors-for-sale/cars/{make}/{city}/{district} → redirect
+        if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
+            return 'redirect_301', {'location': f'/motors-for-sale/{parts[2]}/{parts[3]}/{parts[4]}'}
         # /cars/for-rent/{make}/{city}/{district}
         if parts[0] == 'cars' and parts[1] == 'for-rent':
             return 'cars_make_city_district', {
