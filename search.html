@@ -2534,6 +2534,16 @@
           var _lt = _carRent ? null : _carShortRent ? 'short_rent' : 'sale';
           if (_carRent)      window._bazarCarPageRentType = 'long_rent';
           if (_carShortRent) window._bazarCarPageRentType = 'short_rent';
+          /* Set make/city/district filters EARLY — before any fetch callback fires */
+          var _bcdE = window.__bazarCarData || {};
+          var _isRentSub = _carRent || _carShortRent;
+          var _eMkIdx = _isRentSub ? 2 : 1;
+          var _eMake = (_bcdE.make || _pathParts0[_eMkIdx] || '').replace(/-/g, ' ').toLowerCase();
+          var _eCity = (_bcdE.city || _pathParts0[_eMkIdx + 1] || '').replace(/-/g, ' ').toLowerCase();
+          var _eDist = (_bcdE.district || _pathParts0[_eMkIdx + 2] || '').replace(/-/g, ' ').toLowerCase();
+          if (_eMake) window._bazarCarMakeFilter    = _eMake;
+          if (_eCity) window._bazarCityFilter       = _eCity;
+          if (_eDist) window._bazarDistrictFilter   = _eDist;
           _extraUrl = '/api/properties/recent-enriched?property_type=car&per_page=100' + (_lt ? '&listing_type=' + _lt : '');
         } else if (_isRoomsPage) {
           var _lt = _catToListingType[_pathCat0];
