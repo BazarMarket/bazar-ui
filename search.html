@@ -2498,7 +2498,7 @@
         var _pathSub0 = _pathParts0[1] || '';
         var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
         var _isLatestPage = (_pathCat0 === 'latest-updates');
-        var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale');
+        var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale') || (_pathCat0 === 'motors-for-rent') || (_pathCat0 === 'motors-for-short-term-rent');
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -2530,8 +2530,8 @@
         var _transactionLt = _isTransactionPage ? _catToListingType[_pathCat0] : null;
         var _extraUrl = null;
         if (_isCarPage) {
-          var _carRent      = (_pathCat0 === 'cars' && _pathSub0 === 'for-rent');
-          var _carShortRent = (_pathCat0 === 'cars' && _pathSub0 === 'for-short-term-rent');
+          var _carRent      = (_pathCat0 === 'cars' && _pathSub0 === 'for-rent') || (_pathCat0 === 'motors-for-rent');
+          var _carShortRent = (_pathCat0 === 'cars' && _pathSub0 === 'for-short-term-rent') || (_pathCat0 === 'motors-for-short-term-rent');
           var _lt = _carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale';
           if (_carRent)      window._bazarCarPageRentType = 'long_rent';
           if (_carShortRent) window._bazarCarPageRentType = 'short_rent';

@@ -981,6 +981,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /motors-for-sale  →  category cars
         if parts[0] == 'motors-for-sale':
             return 'category', {'category': 'cars'}
+        # /motors-for-rent  →  motors to rent parent page
+        if parts[0] == 'motors-for-rent':
+            return 'motors_rent_parent', {}
+        # /motors-for-short-term-rent  →  motors short-term rent parent page
+        if parts[0] == 'motors-for-short-term-rent':
+            return 'motors_short_rent_parent', {}
         # Legacy /cars → 301 redirect
         if parts[0] == 'cars':
             return 'redirect_301', {'location': '/motors-for-sale'}
@@ -1323,29 +1329,32 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             _is_short_rent = (_lt_norm == 'short_rent')
             _is_long_rent  = (_lt_norm in ('long_rent', 'rent'))
             if _is_short_rent:
-                cat_label    = 'Motors for Short-Term Rent'
-                _cat_rel_url = '/cars/for-short-term-rent'
+                cat_label     = 'Motors for Short-Term Rent'
+                _cat_rel_url  = '/motors-for-short-term-rent'
+                _cars_rel_url = '/cars/for-short-term-rent'
             elif _is_long_rent:
-                cat_label    = 'Motors to Rent'
-                _cat_rel_url = '/cars/for-rent'
+                cat_label     = 'Motors to Rent'
+                _cat_rel_url  = '/motors-for-rent'
+                _cars_rel_url = '/cars/for-rent'
             else:
-                cat_label    = 'Motors for Sale'
-                _cat_rel_url = '/motors-for-sale'
+                cat_label     = 'Motors for Sale'
+                _cat_rel_url  = '/motors-for-sale'
+                _cars_rel_url = '/motors-for-sale/cars'
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
-            # Context-specific "Cars" label so the crumb makes sense per category
+            # Context-specific "Cars" sub-label (one level below the motors parent)
             if _is_short_rent:
                 parent_label = 'Cars for Short-Term Rent'
-                parent_url   = '/cars/for-short-term-rent'
+                parent_url   = _cars_rel_url
             elif _is_long_rent:
                 parent_label = 'Cars to Rent'
-                parent_url   = '/cars/for-rent'
+                parent_url   = _cars_rel_url
             else:
                 parent_label = 'Cars for Sale'
-                parent_url   = '/motors-for-sale/cars'
+                parent_url   = _cars_rel_url
             car_make     = listing.get('car_make') or ''
             sub_label    = car_make
             sub_slug     = re.sub(r'[^a-z0-9]+', '-', car_make.lower()).strip('-') if car_make else ''
-            _sub_url     = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
+            _sub_url     = f'{_cars_rel_url}/{sub_slug}' if sub_slug else ''
             _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
             _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
             is_real_estate = False
@@ -2439,34 +2448,37 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         district = district_slug.replace('-', ' ').title()
 
         if is_short_rent:
-            cat_label = 'Motors for Short-Term Rent'
-            action    = 'for short-term rent'
-            _cat_url  = '/cars/for-short-term-rent'
+            cat_label  = 'Motors for Short-Term Rent'
+            action     = 'for short-term rent'
+            _cat_url   = '/motors-for-short-term-rent'
+            _cars_base = '/cars/for-short-term-rent'
         elif is_rent:
-            cat_label = 'Motors to Rent'
-            action    = 'to rent'
-            _cat_url  = '/cars/for-rent'
+            cat_label  = 'Motors to Rent'
+            action     = 'to rent'
+            _cat_url   = '/motors-for-rent'
+            _cars_base = '/cars/for-rent'
         else:
-            cat_label = 'Motors for Sale'
-            action    = 'for sale'
-            _cat_url  = '/motors-for-sale'
+            cat_label  = 'Motors for Sale'
+            action     = 'for sale'
+            _cat_url   = '/motors-for-sale'
+            _cars_base = '/motors-for-sale/cars'
 
         if district and city:
             h1 = f'{make} cars {action} in {district}, {city}'
-            canonical = f'{PUBLIC_DOMAIN}{_cat_url}/{make_slug}/{city_slug}/{district_slug}'
+            canonical = f'{PUBLIC_DOMAIN}{_cars_base}/{make_slug}/{city_slug}/{district_slug}'
         elif city:
             h1 = f'{make} cars {action} in {city}'
-            canonical = f'{PUBLIC_DOMAIN}{_cat_url}/{make_slug}/{city_slug}'
+            canonical = f'{PUBLIC_DOMAIN}{_cars_base}/{make_slug}/{city_slug}'
         else:
             h1 = f'{make} cars {action}'
-            canonical = f'{PUBLIC_DOMAIN}{_cat_url}/{make_slug}'
+            canonical = f'{PUBLIC_DOMAIN}{_cars_base}/{make_slug}'
 
         intro = (f'Browse {make} cars {action}'
                  + (f' in {district}, {city}' if district and city else
                     f' in {city}' if city else ' in the UK')
                  + ' on Bazar UK classifieds.')
 
-        # Cars sub-label: context-specific so clicking it makes sense
+        # Cars sub-label: one level below the motors parent
         if is_short_rent:
             _cars_label = 'Cars for Short-Term Rent'
             _cars_url   = '/cars/for-short-term-rent'
@@ -2476,9 +2488,9 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         else:
             _cars_label = 'Cars for Sale'
             _cars_url   = '/motors-for-sale/cars'
-        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (_cars_label, _cars_url), (make, f'{_cat_url}/{make_slug}')]
+        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (_cars_label, _cars_url), (make, f'{_cars_base}/{make_slug}')]
         if city:
-            breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
+            breadcrumbs.append((city, f'{_cars_base}/{make_slug}/{city_slug}'))
         if district:
             breadcrumbs.append((district, None))
 
@@ -2547,6 +2559,42 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         seo['ssr'] = {
             'h1':    'Motors for Short-Term Rent in the UK',
             'intro': 'Browse cars available for short-term rent across the UK from private sellers and dealers.',
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Motors for Short-Term Rent', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    elif page_type == 'motors_rent_parent':
+        seo.update({
+            'title':       'Motors to Rent in the UK | Bazar UK',
+            'description': 'Browse cars, vans, motorbikes and more to rent across the UK on Bazar UK classifieds.',
+            'canonical':   f'{PUBLIC_DOMAIN}/motors-for-rent',
+            'robots':      'index, follow',
+        })
+        seo['ssr'] = {
+            'h1':    'Motors to Rent in the UK',
+            'intro': 'Browse all motor vehicles available for long-term rent across the UK from private sellers and dealers.',
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Motors to Rent', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    elif page_type == 'motors_short_rent_parent':
+        seo.update({
+            'title':       'Motors for Short-Term Rent in the UK | Bazar UK',
+            'description': 'Browse cars, vans, motorbikes and more for short-term rent across the UK on Bazar UK classifieds.',
+            'canonical':   f'{PUBLIC_DOMAIN}/motors-for-short-term-rent',
+            'robots':      'index, follow',
+        })
+        seo['ssr'] = {
+            'h1':    'Motors for Short-Term Rent in the UK',
+            'intro': 'Browse all motor vehicles available for short-term rent across the UK from private sellers and dealers.',
             'breadcrumbs': [
                 ('Home', '/'),
                 ('Motors for Short-Term Rent', None),
@@ -4582,7 +4630,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'cars_make', 'cars_make_city', 'cars_make_city_district',
                          'cars_category',
                          'cars_rent', 'cars_rent_make', 'cars_rent_make_city',
-                         'cars_short_rent'):
+                         'cars_short_rent',
+                         'motors_rent_parent', 'motors_short_rent_parent'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage':       'index.html' if is_production else 'dev-index.html',
