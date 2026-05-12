@@ -942,8 +942,14 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /motors-for-sale/{make}
         if parts[0] == 'motors-for-sale':
             return 'cars_make', {'make': parts[1]}
+        # /cars/for-rent  →  motors to rent landing page
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'cars_rent', {}
+        # /cars/for-short-term-rent  →  motors short-term rent landing page
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'cars_short_rent', {}
         # Legacy /cars/{make} → 301
-        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+        if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}'}
         return 'category_city', {'category': parts[0], 'city': parts[1]}
     if len(parts) == 1:
@@ -2460,6 +2466,42 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 ('Home', '/'),
                 ('Motors for Sale', '/motors-for-sale'),
                 ('Cars', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    elif page_type == 'cars_rent':
+        seo.update({
+            'title':       'Motors to Rent in the UK | Bazar UK',
+            'description': 'Browse motors and cars to rent across the UK on Bazar UK classifieds.',
+            'canonical':   f'{PUBLIC_DOMAIN}/cars/for-rent',
+            'robots':      'index, follow',
+        })
+        seo['ssr'] = {
+            'h1':    'Motors to Rent in the UK',
+            'intro': 'Browse motors and cars available for long-term rent across the UK from private sellers and dealers.',
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Motors to Rent', None),
+            ],
+            'type': 'category',
+        }
+        return seo
+
+    elif page_type == 'cars_short_rent':
+        seo.update({
+            'title':       'Motors for Short-term Rent in the UK | Bazar UK',
+            'description': 'Browse motors and cars for short-term rent across the UK on Bazar UK classifieds.',
+            'canonical':   f'{PUBLIC_DOMAIN}/cars/for-short-term-rent',
+            'robots':      'index, follow',
+        })
+        seo['ssr'] = {
+            'h1':    'Motors for Short-term Rent in the UK',
+            'intro': 'Browse motors and cars available for short-term rent across the UK from private sellers and dealers.',
+            'breadcrumbs': [
+                ('Home', '/'),
+                ('Motors for Short-term Rent', None),
             ],
             'type': 'category',
         }
