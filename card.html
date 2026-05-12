@@ -876,9 +876,16 @@
           el('bread-category').textContent = _carCatLabel;
           el('bread-category').href = _carCatHref;
 
-          /* "Cars" parent crumb */
-          if (el('bread-parent-li')) el('bread-parent-li').removeAttribute('style');
-          if (el('bread-parent'))    { el('bread-parent').textContent = 'Cars'; el('bread-parent').href = _carCatHref; }
+          /* "Cars" parent crumb — only for sale (rent URLs duplicate the category) */
+          var _showCarsParent = (_lt !== 'short_rent' && _lt !== 'rent' && _lt !== 'long_rent');
+          if (el('bread-parent-li')) {
+            if (_showCarsParent) {
+              el('bread-parent-li').removeAttribute('style');
+              if (el('bread-parent')) { el('bread-parent').textContent = 'Cars'; el('bread-parent').href = '/motors-for-sale/cars'; }
+            } else {
+              el('bread-parent-li').style.display = 'none';
+            }
+          }
 
           /* Brand crumb */
           var _carMakeSlug = (p.car_make || '').toLowerCase().replace(/\s+/g, '-');

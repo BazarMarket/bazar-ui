@@ -2458,13 +2458,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                     f' in {city}' if city else ' in the UK')
                  + ' on Bazar UK classifieds.')
 
-        if is_short_rent:
-            _cars_cat_url = '/cars/for-short-term-rent'
-        elif is_rent:
-            _cars_cat_url = '/cars/for-rent'
+        # For sale: Home > Motors for Sale > Cars > {Make}
+        # For rent/short_rent: Home > Motors to Rent > {Make}  (no "Cars" — same URL as parent)
+        if is_short_rent or is_rent:
+            breadcrumbs = [('Home', '/'), (cat_label, _cat_url), (make, f'{_cat_url}/{make_slug}')]
         else:
-            _cars_cat_url = '/motors-for-sale/cars'
-        breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', _cars_cat_url), (make, f'{_cat_url}/{make_slug}')]
+            breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', '/motors-for-sale/cars'), (make, f'{_cat_url}/{make_slug}')]
         if city:
             breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
         if district:
