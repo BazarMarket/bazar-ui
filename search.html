@@ -2538,7 +2538,10 @@
           var _bcdE = window.__bazarCarData || {};
           var _isRentSub = _carRent || _carShortRent;
           var _eMkIdx = _isRentSub ? 2 : 1;
-          var _eMake = (_bcdE.make || _pathParts0[_eMkIdx] || '').replace(/-/g, ' ').toLowerCase();
+          var _reservedSegs = {'cars': 1, 'for-rent': 1, 'for-short-term-rent': 1};
+          var _mkFromPath = _pathParts0[_eMkIdx] || '';
+          var _eMakeRaw = _bcdE.make || (!_reservedSegs[_mkFromPath] ? _mkFromPath : '');
+          var _eMake = _eMakeRaw.replace(/-/g, ' ').toLowerCase();
           var _eCity = (_bcdE.city || _pathParts0[_eMkIdx + 1] || '').replace(/-/g, ' ').toLowerCase();
           var _eDist = (_bcdE.district || _pathParts0[_eMkIdx + 2] || '').replace(/-/g, ' ').toLowerCase();
           if (_eMake) window._bazarCarMakeFilter    = _eMake;
@@ -3655,7 +3658,9 @@
               var _bcd = window.__bazarCarData || {};
               var _carRentPath = (pathParts[1] === 'for-rent' || pathParts[1] === 'for-short-term-rent');
               var _carMakeIdx  = _carRentPath ? 2 : 1;
-              var _carMakeSlug = _bcd.make || pathParts[_carMakeIdx] || '';
+              var _reservedMk  = {'cars': 1, 'for-rent': 1, 'for-short-term-rent': 1};
+              var _mkSeg       = pathParts[_carMakeIdx] || '';
+              var _carMakeSlug = _bcd.make || (!_reservedMk[_mkSeg] ? _mkSeg : '');
               var _carCitySlug = _bcd.city || pathParts[_carMakeIdx + 1] || '';
               var _carDistSlug = _bcd.district || pathParts[_carMakeIdx + 2] || '';
               if (_carMakeSlug) window._bazarCarMakeFilter = _carMakeSlug.replace(/-/g, ' ').toLowerCase();
