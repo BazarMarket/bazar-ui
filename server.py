@@ -1332,8 +1332,14 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 cat_label    = 'Motors for Sale'
                 _cat_rel_url = '/motors-for-sale'
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
-            parent_label = 'Cars'
-            parent_url   = _cat_rel_url
+            # For sale: "Cars" links to /motors-for-sale/cars (different from category)
+            # For rent/short_rent: no "Cars" crumb (same URL as category = confusing)
+            if not _is_short_rent and not _is_long_rent:
+                parent_label = 'Cars'
+                parent_url   = '/motors-for-sale/cars'
+            else:
+                parent_label = ''
+                parent_url   = ''
             car_make     = listing.get('car_make') or ''
             sub_label    = car_make
             sub_slug     = re.sub(r'[^a-z0-9]+', '-', car_make.lower()).strip('-') if car_make else ''
