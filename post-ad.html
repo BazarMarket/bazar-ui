@@ -4563,7 +4563,7 @@
             var formData = new FormData();
             formData.append('title',         title);
             formData.append('property_type', 'car');
-            formData.append('listing_type',  (reState.listingType === 'For Long-term Rent' || reState.listingType === 'For Short-term Rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale');
+            formData.append('listing_type',  reState.listingType === 'For Long-term Rent' ? 'long_rent' : reState.listingType === 'For Short-term Rent' ? 'short_rent' : (reState.listingType === 'For Rent' ? 'rent' : 'sale'));
             if (price) formData.append('price', price);
             formData.append('currency',      'GBP');
             formData.append('seller_name',   sellerName);
