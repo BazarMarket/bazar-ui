@@ -4569,7 +4569,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_subtype_city', 'property_subtype_city_district',
                          'cars_make', 'cars_make_city', 'cars_make_city_district',
                          'cars_category',
-                         'cars_rent', 'cars_rent_make', 'cars_rent_make_city'):
+                         'cars_rent', 'cars_rent_make', 'cars_rent_make_city',
+                         'cars_short_rent'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage':       'index.html' if is_production else 'dev-index.html',
