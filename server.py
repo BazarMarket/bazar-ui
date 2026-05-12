@@ -828,6 +828,11 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'cars_make_city_district', {
                 'make': parts[2], 'city': parts[3], 'district': parts[4], 'is_rent': True
             }
+        # /cars/for-short-term-rent/{make}/{city}/{district}
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'cars_make_city_district', {
+                'make': parts[2], 'city': parts[3], 'district': parts[4], 'is_short_rent': True
+            }
     if len(parts) == 3:
         # /property/for-rent/short-term  →  property_transaction_modifier
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale') and parts[2] == 'short-term':
@@ -856,11 +861,14 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         if parts[0] == 'motors-for-sale':
             return 'cars_make_city', {'make': parts[1], 'city': parts[2]}
         # Legacy /cars/{make}/{city} → 301
-        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+        if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}/{parts[2]}'}
         # /cars/for-rent/{make}
         if parts[0] == 'cars' and parts[1] == 'for-rent':
             return 'cars_make', {'make': parts[2], 'is_rent': True}
+        # /cars/for-short-term-rent/{make}
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'cars_make', {'make': parts[2], 'is_short_rent': True}
         # /property-for-sale/{subtype}/{city} or /property-to-rent/{subtype}/{city}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city', {
@@ -876,12 +884,17 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
                 'make': parts[1], 'city': parts[2], 'district': parts[3]
             }
         # Legacy /cars/{make}/{city}/{district} → 301
-        if parts[0] == 'cars' and parts[1] not in ('for-rent',):
+        if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}/{parts[2]}/{parts[3]}'}
         # /cars/for-rent/{make}/{city}
         if parts[0] == 'cars' and parts[1] == 'for-rent':
             return 'cars_make_city_district', {
                 'make': parts[2], 'city': parts[3], 'district': '', 'is_rent': True
+            }
+        # /cars/for-short-term-rent/{make}/{city}
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'cars_make_city_district', {
+                'make': parts[2], 'city': parts[3], 'district': '', 'is_short_rent': True
             }
         # /property-for-sale/{subtype}/{city}/{district}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
@@ -1307,9 +1320,17 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
         # ── Cars: custom breadcrumb ───────────────────────────────────────────
         if _pt_norm == 'car':
-            is_rent = _lt_norm in ('long_rent', 'short_rent', 'rent')
-            cat_label   = 'Motors to Rent' if is_rent else 'Motors for Sale'
-            _cat_rel_url = '/cars/for-rent' if is_rent else '/motors-for-sale'
+            _is_short_rent = (_lt_norm == 'short_rent')
+            _is_long_rent  = (_lt_norm in ('long_rent', 'rent'))
+            if _is_short_rent:
+                cat_label    = 'Motors for Short Term Rent'
+                _cat_rel_url = '/cars/for-short-term-rent'
+            elif _is_long_rent:
+                cat_label    = 'Motors to Rent'
+                _cat_rel_url = '/cars/for-rent'
+            else:
+                cat_label    = 'Motors for Sale'
+                _cat_rel_url = '/motors-for-sale'
             cat_url     = f'{PUBLIC_DOMAIN}{_cat_rel_url}'
             parent_label = 'Cars'
             parent_url   = _cat_rel_url
@@ -2403,14 +2424,24 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         make_slug    = params.get('make', '')
         city_slug    = params.get('city', '')
         district_slug= params.get('district', '')
-        is_rent      = bool(params.get('is_rent', False))
+        is_rent       = bool(params.get('is_rent', False))
+        is_short_rent = bool(params.get('is_short_rent', False))
         make   = make_slug.replace('-', ' ').title()
         city   = city_slug.replace('-', ' ').title()
         district = district_slug.replace('-', ' ').title()
 
-        cat_label    = 'Motors to Rent' if is_rent else 'Motors for Sale'
-        action       = 'to rent' if is_rent else 'for sale'
-        _cat_url     = '/cars/for-rent' if is_rent else '/motors-for-sale'
+        if is_short_rent:
+            cat_label = 'Motors for Short Term Rent'
+            action    = 'for short-term rent'
+            _cat_url  = '/cars/for-short-term-rent'
+        elif is_rent:
+            cat_label = 'Motors to Rent'
+            action    = 'to rent'
+            _cat_url  = '/cars/for-rent'
+        else:
+            cat_label = 'Motors for Sale'
+            action    = 'for sale'
+            _cat_url  = '/motors-for-sale'
 
         if district and city:
             h1 = f'{make} cars {action} in {district}, {city}'
@@ -2427,7 +2458,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                     f' in {city}' if city else ' in the UK')
                  + ' on Bazar UK classifieds.')
 
-        _cars_cat_url = '/cars/for-rent' if is_rent else '/motors-for-sale/cars'
+        if is_short_rent:
+            _cars_cat_url = '/cars/for-short-term-rent'
+        elif is_rent:
+            _cars_cat_url = '/cars/for-rent'
+        else:
+            _cars_cat_url = '/motors-for-sale/cars'
         breadcrumbs = [('Home', '/'), (cat_label, _cat_url), ('Cars', _cars_cat_url), (make, f'{_cat_url}/{make_slug}')]
         if city:
             breadcrumbs.append((city, f'{_cat_url}/{make_slug}/{city_slug}'))
