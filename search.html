@@ -410,6 +410,8 @@
       .sr-mob-filter-apply { width: 100%; background: #ff9138; border: none; border-radius: 14px; padding: 13px 0 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; }
       .sr-mob-filter-apply .smf-apply-title { font-family: "Poppins",sans-serif; font-size: 16px; font-weight: 600; color: #fff; }
       .sr-mob-filter-apply .smf-apply-sub { font-family: "Poppins",sans-serif; font-size: 11px; color: rgba(255,255,255,0.75); }
+      .sr-mob-price-sel--full { width: 100%; }
+      #smfCarSections .sr-mob-filter-section:first-child { border-top: 1px solid #f2f2f2; }
    </style>
    <script>
       window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
@@ -1871,6 +1873,11 @@
          var btn   = document.getElementById('srMobFilterBtn');
          if (!sheet) return;
          _smfBuildPrices();
+         var propSec = document.getElementById('smfPropertySections');
+         var carSec  = document.getElementById('smfCarSections');
+         var isCar   = (typeof _isCarPage !== 'undefined') && _isCarPage;
+         if (propSec) propSec.style.display = isCar ? 'none' : '';
+         if (carSec)  carSec.style.display  = isCar ? '' : 'none';
          _smfSyncFromDesktop();
          sheet.classList.add('open');
          document.body.style.overflow = 'hidden';
@@ -1908,6 +1915,11 @@
             var yVals = (typeof yearValues !== 'undefined') ? yearValues : [];
             yVals.forEach(function(v) { yFrom.appendChild(new Option(v, v)); yTo.appendChild(new Option(v, v)); });
          }
+         var cyMin = document.getElementById('smfCarYearMin'), cyMax = document.getElementById('smfCarYearMax');
+         if (cyMin && cyMax && cyMin.options.length <= 1) {
+            var cyVals = (typeof _motorsYearValues !== 'undefined') ? _motorsYearValues : [];
+            cyVals.forEach(function(v) { cyMin.appendChild(new Option(v, v)); cyMax.appendChild(new Option(v, v)); });
+         }
          _smfPricesBuilt = true;
       }
 
@@ -1940,6 +1952,47 @@
          document.querySelectorAll('#smfOnlineViewing .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', p.textContent.trim() === onlineVal); });
          var featVals = Array.prototype.map.call(document.querySelectorAll('#cfFeaturesPanel input:checked'), function(c){ return c.value; });
          document.querySelectorAll('#smfFeatures .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', featVals.indexOf(p.textContent.trim()) !== -1); });
+         // Sync car filters
+         var isCar = (typeof _isCarPage !== 'undefined') && _isCarPage;
+         if (isCar) {
+            var smfMake = document.getElementById('smfCarMake');
+            var makeSel = document.getElementById('cfMotorsMake');
+            if (smfMake && makeSel) {
+               smfMake.value = makeSel.value;
+               smfMake.classList.toggle('has-val', !!makeSel.value);
+               if (makeSel.value) {
+                  _smfPopulateCarModel(makeSel.value);
+                  var smfModel = document.getElementById('smfCarModel');
+                  var modelSel = document.getElementById('cfMotorsModel');
+                  if (smfModel && modelSel) { smfModel.value = modelSel.value; smfModel.classList.toggle('has-val', !!modelSel.value); }
+               }
+            }
+            var fuelVal = (document.getElementById('cfMotorsFuel') || {}).value || '';
+            document.querySelectorAll('#smfCarFuel .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.val === fuelVal); });
+            var transVal = (document.getElementById('cfMotorsTransmission') || {}).value || '';
+            document.querySelectorAll('#smfCarTransmission .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.val === transVal); });
+            var bodyVal = (document.getElementById('cfMotorsBodyType') || {}).value || '';
+            document.querySelectorAll('#smfCarBodyType .sr-mob-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.val === bodyVal); });
+            var smfMileage = document.getElementById('smfCarMileage');
+            var mileageSel = document.getElementById('cfMotorsMileage');
+            if (smfMileage && mileageSel) { smfMileage.value = mileageSel.value; smfMileage.classList.toggle('has-val', !!mileageSel.value); }
+            var yMinTxt = ((document.getElementById('cfMotorsYearMinLabel') || {}).textContent || '').trim();
+            var yMaxTxt = ((document.getElementById('cfMotorsYearMaxLabel') || {}).textContent || '').trim();
+            var smfYMin = document.getElementById('smfCarYearMin');
+            var smfYMax = document.getElementById('smfCarYearMax');
+            if (smfYMin) { smfYMin.value = (yMinTxt && yMinTxt !== 'Year min') ? yMinTxt : ''; smfYMin.classList.toggle('has-val', !!smfYMin.value); }
+            if (smfYMax) { smfYMax.value = (yMaxTxt && yMaxTxt !== 'Year max') ? yMaxTxt : ''; smfYMax.classList.toggle('has-val', !!smfYMax.value); }
+         }
+      }
+
+      function _smfPopulateCarModel(make) {
+         var sel = document.getElementById('smfCarModel');
+         if (!sel) return;
+         var models = (typeof cfMotorsMakeModels !== 'undefined' && make) ? (cfMotorsMakeModels[make] || []) : [];
+         var html = '<option value="">Any model</option>';
+         models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
+         sel.innerHTML = html;
+         sel.classList.toggle('has-val', false);
       }
 
       function _smfChip(btn) { btn.classList.toggle('active'); }
@@ -1981,21 +2034,70 @@
          }
          applyRangeSel('smfPriceMin','cfPriceMinPanel', clearPrice, selectPrice, 'Min');
          applyRangeSel('smfPriceMax','cfPriceMaxPanel', clearPrice, selectPrice, 'Max');
-         applyRangeSel('smfAreaMin','cfAreaMinPanel', clearArea, selectArea, 'Min');
-         applyRangeSel('smfAreaMax','cfAreaMaxPanel', clearArea, selectArea, 'Max');
-         applyRangeSel('smfYearFrom','cfYearFromPanel', clearYear, selectYear, 'From');
-         applyRangeSel('smfYearTo','cfYearToPanel', clearYear, selectYear, 'To');
+         var isCar = (typeof _isCarPage !== 'undefined') && _isCarPage;
+         if (!isCar) {
+            applyRangeSel('smfAreaMin','cfAreaMinPanel', clearArea, selectArea, 'Min');
+            applyRangeSel('smfAreaMax','cfAreaMaxPanel', clearArea, selectArea, 'Max');
+            applyRangeSel('smfYearFrom','cfYearFromPanel', clearYear, selectYear, 'From');
+            applyRangeSel('smfYearTo','cfYearToPanel', clearYear, selectYear, 'To');
+         } else {
+            // Apply car-specific filters to desktop controls
+            var smfMake = document.getElementById('smfCarMake');
+            var makeSel = document.getElementById('cfMotorsMake');
+            if (smfMake && makeSel) {
+               makeSel.value = smfMake.value;
+               if (typeof onCfMotorsMakeChange === 'function') onCfMotorsMakeChange(makeSel);
+            }
+            var smfModel = document.getElementById('smfCarModel');
+            var modelSel = document.getElementById('cfMotorsModel');
+            if (smfModel && modelSel) modelSel.value = smfModel.value;
+            var fuelPill = document.querySelector('#smfCarFuel .sr-mob-pill.active');
+            var fuelSel  = document.getElementById('cfMotorsFuel');
+            if (fuelSel) fuelSel.value = fuelPill ? fuelPill.dataset.val : '';
+            var transPill = document.querySelector('#smfCarTransmission .sr-mob-pill.active');
+            var transSel  = document.getElementById('cfMotorsTransmission');
+            if (transSel) transSel.value = transPill ? transPill.dataset.val : '';
+            var bodyPill = document.querySelector('#smfCarBodyType .sr-mob-pill.active');
+            var bodyTypeSel = document.getElementById('cfMotorsBodyType');
+            if (bodyTypeSel) bodyTypeSel.value = bodyPill ? bodyPill.dataset.val : '';
+            var smfMileage = document.getElementById('smfCarMileage');
+            var mileageSel = document.getElementById('cfMotorsMileage');
+            if (smfMileage && mileageSel) mileageSel.value = smfMileage.value;
+            // Year min/max via panel click simulation
+            var smfYMin = document.getElementById('smfCarYearMin');
+            var smfYMax = document.getElementById('smfCarYearMax');
+            function applyMotorsYear(smfId, which) {
+               var sel = document.getElementById(smfId);
+               if (!sel) return;
+               if (sel.value) {
+                  var panel = document.getElementById('cfMotorsYear' + which + 'Panel');
+                  if (panel) { var found = null; panel.querySelectorAll('.cf-price-item').forEach(function(item){ if (item.textContent.trim() === sel.value) found = item; }); if (found && typeof selectMotorsYear === 'function') selectMotorsYear(found, which); }
+               } else { if (typeof clearMotorsYear === 'function') clearMotorsYear(which, null); }
+            }
+            applyMotorsYear('smfCarYearMin', 'Min');
+            applyMotorsYear('smfCarYearMax', 'Max');
+         }
          _mobFilterClose();
          if (window._bazarCurrentType) { _srCurrentPage = 1; renderListings(window._bazarCurrentType); }
       }
 
       function _mobFilterClear() {
-         document.querySelectorAll('#smfBedrooms .sr-mob-chip, #smfBathrooms .sr-mob-chip').forEach(function(c){ c.classList.remove('active'); });
-         document.querySelectorAll('#smfCondition .sr-mob-pill, #smfSeller .sr-mob-pill, #smfOnlineViewing .sr-mob-pill, #smfFeatures .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
-         ['smfPriceMin','smfPriceMax','smfAreaMin','smfAreaMax','smfYearFrom','smfYearTo'].forEach(function(id){
-            var el = document.getElementById(id);
-            if (el) { el.value = ''; el.classList.remove('has-val'); }
-         });
+         var isCar = (typeof _isCarPage !== 'undefined') && _isCarPage;
+         if (!isCar) {
+            document.querySelectorAll('#smfBedrooms .sr-mob-chip, #smfBathrooms .sr-mob-chip').forEach(function(c){ c.classList.remove('active'); });
+            document.querySelectorAll('#smfCondition .sr-mob-pill, #smfSeller .sr-mob-pill, #smfOnlineViewing .sr-mob-pill, #smfFeatures .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
+            ['smfPriceMin','smfPriceMax','smfAreaMin','smfAreaMax','smfYearFrom','smfYearTo'].forEach(function(id){
+               var el = document.getElementById(id);
+               if (el) { el.value = ''; el.classList.remove('has-val'); }
+            });
+         } else {
+            document.querySelectorAll('#smfCarFuel .sr-mob-pill, #smfCarTransmission .sr-mob-pill, #smfCarBodyType .sr-mob-pill').forEach(function(p){ p.classList.remove('active'); });
+            ['smfPriceMin','smfPriceMax','smfCarMake','smfCarModel','smfCarYearMin','smfCarYearMax','smfCarMileage'].forEach(function(id){
+               var el = document.getElementById(id);
+               if (el) { el.value = ''; el.classList.remove('has-val'); }
+            });
+            _smfPopulateCarModel('');
+         }
       }
 
       function toggleMoreFilters() {
@@ -2499,6 +2601,7 @@
         var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
         var _isLatestPage = (_pathCat0 === 'latest-updates');
         var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale') || (_pathCat0 === 'motors-for-rent') || (_pathCat0 === 'motors-for-short-term-rent');
+        window._isCarPage = _isCarPage;
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -4057,6 +4160,7 @@
                </select>
             </div>
          </div>
+         <div id="smfPropertySections">
          <div class="sr-mob-filter-section">
             <div class="sr-mob-filter-section-label">Bedrooms</div>
             <div class="sr-mob-chips" id="smfBedrooms">
@@ -4165,6 +4269,94 @@
                <button class="sr-mob-pill" onclick="_smfPill(this)">Solar panel</button>
             </div>
          </div>
+         </div><!-- /smfPropertySections -->
+         <div id="smfCarSections" style="display:none">
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Brand</div>
+               <div class="sr-mob-filter-price-row">
+                  <select id="smfCarMake" class="sr-mob-price-sel sr-mob-price-sel--full" onchange="_smfPopulateCarModel(this.value);_smfPriceChange(this)">
+                     <option value="">Any brand</option>
+                     <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option>
+                     <option>Volkswagen</option><option>Ford</option><option>Toyota</option>
+                     <option>Nissan</option><option>Honda</option><option>Kia</option>
+                     <option>Hyundai</option><option>Peugeot</option><option>Renault</option>
+                     <option>Skoda</option><option>Vauxhall</option><option>Land Rover</option>
+                     <option>Jaguar</option><option>Mini</option><option>Tesla</option>
+                     <option>Volvo</option><option>Lexus</option><option>Porsche</option>
+                     <option>SEAT</option><option>Bugatti</option><option>Cadillac</option>
+                     <option>Alfa Romeo</option><option>Other</option>
+                  </select>
+               </div>
+            </div>
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Model</div>
+               <div class="sr-mob-filter-price-row">
+                  <select id="smfCarModel" class="sr-mob-price-sel sr-mob-price-sel--full" onchange="_smfPriceChange(this)">
+                     <option value="">Any model</option>
+                  </select>
+               </div>
+            </div>
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Fuel type</div>
+               <div class="sr-mob-pills" id="smfCarFuel">
+                  <button class="sr-mob-pill" data-val="Petrol" onclick="_smfPillSingle(this,'smfCarFuel')">Petrol</button>
+                  <button class="sr-mob-pill" data-val="Diesel" onclick="_smfPillSingle(this,'smfCarFuel')">Diesel</button>
+                  <button class="sr-mob-pill" data-val="Hybrid" onclick="_smfPillSingle(this,'smfCarFuel')">Hybrid</button>
+                  <button class="sr-mob-pill" data-val="Plug-in Hybrid" onclick="_smfPillSingle(this,'smfCarFuel')">Plug-in Hybrid</button>
+                  <button class="sr-mob-pill" data-val="Electric" onclick="_smfPillSingle(this,'smfCarFuel')">Electric</button>
+                  <button class="sr-mob-pill" data-val="LPG" onclick="_smfPillSingle(this,'smfCarFuel')">LPG</button>
+               </div>
+            </div>
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Transmission</div>
+               <div class="sr-mob-pills" id="smfCarTransmission">
+                  <button class="sr-mob-pill" data-val="Automatic" onclick="_smfPillSingle(this,'smfCarTransmission')">Automatic</button>
+                  <button class="sr-mob-pill" data-val="Manual" onclick="_smfPillSingle(this,'smfCarTransmission')">Manual</button>
+                  <button class="sr-mob-pill" data-val="Semi-automatic" onclick="_smfPillSingle(this,'smfCarTransmission')">Semi-auto</button>
+               </div>
+            </div>
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Body type</div>
+               <div class="sr-mob-pills" id="smfCarBodyType">
+                  <button class="sr-mob-pill" data-val="Saloon" onclick="_smfPillSingle(this,'smfCarBodyType')">Saloon</button>
+                  <button class="sr-mob-pill" data-val="Hatchback" onclick="_smfPillSingle(this,'smfCarBodyType')">Hatchback</button>
+                  <button class="sr-mob-pill" data-val="SUV" onclick="_smfPillSingle(this,'smfCarBodyType')">SUV</button>
+                  <button class="sr-mob-pill" data-val="Coupe" onclick="_smfPillSingle(this,'smfCarBodyType')">Coupe</button>
+                  <button class="sr-mob-pill" data-val="Convertible" onclick="_smfPillSingle(this,'smfCarBodyType')">Convertible</button>
+                  <button class="sr-mob-pill" data-val="Estate" onclick="_smfPillSingle(this,'smfCarBodyType')">Estate</button>
+                  <button class="sr-mob-pill" data-val="MPV" onclick="_smfPillSingle(this,'smfCarBodyType')">MPV</button>
+                  <button class="sr-mob-pill" data-val="Pickup" onclick="_smfPillSingle(this,'smfCarBodyType')">Pickup</button>
+                  <button class="sr-mob-pill" data-val="Van" onclick="_smfPillSingle(this,'smfCarBodyType')">Van</button>
+               </div>
+            </div>
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Year</div>
+               <div class="sr-mob-filter-price-row">
+                  <select id="smfCarYearMin" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                     <option value="">Year min</option>
+                  </select>
+                  <select id="smfCarYearMax" class="sr-mob-price-sel" onchange="_smfPriceChange(this)">
+                     <option value="">Year max</option>
+                  </select>
+               </div>
+            </div>
+            <div class="sr-mob-filter-section">
+               <div class="sr-mob-filter-section-label">Max mileage</div>
+               <div class="sr-mob-filter-price-row">
+                  <select id="smfCarMileage" class="sr-mob-price-sel sr-mob-price-sel--full" onchange="_smfPriceChange(this)">
+                     <option value="">Any mileage</option>
+                     <option value="5000">5,000</option>
+                     <option value="10000">10,000</option>
+                     <option value="20000">20,000</option>
+                     <option value="30000">30,000</option>
+                     <option value="50000">50,000</option>
+                     <option value="75000">75,000</option>
+                     <option value="100000">100,000</option>
+                     <option value="150000">150,000+</option>
+                  </select>
+               </div>
+            </div>
+         </div><!-- /smfCarSections -->
       </div>
       <div class="sr-mob-filter-footer">
          <button class="sr-mob-filter-apply" onclick="_mobFilterApply()">
