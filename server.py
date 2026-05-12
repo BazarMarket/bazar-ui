@@ -2521,17 +2521,18 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
     elif page_type == 'cars_rent':
         seo.update({
-            'title':       'Motors to Rent in the UK | Bazar UK',
-            'description': 'Browse motors and cars to rent across the UK on Bazar UK classifieds.',
+            'title':       'Cars for Rent in the UK | Bazar UK',
+            'description': 'Browse cars for long-term rent across the UK on Bazar UK classifieds.',
             'canonical':   f'{PUBLIC_DOMAIN}/cars/for-rent',
             'robots':      'index, follow',
         })
         seo['ssr'] = {
-            'h1':    'Motors to Rent in the UK',
-            'intro': 'Browse motors and cars available for long-term rent across the UK from private sellers and dealers.',
+            'h1':    'Cars for Rent in the UK',
+            'intro': 'Browse cars available for long-term rent across the UK from private sellers and dealers.',
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Motors to Rent', None),
+                ('Motors to Rent', '/motors-for-rent'),
+                ('Cars for Rent', None),
             ],
             'type': 'category',
         }
@@ -2539,17 +2540,18 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
 
     elif page_type == 'cars_short_rent':
         seo.update({
-            'title':       'Motors for Short-term Rent in the UK | Bazar UK',
-            'description': 'Browse motors and cars for short-term rent across the UK on Bazar UK classifieds.',
+            'title':       'Cars for Short-Term Rent in the UK | Bazar UK',
+            'description': 'Browse cars for short-term rent across the UK on Bazar UK classifieds.',
             'canonical':   f'{PUBLIC_DOMAIN}/cars/for-short-term-rent',
             'robots':      'index, follow',
         })
         seo['ssr'] = {
-            'h1':    'Motors for Short-term Rent in the UK',
-            'intro': 'Browse motors and cars available for short-term rent across the UK from private sellers and dealers.',
+            'h1':    'Cars for Short-Term Rent in the UK',
+            'intro': 'Browse cars available for short-term rent across the UK from private sellers and dealers.',
             'breadcrumbs': [
                 ('Home', '/'),
-                ('Motors for Short-term Rent', None),
+                ('Motors for Short-Term Rent', '/motors-for-short-term-rent'),
+                ('Cars for Short-Term Rent', None),
             ],
             'type': 'category',
         }
