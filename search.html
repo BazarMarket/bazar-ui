@@ -2532,7 +2532,7 @@
         if (_isCarPage) {
           var _carRent      = (_pathCat0 === 'cars' && _pathSub0 === 'for-rent');
           var _carShortRent = (_pathCat0 === 'cars' && _pathSub0 === 'for-short-term-rent');
-          var _lt = _carRent ? null : _carShortRent ? 'short_rent' : 'sale';
+          var _lt = _carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale';
           if (_carRent)      window._bazarCarPageRentType = 'long_rent';
           if (_carShortRent) window._bazarCarPageRentType = 'short_rent';
           /* Set make/city/district filters EARLY — before any fetch callback fires */
@@ -2558,7 +2558,7 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _apiPt + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         }
 
-        var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_carRent ? null : _carShortRent ? 'short_rent' : 'sale') : null);
+        var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale') : null);
         var _mainFetchUrl = '/api/properties/recent-enriched' + (_effectiveLt ? '?listing_type=' + _effectiveLt + '&per_page=100' : '');
         fetch(_mainFetchUrl, { headers: { 'Accept': 'application/json' } })
           .then(function(r) { return r.ok ? r.json() : null; })
@@ -2909,7 +2909,7 @@
           var _crt = window._bazarCarPageRentType;
           items = items.filter(function(item) {
             if (_crt === 'short_rent') return item.lt === 'short_rent';
-            if (_crt === 'long_rent')  return item.lt !== 'short_rent';
+            if (_crt === 'long_rent')  return item.lt === 'rent' || item.lt === 'long_rent';
             return true;
           });
         }
