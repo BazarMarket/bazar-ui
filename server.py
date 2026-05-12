@@ -1323,7 +1323,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             _is_short_rent = (_lt_norm == 'short_rent')
             _is_long_rent  = (_lt_norm in ('long_rent', 'rent'))
             if _is_short_rent:
-                cat_label    = 'Motors for Short Term Rent'
+                cat_label    = 'Motors for Short-Term Rent'
                 _cat_rel_url = '/cars/for-short-term-rent'
             elif _is_long_rent:
                 cat_label    = 'Motors to Rent'
@@ -2431,7 +2431,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         district = district_slug.replace('-', ' ').title()
 
         if is_short_rent:
-            cat_label = 'Motors for Short Term Rent'
+            cat_label = 'Motors for Short-Term Rent'
             action    = 'for short-term rent'
             _cat_url  = '/cars/for-short-term-rent'
         elif is_rent:
