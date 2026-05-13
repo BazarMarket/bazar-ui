@@ -46,6 +46,7 @@ function setupRecaptcha() {
         });
     } catch(e) {
         console.error('reCAPTCHA setup error:', e.code, e.message);
+        if (window.bzLogError) window.bzLogError('firebase', 'reCAPTCHA setup: ' + (e.code || e.message));
         recaptchaVerifier = null;
     }
 }
@@ -265,7 +266,7 @@ function doSendFirebaseSms(phoneNumber, smsBtn) {
         })
         .catch(function(error) {
             console.error('SMS error code:', error.code, 'message:', error.message);
-            if (window.bzLogError) window.bzLogError('firebase', 'SMS send: ' + (error.code || error.message));
+            if (window.bzLogError) window.bzLogError('firebase', 'SMS send: ' + (error.code || error.message) + ' / ' + phoneNumber, null, phoneNumber);
             smsBtn.textContent = 'Sign in by an SMS';
             smsBtn.disabled = false;
             if (error.code === 'auth/invalid-phone-number') {
@@ -372,14 +373,15 @@ function verifyOtpCode() {
                         openProfileModal();
                     }
                 })
-                .catch(function() {
+                .catch(function(err) {
                     // Ошибка сети — показываем форму на всякий случай
+                    if (window.bzLogError) window.bzLogError('firebase', 'Customer check failed: ' + (err && err.message ? err.message : 'network error'), null, _bazarOtpPhone);
                     openProfileModal();
                 });
         })
         .catch(function(error) {
             console.error('Verify error:', error);
-            if (window.bzLogError) window.bzLogError('firebase', 'OTP verify: ' + (error.code || error.message));
+            if (window.bzLogError) window.bzLogError('firebase', 'OTP verify: ' + (error.code || error.message), null, _bazarOtpPhone);
             var errEl = document.getElementById('otpError');
             errEl.textContent = 'Wrong code. Please try again.';
             errEl.style.display = 'block';
@@ -500,7 +502,9 @@ function finishRegistration() {
                 gender: selectedGender,
                 plan: localStorage.getItem('bazar_plan') || 'free',
             })
-        }).catch(function() {});
+        }).catch(function(err) {
+            if (window.bzLogError) window.bzLogError('firebase', 'Customer create failed: ' + (err && err.message ? err.message : 'network error'), null, phone);
+        });
 
         /* Save gender to server.py's authoritative SQLite DB so ALL pages show correct avatar */
         fetch('/api/save-gender', {
