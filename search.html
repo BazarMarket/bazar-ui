@@ -1303,7 +1303,7 @@
          'Property to Rent':               '/property-to-rent',
          'Property for short-term rent':  '/property-short-rent',
          'Motors':                            '/motors-for-sale',
-         'Motors for rent':                   '/motors-for-rent/cars',
+         'Motors for rent':                   '/motors-to-rent/cars',
          'Motors for short-term rent':        '/motors-for-short-term-rent/cars',
          'Mobile phones, communication':      '/electronics',
          'Computers, gaming':                 '/electronics',
@@ -2602,7 +2602,7 @@
         var _pathSub0 = _pathParts0[1] || '';
         var _isRoomsPage = (_pathCat0 === 'rooms') || (_pathSub0 === 'rooms');
         var _isLatestPage = (_pathCat0 === 'latest-updates');
-        var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale') || (_pathCat0 === 'motors-for-rent') || (_pathCat0 === 'motors-for-short-term-rent');
+        var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale') || (_pathCat0 === 'motors-to-rent') || (_pathCat0 === 'motors-for-short-term-rent');
         window._isCarPage = _isCarPage;
 
         /* Map URL path category to listing_type enum */
@@ -2635,7 +2635,7 @@
         var _transactionLt = _isTransactionPage ? _catToListingType[_pathCat0] : null;
         var _extraUrl = null;
         if (_isCarPage) {
-          var _carRent      = (_pathCat0 === 'cars' && _pathSub0 === 'for-rent') || (_pathCat0 === 'motors-for-rent');
+          var _carRent      = (_pathCat0 === 'cars' && _pathSub0 === 'for-rent') || (_pathCat0 === 'motors-to-rent');
           var _carShortRent = (_pathCat0 === 'cars' && _pathSub0 === 'for-short-term-rent') || (_pathCat0 === 'motors-for-short-term-rent');
           var _lt = _carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale';
           if (_carRent)      window._bazarCarPageRentType = 'long_rent';
@@ -3642,7 +3642,7 @@
             }
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
-         } else if (pathCat === 'motors-for-rent') {
+         } else if (pathCat === 'motors-to-rent') {
             document.getElementById('cfCatLabel').textContent = 'Motors to Rent';
             var imgEl = document.getElementById('cfCatImg');
             imgEl.src = 'img/cat/image4.png'; imgEl.style.display = '';
@@ -3660,7 +3660,7 @@
             });
             currentMode = 'rent'; buildPricePanels(); _smfPricesBuilt = false;
             if (pathSub === 'cars') {
-               if (catLink) { catLink.textContent = 'Motors to Rent'; catLink.href = '/motors-for-rent'; catLink.parentNode.style.display = ''; }
+               if (catLink) { catLink.textContent = 'Motors to Rent'; catLink.href = '/motors-to-rent'; catLink.parentNode.style.display = ''; }
                if (catArrow) catArrow.style.display = '';
                if (typeEl) typeEl.textContent = 'Cars to Rent';
             } else {
