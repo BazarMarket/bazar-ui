@@ -2436,7 +2436,7 @@
          var transmission = (document.getElementById('carTransmissionSelect') || {}).value || '';
          var year = (document.getElementById('carYearSelect') || {}).value || '';
          var listingType = reState.listingType || '';
-         var titleListingType = listingType === 'For Short-term Rent' ? 'Short-rent' : listingType === 'For Long-term Rent' ? 'For Rent' : listingType;
+         var titleListingType = listingType === 'For Short-term Rent' ? 'Short-rent' : listingType === 'For Long-term Rent' ? 'To Rent' : listingType;
          var parts = [];
          if (make && make !== 'Other') parts.push(make);
          if (engine) parts.push(engine === 'Electric (N/A)' ? 'Electric' : engine);
