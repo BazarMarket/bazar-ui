@@ -3663,6 +3663,19 @@
                if (catLink) { catLink.textContent = 'Motors to Rent'; catLink.href = '/motors-to-rent'; catLink.parentNode.style.display = ''; }
                if (catArrow) catArrow.style.display = '';
                if (typeEl) typeEl.textContent = 'Cars to Rent';
+               /* Pre-select make from URL segment (e.g. /motors-to-rent/cars/bmw) */
+               var _makeSeg = pathParts[2] || '';
+               if (_makeSeg) {
+                  var makeSelect = document.getElementById('cfMotorsMake');
+                  if (makeSelect) {
+                     var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
+                     for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
+                        if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
+                           makeSelect.selectedIndex = _mi; break;
+                        }
+                     }
+                  }
+               }
             } else {
                if (catLink) catLink.parentNode.style.display = 'none';
                if (catArrow) catArrow.style.display = 'none';
@@ -3688,6 +3701,19 @@
                if (catLink) { catLink.textContent = 'Motors for Short-Term Rent'; catLink.href = '/motors-for-short-term-rent'; catLink.parentNode.style.display = ''; }
                if (catArrow) catArrow.style.display = '';
                if (typeEl) typeEl.textContent = 'Cars for Short-Term Rent';
+               /* Pre-select make from URL segment (e.g. /motors-for-short-term-rent/cars/alfa-romeo) */
+               var _makeSeg = pathParts[2] || '';
+               if (_makeSeg) {
+                  var makeSelect = document.getElementById('cfMotorsMake');
+                  if (makeSelect) {
+                     var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
+                     for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
+                        if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
+                           makeSelect.selectedIndex = _mi; break;
+                        }
+                     }
+                  }
+               }
             } else {
                if (catLink) catLink.parentNode.style.display = 'none';
                if (catArrow) catArrow.style.display = 'none';
