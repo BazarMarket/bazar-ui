@@ -826,16 +826,22 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /motors-for-sale/cars/{make}/{city}/{district} → redirect
         if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[2]}/{parts[3]}/{parts[4]}'}
-        # /cars/for-rent/{make}/{city}/{district}
-        if parts[0] == 'cars' and parts[1] == 'for-rent':
+        # /motors-for-rent/cars/{make}/{city}/{district}
+        if parts[0] == 'motors-for-rent' and parts[1] == 'cars':
             return 'cars_make_city_district', {
                 'make': parts[2], 'city': parts[3], 'district': parts[4], 'is_rent': True
             }
-        # /cars/for-short-term-rent/{make}/{city}/{district}
-        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+        # /motors-for-short-term-rent/cars/{make}/{city}/{district}
+        if parts[0] == 'motors-for-short-term-rent' and parts[1] == 'cars':
             return 'cars_make_city_district', {
                 'make': parts[2], 'city': parts[3], 'district': parts[4], 'is_short_rent': True
             }
+        # /cars/for-rent/{make}/{city}/{district}  →  301
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'redirect_301', {'location': f'/motors-for-rent/cars/{parts[2]}/{parts[3]}/{parts[4]}'}
+        # /cars/for-short-term-rent/{make}/{city}/{district}  →  301
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'redirect_301', {'location': f'/motors-for-short-term-rent/cars/{parts[2]}/{parts[3]}/{parts[4]}'}
     if len(parts) == 3:
         # /property/for-rent/short-term  →  property_transaction_modifier
         if parts[0] == 'property' and parts[1] in ('for-rent', 'for-sale') and parts[2] == 'short-term':
@@ -869,12 +875,18 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # Legacy /cars/{make}/{city} → 301
         if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}/{parts[2]}'}
-        # /cars/for-rent/{make}
-        if parts[0] == 'cars' and parts[1] == 'for-rent':
+        # /motors-for-rent/cars/{make}
+        if parts[0] == 'motors-for-rent' and parts[1] == 'cars':
             return 'cars_make', {'make': parts[2], 'is_rent': True}
-        # /cars/for-short-term-rent/{make}
-        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+        # /motors-for-short-term-rent/cars/{make}
+        if parts[0] == 'motors-for-short-term-rent' and parts[1] == 'cars':
             return 'cars_make', {'make': parts[2], 'is_short_rent': True}
+        # /cars/for-rent/{make}  →  301
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'redirect_301', {'location': f'/motors-for-rent/cars/{parts[2]}'}
+        # /cars/for-short-term-rent/{make}  →  301
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'redirect_301', {'location': f'/motors-for-short-term-rent/cars/{parts[2]}'}
         # /property-for-sale/{subtype}/{city} or /property-to-rent/{subtype}/{city}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city', {
@@ -895,16 +907,22 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # Legacy /cars/{make}/{city}/{district} → 301
         if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}/{parts[2]}/{parts[3]}'}
-        # /cars/for-rent/{make}/{city}
-        if parts[0] == 'cars' and parts[1] == 'for-rent':
+        # /motors-for-rent/cars/{make}/{city}
+        if parts[0] == 'motors-for-rent' and parts[1] == 'cars':
             return 'cars_make_city_district', {
                 'make': parts[2], 'city': parts[3], 'district': '', 'is_rent': True
             }
-        # /cars/for-short-term-rent/{make}/{city}
-        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+        # /motors-for-short-term-rent/cars/{make}/{city}
+        if parts[0] == 'motors-for-short-term-rent' and parts[1] == 'cars':
             return 'cars_make_city_district', {
                 'make': parts[2], 'city': parts[3], 'district': '', 'is_short_rent': True
             }
+        # /cars/for-rent/{make}/{city}  →  301
+        if parts[0] == 'cars' and parts[1] == 'for-rent':
+            return 'redirect_301', {'location': f'/motors-for-rent/cars/{parts[2]}/{parts[3]}'}
+        # /cars/for-short-term-rent/{make}/{city}  →  301
+        if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
+            return 'redirect_301', {'location': f'/motors-for-short-term-rent/cars/{parts[2]}/{parts[3]}'}
         # /property-for-sale/{subtype}/{city}/{district}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city_district', {
@@ -970,12 +988,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /motors-for-sale/{make}
         if parts[0] == 'motors-for-sale':
             return 'cars_make', {'make': parts[1]}
-        # /cars/for-rent  →  motors to rent landing page
+        # /cars/for-rent  →  301 to canonical
         if parts[0] == 'cars' and parts[1] == 'for-rent':
-            return 'cars_rent', {}
-        # /cars/for-short-term-rent  →  motors short-term rent landing page
+            return 'redirect_301', {'location': '/motors-for-rent/cars'}
+        # /cars/for-short-term-rent  →  301 to canonical
         if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
-            return 'cars_short_rent', {}
+            return 'redirect_301', {'location': '/motors-for-short-term-rent/cars'}
         # Legacy /cars/{make} → 301
         if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}'}
@@ -1346,11 +1364,11 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             if _is_short_rent:
                 cat_label     = 'Motors for Short-Term Rent'
                 _cat_rel_url  = '/motors-for-short-term-rent'
-                _cars_rel_url = '/cars/for-short-term-rent'
+                _cars_rel_url = '/motors-for-short-term-rent/cars'
             elif _is_long_rent:
                 cat_label     = 'Motors to Rent'
                 _cat_rel_url  = '/motors-for-rent'
-                _cars_rel_url = '/cars/for-rent'
+                _cars_rel_url = '/motors-for-rent/cars'
             else:
                 cat_label     = 'Motors for Sale'
                 _cat_rel_url  = '/motors-for-sale'
@@ -2469,12 +2487,12 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             cat_label  = 'Motors for Short-Term Rent'
             action     = 'for short-term rent'
             _cat_url   = '/motors-for-short-term-rent'
-            _cars_base = '/cars/for-short-term-rent'
+            _cars_base = '/motors-for-short-term-rent/cars'
         elif is_rent:
             cat_label  = 'Motors to Rent'
             action     = 'to rent'
             _cat_url   = '/motors-for-rent'
-            _cars_base = '/cars/for-rent'
+            _cars_base = '/motors-for-rent/cars'
         else:
             cat_label  = 'Motors for Sale'
             action     = 'for sale'
@@ -2499,10 +2517,10 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         # Cars sub-label: one level below the motors parent
         if is_short_rent:
             _cars_label = 'Cars for Short-Term Rent'
-            _cars_url   = '/cars/for-short-term-rent'
+            _cars_url   = '/motors-for-short-term-rent/cars'
         elif is_rent:
             _cars_label = 'Cars to Rent'
-            _cars_url   = '/cars/for-rent'
+            _cars_url   = '/motors-for-rent/cars'
         else:
             _cars_label = 'Cars for Sale'
             _cars_url   = '/motors-for-sale/cars'
@@ -2553,7 +2571,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         seo.update({
             'title':       'Cars to Rent in the UK | Bazar UK',
             'description': 'Browse cars for long-term rent across the UK on Bazar UK classifieds.',
-            'canonical':   f'{PUBLIC_DOMAIN}/cars/for-rent',
+            'canonical':   f'{PUBLIC_DOMAIN}/motors-for-rent/cars',
             'robots':      'index, follow',
         })
         seo['ssr'] = {
@@ -2572,7 +2590,7 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
         seo.update({
             'title':       'Cars for Short-Term Rent in the UK | Bazar UK',
             'description': 'Browse cars for short-term rent across the UK on Bazar UK classifieds.',
-            'canonical':   f'{PUBLIC_DOMAIN}/cars/for-short-term-rent',
+            'canonical':   f'{PUBLIC_DOMAIN}/motors-for-short-term-rent/cars',
             'robots':      'index, follow',
         })
         seo['ssr'] = {
