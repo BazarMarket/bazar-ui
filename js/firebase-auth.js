@@ -262,6 +262,7 @@ function doSendFirebaseSms(phoneNumber, smsBtn) {
             confirmationResult = result;
             smsBtn.textContent = 'Sign in by an SMS';
             smsBtn.disabled = false;
+            if (window.bzLogError) window.bzLogError('firebase', 'SMS sent OK / ' + phoneNumber, null, phoneNumber);
             openOtpModal(phoneNumber);
         })
         .catch(function(error) {
@@ -346,6 +347,7 @@ function verifyOtpCode() {
 
             if (phone) localStorage.setItem('bazar_phone', phone);
             if (uid)   localStorage.setItem('bazar_firebase_uid', uid);
+            if (window.bzLogError) window.bzLogError('firebase', 'OTP verified OK / ' + (phone || uid), null, phone);
 
             // Проверяем: есть ли аккаунт в базе?
             fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
@@ -359,6 +361,7 @@ function verifyOtpCode() {
                             localStorage.setItem('bazar_plan',     data.plan || 'free');
                             closeOtpModal();
                             doLogin();
+                            if (window.bzLogError) window.bzLogError('firebase', 'Login OK: ' + data.name + ' / ' + (phone || uid), null, phone);
                             window.location.href = 'post-ad';
                         } else {
                             // Log in — загружаем данные и входим
@@ -367,9 +370,11 @@ function verifyOtpCode() {
                             localStorage.setItem('bazar_plan',     data.plan || 'free');
                             closeOtpModal();
                             doLogin();
+                            if (window.bzLogError) window.bzLogError('firebase', 'Login OK: ' + data.name + ' / ' + (phone || uid), null, phone);
                         }
                     } else {
                         // Новый пользователь — показываем форму профиля
+                        if (window.bzLogError) window.bzLogError('firebase', 'New user - profile form / ' + (phone || uid), null, phone);
                         openProfileModal();
                     }
                 })
@@ -484,6 +489,8 @@ function finishRegistration() {
     closeProfileModal();
     doLogin();
     if (typeof gtag === 'function') gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD'});
+    var _regPhone = (function(){ try { return localStorage.getItem('bazar_phone') || ''; } catch(e){ return ''; } })();
+    if (window.bzLogError) window.bzLogError('firebase', 'Registration complete: ' + name, null, _regPhone);
 
     var firebaseUser = auth.currentUser;
     var uid   = (firebaseUser && firebaseUser.uid) ? firebaseUser.uid : localStorage.getItem('bazar_firebase_uid');
