@@ -555,7 +555,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    setupRecaptcha();
     var otpInputs = document.querySelectorAll('.otp-input');
     otpInputs.forEach(function(input, index) {
         input.addEventListener('input', function() {
