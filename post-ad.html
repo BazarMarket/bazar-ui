@@ -3751,7 +3751,7 @@
          var _carTransmission = getSelectVal('carTransmissionSelect');
          if (!_carTransmission) { showValidationError('Please select a Transmission.', 'carTransmissionSelect'); return; }
 
-         var listingType = (reState.listingType === 'For Long-term Rent' || reState.listingType === 'For Short-term Rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale';
+         var listingType = reState.listingType === 'For Short-term Rent' ? 'short_rent' : (reState.listingType === 'For Long-term Rent' || reState.listingType === 'For Rent') ? 'rent' : 'sale';
 
          var formData = new FormData();
          formData.append('title', title);
