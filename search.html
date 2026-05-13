@@ -3659,8 +3659,14 @@
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             currentMode = 'rent'; buildPricePanels(); _smfPricesBuilt = false;
-            if (catLink) catLink.parentNode.style.display = 'none';
-            if (catArrow) catArrow.style.display = 'none';
+            if (pathSub === 'cars') {
+               if (catLink) { catLink.textContent = 'Motors to Rent'; catLink.href = '/motors-for-rent'; catLink.parentNode.style.display = ''; }
+               if (catArrow) catArrow.style.display = '';
+               if (typeEl) typeEl.textContent = 'Cars to Rent';
+            } else {
+               if (catLink) catLink.parentNode.style.display = 'none';
+               if (catArrow) catArrow.style.display = 'none';
+            }
          } else if (pathCat === 'motors-for-short-term-rent') {
             document.getElementById('cfCatLabel').textContent = 'Motors for short-term rent';
             var imgEl = document.getElementById('cfCatImg');
@@ -3678,8 +3684,14 @@
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             currentMode = 'short-rent'; buildPricePanels(); _smfPricesBuilt = false;
-            if (catLink) catLink.parentNode.style.display = 'none';
-            if (catArrow) catArrow.style.display = 'none';
+            if (pathSub === 'cars') {
+               if (catLink) { catLink.textContent = 'Motors for Short-Term Rent'; catLink.href = '/motors-for-short-term-rent'; catLink.parentNode.style.display = ''; }
+               if (catArrow) catArrow.style.display = '';
+               if (typeEl) typeEl.textContent = 'Cars for Short-Term Rent';
+            } else {
+               if (catLink) catLink.parentNode.style.display = 'none';
+               if (catArrow) catArrow.style.display = 'none';
+            }
          } else if (pathCat === 'cars' && pathSub === 'for-rent') {
             /* Motors to Rent page: set category UI and show car filters */
             document.getElementById('cfCatLabel').textContent = 'Motors to Rent';

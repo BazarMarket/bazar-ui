@@ -958,6 +958,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_modifier', {
                 'category': parts[0], 'modifier': 'short-term'
             }
+        # /motors-for-rent/cars  →  cars to rent page
+        if parts[0] == 'motors-for-rent' and parts[1] == 'cars':
+            return 'cars_rent', {}
+        # /motors-for-short-term-rent/cars  →  cars short-term rent page
+        if parts[0] == 'motors-for-short-term-rent' and parts[1] == 'cars':
+            return 'cars_short_rent', {}
         # /motors-for-sale/cars  →  cars category page
         if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
             return 'cars_category', {}
