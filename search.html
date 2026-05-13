@@ -618,7 +618,11 @@
                         <option>Jaguar</option><option>Mini</option><option>Tesla</option>
                         <option>Volvo</option><option>Lexus</option><option>Porsche</option>
                         <option>SEAT</option><option>Bugatti</option><option>Cadillac</option>
-                        <option>Alfa Romeo</option><option>Other</option>
+                        <option>Alfa Romeo</option><option>Cupra</option><option>Alpine</option>
+                        <option>Chevrolet</option><option>Chrysler</option><option>Daewoo</option>
+                        <option>BYD</option><option>Subaru</option><option>Mitsubishi</option>
+                        <option>Mazda</option><option>Fiat</option><option>Citroen</option>
+                        <option>Other</option>
                      </select>
                      <div class="cf-cat" id="cfAptTypeWrap" style="display:none;">
                         <button class="cf-cat-btn" id="cfAptTypeBtn" onclick="toggleAptTypePanel(event)">
@@ -3592,6 +3596,27 @@
          var pathCatMap = {};
          if (_pathToKey) pathCatMap[pathCat] = _pathToKey;
 
+         var _preSelectMotorsMake = function(slug) {
+            if (!slug) return;
+            var sel = document.getElementById('cfMotorsMake');
+            if (!sel) return;
+            var norm = slug.toLowerCase().replace(/-/g, ' ');
+            var found = false;
+            for (var _i = 0; _i < sel.options.length; _i++) {
+               if (sel.options[_i].text.toLowerCase() === norm || sel.options[_i].value.toLowerCase() === norm) {
+                  sel.selectedIndex = _i; found = true; break;
+               }
+            }
+            if (!found) {
+               var display = norm.replace(/(?:^|\s)\S/g, function(c) { return c.toUpperCase(); });
+               var lastIdx = sel.options.length - 1;
+               var opt = document.createElement('option');
+               opt.text = display; opt.value = display;
+               sel.insertBefore(opt, sel.options[lastIdx]);
+               sel.value = display;
+            }
+         };
+
          if (cat && catMap[cat]) {
             var info = catMap[cat];
             document.getElementById('cfCatLabel').textContent = info.label;
@@ -3628,18 +3653,7 @@
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /motors-for-sale/bmw) */
-            var _makeSeg = pathParts[1] || '';
-            if (_makeSeg) {
-               var makeSelect = document.getElementById('cfMotorsMake');
-               if (makeSelect) {
-                  var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
-                  for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
-                     if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
-                        makeSelect.selectedIndex = _mi; break;
-                     }
-                  }
-               }
-            }
+            _preSelectMotorsMake(pathParts[1]);
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
          } else if (pathCat === 'motors-to-rent') {
@@ -3664,18 +3678,7 @@
                if (catArrow) catArrow.style.display = '';
                if (typeEl) typeEl.textContent = 'Cars to Rent';
                /* Pre-select make from URL segment (e.g. /motors-to-rent/cars/bmw) */
-               var _makeSeg = pathParts[2] || '';
-               if (_makeSeg) {
-                  var makeSelect = document.getElementById('cfMotorsMake');
-                  if (makeSelect) {
-                     var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
-                     for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
-                        if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
-                           makeSelect.selectedIndex = _mi; break;
-                        }
-                     }
-                  }
-               }
+               _preSelectMotorsMake(pathParts[2]);
             } else {
                if (catLink) catLink.parentNode.style.display = 'none';
                if (catArrow) catArrow.style.display = 'none';
@@ -3702,18 +3705,7 @@
                if (catArrow) catArrow.style.display = '';
                if (typeEl) typeEl.textContent = 'Cars for Short-Term Rent';
                /* Pre-select make from URL segment (e.g. /motors-for-short-term-rent/cars/alfa-romeo) */
-               var _makeSeg = pathParts[2] || '';
-               if (_makeSeg) {
-                  var makeSelect = document.getElementById('cfMotorsMake');
-                  if (makeSelect) {
-                     var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
-                     for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
-                        if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
-                           makeSelect.selectedIndex = _mi; break;
-                        }
-                     }
-                  }
-               }
+               _preSelectMotorsMake(pathParts[2]);
             } else {
                if (catLink) catLink.parentNode.style.display = 'none';
                if (catArrow) catArrow.style.display = 'none';
@@ -3737,18 +3729,7 @@
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /cars/for-rent/bugatti) */
-            var _makeSeg = pathParts[2] || '';
-            if (_makeSeg) {
-               var makeSelect = document.getElementById('cfMotorsMake');
-               if (makeSelect) {
-                  var _makeNorm = _makeSeg.toLowerCase().replace(/-/g,' ');
-                  for (var _mi=0; _mi<makeSelect.options.length; _mi++) {
-                     if (makeSelect.options[_mi].text.toLowerCase() === _makeNorm || makeSelect.options[_mi].value.toLowerCase() === _makeNorm) {
-                        makeSelect.selectedIndex = _mi; break;
-                     }
-                  }
-               }
-            }
+            _preSelectMotorsMake(pathParts[2]);
             currentMode = 'rent'; buildPricePanels(); _smfPricesBuilt = false;
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
@@ -3768,18 +3749,7 @@
             ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
-            var _makeSeg2 = pathParts[2] || '';
-            if (_makeSeg2) {
-               var makeSelect2 = document.getElementById('cfMotorsMake');
-               if (makeSelect2) {
-                  var _makeNorm2 = _makeSeg2.toLowerCase().replace(/-/g,' ');
-                  for (var _mi2=0; _mi2<makeSelect2.options.length; _mi2++) {
-                     if (makeSelect2.options[_mi2].text.toLowerCase() === _makeNorm2 || makeSelect2.options[_mi2].value.toLowerCase() === _makeNorm2) {
-                        makeSelect2.selectedIndex = _mi2; break;
-                     }
-                  }
-               }
-            }
+            _preSelectMotorsMake(pathParts[2]);
             currentMode = 'short-rent'; buildPricePanels(); _smfPricesBuilt = false;
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
