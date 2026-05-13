@@ -4384,13 +4384,35 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         headers={'Accept': 'application/json'})
                     with urllib.request.urlopen(req, timeout=4) as r:
                         detail = json.loads(r.read().decode('utf-8'))
+                    # Get real view count from MySQL property_views table
+                    _real_views = 0
+                    try:
+                        import pymysql as _pymysql
+                        _vc = _pymysql.connect(
+                            host=os.environ.get('DB_HOST', '127.0.0.1'),
+                            user=os.environ.get('DB_USERNAME', 'bazar'),
+                            password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                            database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                            connect_timeout=2,
+                            cursorclass=_pymysql.cursors.DictCursor,
+                        )
+                        with _vc:
+                            with _vc.cursor() as _cur:
+                                _cur.execute(
+                                    'SELECT COUNT(*) AS cnt FROM property_views WHERE property_id=%s',
+                                    (ad_id,)
+                                )
+                                _row = _cur.fetchone()
+                                _real_views = int(_row['cnt']) if _row else 0
+                    except Exception:
+                        _real_views = detail.get('views_count') or detail.get('views') or 0
                     with lock:
                         enriched_list[idx]['old_price']    = detail.get('old_price')
                         enriched_list[idx]['district']     = detail.get('district') or ''
                         enriched_list[idx]['listing_type'] = detail.get('listing_type') or ''
                         enriched_list[idx]['images']       = detail.get('images') or []
                         enriched_list[idx]['car_make']     = detail.get('car_make') or ''
-                        enriched_list[idx]['views']        = detail.get('views_count') or detail.get('views') or 0
+                        enriched_list[idx]['views']        = _real_views
                         if detail.get('created_at') and not enriched_list[idx].get('created_at'):
                             enriched_list[idx]['created_at'] = detail.get('created_at')
                     # Refresh per-listing cache so card.html gets fresh data too
