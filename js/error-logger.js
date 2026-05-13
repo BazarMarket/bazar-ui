@@ -13,13 +13,14 @@
         if (message.indexOf('extension') !== -1 || message.indexOf('chrome-extension') !== -1) return;
         _sent++;
         var phone = phoneOverride || getPhone();
+        var payload = JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone });
         try {
             navigator.sendBeacon
-                ? navigator.sendBeacon(API, JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone }))
+                ? navigator.sendBeacon(API, new Blob([payload], { type: 'application/json' }))
                 : fetch(API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone }),
+                    body: payload,
                     keepalive: true
                 }).catch(function () {});
         } catch (e) {}
