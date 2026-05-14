@@ -471,13 +471,15 @@ function openProfileModal() {
     document.getElementById('genderMale').classList.add('profile-gender-btn--active');
     document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
     var nameInp = document.getElementById('profileFullName');
-    if (window._postAdSellerName) {
-        /* Post-ad flow: name already filled in Contact Details — pre-fill and hide */
-        nameInp.value = window._postAdSellerName;
-        nameInp.style.display = 'none';
-    } else {
-        nameInp.value = '';
-        nameInp.style.display = '';
+    if (nameInp) {
+        if (window._postAdSellerName) {
+            /* Post-ad flow: name already filled in Contact Details — pre-fill and hide */
+            nameInp.value = window._postAdSellerName;
+            nameInp.style.display = 'none';
+        } else {
+            nameInp.value = '';
+            nameInp.style.display = '';
+        }
     }
     document.getElementById('profileSubmitBtn').classList.add('profile-submit-btn--gray');
     document.getElementById('otpModal').classList.remove('modal-overlay--active');
@@ -509,8 +511,10 @@ function finishRegistration() {
     if (firebaseUser && firebaseUser.uid) {
         localStorage.setItem('bazar_firebase_uid', firebaseUser.uid);
     }
+    /* Save customer — store promise so post-ad flow can await it before page navigation */
+    var _customerSaveP = Promise.resolve();
     if (uid) {
-        fetch(window.BAZAR_API + '/customers', {
+        _customerSaveP = fetch(window.BAZAR_API + '/customers', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
@@ -536,7 +540,8 @@ function finishRegistration() {
         var _postCb = window._postAdCallback;
         window._postAdCallback = null;
         window._postAdSellerName = null;
-        _postCb();
+        /* Wait for customer to be saved in DB before navigating away */
+        _customerSaveP.then(function() { _postCb(); });
         return;
     }
     if (isPostAd) {
