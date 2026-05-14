@@ -255,6 +255,8 @@ window.onload = function () {
         //     },
         // }
     });
+    } else {
+        if (window.bzLogError) window.bzLogError('frontend', 'Swiper not loaded — sliders skipped on this page', window.location.pathname, null);
     } // end if (typeof Swiper !== 'undefined')
 
 
