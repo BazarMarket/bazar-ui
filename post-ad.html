@@ -3419,6 +3419,9 @@
       }
 
       /* ── Lock contact fields from profile + cross-page sync ── */
+      /* Expose for firebase-auth.js to call after OTP login/registration */
+      window._bazarPostAdLockContact = function() { _lockContactFields(); };
+
       function _lockContactFields() {
          var name  = localStorage.getItem('bazar_username') || '';
          var phone = localStorage.getItem('bazar_phone')   || '';
@@ -4795,6 +4798,8 @@
 
          // Auto-fill and lock contact details from user profile
          _lockContactFields();
+         /* Repeat after Inputmask has been applied (script.js loads after) */
+         setTimeout(_lockContactFields, 300);
 
          /* Edit mode is initialized in pageshow handler (after form reset) */
       });

@@ -89,6 +89,8 @@ function doLogin() {
     if (_hg) _hg.style.display = 'none';
     if (_hl) _hl.style.display = '';
     document.body.classList.add('bazar-logged');
+    /* Post-ad page: re-fill Contact Details with registered name/phone */
+    if (window._bazarPostAdLockContact) window._bazarPostAdLockContact();
 }
 
 function clearUserLocalData() {
