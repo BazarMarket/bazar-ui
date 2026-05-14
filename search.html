@@ -2701,8 +2701,19 @@
           if (!listings || !listings.length) return;
           clearInterval(_tabIntvl);
           _tabBuilt = true;
+          /* Classify each listing into a human-readable category name */
+          function _catLabel(p) {
+            if (p.mk) return 'Motors';          /* car_make is set → it's a car */
+            var lt = (p.lt || '').toLowerCase();
+            if (lt === 'sale')       return 'Property for Sale';
+            if (lt === 'long_rent')  return 'Property to Rent';
+            if (lt === 'short_rent') return 'Short-term Rent';
+            if (lt === 'rooms')      return 'Rooms';
+            if (lt === 'room')       return 'Rooms';
+            return 'Other';
+          }
           var counts = {}, total = listings.length;
-          listings.forEach(function(p) { var c = p.category || 'Other'; counts[c] = (counts[c]||0)+1; });
+          listings.forEach(function(p) { var c = _catLabel(p); counts[c] = (counts[c]||0)+1; });
           var tabsEl = document.getElementById('sellerCatTabs');
           if (!tabsEl) return;
           /* My Ads-style tab buttons: orange fill = active, white+border = inactive */
@@ -2715,6 +2726,8 @@
             t.textContent = label + ' (' + count + ')';
             return t;
           }
+          /* Save original full list for filtering */
+          var _sellerOrig = listings.slice();
           tabsEl.appendChild(makeTab('All Ads', '', total, true));
           Object.keys(counts).forEach(function(cat) { tabsEl.appendChild(makeTab(cat, cat, counts[cat], false)); });
           tabsEl.addEventListener('click', function(e) {
@@ -2724,7 +2737,13 @@
             tabsEl.querySelectorAll('.seller-cat-tab').forEach(function(t) {
               t.style.cssText = t === tab ? sActive : sBase;
             });
-            try { _selectedCat = cat; if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
+            /* Filter within Seller bucket and re-render */
+            try {
+              BAZAR_LISTINGS['Seller'] = cat
+                ? _sellerOrig.filter(function(p) { return _catLabel(p) === cat; })
+                : _sellerOrig.slice();
+              if (typeof renderListings === 'function') renderListings('Seller');
+            } catch(ex) {}
           });
         }, 300);
       })();
