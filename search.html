@@ -1021,6 +1021,18 @@
             </div>
          </div>
 
+         <!-- Seller profile banner (shown only when ?seller_uid= param is present) -->
+         <div id="sellerBanner" style="display:none; background:#fff; border-bottom:1px solid #e2e4e8; padding:18px 0;">
+            <div class="bazar-container" style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+               <img id="sellerBannerAvatar" src="icon/man.svg" alt="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #f0f1f3;">
+               <div style="flex:1;min-width:0;">
+                  <div style="font-size:18px;font-weight:700;color:#1a1a2e;" id="sellerBannerName"></div>
+                  <div style="font-size:13px;color:#888;margin-top:2px;">Ads from this seller</div>
+               </div>
+               <a href="search" style="font-size:13px;color:#e8873a;text-decoration:none;white-space:nowrap;">← All ads</a>
+            </div>
+         </div>
+
          <div class="sr-wrap">
             <div class="sr-results">
 
@@ -2610,6 +2622,37 @@
         'Industrial': [], 'Hotel': [], 'Cars': [], 'Phones': []
       };
 
+      /* ── Seller page mode: detect ?seller_uid= and show banner ── */
+      (function initSellerMode() {
+        var _sp = new URLSearchParams(window.location.search);
+        var _suid = _sp.get('seller_uid');
+        var _sname = _sp.get('seller_name') || '';
+        if (!_suid) return;
+        window._sellerUidFilter = _suid;
+        /* Show banner */
+        var _banner = document.getElementById('sellerBanner');
+        var _bannerName = document.getElementById('sellerBannerName');
+        var _bannerAvatar = document.getElementById('sellerBannerAvatar');
+        if (_banner) _banner.style.display = '';
+        if (_bannerName) _bannerName.textContent = _sname || 'Seller';
+        /* Fetch seller avatar */
+        if (_suid) {
+          fetch((window.BAZAR_API || '/api') + '/customers/' + encodeURIComponent(_suid))
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(cust) {
+              if (!cust) return;
+              if (cust.name && _bannerName) _bannerName.textContent = cust.name;
+              if (cust.avatar && _bannerAvatar) _bannerAvatar.src = cust.avatar;
+              else if (cust.gender === 'female' && _bannerAvatar) _bannerAvatar.src = 'icon/woman.png';
+              else if (_bannerAvatar) _bannerAvatar.src = 'icon/man.svg';
+            })
+            .catch(function() {});
+        }
+        /* Hide filters sidebar — not useful when showing one seller's ads */
+        var _cfOuter = document.querySelector('.cf-block-outer');
+        if (_cfOuter) _cfOuter.style.display = 'none';
+      })();
+
       /* ── Load real listings from API and prepend to BAZAR_LISTINGS ── */
       (function loadApiListings() {
         /* On /rooms or /property-to-rent/rooms page also load rooms-specific endpoint */
@@ -2783,6 +2826,19 @@
               BAZAR_LISTINGS['PropertyAll'] = _txAll;
               window._bazarCurrentType = 'PropertyAll';
               renderListings('PropertyAll');
+              if (typeof initProductSwipers === 'function') initProductSwipers();
+              return;
+            }
+            /* Seller page mode: merge all items into one list and render */
+            if (window._sellerUidFilter) {
+              var _sellerAll = [];
+              Object.keys(apiByBucket).forEach(function(k) {
+                if (Array.isArray(apiByBucket[k])) _sellerAll = _sellerAll.concat(apiByBucket[k]);
+              });
+              _sellerAll.sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
+              BAZAR_LISTINGS['Seller'] = _sellerAll;
+              window._bazarCurrentType = 'Seller';
+              renderListings('Seller');
               if (typeof initProductSwipers === 'function') initProductSwipers();
               return;
             }
@@ -3032,6 +3088,12 @@
             if (_crt === 'short_rent') return item.lt === 'short_rent';
             if (_crt === 'long_rent')  return item.lt === 'rent' || item.lt === 'long_rent';
             return true;
+          });
+        }
+        /* Seller page mode: show only this seller's ads */
+        if (window._sellerUidFilter) {
+          items = items.filter(function(item) {
+            return item.uid && item.uid === window._sellerUidFilter;
           });
         }
         /* Apply House sub-type filter (cfHouseTypePanel checkboxes) */

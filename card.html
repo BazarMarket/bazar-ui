@@ -376,7 +376,7 @@
                               </div>
                               <p class="card-name__text" id="seller-since">2 years with Bazar Market</p>
                               <div class="card-name__links">
-                                 <a href="#" class="link-start link-hover">Other Ads from this seller</a>
+                                 <a href="#" id="seller-other-ads-link" class="link-start link-hover">Other Ads from this seller</a>
                               </div>
                            </div>
                         </div>
@@ -1244,6 +1244,11 @@
          ? (localStorage.getItem('bazar_username') || p.seller_name)
          : p.seller_name;
       el('seller-name').textContent = _displaySellerName;
+      /* "Other Ads from this seller" button — set href with seller_uid */
+      var _otherAdsLink = document.getElementById('seller-other-ads-link');
+      if (_otherAdsLink && p.seller_firebase_uid) {
+         _otherAdsLink.href = 'search?seller_uid=' + encodeURIComponent(p.seller_firebase_uid) + '&seller_name=' + encodeURIComponent(_displaySellerName || p.seller_name || '');
+      }
       /* Show own avatar from localStorage if viewing own listing */
       if (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid) {
          var _ownAv = localStorage.getItem('bazar_avatar');
