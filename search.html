@@ -2676,6 +2676,29 @@
           if (heroSort) heroSort.style.justifyContent = 'flex-end';
           /* Re-render with cleared category */
           try { if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
+          /* Insert "All categories" dropdown into Row 1 (after search/location) */
+          var cfRow1 = document.querySelector('.cf-row1');
+          if (cfRow1 && !document.getElementById('sellerCatDropWrap')) {
+            var dropWrap = document.createElement('div');
+            dropWrap.className = 'cf-cat'; dropWrap.id = 'sellerCatDropWrap';
+            dropWrap.innerHTML =
+              '<button class="cf-cat-btn" id="sellerCatDropBtn" type="button">' +
+                '<span class="cf-cat-btn-label" id="sellerCatDropLabel">All categories</span>' +
+                '<svg class="cf-arrow-icon" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+              '</button>' +
+              '<div class="cf-cat-panel" id="sellerCatDropPanel" style="display:none;min-width:220px;"></div>';
+            var firstHiddenCat = cfRow1.querySelector('.cf-cat[style*="display: none"]');
+            cfRow1.insertBefore(dropWrap, firstHiddenCat || null);
+            document.getElementById('sellerCatDropBtn').addEventListener('click', function(e) {
+              var p = document.getElementById('sellerCatDropPanel');
+              if (p) { p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
+              e.stopPropagation();
+            });
+            document.addEventListener('click', function() {
+              var p = document.getElementById('sellerCatDropPanel');
+              if (p) p.style.display = 'none';
+            });
+          }
         }, 180);
 
         /* ── 3. Fetch seller name + avatar ── */
@@ -2728,22 +2751,61 @@
           }
           /* Save original full list for filtering */
           var _sellerOrig = listings.slice();
-          tabsEl.appendChild(makeTab('All Ads', '', total, true));
-          Object.keys(counts).forEach(function(cat) { tabsEl.appendChild(makeTab(cat, cat, counts[cat], false)); });
-          tabsEl.addEventListener('click', function(e) {
-            var tab = e.target.closest('.seller-cat-tab');
-            if (!tab) return;
-            var cat = tab.dataset.cat;
-            tabsEl.querySelectorAll('.seller-cat-tab').forEach(function(t) {
-              t.style.cssText = t === tab ? sActive : sBase;
-            });
-            /* Filter within Seller bucket and re-render */
+
+          /* ── Shared filter function: syncs dropdown + tabs + results ── */
+          function _applySellerCat(cat) {
+            /* Update dropdown label and active state */
+            var dropLabel = document.getElementById('sellerCatDropLabel');
+            if (dropLabel) dropLabel.textContent = cat || 'All categories';
+            var dropBtn = document.getElementById('sellerCatDropBtn');
+            if (dropBtn) dropBtn.classList.toggle('has-selection', !!cat);
+            var dropPanel = document.getElementById('sellerCatDropPanel');
+            if (dropPanel) {
+              dropPanel.style.display = 'none';
+              dropPanel.querySelectorAll('.cf-cat-item').forEach(function(i) {
+                i.classList.toggle('active', (i.dataset.cat || '') === cat);
+              });
+            }
+            /* Update tab button active states */
+            if (tabsEl) {
+              tabsEl.querySelectorAll('.seller-cat-tab').forEach(function(t) {
+                t.style.cssText = (t.dataset.cat || '') === cat ? sActive : sBase;
+              });
+            }
+            /* Filter BAZAR_LISTINGS['Seller'] and re-render */
             try {
               BAZAR_LISTINGS['Seller'] = cat
                 ? _sellerOrig.filter(function(p) { return _catLabel(p) === cat; })
                 : _sellerOrig.slice();
               if (typeof renderListings === 'function') renderListings('Seller');
             } catch(ex) {}
+          }
+
+          /* ── Populate "All categories" dropdown ── */
+          var dropPanel = document.getElementById('sellerCatDropPanel');
+          if (dropPanel) {
+            function makeDropItem(label, cat, active) {
+              var i = document.createElement('div');
+              i.className = 'cf-cat-item' + (active ? ' active' : '');
+              i.dataset.cat = cat;
+              i.style.cssText = 'display:flex;justify-content:space-between;align-items:center;';
+              i.innerHTML = '<span>' + label + '</span>' +
+                '<span style="background:#f3f4f6;color:#888;border-radius:10px;padding:0 7px;font-size:12px;font-weight:600;margin-left:10px;">' +
+                (cat === '' ? total : (counts[cat] || 0)) + '</span>';
+              i.addEventListener('click', function(e) { _applySellerCat(cat); e.stopPropagation(); });
+              return i;
+            }
+            dropPanel.appendChild(makeDropItem('All categories', '', true));
+            Object.keys(counts).forEach(function(cat) { dropPanel.appendChild(makeDropItem(cat, cat, false)); });
+          }
+
+          /* ── Build tab buttons and wire to shared filter ── */
+          tabsEl.appendChild(makeTab('All Ads', '', total, true));
+          Object.keys(counts).forEach(function(cat) { tabsEl.appendChild(makeTab(cat, cat, counts[cat], false)); });
+          tabsEl.addEventListener('click', function(e) {
+            var tab = e.target.closest('.seller-cat-tab');
+            if (!tab) return;
+            _applySellerCat(tab.dataset.cat || '');
           });
         }, 300);
       })();
