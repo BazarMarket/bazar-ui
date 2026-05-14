@@ -229,7 +229,12 @@ var _bazarOtpPhone = '';
 
 function showPhoneError(msg, isHtml) {
     var input = document.querySelector('.modal-number-input');
-    if (!input) return;
+    if (!input) {
+        /* Post-ad context: show error near sellerPhoneInput instead */
+        var paErr = document.getElementById('sellerPhoneError');
+        if (paErr) { paErr.textContent = msg; paErr.style.display = 'block'; paErr.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        return;
+    }
     var err = document.getElementById('phoneError');
     if (!err) {
         err = document.createElement('p');
@@ -354,28 +359,24 @@ function verifyOtpCode() {
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.exists) {
-                        if (modalMode === 'post-ad') {
-                            // Post an Ad + уже зарегистрирован — логиним и сразу переходим
-                            localStorage.setItem('bazar_username', data.name);
-                            localStorage.setItem('bazar_gender',   data.gender);
-                            localStorage.setItem('bazar_plan',     data.plan || 'free');
-                            closeOtpModal();
-                            doLogin();
-                            if (window.bzLogError) window.bzLogError('firebase', 'Login OK: ' + data.name + ' / ' + (phone || uid), null, phone);
+                        // Log in — загружаем данные и входим
+                        localStorage.setItem('bazar_username', data.name);
+                        localStorage.setItem('bazar_gender',   data.gender);
+                        localStorage.setItem('bazar_plan',     data.plan || 'free');
+                        closeOtpModal();
+                        doLogin();
+                        if (window.bzLogError) window.bzLogError('firebase', 'Login OK: ' + data.name + ' / ' + (phone || uid), null, phone);
+                        if (window._postAdCallback) {
+                            var _cb = window._postAdCallback;
+                            window._postAdCallback = null;
+                            _cb();
+                        } else if (modalMode === 'post-ad') {
                             window.location.href = 'post-ad';
-                        } else {
-                            // Log in — загружаем данные и входим
-                            localStorage.setItem('bazar_username', data.name);
-                            localStorage.setItem('bazar_gender',   data.gender);
-                            localStorage.setItem('bazar_plan',     data.plan || 'free');
-                            closeOtpModal();
-                            doLogin();
-                            if (window.bzLogError) window.bzLogError('firebase', 'Login OK: ' + data.name + ' / ' + (phone || uid), null, phone);
                         }
                     } else {
                         // Новый пользователь — показываем форму профиля
                         if (window.bzLogError) window.bzLogError('firebase', 'New user - profile form / ' + (phone || uid), null, phone);
-                        openProfileModal();
+                        openProfileModal(); // handles _postAdSellerName pre-fill internally
                     }
                 })
                 .catch(function(err) {
@@ -407,8 +408,12 @@ function closeOtpModalOutside(e) {
 
 function backToCreateAccount() {
     document.getElementById('otpModal').classList.remove('modal-overlay--active');
-    document.getElementById('createAccountModal').classList.add('modal-overlay--active');
+    document.body.style.overflow = '';
     clearInterval(otpTimerInterval);
+    var createModal = document.getElementById('createAccountModal');
+    if (createModal) createModal.classList.add('modal-overlay--active');
+    // If no createAccountModal (post-ad page) — user just edits phone in the form
+    if (window._postAdCallback) { window._postAdCallback = null; }
 }
 
 function startOtpTimer() {
@@ -468,10 +473,19 @@ function openProfileModal() {
     document.getElementById('profileAvatarPreview').src = 'icon/man.png';
     document.getElementById('genderMale').classList.add('profile-gender-btn--active');
     document.getElementById('genderFemale').classList.remove('profile-gender-btn--active');
-    document.getElementById('profileFullName').value = '';
+    var nameInp = document.getElementById('profileFullName');
+    if (window._postAdSellerName) {
+        /* Post-ad flow: name already filled in Contact Details — pre-fill and hide */
+        nameInp.value = window._postAdSellerName;
+        nameInp.style.display = 'none';
+    } else {
+        nameInp.value = '';
+        nameInp.style.display = '';
+    }
     document.getElementById('profileSubmitBtn').classList.add('profile-submit-btn--gray');
     document.getElementById('otpModal').classList.remove('modal-overlay--active');
     document.getElementById('profileModal').classList.add('modal-overlay--active');
+    checkProfileReady();
 }
 
 function closeProfileModal() {
@@ -521,10 +535,25 @@ function finishRegistration() {
         }).catch(function() {});
     }
 
+    if (window._postAdCallback) {
+        var _postCb = window._postAdCallback;
+        window._postAdCallback = null;
+        window._postAdSellerName = null;
+        _postCb();
+        return;
+    }
     if (isPostAd) {
         window.location.href = 'post-ad';
     }
 }
+
+/* ── Post-Ad Auth: send OTP using phone from Contact Details form ── */
+window.bzSendSmsFromPostAd = function(phoneNumber, callback) {
+    window._postAdCallback = callback;
+    setupRecaptcha();
+    var fakeBtn = { textContent: '', disabled: false };
+    doSendFirebaseSms(phoneNumber, fakeBtn);
+};
 
 
 document.addEventListener('keydown', function(e) {

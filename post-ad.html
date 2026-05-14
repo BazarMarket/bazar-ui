@@ -7,9 +7,7 @@
    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1808636054');</script>
    <meta charset="UTF-8">
    <script>
-       if (!localStorage.getItem('bazar_firebase_uid')) {
-           window.location.replace('/?login=1');
-       }
+       /* Post-ad is now accessible without login — auth happens on Publish Ad click */
    </script>
    <title>Post an Ad – Bazar</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -2042,7 +2040,8 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Phone:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" id="sellerPhoneInput" type="tel" placeholder="+357 xx xxxxxx">
+                        <input class="pa-input" id="sellerPhoneInput" type="tel" placeholder="07XXX XXX XXX" oninput="_clearPhoneFieldError()">
+                        <div id="sellerPhoneError" style="display:none;color:#e53935;font-size:13px;margin-top:5px;font-weight:500;">Please enter a valid UK mobile number (07XXX XXX XXX)</div>
                      </div>
                   </div>
 
@@ -3382,6 +3381,43 @@
          window.location.href = 'publish-options?ad_id=' + adId;
       }
 
+      /* ── Phone field error helpers ── */
+      function _clearPhoneFieldError() {
+         var errEl = document.getElementById('sellerPhoneError');
+         if (errEl) errEl.style.display = 'none';
+      }
+      function _showPhoneFieldError(msg) {
+         var errEl = document.getElementById('sellerPhoneError');
+         if (errEl) {
+            errEl.textContent = msg || 'Please enter a valid UK mobile number (07XXX XXX XXX)';
+            errEl.style.display = 'block';
+            errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+         }
+      }
+
+      /* ── Auth gate for Publish Ad: sends OTP via Contact Details phone ── */
+      function _requireAuthThenSubmit(submitFn) {
+         if (localStorage.getItem('bazar_firebase_uid')) {
+            submitFn();
+            return;
+         }
+         var rawPhone = (getInputVal('sellerPhoneInput') || '').replace(/[\s\-\(\)\.]/g, '');
+         /* Normalise: strip +44 or 0044 prefix, then leading 0 */
+         if (rawPhone.startsWith('+44'))   rawPhone = rawPhone.slice(3);
+         else if (rawPhone.startsWith('0044')) rawPhone = rawPhone.slice(4);
+         if (rawPhone.startsWith('0'))     rawPhone = rawPhone.slice(1);
+         /* Valid UK mobile: starts with 7, 9 more digits = 10 total after stripping 0 */
+         if (!/^7\d{9}$/.test(rawPhone)) {
+            _showPhoneFieldError('Please enter a valid UK mobile number (07XXX XXX XXX)');
+            return;
+         }
+         var intlPhone = '+44' + rawPhone;
+         window._postAdSellerName = (getInputVal('sellerNameInput') || '').trim();
+         if (typeof window.bzSendSmsFromPostAd === 'function') {
+            window.bzSendSmsFromPostAd(intlPhone, submitFn);
+         }
+      }
+
       /* ── Lock contact fields from profile + cross-page sync ── */
       function _lockContactFields() {
          var name  = localStorage.getItem('bazar_username') || '';
@@ -3467,6 +3503,7 @@
       }
 
       async function submitProperty() {
+         if (!localStorage.getItem('bazar_firebase_uid')) { _requireAuthThenSubmit(submitProperty); return; }
          if (reState.cat === 'motors' && isCarSubtype) {
             submitCar();
             return;
@@ -3726,6 +3763,7 @@
       }
 
       async function submitCar() {
+         if (!localStorage.getItem('bazar_firebase_uid')) { _requireAuthThenSubmit(submitCar); return; }
          var title = getInputVal('titleInput');
          var price = getInputVal('priceInput').replace(/\./g, '');
          var sellerName = getInputVal('sellerNameInput');
@@ -3883,6 +3921,7 @@
       }
 
       async function submitPhone() {
+         if (!localStorage.getItem('bazar_firebase_uid')) { _requireAuthThenSubmit(submitPhone); return; }
          var title = getInputVal('titleInput');
          var price = getInputVal('priceInput').replace(/\./g, '');
          var sellerName = getInputVal('sellerNameInput');
@@ -5171,5 +5210,53 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+<!-- OTP Code Modal -->
+<div class="modal-overlay" id="otpModal" onclick="closeOtpModalOutside(event)">
+    <div class="modal-card modal-card--otp">
+        <button class="modal-close" onclick="closeOtpModal()">&#x2715;</button>
+        <div class="otp-icon">
+            <img loading="lazy" src="img/otp-icon.png" alt="" width="154">
+        </div>
+        <h2 class="modal-title otp-title">Enter the code</h2>
+        <p class="otp-subtitle">We sent it to the number <span id="otpPhoneDisplay"></span></p>
+        <div class="otp-inputs">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+        </div>
+        <p id="otpError" style="color:red;font-size:13px;margin:8px 0 0;display:none"></p>
+        <button class="otp-resend-btn" id="otpResendBtn" disabled>Get new code: <span id="otpTimer">60</span> s.</button>
+        <button class="otp-report-btn" id="otpReportBtn" onclick="reportSmsIssue()" style="display:none">Didn't receive the code? Report issue</button>
+        <button class="otp-back-btn" onclick="backToCreateAccount()">Enter a different phone number</button>
+    </div>
+</div>
+
+<!-- Profile Setup Modal -->
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-card modal-card--profile">
+        <button class="modal-close" onclick="closeProfileModal()">&#x2715;</button>
+        <div class="profile-avatar-wrap">
+            <img id="profileAvatarPreview" src="icon/man.png" alt="" class="profile-avatar-img">
+        </div>
+        <h2 class="modal-title profile-modal-title">Almost there!</h2>
+        <p class="profile-modal-subtitle">Just a few details</p>
+        <div class="profile-gender-btns">
+            <button class="profile-gender-btn profile-gender-btn--active" id="genderMale" onclick="selectGender('male')">&#9794; Male</button>
+            <button class="profile-gender-btn" id="genderFemale" onclick="selectGender('female')">&#9792; Female</button>
+        </div>
+        <input class="profile-name-input" id="profileFullName" type="text" placeholder="Full name" oninput="checkProfileReady()">
+        <button class="profile-submit-btn profile-submit-btn--gray" id="profileSubmitBtn" onclick="finishRegistration()">Get started</button>
+    </div>
+</div>
+
+<div id="recaptcha-container"></div>
+
+<script src="js/error-logger.js?v=1"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+<script src="js/firebase-auth.js?v=9"></script>
 </body>
 </html>
