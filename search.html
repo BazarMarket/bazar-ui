@@ -2692,12 +2692,12 @@
           })
           .catch(function() {});
 
-        /* ── 4. Build category tabs once BAZAR_LISTINGS is populated ── */
+        /* ── 4. Build category tabs once BAZAR_LISTINGS['Seller'] is populated ── */
         var _tabBuilt = false, _tabTry = 0;
         var _tabIntvl = setInterval(function() {
           _tabTry++;
-          if (_tabBuilt || _tabTry > 50) { clearInterval(_tabIntvl); return; }
-          var listings = window.BAZAR_LISTINGS;
+          if (_tabBuilt || _tabTry > 60) { clearInterval(_tabIntvl); return; }
+          var listings = (typeof BAZAR_LISTINGS !== 'undefined') ? BAZAR_LISTINGS['Seller'] : null;
           if (!listings || !listings.length) return;
           clearInterval(_tabIntvl);
           _tabBuilt = true;
