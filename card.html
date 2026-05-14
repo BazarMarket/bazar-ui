@@ -1247,7 +1247,7 @@
       /* "Other Ads from this seller" button — set href with seller_uid */
       var _otherAdsLink = document.getElementById('seller-other-ads-link');
       if (_otherAdsLink && p.seller_firebase_uid) {
-         _otherAdsLink.href = 'search?seller_uid=' + encodeURIComponent(p.seller_firebase_uid) + '&seller_name=' + encodeURIComponent(_displaySellerName || p.seller_name || '');
+         _otherAdsLink.href = 'search?seller=' + encodeURIComponent(p.seller_firebase_uid);
       }
       /* Show own avatar from localStorage if viewing own listing */
       if (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid) {

@@ -1021,18 +1021,6 @@
             </div>
          </div>
 
-         <!-- Seller profile banner (shown only when ?seller_uid= param is present) -->
-         <div id="sellerBanner" style="display:none; background:#fff; border-bottom:1px solid #e2e4e8; padding:18px 0;">
-            <div class="bazar-container" style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-               <img id="sellerBannerAvatar" src="icon/man.svg" alt="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #f0f1f3;">
-               <div style="flex:1;min-width:0;">
-                  <div style="font-size:18px;font-weight:700;color:#1a1a2e;" id="sellerBannerName"></div>
-                  <div style="font-size:13px;color:#888;margin-top:2px;">Ads from this seller</div>
-               </div>
-               <a href="search" style="font-size:13px;color:#e8873a;text-decoration:none;white-space:nowrap;">← All ads</a>
-            </div>
-         </div>
-
          <div class="sr-wrap">
             <div class="sr-results">
 
@@ -2622,35 +2610,41 @@
         'Industrial': [], 'Hotel': [], 'Cars': [], 'Phones': []
       };
 
-      /* ── Seller page mode: detect ?seller_uid= and show banner ── */
+      /* ── Seller page mode: detect ?seller= and inject info into breadcrumbs ── */
       (function initSellerMode() {
         var _sp = new URLSearchParams(window.location.search);
-        var _suid = _sp.get('seller_uid');
-        var _sname = _sp.get('seller_name') || '';
+        var _suid = _sp.get('seller');
         if (!_suid) return;
         window._sellerUidFilter = _suid;
-        /* Show banner */
-        var _banner = document.getElementById('sellerBanner');
-        var _bannerName = document.getElementById('sellerBannerName');
-        var _bannerAvatar = document.getElementById('sellerBannerAvatar');
-        if (_banner) _banner.style.display = '';
-        if (_bannerName) _bannerName.textContent = _sname || 'Seller';
-        /* Fetch seller avatar */
-        if (_suid) {
-          fetch((window.BAZAR_API || '/api') + '/customers/' + encodeURIComponent(_suid))
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(cust) {
-              if (!cust) return;
-              if (cust.name && _bannerName) _bannerName.textContent = cust.name;
-              if (cust.avatar && _bannerAvatar) _bannerAvatar.src = cust.avatar;
-              else if (cust.gender === 'female' && _bannerAvatar) _bannerAvatar.src = 'icon/woman.png';
-              else if (_bannerAvatar) _bannerAvatar.src = 'icon/man.svg';
-            })
-            .catch(function() {});
+        /* Inject seller avatar + name into the breadcrumbs row (same visual level) */
+        var breadEl = document.querySelector('.sr-breadcrumbs');
+        if (breadEl) {
+          var sellerDiv = document.createElement('div');
+          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:10px;margin-right:20px;flex-shrink:0;';
+          sellerDiv.innerHTML =
+            '<img id="sellerBannerAvatar" src="icon/man.svg" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #e2e4e8;">' +
+            '<div><div id="sellerBannerName" style="font-size:14px;font-weight:700;color:#1a1a2e;line-height:1.3;"></div>' +
+            '<div style="font-size:12px;color:#888;">Ads from this seller</div></div>' +
+            '<a href="search" style="margin-left:14px;font-size:13px;color:#e8873a;text-decoration:none;white-space:nowrap;font-weight:500;">← All ads</a>';
+          breadEl.style.cssText = 'display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:6px;';
+          breadEl.insertBefore(sellerDiv, breadEl.firstChild);
+          /* Update last breadcrumb item text */
+          var breadType = document.getElementById('breadCrumbType');
+          if (breadType) breadType.textContent = "Seller's ads";
         }
-        /* Hide filters sidebar — not useful when showing one seller's ads */
-        var _cfOuter = document.querySelector('.cf-block-outer');
-        if (_cfOuter) _cfOuter.style.display = 'none';
+        /* Fetch seller name + avatar from API */
+        fetch((window.BAZAR_API || '/api') + '/customers/' + encodeURIComponent(_suid))
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(cust) {
+            if (!cust) return;
+            var nameEl   = document.getElementById('sellerBannerName');
+            var avatarEl = document.getElementById('sellerBannerAvatar');
+            if (cust.name && nameEl) nameEl.textContent = cust.name;
+            if (cust.avatar && avatarEl) avatarEl.src = cust.avatar;
+            else if (cust.gender === 'female' && avatarEl) avatarEl.src = 'icon/woman.png';
+            else if (avatarEl) avatarEl.src = 'icon/man.svg';
+          })
+          .catch(function() {});
       })();
 
       /* ── Load real listings from API and prepend to BAZAR_LISTINGS ── */
