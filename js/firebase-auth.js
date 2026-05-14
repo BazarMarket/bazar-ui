@@ -186,12 +186,8 @@ function openPostAdModal() {
 }
 
 function handlePostAd(e) {
-    if (localStorage.getItem('bazar_username')) {
-        return true;
-    }
-    if (e) e.preventDefault();
-    openPostAdModal();
-    return false;
+    /* post-ad.html now handles its own auth — always navigate directly */
+    return true;
 }
 
 function switchToLogin() {
