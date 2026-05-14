@@ -94,6 +94,7 @@ window.onload = function () {
 
     // ИНИЦИАЛИЗАЦИЯ СЛАЙДЕРОВ =============================================================================================================
 
+    if (typeof Swiper !== 'undefined') {
     const sliderSlider = new Swiper('.slider-slider .swiper', {
 
         loop: true,
@@ -254,6 +255,7 @@ window.onload = function () {
         //     },
         // }
     });
+    } // end if (typeof Swiper !== 'undefined')
 
 
 
