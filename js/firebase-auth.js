@@ -323,7 +323,8 @@ function openOtpModal(phoneNumber) {
     otpResendCount = 0;
     document.getElementById('otpPhoneDisplay').textContent = display;
     document.getElementById('otpError').style.display = 'none';
-    document.getElementById('createAccountModal').classList.remove('modal-overlay--active');
+    var _cam = document.getElementById('createAccountModal');
+    if (_cam) _cam.classList.remove('modal-overlay--active');
     document.getElementById('otpModal').classList.add('modal-overlay--active');
     document.querySelectorAll('.otp-input').forEach(function(inp) { inp.value = ''; });
     document.querySelectorAll('.otp-input')[0].focus();
