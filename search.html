@@ -2720,8 +2720,11 @@
         var _tabIntvl = setInterval(function() {
           _tabTry++;
           if (_tabBuilt || _tabTry > 60) { clearInterval(_tabIntvl); return; }
-          var listings = (typeof BAZAR_LISTINGS !== 'undefined') ? BAZAR_LISTINGS['Seller'] : null;
-          if (!listings || !listings.length) return;
+          var _rawSeller = (typeof BAZAR_LISTINGS !== 'undefined') ? BAZAR_LISTINGS['Seller'] : null;
+          if (!_rawSeller || !_rawSeller.length) return;
+          /* Filter only THIS seller's ads (BAZAR_LISTINGS['Seller'] may contain all sellers) */
+          var listings = _rawSeller.filter(function(p) { return p.uid && p.uid === _suid; });
+          if (!listings.length) return;
           clearInterval(_tabIntvl);
           _tabBuilt = true;
           /* Classify each listing into a human-readable category name */
