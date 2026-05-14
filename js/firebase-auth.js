@@ -84,8 +84,10 @@ function doLogin() {
     }
     var phoneMenuEl = document.getElementById('header-menu-phone');
     if (phoneMenuEl) phoneMenuEl.textContent = localStorage.getItem('bazar_phone') || '';
-    document.getElementById('header-guest').style.display = 'none';
-    document.getElementById('header-logged-in').style.display = '';
+    var _hg = document.getElementById('header-guest');
+    var _hl = document.getElementById('header-logged-in');
+    if (_hg) _hg.style.display = 'none';
+    if (_hl) _hl.style.display = '';
     document.body.classList.add('bazar-logged');
 }
 
