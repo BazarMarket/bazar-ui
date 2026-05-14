@@ -2643,16 +2643,17 @@
 
         /* ── 2. Filter cleanup: keep only price, move Sort by to right ── */
         setTimeout(function() {
-          /* Reset category button UI to "All Categories" */
+          /* Reset real cfCatBtn to "All categories" state (keep it visible) */
           var catBtn = document.getElementById('cfCatBtn');
           if (catBtn) {
-            var lbl = catBtn.querySelector('.cf-cat-btn-label');
-            if (lbl) lbl.textContent = 'All Categories';
-            var catImg = catBtn.querySelector('img');
-            if (catImg) catImg.remove();
+            var catLabelEl = document.getElementById('cfCatLabel');
+            if (catLabelEl) catLabelEl.textContent = 'All categories';
+            var catImgEl = document.getElementById('cfCatImg');
+            if (catImgEl) catImgEl.style.display = 'none';
             catBtn.classList.remove('has-selection');
-            var catWrap = catBtn.closest('.cf-cat');
-            if (catWrap) catWrap.style.display = 'none';
+            /* Clear the real category panel — will be repopulated with seller's real categories */
+            var cfCatPanelEl = document.getElementById('cfCatPanel');
+            if (cfCatPanelEl) cfCatPanelEl.innerHTML = '';
           }
           /* Hide Property type button */
           var typeBtn = document.getElementById('cfTypeBtn');
@@ -2676,29 +2677,6 @@
           if (heroSort) heroSort.style.justifyContent = 'flex-end';
           /* Re-render with cleared category */
           try { if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
-          /* Insert "All categories" dropdown into Row 1 (after search/location) */
-          var cfRow1 = document.querySelector('.cf-row1');
-          if (cfRow1 && !document.getElementById('sellerCatDropWrap')) {
-            var dropWrap = document.createElement('div');
-            dropWrap.className = 'cf-cat'; dropWrap.id = 'sellerCatDropWrap';
-            dropWrap.innerHTML =
-              '<button class="cf-cat-btn" id="sellerCatDropBtn" type="button">' +
-                '<span class="cf-cat-btn-label" id="sellerCatDropLabel">All categories</span>' +
-                '<svg class="cf-arrow-icon" width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-              '</button>' +
-              '<div class="cf-cat-panel" id="sellerCatDropPanel" style="display:none;min-width:220px;"></div>';
-            var firstHiddenCat = cfRow1.querySelector('.cf-cat[style*="display: none"]');
-            cfRow1.insertBefore(dropWrap, firstHiddenCat || null);
-            document.getElementById('sellerCatDropBtn').addEventListener('click', function(e) {
-              var p = document.getElementById('sellerCatDropPanel');
-              if (p) { p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
-              e.stopPropagation();
-            });
-            document.addEventListener('click', function() {
-              var p = document.getElementById('sellerCatDropPanel');
-              if (p) p.style.display = 'none';
-            });
-          }
         }, 180);
 
         /* ── 3. Fetch seller name + avatar ── */
@@ -2755,24 +2733,42 @@
           /* Save original full list for filtering */
           var _sellerOrig = listings.slice();
 
-          /* ── Shared filter function: syncs dropdown + tabs + results ── */
+          /* Icon + display-label map per category key */
+          var _catMeta = {
+            'Motors':            { img: 'img/cat/image3.png', label: 'Motors for Sale' },
+            'Property for Sale': { img: 'img/cat/image1.png', label: 'Property for Sale' },
+            'Property to Rent':  { img: 'img/cat/image2.png', label: 'Property to Rent' },
+            'Short-term Rent':   { img: 'img/cat/image2.png', label: 'Property for short-term rent' },
+            'Rooms':             { img: 'img/cat/image2.png', label: 'Rooms' }
+          };
+
+          /* ── Shared filter function: syncs real dropdown + tabs + results ── */
           function _applySellerCat(cat) {
-            /* Update dropdown label and active state */
-            var dropLabel = document.getElementById('sellerCatDropLabel');
-            if (dropLabel) dropLabel.textContent = cat || 'All categories';
-            var dropBtn = document.getElementById('sellerCatDropBtn');
-            if (dropBtn) dropBtn.classList.toggle('has-selection', !!cat);
-            var dropPanel = document.getElementById('sellerCatDropPanel');
-            if (dropPanel) {
-              dropPanel.style.display = 'none';
-              dropPanel.querySelectorAll('.cf-cat-item').forEach(function(i) {
-                i.classList.toggle('active', (i.dataset.cat || '') === cat);
+            /* Update real cfCatBtn label and icon */
+            var cfLabel = document.getElementById('cfCatLabel');
+            var cfImg   = document.getElementById('cfCatImg');
+            var cfBtn   = document.getElementById('cfCatBtn');
+            var cfPanel = document.getElementById('cfCatPanel');
+            if (cat && _catMeta[cat]) {
+              if (cfLabel) cfLabel.textContent = _catMeta[cat].label;
+              if (cfImg)   { cfImg.src = _catMeta[cat].img; cfImg.style.display = ''; }
+              if (cfBtn)   cfBtn.classList.add('has-selection');
+            } else {
+              if (cfLabel) cfLabel.textContent = 'All categories';
+              if (cfImg)   cfImg.style.display = 'none';
+              if (cfBtn)   cfBtn.classList.remove('has-selection');
+            }
+            /* Close panel and update active state */
+            if (cfPanel) {
+              if (typeof toggleCatPanel === 'function') { try { var op = cfPanel.classList.contains('open'); if (op) cfPanel.classList.remove('open'); } catch(e){} }
+              cfPanel.querySelectorAll('.cf-cat-item').forEach(function(i) {
+                i.classList.toggle('active', (i.dataset.cat || '') === (cat || ''));
               });
             }
             /* Update tab button active states */
             if (tabsEl) {
               tabsEl.querySelectorAll('.seller-cat-tab').forEach(function(t) {
-                t.style.cssText = (t.dataset.cat || '') === cat ? sActive : sBase;
+                t.style.cssText = (t.dataset.cat || '') === (cat || '') ? sActive : sBase;
               });
             }
             /* Filter BAZAR_LISTINGS['Seller'] and re-render */
@@ -2784,22 +2780,30 @@
             } catch(ex) {}
           }
 
-          /* ── Populate "All categories" dropdown ── */
-          var dropPanel = document.getElementById('sellerCatDropPanel');
-          if (dropPanel) {
-            function makeDropItem(label, cat, active) {
+          /* ── Populate real cfCatPanel with seller's actual categories + icons ── */
+          var cfCatPanel = document.getElementById('cfCatPanel');
+          if (cfCatPanel) {
+            function makeDropItem(displayLabel, cat, iconSrc, count, active) {
               var i = document.createElement('div');
               i.className = 'cf-cat-item' + (active ? ' active' : '');
               i.dataset.cat = cat;
-              i.style.cssText = 'display:flex;justify-content:space-between;align-items:center;';
-              i.innerHTML = '<span>' + label + '</span>' +
-                '<span style="background:#f3f4f6;color:#888;border-radius:10px;padding:0 7px;font-size:12px;font-weight:600;margin-left:10px;">' +
-                (cat === '' ? total : (counts[cat] || 0)) + '</span>';
+              if (iconSrc) i.innerHTML = '<img src="' + iconSrc + '" alt="" style="width:20px;height:20px;object-fit:contain;flex-shrink:0;">' + displayLabel;
+              else         i.innerHTML = '<span class="cf-cat-all">' + displayLabel + '</span>';
+              /* Count badge */
+              var badge = document.createElement('span');
+              badge.style.cssText = 'margin-left:auto;background:#f3f4f6;color:#888;border-radius:10px;padding:0 7px;font-size:12px;font-weight:600;flex-shrink:0;';
+              badge.textContent = count;
+              i.appendChild(badge);
+              i.style.cssText = 'display:flex;align-items:center;gap:8px;';
               i.addEventListener('click', function(e) { _applySellerCat(cat); e.stopPropagation(); });
               return i;
             }
-            dropPanel.appendChild(makeDropItem('All categories', '', true));
-            Object.keys(counts).forEach(function(cat) { dropPanel.appendChild(makeDropItem(cat, cat, false)); });
+            cfCatPanel.appendChild(makeDropItem('All categories', '', '', total, true));
+            cfCatPanel.appendChild(Object.assign(document.createElement('div'), { className: 'cf-cat-divider' }));
+            Object.keys(counts).forEach(function(cat) {
+              var meta = _catMeta[cat] || { img: '', label: cat };
+              cfCatPanel.appendChild(makeDropItem(meta.label, cat, meta.img, counts[cat], false));
+            });
           }
 
           /* ── Build tab buttons and wire to shared filter ── */
