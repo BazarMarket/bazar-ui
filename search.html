@@ -2621,23 +2621,24 @@
         /* Reset category to "All" before loadApiListings uses it */
         try { _selectedCat = ''; _selectedType = ''; _selectedSubtype = ''; } catch(e) {}
 
-        /* ── 1. Inject seller info into breadcrumbs row (avatar 57px, name 21px) ── */
+        /* ── 1. Replace breadcrumbs row with seller profile block ── */
         var breadEl = document.querySelector('.sr-breadcrumbs');
         if (breadEl) {
+          /* Hide standard breadcrumb list (Home > Search results) */
+          var breadUl = document.getElementById('srBreadcrumb');
+          if (breadUl) breadUl.style.display = 'none';
+          /* Inject seller block */
           var sellerDiv = document.createElement('div');
-          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:14px;margin-right:24px;flex-shrink:0;';
+          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:14px;flex-shrink:0;';
           sellerDiv.innerHTML =
             '<img id="sellerBannerAvatar" src="icon/man.svg" style="width:57px;height:57px;border-radius:50%;object-fit:cover;border:2px solid #e2e4e8;">' +
             '<div>' +
               '<div id="sellerBannerName" style="font-size:21px;font-weight:700;color:#1a1a2e;line-height:1.3;"></div>' +
               '<div style="font-size:13px;color:#888;margin-top:1px;">Ads from this seller</div>' +
-              '<div id="sellerCatTabs" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;"></div>' +
-            '</div>' +
-            '<a href="search" style="margin-left:14px;font-size:13px;color:#e8873a;text-decoration:none;white-space:nowrap;font-weight:500;">← All ads</a>';
+              '<div id="sellerCatTabs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;"></div>' +
+            '</div>';
           breadEl.style.cssText = 'display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:6px;';
           breadEl.insertBefore(sellerDiv, breadEl.firstChild);
-          var breadType = document.getElementById('breadCrumbType');
-          if (breadType) breadType.textContent = "Seller's ads";
         }
 
         /* ── 2. Filter cleanup: keep only price, move Sort by to right ── */
@@ -2704,27 +2705,24 @@
           listings.forEach(function(p) { var c = p.category || 'Other'; counts[c] = (counts[c]||0)+1; });
           var tabsEl = document.getElementById('sellerCatTabs');
           if (!tabsEl) return;
-          var sBase   = 'display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #e2e4e8;background:#fff;color:#444;white-space:nowrap;';
-          var sActive = 'display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid #ff9138;background:#fff8f0;color:#ff9138;white-space:nowrap;';
-          var cBase   = 'background:#f3f4f6;color:#666;border-radius:10px;padding:0 6px;font-size:11px;font-weight:600;';
-          var cActive = 'background:#ffe8d2;color:#ff9138;border-radius:10px;padding:0 6px;font-size:11px;font-weight:600;';
+          /* My Ads-style tab buttons: orange fill = active, white+border = inactive */
+          var sBase   = 'display:inline-flex;align-items:center;padding:6px 16px;border-radius:20px;font-family:Poppins,sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:1.5px solid #d1d5db;background:#fff;color:#555;white-space:nowrap;transition:all .15s;';
+          var sActive = 'display:inline-flex;align-items:center;padding:6px 16px;border-radius:20px;font-family:Poppins,sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid #ff9138;background:#ff9138;color:#fff;white-space:nowrap;transition:all .15s;';
           function makeTab(label, cat, count, active) {
-            var t = document.createElement('span');
+            var t = document.createElement('button');
             t.className = 'seller-cat-tab'; t.dataset.cat = cat;
             t.style.cssText = active ? sActive : sBase;
-            t.innerHTML = label + ' <span style="' + (active ? cActive : cBase) + '">' + count + '</span>';
+            t.textContent = label + ' (' + count + ')';
             return t;
           }
-          tabsEl.appendChild(makeTab('All ads', '', total, true));
+          tabsEl.appendChild(makeTab('All Ads', '', total, true));
           Object.keys(counts).forEach(function(cat) { tabsEl.appendChild(makeTab(cat, cat, counts[cat], false)); });
           tabsEl.addEventListener('click', function(e) {
             var tab = e.target.closest('.seller-cat-tab');
             if (!tab) return;
             var cat = tab.dataset.cat;
             tabsEl.querySelectorAll('.seller-cat-tab').forEach(function(t) {
-              var on = t === tab;
-              t.style.cssText = on ? sActive : sBase;
-              var cs = t.querySelector('span'); if (cs) cs.style.cssText = on ? cActive : cBase;
+              t.style.cssText = t === tab ? sActive : sBase;
             });
             try { _selectedCat = cat; if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
           });
