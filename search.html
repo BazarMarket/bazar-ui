@@ -2610,29 +2610,74 @@
         'Industrial': [], 'Hotel': [], 'Cars': [], 'Phones': []
       };
 
-      /* ── Seller page mode: detect ?seller= and inject info into breadcrumbs ── */
+      /* ── Seller page mode: detect ?seller= ── */
       (function initSellerMode() {
         var _sp = new URLSearchParams(window.location.search);
         var _suid = _sp.get('seller');
         if (!_suid) return;
+        window._sellerMode = true;
         window._sellerUidFilter = _suid;
-        /* Inject seller avatar + name into the breadcrumbs row (same visual level) */
+
+        /* Reset category to "All" before loadApiListings uses it */
+        try { _selectedCat = ''; _selectedType = ''; _selectedSubtype = ''; } catch(e) {}
+
+        /* ── 1. Inject seller info into breadcrumbs row (avatar 57px, name 21px) ── */
         var breadEl = document.querySelector('.sr-breadcrumbs');
         if (breadEl) {
           var sellerDiv = document.createElement('div');
-          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:10px;margin-right:20px;flex-shrink:0;';
+          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:14px;margin-right:24px;flex-shrink:0;';
           sellerDiv.innerHTML =
-            '<img id="sellerBannerAvatar" src="icon/man.svg" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #e2e4e8;">' +
-            '<div><div id="sellerBannerName" style="font-size:14px;font-weight:700;color:#1a1a2e;line-height:1.3;"></div>' +
-            '<div style="font-size:12px;color:#888;">Ads from this seller</div></div>' +
+            '<img id="sellerBannerAvatar" src="icon/man.svg" style="width:57px;height:57px;border-radius:50%;object-fit:cover;border:2px solid #e2e4e8;">' +
+            '<div>' +
+              '<div id="sellerBannerName" style="font-size:21px;font-weight:700;color:#1a1a2e;line-height:1.3;"></div>' +
+              '<div style="font-size:13px;color:#888;margin-top:1px;">Ads from this seller</div>' +
+              '<div id="sellerCatTabs" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;"></div>' +
+            '</div>' +
             '<a href="search" style="margin-left:14px;font-size:13px;color:#e8873a;text-decoration:none;white-space:nowrap;font-weight:500;">← All ads</a>';
           breadEl.style.cssText = 'display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:6px;';
           breadEl.insertBefore(sellerDiv, breadEl.firstChild);
-          /* Update last breadcrumb item text */
           var breadType = document.getElementById('breadCrumbType');
           if (breadType) breadType.textContent = "Seller's ads";
         }
-        /* Fetch seller name + avatar from API */
+
+        /* ── 2. Filter cleanup: keep only price, move Sort by to right ── */
+        setTimeout(function() {
+          /* Reset category button UI to "All Categories" */
+          var catBtn = document.getElementById('cfCatBtn');
+          if (catBtn) {
+            var lbl = catBtn.querySelector('.cf-cat-btn-label');
+            if (lbl) lbl.textContent = 'All Categories';
+            var catImg = catBtn.querySelector('img');
+            if (catImg) catImg.remove();
+            catBtn.classList.remove('has-selection');
+            var catWrap = catBtn.closest('.cf-cat');
+            if (catWrap) catWrap.style.display = 'none';
+          }
+          /* Hide Property type button */
+          var typeBtn = document.getElementById('cfTypeBtn');
+          if (typeBtn) { var tw = typeBtn.closest('.cf-cat'); if (tw) tw.style.display = 'none'; }
+          /* Hide dynamic subtype row */
+          var dynRow = document.getElementById('cfDynamicRow');
+          if (dynRow) dynRow.style.display = 'none';
+          /* In price row: hide bedrooms / bathrooms / condition */
+          ['cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+          });
+          /* Hide rows: property area/year, motors row 2, extra filters, More-filters btns */
+          ['cfPropertyRow4','cfMotorsRow2','cfMoreRow'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+          });
+          ['cfMoreBtn','cfMoreBtnMotors'].forEach(function(id) {
+            var el = document.getElementById(id); if (el) el.style.display = 'none';
+          });
+          /* Sort by: move to the right */
+          var heroSort = document.querySelector('.sr-hero-sort');
+          if (heroSort) heroSort.style.justifyContent = 'flex-end';
+          /* Re-render with cleared category */
+          try { if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
+        }, 180);
+
+        /* ── 3. Fetch seller name + avatar ── */
         fetch((window.BAZAR_API || '/api') + '/customers/' + encodeURIComponent(_suid))
           .then(function(r) { return r.ok ? r.json() : null; })
           .then(function(cust) {
@@ -2645,6 +2690,45 @@
             else if (avatarEl) avatarEl.src = 'icon/man.svg';
           })
           .catch(function() {});
+
+        /* ── 4. Build category tabs once BAZAR_LISTINGS is populated ── */
+        var _tabBuilt = false, _tabTry = 0;
+        var _tabIntvl = setInterval(function() {
+          _tabTry++;
+          if (_tabBuilt || _tabTry > 50) { clearInterval(_tabIntvl); return; }
+          var listings = window.BAZAR_LISTINGS;
+          if (!listings || !listings.length) return;
+          clearInterval(_tabIntvl);
+          _tabBuilt = true;
+          var counts = {}, total = listings.length;
+          listings.forEach(function(p) { var c = p.category || 'Other'; counts[c] = (counts[c]||0)+1; });
+          var tabsEl = document.getElementById('sellerCatTabs');
+          if (!tabsEl) return;
+          var sBase   = 'display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid #e2e4e8;background:#fff;color:#444;white-space:nowrap;';
+          var sActive = 'display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid #ff9138;background:#fff8f0;color:#ff9138;white-space:nowrap;';
+          var cBase   = 'background:#f3f4f6;color:#666;border-radius:10px;padding:0 6px;font-size:11px;font-weight:600;';
+          var cActive = 'background:#ffe8d2;color:#ff9138;border-radius:10px;padding:0 6px;font-size:11px;font-weight:600;';
+          function makeTab(label, cat, count, active) {
+            var t = document.createElement('span');
+            t.className = 'seller-cat-tab'; t.dataset.cat = cat;
+            t.style.cssText = active ? sActive : sBase;
+            t.innerHTML = label + ' <span style="' + (active ? cActive : cBase) + '">' + count + '</span>';
+            return t;
+          }
+          tabsEl.appendChild(makeTab('All ads', '', total, true));
+          Object.keys(counts).forEach(function(cat) { tabsEl.appendChild(makeTab(cat, cat, counts[cat], false)); });
+          tabsEl.addEventListener('click', function(e) {
+            var tab = e.target.closest('.seller-cat-tab');
+            if (!tab) return;
+            var cat = tab.dataset.cat;
+            tabsEl.querySelectorAll('.seller-cat-tab').forEach(function(t) {
+              var on = t === tab;
+              t.style.cssText = on ? sActive : sBase;
+              var cs = t.querySelector('span'); if (cs) cs.style.cssText = on ? cActive : cBase;
+            });
+            try { _selectedCat = cat; if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
+          });
+        }, 300);
       })();
 
       /* ── Load real listings from API and prepend to BAZAR_LISTINGS ── */
