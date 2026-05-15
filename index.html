@@ -1440,11 +1440,12 @@
         var diff = Math.round((nowDay - postDay) / 86400000);
         if (diff <= 0)  return 'Today';
         if (diff === 1) return 'Yesterday';
-        if (diff <= 3)  return diff + ' days ago';
-        if (diff <= 10) return '1 week ago';
-        if (diff <= 17) return '2 weeks ago';
-        if (diff <= 24) return '3 weeks ago';
-        var m = Math.floor(diff / 30);
+        if (diff < 7)   return diff + ' days ago';
+        if (diff < 14)  return '1 week ago';
+        if (diff < 21)  return '2 weeks ago';
+        if (diff < 28)  return '3 weeks ago';
+        if (diff < 35)  return '4 weeks ago';
+        var m = Math.round(diff / 30);
         if (m < 2)  return '1 month ago';
         if (m < 12) return m + ' months ago';
         var y = Math.floor(m / 12);
