@@ -4729,6 +4729,26 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         p_clean = path.lstrip('/')
         page_type, params = resolve_page_type(path, qs)
 
+        # ── /search?seller={uid} → 301 /profile/{id} ─────────────────────────
+        if page_type == 'search' and qs:
+            _qs_params = urllib.parse.parse_qs(qs)
+            _seller_uid = (_qs_params.get('seller') or [None])[0]
+            if _seller_uid:
+                with _chat_lock:
+                    _rc = _chat_db()
+                    _rr = _rc.execute('SELECT id FROM profile_ids WHERE firebase_uid=?', (_seller_uid,)).fetchone()
+                    if not _rr:
+                        _rc.execute('INSERT OR IGNORE INTO profile_ids (firebase_uid, created_at) VALUES (?,?)', (_seller_uid, time.time()))
+                        _rc.commit()
+                        _rr = _rc.execute('SELECT id FROM profile_ids WHERE firebase_uid=?', (_seller_uid,)).fetchone()
+                    _rc.close()
+                if _rr:
+                    self.send_response(301)
+                    self.send_header('Location', f'/profile/{_rr[0]}')
+                    self.send_header('Content-Length', '0')
+                    self.end_headers()
+                    return
+
         # 301 redirect (e.g. /flats/for-sale → /property-for-sale/flats)
         if page_type == 'redirect_301':
             self.send_response(301)
