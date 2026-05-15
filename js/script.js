@@ -256,7 +256,7 @@ window.onload = function () {
         // }
     });
     } else {
-        if (window.bzLogError) window.bzLogError('frontend', 'Swiper not loaded — sliders skipped on this page', window.location.pathname, null);
+        if (document.querySelector('.swiper') && window.bzLogError) window.bzLogError('frontend', 'Swiper not loaded — sliders skipped on this page', window.location.pathname, null);
     } // end if (typeof Swiper !== 'undefined')
 
 
@@ -264,8 +264,10 @@ window.onload = function () {
 
     //ИНПУТ МАСКА ДЛЯ ТЕЛЕФОНА  =============================================================================================================
     const telInput = document.querySelectorAll('input[type="tel"]:not(.modal-number-input)');
-    var im = new Inputmask("9999 999999");
-    im.mask(telInput);
+    if (typeof Inputmask !== 'undefined') {
+        var im = new Inputmask("9999 999999");
+        im.mask(telInput);
+    }
 
 
 
