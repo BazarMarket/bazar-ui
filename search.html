@@ -2618,8 +2618,11 @@
         var _profileIdMatch = window.location.pathname.match(/^\/profile\/(\d+)$/);
 
         if (_profileIdMatch && !_suid) {
-          /* /profile/{id} — resolve numeric id → firebase_uid first, then continue */
+          /* /profile/{id} — set seller mode flags IMMEDIATELY so loadApiListings
+             sees them synchronously, then resolve the real firebase_uid async */
           var _pid = _profileIdMatch[1];
+          window._sellerMode = true;
+          window._sellerUidFilter = '_pending_'; /* placeholder — replaced on resolve */
           fetch((window.BAZAR_API || '/api') + '/profile-uid/' + _pid)
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(d) {
@@ -2628,7 +2631,7 @@
               }
             })
             .catch(function() {});
-          return; /* will continue in callback */
+          return; /* _startSellerMode will be called from the callback above */
         }
 
         if (!_suid) return;
