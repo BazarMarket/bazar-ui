@@ -1434,7 +1434,10 @@
         if (!raw) return '';
         var d = new Date((raw + '').replace(' ', 'T'));
         if (isNaN(d)) return '';
-        var diff = Math.floor((new Date() - d) / 86400000);
+        var now = new Date();
+        var nowDay  = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var postDay = new Date(d.getFullYear(),   d.getMonth(),   d.getDate());
+        var diff = Math.round((nowDay - postDay) / 86400000);
         if (diff <= 0)  return 'Today';
         if (diff === 1) return 'Yesterday';
         if (diff <= 3)  return diff + ' days ago';
