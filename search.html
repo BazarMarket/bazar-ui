@@ -2612,9 +2612,30 @@
 
       /* ── Seller page mode: detect ?seller= ── */
       (function initSellerMode() {
-        var _sp = new URLSearchParams(window.location.search);
-        var _suid = _sp.get('seller');
+        /* Detect seller from either ?seller={uid} or /profile/{id} URL */
+        var _sp   = new URLSearchParams(window.location.search);
+        var _suid = _sp.get('seller') || '';
+        var _profileIdMatch = window.location.pathname.match(/^\/profile\/(\d+)$/);
+
+        if (_profileIdMatch && !_suid) {
+          /* /profile/{id} — resolve numeric id → firebase_uid first, then continue */
+          var _pid = _profileIdMatch[1];
+          fetch((window.BAZAR_API || '/api') + '/profile-uid/' + _pid)
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(d) {
+              if (d && d.firebase_uid) {
+                _startSellerMode(d.firebase_uid);
+              }
+            })
+            .catch(function() {});
+          return; /* will continue in callback */
+        }
+
         if (!_suid) return;
+        _startSellerMode(_suid);
+      })();
+
+      function _startSellerMode(_suid) {
         window._sellerMode = true;
         window._sellerUidFilter = _suid;
 
@@ -2815,7 +2836,7 @@
             _applySellerCat(tab.dataset.cat || '');
           });
         }, 300);
-      })();
+      }
 
       /* ── Load real listings from API and prepend to BAZAR_LISTINGS ── */
       (function loadApiListings() {

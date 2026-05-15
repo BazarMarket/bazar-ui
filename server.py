@@ -122,6 +122,11 @@ def _init_chat_db():
                 gender     TEXT DEFAULT 'male',
                 updated_at REAL DEFAULT 0
             )''',
+            '''CREATE TABLE IF NOT EXISTS profile_ids (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                firebase_uid TEXT UNIQUE NOT NULL,
+                created_at   REAL DEFAULT 0
+            )''',
         ]
         for s in stmts:
             try:
@@ -808,6 +813,12 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
     # search
     if p == 'search.html' or p.startswith('search'):
         return 'search', {}
+
+    # /profile/{id} — seller profile page
+    if p.startswith('profile/'):
+        _pid_part = p[len('profile/'):]
+        if _pid_part.isdigit():
+            return 'seller_profile', {'profile_id': _pid_part}
 
     # internal / private pages (match both with and without .html extension)
     if p in INTERNAL_PAGES or (p + '.html') in INTERNAL_PAGES:
@@ -4141,6 +4152,38 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'admin': True})
             return
 
+        # ── GET /api/profile-id/{firebase_uid} — get or create numeric profile ID ──
+        _profid_m = re.match(r'^/api/profile-id/(.+)$', path)
+        if _profid_m:
+            _fuid = urllib.parse.unquote(_profid_m.group(1))
+            with _chat_lock:
+                _pc = _chat_db()
+                _pr = _pc.execute('SELECT id FROM profile_ids WHERE firebase_uid=?', (_fuid,)).fetchone()
+                if not _pr:
+                    _pc.execute('INSERT OR IGNORE INTO profile_ids (firebase_uid, created_at) VALUES (?,?)', (_fuid, time.time()))
+                    _pc.commit()
+                    _pr = _pc.execute('SELECT id FROM profile_ids WHERE firebase_uid=?', (_fuid,)).fetchone()
+                _pc.close()
+            if _pr:
+                self._send_json(200, {'id': _pr[0], 'firebase_uid': _fuid})
+            else:
+                self._send_json(500, {'error': 'failed'})
+            return
+
+        # ── GET /api/profile-uid/{id} — resolve numeric profile ID → firebase_uid ──
+        _profuid_m = re.match(r'^/api/profile-uid/(\d+)$', path)
+        if _profuid_m:
+            _pid = int(_profuid_m.group(1))
+            with _chat_lock:
+                _pc2 = _chat_db()
+                _pr2 = _pc2.execute('SELECT firebase_uid FROM profile_ids WHERE id=?', (_pid,)).fetchone()
+                _pc2.close()
+            if _pr2:
+                self._send_json(200, {'id': _pid, 'firebase_uid': _pr2[0]})
+            else:
+                self._send_json(404, {'error': 'profile not found'})
+            return
+
         # ── GET /api/properties/<id>/views — view count from MySQL ──────────────
         _pv_m = re.match(r'^/api/properties/(\d+)/views$', path)
         if _pv_m:
@@ -4696,6 +4739,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         if page_type in ('homepage', 'listing', 'category', 'category_modifier',
                          'category_city', 'category_city_modifier',
                          'category_city_district', 'search', 'latest_updates',
+                         'seller_profile',
                          'property_transaction', 'property_transaction_modifier',
                          'property_transaction_city',
                          'property_subtype', 'property_subtype_modifier',
@@ -4713,6 +4757,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 'listing':        'card.html',
                 'search':         'search.html',
                 'latest_updates': 'search.html',
+                'seller_profile': 'search.html',
             }.get(page_type)
 
             if html_filename is None:
