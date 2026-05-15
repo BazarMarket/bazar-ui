@@ -4836,6 +4836,21 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
 
         html     = inject_seo(html, seo_head)
 
+        # For /profile/{id} pages: inject seller firebase_uid synchronously so
+        # JS initSellerMode can read it without any async fetch
+        if page_type == 'seller_profile' and params.get('profile_id'):
+            try:
+                _pid = int(params['profile_id'])
+                with _chat_lock:
+                    _pc = _chat_db()
+                    _pr = _pc.execute('SELECT firebase_uid FROM profile_ids WHERE id=?', (_pid,)).fetchone()
+                    _pc.close()
+                if _pr:
+                    _uid_script = '<script>window._profileSellerUid=' + json.dumps(_pr[0]) + ';</script>'
+                    html = re.sub(r'(<body[^>]*>)', r'\1' + _uid_script, html, count=1)
+            except Exception:
+                pass
+
         # Inject visible server-rendered body content (H1, breadcrumbs, intro)
         ssr = seo_data.get('ssr')
         if ssr:

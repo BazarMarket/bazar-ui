@@ -2612,28 +2612,11 @@
 
       /* ── Seller page mode: detect ?seller= ── */
       (function initSellerMode() {
-        /* Detect seller from either ?seller={uid} or /profile/{id} URL */
+        /* Detect seller UID from:
+           1. ?seller={uid} query param (legacy, now redirected)
+           2. window._profileSellerUid injected by server for /profile/{id} pages */
         var _sp   = new URLSearchParams(window.location.search);
-        var _suid = _sp.get('seller') || '';
-        var _profileIdMatch = window.location.pathname.match(/^\/profile\/(\d+)$/);
-
-        if (_profileIdMatch && !_suid) {
-          /* /profile/{id} — set seller mode flags IMMEDIATELY so loadApiListings
-             sees them synchronously, then resolve the real firebase_uid async */
-          var _pid = _profileIdMatch[1];
-          window._sellerMode = true;
-          window._sellerUidFilter = '_pending_'; /* placeholder — replaced on resolve */
-          fetch((window.BAZAR_API || '/api') + '/profile-uid/' + _pid)
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(d) {
-              if (d && d.firebase_uid) {
-                _startSellerMode(d.firebase_uid);
-              }
-            })
-            .catch(function() {});
-          return; /* _startSellerMode will be called from the callback above */
-        }
-
+        var _suid = _sp.get('seller') || window._profileSellerUid || '';
         if (!_suid) return;
         _startSellerMode(_suid);
       })();
