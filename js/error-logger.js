@@ -11,6 +11,11 @@
         if (_sent >= MAX_PER_SESSION) return;
         if (!message || message.length < 3) return;
         if (message.indexOf('extension') !== -1 || message.indexOf('chrome-extension') !== -1) return;
+        // Browser-level noise: IndexedDB disconnect (Firebase auth storage, browser drops connection when tab is in background)
+        if (message.indexOf('Connection to Indexed Database server lost') !== -1) return;
+        // Browser-level noise: bare "Load failed" = Safari/iOS name for a failed fetch() due to no network / timeout
+        // Only skip the exact bare message — real JS load errors include a URL or more context
+        if (message.trim() === 'Load failed') return;
         _sent++;
         var phone = phoneOverride || getPhone();
         var payload = JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone });
