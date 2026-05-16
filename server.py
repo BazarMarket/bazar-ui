@@ -340,7 +340,23 @@ def _gemini_moderate_comment(comment: str) -> dict:
         print(f'[COMMENT-MOD] Gemini error: {exc}', flush=True)
         return {'flagged': False, 'reasons': [], 'confidence': 0.0}
 
-_MOD_PROMPT = """You are a content moderation AI for Bazar (www.bazar.uk), a UK marketplace for properties, cars, vans, motorbikes, mobile phones, and electronics.
+_MOD_PROMPT = """You are a content moderation AI for Bazar (www.bazar.uk), a UK classifieds marketplace.
+Bazar accepts listings across all common classifieds categories:
+- Property (for sale, rent, short-term rent)
+- Motors (cars, vans, motorbikes, trucks, campervans, caravans, boats)
+- Mobile phones & communication
+- Computers & gaming
+- Electronics & appliances
+- Home, garden & pool
+- Clothes, footwear & accessories
+- Health & beauty
+- Jobs
+- Services
+- Animals & pets
+- Sports, leisure & hobbies
+- Free stuff
+- Business
+
 Analyse the following listing and determine if it violates content policies.
 
 Policy violations to detect:
@@ -348,7 +364,7 @@ Policy violations to detect:
 2. Hate speech or discrimination
 3. Sexual or explicit content
 4. Spam, scam, or clearly fraudulent content
-5. Content completely unrelated to any marketplace category (property, vehicles, phones, electronics)
+5. Content completely unrelated to any standard classifieds category (e.g. pure political propaganda, malware, illegal weapons)
 
 Title: {title}
 Description: {description}
