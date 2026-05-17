@@ -1523,7 +1523,7 @@
                         <span class="pa-field__label">RAM:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneRamSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select RAM</option>
+                              <option value="" selected>Select RAM</option>
                               <option>2GB</option>
                               <option>3GB</option>
                               <option>4GB</option>
@@ -1539,7 +1539,7 @@
                         <span class="pa-field__label">Storage:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneStorageSelect" onchange="updatePhoneTitle(); this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select storage</option>
+                              <option value="" selected>Select storage</option>
                               <option>32GB</option>
                               <option>64GB</option>
                               <option>128GB</option>
@@ -1554,7 +1554,7 @@
                         <span class="pa-field__label">SIM type:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneSimSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select SIM type</option>
+                              <option value="" selected>Select SIM type</option>
                               <option>Single SIM</option>
                               <option>Dual SIM</option>
                               <option>eSIM</option>
@@ -1566,7 +1566,7 @@
                         <span class="pa-field__label">Colour:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneColourSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select colour</option>
+                              <option value="" selected>Select colour</option>
                               <option>Black</option>
                               <option>White</option>
                               <option>Silver</option>
@@ -1595,7 +1595,7 @@
                         <span class="pa-field__label">Network:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneNetworkSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select network</option>
+                              <option value="" selected>Select network</option>
                               <option>5G</option>
                               <option>4G</option>
                               <option>Wi-Fi only</option>
@@ -1607,7 +1607,7 @@
                         <span class="pa-field__label">Battery health:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneBatterySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select battery health</option>
+                              <option value="" selected>Select battery health</option>
                               <option>100%</option>
                               <option>95–99%</option>
                               <option>90–94%</option>
@@ -1621,7 +1621,7 @@
                         <span class="pa-field__label">Warranty:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneWarrantySelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select warranty</option>
+                              <option value="" selected>Select warranty</option>
                               <option>No warranty</option>
                               <option>Manufacturer warranty</option>
                               <option>Shop warranty</option>
@@ -2280,7 +2280,7 @@
             modelSel.style.display = 'none';
             if (otherField) otherField.style.display = 'flex';
          } else {
-            var html = '<option value="" disabled selected hidden>Select model</option>';
+            var html = '<option value="" selected>Select model</option>';
             models.forEach(function(m) { html += '<option>' + m + '</option>'; });
             modelSel.innerHTML = html;
             modelSel.classList.add('pa-empty');
