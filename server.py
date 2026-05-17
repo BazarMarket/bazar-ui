@@ -366,6 +366,10 @@ Policy violations to detect:
 4. Spam, scam, or clearly fraudulent content
 5. Content completely unrelated to any standard classifieds category (e.g. pure political propaganda, malware, illegal weapons)
 
+Important: A short, minimal, or vague description (including a single word like "car", "house", "phone", etc.) is NOT a violation.
+Judge the listing as a whole — if the title clearly identifies a valid classifieds item, the description does not need to be detailed.
+Only flag rule 5 if BOTH the title AND description together are genuinely unrelated to any classifieds category.
+
 Title: {title}
 Description: {description}
 
