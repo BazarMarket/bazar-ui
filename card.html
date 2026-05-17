@@ -2991,7 +2991,7 @@ function _glbKey(e) {
 </div>
 <script>
 (function() {
-   fetch((window.BAZAR_API || '/api') + '/is-admin')
+   fetch((window.BAZAR_API || '/api') + '/is-admin', { credentials: 'include' })
       .then(function(r) { return r.json(); })
       .then(function(d) {
          if (d && d.admin) {
