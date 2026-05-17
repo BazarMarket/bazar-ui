@@ -1489,7 +1489,7 @@
                         </div>
                      </div>
                      <div class="pa-field">
-                        <span class="pa-field__label">Model:</span>
+                        <span class="pa-field__label">Model:<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="phoneModelSelect" onchange="onPhoneModelChange(this)">
                               <option value="" disabled selected hidden>Select brand first</option>
@@ -1505,7 +1505,7 @@
                   </div>
 
                   <div class="pa-field" id="conditionField">
-                     <span class="pa-field__label">Condition:</span>
+                     <span class="pa-field__label">Condition:<span>*</span></span>
                      <div class="pa-field__control pa-select-wrap">
                         <select class="pa-select" id="conditionSelect">
                            <option value="">Select condition</option>
@@ -3917,6 +3917,8 @@
          var modelSel = document.getElementById('phoneModelSelect');
          var model = modelSel && modelSel.style.display !== 'none' ? (modelSel.value || '') : '';
          if (!model || model === 'Other') model = getInputVal('phoneModelOtherInput');
+         if (!model) { showValidationError('Please select a Model.', 'phoneModelSelect'); return; }
+         if (!getSelectVal('conditionSelect')) { showValidationError('Please select a Condition.', 'conditionSelect'); return; }
 
          var formData = new FormData();
          formData.append('title', title);
