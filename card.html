@@ -100,7 +100,15 @@
 
       <main class="main header-indent">
 
-         <section class="card-grid">
+         <!-- Listing not found block -->
+         <div id="cardNotFound" style="display:none;padding:60px 20px;text-align:center;">
+            <div style="font-size:48px;margin-bottom:16px;">🔍</div>
+            <h2 style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:#1d1d1b;margin:0 0 10px;">This listing is no longer available</h2>
+            <p style="font-family:'Poppins',sans-serif;font-size:15px;color:#6b7280;margin:0 0 28px;">It may have been removed by the seller or expired.</p>
+            <a href="/" style="display:inline-block;background:#ff9138;color:#fff;font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;padding:12px 32px;border-radius:14px;text-decoration:none;">Browse other listings</a>
+         </div>
+
+         <section class="card-grid" id="cardGridSection" style="display:none">
             <div class="container-full">
                <div class="card-grid__body">
                   <div class="card-grid__top">
@@ -783,7 +791,14 @@
       fetch(apiUrl)
          .then(function(r) { if (!r.ok) return null; return r.json(); })
          .then(function(p) {
-            if (!p) return;
+            if (!p || p.status === 'deleted' || p.status === 'rejected' || p.status === 'inactive') {
+               var nf = document.getElementById('cardNotFound');
+               if (nf) nf.style.display = '';
+               document.title = 'Listing not found | Bazar UK';
+               return;
+            }
+            var gs = document.getElementById('cardGridSection');
+            if (gs) gs.style.display = '';
 
       function fmt(n) {
          return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
