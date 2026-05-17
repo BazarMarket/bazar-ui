@@ -412,6 +412,10 @@
       .sr-mob-filter-apply .smf-apply-sub { font-family: "Poppins",sans-serif; font-size: 11px; color: rgba(255,255,255,0.75); }
       .sr-mob-price-sel--full { width: 100%; }
       #smfCarSections .sr-mob-filter-section:first-child { border-top: 1px solid #f2f2f2; }
+      .sr-grid-view .car-meta-row{display:flex;align-items:center;justify-content:flex-end;gap:6px;background:#f3f4f6;border-radius:8px;padding:4px 8px;font-family:"Poppins",sans-serif;font-weight:400;color:#1d1d1b}
+      .sr-grid-view .car-meta-row__date,.sr-grid-view .car-meta-row__views{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:12px}
+      .sr-grid-view .car-meta-row__date .icon-calendar,.sr-grid-view .car-meta-row__views .icon-eye{font-size:16px;line-height:1;color:#6b7280}
+      .sr-grid-view .car-meta-row__sep{opacity:.3;font-size:11px;flex-shrink:0;font-weight:300}
    </style>
    <script>
       window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
@@ -2970,6 +2974,7 @@
                 l:    [ad.district, ad.city].filter(Boolean).join(', ') || 'UK',
                 d:    ad.description || '',
                 dt:   fmtDate(ad.created_at),
+                raw_dt: ad.created_at || '',
                 n:    String(ad.id),
                 v:    ad.views || 0,
                 stk:  stk,
@@ -3144,6 +3149,28 @@
           '<p class="details-item icon-eye">'+item.v+'</p>'+
           '</div></div></div>';
       }
+      function _relTimeSr(raw) {
+        if (!raw) return '';
+        var d = new Date((raw + '').replace(' ', 'T'));
+        if (isNaN(d)) return '';
+        var now = new Date();
+        var nowDay  = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var postDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        var diff = Math.round((nowDay - postDay) / 86400000);
+        if (diff <= 0)  return 'Today';
+        if (diff === 1) return 'Yesterday';
+        if (diff < 7)   return diff + ' days ago';
+        if (diff < 14)  return '1 week ago';
+        if (diff < 21)  return '2 weeks ago';
+        if (diff < 28)  return '3 weeks ago';
+        if (diff < 35)  return '4 weeks ago';
+        var m = Math.round(diff / 30);
+        if (m < 2)  return '1 month ago';
+        if (m < 12) return m + ' months ago';
+        var y = Math.floor(m / 12);
+        return y === 1 ? '1 year ago' : y + ' years ago';
+      }
+
       function buildGridCard(item) {
         var shortT = item.t.length > 38 ? item.t.substring(0,38)+'…' : item.t;
         var _cu = localStorage.getItem('bazar_username') || '';
@@ -3160,7 +3187,14 @@
           '<img loading="lazy" src="'+item.imgs[0]+'" alt="" class="img-cover" onload="window._checkImgPortrait&&window._checkImgPortrait(this)">'+
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button></div>'+
           '<div class="card__down"><div class="card__prices"><span class="price-new">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
-          '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div></div></div>';
+          (item.info && item.info.length > 0
+            ? '<div class="card__dop"><div class="info-bord">'+_buildInfoItems(item.info.slice(0,3))+'</div></div>'
+            : '<div class="card__dop"><div class="car-meta-row">'+
+                '<span class="car-meta-row__date"><span class="icon-calendar"></span>'+(_relTimeSr(item.raw_dt)||'—')+'</span>'+
+                '<span class="car-meta-row__sep">|</span>'+
+                '<span class="car-meta-row__views"><span class="icon-eye"></span>'+(item.v||0)+'</span>'+
+              '</div></div>'
+          )+'</div></div>';
       }
       var _srCurrentPage = 1;
       var _srItemsPerPage = 60;
