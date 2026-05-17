@@ -416,7 +416,7 @@
                            <a href="#" id="emailContactBtn" class="btn btn_old icon-email" onclick="event.preventDefault();openEmailPopup()" style="display:none">Email</a>
                         </div>
 
-                        <div class="card-options card-tile">
+                        <div class="card-options card-tile" id="cardOptionsBlock" style="display:none">
                            <div class="card-options__item">
                               <span data-popup="popup-share"
                                  class="popup-link link-icon link-icon_vertical icon-share">Share</a>
@@ -2989,6 +2989,19 @@ function _glbKey(e) {
    <a href="/post-ad" class="menu-mob__item icon-add" onclick="return handlePostAd(event)">New AD</a>
    <a href="#" class="menu-mob__item icon-user-big" onclick="handleMobileProfile(event)">Profile</a>
 </div>
+<script>
+(function() {
+   fetch((window.BAZAR_API || '/api') + '/is-admin')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+         if (d && d.admin) {
+            var el = document.getElementById('cardOptionsBlock');
+            if (el) el.style.display = '';
+         }
+      })
+      .catch(function() {});
+})();
+</script>
 </body>
 
 </html>
