@@ -2942,14 +2942,14 @@
          }
          if (reState.cat === 'phones') {
             /* propType is now the brand name (Apple, Samsung, etc.) from the third column */
+            deactivateCarFields();
+            activatePhoneFields(); /* must come first — initPhoneBrandSelect() populates options */
             var brandSel = document.getElementById('phoneBrandSelect');
             if (brandSel && propType !== 'Mobile phones') {
                brandSel.value = propType;
                brandSel.classList.toggle('pa-empty', !brandSel.value);
                onPhoneBrandChange(brandSel);
             }
-            deactivateCarFields();
-            activatePhoneFields();
             document.getElementById('houseTypeField').style.display = 'none';
             document.getElementById('buildingTypeField').style.display = 'none';
             document.getElementById('constructionTypeField').style.display = 'none';
