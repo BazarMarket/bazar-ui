@@ -430,6 +430,39 @@
       .po-lp-card-wrap .info-bord__item::before {
          font-size: 14px;
       }
+      .po-lp-card-wrap .lp-car-meta {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 6px;
+         background: #f3f4f6;
+         border-radius: 8px;
+         padding: 4px 8px;
+         font-family: 'Poppins', sans-serif;
+         font-weight: 400;
+         color: #1d1d1b;
+         width: 100%;
+         box-sizing: border-box;
+      }
+      .po-lp-card-wrap .lp-car-meta__date,
+      .po-lp-card-wrap .lp-car-meta__views {
+         display: flex;
+         align-items: center;
+         gap: 3px;
+         white-space: nowrap;
+         font-size: 10px;
+      }
+      .po-lp-card-wrap .lp-car-meta__date .icon-calendar,
+      .po-lp-card-wrap .lp-car-meta__views .icon-eye {
+         font-size: 14px;
+         line-height: 1;
+         color: #6b7280;
+      }
+      .po-lp-card-wrap .lp-car-meta__sep {
+         opacity: .3;
+         font-size: 11px;
+         font-weight: 300;
+      }
       .po-lp-card-wrap .card.card_gold .card__head { background: #d4a017; }
       .po-lp-card-wrap .card.card_gold .card__logo { border-radius: 0; }
       .po-lp-card-wrap .card.card_gold .card__name  { color: #fff; }
@@ -859,11 +892,10 @@
                            <span class="price-new" id="lpAdPrice">£ 1,049.00</span>
                         </div>
                         <div class="card__dop">
-                           <div class="info-bord" id="lpAdFeatures">
-                              <span class="info-bord__item icon-bead">2 beds</span>
-                              <span class="info-bord__item icon-bath">2 bath</span>
-                              <span class="info-bord__item icon-house-area">153 m²</span>
-                              <span class="info-bord__item icon-Plot">433 m²</span>
+                           <div class="lp-car-meta" id="lpAdFeatures">
+                              <span class="lp-car-meta__date"><span class="icon-calendar"></span>Today</span>
+                              <span class="lp-car-meta__sep">|</span>
+                              <span class="lp-car-meta__views"><span class="icon-eye"></span>0</span>
                            </div>
                         </div>
                      </div>
@@ -1280,7 +1312,16 @@
                   if (d.bathrooms)    feats += '<span class="info-bord__item icon-bath">'        + d.bathrooms + ' bath</span>';
                   if (d.covered_area) feats += '<span class="info-bord__item icon-house-area">'  + d.covered_area + ' m\u00B2</span>';
                   if (d.plot_area)    feats += '<span class="info-bord__item icon-Plot">'        + d.plot_area + ' m\u00B2</span>';
-                  if (feats) featEl.innerHTML = feats;
+                  if (feats) {
+                     featEl.className = 'info-bord';
+                     featEl.innerHTML = feats;
+                  } else {
+                     featEl.className = 'lp-car-meta';
+                     featEl.innerHTML =
+                        '<span class="lp-car-meta__date"><span class="icon-calendar"></span>Today</span>' +
+                        '<span class="lp-car-meta__sep">|</span>' +
+                        '<span class="lp-car-meta__views"><span class="icon-eye"></span>' + (d.views || 0) + '</span>';
+                  }
                }
             })
             .catch(function() {});
