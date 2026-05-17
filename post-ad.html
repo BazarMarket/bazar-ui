@@ -2278,8 +2278,15 @@
          'Vivo':     ['Vivo X90','Vivo X100','Vivo V29','Vivo V30','Other'],
          'Honor':    ['Honor Magic 5','Honor Magic 6','Honor 90','Honor 90 Pro','Other'],
          'Realme':   ['Realme GT 5','Realme 12 Pro','Realme 12 Pro+','Realme 11 Pro','Other'],
-         'Nothing':  ['Phone (1)','Phone (2)','Phone (2a)','Phone (2a) Plus','Other'],
-         'Other':    []
+         'Nothing':    ['Phone (1)','Phone (2)','Phone (2a)','Phone (2a) Plus','Other'],
+         'ASUS':       ['ROG Phone 6','ROG Phone 7','ROG Phone 8','ZenFone 9','ZenFone 10','ZenFone 11 Ultra','Other'],
+         'LG':         ['LG G8 ThinQ','LG V60 ThinQ','LG Velvet','LG Wing','LG K52','LG K92','Other'],
+         'Fairphone':  ['Fairphone 4','Fairphone 5','Other'],
+         'Blackberry': ['BlackBerry KEY2','BlackBerry KEY2 LE','BlackBerry Motion','BlackBerry Passport','Other'],
+         'Alcatel':    ['Alcatel 1S','Alcatel 3','Alcatel 3X','Alcatel 3L','Alcatel 5','Other'],
+         'TCL':        ['TCL 20 Pro 5G','TCL 30 5G','TCL 40 SE','TCL 50 5G','Other'],
+         'ZTE':        ['ZTE Axon 40 Pro','ZTE Axon 50','ZTE Blade V50','ZTE Blade A73','Other'],
+         'Other':      []
       };
 
       function initPhoneBrandSelect() {
@@ -2648,7 +2655,7 @@
             'Other':       []
          },
          'phones': {
-            'Mobile phones':           [],
+            'Mobile phones':           ['Apple','Samsung','Xiaomi','Huawei','Google','OnePlus','Sony','Nokia','Motorola','Oppo','Vivo','Honor','Realme','Nothing','ASUS','LG','Fairphone','Blackberry','Alcatel','TCL','ZTE','Other'],
             'Phone parts, tools':      [],
             'Phones, answering mach.': [],
             'Wearables':               [],
@@ -2847,10 +2854,11 @@
 
          if (cat === 'phones' && sub === 'Mobile phones') {
             deactivateCarFields();
-            activatePhoneFields();
+            deactivatePhoneFields();
             document.getElementById('subtypeField').style.display = 'none';
-            document.getElementById('paForm').classList.add('visible');
-            if (_isMobile()) _mobShowForm();
+            fillSubSub(cat, sub);
+            document.getElementById('paForm').classList.remove('visible');
+            if (_isMobile()) _mobWizardStep(3);
             return;
          }
          deactivatePhoneFields();
@@ -2926,7 +2934,14 @@
             if (_isMobile()) _mobShowForm();
             return;
          }
-         if (reState.cat === 'phones' && propType === 'Mobile phones') {
+         if (reState.cat === 'phones') {
+            /* propType is now the brand name (Apple, Samsung, etc.) from the third column */
+            var brandSel = document.getElementById('phoneBrandSelect');
+            if (brandSel && propType !== 'Mobile phones') {
+               brandSel.value = propType;
+               brandSel.classList.toggle('pa-empty', !brandSel.value);
+               onPhoneBrandChange(brandSel);
+            }
             deactivateCarFields();
             activatePhoneFields();
             document.getElementById('houseTypeField').style.display = 'none';
