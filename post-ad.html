@@ -1502,22 +1502,6 @@
                            <input class="pa-input" id="phoneModelOtherInput" type="text" placeholder="Enter model name" oninput="updatePhoneTitle()">
                         </div>
                      </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">RAM:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="phoneRamSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" disabled selected hidden>Select RAM</option>
-                              <option>2GB</option>
-                              <option>3GB</option>
-                              <option>4GB</option>
-                              <option>6GB</option>
-                              <option>8GB</option>
-                              <option>12GB</option>
-                              <option>16GB</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
                   </div>
 
                   <div class="pa-field" id="conditionField">
@@ -1547,6 +1531,22 @@
 
                   <!-- Phone-specific fields part 2 (after Condition + Delivery) -->
                   <div id="phoneSpecificSection2" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">RAM:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneRamSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" disabled selected hidden>Select RAM</option>
+                              <option>2GB</option>
+                              <option>3GB</option>
+                              <option>4GB</option>
+                              <option>6GB</option>
+                              <option>8GB</option>
+                              <option>12GB</option>
+                              <option>16GB</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
                      <div class="pa-field">
                         <span class="pa-field__label">Storage:</span>
                         <div class="pa-field__control pa-select-wrap">
