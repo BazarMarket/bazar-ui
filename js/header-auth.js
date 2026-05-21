@@ -99,11 +99,18 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                         try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
                         if (avImg) avImg.src = d.avatar;
                     } else if (!d.gender_from_db) {
-                        /* Server hasn't confirmed gender yet — keep local choice, just re-apply it */
+                        /* Server hasn't confirmed gender yet.
+                           If API returned an avatar — save and use it.
+                           Otherwise fall back to whatever is in localStorage, then gender icon.
+                           Never delete bazar_avatar here. */
+                        var _savedAv = localStorage.getItem('bazar_avatar');
+                        if (d.avatar) {
+                            try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
+                            _savedAv = d.avatar;
+                        }
                         var _curGender = localStorage.getItem('bazar_gender') || 'male';
                         var genderIcon = _curGender === 'female' ? 'icon/woman.png' : 'icon/man.svg';
-                        try { localStorage.removeItem('bazar_avatar'); } catch(ex) {}
-                        if (avImg) avImg.src = genderIcon;
+                        if (avImg) avImg.src = _savedAv || genderIcon;
                     } else {
                         /* gender_from_db but no custom avatar — use gender icon */
                         var _curGender2 = localStorage.getItem('bazar_gender') || 'male';

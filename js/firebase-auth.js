@@ -92,6 +92,23 @@ function doLogin() {
     if (_hg) _hg.style.display = 'none';
     if (_hl) _hl.style.display = '';
     document.body.classList.add('bazar-logged');
+    /* Fetch fresh avatar from API and save to localStorage so it persists across pages */
+    var _loginUid = localStorage.getItem('bazar_firebase_uid');
+    if (_loginUid && !localStorage.getItem('bazar_avatar')) {
+        var _api = (window.BAZAR_API || (window.location.hostname === 'www.bazar.uk' ? 'https://admin.bazar.uk/api' : '/api'));
+        fetch(_api + '/customers/' + encodeURIComponent(_loginUid))
+            .then(function(r) { return r.ok ? r.json() : {}; })
+            .then(function(d) {
+                if (d.avatar) {
+                    try { localStorage.setItem('bazar_avatar', d.avatar); } catch(ex) {}
+                    var _avEl = document.getElementById('header-avatar');
+                    if (_avEl) {
+                        var _avImg = _avEl.querySelector('img') || (_avEl.tagName === 'IMG' ? _avEl : null);
+                        if (_avImg) _avImg.src = d.avatar;
+                    }
+                }
+            }).catch(function() {});
+    }
     /* Post-ad page: re-fill Contact Details with registered name/phone */
     if (window._bazarPostAdLockContact) window._bazarPostAdLockContact();
 }
