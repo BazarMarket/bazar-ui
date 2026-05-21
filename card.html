@@ -1156,9 +1156,6 @@
       var specs = '';
       specs += '<caption>Specifications</caption>';
       specs += '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>';
-      var _locationVal = p.city ? (p.district ? p.city + ', ' + p.district : p.city) : (p.district || '');
-      specs += specRow('Location', _locationVal);
-
       var condLabel = {new:'New build', resale:'Resale', under_construction:'Under construction'};
       var ptype = (p.property_type || '').toLowerCase();
 
@@ -1203,19 +1200,20 @@
 
       } else {
          /* ── Real estate — form order ── */
+         /* 1 */ if (ptype !== 'room' && p.sub_type) specs += specRow(ptype === 'land' ? 'Plot type' : 'House type', p.sub_type);
+         /* 1 */ if (ptype === 'room' && p.sub_type) specs += specRow('Room type', p.sub_type);
+         /* 2 */ specs += specRow('Number of Bedrooms', p.bedrooms != null ? (parseInt(p.bedrooms) >= 10 ? String(p.bedrooms).replace(/\+$/,'') + '+' : p.bedrooms) : p.bedrooms);
+         /* 3 */ specs += specRow('Number of Bathrooms', p.bathrooms != null ? (parseInt(p.bathrooms) >= 5  ? String(p.bathrooms).replace(/\+$/,'') + '+' : p.bathrooms) : p.bathrooms);
+         /* 4 */ if (p.covered_area) specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
+         /* 5 */ specs += specRow('Condition', condLabel[p.condition] || p.condition);
+         /* 6 */ if (p.furnishing_type) specs += specRow('Furnishing', p.furnishing_type);
+         /* rest */
          if (ptype !== 'room' && p.building_type) specs += specRow('Building type', p.building_type);
-         if (ptype !== 'room' && p.sub_type) specs += specRow(ptype === 'land' ? 'Plot type' : 'House type', p.sub_type);
-         specs += specRow('Number of Bedrooms', p.bedrooms != null ? (parseInt(p.bedrooms) >= 10 ? String(p.bedrooms).replace(/\+$/,'') + '+' : p.bedrooms) : p.bedrooms);
-         specs += specRow('Number of Bathrooms', p.bathrooms != null ? (parseInt(p.bathrooms) >= 5  ? String(p.bathrooms).replace(/\+$/,'') + '+' : p.bathrooms) : p.bathrooms);
-         if (ptype === 'room' && p.sub_type) specs += specRow('Room type', p.sub_type);
-         specs += specRow('Condition', condLabel[p.condition] || p.condition);
          specs += specRow('Floor', (p.floor === 0 || p.floor === '0') ? 'Ground floor' : p.floor);
          if (p.parking_type) specs += specRow('Parking', p.parking_type);
          else if (p.parking) specs += specRow('Parking', 'Yes');
-         if (p.furnishing_type) specs += specRow('Furnishing', p.furnishing_type);
          if (p.ac_type) specs += specRow('Air conditioning', p.ac_type);
          specs += specRow('Year Built', p.construction_year);
-         if (p.covered_area) specs += '<tr><th>Covered area:</th><td>' + p.covered_area + ' m2</td></tr>';
          if (p.plot_area) specs += '<tr><th>Plot area:</th><td>' + p.plot_area + ' m2</td></tr>';
          var amenities = [];
          if(p.air_conditioning) amenities.push('Air Conditioning');
