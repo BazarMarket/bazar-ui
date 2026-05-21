@@ -16,6 +16,8 @@
         // Browser-level noise: bare "Load failed" = Safari/iOS name for a failed fetch() due to no network / timeout
         // Only skip the exact bare message — real JS load errors include a URL or more context
         if (message.trim() === 'Load failed') return;
+        // Browser-level noise: cross-origin script error — browser hides details of errors from 3rd-party scripts (Firebase, Stripe etc.)
+        if (message.trim() === 'unknown' || message.trim() === 'Script error.') return;
         _sent++;
         var phone = phoneOverride || getPhone();
         var payload = JSON.stringify({ type: type, message: String(message).slice(0, 2000), page: page || location.pathname, phone: phone });
