@@ -3248,21 +3248,40 @@
                   cvs.toBlob(function(blob) {
                      var fname = file.name.replace(/\.[^.]+$/, '.jpg');
                      var compressed = new File([blob], fname, { type: 'image/jpeg' });
-                     var box = document.createElement('div');
-                     box.className = 'pa-photo-box';
-                     box._paFile = compressed;
-                     box.style.backgroundImage = 'url(' + e.target.result + ')';
-                     box.style.backgroundSize = 'cover';
-                     box.style.backgroundPosition = 'center';
-                     box.style.border = '2px solid #e4e4e4';
-                     box.setAttribute('draggable', 'true');
-                     _attachDragEvents(box);
-                     var rm = document.createElement('span');
-                     rm.textContent = '×';
-                     rm.style.cssText = 'position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#e53935;color:#fff;font-size:18px;font-weight:700;line-height:24px;text-align:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:10;user-select:none;';
-                     rm.onclick = function(ev) { ev.stopPropagation(); box.remove(); };
-                     box.appendChild(rm);
-                     grid.appendChild(box);
+                     /* ── SafeSearch moderation check before adding to grid ── */
+                     var _reader2 = new FileReader();
+                     _reader2.onload = function(ev2) {
+                        var _b64 = ev2.target.result; /* data:image/jpeg;base64,... */
+                        fetch('/api/moderate-avatar', {
+                           method: 'POST',
+                           headers: { 'Content-Type': 'application/json' },
+                           body: JSON.stringify({ image: _b64 })
+                        })
+                        .then(function(r) { return r.ok ? r.json() : { ok: true }; })
+                        .catch(function() { return { ok: true }; })
+                        .then(function(res) {
+                           if (res.flagged) {
+                              alert('This photo was rejected: ' + (res.reason || 'inappropriate content') + '. Please upload a different photo.');
+                              return;
+                           }
+                           var box = document.createElement('div');
+                           box.className = 'pa-photo-box';
+                           box._paFile = compressed;
+                           box.style.backgroundImage = 'url(' + e.target.result + ')';
+                           box.style.backgroundSize = 'cover';
+                           box.style.backgroundPosition = 'center';
+                           box.style.border = '2px solid #e4e4e4';
+                           box.setAttribute('draggable', 'true');
+                           _attachDragEvents(box);
+                           var rm = document.createElement('span');
+                           rm.textContent = '×';
+                           rm.style.cssText = 'position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;background:#e53935;color:#fff;font-size:18px;font-weight:700;line-height:24px;text-align:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35);z-index:10;user-select:none;';
+                           rm.onclick = function(ev) { ev.stopPropagation(); box.remove(); };
+                           box.appendChild(rm);
+                           grid.appendChild(box);
+                        });
+                     };
+                     _reader2.readAsDataURL(blob);
                   }, 'image/jpeg', 0.82);
                };
                img.src = e.target.result;
