@@ -1990,7 +1990,7 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Phone:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" id="sellerPhoneInput" type="tel" placeholder="07XXX XXX XXX" oninput="_clearPhoneFieldError()">
+                        <input class="pa-input" id="sellerPhoneInput" type="tel" placeholder="07XXX XXX XXX" oninput="normalizePostAdPhone(this)">
                         <div id="sellerPhoneError" style="display:none;color:#e53935;font-size:13px;margin-top:5px;font-weight:500;">Please enter a valid UK mobile number (07XXX XXX XXX)</div>
                      </div>
                   </div>
@@ -3354,6 +3354,23 @@
       function _goAfterPublish(adId) {
          /* Always show the choose-plan form for every new ad — no automatic plan activation */
          window.location.href = 'publish-options?ad_id=' + adId;
+      }
+
+      /* ── Phone field +44 normalizer (same logic as login modal) ── */
+      function normalizePostAdPhone(input) {
+         var pos = input.selectionStart;
+         var raw = input.value.replace(/[^\d+]/g, '');
+         if (raw.startsWith('+44'))          raw = '0' + raw.slice(3);
+         else if (raw.startsWith('0044'))    raw = '0' + raw.slice(4);
+         else if (raw.startsWith('44') && raw.replace(/\D/g,'').length >= 12) raw = '0' + raw.slice(2);
+         else if (raw.startsWith('7'))       raw = '0' + raw;
+         raw = raw.slice(0, 11);
+         var formatted = raw;
+         if (raw.length > 8) formatted = raw.slice(0,5) + ' ' + raw.slice(5,8) + ' ' + raw.slice(8);
+         else if (raw.length > 5) formatted = raw.slice(0,5) + ' ' + raw.slice(5);
+         input.value = formatted;
+         try { input.setSelectionRange(formatted.length, formatted.length); } catch(err) {}
+         _clearPhoneFieldError();
       }
 
       /* ── Phone field error helpers ── */
