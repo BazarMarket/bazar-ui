@@ -3261,7 +3261,7 @@
                         .catch(function() { return { ok: true }; })
                         .then(function(res) {
                            if (res.flagged) {
-                              alert('This photo was rejected: ' + (res.reason || 'inappropriate content') + '. Please upload a different photo.');
+                              showValidationError('This photo contains inappropriate content and cannot be uploaded. Please choose a different photo.');
                               return;
                            }
                            var box = document.createElement('div');
