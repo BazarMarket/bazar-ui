@@ -1521,6 +1521,27 @@
                      </div>
                   </div>
 
+                  <!-- Phone-specific fields part 2 (after Model) -->
+                  <div id="phoneSpecificSection2" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">Storage:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="phoneStorageSelect" onchange="updatePhoneTitle(); this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" selected>Select storage</option>
+                              <option>8GB</option>
+                              <option>16GB</option>
+                              <option>32GB</option>
+                              <option>64GB</option>
+                              <option>128GB</option>
+                              <option>256GB</option>
+                              <option>512GB</option>
+                              <option>1TB</option>
+                              <option>Other</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="conditionField">
                      <span class="pa-field__label">Condition:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -1534,8 +1555,7 @@
                      </div>
                   </div>
 
-                  <!-- Phone-specific fields part 2 (after Condition) -->
-                  <div id="phoneSpecificSection2" style="display:none">
+                  <div id="phoneSpecificSection3" style="display:none">
                      <div class="pa-field">
                         <span class="pa-field__label">RAM:</span>
                         <div class="pa-field__control pa-select-wrap">
@@ -1550,23 +1570,6 @@
                               <option>12GB</option>
                               <option>16GB</option>
                               <option>24GB</option>
-                              <option>Other</option>
-                           </select>
-                        </div>
-                     </div>
-                     <div class="pa-field">
-                        <span class="pa-field__label">Storage:</span>
-                        <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="phoneStorageSelect" onchange="updatePhoneTitle(); this.classList.toggle('pa-empty',!this.value)">
-                              <option value="" selected>Select storage</option>
-                              <option>8GB</option>
-                              <option>16GB</option>
-                              <option>32GB</option>
-                              <option>64GB</option>
-                              <option>128GB</option>
-                              <option>256GB</option>
-                              <option>512GB</option>
-                              <option>1TB</option>
                               <option>Other</option>
                            </select>
                         </div>
@@ -2342,6 +2345,8 @@
          if (phoneSec) phoneSec.style.display = '';
          var phoneSec2 = document.getElementById('phoneSpecificSection2');
          if (phoneSec2) phoneSec2.style.display = '';
+         var phoneSec3 = document.getElementById('phoneSpecificSection3');
+         if (phoneSec3) phoneSec3.style.display = '';
          initPhoneBrandSelect();
          var condSel = document.getElementById('conditionSelect');
          if (condSel) {
@@ -2367,6 +2372,8 @@
          if (phoneSec) phoneSec.style.display = 'none';
          var phoneSec2 = document.getElementById('phoneSpecificSection2');
          if (phoneSec2) phoneSec2.style.display = 'none';
+         var phoneSec3 = document.getElementById('phoneSpecificSection3');
+         if (phoneSec3) phoneSec3.style.display = 'none';
       }
 
       function initCarMakeSelect() {
