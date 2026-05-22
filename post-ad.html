@@ -4772,7 +4772,13 @@
                      if (subsubEl) { selectSubSub(subsubEl); }
                   } else {
                      /* for categories without sub-sub (phones, etc.) */
+                     if (ui.mainCat === 'phones') {
+                        /* must activate phone-specific fields before filling values */
+                        if (typeof deactivateCarFields === 'function') deactivateCarFields();
+                        if (typeof activatePhoneFields === 'function') activatePhoneFields();
+                     }
                      document.getElementById('paForm').classList.add('visible');
+                     if (_isMobile()) _mobShowForm();
                   }
 
                   setTimeout(function() {
