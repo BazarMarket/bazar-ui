@@ -2312,7 +2312,24 @@
          if (!model || model === 'Other') model = getInputVal('phoneModelOtherInput');
          var storage = (document.getElementById('phoneStorageSelect') || {}).value || '';
          var parts = [brand, model, storage].filter(Boolean);
-         if (parts.length) titleInput.value = parts.join(' ');
+         var suggested = parts.join(' ');
+         var hint   = document.getElementById('suggestedHint');
+         var textEl = document.getElementById('suggestedText');
+         if (userEditedTitle) {
+            /* user typed manually — show hint only, never overwrite */
+            if (hint && textEl && suggested) {
+               textEl.textContent = suggested;
+               hint.style.display = 'flex';
+            } else if (hint) {
+               hint.style.display = 'none';
+            }
+            return;
+         }
+         /* user hasn't touched the field — auto-fill directly */
+         if (suggested) {
+            titleInput.value = suggested;
+            if (hint) hint.style.display = 'none';
+         }
       }
 
       function activatePhoneFields() {
