@@ -1180,7 +1180,7 @@
          specs += specRow('MOT status', p.mot_status);
          specs += specRow('Condition', carCondLabel[p.condition] || p.condition);
 
-      } else if (ptype === 'phone') {
+      } else if (ptype === 'phone' || ptype === 'mobile_phone') {
          /* ── Phones — form order ── */
          specs += specRow('Brand', p.phone_brand);
          specs += specRow('Model', p.phone_model);
