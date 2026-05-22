@@ -1026,11 +1026,13 @@
         }
       })();
 
+      var reTypes = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','office','shop','restaurant','industrial','hotel','business_investment','land','building','room'];
+      var isRealEstate = reTypes.indexOf((p.property_type || '').toLowerCase()) !== -1;
+      var showDelivery = (!isRealEstate && p.delivery === 'Yes');
+
       var deliveryEl = el('prop-delivery');
       if (deliveryEl) {
-         var reTypes = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','office','shop','restaurant','industrial','hotel','business_investment','land','building','room'];
-         var isRealEstate = reTypes.indexOf((p.property_type || '').toLowerCase()) !== -1;
-         deliveryEl.style.display = (!isRealEstate && p.delivery === 'Yes') ? '' : 'none';
+         deliveryEl.style.display = showDelivery ? '' : 'none';
       }
 
       var sellerStatusEl = el('prop-seller-status');
@@ -1070,7 +1072,7 @@
          sellerStatusEl.classList.remove('seller-status--active', 'seller-status--inactive');
          sellerStatusEl.classList.add(isActive ? 'seller-status--active' : 'seller-status--inactive');
          sellerStatusEl.querySelector('.seller-status__text').textContent = statusText;
-         sellerStatusEl.style.display = '';
+         sellerStatusEl.style.display = showDelivery ? 'none' : '';
          var photoWrap = document.getElementById('seller-photo-wrap');
          if (photoWrap) {
             photoWrap.classList.remove('online', 'offline');
