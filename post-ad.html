@@ -1620,10 +1620,10 @@
                   <div class="pa-field" id="deliveryField">
                      <span class="pa-field__label">Delivery:</span>
                      <div class="pa-field__control pa-select-wrap">
-                        <select class="pa-select">
+                        <select class="pa-select" id="phoneDeliverySelect">
                            <option value="">Select delivery option</option>
-                           <option>Pickup only</option>
-                           <option>Delivery available</option>
+                           <option value="Pickup only">Pickup only</option>
+                           <option value="Yes">Delivery available</option>
                         </select>
                      </div>
                   </div>
@@ -4418,6 +4418,7 @@
             }, 400);
          }
          _setSelect('phoneStorageSelect', d.phone_storage || '');
+         _setSelect('phoneDeliverySelect', d.delivery || '');
       }
 
       /* Override submit to use update endpoint */
