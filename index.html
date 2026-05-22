@@ -1478,7 +1478,8 @@
         var priceOld = (_opN && _opN > _curN) ? '<span class="price-old">£ ' + Math.round(_opN).toLocaleString('en-GB') + '</span>' : '';
         var _infoItemsA = '';
         var infoBord;
-        if ((ad.property_type || '').toLowerCase() === 'car') {
+        var _pt0 = (ad.property_type || '').toLowerCase();
+        if (_pt0 === 'car' || _pt0 === 'mobile_phone') {
             infoBord = _carMetaHtml(ad);
         } else {
             if (ad.bedrooms) _infoItemsA += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
@@ -1660,7 +1661,8 @@
                     var priceOld = (_latOpN && _latOpN > _latCurN) ? '<span class="price-old">£ ' + Math.round(_latOpN).toLocaleString('en-GB') + '</span>' : '';
                     var _infoItemsB = '';
                     var infoBord;
-                    if ((ad.property_type || '').toLowerCase() === 'car') {
+                    var _ptB = (ad.property_type || '').toLowerCase();
+                    if (_ptB === 'car' || _ptB === 'mobile_phone') {
                         infoBord = _carMetaHtml(ad);
                     } else {
                         if (ad.bedrooms) _infoItemsB += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
@@ -1712,7 +1714,8 @@
                         var priceOld2 = (_opN2 && _opN2 > _curN2) ? '<span class="price-old">£ ' + Math.round(_opN2).toLocaleString('en-GB') + '</span>' : '';
                         var _ii = '';
                         var infoBord2;
-                        if ((ad.property_type || '').toLowerCase() === 'car') {
+                        var _ptC = (ad.property_type || '').toLowerCase();
+                        if (_ptC === 'car' || _ptC === 'mobile_phone') {
                             infoBord2 = _carMetaHtml(ad);
                         } else {
                             if (ad.bedrooms) _ii += '<span class="info-bord__item icon-bead">' + ad.bedrooms + ' bed' + (ad.bedrooms > 1 ? 's' : '') + '</span>';
