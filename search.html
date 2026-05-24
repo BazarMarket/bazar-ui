@@ -2719,6 +2719,8 @@
           /* Classify each listing into a human-readable category name */
           function _catLabel(p) {
             if (p.mk) return 'Motors';          /* car_make is set → it's a car */
+            var pt = (p.pt || '').toLowerCase();
+            if (pt === 'mobile_phone' || pt === 'phone') return 'Mobile Phones';
             var lt = (p.lt || '').toLowerCase();
             if (lt === 'sale')       return 'Property for Sale';
             if (lt === 'long_rent')  return 'Property to Rent';
@@ -2747,6 +2749,7 @@
           /* Icon + display-label map per category key */
           var _catMeta = {
             'Motors':            { img: 'img/cat/image3.png', label: 'Motors for Sale' },
+            'Mobile Phones':     { img: 'img/cat/image5.png', label: 'Mobile Phones for Sale' },
             'Property for Sale': { img: 'img/cat/image1.png', label: 'Property for Sale' },
             'Property to Rent':  { img: 'img/cat/image2.png', label: 'Property to Rent' },
             'Short-term Rent':   { img: 'img/cat/image2.png', label: 'Property for short-term rent' },
