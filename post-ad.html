@@ -4206,7 +4206,7 @@
 
          /* Basic */
          var titleEl = document.getElementById('titleInput');
-         if (titleEl) { titleEl.removeAttribute('readonly'); titleEl.value = d.title || ''; userEditedTitle = true; }
+         if (titleEl) { titleEl.removeAttribute('readonly'); titleEl.value = d.title || ''; }
          _setVal('descriptionInput', d.description || '');
 
          /* Price — formatPrice() uses dots as thousands sep (e.g. 10.000.000) */
@@ -4413,6 +4413,7 @@
                if (brandSel) {
                   brandSel.value = d.phone_brand;
                   brandSel.classList.toggle('pa-empty', !brandSel.value);
+                  userEditedTitle = true; /* block premature title rewrite while model not yet set */
                   onPhoneBrandChange(brandSel); /* direct call — populates model list synchronously */
                }
                /* Highlight brand in column 3 */
@@ -4421,6 +4422,9 @@
                });
                setTimeout(function(){
                   _setSelect('phoneModelSelect', d.phone_model || '');
+                  /* Now all fields are set — regenerate title from brand+model+storage */
+                  userEditedTitle = false;
+                  if (typeof updatePhoneTitle === 'function') updatePhoneTitle();
                }, 100);
             }, 400);
          }
