@@ -4447,8 +4447,15 @@
                }, 100);
             }, 400);
          }
-         _setSelect('phoneStorageSelect', d.phone_storage || '');
-         _setSelect('phoneDeliverySelect', d.delivery || '');
+         _setSelect('phoneStorageSelect',  d.phone_storage  || '');
+         _setSelect('phoneSimSelect',      d.sim_type       || '');
+         _setSelect('phoneColourSelect',   d.colour         || '');
+         _setSelect('phoneBatterySelect',  d.battery_health || '');
+         _setSelect('phoneWarrantySelect', d.warranty       || '');
+         _setSelect('phoneDeliverySelect', d.delivery       || '');
+         _setSelect('phoneUnlockSelect',   d.unlock_status  || '');
+         _setSelect('phoneNetworkSelect',  d.network        || '');
+         _setSelect('phoneRamSelect',      d.phone_ram      || '');
       }
 
       /* Override submit to use update endpoint */
