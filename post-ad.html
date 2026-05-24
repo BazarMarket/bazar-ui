@@ -4409,11 +4409,19 @@
          /* Phones */
          if (d.phone_brand) {
             setTimeout(function(){
-               _setSelect('phoneBrandSelect', d.phone_brand);
-               var evt2 = new Event('change'); document.getElementById('phoneBrandSelect') && document.getElementById('phoneBrandSelect').dispatchEvent(evt2);
+               var brandSel = document.getElementById('phoneBrandSelect');
+               if (brandSel) {
+                  brandSel.value = d.phone_brand;
+                  brandSel.classList.toggle('pa-empty', !brandSel.value);
+                  onPhoneBrandChange(brandSel); /* direct call — populates model list synchronously */
+               }
+               /* Highlight brand in column 3 */
+               document.querySelectorAll('#subSubCats .cat-item').forEach(function(el) {
+                  el.classList.toggle('active', el.textContent.trim() === d.phone_brand);
+               });
                setTimeout(function(){
                   _setSelect('phoneModelSelect', d.phone_model || '');
-               }, 300);
+               }, 100);
             }, 400);
          }
          _setSelect('phoneStorageSelect', d.phone_storage || '');
