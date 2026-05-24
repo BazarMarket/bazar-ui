@@ -1325,7 +1325,7 @@
          'Motors':                            '/motors-for-sale',
          'Motors for rent':                   '/motors-to-rent/cars',
          'Motors for short-term rent':        '/motors-for-short-term-rent/cars',
-         'Mobile phones, communication':      '/electronics',
+         'Mobile phones, communication':      '/mobile-phones',
          'Computers, gaming':                 '/electronics',
          'Electronics, appliances':           '/electronics',
          'Clothes, footwear, accessories':    '/fashion',
@@ -2838,6 +2838,8 @@
         var _isLatestPage = (_pathCat0 === 'latest-updates');
         var _isCarPage = (_pathCat0 === 'cars') || (_pathCat0 === 'motors-for-sale') || (_pathCat0 === 'motors-to-rent') || (_pathCat0 === 'motors-for-short-term-rent');
         window._isCarPage = _isCarPage;
+        var _isPhonePage = (_pathCat0 === 'mobile-phones');
+        window._isPhonePage = _isPhonePage;
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -2895,6 +2897,8 @@
           var _lt = _catToListingType[_pathCat0];
           var _apiPt = _subTypeConfig ? _subTypeConfig.pt : _pathSub0;
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _apiPt + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
+        } else if (_isPhonePage) {
+          _extraUrl = '/api/properties/recent-enriched?property_type=mobile_phone&per_page=50';
         }
 
         var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale') : null);
@@ -4030,6 +4034,25 @@
             });
             _preSelectMotorsMake(pathParts[2]);
             currentMode = 'short-rent'; buildPricePanels(); _smfPricesBuilt = false;
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
+         } else if (pathCat === 'mobile-phones') {
+            /* Mobile phones page: set category UI and hide property/motors filters */
+            document.getElementById('cfCatLabel').textContent = 'Mobile phones, communication';
+            var imgEl = document.getElementById('cfCatImg');
+            imgEl.src = 'img/cat/image5.png'; imgEl.style.display = '';
+            document.getElementById('cfCatPanel').querySelectorAll('.cf-cat-item').forEach(function(i) {
+               i.classList.remove('active');
+               if (i.textContent.trim() === 'Mobile phones, communication') i.classList.add('active');
+            });
+            var _mRow2 = document.getElementById('cfMotorsRow2');
+            if (_mRow2) _mRow2.style.display = 'none';
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
          } else if (pathCatMap[pathCat]) {

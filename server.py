@@ -903,6 +903,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /motors-for-sale/cars/{make} → redirect (old URL after Cars for Sale page)
         if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[2]}'}
+        # /mobile-phones/{brand}/{city}
+        if parts[0] == 'mobile-phones':
+            return 'mobile_phones', {'brand': parts[1], 'city': parts[2]}
         # /motors-for-sale/{make}/{city}
         if parts[0] == 'motors-for-sale':
             return 'cars_make_city', {'make': parts[1], 'city': parts[2]}
@@ -963,6 +966,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /cars/for-short-term-rent/{make}/{city}  →  301
         if parts[0] == 'cars' and parts[1] == 'for-short-term-rent':
             return 'redirect_301', {'location': f'/motors-for-short-term-rent/cars/{parts[2]}/{parts[3]}'}
+        # /mobile-phones/{brand}/{city}/{district}
+        if parts[0] == 'mobile-phones':
+            return 'mobile_phones', {'brand': parts[1], 'city': parts[2], 'district': parts[3]}
         # /property-for-sale/{subtype}/{city}/{district}
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city_district', {
@@ -1028,6 +1034,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /motors-for-sale/cars  →  cars category page
         if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
             return 'cars_category', {}
+        # /mobile-phones/{brand}
+        if parts[0] == 'mobile-phones':
+            return 'mobile_phones', {'brand': parts[1]}
         # /motors-for-sale/{make}
         if parts[0] == 'motors-for-sale':
             return 'cars_make', {'make': parts[1]}
@@ -1054,6 +1063,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # /property-short-rent  →  property_transaction_modifier
         if parts[0] == 'property-short-rent':
             return 'property_transaction_modifier', {'transaction': 'for-rent'}
+        # /mobile-phones  →  mobile phones category page
+        if parts[0] == 'mobile-phones':
+            return 'mobile_phones', {}
         # /motors-for-sale  →  category cars
         if parts[0] == 'motors-for-sale':
             return 'category', {'category': 'cars'}
@@ -1083,6 +1095,7 @@ CATEGORY_LABELS = {
     'vehicles':    'Vehicles',    'rooms':       'Rooms',
     'flats':       'Flats',
     'jobs':        'Jobs',        'electronics': 'Electronics',
+    'mobile-phones': 'Mobile phones',
     'furniture':   'Furniture',   'fashion':     'Fashion',
     'services':    'Services',    'pets':        'Pets',
     'sports':      'Sports',      'kids':        'Kids',
@@ -1096,6 +1109,7 @@ CATEGORY_ACTION = {
     'vehicles':  'for sale',   'rooms':       'to rent',
     'flats':     'for Rent',
     'jobs':      '',           'electronics': 'for sale',
+    'mobile-phones': 'for sale',
     'furniture': 'for sale',   'fashion':     'for sale',
     'services':  '',           'pets':        'for sale',
     'sports':    'for sale',   'kids':        'for sale',
@@ -1113,6 +1127,7 @@ CATEGORY_INTROS = {
     'flats':       'Find flats to rent across the UK. Short-term and long-term rentals available.',
     'jobs':        'Browse job listings across the UK. Find local opportunities on Bazar.',
     'electronics': 'Buy and sell electronics across the UK — phones, laptops, TVs and more.',
+    'mobile-phones': 'Buy and sell mobile phones across the UK. Find iPhones, Samsung, Google Pixel and more from private sellers.',
     'furniture':   'Browse furniture listings across the UK. New and second-hand pieces from local sellers.',
     'fashion':     'Buy and sell fashion across the UK — clothing, shoes, accessories and more.',
     'services':    'Find local services across the UK. Tradespeople, cleaners, tutors and more.',
@@ -1439,6 +1454,21 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             _sub_url     = f'{_make_url_base}/{sub_slug}' if sub_slug else ''
             _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
             _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
+            is_real_estate = False
+
+        # ── Mobile phones: custom breadcrumb ─────────────────────────────────
+        elif _pt_norm in ('mobile_phone', 'phone'):
+            cat_label    = 'Mobile phones'
+            cat_url      = f'{PUBLIC_DOMAIN}/mobile-phones'
+            _cat_rel_url = '/mobile-phones'
+            phone_brand  = listing.get('phone_brand') or ''
+            sub_label    = phone_brand
+            sub_slug     = re.sub(r'[^a-z0-9]+', '-', phone_brand.lower()).strip('-') if phone_brand else ''
+            _sub_url     = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
+            _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
+            _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
+            parent_label = ''
+            parent_url   = ''
             is_real_estate = False
 
         # ── Property: existing breadcrumb logic ───────────────────────────────
@@ -2591,6 +2621,80 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             'car_make':    make_slug,
             'car_city':    city_slug,
             'car_district': district_slug,
+        }
+        return seo
+
+    elif page_type == 'mobile_phones':
+        brand_slug    = params.get('brand', '')
+        city_slug     = params.get('city', '')
+        district_slug = params.get('district', '')
+        brand    = brand_slug.replace('-', ' ').title() if brand_slug else ''
+        city     = city_slug.replace('-', ' ').title() if city_slug else ''
+        district = district_slug.replace('-', ' ').title() if district_slug else ''
+
+        if district and city and brand:
+            h1        = f'{brand} phones for sale in {district}, {city}'
+            canonical = f'{PUBLIC_DOMAIN}/mobile-phones/{brand_slug}/{city_slug}/{district_slug}'
+        elif city and brand:
+            h1        = f'{brand} phones for sale in {city}'
+            canonical = f'{PUBLIC_DOMAIN}/mobile-phones/{brand_slug}/{city_slug}'
+        elif brand:
+            h1        = f'{brand} phones for sale in the UK'
+            canonical = f'{PUBLIC_DOMAIN}/mobile-phones/{brand_slug}'
+        else:
+            h1        = 'Mobile Phones for Sale in the UK'
+            canonical = f'{PUBLIC_DOMAIN}/mobile-phones'
+
+        intro = (f'Browse {brand + " " if brand else ""}mobile phones for sale'
+                 + (f' in {district}, {city}' if district and city else
+                    f' in {city}' if city else ' across the UK')
+                 + ' on Bazar UK classifieds.')
+        desc = intro[:160]
+
+        breadcrumbs = [('Home', '/')]
+        if brand:
+            breadcrumbs.append(('Mobile phones', '/mobile-phones'))
+            if city:
+                breadcrumbs.append((brand, f'/mobile-phones/{brand_slug}'))
+                if district:
+                    breadcrumbs.append((city, f'/mobile-phones/{brand_slug}/{city_slug}'))
+                    breadcrumbs.append((district, None))
+                else:
+                    breadcrumbs.append((city, None))
+            else:
+                breadcrumbs.append((brand, None))
+        else:
+            breadcrumbs.append(('Mobile phones', None))
+
+        breadcrumb_schema = {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1,
+                 "name": name, "item": PUBLIC_DOMAIN + (href or '')}
+                for i, (name, href) in enumerate(breadcrumbs)
+            ]
+        }
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {"@type": "CollectionPage", "name": h1, "description": desc,
+                 "url": canonical, "breadcrumb": breadcrumb_schema},
+                breadcrumb_schema,
+            ]
+        }
+        _robots = 'index, follow' if not district else 'noindex, follow'
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': desc,
+            'canonical':   canonical,
+            'robots':      _robots,
+            'json_ld':     json.dumps(schema),
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': breadcrumbs,
+            'type':        'category',
         }
         return seo
 
@@ -4787,7 +4891,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'property_sale_type', 'category_transaction',
                          'property_subtype_city', 'property_subtype_city_district',
                          'cars_make', 'cars_make_city', 'cars_make_city_district',
-                         'cars_category',
+                         'cars_category', 'mobile_phones',
                          'cars_rent', 'cars_rent_make', 'cars_rent_make_city',
                          'cars_short_rent',
                          'motors_rent_parent', 'motors_short_rent_parent'):
