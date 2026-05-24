@@ -1197,7 +1197,8 @@
          specs += specRow('Original box', p.original_box);
          specs += specRow('Charger included', p.charger_included);
          specs += specRow('Seller type', p.seller_type);
-         specs += specRow('Condition', condLabel[p.condition] || p.condition);
+         var phoneCondLabel = {new:'New', resale:'Like new'};
+         specs += specRow('Condition', phoneCondLabel[p.condition] || p.condition);
 
       } else {
          /* ── Real estate — form order ── */
