@@ -2848,6 +2848,34 @@
           if (_phoneCityFilter)  window._bazarPhoneCityFilter  = _phoneCityFilter;
           if (_phoneDistFilter)  window._bazarPhoneDistFilter  = _phoneDistFilter;
         }
+        /* Brand keyword fallback map for when phone_brand is not in API list response */
+        var _phoneBrandKeywords = {
+          'apple':    ['iphone', 'apple'],
+          'samsung':  ['samsung', 'galaxy'],
+          'google':   ['google', 'pixel'],
+          'oneplus':  ['oneplus', 'one plus'],
+          'xiaomi':   ['xiaomi', 'redmi', 'poco'],
+          'huawei':   ['huawei'],
+          'sony':     ['sony', 'xperia'],
+          'nokia':    ['nokia'],
+          'motorola': ['motorola', 'moto '],
+          'oppo':     ['oppo'],
+          'realme':   ['realme'],
+          'vivo':     ['vivo'],
+          'asus':     ['asus', 'zenfone'],
+          'honor':    ['honor'],
+          'lg':       [' lg '],
+          'htc':      ['htc']
+        };
+        window._phoneBrandMatchFn = function(item, brandFilter) {
+          if (!brandFilter) return true;
+          /* If phone_brand field is populated — use it */
+          if (item.pb) return item.pb.toLowerCase() === brandFilter;
+          /* Fall back to title keyword matching */
+          var kws = _phoneBrandKeywords[brandFilter] || [brandFilter];
+          var tl = (' ' + (item.t || '') + ' ').toLowerCase();
+          return kws.some(function(kw) { return tl.indexOf(kw) !== -1; });
+        };
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -3063,7 +3091,7 @@
               var _pDistF  = window._bazarPhoneDistFilter  || '';
               if (_pBrandF || _pCityF || _pDistF) {
                 BAZAR_LISTINGS['Phones'] = (BAZAR_LISTINGS['Phones'] || []).filter(function(item) {
-                  if (_pBrandF && item.pb && (item.pb || '').toLowerCase() !== _pBrandF) return false;
+                  if (_pBrandF && !window._phoneBrandMatchFn(item, _pBrandF)) return false;
                   if (_pCityF  && (item.l || '').toLowerCase().indexOf(_pCityF)  === -1) return false;
                   if (_pDistF  && (item.l || '').toLowerCase().indexOf(_pDistF)  === -1) return false;
                   return true;
@@ -3110,14 +3138,14 @@
                   });
                   /* Phone pages: apply brand/city/district filter before rendering */
                   if (_isPhonePage) {
-                    var _pBF = window._bazarPhoneBrandFilter || '';
-                    var _pCF = window._bazarPhoneCityFilter  || '';
-                    var _pDF = window._bazarPhoneDistFilter  || '';
-                    if (_pBF || _pCF || _pDF) {
+                    var _pBF2 = window._bazarPhoneBrandFilter || '';
+                    var _pCF  = window._bazarPhoneCityFilter  || '';
+                    var _pDF  = window._bazarPhoneDistFilter  || '';
+                    if (_pBF2 || _pCF || _pDF) {
                       newItems = newItems.filter(function(item) {
-                        if (_pBF && item.pb && (item.pb || '').toLowerCase() !== _pBF) return false;
-                        if (_pCF && (item.l || '').toLowerCase().indexOf(_pCF) === -1) return false;
-                        if (_pDF && (item.l || '').toLowerCase().indexOf(_pDF) === -1) return false;
+                        if (_pBF2 && !window._phoneBrandMatchFn(item, _pBF2)) return false;
+                        if (_pCF  && (item.l || '').toLowerCase().indexOf(_pCF) === -1) return false;
+                        if (_pDF  && (item.l || '').toLowerCase().indexOf(_pDF) === -1) return false;
                         return true;
                       });
                     }
