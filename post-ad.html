@@ -4817,10 +4817,16 @@
                if (!activeCat) return;
                var cat = activeCat.dataset.cat;
                if (cat === 'motors') {
-                  var activeSub = document.querySelector('#subCats .cat-item.active');
-                  if (activeSub) fillSubSub('motors', activeSub.dataset.subcat);
+                  /* In edit mode, don't re-run motors setup — it breaks form field population */
+                  if (!_editAdId) {
+                     var activeSub = document.querySelector('#subCats .cat-item.active');
+                     if (activeSub) fillSubSub('motors', activeSub.dataset.subcat);
+                  }
                } else if (cat === 'phones') {
-                  selectCat(activeCat);
+                  /* In edit mode, don't re-run phones setup — it hides the form and clears fields */
+                  if (!_editAdId) {
+                     selectCat(activeCat);
+                  }
                }
             })
             .catch(function() {});
