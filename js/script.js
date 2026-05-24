@@ -1232,7 +1232,7 @@ window.onload = function () {
 
 // ── Portrait image detection for card thumbnails ────────────────────────────
 window._checkImgPortrait = function(img) {
-    if (img.naturalHeight > img.naturalWidth * 1.05) {
+    if (img.naturalHeight > img.naturalWidth * 0.75) {
         img.style.objectFit = 'contain';
         var wrap = img.parentElement;
         if (wrap) wrap.style.background = '#888888';
