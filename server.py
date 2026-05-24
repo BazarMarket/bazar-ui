@@ -3256,6 +3256,26 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
     def do_DELETE(self):
         parsed = urllib.parse.urlparse(self.path)
         self._proxy_to_laravel('DELETE', parsed.path, parsed.query)
+        # After a property is deleted, clean up its view records so recycled IDs
+        # don't inherit stale view counts.
+        _del_m = re.match(r'^/api/properties/(\d+)$', parsed.path)
+        if _del_m:
+            _del_pid = int(_del_m.group(1))
+            try:
+                import pymysql as _pymysql
+                _dc = _pymysql.connect(
+                    host=os.environ.get('DB_HOST', '127.0.0.1'),
+                    user=os.environ.get('DB_USERNAME', 'bazar'),
+                    password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                    database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                    connect_timeout=2,
+                )
+                with _dc:
+                    with _dc.cursor() as _dc_cur:
+                        _dc_cur.execute('DELETE FROM property_views WHERE property_id=%s', (_del_pid,))
+                    _dc.commit()
+            except Exception:
+                pass
 
     def do_PATCH(self):
         parsed   = urllib.parse.urlparse(self.path)
@@ -3591,7 +3611,24 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 conn.row_factory = sqlite3.Row
                 row = conn.execute('SELECT property_id FROM moderation_reviews WHERE id=?', (review_id,)).fetchone()
                 if row and row['property_id']:
-                    _set_property_status_internal(int(row['property_id']), 'deleted')
+                    _mod_del_pid = int(row['property_id'])
+                    _set_property_status_internal(_mod_del_pid, 'deleted')
+                    # Clean up view records so recycled IDs don't inherit stale counts
+                    try:
+                        import pymysql as _pymysql
+                        _mdc = _pymysql.connect(
+                            host=os.environ.get('DB_HOST', '127.0.0.1'),
+                            user=os.environ.get('DB_USERNAME', 'bazar'),
+                            password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                            database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                            connect_timeout=2,
+                        )
+                        with _mdc:
+                            with _mdc.cursor() as _mdc_cur:
+                                _mdc_cur.execute('DELETE FROM property_views WHERE property_id=%s', (_mod_del_pid,))
+                            _mdc.commit()
+                    except Exception:
+                        pass
                 conn.execute('DELETE FROM moderation_reviews WHERE id=?', (review_id,))
                 conn.commit()
                 conn.close()
