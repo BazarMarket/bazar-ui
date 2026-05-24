@@ -1128,8 +1128,8 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Ad Title:<span>*</span></span>
                      <div class="pa-field__control">
-                        <div class="pa-title-meta"><span id="titleCharCount">0/80</span></div>
-                        <input class="pa-input" id="titleInput" type="text" maxlength="80" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
+                        <div class="pa-title-meta"><span id="titleCharCount">0/70</span></div>
+                        <input class="pa-input" id="titleInput" type="text" maxlength="70" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
                         <div class="pa-suggested" id="suggestedHint">
                            <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
                         </div>
@@ -2557,8 +2557,8 @@
          var inp = document.getElementById('titleInput');
          if (!el || !inp) return;
          var len = inp.value.length;
-         el.textContent = len + '/80';
-         el.className = len >= 80 ? 'pa-tc-over' : len >= 65 ? 'pa-tc-warn' : '';
+         el.textContent = len + '/70';
+         el.className = len >= 70 ? 'pa-tc-over' : len >= 55 ? 'pa-tc-warn' : '';
       }
 
       function onTitleManualEdit() {
