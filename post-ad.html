@@ -3995,7 +3995,6 @@
          var model = modelSel && modelSel.style.display !== 'none' ? (modelSel.value || '') : '';
          if (!model || model === 'Other') model = getInputVal('phoneModelOtherInput');
          if (!model) { showValidationError('Please select a Model.', 'phoneModelSelect'); return; }
-         if (!getSelectVal('conditionSelect')) { showValidationError('Please select a Condition.', 'conditionSelect'); return; }
 
          var formData = new FormData();
          formData.append('title', title);
