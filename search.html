@@ -2840,6 +2840,14 @@
         window._isCarPage = _isCarPage;
         var _isPhonePage = (_pathCat0 === 'mobile-phones');
         window._isPhonePage = _isPhonePage;
+        if (_isPhonePage) {
+          var _phoneBrandFilter = (_pathParts0[1] || '').replace(/-/g, ' ').toLowerCase();
+          var _phoneCityFilter  = (_pathParts0[2] || '').replace(/-/g, ' ').toLowerCase();
+          var _phoneDistFilter  = (_pathParts0[3] || '').replace(/-/g, ' ').toLowerCase();
+          if (_phoneBrandFilter) window._bazarPhoneBrandFilter = _phoneBrandFilter;
+          if (_phoneCityFilter)  window._bazarPhoneCityFilter  = _phoneCityFilter;
+          if (_phoneDistFilter)  window._bazarPhoneDistFilter  = _phoneDistFilter;
+        }
 
         /* Map URL path category to listing_type enum */
         var _catToListingType = {
@@ -2916,7 +2924,7 @@
               'office': 'Office', 'shop': 'Shop', 'restaurant': 'Restaurant',
               'industrial': 'Industrial', 'hotel': 'Hotel', 'land': 'Land',
               'building': 'Building', 'business': 'Business or Investment',
-              'car': 'Cars', 'phone': 'Phones'
+              'car': 'Cars', 'phone': 'Phones', 'mobile_phone': 'Phones'
             };
             function guessCategory(propType, title) {
               if (propType) {
@@ -2986,6 +2994,7 @@
                 cy:   ad.city ? ad.city.toUpperCase() : 'UK',
                 st:   ad.sub_type || '',
                 mk:   ad.car_make || '',
+                pb:   ad.phone_brand || '',
                 lt:   ad.listing_type || ''
               });
             });
@@ -3047,10 +3056,27 @@
               renderListings('Cars');
               if (typeof initProductSwipers === 'function') initProductSwipers();
             }
+            /* Phone pages: after main fetch, render Phones type immediately */
+            if (_isPhonePage) {
+              var _pBrandF = window._bazarPhoneBrandFilter || '';
+              var _pCityF  = window._bazarPhoneCityFilter  || '';
+              var _pDistF  = window._bazarPhoneDistFilter  || '';
+              if (_pBrandF || _pCityF || _pDistF) {
+                BAZAR_LISTINGS['Phones'] = (BAZAR_LISTINGS['Phones'] || []).filter(function(item) {
+                  if (_pBrandF && item.pb && (item.pb || '').toLowerCase() !== _pBrandF) return false;
+                  if (_pCityF  && (item.l || '').toLowerCase().indexOf(_pCityF)  === -1) return false;
+                  if (_pDistF  && (item.l || '').toLowerCase().indexOf(_pDistF)  === -1) return false;
+                  return true;
+                });
+              }
+              window._bazarCurrentType = 'Phones';
+              renderListings('Phones');
+              if (typeof initProductSwipers === 'function') initProductSwipers();
+            }
             /* Extra fetch for path-specific category (e.g. /rooms or /property-for-sale/restaurant) */
             if (_extraUrl) {
-              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_subtypeBucket || 'House'));
-              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_subtypeBucket || 'Property') + ' listing');
+              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_isPhonePage ? 'Phones' : (_subtypeBucket || 'House')));
+              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_isPhonePage ? 'Phone listing' : (_subtypeBucket || 'Property') + ' listing'));
               fetch(_extraUrl, { headers: { 'Accept': 'application/json' } })
                 .then(function(r2) { return r2.ok ? r2.json() : null; })
                 .then(function(resp2) {
@@ -3078,13 +3104,32 @@
                       cc: ad.is_vip ? 'card_red' : ad.is_pro ? 'card_orange' : '',
                       cy: ad.city ? ad.city.toUpperCase() : 'UK',
                       mk: ad.car_make || '',
+                      pb: ad.phone_brand || '',
                       lt: ad.listing_type || ''
                     });
                   });
+                  /* Phone pages: apply brand/city/district filter before rendering */
+                  if (_isPhonePage) {
+                    var _pBF = window._bazarPhoneBrandFilter || '';
+                    var _pCF = window._bazarPhoneCityFilter  || '';
+                    var _pDF = window._bazarPhoneDistFilter  || '';
+                    if (_pBF || _pCF || _pDF) {
+                      newItems = newItems.filter(function(item) {
+                        if (_pBF && item.pb && (item.pb || '').toLowerCase() !== _pBF) return false;
+                        if (_pCF && (item.l || '').toLowerCase().indexOf(_pCF) === -1) return false;
+                        if (_pDF && (item.l || '').toLowerCase().indexOf(_pDF) === -1) return false;
+                        return true;
+                      });
+                    }
+                  }
                   if (newItems.length) {
                     BAZAR_LISTINGS[_extraBucket] = newItems.concat(BAZAR_LISTINGS[_extraBucket] || []);
                     var reType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
-                    if (reType === _extraBucket) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
+                    if (reType === _extraBucket || _isPhonePage) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
+                  } else if (_isPhonePage) {
+                    BAZAR_LISTINGS['Phones'] = BAZAR_LISTINGS['Phones'] || [];
+                    window._bazarCurrentType = 'Phones';
+                    renderListings('Phones');
                   }
                 })
                 .catch(function() {});
