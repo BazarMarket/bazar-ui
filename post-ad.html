@@ -4441,9 +4441,8 @@
                });
                setTimeout(function(){
                   _setSelect('phoneModelSelect', d.phone_model || '');
-                  /* Now all fields are set — regenerate title from brand+model+storage */
-                  userEditedTitle = false;
-                  if (typeof updatePhoneTitle === 'function') updatePhoneTitle();
+                  /* Edit mode: keep the stored title, don't auto-regenerate */
+                  userEditedTitle = true;
                }, 100);
             }, 400);
          }
