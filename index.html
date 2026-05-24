@@ -1844,7 +1844,20 @@
                        {label:'Shops for Sale',     url:'/property-for-sale/shop'}],
         'restaurant': [{label:'Restaurant to Rent', url:'/property-to-rent/restaurant'}],
         'industrial': [{label:'Industrial to Rent', url:'/property-to-rent/industrial'}],
-        'hotel':      [{label:'Hotel to Rent',      url:'/property-to-rent/hotel'}]
+        'hotel':      [{label:'Hotel to Rent',      url:'/property-to-rent/hotel'}],
+        'phone':      [{label:'Mobile Phones for Sale', url:'/mobile-phones'}],
+        'phones':     [{label:'Mobile Phones for Sale', url:'/mobile-phones'}],
+        'mobile':     [{label:'Mobile Phones for Sale', url:'/mobile-phones'}],
+        'mobiles':    [{label:'Mobile Phones for Sale', url:'/mobile-phones'}],
+        'smartphone': [{label:'Mobile Phones for Sale', url:'/mobile-phones'}],
+        'iphone':     [{label:'Mobile Phones for Sale', url:'/mobile-phones'},
+                       {label:'Apple iPhones',           url:'/mobile-phones/apple'}],
+        'apple':      [{label:'Apple iPhones',           url:'/mobile-phones/apple'}],
+        'samsung':    [{label:'Samsung Phones',          url:'/mobile-phones/samsung'}],
+        'xiaomi':     [{label:'Xiaomi Phones',           url:'/mobile-phones/xiaomi'}],
+        'huawei':     [{label:'Huawei Phones',           url:'/mobile-phones/huawei'}],
+        'motorola':   [{label:'Motorola Phones',         url:'/mobile-phones/motorola'}],
+        'nokia':      [{label:'Nokia Phones',            url:'/mobile-phones/nokia'}]
     };
 
     function getStaticCats(q) {
@@ -1909,7 +1922,7 @@
 
         if (listings.length) {
             if (cats.length) html += '<div class="search-suggest__divider"></div>';
-            html += '<div class="search-suggest__section"><div class="search-suggest__head">Properties</div>';
+            html += '<div class="search-suggest__section"><div class="search-suggest__head">Listings</div>';
             listings.forEach(function(p) {
                 var price = p.price ? '£' + Number(p.price).toLocaleString('en-GB') : '';
                 html += '<a class="search-suggest__item" href="' + p.url + '">' +
