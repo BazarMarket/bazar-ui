@@ -4206,7 +4206,7 @@
 
          /* Basic */
          var titleEl = document.getElementById('titleInput');
-         if (titleEl) { titleEl.removeAttribute('readonly'); titleEl.value = d.title || ''; }
+         if (titleEl) { titleEl.removeAttribute('readonly'); titleEl.value = d.title || ''; userEditedTitle = true; }
          _setVal('descriptionInput', d.description || '');
 
          /* Price — formatPrice() uses dots as thousands sep (e.g. 10.000.000) */
