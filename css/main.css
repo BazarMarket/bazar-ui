@@ -5204,8 +5204,9 @@ body.bazar-logged .card__heart {
 }
 .cat-mob-grid__item:active { border-color: #ff9138; }
 .cat-mob-grid__img {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
   object-fit: contain;
 }
 .cat-mob-grid__title {
