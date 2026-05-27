@@ -434,6 +434,47 @@
          outline: none;
          border-color: #ff9138;
       }
+      /* Phone field with +44 prefix */
+      .pa-phone-wrap {
+         display: flex;
+         align-items: stretch;
+         border: 1px solid #e4e4e4;
+         border-radius: 8px;
+         overflow: hidden;
+         box-shadow: inset 0 2px 4px rgba(0,0,0,.06);
+         background: #fff;
+         width: 100%;
+      }
+      .pa-phone-wrap:focus-within {
+         border-color: #ff9138;
+      }
+      .pa-phone-prefix {
+         display: flex;
+         align-items: center;
+         padding: 11px 12px;
+         background: #f5f5f5;
+         border-right: 1px solid #e4e4e4;
+         font-family: "Poppins", sans-serif;
+         font-size: 15px;
+         font-weight: 600;
+         color: #555;
+         white-space: nowrap;
+         user-select: none;
+      }
+      .pa-phone-input {
+         flex: 1;
+         min-width: 0;
+         border: none;
+         outline: none;
+         padding: 11px 16px;
+         font-family: "Poppins", sans-serif;
+         font-size: 15px;
+         color: #333;
+         background: transparent;
+         box-sizing: border-box;
+      }
+      .pa-phone-input::placeholder { color: #aaa; }
+
       .pa-input[readonly] {
          background: #f5f5f5;
          color: #555;
@@ -1996,8 +2037,11 @@
                   <div class="pa-field">
                      <span class="pa-field__label">Phone:<span>*</span></span>
                      <div class="pa-field__control">
-                        <input class="pa-input" id="sellerPhoneInput" type="tel" placeholder="07XXX XXX XXX" oninput="normalizePostAdPhone(this)">
-                        <div id="sellerPhoneError" style="display:none;color:#e53935;font-size:13px;margin-top:5px;font-weight:500;">Please enter a valid UK mobile number (07XXX XXX XXX)</div>
+                        <div class="pa-phone-wrap">
+                           <span class="pa-phone-prefix">+44</span>
+                           <input class="pa-phone-input" id="sellerPhoneInput" type="tel" placeholder="7XXX XXX XXX" inputmode="tel" oninput="normalizePostAdPhone(this)">
+                        </div>
+                        <div id="sellerPhoneError" style="display:none;color:#e53935;font-size:13px;margin-top:5px;font-weight:500;">Please enter a valid UK mobile number (7XXX XXX XXX)</div>
                      </div>
                   </div>
 
@@ -3416,18 +3460,20 @@
          window.location.href = 'publish-options?ad_id=' + adId;
       }
 
-      /* ── Phone field +44 normalizer (same logic as login modal) ── */
+      /* ── Phone field +44 normalizer ── */
       function normalizePostAdPhone(input) {
-         var pos = input.selectionStart;
-         var raw = input.value.replace(/[^\d+]/g, '');
-         if (raw.startsWith('+44'))          raw = '0' + raw.slice(3);
-         else if (raw.startsWith('0044'))    raw = '0' + raw.slice(4);
-         else if (raw.startsWith('44') && raw.replace(/\D/g,'').length >= 12) raw = '0' + raw.slice(2);
-         else if (raw.startsWith('7'))       raw = '0' + raw;
-         raw = raw.slice(0, 11);
+         var raw = input.value.replace(/[^\d]/g, '');
+         /* Handle pasted full numbers: +447..., 07..., 447..., 0044... */
+         if (raw.startsWith('0044'))      raw = raw.slice(4);
+         else if (raw.startsWith('44') && raw.length >= 11) raw = raw.slice(2);
+         else if (raw.startsWith('07'))   raw = raw.slice(1);
+         /* Remove leading 0 if present (shouldn't be after +44 strip) */
+         if (raw.startsWith('0'))         raw = raw.slice(1);
+         raw = raw.slice(0, 10); /* max 10 digits: 7XXXXXXXXX */
+         /* Format: 7XXX XXX XXX */
          var formatted = raw;
-         if (raw.length > 8) formatted = raw.slice(0,5) + ' ' + raw.slice(5,8) + ' ' + raw.slice(8);
-         else if (raw.length > 5) formatted = raw.slice(0,5) + ' ' + raw.slice(5);
+         if (raw.length > 7) formatted = raw.slice(0,4) + ' ' + raw.slice(4,7) + ' ' + raw.slice(7);
+         else if (raw.length > 4) formatted = raw.slice(0,4) + ' ' + raw.slice(4);
          input.value = formatted;
          try { input.setSelectionRange(formatted.length, formatted.length); } catch(err) {}
          _clearPhoneFieldError();
@@ -3441,7 +3487,7 @@
       function _showPhoneFieldError(msg) {
          var errEl = document.getElementById('sellerPhoneError');
          if (errEl) {
-            errEl.textContent = msg || 'Please enter a valid UK mobile number (07XXX XXX XXX)';
+            errEl.textContent = msg || 'Please enter a valid UK mobile number (7XXX XXX XXX)';
             errEl.style.display = 'block';
             errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
          }
@@ -3460,7 +3506,7 @@
          if (rawPhone.startsWith('0'))     rawPhone = rawPhone.slice(1);
          /* Valid UK mobile: starts with 7, 9 more digits = 10 total after stripping 0 */
          if (!/^7\d{9}$/.test(rawPhone)) {
-            _showPhoneFieldError('Please enter a valid UK mobile number (07XXX XXX XXX)');
+            _showPhoneFieldError('Please enter a valid UK mobile number (7XXX XXX XXX)');
             return;
          }
          var intlPhone = '+44' + rawPhone;
@@ -4272,7 +4318,16 @@
 
          /* Contact */
          _setVal('sellerNameInput',  d.seller_name  || '');
-         _setVal('sellerPhoneInput', d.seller_phone || '');
+         /* Pre-fill phone: normalize +447... → 7... for the +44 prefix field */
+         (function() {
+            var ph = (d.seller_phone || '').replace(/[\s\-\(\)\.]/g, '');
+            if (ph.startsWith('+44')) ph = ph.slice(3);
+            else if (ph.startsWith('0044')) ph = ph.slice(4);
+            else if (ph.startsWith('07')) ph = ph.slice(1);
+            if (ph.startsWith('0')) ph = ph.slice(1);
+            var el = document.getElementById('sellerPhoneInput');
+            if (el) { el.value = ph; normalizePostAdPhone(el); }
+         })();
          /* Profile email takes priority over ad's stored email (profile may have been updated) */
          var _profileEmail = localStorage.getItem('bazar_email') || '';
          var _editEmail = _profileEmail || d.seller_email || '';
