@@ -4325,9 +4325,9 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
                 return
-            _redirect_uri = os.environ.get('OAUTH_REDIRECT_URI', '')
-            _client_id    = '1065826568544-r4k54p3ldhp3miuvqr25k6kq17t0doih.apps.googleusercontent.com'
-            _client_secret = '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'
+            _redirect_uri  = os.environ.get('OAUTH_REDIRECT_URI', '')
+            _client_id     = os.environ.get('GOOGLE_ADS_CLIENT_ID', '1065826568544-9r9nln8e3e453h4rtl0bddd73uaoehd4.apps.googleusercontent.com')
+            _client_secret = os.environ.get('GOOGLE_ADS_CLIENT_SECRET', '')
             token_data = urllib.parse.urlencode({
                 'code':          code,
                 'client_id':     _client_id,
