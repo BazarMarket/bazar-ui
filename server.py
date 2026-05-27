@@ -4313,6 +4313,53 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(200, {'admin': True})
             return
 
+        # ── GET /oauth/callback — one-time Google Ads OAuth token exchange ────────
+        if path == '/oauth/callback':
+            params = urllib.parse.parse_qs(qs)
+            code = params.get('code', [None])[0]
+            if not code:
+                body = b'<h2>Error: no code in callback</h2>'
+                self.send_response(400)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            _redirect_uri = os.environ.get('OAUTH_REDIRECT_URI', '')
+            _client_id    = '1065826568544-r4k54p3ldhp3miuvqr25k6kq17t0doih.apps.googleusercontent.com'
+            _client_secret = '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'
+            token_data = urllib.parse.urlencode({
+                'code':          code,
+                'client_id':     _client_id,
+                'client_secret': _client_secret,
+                'redirect_uri':  _redirect_uri,
+                'grant_type':    'authorization_code',
+            }).encode('utf-8')
+            try:
+                req = urllib.request.Request(
+                    'https://oauth2.googleapis.com/token',
+                    data=token_data, method='POST')
+                req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+                with urllib.request.urlopen(req) as resp:
+                    tokens = json.loads(resp.read())
+                refresh_token = tokens.get('refresh_token', 'NOT_FOUND')
+                print(f'[OAUTH] refresh_token obtained: {refresh_token[:20]}...', flush=True)
+                body = (
+                    f'<html><body style="font-family:monospace;padding:40px">'
+                    f'<h2 style="color:green">&#10003; refresh_token получен!</h2>'
+                    f'<p>Скопируйте и сохраните в Secrets как <b>GOOGLE_ADS_REFRESH_TOKEN</b>:</p>'
+                    f'<textarea rows="4" cols="80" style="font-size:14px">{refresh_token}</textarea>'
+                    f'</body></html>'
+                ).encode('utf-8')
+            except Exception as ex:
+                body = f'<h2>Token exchange error: {ex}</h2>'.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         # ── GET /api/profile-id/{firebase_uid} — get or create numeric profile ID ──
         _profid_m = re.match(r'^/api/profile-id/(.+)$', path)
         if _profid_m:
