@@ -1260,3 +1260,12 @@ window._checkImgPortrait = function(img) {
     else hideWallet();
 })();
 
+window.handleMobileMessages = function(e) {
+    e.preventDefault();
+    if (typeof _bzIsLoggedIn === 'function' && _bzIsLoggedIn()) {
+        window.location.href = '/messages';
+    } else {
+        if (typeof openCreateAccountModal === 'function') openCreateAccountModal();
+    }
+};
+
