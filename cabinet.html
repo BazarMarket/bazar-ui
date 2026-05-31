@@ -1795,12 +1795,17 @@
                     if (daysLeft <= 0) { isExpired = true; daysLeft = 0; }
                 }
             } else {
-                var baseDate = ad.boosted_at || ad.created_at;
-                if (baseDate) {
-                    daysLeft = Math.ceil(30 - (Date.now() - new Date(baseDate).getTime()) / 86400000);
+                if (ad.expires_at) {
+                    daysLeft = Math.ceil((new Date(ad.expires_at).getTime() - Date.now()) / 86400000);
                     if (daysLeft <= 0) { isExpired = true; daysLeft = 0; }
                 } else {
-                    daysLeft = 30;
+                    var baseDate = ad.boosted_at || ad.created_at;
+                    if (baseDate) {
+                        daysLeft = Math.ceil(30 - (Date.now() - new Date(baseDate).getTime()) / 86400000);
+                        if (daysLeft <= 0) { isExpired = true; daysLeft = 0; }
+                    } else {
+                        daysLeft = 30;
+                    }
                 }
             }
 
@@ -2048,11 +2053,17 @@
                     if (_localDl > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;white-space:nowrap;">' + _localDl + 'd left</span>';
                 }
             } else {
-                var _base = ad.boosted_at || ad.created_at;
-                if (_base) {
-                    var _dl2 = Math.ceil(30 - (Date.now() - new Date(_base).getTime()) / 86400000);
+                if (ad.expires_at) {
+                    var _dl2 = Math.ceil((new Date(ad.expires_at).getTime() - Date.now()) / 86400000);
                     _numDays = Math.max(0, _dl2);
                     if (_dl2 > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;white-space:nowrap;">' + _dl2 + 'd left</span>';
+                } else {
+                    var _base = ad.boosted_at || ad.created_at;
+                    if (_base) {
+                        var _dl2 = Math.ceil(30 - (Date.now() - new Date(_base).getTime()) / 86400000);
+                        _numDays = Math.max(0, _dl2);
+                        if (_dl2 > 0) _daysLeft = '<span style="font-size:11px;color:#6b7280;margin-left:5px;white-space:nowrap;">' + _dl2 + 'd left</span>';
+                    }
                 }
             }
 
