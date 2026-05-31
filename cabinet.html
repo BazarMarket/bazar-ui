@@ -2528,7 +2528,7 @@
                 if (!cfg.googleMapsApiKey) { doGeocode(lat, lng); return; }
                 window._cabinetGeocodePending = function() { doGeocode(lat, lng); };
                 var s = document.createElement('script');
-                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=_cabinetGeocodePending';
+                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&callback=_cabinetGeocodePending';
                 s.async = true; s.defer = true;
                 document.head.appendChild(s);
             }).catch(function() {

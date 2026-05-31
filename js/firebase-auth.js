@@ -315,8 +315,9 @@ function doSendFirebaseSms(phoneNumber, smsBtn) {
 }
 
 function sendSmsCode() {
-    if (!document.getElementById('agreeCheckbox').checked) { document.getElementById('agreeError').style.display = 'block'; return; }
-    document.getElementById('agreeError').style.display = 'none';
+    var _agCb = document.getElementById('agreeCheckbox');
+    if (_agCb && !_agCb.checked) { document.getElementById('agreeError').style.display = 'block'; return; }
+    if (_agCb) document.getElementById('agreeError').style.display = 'none';
     clearPhoneError();
     var rawValue = document.querySelector('.modal-number-input').value.replace(/[\s\(\)\-_\.]/g, '');
     if (rawValue.startsWith('+44')) {

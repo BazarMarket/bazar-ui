@@ -445,7 +445,7 @@
              .then(function(cfg) {
                 if (!cfg.googleMapsApiKey) return;
                 var s = document.createElement('script');
-                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&loading=async&callback=initMapsForLocation';
+                s.src = 'https://maps.googleapis.com/maps/api/js?key=' + cfg.googleMapsApiKey + '&libraries=places&callback=initMapsForLocation';
                 s.async = true; s.defer = true;
                 document.head.appendChild(s);
              });
