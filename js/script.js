@@ -1192,41 +1192,31 @@ window.onload = function () {
     else init();
 })();
 
-// ── Plan Badge ─────────────────────────────────────────────
+// ── My Ads Count ───────────────────────────────────────────
 (function() {
-    function updatePlanBadge() {
-        var plan = localStorage.getItem('bazar_plan') || 'free';
+    function updateAdsCount() {
         var badge = document.getElementById('subPlanBadge');
-        if (!badge) return;
-        var labels = { free: 'Free', pro: 'PRO', vip: 'VIP' };
-        badge.textContent = labels[plan] || 'Free';
-        badge.className = 'subscription__stiker';
-        if (plan === 'vip') badge.className += ' subscription__stiker--vip';
-        if (plan === 'free') badge.className += ' subscription__stiker--free';
-
         var daysEl = document.getElementById('subDaysEl');
+        if (badge) { badge.style.display = 'none'; badge.className = ''; }
         if (!daysEl) return;
         daysEl.textContent = '';
-        daysEl.style.display = '';
-        if (plan === 'free') {
-            daysEl.textContent = '30d';
-            daysEl.style.display = 'inline';
-        } else if (plan === 'pro' || plan === 'vip') {
-            var uid = localStorage.getItem('bazar_firebase_uid');
-            if (uid) {
-                fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid))
-                    .then(function(r) { return r.json(); })
-                    .then(function(d) {
-                        var days = parseInt(d.pro_days_left || d.vip_days_left || d.days_left || 0, 10);
-                        if (days > 0) daysEl.textContent = days + 'd';
-                    })
-                    .catch(function() {});
-            }
-        }
+        daysEl.style.cssText = 'display:none';
+        var uid = localStorage.getItem('bazar_firebase_uid');
+        if (!uid) return;
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(uid) + '/properties')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var count = Array.isArray(d) ? d.filter(function(p) { return p.status !== 'deleted'; }).length : 0;
+                if (count > 0) {
+                    daysEl.textContent = count;
+                    daysEl.style.cssText = 'display:inline;background:#ff9138;color:#fff;font-weight:700;font-size:13px;padding:2px 8px;border-radius:12px;min-width:22px;text-align:center;line-height:1.6';
+                }
+            })
+            .catch(function() {});
     }
-    window.updatePlanBadge = updatePlanBadge;
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updatePlanBadge);
-    else updatePlanBadge();
+    window.updatePlanBadge = updateAdsCount;
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateAdsCount);
+    else updateAdsCount();
 })();
 
 
