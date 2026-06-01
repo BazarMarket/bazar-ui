@@ -132,35 +132,23 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         var daysEl = document.getElementById('subDaysEl') ||
                      document.querySelector('.subscription__days');
 
-        if (!badge) return;
-
-        /* Style map */
-        var styles = {
-            free: { text: 'Free',  bg: '#22c55e', color: '#fff' },
-            pro:  { text: 'PRO',   bg: '#ff9138', color: '#fff' },
-            vip:  { text: 'VIP',   bg: '#c99a10', color: '#fff' }
-        };
-        var s = styles[plan] || styles.free;
-        badge.textContent = s.text;
-        badge.style.background = s.bg;
-        badge.style.color = s.color;
-        badge.style.borderRadius = '20px';
-        badge.style.padding = '2px 10px';
-        badge.style.fontWeight = '700';
-        badge.style.fontSize = '12px';
-
-        if (daysEl) {
-            if (plan === 'free') {
-                daysEl.textContent = '30d';
-                daysEl.style.display = 'inline';
-            } else if (daysLeft > 0) {
-                daysEl.textContent = daysLeft + 'd';
-                daysEl.style.display = '';
-            } else {
-                daysEl.textContent = '';
-                daysEl.style.display = 'none';
-            }
-        }
+        // Скрываем план-бейдж, показываем кол-во объявлений
+        if (badge) { badge.style.display = 'none'; badge.className = ''; }
+        if (!daysEl) return;
+        daysEl.textContent = '';
+        daysEl.style.cssText = 'display:none';
+        var _uid = localStorage.getItem('bazar_firebase_uid');
+        if (!_uid || !window.BAZAR_API) return;
+        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(_uid) + '/properties')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                var count = Array.isArray(d) ? d.filter(function(p) { return p.status !== 'deleted'; }).length : 0;
+                if (count > 0) {
+                    daysEl.textContent = count;
+                    daysEl.style.cssText = 'display:inline;background:#ff9138;color:#fff;font-weight:700;font-size:13px;padding:2px 8px;border-radius:12px;min-width:22px;text-align:center;line-height:1.6';
+                }
+            })
+            .catch(function() {});
     }
 
     function updateFavCount() {
