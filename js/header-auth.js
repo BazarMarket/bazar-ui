@@ -147,7 +147,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
                 var count = _items.filter(function(p) { return p.status !== 'deleted'; }).length;
                 if (count > 0) {
                     daysEl.textContent = count;
-                    daysEl.style.cssText = 'display:inline;background:#ff9138;color:#fff;font-weight:700;font-size:13px;padding:2px 8px;border-radius:12px;min-width:22px;text-align:center;line-height:1.6';
+                    daysEl.style.cssText = '';
                 }
             })
             .catch(function() {});
