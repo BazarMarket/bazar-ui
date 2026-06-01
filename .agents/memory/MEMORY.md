@@ -1,0 +1,2 @@
+---
+- [Auto-delete expired listings](auto-delete-expired.md) — Python thread in server.py calls Laravel daily; hard-deletes when expires_at < now() or created_at+30 < now()
