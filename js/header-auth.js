@@ -132,25 +132,20 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         var daysEl = document.getElementById('subDaysEl') ||
                      document.querySelector('.subscription__days');
 
-        // Скрываем план-бейдж, показываем кол-во объявлений
-        if (badge) { badge.style.display = 'none'; badge.className = ''; }
-        if (!daysEl) return;
-        daysEl.textContent = '';
-        daysEl.style.cssText = 'display:none';
-        var _uid = localStorage.getItem('bazar_firebase_uid');
-        if (!_uid) return;
-        var _api = (window.BAZAR_API || '/api');
-        fetch(_api + '/customers/' + encodeURIComponent(_uid) + '/properties')
-            .then(function(r) { return r.ok ? r.json() : []; })
-            .then(function(d) {
-                var _items = Array.isArray(d) ? d : (d && Array.isArray(d.data) ? d.data : []);
-                var count = _items.filter(function(p) { return p.status !== 'deleted'; }).length;
-                if (count > 0) {
-                    daysEl.textContent = count;
-                    daysEl.style.cssText = '';
-                }
-            })
-            .catch(function() {});
+        // Показываем бейдж плана (Free / PRO / VIP) без даты
+        if (daysEl) { daysEl.textContent = ''; daysEl.style.display = 'none'; }
+        if (!badge) return;
+        badge.style.display = '';
+        if (plan === 'vip') {
+            badge.className = 'subscription__stiker subscription__stiker--vip';
+            badge.textContent = 'VIP';
+        } else if (plan === 'pro') {
+            badge.className = 'subscription__stiker';
+            badge.textContent = 'PRO';
+        } else {
+            badge.className = 'subscription__stiker subscription__stiker--free';
+            badge.textContent = 'Free';
+        }
     }
 
     function updateFavCount() {
