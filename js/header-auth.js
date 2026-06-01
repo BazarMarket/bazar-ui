@@ -138,11 +138,13 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         daysEl.textContent = '';
         daysEl.style.cssText = 'display:none';
         var _uid = localStorage.getItem('bazar_firebase_uid');
-        if (!_uid || !window.BAZAR_API) return;
-        fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(_uid) + '/properties')
-            .then(function(r) { return r.json(); })
+        if (!_uid) return;
+        var _api = (window.BAZAR_API || '/api');
+        fetch(_api + '/customers/' + encodeURIComponent(_uid) + '/properties')
+            .then(function(r) { return r.ok ? r.json() : []; })
             .then(function(d) {
-                var count = Array.isArray(d) ? d.filter(function(p) { return p.status !== 'deleted'; }).length : 0;
+                var _items = Array.isArray(d) ? d : (d && Array.isArray(d.data) ? d.data : []);
+                var count = _items.filter(function(p) { return p.status !== 'deleted'; }).length;
                 if (count > 0) {
                     daysEl.textContent = count;
                     daysEl.style.cssText = 'display:inline;background:#ff9138;color:#fff;font-weight:700;font-size:13px;padding:2px 8px;border-radius:12px;min-width:22px;text-align:center;line-height:1.6';
