@@ -1177,10 +1177,10 @@
                      </div>
                   </div>
 
-                  <!-- Car-specific fields (Motors → Cars) -->
+                  <!-- Car/Van-specific fields (Motors → Cars / Vans) -->
                   <div id="carSpecificSection" style="display:none">
                      <div class="pa-field">
-                        <span class="pa-field__label">Car Brand:<span>*</span></span>
+                        <span class="pa-field__label" id="carBrandLabel">Car Brand:<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="carMakeSelect" onchange="onCarMakeChange(this)">
                               <option value="" selected>Select car brand</option>
@@ -2261,7 +2261,43 @@
          'XPeng':           ['G6','G9','P5','P7','Other'],
          'Other':           []
       };
+
+      var vanMakeModels = {
+         'Aixam':            ['Aixam 500', 'Aixam 741', 'Aixam Access', 'Minauto', 'Other'],
+         'BAW':              ['Fenix', 'Yuanbao', 'Other'],
+         'BYD':              ['T3', 'Other'],
+         'Chevrolet':        ['Express', 'Astro', 'City Express', 'Other'],
+         'Citroen':          ['Berlingo', 'Dispatch', 'Relay', 'Jumper', 'Jumpy', 'e-Berlingo', 'e-Dispatch', 'Other'],
+         'Dacia':            ['Dokker', 'Jogger', 'Other'],
+         'DFM':              ['C37', 'V27', 'Mini Van', 'Other'],
+         'Fiat':             ['Ducato', 'Doblo Cargo', 'Scudo', 'Fiorino', 'Talento', 'e-Ducato', 'Other'],
+         'Ford':             ['Transit', 'Transit Custom', 'Transit Connect', 'Transit Courier', 'E-Transit', 'E-Transit Custom', 'Other'],
+         'Foton':            ['Aumark', 'View CS2', 'Other'],
+         'Honda':            ['e:NV200', 'Acty', 'Other'],
+         'Hyundai':          ['H350', 'iLoad', 'Staria Load', 'Other'],
+         'Isuzu':            ['N-Series', 'NLR', 'NLS', 'NMR', 'Other'],
+         'Iveco':            ['Daily', 'Daily Electric', 'Other'],
+         'Kia':              ['K2500', 'PV5', 'Bongo', 'Other'],
+         'LDV':              ['Deliver 9', 'Deliver 3', 'EV80', 'Other'],
+         'Maxus':            ['Deliver 9', 'EV80', 'V80', 'V90', 'T90EV', 'Other'],
+         'Mazda':            ['Bongo', 'E2000', 'Other'],
+         'Mercedes-Benz':    ['Sprinter', 'Vito', 'Viano', 'Citan', 'eSprinter', 'eVito', 'Other'],
+         'Mitsubishi':       ['Canter', 'L300', 'Delica', 'Other'],
+         'Nissan':           ['NV200', 'NV300', 'NV400', 'Primastar', 'Interstar', 'e-NV200', 'Other'],
+         'Opel / Vauxhall':  ['Vivaro', 'Movano', 'Combo', 'Vivaro-e', 'Combo-e', 'Movano-e', 'Other'],
+         'Peugeot':          ['Expert', 'Boxer', 'Partner', 'e-Expert', 'e-Boxer', 'e-Partner', 'Other'],
+         'Renault':          ['Traffic', 'Master', 'Kangoo', 'Kangoo Van', 'Trafic', 'Master Z.E.', 'Kangoo E-Tech', 'Other'],
+         'Rover':            ['Other'],
+         'Seat':             ['Inca', 'Other'],
+         'Skoda':            ['Felicia Combi', 'Other'],
+         'Suzuki':           ['Carry', 'Every', 'Other'],
+         'Toyota':           ['Proace', 'ProAce City', 'HiAce', 'Proace Verso', 'ProAce Electric', 'Other'],
+         'Volkswagen':       ['Transporter T5', 'Transporter T6', 'Transporter T6.1', 'Caddy', 'Crafter', 'ID. Buzz Cargo', 'Other'],
+         'Other':            []
+      };
+
       var isCarSubtype = false;
+      var isVanSubtype = false;
       var isPhoneSubtype = false;
 
       var phoneModels = {
@@ -2410,8 +2446,10 @@
       function initCarMakeSelect() {
          var sel = document.getElementById('carMakeSelect');
          if (!sel) return;
-         var html = '<option value="" selected>Select car brand</option>';
-         Object.keys(carMakeModels).forEach(function(make) {
+         var models = isVanSubtype ? vanMakeModels : carMakeModels;
+         var placeholder = isVanSubtype ? 'Select van brand' : 'Select car brand';
+         var html = '<option value="" selected>' + placeholder + '</option>';
+         Object.keys(models).forEach(function(make) {
             html += '<option value="' + make + '">' + make + '</option>';
          });
          sel.innerHTML = html;
@@ -2440,7 +2478,7 @@
             updateCarTitle();
             return;
          }
-         var models = carMakeModels[make] || [];
+         var models = (isVanSubtype ? vanMakeModels : carMakeModels)[make] || [];
          if (models.length) {
             var html = '<option value="" selected>Select model</option>';
             models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
@@ -2506,10 +2544,23 @@
 
       function activateCarFields() {
          isCarSubtype = true;
+         isVanSubtype = false;
+         _activateMotorFields('Car Brand:');
+      }
+
+      function activateVanFields() {
+         isVanSubtype = true;
+         isCarSubtype = true;
+         _activateMotorFields('Van Brand:');
+      }
+
+      function _activateMotorFields(brandLabel) {
          ['brandField','modelField','yearField'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.style.display = 'none';
          });
+         var lbl = document.getElementById('carBrandLabel');
+         if (lbl) lbl.childNodes[0].textContent = brandLabel;
          var carSec = document.getElementById('carSpecificSection');
          if (carSec) carSec.style.display = '';
          initCarMakeSelect();
@@ -2531,6 +2582,7 @@
 
       function deactivateCarFields() {
          isCarSubtype = false;
+         isVanSubtype = false;
          var carSec = document.getElementById('carSpecificSection');
          if (carSec) carSec.style.display = 'none';
          var titleInput = document.getElementById('titleInput');
@@ -2687,9 +2739,9 @@
             'For Short-term Rent': ['Flats', 'Studio', 'House', 'Maisonette', 'Rooms', 'Townhouse', 'Penthouse', 'Duplex', 'Bungalow', 'Cottage']
          },
          'motors': {
-            'For Sale':            ['Cars', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
-            'For Long-term Rent':  ['Cars', 'Motorbikes', 'Boats & marine', 'Other'],
-            'For Short-term Rent': ['Cars', 'Motorbikes', 'Boats & marine', 'Other']
+            'For Sale':            ['Cars', 'Vans', 'Motorbikes', 'Trucks', 'Boats & marine', 'Auto parts', 'Accessories', 'Other'],
+            'For Long-term Rent':  ['Cars', 'Vans', 'Motorbikes', 'Boats & marine', 'Other'],
+            'For Short-term Rent': ['Cars', 'Vans', 'Motorbikes', 'Boats & marine', 'Other']
          },
          'jobs': {
             'Full-time':   ['IT & Technology', 'Sales', 'Marketing', 'Finance', 'Healthcare', 'Other'],
@@ -2978,6 +3030,17 @@
             if (_isMobile()) _mobShowForm();
             return;
          }
+         if (reState.cat === 'motors' && propType === 'Vans') {
+            deactivatePhoneFields();
+            activateVanFields();
+            document.getElementById('houseTypeField').style.display = 'none';
+            document.getElementById('buildingTypeField').style.display = 'none';
+            document.getElementById('constructionTypeField').style.display = 'none';
+            document.getElementById('subtypeField').style.display = 'none';
+            document.getElementById('paForm').classList.add('visible');
+            if (_isMobile()) _mobShowForm();
+            return;
+         }
          if (reState.cat === 'phones') {
             /* propType is now the brand name (Apple, Samsung, etc.) from the third column */
             deactivateCarFields();
@@ -3176,7 +3239,7 @@
          houseTypeField.style.display = 'none';
          var list = (catData[cat] && catData[cat][sub]) || [];
          if (cat === 'motors' && !window.bazarIsAdmin) {
-            list = list.filter(function(s) { return s === 'Cars'; });
+            list = list.filter(function(s) { return s === 'Cars' || s === 'Vans'; });
          }
          if (!list.length) { subSubCats.innerHTML = ''; return; }
          if (cat === 'real-estate') {
@@ -3605,7 +3668,7 @@
 
       async function submitProperty() {
          if (!localStorage.getItem('bazar_firebase_uid')) { _requireAuthThenSubmit(submitProperty); return; }
-         if (reState.cat === 'motors' && isCarSubtype) {
+         if (reState.cat === 'motors' && (isCarSubtype || isVanSubtype)) {
             submitCar();
             return;
          }
@@ -3897,7 +3960,7 @@
          var firebaseUid = localStorage.getItem('bazar_firebase_uid');
          if (firebaseUid) formData.append('firebase_uid', firebaseUid);
          formData.append('listing_type', listingType);
-         formData.append('property_type', 'car');
+         formData.append('property_type', isVanSubtype ? 'van' : 'car');
          formData.append('price', price);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
