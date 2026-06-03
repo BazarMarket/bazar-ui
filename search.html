@@ -2396,11 +2396,12 @@
       var priceValuesSale    = ['500','1.000','2.000','3.000','5.000','7.500','10.000','15.000','20.000','25.000','30.000','40.000','50.000','75.000','100.000'];
       var priceValuesRent    = ['100','200','300','400','500','600','700','800','900','1.000','1.250','1.500','2.000','2.500','3.000','4.000','5.000'];
       var priceValuesCarRent = ['10','25','50','75','100','200','300','500','750','1.000','2.000','3.000','5.000'];
+      var priceValuesPhone   = ['10','20','30','50','75','100','150','200','250','300','400','500','600','750','1.000','1.200','1.500'];
       var priceValues = priceValuesSale;
 
       function buildPricePanels() {
          var _isCarRent = window._isCarPage && (currentMode === 'rent' || currentMode === 'short-rent');
-         priceValues = _isCarRent ? priceValuesCarRent : (currentMode === 'rent' || currentMode === 'short-rent') ? priceValuesRent : priceValuesSale;
+         priceValues = window._isPhonePage ? priceValuesPhone : _isCarRent ? priceValuesCarRent : (currentMode === 'rent' || currentMode === 'short-rent') ? priceValuesRent : priceValuesSale;
          var minPanel = document.getElementById('cfPriceMinPanel');
          var maxPanel = document.getElementById('cfPriceMaxPanel');
          minPanel.innerHTML = priceValues.map(function(v){ return '<div class="cf-price-item" onclick="selectPrice(this,\'Min\')">' + v + '</div>'; }).join('');
@@ -4262,6 +4263,7 @@
             ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
+            buildPricePanels(); _smfPricesBuilt = false;
             /* Pre-select brand from URL path segment */
             if (window._bazarPhoneBrandFilter) _preSelectPhoneBrand(window._bazarPhoneBrandFilter.replace(/\s+/g, '-'));
             if (catLink) catLink.parentNode.style.display = 'none';
