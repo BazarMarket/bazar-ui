@@ -611,6 +611,17 @@
                         </button>
                         <div class="cf-cat-panel" id="cfTypePanel"></div>
                      </div>
+                     <!-- Phones: Any brand — shown when Mobile phones category selected -->
+                     <select class="cf-ctrl" id="cfPhoneBrand" onchange="onCfPhoneBrandChange(this)" style="display:none">
+                        <option value="">Any brand</option>
+                        <option>Apple</option><option>Samsung</option><option>Xiaomi</option><option>Huawei</option>
+                        <option>Google</option><option>OnePlus</option><option>Sony</option><option>Nokia</option>
+                        <option>Motorola</option><option>Oppo</option><option>Vivo</option><option>Honor</option>
+                        <option>Realme</option><option>Nothing</option><option>ASUS</option><option>LG</option>
+                        <option>Fairphone</option><option>Blackberry</option><option>Alcatel</option><option>TCL</option>
+                        <option>ZTE</option><option>HTC</option><option>Cat</option><option>Blackview</option>
+                        <option>Doogee</option><option>Oukitel</option><option>Ulefone</option><option>Other</option>
+                     </select>
                      <!-- Motors: Any brand (make) — shown when Motors category selected -->
                      <select class="cf-ctrl" id="cfMotorsMake" onchange="onCfMotorsMakeChange(this)" style="display:none">
                         <option value="">Any brand</option>
@@ -894,6 +905,33 @@
                         <option value="20000">20,000</option><option value="30000">30,000</option>
                         <option value="50000">50,000</option><option value="75000">75,000</option>
                         <option value="100000">100,000</option><option value="150000">150,000+</option>
+                     </select>
+                  </div>
+                  <!-- Phones row 2: model + storage + condition + SIM + battery + warranty -->
+                  <div class="cf-row" id="cfPhonesRow2" style="display:none">
+                     <select class="cf-ctrl" id="cfPhoneModel" onchange="onCfPhoneFilterChange()" style="display:none">
+                        <option value="">Any model</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneStorage" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any storage</option>
+                        <option>8GB</option><option>16GB</option><option>32GB</option><option>64GB</option>
+                        <option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneCondition" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any condition</option>
+                        <option>New</option><option>Like new</option><option>Good</option><option>Fair</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneSim" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any SIM type</option>
+                        <option>Single SIM</option><option>Dual SIM</option><option>eSIM</option><option>eSIM + SIM</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneBattery" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any battery health</option>
+                        <option>100%</option><option>95–99%</option><option>90–94%</option><option>85–89%</option><option>Below 85%</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneWarranty" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any warranty</option>
+                        <option>Shop warranty</option><option>Manufacturer warranty</option><option>No warranty</option>
                      </select>
                   </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
@@ -1365,13 +1403,16 @@
          }
          var l = label.toLowerCase();
          var isMotors = l.indexOf('motors') !== -1;
+         var isPhones = l.indexOf('mobile phones') !== -1 || l.indexOf('mobile phone') !== -1;
          var motorsRow2 = document.getElementById('cfMotorsRow2');
          if (motorsRow2) motorsRow2.style.display = isMotors ? '' : 'none';
-         /* Show/hide property vs motors filters */
+         var phonesRow2 = document.getElementById('cfPhonesRow2');
+         if (phonesRow2) phonesRow2.style.display = isPhones ? '' : 'none';
+         /* Show/hide property vs motors/phones filters */
          var _propFilterIds = ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'];
          _propFilterIds.forEach(function(id){
             var el = document.getElementById(id);
-            if (el) el.style.display = isMotors ? 'none' : '';
+            if (el) el.style.display = (isMotors || isPhones) ? 'none' : '';
          });
          /* Show/hide motors-specific filters */
          var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'];
@@ -1379,6 +1420,9 @@
             var el = document.getElementById(id);
             if (el) el.style.display = isMotors ? '' : 'none';
          });
+         /* Show/hide phones-specific filters */
+         var cfPhoneBrandEl = document.getElementById('cfPhoneBrand');
+         if (cfPhoneBrandEl) cfPhoneBrandEl.style.display = isPhones ? '' : 'none';
 
          /* Navigate to the category URL */
          var targetUrl = catUrlMap[label];
@@ -2994,6 +3038,12 @@
                 st:   ad.sub_type || '',
                 mk:   ad.car_make || '',
                 pb:   ad.phone_brand || '',
+                pm:   ad.phone_model || '',
+                ps:   ad.phone_storage || '',
+                psi:  ad.sim_type || '',
+                pb2:  ad.battery_health || '',
+                pw:   ad.warranty || '',
+                pc:   ad.condition || '',
                 lt:   ad.listing_type || '',
                 pt:   ad.property_type || ''
               });
@@ -3105,6 +3155,12 @@
                       cy: ad.city ? ad.city.toUpperCase() : 'UK',
                       mk: ad.car_make || '',
                       pb: ad.phone_brand || '',
+                      pm: ad.phone_model || '',
+                      ps: ad.phone_storage || '',
+                      psi: ad.sim_type || '',
+                      pb2: ad.battery_health || '',
+                      pw: ad.warranty || '',
+                      pc: ad.condition || '',
                       lt: ad.listing_type || ''
                     });
                   });
@@ -3335,6 +3391,41 @@
             return (item.mk || '').toLowerCase().indexOf(_mf) !== -1 ||
                    (item.t  || '').toLowerCase().indexOf(_mf) !== -1;
           });
+        }
+        /* Apply phone filters from dropdowns */
+        var _cfPhoneBrandVal = ((document.getElementById('cfPhoneBrand') || {}).value || '').toLowerCase();
+        if (_cfPhoneBrandVal) {
+          items = items.filter(function(item) {
+            return (item.pb || '').toLowerCase() === _cfPhoneBrandVal ||
+                   (item.t  || '').toLowerCase().indexOf(_cfPhoneBrandVal) !== -1;
+          });
+        }
+        var _cfPhoneModelVal = ((document.getElementById('cfPhoneModel') || {}).value || '').toLowerCase();
+        if (_cfPhoneModelVal) {
+          items = items.filter(function(item) {
+            return (item.pm || '').toLowerCase() === _cfPhoneModelVal ||
+                   (item.t  || '').toLowerCase().indexOf(_cfPhoneModelVal) !== -1;
+          });
+        }
+        var _cfPhoneStorageVal = (document.getElementById('cfPhoneStorage') || {}).value || '';
+        if (_cfPhoneStorageVal) {
+          items = items.filter(function(item) { return (item.ps || '') === _cfPhoneStorageVal; });
+        }
+        var _cfPhoneConditionVal = (document.getElementById('cfPhoneCondition') || {}).value || '';
+        if (_cfPhoneConditionVal) {
+          items = items.filter(function(item) { return (item.pc || '') === _cfPhoneConditionVal; });
+        }
+        var _cfPhoneSimVal = (document.getElementById('cfPhoneSim') || {}).value || '';
+        if (_cfPhoneSimVal) {
+          items = items.filter(function(item) { return (item.psi || '') === _cfPhoneSimVal; });
+        }
+        var _cfPhoneBatteryVal = (document.getElementById('cfPhoneBattery') || {}).value || '';
+        if (_cfPhoneBatteryVal) {
+          items = items.filter(function(item) { return (item.pb2 || '') === _cfPhoneBatteryVal; });
+        }
+        var _cfPhoneWarrantyVal = (document.getElementById('cfPhoneWarranty') || {}).value || '';
+        if (_cfPhoneWarrantyVal) {
+          items = items.filter(function(item) { return (item.pw || '') === _cfPhoneWarrantyVal; });
         }
         if (window._bazarCarPageRentType) {
           var _crt = window._bazarCarPageRentType;
@@ -3572,6 +3663,75 @@
          models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
          modelSel.innerHTML = html;
       }
+
+      /* ── Phone filter helpers ──────────────────────────────────── */
+      var cfPhoneMakeModels = {
+         'Apple':    ['iPhone 11','iPhone 12','iPhone 12 Pro','iPhone 12 Pro Max','iPhone 13','iPhone 13 Pro','iPhone 13 Pro Max','iPhone 14','iPhone 14 Pro','iPhone 14 Pro Max','iPhone 15','iPhone 15 Plus','iPhone 15 Pro','iPhone 15 Pro Max','iPhone 16','iPhone 16 Plus','iPhone 16 Pro','iPhone 16 Pro Max','iPhone SE (2022)','Other'],
+         'Samsung':  ['Galaxy S21','Galaxy S21 Ultra','Galaxy S22','Galaxy S22 Ultra','Galaxy S23','Galaxy S23 Ultra','Galaxy S24','Galaxy S24+','Galaxy S24 Ultra','Galaxy A54','Galaxy A55','Galaxy A35','Galaxy Z Flip 5','Galaxy Z Flip 6','Galaxy Z Fold 5','Galaxy Z Fold 6','Other'],
+         'Xiaomi':   ['Redmi Note 12','Redmi Note 13','Redmi Note 13 Pro','Xiaomi 13','Xiaomi 13T','Xiaomi 13T Pro','Xiaomi 14','Poco X6','Poco F5','Other'],
+         'Huawei':   ['P40','P40 Pro','P50','P50 Pro','Mate 50','Mate 50 Pro','Nova 12','Other'],
+         'Google':   ['Pixel 7','Pixel 7a','Pixel 7 Pro','Pixel 8','Pixel 8a','Pixel 8 Pro','Pixel 9','Pixel 9 Pro','Pixel 9 Pro XL','Other'],
+         'OnePlus':  ['OnePlus 11','OnePlus 12','OnePlus Nord 3','OnePlus Nord CE 3','OnePlus Nord 4','Other'],
+         'Sony':     ['Xperia 1 V','Xperia 5 V','Xperia 10 V','Xperia 1 VI','Other'],
+         'Nokia':    ['Nokia G42','Nokia G60','Nokia X30','Nokia XR21','Other'],
+         'Motorola': ['Moto G84','Moto G54','Edge 40','Edge 40 Pro','Edge 50','Edge 50 Pro','Other'],
+         'Oppo':     ['Oppo Find X6','Oppo Find X7','Oppo Reno 10','Oppo Reno 11','Other'],
+         'Vivo':     ['Vivo X90','Vivo X100','Vivo V29','Vivo V30','Other'],
+         'Honor':    ['Honor Magic 5','Honor Magic 6','Honor 90','Honor 90 Pro','Other'],
+         'Realme':   ['Realme GT 5','Realme 12 Pro','Realme 12 Pro+','Other'],
+         'Nothing':  ['Phone (1)','Phone (2)','Phone (2a)','Phone (2a) Plus','Other'],
+         'ASUS':     ['ROG Phone 7','ROG Phone 8','ZenFone 10','ZenFone 11 Ultra','Other'],
+         'LG':       ['LG G8 ThinQ','LG V60 ThinQ','LG Velvet','LG Wing','Other'],
+         'Other':    []
+      };
+
+      function onCfPhoneBrandChange(sel) {
+         var brand = sel.value;
+         var modelSel = document.getElementById('cfPhoneModel');
+         if (modelSel) {
+            var models = cfPhoneMakeModels[brand] || [];
+            var html = '<option value="">Any model</option>';
+            models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
+            modelSel.innerHTML = html;
+            modelSel.style.display = brand ? '' : 'none';
+         }
+         /* Navigate to brand-specific URL (consistent with car make behaviour) */
+         var brandSlug = brand ? brand.toLowerCase().replace(/\s+/g, '-') : '';
+         var targetPath = brandSlug ? '/mobile-phones/' + brandSlug : '/mobile-phones';
+         if (window.location.pathname.replace(/\/$/, '') !== targetPath) {
+            window.location.href = targetPath;
+         } else {
+            if (window._bazarCurrentType === 'Phones') { _srCurrentPage = 1; renderListings('Phones'); }
+         }
+      }
+
+      function onCfPhoneFilterChange() {
+         _srCurrentPage = 1;
+         if (window._bazarCurrentType === 'Phones') renderListings('Phones');
+      }
+
+      var _preSelectPhoneBrand = function(slug) {
+         if (!slug) return;
+         var sel = document.getElementById('cfPhoneBrand');
+         if (!sel) return;
+         var norm = slug.toLowerCase().replace(/-/g, ' ');
+         for (var _i = 0; _i < sel.options.length; _i++) {
+            if (sel.options[_i].text.toLowerCase() === norm) {
+               sel.selectedIndex = _i;
+               /* Populate model dropdown */
+               var modelSel = document.getElementById('cfPhoneModel');
+               if (modelSel) {
+                  var brand = sel.options[_i].text;
+                  var models = cfPhoneMakeModels[brand] || [];
+                  var html = '<option value="">Any model</option>';
+                  models.forEach(function(m) { html += '<option value="' + m + '">' + m + '</option>'; });
+                  modelSel.innerHTML = html;
+                  modelSel.style.display = models.length ? '' : 'none';
+               }
+               return;
+            }
+         }
+      };
 
       /* Motors year min/max panel functions */
       var _motorsYearValues = (function() {
@@ -4082,7 +4242,7 @@
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
          } else if (pathCat === 'mobile-phones') {
-            /* Mobile phones page: set category UI and hide property/motors filters */
+            /* Mobile phones page: set category UI, show phone filters, hide property/motors */
             document.getElementById('cfCatLabel').textContent = 'Mobile phones, communication';
             var imgEl = document.getElementById('cfCatImg');
             imgEl.src = 'img/cat/image5.png'; imgEl.style.display = '';
@@ -4092,12 +4252,18 @@
             });
             var _mRow2 = document.getElementById('cfMotorsRow2');
             if (_mRow2) _mRow2.style.display = 'none';
+            var _phRow2 = document.getElementById('cfPhonesRow2');
+            if (_phRow2) _phRow2.style.display = '';
+            var _cfPhoneBrandEl = document.getElementById('cfPhoneBrand');
+            if (_cfPhoneBrandEl) _cfPhoneBrandEl.style.display = '';
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
             ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
+            /* Pre-select brand from URL path segment */
+            if (window._bazarPhoneBrandFilter) _preSelectPhoneBrand(window._bazarPhoneBrandFilter.replace(/\s+/g, '-'));
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
          } else if (pathCatMap[pathCat]) {
