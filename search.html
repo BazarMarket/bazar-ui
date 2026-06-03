@@ -768,6 +768,33 @@
                         </div>
                      </div>
                   </div>
+                  <!-- Phones row 2: model + storage + condition + SIM + battery + warranty -->
+                  <div class="cf-row" id="cfPhonesRow2" style="display:none">
+                     <select class="cf-ctrl" id="cfPhoneModel" onchange="onCfPhoneFilterChange()" style="display:none">
+                        <option value="">Any model</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneStorage" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any storage</option>
+                        <option>8GB</option><option>16GB</option><option>32GB</option><option>64GB</option>
+                        <option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneCondition" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any condition</option>
+                        <option>New</option><option>Like new</option><option>Used</option><option>Refurbished</option><option>For parts / not working</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneSim" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any SIM type</option>
+                        <option>Single SIM</option><option>Dual SIM</option><option>eSIM</option><option>eSIM + SIM</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneBattery" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any battery health</option>
+                        <option>100%</option><option>95–99%</option><option>90–94%</option><option>85–89%</option><option>Below 85%</option>
+                     </select>
+                     <select class="cf-ctrl" id="cfPhoneWarranty" onchange="onCfPhoneFilterChange()">
+                        <option value="">Any warranty</option>
+                        <option>Shop warranty</option><option>Manufacturer warranty</option><option>No warranty</option>
+                     </select>
+                  </div>
                   <!-- Row 3: Price min/max + Bedrooms + Bathrooms -->
                   <div class="cf-row">
                      <div class="cf-price-joined">
@@ -905,33 +932,6 @@
                         <option value="20000">20,000</option><option value="30000">30,000</option>
                         <option value="50000">50,000</option><option value="75000">75,000</option>
                         <option value="100000">100,000</option><option value="150000">150,000+</option>
-                     </select>
-                  </div>
-                  <!-- Phones row 2: model + storage + condition + SIM + battery + warranty -->
-                  <div class="cf-row" id="cfPhonesRow2" style="display:none">
-                     <select class="cf-ctrl" id="cfPhoneModel" onchange="onCfPhoneFilterChange()" style="display:none">
-                        <option value="">Any model</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfPhoneStorage" onchange="onCfPhoneFilterChange()">
-                        <option value="">Any storage</option>
-                        <option>8GB</option><option>16GB</option><option>32GB</option><option>64GB</option>
-                        <option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfPhoneCondition" onchange="onCfPhoneFilterChange()">
-                        <option value="">Any condition</option>
-                        <option>New</option><option>Like new</option><option>Used</option><option>Refurbished</option><option>For parts / not working</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfPhoneSim" onchange="onCfPhoneFilterChange()">
-                        <option value="">Any SIM type</option>
-                        <option>Single SIM</option><option>Dual SIM</option><option>eSIM</option><option>eSIM + SIM</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfPhoneBattery" onchange="onCfPhoneFilterChange()">
-                        <option value="">Any battery health</option>
-                        <option>100%</option><option>95–99%</option><option>90–94%</option><option>85–89%</option><option>Below 85%</option>
-                     </select>
-                     <select class="cf-ctrl" id="cfPhoneWarranty" onchange="onCfPhoneFilterChange()">
-                        <option value="">Any warranty</option>
-                        <option>Shop warranty</option><option>Manufacturer warranty</option><option>No warranty</option>
                      </select>
                   </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
