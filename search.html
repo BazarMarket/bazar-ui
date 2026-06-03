@@ -895,10 +895,6 @@
                         <option value="50000">50,000</option><option value="75000">75,000</option>
                         <option value="100000">100,000</option><option value="150000">150,000+</option>
                      </select>
-                     <button class="cf-more-btn" id="cfMoreBtnMotors" onclick="toggleMoreFilters()" style="display:none">
-                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                        More filters
-                     </button>
                   </div>
                   <!-- Row 4: Property area min/max + Construction year min/max -->
                   <div class="cf-row" id="cfPropertyRow4">
@@ -1378,7 +1374,7 @@
             if (el) el.style.display = isMotors ? 'none' : '';
          });
          /* Show/hide motors-specific filters */
-         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'];
+         var _motorOnlyIds = ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'];
          _motorOnlyIds.forEach(function(id){
             var el = document.getElementById(id);
             if (el) el.style.display = isMotors ? '' : 'none';
@@ -2680,7 +2676,7 @@
           ['cfPropertyRow4','cfMotorsRow2','cfMoreRow'].forEach(function(id) {
             var el = document.getElementById(id); if (el) el.style.display = 'none';
           });
-          ['cfMoreBtn','cfMoreBtnMotors'].forEach(function(id) {
+          ['cfMoreBtn'].forEach(function(id) {
             var el = document.getElementById(id); if (el) el.style.display = 'none';
           });
           /* Sort by: move to the right */
@@ -3981,7 +3977,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /motors-for-sale/bmw) */
@@ -4001,7 +3997,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             currentMode = 'rent'; buildPricePanels(); _smfPricesBuilt = false;
@@ -4028,7 +4024,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             currentMode = 'short-rent'; buildPricePanels(); _smfPricesBuilt = false;
@@ -4057,7 +4053,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             /* Pre-select make from URL segment (e.g. /cars/for-rent/bugatti) */
@@ -4078,7 +4074,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = '';
             });
             _preSelectMotorsMake(pathParts[2]);
@@ -4099,7 +4095,7 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
-            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage','cfMoreBtnMotors'].forEach(function(id){
+            ['cfMotorsMake','cfMotorsModel','cfMotorsFuel','cfMotorsTransmission','cfMotorsYearJoined','cfMotorsBodyType','cfMotorsMileage'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
             if (catLink) catLink.parentNode.style.display = 'none';
