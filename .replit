@@ -50,3 +50,4 @@ run = ["sh", "-c", "deploy"]
 
 [userenv.shared]
 OAUTH_REDIRECT_URI = "https://5598a117-b706-47f3-b730-7bfffbf33d8c-00-1eu86075dpd9f.pike.replit.dev/oauth/callback"
+GOOGLE_ADS_REFRESH_TOKEN = "1//0gtcy9ufmc_FoCgYIARAAGBASNwF-L9Ir02LiR9kad2k8UzSR0Hl-gbiCNPLoN7wfSVsNPITkdIwC_oRmfXX-iGk548XwPdZ3-V8"
