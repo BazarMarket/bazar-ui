@@ -423,9 +423,9 @@
          : '/api';
       (function() {
          fetch(window.BAZAR_API + '/is-admin', { credentials: 'include' })
-            .then(function(r) { return r.json(); })
+            .then(function(r) { return r.ok ? r.json() : {}; })
             .then(function(d) {
-               if (!d.admin) return;
+               if (!d || !d.admin) return;
                document.querySelectorAll('[data-admin-only]').forEach(function(el) {
                   el.style.removeProperty('display');
                   el.removeAttribute('data-admin-only');
