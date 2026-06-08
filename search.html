@@ -2,6 +2,7 @@
 <html lang="ru">
 
 <head>
+   <base href="/">
    <!-- Google tag (gtag.js) -->
    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1808636054"></script>
    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1808636054');</script>
@@ -4528,7 +4529,9 @@
          }, function() { input.value = ''; alert('Location access denied'); });
       }
       window.initMapsForSearch = function() {
-         LocationAutocomplete.init('searchLocationInput', 'searchLocDropdown');
+         if (typeof LocationAutocomplete !== 'undefined') {
+            LocationAutocomplete.init('searchLocationInput', 'searchLocDropdown');
+         }
       };
       (function() {
          fetch('/api/config')
