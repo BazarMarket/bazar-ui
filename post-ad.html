@@ -3771,6 +3771,10 @@
             submitPhone();
             return;
          }
+         if (reState.cat === 'jobs' || reState.cat === 'services') {
+            submitJob();
+            return;
+         }
          if (reState.cat !== 'real-estate') {
             alert('Only Property, Motors → Cars and Mobile phones listings are supported for submission at the moment.');
             return;
@@ -4312,6 +4316,123 @@
                category: 'phones',
                listing_type: 'sale',
                city: document.getElementById('locationCity').value || ''
+            });
+            if (typeof gtag === 'function') {
+               gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+               setTimeout(function(){ _goAfterPublish(adId); }, 1500);
+            } else { _goAfterPublish(adId); }
+         })
+         .catch(function(err) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            alert('Error submitting ad: ' + err.message);
+         });
+      }
+
+      async function submitJob() {
+         if (!localStorage.getItem('bazar_firebase_uid')) { _requireAuthThenSubmit(submitJob); return; }
+         var title = getInputVal('titleInput');
+         var sellerName = getInputVal('sellerNameInput');
+         var sellerPhone = getInputVal('sellerPhoneInput');
+
+         if (!title) { showValidationError('Please enter the Ad Title.', 'titleInput'); return; }
+         if (!sellerName) { showValidationError('Please enter your Name.', 'sellerNameInput'); return; }
+         if (!sellerPhone) { showValidationError('Please enter your Phone number.', 'sellerPhoneInput'); return; }
+
+         var locationCity = document.getElementById('locationCity').value;
+         if (!locationCity) { showValidationError('Please select a location.', 'locationInput'); return; }
+
+         var description = getInputVal('descriptionInput');
+         if (!description || !description.trim()) { showValidationError('Please enter the Description.', 'descriptionInput'); return; }
+         if (_paHasProfanity(description)) { showValidationError('Your description contains inappropriate language. Please revise it before submitting.', 'descriptionInput'); return; }
+
+         var formData = new FormData();
+         formData.append('title', title);
+         var firebaseUid = localStorage.getItem('bazar_firebase_uid');
+         if (firebaseUid) formData.append('firebase_uid', firebaseUid);
+
+         var listingType = reState.listingType === 'Looking for Work' ? 'looking_for_work' : 'job_vacancy';
+         formData.append('category', reState.cat);
+         formData.append('listing_type', listingType);
+         formData.append('property_type', reState.propType || '');
+
+         var price = getInputVal('priceInput').replace(/\./g, '');
+         if (price && parseInt(price) > 0) formData.append('price', price);
+         formData.append('currency', 'GBP');
+         formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
+         if (window._clearOldPrice) formData.append('clear_old_price', '1');
+
+         var jobType = getSelectVal('jobTypeSelect');
+         if (jobType) formData.append('job_type', jobType);
+         var salaryPeriod = getSelectVal('jobSalaryPeriodSelect');
+         if (salaryPeriod) formData.append('salary_period', salaryPeriod);
+         var servicePricing = getSelectVal('servicePricingSelect');
+         if (servicePricing) formData.append('service_pricing', servicePricing);
+
+         formData.append('country', 'United Kingdom');
+         formData.append('city', locationCity);
+         var locationPostcode = document.getElementById('locationPostcode').value;
+         if (locationPostcode) formData.append('postal_code', locationPostcode);
+         var locationDistrict = document.getElementById('locationDistrict').value;
+         if (locationDistrict) formData.append('district', locationDistrict);
+         var locationRegion = document.getElementById('locationRegion').value;
+         if (locationRegion) formData.append('region', locationRegion);
+         var locationLat = document.getElementById('locationLat').value;
+         var locationLng = document.getElementById('locationLng').value;
+         if (locationLat) formData.append('latitude', locationLat);
+         if (locationLng) formData.append('longitude', locationLng);
+
+         formData.append('description', description);
+         formData.append('seller_name', sellerName);
+         formData.append('seller_phone', sellerPhone);
+         var sellerEmail = getInputVal('sellerEmailInput');
+         if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
+         var hasWhatsapp = document.getElementById('whatsappCheck');
+         var hasTelegram = document.getElementById('telegramCheck');
+         var hasViber    = document.getElementById('viberCheck');
+         var hasEmail    = document.getElementById('emailCheck');
+         formData.append('has_whatsapp', (hasWhatsapp && hasWhatsapp.checked) ? '1' : '0');
+         formData.append('has_telegram', (hasTelegram && hasTelegram.checked) ? '1' : '0');
+         formData.append('has_viber',    (hasViber    && hasViber.checked)    ? '1' : '0');
+         formData.append('has_email',    (hasEmail    && hasEmail.checked)    ? '1' : '0');
+         var youtube = getInputVal('youtubeInput');
+         formData.append('video_url', youtube);
+
+         var photoGrid = document.getElementById('photoPreviewGrid');
+         if (photoGrid) {
+            Array.from(photoGrid.children).forEach(function(box) {
+               if (box._paFile) formData.append('images[]', box._paFile);
+            });
+         }
+
+         if (!(await validateYouTubeUrl(youtube))) return;
+         var btn = document.querySelector('.pa-btn-submit');
+         btn.textContent = 'Submitting...';
+         btn.disabled = true;
+
+         var submitUrl = _editAdId ? (API_URL + '/' + _editAdId + '/update') : '/api/properties';
+         fetch(submitUrl, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+         })
+         .then(function(r) { return r.json(); })
+         .then(function(data) {
+            btn.textContent = 'Publish Ad';
+            btn.disabled = false;
+            if (data.errors || (data.message && !data.property_id)) {
+               alert('Error: ' + (data.message || JSON.stringify(data.errors)));
+               return;
+            }
+            var adId = data.property_id || '';
+            var ads = [];
+            try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
+            ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: reState.cat, status: 'pending' });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            trackGA4Event('post_ad', {
+               category: reState.cat,
+               listing_type: listingType,
+               city: locationCity
             });
             if (typeof gtag === 'function') {
                gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
