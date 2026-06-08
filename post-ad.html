@@ -4351,13 +4351,15 @@
          var firebaseUid = localStorage.getItem('bazar_firebase_uid');
          if (firebaseUid) formData.append('firebase_uid', firebaseUid);
 
-         var listingType = reState.listingType === 'Looking for Work' ? 'looking_for_work' : 'job_vacancy';
-         formData.append('category', reState.cat);
-         formData.append('listing_type', listingType);
-         formData.append('property_type', reState.propType || '');
+         var propertyType = reState.cat === 'services'
+            ? 'service'
+            : (reState.listingType === 'Looking for Work' ? 'job_seeking' : 'job');
+         formData.append('listing_type', 'sale');
+         formData.append('property_type', propertyType);
+         formData.append('sub_type', reState.propType || '');
 
          var price = getInputVal('priceInput').replace(/\./g, '');
-         if (price && parseInt(price) > 0) formData.append('price', price);
+         formData.append('price', (price && parseInt(price) > 0) ? price : '0');
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
          if (window._clearOldPrice) formData.append('clear_old_price', '1');
