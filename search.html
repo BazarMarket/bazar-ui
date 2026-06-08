@@ -417,6 +417,43 @@
       .sr-grid-view .car-meta-row__date,.sr-grid-view .car-meta-row__views{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:12px}
       .sr-grid-view .car-meta-row__date .icon-calendar,.sr-grid-view .car-meta-row__views .icon-eye{font-size:16px;line-height:1;color:#6b7280}
       .sr-grid-view .car-meta-row__sep{opacity:.3;font-size:11px;flex-shrink:0;font-weight:300}
+      /* ── Job cards (cypruswork style) ──────────────────────────────────────── */
+      .job-card{position:relative;display:flex;align-items:flex-start;gap:14px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin-bottom:10px;transition:box-shadow .15s ease,border-color .15s ease;}
+      .job-card:hover{box-shadow:0 2px 14px rgba(0,0,0,.10);border-color:#d1d5db;}
+      .job-card__link{position:absolute;inset:0;z-index:0;border-radius:10px;}
+      .job-card__logo-col{flex-shrink:0;}
+      .job-card__logo{width:58px;height:58px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;}
+      .job-card__initials{font-size:19px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1;z-index:1;pointer-events:none;}
+      .job-card__logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;z-index:2;}
+      .job-card__body{flex:1;min-width:0;}
+      .job-card__top{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:3px;}
+      .job-card__title{font-size:15px;font-weight:600;color:#111827;text-decoration:none;flex:1;min-width:0;position:relative;z-index:1;line-height:1.3;}
+      .job-card__title:hover{color:#ffae49;}
+      .job-card__date{font-size:12px;color:#9ca3af;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+      .job-card__meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;color:#6b7280;margin-bottom:5px;}
+      .job-card__company{font-weight:500;color:#374151;}
+      .job-card__sep{color:#d1d5db;font-size:11px;}
+      .job-card__loc{display:flex;align-items:center;gap:2px;}
+      .job-card__salary{color:#059669;font-weight:500;}
+      .job-card__desc{font-size:13px;color:#6b7280;line-height:1.5;margin:0 0 6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+      .job-card__plan{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;position:relative;z-index:1;}
+      .job-card__plan--vip{background:#fef2f2;color:#e31836;border:1px solid #fca5a5;}
+      .job-card__plan--pro{background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
+      .job-card__boost{position:relative;z-index:1;padding:4px 10px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;margin-left:auto;flex-shrink:0;}
+      .job-card .card__heart{position:relative;z-index:1;background:none;border:none;cursor:pointer;font-size:18px;color:#9ca3af;margin-left:auto;}
+      .job-card .card__heart:hover{color:#e31836;}
+      .job-card__footer{display:flex;align-items:center;}
+      /* Jobs in grid view: force single column */
+      .cards__grid--jobs{grid-template-columns:1fr!important;}
+      /* Dark mode */
+      .dark-mode .job-card{background:#1f2937;border-color:#374151;}
+      .dark-mode .job-card:hover{box-shadow:0 2px 14px rgba(0,0,0,.30);border-color:#4b5563;}
+      .dark-mode .job-card__title{color:#f9fafb;}
+      .dark-mode .job-card__title:hover{color:#ffae49;}
+      .dark-mode .job-card__company{color:#d1d5db;}
+      .dark-mode .job-card__meta{color:#9ca3af;}
+      .dark-mode .job-card__desc{color:#9ca3af;}
+      .dark-mode .job-card .card__heart{color:#6b7280;}
    </style>
    <script>
       window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
@@ -2653,7 +2690,13 @@
             var BAZAR_LISTINGS = {
         'Flats': [], 'House': [], 'Land': [], 'Building': [], 'Business or Investment': [],
         'Rooms': [], 'Studio': [], 'Office': [], 'Shop': [], 'Restaurant': [],
-        'Industrial': [], 'Hotel': [], 'Cars': [], 'Phones': []
+        'Industrial': [], 'Hotel': [], 'Cars': [], 'Phones': [],
+        'Jobs': [
+          {id:'demo-j1',uid:'',s:'TechHire Ltd',t:'Senior Frontend Developer (React/Vue)',imgs:['img/product.jpg'],info:[],p:'£ 65,000',pn:65000,op:'',l:'London, Canary Wharf',d:'We are looking for an experienced frontend developer to join our growing team. You will work on large-scale web applications using React and Vue. Remote-friendly, flexible hours, great perks.',dt:'08 06 2025 | 10:00',raw_dt:'2025-06-08T10:00:00Z',n:'demo-j1',v:14,stk:[],cc:'',cy:'LONDON',lt:'jobs',pt:'job'},
+          {id:'demo-j2',uid:'',s:'Sunrise Hospitality',t:'Head Chef — Fine Dining Restaurant',imgs:['img/product.jpg'],info:[],p:'£ 45,000',pn:45000,op:'',l:'Limassol, Cyprus',d:'Award-winning restaurant seeking a creative and experienced Head Chef. Minimum 5 years fine dining experience. Competitive salary, accommodation assistance, relocation package available.',dt:'07 06 2025 | 14:22',raw_dt:'2025-06-07T14:22:00Z',n:'demo-j2',v:8,stk:[],cc:'',cy:'LIMASSOL',lt:'jobs',pt:'job'},
+          {id:'demo-j3',uid:'',s:'Atlas Construction',t:'Site Manager / Construction Engineer',imgs:['img/product.jpg'],info:[],p:'',pn:0,op:'',l:'Nicosia, Cyprus',d:'Major construction company looking for a Site Manager to oversee residential and commercial projects. Must have CSCS card and 3+ years site management experience.',dt:'06 06 2025 | 09:10',raw_dt:'2025-06-06T09:10:00Z',n:'demo-j3',v:22,stk:[],cc:'',cy:'NICOSIA',lt:'jobs',pt:'job'}
+        ],
+        'Services': []
       };
 
       /* ── Seller page mode: detect ?seller= ── */
@@ -2885,6 +2928,8 @@
         window._isCarPage = _isCarPage;
         var _isPhonePage = (_pathCat0 === 'mobile-phones');
         window._isPhonePage = _isPhonePage;
+        var _isJobPage = (_pathCat0 === 'jobs');
+        window._isJobPage = _isJobPage;
         if (_isPhonePage) {
           var _phoneBrandFilter = (_pathParts0[1] || '').replace(/-/g, ' ').toLowerCase();
           var _phoneCityFilter  = (_pathParts0[2] || '').replace(/-/g, ' ').toLowerCase();
@@ -2952,6 +2997,8 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _apiPt + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         } else if (_isPhonePage) {
           _extraUrl = '/api/properties/recent-enriched?property_type=mobile_phone&per_page=50';
+        } else if (_isJobPage) {
+          _extraUrl = '/api/properties/recent-enriched?property_type=job&per_page=100';
         }
 
         var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale') : null);
@@ -2969,7 +3016,8 @@
               'office': 'Office', 'shop': 'Shop', 'restaurant': 'Restaurant',
               'industrial': 'Industrial', 'hotel': 'Hotel', 'land': 'Land',
               'building': 'Building', 'business': 'Business or Investment',
-              'car': 'Cars', 'phone': 'Phones', 'mobile_phone': 'Phones'
+              'car': 'Cars', 'phone': 'Phones', 'mobile_phone': 'Phones',
+              'job': 'Jobs', 'service': 'Services'
             };
             function guessCategory(propType, title) {
               if (propType) {
@@ -3127,8 +3175,8 @@
             }
             /* Extra fetch for path-specific category (e.g. /rooms or /property-for-sale/restaurant) */
             if (_extraUrl) {
-              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_isPhonePage ? 'Phones' : (_subtypeBucket || 'House')));
-              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_isPhonePage ? 'Phone listing' : (_subtypeBucket || 'Property') + ' listing'));
+              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_isPhonePage ? 'Phones' : (_isJobPage ? 'Jobs' : (_subtypeBucket || 'House'))));
+              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_isPhonePage ? 'Phone listing' : (_isJobPage ? 'Job listing' : (_subtypeBucket || 'Property') + ' listing')));
               fetch(_extraUrl, { headers: { 'Accept': 'application/json' } })
                 .then(function(r2) { return r2.ok ? r2.json() : null; })
                 .then(function(resp2) {
@@ -3183,11 +3231,15 @@
                   if (newItems.length) {
                     BAZAR_LISTINGS[_extraBucket] = newItems.concat(BAZAR_LISTINGS[_extraBucket] || []);
                     var reType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
-                    if (reType === _extraBucket || _isPhonePage) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
+                    if (reType === _extraBucket || _isPhonePage || _isJobPage) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
                   } else if (_isPhonePage) {
                     BAZAR_LISTINGS['Phones'] = BAZAR_LISTINGS['Phones'] || [];
                     window._bazarCurrentType = 'Phones';
                     renderListings('Phones');
+                  } else if (_isJobPage) {
+                    BAZAR_LISTINGS['Jobs'] = BAZAR_LISTINGS['Jobs'] || [];
+                    window._bazarCurrentType = 'Jobs';
+                    renderListings('Jobs');
                   }
                 })
                 .catch(function() {});
@@ -3303,6 +3355,58 @@
               '</div></div>'
           )+'</div></div>';
       }
+      /* ── buildJobCard — cypruswork-style job listing card ─────────────────── */
+      function buildJobCard(item) {
+        var cardHref = item.id ? 'card.html?id=' + item.id : 'card.html';
+        var name = item.s || 'Employer';
+        var words = name.trim().split(/\s+/).filter(Boolean);
+        var initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase()
+                     : words.length === 1 ? words[0].substring(0, 2).toUpperCase() : '?';
+        var _jColors = ['#4f46e5','#0891b2','#059669','#7c3aed','#d97706','#db2777','#0369a1','#0f766e','#b45309','#be123c'];
+        var _jHue = name.split('').reduce(function(a, c) { return a + c.charCodeAt(0); }, 0) % _jColors.length;
+        var bgColor = _jColors[_jHue];
+        var dateStr = (typeof _relTimeSr === 'function' ? _relTimeSr(item.raw_dt) : '') || item.dt || '';
+        var loc = item.l || item.cy || 'UK';
+        var rawDesc = item.d || '';
+        var desc = rawDesc.length > 130 ? rawDesc.substring(0, 130) + '\u2026' : rawDesc;
+        var salary = item.pn ? item.p : '';
+        var badge = '';
+        if (item.stk && item.stk.indexOf('VIP') !== -1)      badge = '<span class="job-card__plan job-card__plan--vip">VIP</span>';
+        else if (item.stk && item.stk.indexOf('PRO') !== -1) badge = '<span class="job-card__plan job-card__plan--pro">PRO</span>';
+        var _cu = localStorage.getItem('bazar_username') || '';
+        var _cp = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
+        var _isOwner = _cu && item.s === _cu;
+        var boostBtn = (_isOwner && _cp !== 'vip' && item.stk && item.stk.indexOf('VIP') === -1)
+          ? '<button class="job-card__boost" onclick="event.stopPropagation();event.preventDefault();bazarBoostPay(window.location.href,\''+item.n+'\')">Boost</button>' : '';
+        var logoImg = item.uid
+          ? '<img class="job-card__logo-img" src="" data-uid="'+item.uid+'" style="display:none" alt="" onload="this.style.display=\'block\';var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';">'
+          : '';
+        return '<div class="job-card '+(item.cc||'')+'">' +
+          '<a href="'+cardHref+'" class="job-card__link" aria-label="'+item.t+'"></a>' +
+          '<div class="job-card__logo-col">' +
+            '<div class="job-card__logo" style="background:'+bgColor+'">' +
+              logoImg +
+              '<span class="job-card__initials">'+initials+'</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="job-card__body">' +
+            '<div class="job-card__top">' +
+              badge +
+              '<a href="'+cardHref+'" class="job-card__title">'+item.t+'</a>' +
+              boostBtn +
+              '<span class="job-card__date">'+dateStr+'</span>' +
+            '</div>' +
+            '<div class="job-card__meta">' +
+              '<span class="job-card__company">'+name+'</span>' +
+              (loc ? '<span class="job-card__sep">&middot;</span><span class="job-card__loc"><span class="icon-pin"></span>&nbsp;'+loc+'</span>' : '') +
+              (salary ? '<span class="job-card__sep">&middot;</span><span class="job-card__salary">'+salary+'</span>' : '') +
+            '</div>' +
+            (desc ? '<p class="job-card__desc">'+desc+'</p>' : '') +
+            '<div class="job-card__footer"><button class="card__heart icon-heart" type="button" aria-label="Save"></button></div>' +
+          '</div>' +
+        '</div>';
+      }
+
       var _srCurrentPage = 1;
       var _srItemsPerPage = 60;
 
@@ -3519,24 +3623,35 @@
         /* Paginate */
         var start = (_srCurrentPage - 1) * _srItemsPerPage;
         var pageItems = items.slice(start, start + _srItemsPerPage);
+        var _isJobsType = (type === 'Jobs');
         var listBody = document.querySelector('.list-products__body');
         if (listBody) {
-          listBody.innerHTML = pageItems.map(buildListProduct).join('');
-          if (window._checkImgPortrait) {
-            listBody.querySelectorAll('.product-gallery__img img').forEach(function(img) {
-              if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
-              else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
-            });
+          if (_isJobsType) {
+            listBody.innerHTML = pageItems.map(buildJobCard).join('');
+          } else {
+            listBody.innerHTML = pageItems.map(buildListProduct).join('');
+            if (window._checkImgPortrait) {
+              listBody.querySelectorAll('.product-gallery__img img').forEach(function(img) {
+                if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
+                else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
+              });
+            }
           }
         }
         var gridBody = document.querySelector('#sr-grid-view .cards__grid');
         if (gridBody) {
-          gridBody.innerHTML = pageItems.map(buildGridCard).join('');
-          if (window._checkImgPortrait) {
-            gridBody.querySelectorAll('.card__img .img-cover').forEach(function(img) {
-              if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
-              else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
-            });
+          if (_isJobsType) {
+            gridBody.classList.add('cards__grid--jobs');
+            gridBody.innerHTML = pageItems.map(buildJobCard).join('');
+          } else {
+            gridBody.classList.remove('cards__grid--jobs');
+            gridBody.innerHTML = pageItems.map(buildGridCard).join('');
+            if (window._checkImgPortrait) {
+              gridBody.querySelectorAll('.card__img .img-cover').forEach(function(img) {
+                if (img.complete && img.naturalWidth > 0) { window._checkImgPortrait(img); }
+                else { img.addEventListener('load', function(){ window._checkImgPortrait(img); }, {once:true}); }
+              });
+            }
           }
         }
         /* Pagination control */
@@ -4269,6 +4384,29 @@
             if (window._bazarPhoneBrandFilter) _preSelectPhoneBrand(window._bazarPhoneBrandFilter.replace(/\s+/g, '-'));
             if (catLink) catLink.parentNode.style.display = 'none';
             if (catArrow) catArrow.style.display = 'none';
+         } else if (pathCat === 'jobs' || pathCat === 'services') {
+            /* Jobs / Services pages: hide property & motors filters, update category label */
+            var _jobAutoType = pathCat === 'jobs' ? 'Jobs' : 'Services';
+            var _jobCatLabel = pathCat === 'jobs' ? 'Jobs' : 'Services';
+            var _cfCatLbl = document.getElementById('cfCatLabel');
+            if (_cfCatLbl) _cfCatLbl.textContent = _jobCatLabel;
+            var _cfCatImg = document.getElementById('cfCatImg');
+            if (_cfCatImg) { _cfCatImg.src = pathCat === 'jobs' ? 'img/cat/image11.png' : 'img/cat/image14.png'; _cfCatImg.style.display = ''; }
+            if (catLink) catLink.parentNode.style.display = 'none';
+            if (catArrow) catArrow.style.display = 'none';
+            var _mRow2j = document.getElementById('cfMotorsRow2');
+            if (_mRow2j) _mRow2j.style.display = 'none';
+            ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
+               var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            if (!type) {
+               if (typeEl) typeEl.textContent = _jobAutoType;
+               window._bazarCurrentType = _jobAutoType;
+               if (BAZAR_LISTINGS[_jobAutoType] && BAZAR_LISTINGS[_jobAutoType].length) {
+                  renderListings(_jobAutoType);
+                  if (typeof initProductSwipers === 'function') initProductSwipers();
+               }
+            }
          } else if (pathCatMap[pathCat]) {
             var info = catMap[pathCatMap[pathCat]];
             document.getElementById('cfCatLabel').textContent = info.label;
@@ -4289,6 +4427,8 @@
             var pathAutoType = null;
             if (pathCat === 'rooms' || pathSub === 'rooms') pathAutoType = 'Rooms';
             if (pathCat === 'flats' || pathSub === 'flats') pathAutoType = 'Flats';
+            if (pathCat === 'jobs')     pathAutoType = 'Jobs';
+            if (pathCat === 'services') pathAutoType = 'Services';
             /* Subtypes (including house sub-types like cottage, villa etc.) */
             var _autoSubBucketMap = {
               'restaurant': 'Restaurant', 'shop': 'Shop', 'office': 'Office',
