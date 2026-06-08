@@ -2980,6 +2980,9 @@
          reState.bedrooms = '';
          var bedroomsSelect = document.getElementById('bedroomsSelect');
          if (bedroomsSelect) bedroomsSelect.value = '';
+         var titleInput = document.getElementById('titleInput');
+         if (titleInput) { titleInput.value = ''; titleInput.removeAttribute('readonly'); }
+         userEditedTitle = false;
          var subCats = document.getElementById('subCats');
          var subSubCats = document.getElementById('subSubCats');
          var data = catData[cat] || {};
