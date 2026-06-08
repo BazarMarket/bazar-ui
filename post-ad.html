@@ -2806,33 +2806,10 @@
             'For Long-term Rent':  ['Cars', 'Vans', 'Motorbikes', 'Boats & marine', 'Other'],
             'For Short-term Rent': ['Cars', 'Vans', 'Motorbikes', 'Boats & marine', 'Other']
          },
-         'jobs': {
-            'Admin, Office Support': [],
-            'Accounting, Finance':   [],
-            'Apprenticeships':       [],
-            'Banking, Insurance':    [],
-            'Building, Construction':[],
-            'Childcare, Nannies':    [],
-            'Cleaning, Domestic':    [],
-            'Creative, Design':      [],
-            'Customer Service':      [],
-            'Driving, Transport':    [],
-            'Education, Training':   [],
-            'Engineering':           [],
-            'Graduate, Internships': [],
-            'Healthcare, Nursing':   [],
-            'Hospitality, Catering': [],
-            'IT, Software':          [],
-            'Legal':                 [],
-            'Marketing, Media':      [],
-            'Retail, Sales':         [],
-            'Science, Research':     [],
-            'Security':              [],
-            'Skilled Trades':        [],
-            'Social Work, Care':     [],
-            'Warehouse, Logistics':  [],
-            'Other':                 []
-         },
+         'jobs': (function(){
+            var jobCats = ['Admin, Office Support','Accounting, Finance','Apprenticeships','Banking, Insurance','Building, Construction','Childcare, Nannies','Cleaning, Domestic','Creative, Design','Customer Service','Driving, Transport','Education, Training','Engineering','Graduate, Internships','Healthcare, Nursing','Hospitality, Catering','IT, Software','Legal','Marketing, Media','Retail, Sales','Science, Research','Security','Skilled Trades','Social Work, Care','Warehouse, Logistics','Other'];
+            return { 'Job Vacancy': jobCats, 'Looking for Work': jobCats };
+         })(),
          'phones': {
             'Mobile phones':           ['Apple','Samsung','Xiaomi','Huawei','Google','OnePlus','Sony','Nokia','Motorola','Oppo','Vivo','Honor','Realme','Nothing','ASUS','LG','HTC','Cat','Fairphone','Blackview','Doogee','Oukitel','Ulefone','Blackberry','Alcatel','TCL','ZTE','Other'],
             'Phone parts, tools':      [],
