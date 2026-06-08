@@ -4574,6 +4574,18 @@ body.bazar-logged .card__heart {
 .menu-sub__links:hover {
   color: #1a1a1a;
 }
+.menu-sub__links--type {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.menu-sub__links--type:before {
+  background: #ff9138;
+}
+.menu-sub__divider {
+  height: 1px;
+  background: #ebebeb;
+  margin: 6px 0 6px 0;
+}
 
 .rent-toggle {
   display: flex;
