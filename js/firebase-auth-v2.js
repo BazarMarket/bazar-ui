@@ -63,6 +63,15 @@ function switchRentType(type, btn) {
     }
 }
 
+function switchJobType(type, btn) {
+    btn.closest('.rent-toggle__btns').querySelectorAll('.rent-toggle__btn').forEach(function(b) {
+        b.classList.remove('active');
+    });
+    btn.classList.add('active');
+    document.getElementById('jobs-vacancy').style.display = type === 'vacancy' ? '' : 'none';
+    document.getElementById('jobs-seeking').style.display = type === 'seeking' ? '' : 'none';
+}
+
 function switchMotorsRentType(type, btn) {
     btn.closest('.rent-toggle__btns').querySelectorAll('.rent-toggle__btn').forEach(function(b) {
         b.classList.remove('active');
