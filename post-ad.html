@@ -1149,8 +1149,8 @@
                      <div class="cat-item" data-cat="home" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image10.png" alt="">Home, garden, pool</div>
                      <div class="cat-item" data-cat="clothes" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image7.png" alt="">Clothes, footwear, accessories</div>
                      <div class="cat-item" data-cat="health" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image13.png" alt="">Health, beauty</div>
-                     <div class="cat-item" data-cat="jobs" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image11.png" alt="">Jobs</div>
-                     <div class="cat-item" data-cat="services" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image14.png" alt="">Services</div>
+                     <div class="cat-item" data-cat="jobs" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image11.png" alt="">Jobs</div>
+                     <div class="cat-item" data-cat="services" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image14.png" alt="">Services</div>
                      <div class="cat-item" data-cat="animals" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image12.png" alt="">Animals</div>
                      <div class="cat-item" data-cat="sports" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image8.png" alt="">Sports, leisure, hobbies</div>
                      <div class="cat-item" data-cat="free" data-admin-only="1" onclick="selectCat(this)"><img class="cat-item__icon" src="img/cat/image16.png" alt="">Free Stuff</div>
@@ -2745,11 +2745,31 @@
             'For Short-term Rent': ['Cars', 'Vans', 'Motorbikes', 'Boats & marine', 'Other']
          },
          'jobs': {
-            'Full-time':   ['IT & Technology', 'Sales', 'Marketing', 'Finance', 'Healthcare', 'Other'],
-            'Part-time':   ['Retail', 'Hospitality', 'Education', 'Other'],
-            'Freelance':   ['Design', 'Writing', 'Programming', 'Other'],
-            'Internship':  [],
-            'Other':       []
+            'Admin, Office Support': [],
+            'Accounting, Finance':   [],
+            'Apprenticeships':       [],
+            'Banking, Insurance':    [],
+            'Building, Construction':[],
+            'Childcare, Nannies':    [],
+            'Cleaning, Domestic':    [],
+            'Creative, Design':      [],
+            'Customer Service':      [],
+            'Driving, Transport':    [],
+            'Education, Training':   [],
+            'Engineering':           [],
+            'Graduate, Internships': [],
+            'Healthcare, Nursing':   [],
+            'Hospitality, Catering': [],
+            'IT, Software':          [],
+            'Legal':                 [],
+            'Marketing, Media':      [],
+            'Retail, Sales':         [],
+            'Science, Research':     [],
+            'Security':              [],
+            'Skilled Trades':        [],
+            'Social Work, Care':     [],
+            'Warehouse, Logistics':  [],
+            'Other':                 []
          },
          'phones': {
             'Mobile phones':           ['Apple','Samsung','Xiaomi','Huawei','Google','OnePlus','Sony','Nokia','Motorola','Oppo','Vivo','Honor','Realme','Nothing','ASUS','LG','HTC','Cat','Fairphone','Blackview','Doogee','Oukitel','Ulefone','Blackberry','Alcatel','TCL','ZTE','Other'],
@@ -2808,12 +2828,32 @@
             'Other':            []
          },
          'services': {
-            'Cleaning':         [],
-            'Repair & handyman':['Plumbing', 'Electrical', 'Painting', 'Other'],
-            'IT & tech':        ['Web development', 'IT support', 'Design', 'Other'],
-            'Beauty & wellness':['Hair', 'Nails', 'Massage', 'Other'],
-            'Tutoring':         ['Languages', 'Maths', 'Music', 'Other'],
-            'Other':            []
+            'Accountancy, Tax':      [],
+            'Beauty Services':       [],
+            'Building, Renovation':  [],
+            'Carpentry, Joinery':    [],
+            'Catering, Private Chef':[],
+            'Childcare, Babysitting':[],
+            'Cleaning':              [],
+            'Electricians':          [],
+            'Events, Entertainment': [],
+            'Fitness, Wellbeing':    [],
+            'Flooring, Tiling':      [],
+            'Gardening, Landscaping':[],
+            'Hairdressing':          [],
+            'Heating, Plumbing':     [],
+            'IT, Tech Support':      [],
+            'Locksmith, Security':   [],
+            'Music Lessons':         [],
+            'Painting, Decorating':  [],
+            'Pet Care':              [],
+            'Photography, Video':    [],
+            'Removals, Storage':     [],
+            'Roofing':               [],
+            'Translation, Interpreting': [],
+            'Tutoring, Coaching':    [],
+            'Vehicle Services':      [],
+            'Other':                 []
          },
          'animals': {
             'Dogs':             ['Puppies for sale', 'Dogs for rehoming', 'Dog accessories', 'Other'],
