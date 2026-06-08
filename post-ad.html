@@ -3142,6 +3142,21 @@
          deactivateCarFields();
          deactivatePhoneFields();
 
+         if (reState.cat === 'jobs' || reState.cat === 'services') {
+            document.getElementById('houseTypeField').style.display = 'none';
+            document.getElementById('buildingTypeField').style.display = 'none';
+            document.getElementById('constructionTypeField').style.display = 'none';
+            document.getElementById('subtypeField').style.display = 'none';
+            document.getElementById('bedroomsField').style.display = 'none';
+            document.getElementById('conditionField').style.display = 'none';
+            document.getElementById('deliveryField').style.display = 'none';
+            var bathroomsField = document.getElementById('bathroomsField');
+            if (bathroomsField) bathroomsField.style.display = 'none';
+            document.getElementById('paForm').classList.add('visible');
+            if (_isMobile()) _mobShowForm();
+            return;
+         }
+
          var houseTypeField = document.getElementById('houseTypeField');
          var houseTypeSelect = document.getElementById('houseTypeSelect');
          var buildingTypeField = document.getElementById('buildingTypeField');
