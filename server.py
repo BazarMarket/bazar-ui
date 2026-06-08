@@ -900,6 +900,11 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
             return 'category_city_modifier', {
                 'category': parts[0], 'city': parts[1], 'modifier': 'short-term'
             }
+        # /jobs/{subtype}/{city} or /services/{subtype}/{city}
+        if parts[0] in ('jobs', 'services'):
+            return 'job_subtype_city', {
+                'category': parts[0], 'subtype': parts[1], 'city': parts[2]
+            }
         # /motors-for-sale/cars/{make} → redirect (old URL after Cars for Sale page)
         if parts[0] == 'motors-for-sale' and parts[1] == 'cars':
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[2]}'}
@@ -973,6 +978,11 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         if parts[0] in ('property-for-sale', 'property-to-rent', 'property-short-rent'):
             return 'property_subtype_city_district', {
                 'transaction': parts[0], 'subtype': parts[1], 'city': parts[2], 'district': parts[3]
+            }
+        # /jobs/{subtype}/{city}/{district} or /services/{subtype}/{city}/{district}
+        if parts[0] in ('jobs', 'services'):
+            return 'job_subtype_city_district', {
+                'category': parts[0], 'subtype': parts[1], 'city': parts[2], 'district': parts[3]
             }
     if len(parts) == 2:
         # /property/for-rent or /property/for-sale  →  property_transaction
@@ -1049,6 +1059,9 @@ def resolve_page_type(path: str, qs: str = '') -> tuple:
         # Legacy /cars/{make} → 301
         if parts[0] == 'cars' and parts[1] not in ('for-rent', 'for-short-term-rent'):
             return 'redirect_301', {'location': f'/motors-for-sale/{parts[1]}'}
+        # /jobs/{subtype} or /services/{subtype}
+        if parts[0] in ('jobs', 'services'):
+            return 'job_subtype', {'category': parts[0], 'subtype': parts[1]}
         return 'category_city', {'category': parts[0], 'city': parts[1]}
     if len(parts) == 1:
         # /flats, /rooms  →  301 redirect to /property-to-rent/{cat}
@@ -1464,6 +1477,22 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
             phone_brand  = listing.get('phone_brand') or ''
             sub_label    = phone_brand
             sub_slug     = re.sub(r'[^a-z0-9]+', '-', phone_brand.lower()).strip('-') if phone_brand else ''
+            _sub_url     = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
+            _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
+            _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
+            parent_label = ''
+            parent_url   = ''
+            is_real_estate = False
+
+        # ── Jobs / Services: custom breadcrumb ───────────────────────────────
+        elif _pt_norm in ('job', 'job_seeking', 'service'):
+            _is_service  = (_pt_norm == 'service')
+            cat_label    = 'Services' if _is_service else 'Jobs'
+            cat_url      = f'{PUBLIC_DOMAIN}/services' if _is_service else f'{PUBLIC_DOMAIN}/jobs'
+            _cat_rel_url = '/services' if _is_service else '/jobs'
+            sub_type     = listing.get('sub_type') or ''
+            sub_label    = sub_type
+            sub_slug     = re.sub(r'[^a-z0-9]+', '-', sub_type.lower()).strip('-') if sub_type else ''
             _sub_url     = f'{_cat_rel_url}/{sub_slug}' if sub_slug else ''
             _city_url    = f'{_sub_url}/{city_slug_url}' if _sub_url and city_slug_url else ''
             _dist_url    = f'{_city_url}/{dist_slug_url}' if _city_url and dist_slug_url else ''
@@ -2545,6 +2574,66 @@ def fetch_seo_data(page_type: str, params: dict) -> dict:
                 (district, None),
             ],
             'type': 'category',
+        }
+        return seo
+
+    # ── Jobs/Services: subtype / subtype+city / subtype+city+district ─────────
+    elif page_type in ('job_subtype', 'job_subtype_city', 'job_subtype_city_district'):
+        cat           = params.get('category', 'jobs')
+        subtype_slug  = params.get('subtype', '')
+        city_slug     = params.get('city', '')
+        district_slug = params.get('district', '')
+        cat_label     = 'Services' if cat == 'services' else 'Jobs'
+        verb          = 'services' if cat == 'services' else 'jobs'
+        subtype       = ' '.join(w.capitalize() for w in subtype_slug.replace('-', ' ').split())
+        city          = city_slug.replace('-', ' ').title()
+        district      = district_slug.replace('-', ' ').title()
+
+        if district and city:
+            canonical = f'{PUBLIC_DOMAIN}/{cat}/{subtype_slug}/{city_slug}/{district_slug}'
+            h1        = f'{subtype} {verb.title()} in {district}, {city}'
+            intro     = f'Browse {subtype.lower()} {verb} in {district}, {city}. Find local listings on Bazar UK.'
+            robots    = 'noindex, follow'
+            breadcrumbs = [
+                ('Home', '/'),
+                (cat_label, f'/{cat}'),
+                (subtype, f'/{cat}/{subtype_slug}'),
+                (city, f'/{cat}/{subtype_slug}/{city_slug}'),
+                (district, None),
+            ]
+        elif city:
+            canonical = f'{PUBLIC_DOMAIN}/{cat}/{subtype_slug}/{city_slug}'
+            h1        = f'{subtype} {verb.title()} in {city}'
+            intro     = f'Browse {subtype.lower()} {verb} in {city}. Find local listings on Bazar UK.'
+            robots    = 'index, follow'
+            breadcrumbs = [
+                ('Home', '/'),
+                (cat_label, f'/{cat}'),
+                (subtype, f'/{cat}/{subtype_slug}'),
+                (h1, None),
+            ]
+        else:
+            canonical = f'{PUBLIC_DOMAIN}/{cat}/{subtype_slug}'
+            h1        = f'{subtype} {verb.title()} in the UK'
+            intro     = f'Browse {subtype.lower()} {verb} across the UK. Find local listings on Bazar UK.'
+            robots    = 'index, follow'
+            breadcrumbs = [
+                ('Home', '/'),
+                (cat_label, f'/{cat}'),
+                (subtype, None),
+            ]
+
+        seo.update({
+            'title':       f'{h1} | Bazar UK',
+            'description': intro[:160],
+            'canonical':   canonical,
+            'robots':      robots,
+        })
+        seo['ssr'] = {
+            'h1':          h1,
+            'intro':       intro,
+            'breadcrumbs': breadcrumbs,
+            'type':        'category',
         }
         return seo
 
@@ -4979,7 +5068,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                          'cars_category', 'mobile_phones',
                          'cars_rent', 'cars_rent_make', 'cars_rent_make_city',
                          'cars_short_rent',
-                         'motors_rent_parent', 'motors_short_rent_parent'):
+                         'motors_rent_parent', 'motors_short_rent_parent',
+                         'job_subtype', 'job_subtype_city', 'job_subtype_city_district'):
             # Determine which HTML file to serve
             html_filename = {
                 'homepage':       'index.html' if is_production else 'dev-index.html',

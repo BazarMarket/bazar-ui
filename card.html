@@ -836,7 +836,7 @@
 
         /* Build sub-type slug and label */
         var _reTypes = ['apartment','studio','house','maisonette','townhouse','penthouse','duplex','bungalow','cottage','office','shop','restaurant','industrial','hotel','business_investment','land','building','room','flat','flats'];
-        var _isRE = (_reTypes.indexOf(_pt) !== -1 || !!p.sub_type) && _pt !== 'mobile_phone' && _pt !== 'phone';
+        var _isRE = (_reTypes.indexOf(_pt) !== -1 || !!p.sub_type) && _pt !== 'mobile_phone' && _pt !== 'phone' && _pt !== 'job' && _pt !== 'job_seeking' && _pt !== 'service';
         var _subtypeSlug = '', _subtypeLabel = '';
         if (_isRE) {
           /* For rooms, sub_type holds room_type (Private/Shared/etc.) — use property_type for breadcrumb */
@@ -960,6 +960,35 @@
             el('bread-district-li').style.display = '';
             el('bread-district').textContent = p.district;
             el('bread-district').href = '/mobile-phones' + (_phoneBrandSlug ? '/' + _phoneBrandSlug : '') + '/' + _phoneCitySlug + '/' + _phoneDistSlug;
+          }
+        } else if (_pt === 'job' || _pt === 'job_seeking' || _pt === 'service') {
+          var _isService   = (_pt === 'service');
+          var _jobCatLabel = _isService ? 'Services' : 'Jobs';
+          var _jobCatHref  = _isService ? '/services' : '/jobs';
+          el('bread-category').textContent = _jobCatLabel;
+          el('bread-category').href = _jobCatHref;
+          var _jobSubLabel = p.sub_type || '';
+          var _jobSubSlug  = _jobSubLabel.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          var _jCitySlug   = (p.city     || '').toLowerCase().replace(/\s+/g, '-');
+          var _jDistSlug   = (p.district || '').toLowerCase().replace(/\s+/g, '-');
+          var _jobSubHref  = _jobCatHref + (_jobSubSlug ? '/' + _jobSubSlug : '');
+          var _jobCityHref = _jobSubHref + (_jCitySlug ? '/' + _jCitySlug : '');
+          var _jobDistHref = _jobCityHref + (_jDistSlug ? '/' + _jDistSlug : '');
+          if (_jobSubLabel && el('bread-type')) {
+            el('bread-type').textContent = _jobSubLabel;
+            el('bread-type').href = _jobSubHref;
+          }
+          if (el('bread-type-arrow') && p.city) el('bread-type-arrow').style.display = '';
+          if (p.city && el('bread-city-li')) {
+            el('bread-city-li').style.display = '';
+            el('bread-city').textContent = p.city;
+            el('bread-city').href = _jobCityHref;
+          }
+          if (el('bread-city-arrow') && p.district) el('bread-city-arrow').style.display = '';
+          if (p.district && el('bread-district-li')) {
+            el('bread-district-li').style.display = '';
+            el('bread-district').textContent = p.district;
+            el('bread-district').href = _jobDistHref;
           }
         } else {
           if (el('bread-type')) el('bread-type').textContent = (p.property_type || '').replace('_', ' ');

@@ -2929,7 +2929,16 @@
         var _isPhonePage = (_pathCat0 === 'mobile-phones');
         window._isPhonePage = _isPhonePage;
         var _isJobPage = (_pathCat0 === 'jobs');
+        var _isServicePage = (_pathCat0 === 'services');
         window._isJobPage = _isJobPage;
+        if (_isJobPage || _isServicePage) {
+          var _jobSubtypeFilter = (_pathParts0[1] || '').replace(/-/g, ' ').toLowerCase();
+          var _jobCityFilter    = (_pathParts0[2] || '').replace(/-/g, ' ').toLowerCase();
+          var _jobDistFilter    = (_pathParts0[3] || '').replace(/-/g, ' ').toLowerCase();
+          if (_jobSubtypeFilter) window._bazarJobSubtypeFilter = _jobSubtypeFilter;
+          if (_jobCityFilter)    window._bazarJobCityFilter    = _jobCityFilter;
+          if (_jobDistFilter)    window._bazarJobDistFilter    = _jobDistFilter;
+        }
         if (_isPhonePage) {
           var _phoneBrandFilter = (_pathParts0[1] || '').replace(/-/g, ' ').toLowerCase();
           var _phoneCityFilter  = (_pathParts0[2] || '').replace(/-/g, ' ').toLowerCase();
@@ -2997,8 +3006,9 @@
           _extraUrl = '/api/properties/recent-enriched?property_type=' + _apiPt + '&per_page=50' + (_lt ? '&listing_type=' + _lt : '');
         } else if (_isPhonePage) {
           _extraUrl = '/api/properties/recent-enriched?property_type=mobile_phone&per_page=50';
-        } else if (_isJobPage) {
-          _extraUrl = '/api/properties/recent-enriched?property_type=job&per_page=100';
+        } else if (_isJobPage || _isServicePage) {
+          var _jobApiPt = _isServicePage ? 'service' : 'job';
+          _extraUrl = '/api/properties/recent-enriched?property_type=' + _jobApiPt + '&per_page=100';
         }
 
         var _effectiveLt = _transactionLt || (_isSubtypePage ? _catToListingType[_pathCat0] : null) || (_isRoomsPage ? _catToListingType[_pathCat0] : null) || (_isCarPage ? (_carRent ? 'rent' : _carShortRent ? 'short_rent' : 'sale') : null);
@@ -3175,8 +3185,8 @@
             }
             /* Extra fetch for path-specific category (e.g. /rooms or /property-for-sale/restaurant) */
             if (_extraUrl) {
-              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_isPhonePage ? 'Phones' : (_isJobPage ? 'Jobs' : (_subtypeBucket || 'House'))));
-              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_isPhonePage ? 'Phone listing' : (_isJobPage ? 'Job listing' : (_subtypeBucket || 'Property') + ' listing')));
+              var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_isPhonePage ? 'Phones' : (_isJobPage ? 'Jobs' : (_isServicePage ? 'Services' : (_subtypeBucket || 'House')))));
+              var _extraTitle  = _isCarPage ? 'Car listing' : (_isRoomsPage ? 'Room listing' : (_isPhonePage ? 'Phone listing' : (_isJobPage ? 'Job listing' : (_isServicePage ? 'Service listing' : (_subtypeBucket || 'Property') + ' listing'))));
               fetch(_extraUrl, { headers: { 'Accept': 'application/json' } })
                 .then(function(r2) { return r2.ok ? r2.json() : null; })
                 .then(function(resp2) {
@@ -3228,10 +3238,25 @@
                       });
                     }
                   }
+                  /* Job/Service pages: apply subtype/city/district filter before rendering */
+                  if (_isJobPage || _isServicePage) {
+                    var _jSF = window._bazarJobSubtypeFilter || '';
+                    var _jCF = window._bazarJobCityFilter    || '';
+                    var _jDF = window._bazarJobDistFilter    || '';
+                    if (_jSF || _jCF || _jDF) {
+                      newItems = newItems.filter(function(item) {
+                        if (_jSF && (item.d || '' + item.t + (item.info || '')).toLowerCase().indexOf(_jSF) === -1) return false;
+                        if (_jCF && (item.l || '').toLowerCase().indexOf(_jCF) === -1) return false;
+                        if (_jDF && (item.l || '').toLowerCase().indexOf(_jDF) === -1) return false;
+                        return true;
+                      });
+                    }
+                  }
+                  var _isJobOrService = _isJobPage || _isServicePage;
                   if (newItems.length) {
                     BAZAR_LISTINGS[_extraBucket] = newItems.concat(BAZAR_LISTINGS[_extraBucket] || []);
                     var reType = new URLSearchParams(window.location.search).get('type') || window._bazarCurrentType;
-                    if (reType === _extraBucket || _isPhonePage || _isJobPage) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
+                    if (reType === _extraBucket || _isPhonePage || _isJobOrService) { renderListings(_extraBucket); if (typeof initProductSwipers === 'function') initProductSwipers(); }
                   } else if (_isPhonePage) {
                     BAZAR_LISTINGS['Phones'] = BAZAR_LISTINGS['Phones'] || [];
                     window._bazarCurrentType = 'Phones';
@@ -3240,6 +3265,10 @@
                     BAZAR_LISTINGS['Jobs'] = BAZAR_LISTINGS['Jobs'] || [];
                     window._bazarCurrentType = 'Jobs';
                     renderListings('Jobs');
+                  } else if (_isServicePage) {
+                    BAZAR_LISTINGS['Services'] = BAZAR_LISTINGS['Services'] || [];
+                    window._bazarCurrentType = 'Services';
+                    renderListings('Services');
                   }
                 })
                 .catch(function() {});
@@ -4399,6 +4428,32 @@
             ['cfTypeWrap','cfBedroomsWrap','cfBathroomsWrap','cfConditionWrap','cfAreaJoined','cfYearJoined','cfMoreBtn'].forEach(function(id){
                var el = document.getElementById(id); if (el) el.style.display = 'none';
             });
+            /* Breadcrumbs: Jobs/Services > Subtype > City */
+            var _jobCatHref = '/' + pathCat;
+            if (breadCrumbCat) { breadCrumbCat.textContent = _jobCatLabel; breadCrumbCat.href = _jobCatHref; }
+            var _jobSubSlugBC = _pathParts0[1] || '';
+            var _jobSubLabelBC = _jobSubSlugBC.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+            var _jobCitySlugBC = _pathParts0[2] || '';
+            var _jobCityLabelBC = _jobCitySlugBC.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+            if (_jobSubSlugBC) {
+               var _jobSubHrefBC = _jobCatHref + '/' + _jobSubSlugBC;
+               var breadCrumbParent = document.getElementById('breadCrumbParent');
+               var breadCrumbParentLink = document.getElementById('breadCrumbParentLink');
+               if (breadCrumbParentLink) {
+                  breadCrumbParentLink.textContent = _jobSubLabelBC;
+                  breadCrumbParentLink.href = _jobSubHrefBC;
+                  breadCrumbParentLink.style.display = '';
+               }
+               var breadCrumbCatArrow = document.getElementById('breadCrumbCatArrow');
+               if (breadCrumbCatArrow) breadCrumbCatArrow.style.display = '';
+               if (_jobCitySlugBC && breadCrumbType) {
+                  breadCrumbType.textContent = _jobCityLabelBC;
+               } else if (breadCrumbType) {
+                  breadCrumbType.textContent = _jobSubLabelBC;
+               }
+            } else if (breadCrumbType) {
+               breadCrumbType.textContent = _jobCatLabel;
+            }
             if (!type) {
                if (typeEl) typeEl.textContent = _jobAutoType;
                window._bazarCurrentType = _jobAutoType;
