@@ -1674,6 +1674,58 @@
                      </div>
                   </div>
 
+                  <!-- Jobs-specific fields -->
+                  <div id="jobSpecificSection" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">Employment type:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="jobTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" selected>Select employment type</option>
+                              <option>Full-time</option>
+                              <option>Part-time</option>
+                              <option>Contract</option>
+                              <option>Freelance</option>
+                              <option>Temporary</option>
+                              <option>Zero hours</option>
+                              <option>Apprenticeship</option>
+                              <option>Internship</option>
+                              <option>Volunteer</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Salary period:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="jobSalaryPeriodSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" selected>Select salary period</option>
+                              <option>Per year</option>
+                              <option>Per month</option>
+                              <option>Per week</option>
+                              <option>Per day</option>
+                              <option>Per hour</option>
+                              <option>Negotiable</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Services-specific fields -->
+                  <div id="serviceSpecificSection" style="display:none">
+                     <div class="pa-field">
+                        <span class="pa-field__label">Pricing:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="servicePricingSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" selected>Select pricing type</option>
+                              <option>Per hour</option>
+                              <option>Per day</option>
+                              <option>Fixed price</option>
+                              <option>Free quote</option>
+                              <option>Negotiable</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="pa-field" id="reFloorField" style="display:none">
                      <span class="pa-field__label">Floor:</span>
                      <div class="pa-field__control pa-select-wrap">
@@ -2176,13 +2228,23 @@
          deactivateCarFields();
 
          var isRE = cat === 'real-estate';
+         var isJob = cat === 'jobs';
+         var isSvc = cat === 'services';
          var reOnlyFields = ['bathroomsField','reFloorField','parkingField','furnishingField','airConField','constructionYearField','propertyAreaField','includedField','onlineViewingField','energyField','regBlockField','regNumField'];
          reOnlyFields.forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.style.display = isRE ? 'flex' : 'none';
          });
          var deliveryEl = document.getElementById('deliveryField');
-         if (deliveryEl) deliveryEl.style.display = isRE ? 'none' : 'flex';
+         if (deliveryEl) deliveryEl.style.display = (isRE || isJob || isSvc) ? 'none' : 'flex';
+         var bedroomsEl = document.getElementById('bedroomsField');
+         if (bedroomsEl) bedroomsEl.style.display = (isRE || isJob || isSvc) ? 'none' : 'flex';
+         var condEl = document.getElementById('conditionField');
+         if (condEl) condEl.style.display = (isJob || isSvc) ? 'none' : 'flex';
+         var jobSec = document.getElementById('jobSpecificSection');
+         if (jobSec) jobSec.style.display = isJob ? 'contents' : 'none';
+         var svcSec = document.getElementById('serviceSpecificSection');
+         if (svcSec) svcSec.style.display = isSvc ? 'contents' : 'none';
       }
 
       /* ── Car Make / Model data ──────────────────────────────────────── */
