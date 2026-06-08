@@ -4433,7 +4433,7 @@
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
             trackGA4Event('post_ad', {
                category: reState.cat,
-               listing_type: listingType,
+               listing_type: propertyType,
                city: locationCity
             });
             if (typeof gtag === 'function') {
