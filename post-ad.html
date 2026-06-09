@@ -1745,7 +1745,7 @@
                      <div class="pa-field">
                         <span class="pa-field__label">Salary period:</span>
                         <div class="pa-field__control pa-select-wrap">
-                           <select class="pa-select pa-empty" id="jobSalaryPeriodSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                           <select class="pa-select pa-empty" id="jobSalaryPeriodSelect" onchange="this.classList.toggle('pa-empty',!this.value);toggleJobSalaryFields()">
                               <option value="" selected>Select salary period</option>
                               <option>Per year</option>
                               <option>Per month</option>
@@ -1756,7 +1756,7 @@
                            </select>
                         </div>
                      </div>
-                     <div class="pa-field">
+                     <div class="pa-field" id="jobSalaryTypeField">
                         <span class="pa-field__label">Salary type:<span>*</span></span>
                         <div class="pa-field__control">
                            <div class="pa-radio-row">
@@ -2587,6 +2587,16 @@
             titleInput.removeAttribute('readonly');
             titleInput.placeholder = 'e.g. Apple iPhone 15 Pro 256GB';
          }
+      }
+
+      function toggleJobSalaryFields() {
+         var periodSel = document.getElementById('jobSalaryPeriodSelect');
+         var isNegotiable = periodSel && periodSel.value === 'Negotiable';
+         ['jobSalaryTypeField','jobSalaryFixedField','jobSalaryRangeField'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = isNegotiable ? 'none' : '';
+         });
+         if (!isNegotiable) toggleJobSalaryType();
       }
 
       function toggleJobSalaryType() {
