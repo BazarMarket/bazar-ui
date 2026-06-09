@@ -2083,7 +2083,7 @@
                      </div>
                   </div>
 
-                  <div class="pa-field">
+                  <div class="pa-field" id="priceField">
                      <span class="pa-field__label">Price:<span>*</span></span>
                      <div class="pa-field__control">
                         <div class="pa-price-row">
@@ -2329,7 +2329,9 @@
          if (jobSec) jobSec.style.display = isJob ? 'contents' : 'none';
          var svcSec = document.getElementById('serviceSpecificSection');
          if (svcSec) svcSec.style.display = isSvc ? 'contents' : 'none';
-         /* Hide "Negotiable price" toggle for Jobs (salary negotiation handled by Salary period) */
+         /* Hide Price field and Negotiable price toggle for Jobs */
+         var priceField = document.getElementById('priceField');
+         if (priceField) priceField.style.display = isJob ? 'none' : '';
          var negRow = document.querySelector('.pa-toggle-row');
          if (negRow) negRow.style.display = isJob ? 'none' : '';
          /* Hide Virtual tour for Jobs and Services */
