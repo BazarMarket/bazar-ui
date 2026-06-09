@@ -351,6 +351,44 @@
       #bedroomsSelect option   { color: #333; }
       #bathroomsSelect.pa-empty { color: #333; }
       #bathroomsSelect option   { color: #333; }
+      /* Salary type radio row */
+      .pa-radio-row {
+         display: flex;
+         align-items: center;
+         gap: 24px;
+         padding-top: 8px;
+         flex-wrap: wrap;
+      }
+      .pa-radio-row label {
+         display: flex;
+         align-items: center;
+         gap: 6px;
+         font-size: 14px;
+         color: #333;
+         cursor: pointer;
+         white-space: nowrap;
+      }
+      .pa-radio-row input[type="radio"] {
+         width: 16px;
+         height: 16px;
+         accent-color: #f0771e;
+         cursor: pointer;
+         flex-shrink: 0;
+      }
+      /* Salary range two-input row */
+      .pa-salary-range-row {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+      }
+      .pa-salary-range-row .pa-price-row {
+         flex: 1;
+      }
+      .pa-salary-range-sep {
+         font-size: 16px;
+         color: #888;
+         flex-shrink: 0;
+      }
       .pa-field {
          display: flex;
          align-items: flex-start;
@@ -1694,6 +1732,17 @@
                         </div>
                      </div>
                      <div class="pa-field">
+                        <span class="pa-field__label">On-site/Remote:</span>
+                        <div class="pa-field__control pa-select-wrap">
+                           <select class="pa-select pa-empty" id="jobWorkplaceSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
+                              <option value="" selected>Select workplace type</option>
+                              <option>Remote</option>
+                              <option>On-site</option>
+                              <option>Hybrid</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
                         <span class="pa-field__label">Salary period:</span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="jobSalaryPeriodSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
@@ -1705,6 +1754,40 @@
                               <option>Per hour</option>
                               <option>Negotiable</option>
                            </select>
+                        </div>
+                     </div>
+                     <div class="pa-field">
+                        <span class="pa-field__label">Salary type:<span>*</span></span>
+                        <div class="pa-field__control">
+                           <div class="pa-radio-row">
+                              <label><input type="radio" name="jobSalaryType" value="fixed" checked onchange="toggleJobSalaryType()"> Fixed</label>
+                              <label><input type="radio" name="jobSalaryType" value="range" onchange="toggleJobSalaryType()"> Range</label>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="pa-field" id="jobSalaryFixedField">
+                        <span class="pa-field__label">Salary:<span>*</span></span>
+                        <div class="pa-field__control">
+                           <div class="pa-price-row">
+                              <span class="pa-price-currency">£</span>
+                              <input class="pa-input" id="jobSalaryFixedInput" type="text" inputmode="numeric" placeholder="0" oninput="formatPrice(this)">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="pa-field" id="jobSalaryRangeField" style="display:none">
+                        <span class="pa-field__label">Salary range:<span>*</span></span>
+                        <div class="pa-field__control">
+                           <div class="pa-salary-range-row">
+                              <div class="pa-price-row">
+                                 <span class="pa-price-currency">£</span>
+                                 <input class="pa-input" id="jobSalaryMinInput" type="text" inputmode="numeric" placeholder="From" oninput="formatPrice(this)">
+                              </div>
+                              <span class="pa-salary-range-sep">—</span>
+                              <div class="pa-price-row">
+                                 <span class="pa-price-currency">£</span>
+                                 <input class="pa-input" id="jobSalaryMaxInput" type="text" inputmode="numeric" placeholder="To" oninput="formatPrice(this)">
+                              </div>
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -2246,6 +2329,9 @@
          if (jobSec) jobSec.style.display = isJob ? 'contents' : 'none';
          var svcSec = document.getElementById('serviceSpecificSection');
          if (svcSec) svcSec.style.display = isSvc ? 'contents' : 'none';
+         /* Hide "Negotiable price" toggle for Jobs (salary negotiation handled by Salary period) */
+         var negRow = document.querySelector('.pa-toggle-row');
+         if (negRow) negRow.style.display = isJob ? 'none' : '';
       }
 
       /* ── Car Make / Model data ──────────────────────────────────────── */
@@ -2495,6 +2581,14 @@
             titleInput.removeAttribute('readonly');
             titleInput.placeholder = 'e.g. Apple iPhone 15 Pro 256GB';
          }
+      }
+
+      function toggleJobSalaryType() {
+         var isRange = document.querySelector('input[name="jobSalaryType"]:checked').value === 'range';
+         var fixedField = document.getElementById('jobSalaryFixedField');
+         var rangeField = document.getElementById('jobSalaryRangeField');
+         if (fixedField) fixedField.style.display = isRange ? 'none' : '';
+         if (rangeField) rangeField.style.display = isRange ? '' : 'none';
       }
 
       function deactivatePhoneFields() {
@@ -4370,8 +4464,22 @@
 
          var jobType = getSelectVal('jobTypeSelect');
          if (jobType) formData.append('job_type', jobType);
+         var workplace = getSelectVal('jobWorkplaceSelect');
+         if (workplace) formData.append('workplace_type', workplace);
          var salaryPeriod = getSelectVal('jobSalaryPeriodSelect');
          if (salaryPeriod) formData.append('salary_period', salaryPeriod);
+         var salaryTypeChecked = document.querySelector('input[name="jobSalaryType"]:checked');
+         var salaryType = salaryTypeChecked ? salaryTypeChecked.value : 'fixed';
+         formData.append('salary_type', salaryType);
+         if (salaryType === 'range') {
+            var salaryMin = getInputVal('jobSalaryMinInput').replace(/\./g, '');
+            var salaryMax = getInputVal('jobSalaryMaxInput').replace(/\./g, '');
+            if (salaryMin) formData.append('salary_min', salaryMin);
+            if (salaryMax) formData.append('salary_max', salaryMax);
+         } else {
+            var salaryFixed = getInputVal('jobSalaryFixedInput').replace(/\./g, '');
+            if (salaryFixed && parseInt(salaryFixed) > 0) formData.append('salary_amount', salaryFixed);
+         }
          var servicePricing = getSelectVal('servicePricingSelect');
          if (servicePricing) formData.append('service_pricing', servicePricing);
 
