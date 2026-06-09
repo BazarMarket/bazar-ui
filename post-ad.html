@@ -3126,6 +3126,19 @@
          document.getElementById('constructionTypeField').style.display = 'none';
          updateRealEstateTitle();
 
+         if (cat === 'jobs') {
+            var jobTypeSel = document.getElementById('jobTypeSelect');
+            if (jobTypeSel) {
+               var vacancyOpts = ['Full-time','Part-time','Contract','Temporary','Zero hours','Apprenticeship','Internship','Volunteer'];
+               var seekingOpts = ['Full-time','Part-time','Contract','Freelance','Temporary','Zero hours','Internship','Volunteer'];
+               var opts = (sub === 'Looking for Work') ? seekingOpts : vacancyOpts;
+               jobTypeSel.innerHTML = '<option value="">Select employment type</option>' +
+                  opts.map(function(o){ return '<option>' + o + '</option>'; }).join('');
+               jobTypeSel.value = '';
+               jobTypeSel.classList.add('pa-empty');
+            }
+         }
+
          if (cat === 'phones' && sub === 'Mobile phones') {
             deactivateCarFields();
             deactivatePhoneFields();
