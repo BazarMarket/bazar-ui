@@ -2149,9 +2149,9 @@
                      </div>
                   </div>
 
-                  <p class="pa-media-subtitle">Virtual tour (optional)</p>
+                  <p class="pa-media-subtitle" id="virtualTourSubtitle">Virtual tour (optional)</p>
 
-                  <div class="pa-field">
+                  <div class="pa-field" id="virtualTourField">
                      <span class="pa-field__label">Virtual tour:</span>
                      <div class="pa-field__control">
                         <input class="pa-input" type="text" placeholder="https://my.matterport.com/...">
@@ -2332,6 +2332,12 @@
          /* Hide "Negotiable price" toggle for Jobs (salary negotiation handled by Salary period) */
          var negRow = document.querySelector('.pa-toggle-row');
          if (negRow) negRow.style.display = isJob ? 'none' : '';
+         /* Hide Virtual tour for Jobs and Services */
+         var _vtSubtitle = document.getElementById('virtualTourSubtitle');
+         var _vtField    = document.getElementById('virtualTourField');
+         var _hideVT = isJob || isSvc;
+         if (_vtSubtitle) _vtSubtitle.style.display = _hideVT ? 'none' : '';
+         if (_vtField)    _vtField.style.display    = _hideVT ? 'none' : '';
       }
 
       /* ── Car Make / Model data ──────────────────────────────────────── */
