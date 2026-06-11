@@ -2934,6 +2934,10 @@
         var _isJobPage = (_pathCat0 === 'jobs');
         var _isServicePage = (_pathCat0 === 'services');
         window._isJobPage = _isJobPage;
+        if (_isJobPage) {
+          var _vs = document.querySelector('.sr-view-sidebar');
+          if (_vs) _vs.style.display = 'none';
+        }
         if (_isJobPage || _isServicePage) {
           var _jobSubtypeFilter = (_pathParts0[1] || '').replace(/-/g, ' ').toLowerCase();
           var _jobCityFilter    = (_pathParts0[2] || '').replace(/-/g, ' ').toLowerCase();
@@ -3511,6 +3515,7 @@
         if (window._bazarCityFilter) {
           var _cf = window._bazarCityFilter;
           items = items.filter(function(item) {
+            if (String(item.id || '').indexOf('demo-') === 0) return true;
             return (item.cy || '').toLowerCase().indexOf(_cf) !== -1 ||
                    (item.l  || '').toLowerCase().indexOf(_cf) !== -1;
           });
@@ -3518,6 +3523,7 @@
         if (window._bazarDistrictFilter) {
           var _df = window._bazarDistrictFilter;
           items = items.filter(function(item) {
+            if (String(item.id || '').indexOf('demo-') === 0) return true;
             return (item.l || '').toLowerCase().indexOf(_df) !== -1;
           });
         }
