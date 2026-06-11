@@ -435,6 +435,7 @@
       .job-card__employment{font-size:11px;font-weight:500;padding:3px 9px;border-radius:12px;border:1px solid #3b82f6;color:#2563eb;white-space:nowrap;background:#eff6ff;position:relative;z-index:1;}
       .job-card__meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;color:#6b7280;margin-bottom:5px;}
       .job-card__company{font-weight:500;color:#374151;}
+      .job-card__icon-meta{font-size:13px;color:#9ca3af;margin-right:4px;vertical-align:middle;}
       .job-card__sep{color:#d1d5db;font-size:11px;}
       .job-card__loc{display:flex;align-items:center;gap:2px;}
       .job-card__salary{color:#059669;font-weight:500;}
@@ -3398,7 +3399,10 @@
         var words = name.trim().split(/\s+/).filter(Boolean);
         var initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase()
                      : words.length === 1 ? words[0].substring(0, 2).toUpperCase() : '?';
-        var dateStr = (typeof _relTimeSr === 'function' ? _relTimeSr(item.raw_dt) : '') || item.dt || '';
+        var _d = item.raw_dt ? new Date(item.raw_dt) : null;
+        var dateStr = (_d && !isNaN(_d))
+          ? String(_d.getDate()).padStart(2,'0')+'/'+String(_d.getMonth()+1).padStart(2,'0')+'/'+_d.getFullYear()
+          : (item.dt || '');
         var loc = item.l || item.cy || 'UK';
         var rawDesc = item.d || '';
         var desc = rawDesc.length > 130 ? rawDesc.substring(0, 130) + '\u2026' : rawDesc;
@@ -3431,8 +3435,8 @@
               '</div>' +
             '</div>' +
             '<div class="job-card__meta">' +
-              '<span class="job-card__company">'+name+'</span>' +
-              (loc ? '<span class="job-card__sep">&middot;</span><span class="job-card__loc"><span class="icon-pin"></span>&nbsp;'+loc+'</span>' : '') +
+              '<span class="job-card__company"><span class="icon-vacations job-card__icon-meta"></span>'+name+'</span>' +
+              (loc ? '<span class="job-card__sep">&middot;</span><span class="job-card__loc"><span class="icon-location job-card__icon-meta"></span>&nbsp;'+loc+'</span>' : '') +
               (salary ? '<span class="job-card__sep">&middot;</span><span class="job-card__salary">'+salary+'</span>' : '') +
             '</div>' +
             (desc ? '<p class="job-card__desc">'+desc+'</p>' : '') +
