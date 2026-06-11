@@ -3414,7 +3414,7 @@
         var logoImg = item.uid
           ? '<img class="job-card__logo-img" src="" data-uid="'+item.uid+'" style="display:none" alt="" onload="this.style.display=\'block\';var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';">'
           : '';
-        var _empType = item.jt || item.employment_type || item.workplace_type || '';
+        var _empType = item.jt || item.employment_type || item.workplace_type || item.st || '';
         var empBadge = _empType ? '<span class="job-card__employment">'+_empType+'</span>' : '';
         return '<div class="job-card '+(item.cc||'')+'">' +
           '<a href="'+cardHref+'" class="job-card__link" aria-label="'+item.t+'"></a>' +
