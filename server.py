@@ -4753,6 +4753,7 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         enriched_list[idx]['images']       = detail.get('images') or []
                         enriched_list[idx]['car_make']     = detail.get('car_make') or ''
                         enriched_list[idx]['phone_brand']  = detail.get('phone_brand') or ''
+                        enriched_list[idx]['job_type']     = detail.get('job_type') or ''
                         enriched_list[idx]['views']        = _real_views
                         if detail.get('created_at') and not enriched_list[idx].get('created_at'):
                             enriched_list[idx]['created_at'] = detail.get('created_at')
