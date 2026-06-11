@@ -4626,6 +4626,9 @@
          if (pt === 'truck')       return { mainCat: 'motors',  subcatUI: 'For Sale', subsubUI: 'Trucks' };
          if (pt === 'boat')        return { mainCat: 'motors',  subcatUI: 'For Sale', subsubUI: 'Boats & marine' };
          if (pt === 'mobile_phone')return { mainCat: 'phones',  subcatUI: 'Mobile phones', subsubUI: null };
+         if (pt === 'job')         return { mainCat: 'jobs',    subcatUI: 'Job Vacancy',    subsubUI: d.sub_type || null };
+         if (pt === 'job_seeking') return { mainCat: 'jobs',    subcatUI: 'Looking for Work', subsubUI: d.sub_type || null };
+         if (pt === 'service')     return { mainCat: 'services',subcatUI: d.sub_type || null, subsubUI: null };
          /* Fallback */
          return { mainCat: 'real-estate', subcatUI: listingUI, subsubUI: reMap[pt] || null };
       }
@@ -4848,6 +4851,13 @@
          }
          /* Energy */
          if (d.energy_efficiency) _setSelect('energySelect', d.energy_efficiency);
+
+         /* Jobs specific */
+         if ((d.property_type || '').toLowerCase() === 'job' || (d.property_type || '').toLowerCase() === 'job_seeking') {
+            setTimeout(function() {
+               if (d.job_type) _setSelect('jobTypeSelect', d.job_type);
+            }, 400);
+         }
 
          /* Video */
          _setVal('youtubeInput', d.video_url || '');
