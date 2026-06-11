@@ -5022,6 +5022,7 @@
          window.submitProperty = function() {
             if (reState.cat === 'motors' && window.isCarSubtype) { window.submitCar(); return; }
             if (reState.cat === 'phones' && window.isPhoneSubtype) { window.submitPhone(); return; }
+            if (reState.cat === 'jobs' || reState.cat === 'services') { submitJob(); return; }
             /* Build formData same as submitProperty does, then intercept */
             var title       = getInputVal('titleInput');
             var listingType = mapListingType(reState.listingType);
