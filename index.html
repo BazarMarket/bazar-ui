@@ -1589,6 +1589,9 @@
                 }
                 var grid = document.getElementById('latestGrid');
                 if (!grid) return;
+                resp.data = resp.data.filter(function(ad) {
+                    return (ad.listing_type || '').toLowerCase() !== 'jobs';
+                });
                 var html = '';
                 resp.data.forEach(function(ad) {
                     var _latOwnPlan = _bzOwnAdPlan(ad);
@@ -1643,7 +1646,7 @@
                 var latestSwiperWrapper = grid.closest('.cards__body').querySelector('.swiper-wrapper');
                 if (latestSwiperWrapper) {
                     var latestSlidesHtml = '';
-                    resp.data.forEach(function(ad) {
+                    resp.data.filter(function(ad){ return (ad.listing_type||'').toLowerCase()!=='jobs'; }).forEach(function(ad) {
                         var _swOwnPlan = _bzOwnAdPlan(ad);
                         var _swIsVip = _swOwnPlan !== null ? (_swOwnPlan === 'vip') : !!ad.is_vip;
                         var _swIsPro = _swOwnPlan !== null ? (_swOwnPlan === 'pro') : !!ad.is_pro;

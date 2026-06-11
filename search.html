@@ -3402,11 +3402,6 @@
         var badge = '';
         if (item.stk && item.stk.indexOf('VIP') !== -1)      badge = '<span class="job-card__plan job-card__plan--vip">VIP</span>';
         else if (item.stk && item.stk.indexOf('PRO') !== -1) badge = '<span class="job-card__plan job-card__plan--pro">PRO</span>';
-        var _cu = localStorage.getItem('bazar_username') || '';
-        var _cp = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
-        var _isOwner = _cu && item.s === _cu;
-        var boostBtn = (_isOwner && _cp !== 'vip' && item.stk && item.stk.indexOf('VIP') === -1)
-          ? '<button class="job-card__boost" onclick="event.stopPropagation();event.preventDefault();bazarBoostPay(window.location.href,\''+item.n+'\')">Boost</button>' : '';
         var logoImg = item.uid
           ? '<img class="job-card__logo-img" src="" data-uid="'+item.uid+'" style="display:none" alt="" onload="this.style.display=\'block\';var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';">'
           : '';
@@ -3422,7 +3417,6 @@
             '<div class="job-card__top">' +
               badge +
               '<a href="'+cardHref+'" class="job-card__title">'+item.t+'</a>' +
-              boostBtn +
               '<span class="job-card__date">'+dateStr+'</span>' +
             '</div>' +
             '<div class="job-card__meta">' +
@@ -3653,6 +3647,8 @@
         var start = (_srCurrentPage - 1) * _srItemsPerPage;
         var pageItems = items.slice(start, start + _srItemsPerPage);
         var _isJobsType = (type === 'Jobs');
+        var _viewSidebar = document.querySelector('.sr-view-sidebar');
+        if (_viewSidebar) _viewSidebar.style.display = _isJobsType ? 'none' : '';
         var listBody = document.querySelector('.list-products__body');
         if (listBody) {
           if (_isJobsType) {
