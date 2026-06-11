@@ -422,9 +422,9 @@
       .job-card:hover{box-shadow:0 2px 14px rgba(0,0,0,.10);border-color:#d1d5db;}
       .job-card__link{position:absolute;inset:0;z-index:0;border-radius:10px;}
       .job-card__logo-col{flex-shrink:0;width:90px;display:flex;justify-content:center;align-items:center;}
-      .job-card__logo{width:72px;height:72px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;}
-      .job-card__initials{font-size:22px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1;z-index:1;pointer-events:none;}
-      .job-card__logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;z-index:2;}
+      .job-card__logo{width:80px;height:80px;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;background:transparent;}
+      .job-card__initials{font-size:40px;font-weight:700;color:#e07329;letter-spacing:1px;line-height:1;z-index:1;pointer-events:none;font-style:italic;}
+      .job-card__logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:4px;z-index:2;}
       .job-card__body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;}
       .job-card__top{display:flex;align-items:flex-start;gap:8px;flex-wrap:nowrap;margin-bottom:4px;}
       .job-card__title-wrap{flex:1;min-width:0;}
@@ -3394,9 +3394,6 @@
         var words = name.trim().split(/\s+/).filter(Boolean);
         var initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase()
                      : words.length === 1 ? words[0].substring(0, 2).toUpperCase() : '?';
-        var _jColors = ['#4f46e5','#0891b2','#059669','#7c3aed','#d97706','#db2777','#0369a1','#0f766e','#b45309','#be123c'];
-        var _jHue = name.split('').reduce(function(a, c) { return a + c.charCodeAt(0); }, 0) % _jColors.length;
-        var bgColor = _jColors[_jHue];
         var dateStr = (typeof _relTimeSr === 'function' ? _relTimeSr(item.raw_dt) : '') || item.dt || '';
         var loc = item.l || item.cy || 'UK';
         var rawDesc = item.d || '';
@@ -3413,7 +3410,7 @@
         return '<div class="job-card '+(item.cc||'')+'">' +
           '<a href="'+cardHref+'" class="job-card__link" aria-label="'+item.t+'"></a>' +
           '<div class="job-card__logo-col">' +
-            '<div class="job-card__logo" style="background:'+bgColor+'">' +
+            '<div class="job-card__logo">' +
               logoImg +
               '<span class="job-card__initials">'+initials+'</span>' +
             '</div>' +
