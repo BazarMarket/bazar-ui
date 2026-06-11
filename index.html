@@ -1591,6 +1591,8 @@
                 if (!grid) return;
                 var html = '';
                 resp.data.forEach(function(ad) {
+                    var _ptSkip = (ad.property_type || '').toLowerCase();
+                    if (_ptSkip === 'job' || _ptSkip === 'job_seeking' || _ptSkip === 'service') return;
                     var _latOwnPlan = _bzOwnAdPlan(ad);
                     var _latIsVip = _latOwnPlan !== null ? (_latOwnPlan === 'vip') : !!ad.is_vip;
                     var _latIsPro = _latOwnPlan !== null ? (_latOwnPlan === 'pro') : !!ad.is_pro;
@@ -1644,6 +1646,8 @@
                 if (latestSwiperWrapper) {
                     var latestSlidesHtml = '';
                     resp.data.forEach(function(ad) {
+                        var _ptSkip2 = (ad.property_type || '').toLowerCase();
+                        if (_ptSkip2 === 'job' || _ptSkip2 === 'job_seeking' || _ptSkip2 === 'service') return;
                         var _swOwnPlan = _bzOwnAdPlan(ad);
                         var _swIsVip = _swOwnPlan !== null ? (_swOwnPlan === 'vip') : !!ad.is_vip;
                         var _swIsPro = _swOwnPlan !== null ? (_swOwnPlan === 'pro') : !!ad.is_pro;
