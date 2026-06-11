@@ -418,18 +418,21 @@
       .sr-grid-view .car-meta-row__date .icon-calendar,.sr-grid-view .car-meta-row__views .icon-eye{font-size:16px;line-height:1;color:#6b7280}
       .sr-grid-view .car-meta-row__sep{opacity:.3;font-size:11px;flex-shrink:0;font-weight:300}
       /* ── Job cards (cypruswork style) ──────────────────────────────────────── */
-      .job-card{position:relative;display:flex;align-items:flex-start;gap:14px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin-bottom:10px;transition:box-shadow .15s ease,border-color .15s ease;}
+      .job-card{position:relative;display:flex;align-items:stretch;gap:12px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 10px;margin-bottom:10px;transition:box-shadow .15s ease,border-color .15s ease;}
       .job-card:hover{box-shadow:0 2px 14px rgba(0,0,0,.10);border-color:#d1d5db;}
       .job-card__link{position:absolute;inset:0;z-index:0;border-radius:10px;}
-      .job-card__logo-col{flex-shrink:0;}
-      .job-card__logo{width:58px;height:58px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;}
-      .job-card__initials{font-size:19px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1;z-index:1;pointer-events:none;}
+      .job-card__logo-col{flex-shrink:0;width:90px;display:flex;justify-content:center;align-items:center;}
+      .job-card__logo{width:72px;height:72px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;}
+      .job-card__initials{font-size:22px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1;z-index:1;pointer-events:none;}
       .job-card__logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;z-index:2;}
-      .job-card__body{flex:1;min-width:0;}
-      .job-card__top{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:3px;}
-      .job-card__title{font-size:15px;font-weight:600;color:#111827;text-decoration:none;flex:1;min-width:0;position:relative;z-index:1;line-height:1.3;}
+      .job-card__body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;}
+      .job-card__top{display:flex;align-items:flex-start;gap:8px;flex-wrap:nowrap;margin-bottom:4px;}
+      .job-card__title-wrap{flex:1;min-width:0;}
+      .job-card__title{font-size:15px;font-weight:600;color:#111827;text-decoration:none;display:block;position:relative;z-index:1;line-height:1.3;}
       .job-card__title:hover{color:#ffae49;}
-      .job-card__date{font-size:12px;color:#9ca3af;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+      .job-card__right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:8px;}
+      .job-card__date{font-size:12px;color:#9ca3af;white-space:nowrap;}
+      .job-card__employment{font-size:11px;font-weight:500;padding:3px 9px;border-radius:12px;border:1px solid #3b82f6;color:#2563eb;white-space:nowrap;background:#eff6ff;position:relative;z-index:1;}
       .job-card__meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:13px;color:#6b7280;margin-bottom:5px;}
       .job-card__company{font-weight:500;color:#374151;}
       .job-card__sep{color:#d1d5db;font-size:11px;}
@@ -439,7 +442,6 @@
       .job-card__plan{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;position:relative;z-index:1;}
       .job-card__plan--vip{background:#fef2f2;color:#e31836;border:1px solid #fca5a5;}
       .job-card__plan--pro{background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
-      .job-card__boost{position:relative;z-index:1;padding:4px 10px;font-size:12px;font-weight:600;border-radius:6px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;margin-left:auto;flex-shrink:0;}
       .job-card .card__heart{position:relative;z-index:1;background:none;border:none;cursor:pointer;font-size:18px;color:#9ca3af;margin-left:auto;}
       .job-card .card__heart:hover{color:#e31836;}
       .job-card__footer{display:flex;align-items:center;}
@@ -453,6 +455,7 @@
       .dark-mode .job-card__company{color:#d1d5db;}
       .dark-mode .job-card__meta{color:#9ca3af;}
       .dark-mode .job-card__desc{color:#9ca3af;}
+      .dark-mode .job-card__employment{border-color:#1d4ed8;color:#93c5fd;background:rgba(30,58,138,.25);}
       .dark-mode .job-card .card__heart{color:#6b7280;}
    </style>
    <script>
@@ -3405,6 +3408,8 @@
         var logoImg = item.uid
           ? '<img class="job-card__logo-img" src="" data-uid="'+item.uid+'" style="display:none" alt="" onload="this.style.display=\'block\';var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';">'
           : '';
+        var _empType = item.employment_type || item.workplace_type || item.job_subtype || '';
+        var empBadge = _empType ? '<span class="job-card__employment">'+_empType+'</span>' : '';
         return '<div class="job-card '+(item.cc||'')+'">' +
           '<a href="'+cardHref+'" class="job-card__link" aria-label="'+item.t+'"></a>' +
           '<div class="job-card__logo-col">' +
@@ -3415,9 +3420,14 @@
           '</div>' +
           '<div class="job-card__body">' +
             '<div class="job-card__top">' +
-              badge +
-              '<a href="'+cardHref+'" class="job-card__title">'+item.t+'</a>' +
-              '<span class="job-card__date">'+dateStr+'</span>' +
+              '<div class="job-card__title-wrap">' +
+                (badge ? badge+'<br>' : '') +
+                '<a href="'+cardHref+'" class="job-card__title">'+item.t+'</a>' +
+              '</div>' +
+              '<div class="job-card__right">' +
+                '<span class="job-card__date">'+dateStr+'</span>' +
+                empBadge +
+              '</div>' +
             '</div>' +
             '<div class="job-card__meta">' +
               '<span class="job-card__company">'+name+'</span>' +
