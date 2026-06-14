@@ -1662,11 +1662,11 @@
                 fetch(apiBase + id, { headers: { 'Accept': 'application/json' } })
                     .then(function(r) { return r.ok ? r.json() : null; })
                     .then(function(d) {
-                        if (!d) { card.remove(); return; }
+                        if (!d) { _renderFavCard(card, id, 'Listing #' + id, 0, 'img/product.jpg'); return; }
                         var img = (d.images && d.images[0]) ? d.images[0] : (d.image || 'img/product.jpg');
                         _renderFavCard(card, id, d.title || 'Listing #' + id, d.price || 0, img);
                     })
-                    .catch(function() { card.remove(); });
+                    .catch(function() { _renderFavCard(card, id, 'Listing #' + id, 0, 'img/product.jpg'); });
             }
         });
     }
