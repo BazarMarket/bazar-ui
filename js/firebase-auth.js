@@ -128,12 +128,7 @@ function clearUserLocalData() {
     localStorage.removeItem('bazar_gender');
     localStorage.removeItem('bazar_plan');
     localStorage.removeItem('bazar_firebase_uid');
-    var favKeys = [];
-    for (var i = 0; i < localStorage.length; i++) {
-        var k = localStorage.key(i);
-        if (k && k.indexOf('favorite_') === 0) favKeys.push(k);
-    }
-    favKeys.forEach(function(k) { localStorage.removeItem(k); });
+    /* favorites (favorite_*) are intentionally kept in localStorage across sessions */
 }
 
 function resetRecaptcha() {
