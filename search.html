@@ -3127,8 +3127,9 @@
                combine all fetched results into one list and render */
             if (_isTransactionPage) {
               var _txAll = [];
+              var _txExclude = ['Cars', 'Phones', 'Jobs', 'Services'];
               Object.keys(apiByBucket).forEach(function(k) {
-                if (Array.isArray(apiByBucket[k])) _txAll = _txAll.concat(apiByBucket[k]);
+                if (Array.isArray(apiByBucket[k]) && _txExclude.indexOf(k) === -1) _txAll = _txAll.concat(apiByBucket[k]);
               });
               _txAll.sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
               BAZAR_LISTINGS['PropertyAll'] = _txAll;
