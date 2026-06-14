@@ -1811,7 +1811,10 @@
 
             /* Days cell */
             var daysHtml;
-            if (isExpired) {
+            var isInactive = (ad.status === 'inactive');
+            if (isInactive) {
+                daysHtml = '<span style="font-size:13px;color:#9ca3af;">Deactivated</span>';
+            } else if (isExpired) {
                 daysHtml = '<span style="font-size:13px;color:#dc2626;">Expired</span>';
             } else if (daysLeft !== null) {
                 var dColor = (plan !== 'free' && daysLeft < 10) ? '#dc2626' : ((plan !== 'free' && daysLeft < 20) ? '#d97706' : '#6b7280');
@@ -2066,6 +2069,9 @@
                     }
                 }
             }
+
+            /* If inactive — replace days counter with "Deactivated" label */
+            if (isInactive) _daysLeft = '<span style="font-size:11px;color:#9ca3af;margin-left:5px;white-space:nowrap;">Deactivated</span>';
 
             /* Promotion button — gray uniform style */
             var _promoUrl = 'publish-options?ad_id=' + ad.id + '&plan=' + _adPlan + '&days=' + _numDays;
