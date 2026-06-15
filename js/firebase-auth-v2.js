@@ -104,9 +104,10 @@ function clearUserLocalData() {
     var toDelete = [];
     for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k && (k.indexOf('bazar_') === 0 || k.indexOf('favorite_') === 0)) {
+        if (k && k.indexOf('bazar_') === 0) {
             toDelete.push(k);
         }
+        /* favorite_* are intentionally kept across sessions */
     }
     toDelete.forEach(function(k) { localStorage.removeItem(k); });
 }
