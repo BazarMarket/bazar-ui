@@ -122,6 +122,47 @@ function doLogin() {
     if (window._bazarPostAdLockContact) window._bazarPostAdLockContact();
 }
 
+function syncFavoritesFromServer(uid) {
+    var api = window.BAZAR_API || '/api';
+    fetch(api + '/favorites?uid=' + encodeURIComponent(uid))
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+            if (!data) return;
+            var toDelete = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf('favorite_') === 0) toDelete.push(k);
+            }
+            toDelete.forEach(function(k) { localStorage.removeItem(k); });
+            if (data.ids && data.ids.length) {
+                data.ids.forEach(function(id) { localStorage.setItem('favorite_' + id, '1'); });
+            }
+            if (window.updateFavCount) window.updateFavCount();
+        })
+        .catch(function() {});
+}
+window.syncFavoritesFromServer = syncFavoritesFromServer;
+
+function uploadLocalFavoritesToServer(uid) {
+    var api = window.BAZAR_API || '/api';
+    for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
+            var pid = parseInt(k.replace('favorite_', ''), 10);
+            if (pid) {
+                (function(_pid) {
+                    fetch(api + '/favorites', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({uid: uid, property_id: _pid, active: 1})
+                    }).catch(function() {});
+                })(pid);
+            }
+        }
+    }
+}
+window.uploadLocalFavoritesToServer = uploadLocalFavoritesToServer;
+
 function clearUserLocalData() {
     localStorage.removeItem('bazar_username');
     localStorage.removeItem('bazar_phone');
@@ -391,6 +432,7 @@ function verifyOtpCode() {
                         localStorage.setItem('bazar_plan',     data.plan || 'free');
                         closeOtpModal();
                         doLogin();
+                        syncFavoritesFromServer(uid);
                         if (window.bzLogError) window.bzLogError('firebase', 'Login OK: ' + data.name + ' / ' + (phone || uid), null, phone);
                         if (window._postAdCallback) {
                             var _cb = window._postAdCallback;
@@ -543,6 +585,7 @@ function finishRegistration() {
     /* Save customer — store promise so post-ad flow can await it before page navigation */
     var _customerSaveP = Promise.resolve();
     if (uid) {
+        uploadLocalFavoritesToServer(uid);
         _customerSaveP = fetch(window.BAZAR_API + '/customers', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },

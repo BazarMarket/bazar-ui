@@ -304,6 +304,14 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         } else {
             localStorage.removeItem(key);
         }
+        var _fUid = localStorage.getItem('bazar_firebase_uid');
+        if (_fUid) {
+            fetch((window.BAZAR_API || '/api') + '/favorites', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({uid: _fUid, property_id: parseInt(id, 10), active: nowFav ? 1 : 0})
+            }).catch(function() {});
+        }
         btn.classList.toggle('active', nowFav);
         btn.classList.toggle('icon-heart', !nowFav);
         btn.classList.toggle('icon-heart-full', nowFav);

@@ -1683,7 +1683,15 @@
                 '<button class="cab-btn-sm cab-btn-sm--outline" data-fav-remove="' + id + '">Remove</button>' +
             '</div>';
         card.querySelector('[data-fav-remove]').addEventListener('click', function() {
-            localStorage.setItem('favorite_' + id, '0');
+            localStorage.removeItem('favorite_' + id);
+            var _rUid = localStorage.getItem('bazar_firebase_uid');
+            if (_rUid) {
+                fetch((window.BAZAR_API || '/api') + '/favorites', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({uid: _rUid, property_id: parseInt(id, 10), active: 0})
+                }).catch(function() {});
+            }
             updateFavCount();
             card.remove();
             var grid = document.getElementById('cab-fav-grid');
@@ -3570,7 +3578,7 @@
 </script>
 
 <script src="js/error-logger.js?v=1"></script>
-<script src="js/header-auth.js?v=22"></script>
+<script src="js/header-auth.js?v=23"></script>
 
 <script>
 /* ── My Tickets ── */

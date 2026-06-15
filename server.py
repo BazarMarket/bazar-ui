@@ -4160,6 +4160,49 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json(502, {'error': 'gateway error'})
             return
 
+        # ── /api/favorites — server-side favorites storage ───────────────────────
+        if path_only == '/api/favorites':
+            _fvp_cl = int(self.headers.get('Content-Length', 0))
+            _fvp_body = self.rfile.read(_fvp_cl) if _fvp_cl > 0 else b''
+            try:
+                _fvp_data = json.loads(_fvp_body) if _fvp_body else {}
+                _fvp_uid  = str(_fvp_data.get('uid', '')).strip()
+                _fvp_pid  = _fvp_data.get('property_id')
+                _fvp_act  = int(_fvp_data.get('active', 1))
+                if not _fvp_uid or not _fvp_pid:
+                    self._send_json(400, {'error': 'uid and property_id required'})
+                    return
+                import pymysql as _pymysql
+                _fvp_conn = _pymysql.connect(
+                    host=os.environ.get('DB_HOST', '127.0.0.1'),
+                    user=os.environ.get('DB_USERNAME', 'bazar'),
+                    password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                    database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                    connect_timeout=3, autocommit=True,
+                )
+                with _fvp_conn:
+                    with _fvp_conn.cursor() as _fvp_cur:
+                        _fvp_cur.execute(
+                            'CREATE TABLE IF NOT EXISTS user_favorites '
+                            '(uid VARCHAR(128) NOT NULL, property_id INT NOT NULL, '
+                            'PRIMARY KEY (uid, property_id)) '
+                            'DEFAULT CHARSET=utf8mb4'
+                        )
+                        if _fvp_act:
+                            _fvp_cur.execute(
+                                'INSERT IGNORE INTO user_favorites (uid, property_id) VALUES (%s, %s)',
+                                (_fvp_uid, int(_fvp_pid))
+                            )
+                        else:
+                            _fvp_cur.execute(
+                                'DELETE FROM user_favorites WHERE uid=%s AND property_id=%s',
+                                (_fvp_uid, int(_fvp_pid))
+                            )
+                self._send_json(200, {'ok': True})
+            except Exception as _fvp_e:
+                self._send_json(500, {'error': str(_fvp_e)})
+            return
+
         # ── /api/save-gender — persist gender in our SQLite (authoritative) ──
         if path_only == '/api/save-gender':
             _sg_cl = int(self.headers.get('Content-Length', 0))
@@ -4400,6 +4443,39 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
         # ── GET /api/is-admin — always true in dev/Replit ────────────────────────
         if path == '/api/is-admin':
             self._send_json(200, {'admin': True})
+            return
+
+        # ── GET /api/favorites?uid=... ────────────────────────────────────────────
+        if path == '/api/favorites':
+            _fv_uid = urllib.parse.parse_qs(qs).get('uid', [''])[0].strip()
+            if not _fv_uid:
+                self._send_json(400, {'error': 'uid required'})
+                return
+            try:
+                import pymysql as _pymysql
+                _fv_conn = _pymysql.connect(
+                    host=os.environ.get('DB_HOST', '127.0.0.1'),
+                    user=os.environ.get('DB_USERNAME', 'bazar'),
+                    password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                    database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                    connect_timeout=3, autocommit=True,
+                )
+                with _fv_conn:
+                    with _fv_conn.cursor() as _fv_cur:
+                        _fv_cur.execute(
+                            'CREATE TABLE IF NOT EXISTS user_favorites '
+                            '(uid VARCHAR(128) NOT NULL, property_id INT NOT NULL, '
+                            'PRIMARY KEY (uid, property_id)) '
+                            'DEFAULT CHARSET=utf8mb4'
+                        )
+                        _fv_cur.execute(
+                            'SELECT property_id FROM user_favorites WHERE uid=%s',
+                            (_fv_uid,)
+                        )
+                        _fv_ids = [str(r[0]) for r in _fv_cur.fetchall()]
+                self._send_json(200, {'ids': _fv_ids})
+            except Exception as _fv_e:
+                self._send_json(500, {'error': str(_fv_e)})
             return
 
         # ── GET /oauth/callback — one-time Google Ads OAuth token exchange ────────
