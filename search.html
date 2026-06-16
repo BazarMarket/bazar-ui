@@ -3670,6 +3670,8 @@
         var _isJobsType = (type === 'Jobs');
         var _viewSidebar = document.querySelector('.sr-view-sidebar');
         if (_viewSidebar) _viewSidebar.style.display = _isJobsType ? 'none' : '';
+        var _srSort = document.querySelector('.sr-sort');
+        if (_srSort) _srSort.style.display = _isJobsType ? 'none' : '';
         var listBody = document.querySelector('.list-products__body');
         if (listBody) {
           if (_isJobsType) {
