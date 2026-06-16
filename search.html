@@ -432,7 +432,8 @@
       .job-card__title:hover{color:#ffae49;}
       .job-card__right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:8px;}
       .job-card__date{font-size:12px;color:#9ca3af;white-space:nowrap;}
-      .job-card__employment{font-size:11px;font-weight:500;padding:3px 9px;border-radius:12px;border:1px solid #3b82f6;color:#2563eb;white-space:nowrap;background:#eff6ff;position:relative;z-index:1;}
+      .job-card__employment{font-size:14px;font-weight:500;padding:4px 12px;border-radius:12px;border:1px solid #3b82f6;color:#2563eb;white-space:nowrap;background:#eff6ff;position:relative;z-index:1;}
+      .job-card__employment--admin{color:#111;border-color:#aaa;background:#f3f4f6;}
       .job-card__meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;color:#111827;font-weight:600;margin-bottom:5px;}
       .job-card__company{font-weight:700;color:#111827;}
       .job-card__icon-meta{font-size:13px;color:#9ca3af;margin-right:3px;vertical-align:middle;}
@@ -3416,7 +3417,8 @@
           ? '<img class="job-card__logo-img" src="" data-uid="'+item.uid+'" style="display:none" alt="" onload="this.style.display=\'block\';var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';">'
           : '';
         var _empType = item.jt || item.employment_type || item.workplace_type || item.st || '';
-        var empBadge = _empType ? '<span class="job-card__employment">'+_empType+'</span>' : '';
+        var _empAdmin = _empType && _empType.toLowerCase().indexOf('admin') !== -1;
+        var empBadge = _empType ? '<span class="job-card__employment'+(_empAdmin?' job-card__employment--admin':'')+'">'+_empType+'</span>' : '';
         return '<div class="job-card '+(item.cc||'')+'">' +
           '<a href="'+cardHref+'" class="job-card__link" aria-label="'+item.t+'"></a>' +
           '<div class="job-card__logo-col">' +
