@@ -1630,45 +1630,90 @@
         var grid = document.getElementById('cab-fav-grid');
         var empty = document.getElementById('cab-fav-empty');
         if (!grid) return;
-        var ids = [];
-        for (var i = 0; i < localStorage.length; i++) {
-            var k = localStorage.key(i);
-            if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
-                var rawId = k.replace('favorite_', '');
-                if (rawId) ids.push(rawId);
+        var uid = localStorage.getItem('bazar_firebase_uid');
+
+        function _idsFromStorage() {
+            var ids = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
+                    var rawId = k.replace('favorite_', '');
+                    if (rawId) ids.push(rawId);
+                }
             }
+            return ids;
         }
-        grid.innerHTML = '';
-        if (ids.length === 0) {
-            if (empty) empty.style.display = '';
-            return;
-        }
-        if (empty) empty.style.display = 'none';
-        var apiBase = window.BAZAR_API + '/properties/';
-        ids.forEach(function(id) {
-            /* Show skeleton while loading */
-            var card = document.createElement('div');
-            card.className = 'cab-fav-card cab-fav-card--loading';
-            card.id = 'fav-card-' + id;
-            card.innerHTML =
-                '<div class="cab-fav-card__img" style="background:#f0f0f0;height:120px;"></div>' +
-                '<div class="cab-fav-card__body"><p class="cab-fav-card__title" style="color:#bbb">Loading…</p></div>';
-            grid.appendChild(card);
-            /* Check static fallback first, then API */
-            var staticP = BAZAR_PRODUCTS[parseInt(id)];
-            if (staticP) {
-                _renderFavCard(card, id, staticP.title, staticP.price, staticP.image);
-            } else {
-                fetch(apiBase + id, { headers: { 'Accept': 'application/json' } })
-                    .then(function(r) { return r.ok ? r.json() : null; })
-                    .then(function(d) {
-                        if (!d) { _renderFavCard(card, id, 'Listing #' + id, 0, 'img/product.jpg'); return; }
-                        var img = (d.images && d.images[0]) ? d.images[0] : (d.image || 'img/product.jpg');
-                        _renderFavCard(card, id, d.title || 'Listing #' + id, d.price || 0, img);
-                    })
-                    .catch(function() { _renderFavCard(card, id, 'Listing #' + id, 0, 'img/product.jpg'); });
+
+        function _drawCards(ids) {
+            grid.innerHTML = '';
+            if (ids.length === 0) {
+                if (empty) empty.style.display = '';
+                return;
             }
-        });
+            if (empty) empty.style.display = 'none';
+            var apiBase = window.BAZAR_API + '/properties/';
+            ids.forEach(function(id) {
+                var card = document.createElement('div');
+                card.className = 'cab-fav-card cab-fav-card--loading';
+                card.id = 'fav-card-' + id;
+                card.innerHTML =
+                    '<div class="cab-fav-card__img" style="background:#f0f0f0;height:120px;"></div>' +
+                    '<div class="cab-fav-card__body"><p class="cab-fav-card__title" style="color:#bbb">Loading…</p></div>';
+                grid.appendChild(card);
+                var staticP = BAZAR_PRODUCTS[parseInt(id)];
+                if (staticP) {
+                    _renderFavCard(card, id, staticP.title, staticP.price, staticP.image);
+                } else {
+                    fetch(apiBase + id, { headers: { 'Accept': 'application/json' } })
+                        .then(function(r) { return r.ok ? r.json() : null; })
+                        .then(function(d) {
+                            if (!d) { _renderFavCard(card, id, 'Listing #' + id, 0, 'img/product.jpg'); return; }
+                            var img = (d.images && d.images[0]) ? d.images[0] : (d.image || 'img/product.jpg');
+                            _renderFavCard(card, id, d.title || 'Listing #' + id, d.price || 0, img);
+                        })
+                        .catch(function() { _renderFavCard(card, id, 'Listing #' + id, 0, 'img/product.jpg'); });
+                }
+            });
+        }
+
+        if (uid) {
+            var _localFavIds = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
+                    var pid = parseInt(k.replace('favorite_', ''), 10);
+                    if (pid) _localFavIds.push(pid);
+                }
+            }
+            var _favApi = window.BAZAR_API || '/api';
+            var _uploadPs = _localFavIds.map(function(pid) {
+                return fetch(_favApi + '/favorites', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({uid: uid, property_id: pid, active: 1})
+                }).catch(function() {});
+            });
+            Promise.all(_uploadPs)
+                .then(function() {
+                    return fetch(_favApi + '/favorites?uid=' + encodeURIComponent(uid));
+                })
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(data) {
+                    var toDelete = [];
+                    for (var i = 0; i < localStorage.length; i++) {
+                        var k = localStorage.key(i);
+                        if (k && k.indexOf('favorite_') === 0) toDelete.push(k);
+                    }
+                    toDelete.forEach(function(k) { localStorage.removeItem(k); });
+                    if (data && data.ids && data.ids.length) {
+                        data.ids.forEach(function(id) { localStorage.setItem('favorite_' + id, '1'); });
+                    }
+                    updateFavCount();
+                    _drawCards(_idsFromStorage());
+                })
+                .catch(function() { _drawCards(_idsFromStorage()); });
+        } else {
+            _drawCards(_idsFromStorage());
+        }
     }
     function _renderFavCard(card, id, title, price, img) {
         card.classList.remove('cab-fav-card--loading');

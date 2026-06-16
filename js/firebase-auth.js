@@ -124,7 +124,22 @@ function doLogin() {
 
 function syncFavoritesFromServer(uid) {
     var api = window.BAZAR_API || '/api';
-    fetch(api + '/favorites?uid=' + encodeURIComponent(uid))
+    var _localIds = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
+            var pid = parseInt(k.replace('favorite_', ''), 10);
+            if (pid) _localIds.push(pid);
+        }
+    }
+    var _ups = _localIds.map(function(pid) {
+        return fetch(api + '/favorites', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({uid: uid, property_id: pid, active: 1})
+        }).catch(function() {});
+    });
+    Promise.all(_ups)
+        .then(function() { return fetch(api + '/favorites?uid=' + encodeURIComponent(uid)); })
         .then(function(r) { return r.ok ? r.json() : null; })
         .then(function(data) {
             if (!data) return;
@@ -655,6 +670,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Production — восстанавливаем сессию если пользователь уже логинился
         if (localStorage.getItem('bazar_username')) {
             doLogin();
+            var _restoreUid = localStorage.getItem('bazar_firebase_uid');
+            if (_restoreUid) syncFavoritesFromServer(_restoreUid);
         }
     }
 
