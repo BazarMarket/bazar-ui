@@ -123,7 +123,6 @@ function doLogin() {
 }
 
 function syncFavoritesFromServer(uid) {
-    var api = window.BAZAR_API || '/api';
     var _localIds = [];
     for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
@@ -133,25 +132,23 @@ function syncFavoritesFromServer(uid) {
         }
     }
     var _ups = _localIds.map(function(pid) {
-        return fetch(api + '/favorites', {
+        return fetch('/api/favorites', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({uid: uid, property_id: pid, active: 1})
         }).catch(function() {});
     });
     Promise.all(_ups)
-        .then(function() { return fetch(api + '/favorites?uid=' + encodeURIComponent(uid)); })
+        .then(function() { return fetch('/api/favorites?uid=' + encodeURIComponent(uid)); })
         .then(function(r) { return r.ok ? r.json() : null; })
         .then(function(data) {
-            if (!data) return;
+            if (!data || !data.ids) return;
             var toDelete = [];
             for (var i = 0; i < localStorage.length; i++) {
                 var k = localStorage.key(i);
                 if (k && k.indexOf('favorite_') === 0) toDelete.push(k);
             }
             toDelete.forEach(function(k) { localStorage.removeItem(k); });
-            if (data.ids && data.ids.length) {
-                data.ids.forEach(function(id) { localStorage.setItem('favorite_' + id, '1'); });
-            }
+            data.ids.forEach(function(id) { localStorage.setItem('favorite_' + id, '1'); });
             if (window.updateFavCount) window.updateFavCount();
         })
         .catch(function() {});
@@ -159,14 +156,13 @@ function syncFavoritesFromServer(uid) {
 window.syncFavoritesFromServer = syncFavoritesFromServer;
 
 function uploadLocalFavoritesToServer(uid) {
-    var api = window.BAZAR_API || '/api';
     for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
         if (k && k.indexOf('favorite_') === 0 && localStorage.getItem(k) === '1') {
             var pid = parseInt(k.replace('favorite_', ''), 10);
             if (pid) {
                 (function(_pid) {
-                    fetch(api + '/favorites', {
+                    fetch('/api/favorites', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({uid: uid, property_id: _pid, active: 1})

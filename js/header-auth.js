@@ -306,7 +306,7 @@ window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
         }
         var _fUid = localStorage.getItem('bazar_firebase_uid');
         if (_fUid) {
-            fetch((window.BAZAR_API || '/api') + '/favorites', {
+            fetch('/api/favorites', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({uid: _fUid, property_id: parseInt(id, 10), active: nowFav ? 1 : 0})
