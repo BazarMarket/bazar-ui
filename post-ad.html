@@ -2107,7 +2107,7 @@
                   <p class="pa-section__title" id="photoSectionTitle">Photos</p>
 
                   <div class="pa-field">
-                     <span class="pa-field__label"><span id="photoLabelText">Images:</span><span id="photoLabelAsterisk">*</span></span>
+                     <span class="pa-field__label"><span id="photoLabelText" style="color:inherit">Images:</span><span id="photoLabelAsterisk">*</span></span>
                      <div class="pa-field__control">
                         <input type="file" id="photoInput" accept="image/jpeg,image/png" multiple style="display:none" onchange="onPhotosSelected(this)">
                         <div class="pa-upload-zone" id="paUploadZone" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.style.borderColor='#ff9138'" ondragleave="this.style.borderColor=''" ondrop="event.preventDefault();this.style.borderColor='';onPhotosSelected({files:event.dataTransfer.files})">
@@ -2349,10 +2349,10 @@
          var _photoInputEl      = document.getElementById('photoInput');
          var _photoGridEl       = document.getElementById('photoPreviewGrid');
          if (isJob) {
-            if (_photoSectionTitle) _photoSectionTitle.textContent = 'Profile Photo (Optional)';
-            if (_photoLabelText)    _photoLabelText.textContent    = 'Your Photo:';
+            if (_photoSectionTitle) _photoSectionTitle.textContent = 'Profile Avatar (Optional)';
+            if (_photoLabelText)    _photoLabelText.textContent    = 'Avatar / Logo:';
             if (_photoLabelAst)     _photoLabelAst.style.display   = 'none';
-            if (_photoZoneText)     _photoZoneText.innerHTML        = 'Drag &amp; drop your photo or <span>click to browse</span>';
+            if (_photoZoneText)     _photoZoneText.innerHTML        = 'Drag &amp; drop your avatar or <span>click to browse</span>';
             if (_photoInputEl)      _photoInputEl.removeAttribute('multiple');
             if (_photoGridEl)       _photoGridEl.innerHTML          = '';
          } else {

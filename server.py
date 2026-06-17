@@ -4820,8 +4820,15 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                                 )
                                 _row = _cur.fetchone()
                                 _real_views = int(_row['cnt']) if _row else 0
+                                _cur.execute(
+                                    'SELECT firebase_uid FROM properties WHERE id=%s',
+                                    (ad_id,)
+                                )
+                                _uid_row = _cur.fetchone()
+                                _firebase_uid = (_uid_row['firebase_uid'] if _uid_row else '') or ''
                     except Exception:
                         _real_views = detail.get('views_count') or detail.get('views') or 0
+                        _firebase_uid = ''
                     with lock:
                         enriched_list[idx]['old_price']    = detail.get('old_price')
                         enriched_list[idx]['district']     = detail.get('district') or ''
@@ -4832,6 +4839,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         enriched_list[idx]['job_type']     = detail.get('job_type') or ''
                         enriched_list[idx]['description']  = detail.get('description') or ''
                         enriched_list[idx]['views']        = _real_views
+                        if _firebase_uid:
+                            enriched_list[idx]['uid'] = _firebase_uid
                         if detail.get('created_at') and not enriched_list[idx].get('created_at'):
                             enriched_list[idx]['created_at'] = detail.get('created_at')
                     # Refresh per-listing cache so card.html gets fresh data too
@@ -4921,6 +4930,26 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                                 _pd['is_vip']    = False
                                 _pd['expires_at'] = None
                                 _pd['days_left']  = 0
+                            # Add firebase_uid as uid for avatar loading in job cards
+                            if not _pd.get('uid'):
+                                try:
+                                    import pymysql as _pm2
+                                    _uc2 = _pm2.connect(
+                                        host=os.environ.get('DB_HOST', '127.0.0.1'),
+                                        user=os.environ.get('DB_USERNAME', 'bazar'),
+                                        password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                                        database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                                        connect_timeout=2,
+                                        cursorclass=_pm2.cursors.DictCursor,
+                                    )
+                                    with _uc2:
+                                        with _uc2.cursor() as _ucur2:
+                                            _ucur2.execute('SELECT firebase_uid FROM properties WHERE id=%s', (_pid,))
+                                            _ur = _ucur2.fetchone()
+                                            if _ur and _ur.get('firebase_uid'):
+                                                _pd['uid'] = _ur['firebase_uid']
+                                except Exception:
+                                    pass
                             body = json.dumps(_pd).encode()
                     except Exception:
                         pass
