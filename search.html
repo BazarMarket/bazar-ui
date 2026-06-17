@@ -3730,8 +3730,8 @@
         imgs.forEach(function(img) { var u = img.getAttribute('data-uid'); if (u) uids[u] = true; });
         Object.keys(uids).forEach(function(uid) {
           if (_avatarCache[uid]) {
-            /* already fetched — apply immediately */
-            if (_avatarCache[uid] !== 'none') {
+            /* already fetched — apply immediately; skip 'pending' to avoid race condition */
+            if (_avatarCache[uid] !== 'none' && _avatarCache[uid] !== 'pending') {
               document.querySelectorAll('img[data-uid="'+uid+'"]').forEach(function(img) { img.src = _avatarCache[uid]; });
             }
             return;
@@ -3741,6 +3741,8 @@
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(data) {
               var av = data && data.avatar ? data.avatar : '';
+              /* Skip default icon paths — show initials instead */
+              if (av && av.indexOf('/icon/') !== -1) av = '';
               _avatarCache[uid] = av || 'none';
               if (av) {
                 document.querySelectorAll('img[data-uid="'+uid+'"]').forEach(function(img) { img.src = av; });
