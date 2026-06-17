@@ -2104,10 +2104,10 @@
 
                <!-- Фотографии -->
                <div class="pa-section">
-                  <p class="pa-section__title">Photos</p>
+                  <p class="pa-section__title" id="photoSectionTitle">Photos</p>
 
                   <div class="pa-field">
-                     <span class="pa-field__label">Images:<span>*</span></span>
+                     <span class="pa-field__label"><span id="photoLabelText">Images:</span><span id="photoLabelAsterisk">*</span></span>
                      <div class="pa-field__control">
                         <input type="file" id="photoInput" accept="image/jpeg,image/png" multiple style="display:none" onchange="onPhotosSelected(this)">
                         <div class="pa-upload-zone" id="paUploadZone" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.style.borderColor='#ff9138'" ondragleave="this.style.borderColor=''" ondrop="event.preventDefault();this.style.borderColor='';onPhotosSelected({files:event.dataTransfer.files})">
@@ -2117,7 +2117,7 @@
                               <line x1="12" y1="20" x2="28" y2="20" stroke="#fff" stroke-width="2.5"/>
                            </svg>
                            <div class="pa-upload-zone__body">
-                              <p class="pa-upload-zone__text">Drag &amp; drop photos or <span>click to browse</span></p>
+                              <p class="pa-upload-zone__text" id="paUploadZoneText">Drag &amp; drop photos or <span>click to browse</span></p>
                               <p class="pa-upload-zone__hint">JPG, PNG · Max 5 MB · First photo is the cover image</p>
                            </div>
                         </div>
@@ -2340,6 +2340,30 @@
          var _hideVT = isJob || isSvc;
          if (_vtSubtitle) _vtSubtitle.style.display = _hideVT ? 'none' : '';
          if (_vtField)    _vtField.style.display    = _hideVT ? 'none' : '';
+
+         /* Photo section: avatar mode for Jobs */
+         var _photoSectionTitle = document.getElementById('photoSectionTitle');
+         var _photoLabelText    = document.getElementById('photoLabelText');
+         var _photoLabelAst     = document.getElementById('photoLabelAsterisk');
+         var _photoZoneText     = document.getElementById('paUploadZoneText');
+         var _photoInputEl      = document.getElementById('photoInput');
+         var _photoGridEl       = document.getElementById('photoPreviewGrid');
+         if (isJob) {
+            if (_photoSectionTitle) _photoSectionTitle.textContent = 'Profile Photo (Optional)';
+            if (_photoLabelText)    _photoLabelText.textContent    = 'Your Photo:';
+            if (_photoLabelAst)     _photoLabelAst.style.display   = 'none';
+            if (_photoZoneText)     _photoZoneText.innerHTML        = 'Drag &amp; drop your photo or <span>click to browse</span>';
+            if (_photoInputEl)      _photoInputEl.removeAttribute('multiple');
+            if (_photoGridEl)       _photoGridEl.innerHTML          = '';
+         } else {
+            if (_photoSectionTitle) _photoSectionTitle.textContent = 'Photos';
+            if (_photoLabelText)    _photoLabelText.textContent    = 'Images:';
+            if (_photoLabelAst)     _photoLabelAst.style.display   = '';
+            if (_photoZoneText)     _photoZoneText.innerHTML        = 'Drag &amp; drop photos or <span>click to browse</span>';
+            if (_photoInputEl)      _photoInputEl.setAttribute('multiple', '');
+            if (_photoGridEl)       _photoGridEl.innerHTML          = '';
+         }
+         _updatePhotoHint();
       }
 
       /* ── Car Make / Model data ──────────────────────────────────────── */
@@ -3529,15 +3553,21 @@
       });
 
       function _getPhotoLimit() {
+         if (reState.cat === 'jobs') return 1;
          var plan = (localStorage.getItem('bazar_plan') || 'free').toLowerCase();
          if (plan === 'vip') return 50;
          if (plan === 'pro') return 20;
          return 10;
       }
       function _updatePhotoHint() {
-         var limit = _getPhotoLimit();
          var hint = document.querySelector('.pa-upload-zone__hint');
-         if (hint) hint.textContent = 'JPG, PNG · Max 5 MB · First photo is the cover image · Up to ' + limit + ' photos';
+         if (!hint) return;
+         if (reState.cat === 'jobs') {
+            hint.textContent = 'JPG, PNG \u00b7 Max 5 MB \u00b7 Appears in your job listings and profile';
+         } else {
+            var limit = _getPhotoLimit();
+            hint.textContent = 'JPG, PNG \u00b7 Max 5 MB \u00b7 First photo is the cover image \u00b7 Up to ' + limit + ' photos';
+         }
       }
 
       function _attachDragEvents(box) {
@@ -4544,10 +4574,19 @@
          formData.append('video_url', youtube);
 
          var photoGrid = document.getElementById('photoPreviewGrid');
+         var _jobAvatarFile = null;
          if (photoGrid) {
-            Array.from(photoGrid.children).forEach(function(box) {
-               if (box._paFile) formData.append('images[]', box._paFile);
-            });
+            var _photoBoxes = Array.from(photoGrid.children);
+            if (reState.cat === 'jobs') {
+               /* Jobs: photo becomes profile avatar, not listing image */
+               if (_photoBoxes.length > 0 && _photoBoxes[0]._paFile) {
+                  _jobAvatarFile = _photoBoxes[0]._paFile;
+               }
+            } else {
+               _photoBoxes.forEach(function(box) {
+                  if (box._paFile) formData.append('images[]', box._paFile);
+               });
+            }
          }
 
          if (!(await validateYouTubeUrl(youtube))) return;
@@ -4568,6 +4607,23 @@
             if (data.errors || (data.message && !data.property_id)) {
                alert('Error: ' + (data.message || JSON.stringify(data.errors)));
                return;
+            }
+            /* Save avatar if user uploaded a profile photo with this job */
+            if (_jobAvatarFile) {
+               var _uid = localStorage.getItem('bazar_firebase_uid');
+               if (_uid) {
+                  var _fr = new FileReader();
+                  _fr.onload = function(ev) {
+                     var _dataUrl = ev.target.result;
+                     try { localStorage.setItem('bazar_avatar', _dataUrl); } catch(ex) {}
+                     fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(_uid), {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ avatar: _dataUrl })
+                     }).catch(function() {});
+                  };
+                  _fr.readAsDataURL(_jobAvatarFile);
+               }
             }
             var adId = data.property_id || '';
             var ads = [];
