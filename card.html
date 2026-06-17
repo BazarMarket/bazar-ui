@@ -1313,12 +1313,11 @@
           if (_empType)            _jobSpecs += '<tr><th>Employment type:</th><td>' + _empType + '</td></tr>';
           if (p.city)              _jobSpecs += '<tr><th>City:</th><td>' + p.city + '</td></tr>';
           if (p.district)          _jobSpecs += '<tr><th>Area:</th><td>' + p.district + '</td></tr>';
-          var _salary = (p.price && p.price !== '0' && p.price !== 0) ? p.price : '';
+          var _salary = (p.price && p.price !== '0' && p.price !== 0 && parseFloat(p.price) !== 0) ? p.price : '';
           if (_salary)             _jobSpecs += '<tr><th>Salary:</th><td>' + _salary + '</td></tr>';
           if (_jobSpecs) {
             _jobSpecPanel.innerHTML =
-              '<table cellpadding="0" cellspacing="0" class="table-custom" style="width:100%">' +
-                '<caption>Specifications</caption>' +
+              '<table cellpadding="0" cellspacing="0" class="table-custom" style="width:100%;border-radius:0;">' +
                 '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>' +
                 _jobSpecs +
               '</table>';
