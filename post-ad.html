@@ -2349,10 +2349,10 @@
          var _photoInputEl      = document.getElementById('photoInput');
          var _photoGridEl       = document.getElementById('photoPreviewGrid');
          if (isJob) {
-            if (_photoSectionTitle) _photoSectionTitle.textContent = 'Profile Avatar (Optional)';
-            if (_photoLabelText)    _photoLabelText.textContent    = 'Avatar / Logo:';
+            if (_photoSectionTitle) _photoSectionTitle.textContent = 'Company Logo (Optional)';
+            if (_photoLabelText)    _photoLabelText.textContent    = 'Logo / Photo:';
             if (_photoLabelAst)     _photoLabelAst.style.display   = 'none';
-            if (_photoZoneText)     _photoZoneText.innerHTML        = 'Drag &amp; drop your avatar or <span>click to browse</span>';
+            if (_photoZoneText)     _photoZoneText.innerHTML        = 'Drag &amp; drop your logo or <span>click to browse</span>';
             if (_photoInputEl)      _photoInputEl.removeAttribute('multiple');
             if (_photoGridEl)       _photoGridEl.innerHTML          = '';
          } else {
@@ -4574,19 +4574,14 @@
          formData.append('video_url', youtube);
 
          var photoGrid = document.getElementById('photoPreviewGrid');
-         var _jobAvatarFile = null;
          if (photoGrid) {
             var _photoBoxes = Array.from(photoGrid.children);
-            if (reState.cat === 'jobs') {
-               /* Jobs: photo becomes profile avatar, not listing image */
-               if (_photoBoxes.length > 0 && _photoBoxes[0]._paFile) {
-                  _jobAvatarFile = _photoBoxes[0]._paFile;
-               }
-            } else {
-               _photoBoxes.forEach(function(box) {
-                  if (box._paFile) formData.append('images[]', box._paFile);
-               });
-            }
+            /* All categories (incl. jobs): photo is saved as a per-listing image.
+               For jobs it serves as the company logo shown in the Jobs previews.
+               The personal profile avatar is managed separately in the cabinet. */
+            _photoBoxes.forEach(function(box) {
+               if (box._paFile) formData.append('images[]', box._paFile);
+            });
          }
 
          if (!(await validateYouTubeUrl(youtube))) return;
@@ -4610,62 +4605,19 @@
             }
             var adId = data.property_id || '';
 
-            /* Steps to run after the ad (and avatar, if any) is saved — runs once */
-            var _afterAdSavedDone = false;
-            function _afterAdSaved() {
-               if (_afterAdSavedDone) return;
-               _afterAdSavedDone = true;
-               var ads = [];
-               try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
-               ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: reState.cat, status: 'pending' });
-               localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-               trackGA4Event('post_ad', {
-                  category: reState.cat,
-                  listing_type: propertyType,
-                  city: locationCity
-               });
-               if (typeof gtag === 'function') {
-                  gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
-                  setTimeout(function(){ _goAfterPublish(adId); }, 1500);
-               } else { _goAfterPublish(adId); }
-            }
-
-            /* Save avatar if user uploaded a profile photo with this job.
-               Compress to 400px JPEG (matches cabinet.html) so the PATCH payload
-               stays small, then wait for it before redirecting. */
-            var _uid = localStorage.getItem('bazar_firebase_uid');
-            if (_jobAvatarFile && _uid) {
-               var _fr = new FileReader();
-               _fr.onload = function(ev) {
-                  var _img = new Image();
-                  _img.onload = function() {
-                     var MAX = 400;
-                     var w = _img.width, h = _img.height;
-                     if (w > MAX || h > MAX) {
-                        if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
-                        else        { w = Math.round(w * MAX / h); h = MAX; }
-                     }
-                     var _canvas = document.createElement('canvas');
-                     _canvas.width = w; _canvas.height = h;
-                     _canvas.getContext('2d').drawImage(_img, 0, 0, w, h);
-                     var _dataUrl = _canvas.toDataURL('image/jpeg', 0.80);
-                     try { localStorage.setItem('bazar_avatar', _dataUrl); } catch(ex) {}
-                     fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(_uid), {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({ avatar: _dataUrl })
-                     }).then(function(){ _afterAdSaved(); }).catch(function(){ _afterAdSaved(); });
-                  };
-                  _img.onerror = function(){ _afterAdSaved(); };
-                  _img.src = ev.target.result;
-               };
-               _fr.onerror = function(){ _afterAdSaved(); };
-               _fr.readAsDataURL(_jobAvatarFile);
-               /* Safety net: never block the redirect if the PATCH hangs */
-               setTimeout(function(){ _afterAdSaved(); }, 3000);
-            } else {
-               _afterAdSaved();
-            }
+            var ads = [];
+            try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
+            ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: reState.cat, status: 'pending' });
+            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+            trackGA4Event('post_ad', {
+               category: reState.cat,
+               listing_type: propertyType,
+               city: locationCity
+            });
+            if (typeof gtag === 'function') {
+               gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+               setTimeout(function(){ _goAfterPublish(adId); }, 1500);
+            } else { _goAfterPublish(adId); }
          })
          .catch(function(err) {
             btn.textContent = 'Publish Ad';

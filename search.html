@@ -3419,8 +3419,11 @@
         var badge = '';
         if (item.stk && item.stk.indexOf('VIP') !== -1)      badge = '<span class="job-card__plan job-card__plan--vip">VIP</span>';
         else if (item.stk && item.stk.indexOf('PRO') !== -1) badge = '<span class="job-card__plan job-card__plan--pro">PRO</span>';
-        var logoImg = item.uid
-          ? '<img class="job-card__logo-img" src="" data-uid="'+item.uid+'" style="display:none" alt="" onload="this.style.display=\'block\';var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';">'
+        /* Job logo = the listing's own uploaded image (per-listing company logo),
+           NOT the seller's profile avatar. Skip the default placeholder image. */
+        var _jobLogo = (item.imgs && item.imgs[0] && item.imgs[0].indexOf('img/product.jpg') === -1) ? item.imgs[0] : '';
+        var logoImg = _jobLogo
+          ? '<img class="job-card__logo-img" src="'+_jobLogo+'" alt="" onload="var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';" onerror="this.style.display=\'none\';">'
           : '';
         var _empType = item.jt || item.employment_type || item.workplace_type || item.st || '';
         var _empAdmin = _empType && _empType.toLowerCase().indexOf('admin') !== -1;
