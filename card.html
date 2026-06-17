@@ -1368,7 +1368,7 @@
       /* Show own avatar from localStorage first (fast, before API responds) */
       if (p.seller_firebase_uid && _curUid && p.seller_firebase_uid === _curUid) {
          var _ownAv = localStorage.getItem('bazar_avatar');
-         if (_ownAv && _ownAv.indexOf('/icon/') === -1) {
+         if (_ownAv && _ownAv.indexOf('icon/') === -1) {
             var _ownAvImg = document.getElementById('seller-avatar-img');
             if (_ownAvImg) _ownAvImg.src = _ownAv;
          }
@@ -1390,7 +1390,7 @@
                   if (_ccpNameEl) _ccpNameEl.textContent = cust.name;
                }
                /* Update seller avatar only if it's a real avatar (not default icon) */
-               var _av = cust.avatar && cust.avatar.indexOf('/icon/') === -1 ? cust.avatar : '';
+               var _av = cust.avatar && cust.avatar.indexOf('icon/') === -1 ? cust.avatar : '';
                if (_av) {
                   var _sellerAv = document.getElementById('seller-avatar-img');
                   if (_sellerAv) _sellerAv.src = _av;

@@ -4608,37 +4608,64 @@
                alert('Error: ' + (data.message || JSON.stringify(data.errors)));
                return;
             }
-            /* Save avatar if user uploaded a profile photo with this job */
-            if (_jobAvatarFile) {
-               var _uid = localStorage.getItem('bazar_firebase_uid');
-               if (_uid) {
-                  var _fr = new FileReader();
-                  _fr.onload = function(ev) {
-                     var _dataUrl = ev.target.result;
+            var adId = data.property_id || '';
+
+            /* Steps to run after the ad (and avatar, if any) is saved — runs once */
+            var _afterAdSavedDone = false;
+            function _afterAdSaved() {
+               if (_afterAdSavedDone) return;
+               _afterAdSavedDone = true;
+               var ads = [];
+               try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
+               ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: reState.cat, status: 'pending' });
+               localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
+               trackGA4Event('post_ad', {
+                  category: reState.cat,
+                  listing_type: propertyType,
+                  city: locationCity
+               });
+               if (typeof gtag === 'function') {
+                  gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
+                  setTimeout(function(){ _goAfterPublish(adId); }, 1500);
+               } else { _goAfterPublish(adId); }
+            }
+
+            /* Save avatar if user uploaded a profile photo with this job.
+               Compress to 400px JPEG (matches cabinet.html) so the PATCH payload
+               stays small, then wait for it before redirecting. */
+            var _uid = localStorage.getItem('bazar_firebase_uid');
+            if (_jobAvatarFile && _uid) {
+               var _fr = new FileReader();
+               _fr.onload = function(ev) {
+                  var _img = new Image();
+                  _img.onload = function() {
+                     var MAX = 400;
+                     var w = _img.width, h = _img.height;
+                     if (w > MAX || h > MAX) {
+                        if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
+                        else        { w = Math.round(w * MAX / h); h = MAX; }
+                     }
+                     var _canvas = document.createElement('canvas');
+                     _canvas.width = w; _canvas.height = h;
+                     _canvas.getContext('2d').drawImage(_img, 0, 0, w, h);
+                     var _dataUrl = _canvas.toDataURL('image/jpeg', 0.80);
                      try { localStorage.setItem('bazar_avatar', _dataUrl); } catch(ex) {}
                      fetch(window.BAZAR_API + '/customers/' + encodeURIComponent(_uid), {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify({ avatar: _dataUrl })
-                     }).catch(function() {});
+                     }).then(function(){ _afterAdSaved(); }).catch(function(){ _afterAdSaved(); });
                   };
-                  _fr.readAsDataURL(_jobAvatarFile);
-               }
+                  _img.onerror = function(){ _afterAdSaved(); };
+                  _img.src = ev.target.result;
+               };
+               _fr.onerror = function(){ _afterAdSaved(); };
+               _fr.readAsDataURL(_jobAvatarFile);
+               /* Safety net: never block the redirect if the PATCH hangs */
+               setTimeout(function(){ _afterAdSaved(); }, 3000);
+            } else {
+               _afterAdSaved();
             }
-            var adId = data.property_id || '';
-            var ads = [];
-            try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
-            ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: reState.cat, status: 'pending' });
-            localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
-            trackGA4Event('post_ad', {
-               category: reState.cat,
-               listing_type: propertyType,
-               city: locationCity
-            });
-            if (typeof gtag === 'function') {
-               gtag('event', 'conversion', {'send_to': 'AW-1808636054/PRn-CPy5m5scEN_rn7BD', 'event_callback': function(){ _goAfterPublish(adId); }});
-               setTimeout(function(){ _goAfterPublish(adId); }, 1500);
-            } else { _goAfterPublish(adId); }
          })
          .catch(function(err) {
             btn.textContent = 'Publish Ad';

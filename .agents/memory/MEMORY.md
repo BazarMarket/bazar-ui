@@ -1,3 +1,4 @@
 ---
 - [Auto-delete expired listings](auto-delete-expired.md) — Python thread in server.py calls Laravel daily; hard-deletes when expires_at < now() or created_at+30 < now()
+- [Avatar API contract](avatar-api-contract.md) — /api/customers/{uid} never returns empty avatar; substitutes /icon/ default, so filter `icon/` to detect a real avatar
 - [SMS leads — mobile only](sms-mobile-only.md) — Only 07... numbers are valid for SMS; 01/02 are landlines, never store or send to them

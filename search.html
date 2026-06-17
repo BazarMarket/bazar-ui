@@ -421,9 +421,9 @@
       .job-card{position:relative;display:flex;align-items:stretch;gap:8px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 16px;margin-bottom:12px;max-width:690px;transition:box-shadow .15s ease,border-color .15s ease;box-shadow:0 2px 8px rgba(0,0,0,.08);}
       .job-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.14);border-color:#d1d5db;}
       .job-card__link{position:absolute;inset:0;z-index:0;border-radius:10px;}
-      .job-card__logo-col{flex-shrink:0;width:88px;display:flex;justify-content:center;align-items:center;}
-      .job-card__logo{width:72px;height:72px;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;background:transparent;}
-      .job-card__initials{font-size:40px;font-weight:600;color:#e07329;letter-spacing:1px;line-height:1;z-index:1;pointer-events:none;}
+      .job-card__logo-col{flex-shrink:0;width:124px;display:flex;justify-content:center;align-items:center;}
+      .job-card__logo{width:104px;height:104px;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;flex-shrink:0;background:transparent;}
+      .job-card__initials{font-size:48px;font-weight:600;color:#e07329;letter-spacing:1px;line-height:1;z-index:1;pointer-events:none;}
       .job-card__logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:4px;z-index:2;}
       .job-card__body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-start;}
       .job-card__top{display:flex;align-items:flex-start;gap:8px;flex-wrap:nowrap;margin-bottom:4px;}
@@ -460,6 +460,11 @@
       .dark-mode .job-card__desc{color:#9ca3af;display:-webkit-box;}
       .dark-mode .job-card__employment{border-color:#1d4ed8;color:#93c5fd;background:rgba(30,58,138,.25);}
       .dark-mode .job-card .card__heart{color:#6b7280;}
+      @media (max-width: 576px) {
+        .job-card__logo-col{width:84px;}
+        .job-card__logo{width:72px;height:72px;}
+        .job-card__initials{font-size:34px;}
+      }
    </style>
    <script>
       window.BAZAR_API = (window.location.hostname === 'www.bazar.uk')
@@ -3742,7 +3747,7 @@
             .then(function(data) {
               var av = data && data.avatar ? data.avatar : '';
               /* Skip default icon paths — show initials instead */
-              if (av && av.indexOf('/icon/') !== -1) av = '';
+              if (av && av.indexOf('icon/') !== -1) av = '';
               _avatarCache[uid] = av || 'none';
               if (av) {
                 document.querySelectorAll('img[data-uid="'+uid+'"]').forEach(function(img) { img.src = av; });
