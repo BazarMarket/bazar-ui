@@ -151,7 +151,7 @@
                   <div class="card-grid__main">
                      <div class="card-grid__left">
 
-                        <div class="card-grid__gallery">
+                        <div class="card-grid__gallery" id="card-grid-gallery">
                            <div class="card-gallery card-tile">
                               <div class="card-gallery__big" style="position:relative;">
                                  <div id="prop-stiker" class="card__stikers"></div>
@@ -226,7 +226,7 @@
                            </div>
                         </div>
 
-                        <div class="card-grid__description">
+                        <div class="card-grid__description" id="card-grid-desc-left">
 
                            <div class="card-description">
                               <table cellpadding="0" cellspacing="0" class="table-custom" id="spec-table">
@@ -388,6 +388,7 @@
                               </div>
                            </div>
                         </div>
+                        <div id="job-spec-panel" class="card-tile" style="display:none"></div>
                         <div class="card-price card-tile">
                            <div class="card-price__info">
                               <p class="info-icon icon-eye" id="prop-views">—</p>
@@ -1297,6 +1298,34 @@
       }
 
       el('spec-table').innerHTML = specs;
+
+      /* ── Jobs layout: hide gallery + left specs, move specs to right panel ── */
+      if (ptype === 'job' || ptype === 'job_seeking') {
+        var _galleryEl = document.getElementById('card-grid-gallery');
+        var _descLeftEl = document.getElementById('card-grid-desc-left');
+        var _jobSpecPanel = document.getElementById('job-spec-panel');
+        if (_galleryEl) _galleryEl.style.display = 'none';
+        if (_descLeftEl) _descLeftEl.style.display = 'none';
+        if (_jobSpecPanel) {
+          var _jobSpecs = '';
+          if (p.sub_type)          _jobSpecs += '<tr><th>Category:</th><td>' + p.sub_type + '</td></tr>';
+          var _empType = p.employment_type || p.workplace_type || p.st || '';
+          if (_empType)            _jobSpecs += '<tr><th>Employment type:</th><td>' + _empType + '</td></tr>';
+          if (p.city)              _jobSpecs += '<tr><th>City:</th><td>' + p.city + '</td></tr>';
+          if (p.district)          _jobSpecs += '<tr><th>Area:</th><td>' + p.district + '</td></tr>';
+          var _salary = (p.price && p.price !== '0' && p.price !== 0) ? p.price : '';
+          if (_salary)             _jobSpecs += '<tr><th>Salary:</th><td>' + _salary + '</td></tr>';
+          if (_jobSpecs) {
+            _jobSpecPanel.innerHTML =
+              '<table cellpadding="0" cellspacing="0" class="table-custom" style="width:100%">' +
+                '<caption>Specifications</caption>' +
+                '<colgroup><col style="width:45%"><col style="width:55%"></colgroup>' +
+                _jobSpecs +
+              '</table>';
+            _jobSpecPanel.style.display = 'block';
+          }
+        }
+      }
 
       /* ── GA4: view_listing (fires once per page load) ── */
       if (!window._ga4ViewFired) {
