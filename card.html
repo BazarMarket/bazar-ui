@@ -1073,6 +1073,21 @@
       var negEl = el('price-negotiable');
       if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
 
+      /* Negotiable-only: no salary amount — style it like the price itself */
+      var _isNegotiableOnly = p.negotiable && !(parseFloat(p.price) > 0);
+      if (_isNegotiableOnly) {
+         /* Hide "0£" */
+         if (priceNew) priceNew.style.display = 'none';
+         /* Hide mob price "0£" */
+         var _mobNeg = el('mob-price-new');
+         if (_mobNeg) { _mobNeg.innerHTML = 'Negotiable'; _mobNeg.style.fontSize = '20px'; }
+         /* Style "Negotiable" as a standalone price label */
+         if (negEl) {
+            negEl.style.cssText = 'display:block!important;font-size:22px!important;font-weight:700!important;' +
+               'color:#1d1d1b!important;text-decoration:none!important;text-align:right!important;line-height:1.2!important;';
+         }
+      }
+
       el('prop-id').textContent = id;
       (function() {
         var raw = p.created_at || '';
