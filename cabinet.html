@@ -1870,12 +1870,12 @@
 
             if (i > 0) html += '<tr><td colspan="6" style="height:14px;background:transparent;padding:0;border:none;"></td></tr>';
 
-            html += '<tr style="' + cardStyle + 'cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
+            html += '<tr style="' + cardStyle + 'cursor:pointer;" onclick="if(event.ctrlKey||event.metaKey||event.shiftKey){window.open(\'card.html?id=' + ad.id + '\',\'_blank\');return;}sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.location.href=\'card.html?id=' + ad.id + '\';" onmouseup="if(event.button===1){event.preventDefault();sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');window.open(\'card.html?id=' + ad.id + '\',\'_blank\');}">' +
                 '<td style="vertical-align:middle;padding:12px 16px;border-radius:10px 0 0 10px;">' +
-                  '<div style="display:flex;align-items:center;gap:10px;">' + imgHtml +
+                  '<a href="card.html?id=' + ad.id + '" onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'subscriptions\');" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + imgHtml +
                     '<div><div style="font-weight:600;color:#111;font-size:13px;line-height:1.3;">' + (ad.title || '—') + '</div>' +
                     (ad.price ? '<div style="font-size:12px;color:#6b7280;margin-top:2px;">£ ' + Number(ad.price).toLocaleString() + '</div>' : '') +
-                  '</div></div>' +
+                  '</div></a>' +
                 '</td>' +
                 '<td ' + tdBase + '>' + planBadgeHtml(plan) + '</td>' +
                 '<td ' + tdBase + '>' + daysHtml + '</td>' +
@@ -2106,14 +2106,14 @@
                 'onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'\'">' + _promoLabel + '</button>';
 
             if (i > 0) html += '<tr data-ad-group="' + ad.id + '"><td colspan="6" style="display:table-cell;height:20px;background:transparent;border:none;border-bottom:none;padding:0;box-shadow:none;"></td></tr>';
-            html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\'">' +
+            html += '<tr data-ad-id="' + ad.id + '" data-ad-group="' + ad.id + '" style="background:#fff;clip-path:inset(0 0 0 0 round 10px 0 0 0);filter:drop-shadow(0 0 15px rgba(0,0,0,0.1));cursor:pointer;" onclick="if(event.ctrlKey||event.metaKey||event.shiftKey){window.open(\'card.html?id=' + ad.id + '\',\'_blank\');return;}sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.location.href=\'card.html?id=' + ad.id + '\';" onmouseup="if(event.button===1){event.preventDefault();sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');window.open(\'card.html?id=' + ad.id + '\',\'_blank\');}">' +
                 '<td style="border-radius:10px 0 0 0;vertical-align:middle;">' +
-                  '<div style="display:flex;align-items:center;gap:10px;">' + img +
+                  '<a href="card.html?id=' + ad.id + '" onclick="event.stopPropagation();sessionStorage.setItem(\'cabReturnTab\',\'my-ads\');" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">' + img +
                     '<div>' +
                       '<div class="cab-ads-table-title" ' + titleStyle + '>' + (ad.title || '—') + '</div>' +
                       (ad.price ? '<div style="font-size:12px;color:#6b7280;margin-top:2px;">£ ' + Number(ad.price).toLocaleString() + '</div>' : '') +
                     '</div>' +
-                  '</div>' +
+                  '</a>' +
                 '</td>' +
                 '<td style="vertical-align:middle;text-align:center;">' + (ad.views > 0 ? ad.views : '—') + '</td>' +
                 '<td style="vertical-align:middle;text-align:center;"><div style="display:inline-flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:4px;">' + planBadge + _daysLeft + '</div></td>' +
