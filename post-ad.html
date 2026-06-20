@@ -4608,7 +4608,7 @@
 
             var ads = [];
             try { ads = JSON.parse(localStorage.getItem('bazar_my_ads')) || []; } catch(e) {}
-            ads.unshift({ id: adId, title: title, price: price, currency: 'GBP', type: reState.cat, status: 'pending' });
+            ads.unshift({ id: adId, title: title, price: parseInt(_jobPrice) || 0, currency: 'GBP', type: reState.cat, status: 'pending' });
             localStorage.setItem('bazar_my_ads', JSON.stringify(ads));
             trackGA4Event('post_ad', {
                category: reState.cat,
