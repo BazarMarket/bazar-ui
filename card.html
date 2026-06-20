@@ -1073,8 +1073,10 @@
       var negEl = el('price-negotiable');
       if(negEl) negEl.style.display = p.negotiable ? '' : 'none';
 
-      /* Negotiable-only: no salary amount — style it like the price itself */
-      var _isNegotiableOnly = p.negotiable && !(parseFloat(p.price) > 0);
+      /* Negotiable-only: no salary amount — style it like the price itself.
+         For jobs: price=0 always means negotiable/not-specified, since checkbox is hidden. */
+      var _isNegotiableOnly = (p.property_type === 'job' && !(parseFloat(p.price) > 0)) ||
+                              (p.negotiable && !(parseFloat(p.price) > 0));
       if (_isNegotiableOnly) {
          /* Hide "0£" */
          if (priceNew) priceNew.style.display = 'none';
