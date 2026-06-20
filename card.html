@@ -1031,7 +1031,7 @@
          ? '<span class="price-period-suffix">' + _salaryPeriodMap[p.salary_period] + '</span>'
          : '';
 
-      var hasOldPrice = p.old_price && p.old_price > 0 && parseFloat(p.old_price) > parseFloat(p.price);
+      var hasOldPrice = p.old_price && p.old_price > 0 && parseFloat(p.old_price) > parseFloat(p.price) && p.property_type !== 'job';
       var priceHtml = fmtPrice(p.price);
 
       var _mobPriceEl = el('mob-price-new');
