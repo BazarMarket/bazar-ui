@@ -1103,6 +1103,11 @@
                '.price-last__text{margin-top:0!important;padding-top:0!important;}';
             document.head.appendChild(_noDecoSt);
          }
+      } else {
+         /* Price is shown — hide .price-last__text container to remove the ::before decorative line */
+         if (negEl && negEl.parentElement && !p.negotiable) {
+            negEl.parentElement.style.display = 'none';
+         }
       }
 
       el('prop-id').textContent = id;

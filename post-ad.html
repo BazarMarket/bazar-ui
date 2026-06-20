@@ -4892,6 +4892,19 @@
          if ((d.property_type || '').toLowerCase() === 'job' || (d.property_type || '').toLowerCase() === 'job_seeking') {
             setTimeout(function() {
                if (d.job_type) _setSelect('jobTypeSelect', d.job_type);
+               /* Salary period */
+               if (d.salary_period) {
+                  _setSelect('jobSalaryPeriodSelect', d.salary_period);
+                  var _pSel = document.getElementById('jobSalaryPeriodSelect');
+                  if (_pSel) { _pSel.classList.remove('pa-empty'); if (typeof toggleJobSalaryFields === 'function') toggleJobSalaryFields(); }
+               }
+               /* Salary amount — d.price holds the stored salary value */
+               var _rawSalary = Math.round(parseFloat(d.price || 0));
+               if (_rawSalary > 0) {
+                  var _fmtSalary = String(_rawSalary).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                  var _salaryFixedEl = document.getElementById('jobSalaryFixedInput');
+                  if (_salaryFixedEl) _salaryFixedEl.value = _fmtSalary;
+               }
             }, 400);
          }
 
