@@ -4517,8 +4517,16 @@
          formData.append('property_type', propertyType);
          formData.append('sub_type', reState.propType || '');
 
-         var price = getInputVal('priceInput').replace(/\./g, '');
-         formData.append('price', (price && parseInt(price) > 0) ? price : '0');
+         var salaryPeriod = getSelectVal('jobSalaryPeriodSelect');
+         var salaryTypeChecked = document.querySelector('input[name="jobSalaryType"]:checked');
+         var salaryType = salaryTypeChecked ? salaryTypeChecked.value : 'fixed';
+         var salaryFixed = salaryType === 'fixed' ? getInputVal('jobSalaryFixedInput').replace(/\./g, '') : '';
+         var salaryMin   = salaryType === 'range'  ? getInputVal('jobSalaryMinInput').replace(/\./g, '')   : '';
+         /* Use salary amount as price so PATCH/POST controllers save it correctly */
+         var _jobPrice = (salaryFixed && parseInt(salaryFixed) > 0) ? salaryFixed
+                       : (salaryMin   && parseInt(salaryMin)   > 0) ? salaryMin
+                       : '0';
+         formData.append('price', _jobPrice);
          formData.append('currency', 'GBP');
          formData.append('negotiable', document.getElementById('negotiableCheckbox').checked ? '1' : '0');
          if (window._clearOldPrice) formData.append('clear_old_price', '1');
@@ -4527,19 +4535,12 @@
          if (jobType) formData.append('job_type', jobType);
          var workplace = getSelectVal('jobWorkplaceSelect');
          if (workplace) formData.append('workplace_type', workplace);
-         var salaryPeriod = getSelectVal('jobSalaryPeriodSelect');
          if (salaryPeriod) formData.append('salary_period', salaryPeriod);
-         var salaryTypeChecked = document.querySelector('input[name="jobSalaryType"]:checked');
-         var salaryType = salaryTypeChecked ? salaryTypeChecked.value : 'fixed';
          formData.append('salary_type', salaryType);
          if (salaryType === 'range') {
-            var salaryMin = getInputVal('jobSalaryMinInput').replace(/\./g, '');
             var salaryMax = getInputVal('jobSalaryMaxInput').replace(/\./g, '');
             if (salaryMin) formData.append('salary_min', salaryMin);
             if (salaryMax) formData.append('salary_max', salaryMax);
-         } else {
-            var salaryFixed = getInputVal('jobSalaryFixedInput').replace(/\./g, '');
-            if (salaryFixed && parseInt(salaryFixed) > 0) formData.append('salary_amount', salaryFixed);
          }
          var servicePricing = getSelectVal('servicePricingSelect');
          if (servicePricing) formData.append('service_pricing', servicePricing);
