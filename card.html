@@ -1022,12 +1022,21 @@
          return fmt(Math.round(n)) + '£';
       }
 
+      /* Salary period abbreviation for job listings */
+      var _salaryPeriodMap = {
+         'Per month': '/mo', 'Per year': '/yr', 'Per week': '/wk',
+         'Per hour': '/hr', 'Per day': '/day'
+      };
+      var _salaryPeriodSuffix = (p.property_type === 'job' && p.salary_period && _salaryPeriodMap[p.salary_period])
+         ? '<span class="price-period-suffix">' + _salaryPeriodMap[p.salary_period] + '</span>'
+         : '';
+
       var hasOldPrice = p.old_price && p.old_price > 0 && parseFloat(p.old_price) > parseFloat(p.price);
       var priceHtml = fmtPrice(p.price);
 
       var _mobPriceEl = el('mob-price-new');
       if(_mobPriceEl) {
-         _mobPriceEl.innerHTML = ' ' + priceHtml;
+         _mobPriceEl.innerHTML = ' ' + priceHtml + _salaryPeriodSuffix;
          var _mpv = parseFloat(p.price) || 0;
          if      (_mpv >= 1000000000) _mobPriceEl.style.fontSize = '16px';
          else if (_mpv >= 100000000)  _mobPriceEl.style.fontSize = '20px';
@@ -1043,7 +1052,7 @@
 
       var priceNew = el('price-new');
       if(priceNew) {
-         priceNew.innerHTML = '<span>' + priceHtml + '</span>';
+         priceNew.innerHTML = '<span>' + priceHtml + _salaryPeriodSuffix + '</span>';
          if(!hasOldPrice) priceNew.style.color = '#1d1d1b';
          var _pv = parseFloat(p.price) || 0;
          if      (_pv >= 1000000000) priceNew.style.fontSize = '18px';
@@ -2879,6 +2888,14 @@ function _glbKey(e) {
     color: #888 !important;
     text-align: right !important;
   }
+  /* Salary period suffix (/mo, /yr, /wk, /hr, /day) */
+  .price-period-suffix {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: #888 !important;
+    margin-left: 2px;
+  }
+
   /* Negotiable-only: hide decorative line above the text block */
   .price-last__text--no-deco {
     margin-top: 0 !important;
