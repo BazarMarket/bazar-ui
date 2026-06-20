@@ -1087,8 +1087,12 @@
          if (negEl) {
             negEl.style.cssText = 'display:block!important;font-size:22px!important;font-weight:700!important;' +
                'color:#1d1d1b!important;text-decoration:none!important;text-align:right!important;line-height:1.2!important;';
-            /* Hide decorative line above the text container */
+            /* Hide decorative line above the text container (inject style to override ::before) */
             if (negEl.parentElement) negEl.parentElement.classList.add('price-last__text--no-deco');
+            var _noDecoSt = document.createElement('style');
+            _noDecoSt.textContent = '.price-last__text::before{content:none!important;display:none!important;background:none!important;}' +
+               '.price-last__text{margin-top:0!important;padding-top:0!important;}';
+            document.head.appendChild(_noDecoSt);
          }
       }
 
