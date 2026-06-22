@@ -3112,6 +3112,8 @@
                 cy:   ad.city ? ad.city.toUpperCase() : 'UK',
                 st:   ad.sub_type || '',
                 jt:   ad.job_type || '',
+                et:   ad.employment_type || '',
+                wt:   ad.workplace_type || '',
                 mk:   ad.car_make || '',
                 pb:   ad.phone_brand || '',
                 pm:   ad.phone_model || '',
@@ -3425,7 +3427,7 @@
         var logoImg = _jobLogo
           ? '<img class="job-card__logo-img" src="'+_jobLogo+'" alt="" onload="var s=this.parentElement.querySelector(\'.job-card__initials\');if(s)s.style.display=\'none\';" onerror="this.style.display=\'none\';">'
           : '';
-        var _empType = item.jt || item.employment_type || item.workplace_type || item.st || '';
+        var _empType = item.et || item.wt || '';
         var _empAdmin = _empType && _empType.toLowerCase().indexOf('admin') !== -1;
         var empBadge = _empType ? '<span class="job-card__employment'+(_empAdmin?' job-card__employment--admin':'')+'">'+_empType+'</span>' : '';
         return '<div class="job-card '+(item.cc||'')+'">' +
