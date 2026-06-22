@@ -3112,7 +3112,7 @@
                 cy:   ad.city ? ad.city.toUpperCase() : 'UK',
                 st:   ad.sub_type || '',
                 jt:   ad.job_type || '',
-                et:   ad.employment_type || '',
+                et:   ad.employment_type || ad.job_type || '',
                 wt:   ad.workplace_type || '',
                 mk:   ad.car_make || '',
                 pb:   ad.phone_brand || '',

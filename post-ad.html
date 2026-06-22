@@ -4533,6 +4533,7 @@
 
          var jobType = getSelectVal('jobTypeSelect');
          if (jobType) formData.append('job_type', jobType);
+         if (jobType) formData.append('employment_type', jobType);
          var workplace = getSelectVal('jobWorkplaceSelect');
          if (workplace) formData.append('workplace_type', workplace);
          if (salaryPeriod) formData.append('salary_period', salaryPeriod);
@@ -4891,7 +4892,7 @@
          /* Jobs specific */
          if ((d.property_type || '').toLowerCase() === 'job' || (d.property_type || '').toLowerCase() === 'job_seeking') {
             setTimeout(function() {
-               if (d.job_type) _setSelect('jobTypeSelect', d.job_type);
+               if (d.employment_type || d.job_type) _setSelect('jobTypeSelect', d.employment_type || d.job_type);
                /* Salary period */
                if (d.salary_period) {
                   _setSelect('jobSalaryPeriodSelect', d.salary_period);
