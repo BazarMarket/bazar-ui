@@ -1715,7 +1715,7 @@
                   <!-- Jobs-specific fields -->
                   <div id="jobSpecificSection" style="display:none">
                      <div class="pa-field">
-                        <span class="pa-field__label">Employment type:</span>
+                        <span class="pa-field__label">Employment type:<span>*</span></span>
                         <div class="pa-field__control pa-select-wrap">
                            <select class="pa-select pa-empty" id="jobTypeSelect" onchange="this.classList.toggle('pa-empty',!this.value)">
                               <option value="" selected>Select employment type</option>
@@ -4504,6 +4504,9 @@
          var description = getInputVal('descriptionInput');
          if (!description || !description.trim()) { showValidationError('Please enter the Description.', 'descriptionInput'); return; }
          if (_paHasProfanity(description)) { showValidationError('Your description contains inappropriate language. Please revise it before submitting.', 'descriptionInput'); return; }
+
+         var _empTypeVal = getSelectVal('jobTypeSelect');
+         if (!_empTypeVal) { showValidationError('Please select an Employment type.', 'jobTypeSelect'); return; }
 
          var formData = new FormData();
          formData.append('title', title);
