@@ -1342,10 +1342,8 @@
         var _ltBadge = document.getElementById('job-listing-type-badge');
         if (_ltBadge) {
           var _ltLabel = ptype === 'job_seeking' ? 'Looking for Work' : 'Job Vacancy';
-          var _ltColor = ptype === 'job_seeking' ? '#7c3aed' : '#ea580c';
-          var _ltBg    = ptype === 'job_seeking' ? '#f5f3ff' : '#fff7ed';
           _ltBadge.textContent = _ltLabel;
-          _ltBadge.style.cssText = 'display:inline-block;font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;margin-bottom:6px;color:' + _ltColor + ';background:' + _ltBg + ';border:1px solid ' + _ltColor + ';width:fit-content;';
+          _ltBadge.style.cssText = 'display:inline-block;font-size:14px;font-weight:500;padding:4px 12px;border-radius:12px;margin-bottom:8px;color:#111;background:#f3f4f6;border:1px solid #aaa;white-space:nowrap;width:fit-content;';
         }
         var _galleryEl = document.getElementById('card-grid-gallery');
         var _descLeftEl = document.getElementById('card-grid-desc-left');
