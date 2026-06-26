@@ -122,6 +122,7 @@
                      </ul>
                      <div class="card-head card-tile">
                         <div class="card-head__left">
+                           <span id="job-listing-type-badge" style="display:none;font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;margin-bottom:6px;display:none;width:fit-content;"></span>
                            <p class="card-head__title" id="prop-title">Apple iPhone XR 128gb</p>
                            <ul class="bread">
                               <li><a id="prop-city-link">Limassol</a> <span>/</span></li>
@@ -1338,6 +1339,14 @@
 
       /* ── Jobs layout: hide gallery + left specs, move specs to right panel ── */
       if (ptype === 'job' || ptype === 'job_seeking') {
+        var _ltBadge = document.getElementById('job-listing-type-badge');
+        if (_ltBadge) {
+          var _ltLabel = ptype === 'job_seeking' ? 'Looking for Work' : 'Job Vacancy';
+          var _ltColor = ptype === 'job_seeking' ? '#7c3aed' : '#ea580c';
+          var _ltBg    = ptype === 'job_seeking' ? '#f5f3ff' : '#fff7ed';
+          _ltBadge.textContent = _ltLabel;
+          _ltBadge.style.cssText = 'display:inline-block;font-size:12px;font-weight:600;padding:2px 10px;border-radius:20px;margin-bottom:6px;color:' + _ltColor + ';background:' + _ltBg + ';border:1px solid ' + _ltColor + ';width:fit-content;';
+        }
         var _galleryEl = document.getElementById('card-grid-gallery');
         var _descLeftEl = document.getElementById('card-grid-desc-left');
         var _jobSpecPanel = document.getElementById('job-spec-panel');
