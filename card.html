@@ -1588,6 +1588,24 @@
         }
       }
 
+      /* ── Contact preference: hide phone or chat based on seller setting ── */
+      (function() {
+        var _cp = p.contact_preference || 'phone_chat';
+        if (_cp === 'chat_only') {
+          /* Hide phone button desktop + mobile */
+          var _ph = document.getElementById('call-btn');
+          if (_ph) _ph.style.display = 'none';
+          var _mph = document.getElementById('mob-call-btn');
+          if (_mph) _mph.style.display = 'none';
+        } else if (_cp === 'phone_only') {
+          /* Hide chat button desktop + mobile */
+          var _ch = document.getElementById('ccpStartBtn');
+          if (_ch) _ch.style.display = 'none';
+          var _mch = document.querySelector('.mob-contact-popup__btn.icon-chat');
+          if (_mch) _mch.style.display = 'none';
+        }
+      })();
+
       /* ── Hide Start Chat + Comment form for the ad owner ── */
       (function() {
         var curUser = localStorage.getItem('bazar_username') || '';
