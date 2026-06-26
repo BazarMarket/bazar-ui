@@ -1588,38 +1588,44 @@
         }
       }
 
-      /* ── Contact preference: hide phone or chat based on seller setting ── */
+      /* ── Contact preference + owner: hide phone/chat buttons ── */
       (function() {
         var _cp = p.contact_preference || 'phone_chat';
-        if (_cp === 'chat_only') {
-          /* Hide phone button desktop + mobile */
-          var _ph = document.getElementById('call-btn');
-          if (_ph) _ph.style.display = 'none';
-          var _mph = document.getElementById('mob-call-btn');
-          if (_mph) _mph.style.display = 'none';
-        } else if (_cp === 'phone_only') {
-          /* Hide chat button desktop + mobile */
-          var _ch = document.getElementById('ccpStartBtn');
-          if (_ch) _ch.style.display = 'none';
-          var _mch = document.querySelector('.mob-contact-popup__btn.icon-chat');
-          if (_mch) _mch.style.display = 'none';
-        }
-      })();
-
-      /* ── Hide Start Chat + Comment form for the ad owner ── */
-      (function() {
         var curUser = localStorage.getItem('bazar_username') || '';
-        var isOwner = _curUid && p.seller_firebase_uid ? (_curUid === p.seller_firebase_uid) : (curUser && p.seller_name && curUser === p.seller_name);
-        if (!isOwner) return;
-        /* Hide desktop Start Chat button */
-        var chatBtn = document.getElementById('ccpStartBtn');
-        if (chatBtn) chatBtn.style.display = 'none';
-        /* Hide mobile Start Chat button */
-        var mobChatBtn = document.querySelector('.mob-contact-popup__btn.icon-chat');
-        if (mobChatBtn) mobChatBtn.style.display = 'none';
-        /* Hide comment form */
-        var commentForm = document.querySelector('.comment-form');
-        if (commentForm) commentForm.style.display = 'none';
+        var isOwner = _curUid && p.seller_firebase_uid
+          ? (_curUid === p.seller_firebase_uid)
+          : (curUser && p.seller_name && curUser === p.seller_name);
+
+        var hidePhone = (_cp === 'chat_only');
+        var hideChat  = (_cp === 'phone_only') || isOwner;
+
+        /* Desktop phone button */
+        var _ph = document.getElementById('call-btn');
+        if (_ph && hidePhone) _ph.style.display = 'none';
+
+        /* Desktop chat button */
+        var _ch = document.getElementById('ccpStartBtn');
+        if (_ch && hideChat) _ch.style.display = 'none';
+
+        /* Mobile phone button */
+        var _mph = document.getElementById('mob-call-btn');
+        if (_mph && hidePhone) _mph.style.display = 'none';
+
+        /* Mobile chat button */
+        var _mch = document.querySelector('.mob-contact-popup__btn.icon-chat');
+        if (_mch && hideChat) _mch.style.display = 'none';
+
+        /* Hide the entire card-btns container if both buttons are gone */
+        if (hidePhone && hideChat) {
+          var _cb = document.querySelector('.card-btns.card-tile');
+          if (_cb) _cb.style.display = 'none';
+        }
+
+        /* Hide comment form for owner */
+        if (isOwner) {
+          var commentForm = document.querySelector('.comment-form');
+          if (commentForm) commentForm.style.display = 'none';
+        }
       })();
 
       /* ── Fill inline chat with seller/product data ── */
