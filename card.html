@@ -1086,7 +1086,8 @@
       /* Negotiable-only: no salary amount — style it like the price itself.
          For jobs: price=0 always means negotiable/not-specified, since checkbox is hidden. */
       var _isNegotiableOnly = (p.property_type === 'job' && !(parseFloat(p.price) > 0)) ||
-                              (p.negotiable && !(parseFloat(p.price) > 0));
+                              (p.negotiable && !(parseFloat(p.price) > 0)) ||
+                              (p.salary_period === 'Negotiable');
       if (_isNegotiableOnly) {
          /* Hide "0£" */
          if (priceNew) priceNew.style.display = 'none';
@@ -1355,8 +1356,10 @@
           if (_empType)            _jobSpecs += '<tr><th>Employment type:</th><td>' + _empType + '</td></tr>';
           if (p.city)              _jobSpecs += '<tr><th>City:</th><td>' + p.city + '</td></tr>';
           if (p.district)          _jobSpecs += '<tr><th>Area:</th><td>' + p.district + '</td></tr>';
-          var _salary = (p.price && p.price !== '0' && p.price !== 0 && parseFloat(p.price) !== 0) ? p.price : '';
-          if (_salary)             _jobSpecs += '<tr><th>Salary:</th><td>' + _salary + '</td></tr>';
+          var _isNeg = p.salary_period === 'Negotiable' || p.negotiable;
+          var _salary = (!_isNeg && p.price && p.price !== '0' && p.price !== 0 && parseFloat(p.price) !== 0) ? p.price : '';
+          if (_isNeg)              _jobSpecs += '<tr><th>Salary:</th><td style="color:#9ca3af;">Negotiable</td></tr>';
+          else if (_salary)        _jobSpecs += '<tr><th>Salary:</th><td>' + _salary + '</td></tr>';
           if (_jobSpecs) {
             _jobSpecPanel.innerHTML =
               '<table cellpadding="0" cellspacing="0" class="table-custom" style="width:100%;border-radius:0;">' +
