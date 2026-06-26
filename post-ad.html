@@ -2171,6 +2171,13 @@
                   </div>
 
                   <div class="pa-field">
+                     <span class="pa-field__label">Email:</span>
+                     <div class="pa-field__control">
+                        <input class="pa-input" id="sellerEmailInput" type="email" placeholder="your@email.com" oninput="_syncEmailCheckbox(this.value)">
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
                      <span class="pa-field__label">Phone:<span>*</span></span>
                      <div class="pa-field__control">
                         <div class="pa-phone-wrap">
@@ -2178,13 +2185,6 @@
                            <input class="pa-phone-input" id="sellerPhoneInput" type="tel" placeholder="7XXX XXX XXX" inputmode="tel" oninput="normalizePostAdPhone(this)">
                         </div>
                         <div id="sellerPhoneError" style="display:none;color:#e53935;font-size:13px;margin-top:5px;font-weight:500;">Please enter a valid UK mobile number (7XXX XXX XXX)</div>
-                     </div>
-                  </div>
-
-                  <div class="pa-field">
-                     <span class="pa-field__label">Email:</span>
-                     <div class="pa-field__control">
-                        <input class="pa-input" id="sellerEmailInput" type="email" placeholder="your@email.com" oninput="_syncEmailCheckbox(this.value)">
                      </div>
                   </div>
 
