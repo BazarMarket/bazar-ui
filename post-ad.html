@@ -1043,6 +1043,10 @@
 
       .pa-messengers { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 12px; }
       .pa-messengers label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; cursor: pointer; }
+      .pa-contact-via { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 10px; }
+      .pa-contact-via label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; cursor: pointer; padding: 5px 12px; border: 1px solid #d1d5db; border-radius: 20px; transition: border-color .15s, background .15s; }
+      .pa-contact-via label:has(input:checked) { border-color: #ffae49; background: #fff8ee; color: #111; font-weight: 500; }
+      .pa-contact-via input[type=radio] { display: none; }
       .pa-btn-preview {
          padding: 14px 32px;
          background: #f4f4f4;
@@ -2185,6 +2189,17 @@
                            <input class="pa-phone-input" id="sellerPhoneInput" type="tel" placeholder="7XXX XXX XXX" inputmode="tel" oninput="normalizePostAdPhone(this)">
                         </div>
                         <div id="sellerPhoneError" style="display:none;color:#e53935;font-size:13px;margin-top:5px;font-weight:500;">Please enter a valid UK mobile number (7XXX XXX XXX)</div>
+                     </div>
+                  </div>
+
+                  <div class="pa-field">
+                     <span class="pa-field__label">Contact via:</span>
+                     <div class="pa-field__control">
+                        <div class="pa-contact-via">
+                           <label><input type="radio" name="contact_pref" value="phone_chat" checked> Phone &amp; chat</label>
+                           <label><input type="radio" name="contact_pref" value="phone_only"> Only phone</label>
+                           <label><input type="radio" name="contact_pref" value="chat_only"> Only chat</label>
+                        </div>
                      </div>
                   </div>
 
@@ -4060,6 +4075,8 @@
 
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
+         var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+         formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
          var sellerEmail = getInputVal('sellerEmailInput');
          if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
 
@@ -4277,6 +4294,8 @@
 
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
+         var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+         formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
          var sellerEmail = getInputVal('sellerEmailInput');
          if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
          var hasWhatsapp = document.getElementById('whatsappCheck');
@@ -4424,6 +4443,8 @@
 
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
+         var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+         formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
          var sellerEmail = getInputVal('sellerEmailInput');
          if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
          var hasWhatsapp = document.getElementById('whatsappCheck');
@@ -4565,6 +4586,8 @@
          formData.append('description', description);
          formData.append('seller_name', sellerName);
          formData.append('seller_phone', sellerPhone);
+         var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+         formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
          var sellerEmail = getInputVal('sellerEmailInput');
          if (sellerEmail) { localStorage.setItem('bazar_email', sellerEmail); formData.append('seller_email', sellerEmail); }
          var hasWhatsapp = document.getElementById('whatsappCheck');
@@ -4817,6 +4840,10 @@
          _setCheck('whatsappCheck', d.has_whatsapp);
          _setCheck('telegramCheck', d.has_telegram);
          _setCheck('viberCheck',    d.has_viber);
+         if (d.contact_preference) {
+           var _cpLoad = document.querySelector('input[name="contact_pref"][value="' + d.contact_preference + '"]');
+           if (_cpLoad) _cpLoad.checked = true;
+         }
          _setCheck('emailCheck',    d.has_email);
 
          /* Real-estate specific */
@@ -5095,6 +5122,8 @@
             formData.append('negotiable',   document.getElementById('negotiableCheckbox').checked ? '1' : '0');
             formData.append('seller_name',  sellerName);
             formData.append('seller_phone', sellerPhone);
+            var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+            formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
             var desc = getInputVal('descriptionInput');
             if (desc && _paHasProfanity(desc)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
             if (desc) formData.append('description', desc);
@@ -5225,6 +5254,8 @@
             formData.append('currency',      'GBP');
             formData.append('seller_name',   sellerName);
             formData.append('seller_phone',  sellerPhone);
+            var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+            formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
             var desc = getInputVal('descriptionInput');
             if (desc && _paHasProfanity(desc)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
             if (desc) formData.append('description', desc);
@@ -5289,6 +5320,8 @@
             formData.append('currency',      'GBP');
             formData.append('seller_name',   sellerName);
             formData.append('seller_phone',  sellerPhone);
+            var _cpEl = document.querySelector('input[name="contact_pref"]:checked');
+            formData.append('contact_preference', _cpEl ? _cpEl.value : 'phone_chat');
             var desc = getInputVal('descriptionInput');
             if (desc && _paHasProfanity(desc)) { alert('Your description contains inappropriate language. Please revise it before submitting.'); return; }
             if (desc) formData.append('description', desc);
