@@ -427,10 +427,11 @@
       .job-card__logo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:4px;z-index:2;}
       .job-card__body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-start;position:relative;}
       .job-card__top{display:flex;align-items:flex-start;gap:8px;flex-wrap:nowrap;margin-bottom:12px;}
-      .job-card__title-wrap{flex:1;min-width:0;padding-right:115px;}
+      .job-card__title-wrap{flex:1;min-width:0;padding-right:145px;}
       .job-card__title{font-size:18px;font-weight:600;color:#111827;text-decoration:none;display:block;position:relative;z-index:1;line-height:1.3;}
       .job-card__title:hover{color:#ffae49;}
-      .job-card__right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;position:absolute;top:0;right:0;}
+      .job-card__right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;position:absolute;top:0;right:0;}
+      .job-card__date-row{display:flex;align-items:center;gap:8px;}
       .job-card__date{font-size:16px;color:#9ca3af;white-space:nowrap;letter-spacing:0.04em;}
       .job-card__employment{font-size:14px;font-weight:500;padding:4px 12px;border-radius:12px;border:1px solid #aaa;color:#111;white-space:nowrap;background:#f3f4f6;position:relative;z-index:1;}
       .job-card__employment--admin{color:#111;border-color:#aaa;background:#f3f4f6;}
@@ -3442,9 +3443,11 @@
                 '<a href="'+cardHref+'" class="job-card__title">'+item.t+'</a>' +
               '</div>' +
               '<div class="job-card__right">' +
-                '<span class="job-card__date">'+dateStr+'</span>' +
-                (empBadge ? '<div style="margin-top:4px;text-align:right;">'+empBadge+'</div>' : '') +
-                '<button class="card__heart icon-heart" type="button" aria-label="Save" style="margin-top:6px;align-self:flex-end;"></button>' +
+                '<div class="job-card__date-row">' +
+                  '<button class="card__heart icon-heart" type="button" aria-label="Save"></button>' +
+                  '<span class="job-card__date">'+dateStr+'</span>' +
+                '</div>' +
+                (empBadge ? '<div style="text-align:right;">'+empBadge+'</div>' : '') +
               '</div>' +
             '</div>' +
           '<div class="job-card__meta">' +
