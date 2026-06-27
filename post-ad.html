@@ -1213,6 +1213,10 @@
                      <div class="pa-field__control">
                         <div class="pa-title-meta"><span id="titleCharCount">0/70</span></div>
                         <input class="pa-input" id="titleInput" type="text" maxlength="70" placeholder="e.g. Apple iPhone XR 128gb" oninput="onTitleManualEdit()">
+                        <div id="titleOverflowPreview" style="display:none;margin-top:4px;font-size:13px;color:#6b7280;line-height:1.4;">
+                           <span style="display:block;color:#111827;" id="titleLine1"></span>
+                           <span style="display:block;color:#9ca3af;border-top:1px dashed #e5e7eb;margin-top:2px;padding-top:2px;" id="titleLine2"></span>
+                        </div>
                         <div class="pa-suggested" id="suggestedHint">
                            <span class="pa-suggested__label">Suggested: </span><span class="pa-suggested__text" id="suggestedText"></span><span class="pa-suggested__use" onclick="useSuggestedTitle()">← Use</span>
                         </div>
@@ -2869,12 +2873,25 @@
          if (!el || !inp) return;
          var isJobsSection = reState.cat === 'jobs' &&
             (reState.listingType === 'Job Vacancy' || reState.listingType === 'Looking for Work');
-         var max = isJobsSection ? 55 : 70;
+         var max = 70;
          inp.maxLength = max;
          var len = inp.value.length;
          el.textContent = len + '/' + max;
          var warn = Math.round(max * 0.79);
          el.className = len >= max ? 'pa-tc-over' : len >= warn ? 'pa-tc-warn' : '';
+         /* Jobs: show overflow preview when >55 chars */
+         var preview = document.getElementById('titleOverflowPreview');
+         if (preview) {
+            if (isJobsSection && len > 55) {
+               var line1 = inp.value.slice(0, 55);
+               var line2 = inp.value.slice(55);
+               document.getElementById('titleLine1').textContent = line1;
+               document.getElementById('titleLine2').textContent = '↳ ' + line2;
+               preview.style.display = 'block';
+            } else {
+               preview.style.display = 'none';
+            }
+         }
       }
 
       function onTitleManualEdit() {
