@@ -2282,6 +2282,10 @@ body {
   width: 100%;
 }
 .card-name__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 14px;
@@ -2294,11 +2298,10 @@ body {
   margin-top: 0 !important;
 }
 .card-name__network {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0;
-  vertical-align: middle;
-  margin-left: 6px;
+  flex-shrink: 0;
 }
 .card-name__network .network__item {
   width: 22px;
