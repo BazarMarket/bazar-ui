@@ -3203,6 +3203,18 @@
               renderListings('Phones');
               if (typeof initProductSwipers === 'function') initProductSwipers();
             }
+            /* Job pages: after main fetch, apply sub-type filter and render Jobs immediately */
+            if (_isJobPage) {
+              var _jSFMain = window._bazarJobSubtypeFilter || '';
+              if (_jSFMain) {
+                BAZAR_LISTINGS['Jobs'] = (BAZAR_LISTINGS['Jobs'] || []).filter(function(item) {
+                  return (item.st || '').toLowerCase().replace(/,/g, '').replace(/\s+/g, ' ').trim().indexOf(_jSFMain) !== -1;
+                });
+              }
+              window._bazarCurrentType = 'Jobs';
+              renderListings('Jobs');
+              if (typeof initProductSwipers === 'function') initProductSwipers();
+            }
             /* Extra fetch for path-specific category (e.g. /rooms or /property-for-sale/restaurant) */
             if (_extraUrl) {
               var _extraBucket = _isCarPage ? 'Cars' : (_isRoomsPage ? 'Rooms' : (_isPhonePage ? 'Phones' : (_isJobPage ? 'Jobs' : (_isServicePage ? 'Services' : (_subtypeBucket || 'House')))));
@@ -3282,9 +3294,11 @@
                     window._bazarCurrentType = 'Phones';
                     renderListings('Phones');
                   } else if (_isJobPage) {
-                    BAZAR_LISTINGS['Jobs'] = BAZAR_LISTINGS['Jobs'] || [];
-                    window._bazarCurrentType = 'Jobs';
-                    renderListings('Jobs');
+                    if (!_jSF) {
+                      BAZAR_LISTINGS['Jobs'] = BAZAR_LISTINGS['Jobs'] || [];
+                      window._bazarCurrentType = 'Jobs';
+                      renderListings('Jobs');
+                    }
                   } else if (_isServicePage) {
                     BAZAR_LISTINGS['Services'] = BAZAR_LISTINGS['Services'] || [];
                     window._bazarCurrentType = 'Services';
