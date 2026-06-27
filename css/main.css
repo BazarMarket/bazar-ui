@@ -2302,12 +2302,12 @@ body {
   flex-shrink: 0;
 }
 .card-name__network .network__item {
-  width: 25px;
-  height: 25px;
+  width: 29px;
+  height: 29px;
   border-radius: 5px;
 }
 .card-name__network .network__item:before {
-  font-size: 15px;
+  font-size: 17px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
