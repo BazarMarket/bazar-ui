@@ -2293,6 +2293,15 @@ body {
 .card-name .card-name__text {
   margin-top: 0 !important;
 }
+.card-name__name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.card-name__name-row .card-name__name {
+  margin: 0;
+}
 .card-name__network {
   display: flex;
   align-items: center;
