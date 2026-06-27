@@ -3265,7 +3265,7 @@
                     var _jDF = window._bazarJobDistFilter    || '';
                     if (_jSF || _jCF || _jDF) {
                       newItems = newItems.filter(function(item) {
-                        if (_jSF && (item.d || '' + item.t + (item.info || '')).toLowerCase().indexOf(_jSF) === -1) return false;
+                        if (_jSF && (item.st || '').toLowerCase().replace(/,/g, '').replace(/\s+/g, ' ').trim().indexOf(_jSF) === -1) return false;
                         if (_jCF && (item.l || '').toLowerCase().indexOf(_jCF) === -1) return false;
                         if (_jDF && (item.l || '').toLowerCase().indexOf(_jDF) === -1) return false;
                         return true;
