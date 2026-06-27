@@ -2290,25 +2290,26 @@ body {
   text-transform: uppercase;
   margin: 0;
 }
-.card-name__stars-row {
+.card-name__bottom {
   display: flex;
   align-items: center;
-  gap: 12px;
+  margin-top: 8px;
+  width: 80px;
 }
 .card-name__network {
   display: flex;
   align-items: center;
   gap: 0;
-  flex-shrink: 0;
-  margin-left: auto;
+  width: 100%;
 }
 .card-name__network .network__item {
-  width: 29px;
-  height: 29px;
-  border-radius: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex: 0 0 24px;
 }
 .card-name__network .network__item:before {
-  font-size: 17px;
+  font-size: 14px;
 }
 .card-name__network .network__item:not(:last-child) {
   margin-right: 4px;
