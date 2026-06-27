@@ -183,6 +183,7 @@
       .product__price-row .product__negotiable { font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; color: #f4705a; }
       .product__text { margin: 8px 0 !important; font-size: 15.5px !important; }
       .product__desc { font-size: 14px !important; margin: 2px 0 !important; line-height: 1.35 !important; display: -webkit-box !important; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+      .product--has-info .product__desc { -webkit-line-clamp: 3 !important; }
       .product__info { margin: 6px 0 0 !important; padding: 8px 0 0 !important; border-top: 1px solid #e5e7eb !important; }
 
       /* ── Desktop large only (>1200px) ── */
@@ -3356,7 +3357,7 @@
         var boostBtn = showBoost
           ? '<button style="margin-left:auto;flex-shrink:0;padding:6px 16px;font-size:13px;font-weight:600;border-radius:8px;border:1px solid #ffb87a;background:#FFF3E8;color:#e55a00;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.10);" onmouseover="this.style.boxShadow=\'0 2px 10px rgba(0,0,0,0.18)\'" onmouseout="this.style.boxShadow=\'0 1px 6px rgba(0,0,0,0.10)\'" onclick="bazarBoostPay(window.location.href,\''+item.n+'\');event.stopPropagation();">Boost to Top</button>'
           : '';
-        return '<div class="product" style="position:relative;">'+
+        return '<div class="product'+(item.info && item.info.length > 0 ? ' product--has-info' : '')+'" style="position:relative;">'+
           '<div class="product__left"><div class="product__gallery"><div class="product-gallery"'+(item.imgs && item.imgs.length > 1 ? ' data-imgs="'+item.imgs.join(',')+'"' : '')+'>'+
           '<div class="swiper"><div class="swiper-wrapper">'+slides+'</div>'+
           '<div class="swiper-pagination pagination-custom"></div></div></div>'+
