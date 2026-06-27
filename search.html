@@ -445,10 +445,11 @@
       .job-card__plan{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;position:relative;z-index:1;}
       .job-card__plan--vip{background:#fef2f2;color:#e31836;border:1px solid #fca5a5;}
       .job-card__plan--pro{background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
-      .job-card .card__heart{background:none;border:none;cursor:pointer;font-size:18px;color:#9ca3af;padding:0;line-height:1;opacity:0;transition:opacity .15s,color .15s;position:relative;z-index:2;}
+      .job-card .card__heart{display:inline-flex!important;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;font-size:18px;color:#9ca3af;padding:0;line-height:1;opacity:0;transition:opacity .15s,color .15s;position:relative!important;top:auto!important;right:auto!important;z-index:2;}
+      .job-card .card__heart::after{display:none!important;}
       .job-card:hover .card__heart{opacity:1;}
       .job-card .card__heart:hover{color:#e31836;}
-      .job-card .card__heart.active{color:#e31836;opacity:1;}
+      .job-card .card__heart.active,.job-card .card__heart.icon-heart-full{color:#e31836!important;opacity:1!important;}
       .job-card__footer{display:flex;align-items:center;}
       /* Jobs in grid view: force single column */
       .cards__grid--jobs{grid-template-columns:1fr!important;}
