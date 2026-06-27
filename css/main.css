@@ -2294,6 +2294,9 @@ body {
 .card-name .card-name__text {
   margin-top: 0 !important;
 }
+.card-name__left .card-name__photo {
+  margin-top: 0;
+}
 .card-name__bottom {
   display: flex;
   align-items: center;
