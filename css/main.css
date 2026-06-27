@@ -2296,6 +2296,19 @@ body {
 .card-name__network {
   display: flex;
   align-items: center;
+  gap: 0;
+}
+.card-name__network .network__item {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  flex: 0 0 22px;
+}
+.card-name__network .network__item:before {
+  font-size: 13px;
+}
+.card-name__network .network__item:not(:last-child) {
+  margin-right: 3px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
