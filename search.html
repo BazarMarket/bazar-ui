@@ -4805,7 +4805,29 @@
          heart.classList.toggle('icon-heart', !isFav);
          heart.classList.toggle('icon-heart-full', isFav);
       }
-      /* Click delegation handled globally by header-auth.js */
+      /* Click handler for job card hearts (.jc-fav-btn) */
+      document.addEventListener('click', function(e) {
+         var btn = e.target.closest('.jc-fav-btn');
+         if (!btn) return;
+         e.preventDefault();
+         e.stopImmediatePropagation();
+         var uid = localStorage.getItem('bazar_firebase_uid');
+         if (!uid) return;
+         var cardId = _heartGetId(btn);
+         if (!cardId) return;
+         var key = 'favorite_' + cardId;
+         var nowFav = localStorage.getItem(key) !== '1';
+         if (nowFav) { localStorage.setItem(key, '1'); } else { localStorage.removeItem(key); }
+         fetch('/api/favorites', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({uid: uid, property_id: parseInt(cardId, 10), active: nowFav ? 1 : 0})
+         }).catch(function() {});
+         btn.classList.toggle('active', nowFav);
+         btn.classList.toggle('icon-heart', !nowFav);
+         btn.classList.toggle('icon-heart-full', nowFav);
+         if (typeof updateFavCount === 'function') updateFavCount();
+      }, true);
       /* Watch for dynamically injected cards and apply stored state */
       (new MutationObserver(function(mutations) {
          mutations.forEach(function(m) {
