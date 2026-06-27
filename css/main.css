@@ -2230,7 +2230,6 @@ body {
   flex-direction: row;
   gap: 25px;
   margin-right: 0;
-  align-items: flex-start;
 }
 .card-name__left {
   display: flex;
@@ -2293,6 +2292,9 @@ body {
 }
 .card-name .card-name__text {
   margin-top: 0 !important;
+}
+.card-name .card-name__links {
+  margin-top: auto;
 }
 .card-name__left .card-name__photo {
   margin-top: -8px;
