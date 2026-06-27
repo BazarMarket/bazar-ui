@@ -2290,11 +2290,6 @@ body {
   text-transform: uppercase;
   margin: 0;
 }
-.card-name__stars-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
 .card-name__network {
   display: flex;
   align-items: center;
@@ -2303,15 +2298,15 @@ body {
   margin-left: auto;
 }
 .card-name__network .network__item {
-  width: 29px;
-  height: 29px;
-  border-radius: 5px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
 }
 .card-name__network .network__item:before {
-  font-size: 17px;
+  font-size: 13px;
 }
 .card-name__network .network__item:not(:last-child) {
-  margin-right: 4px;
+  margin-right: 3px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
