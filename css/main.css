@@ -2290,22 +2290,24 @@ body {
   text-transform: uppercase;
   margin: 0;
 }
-.card-name__bottom {
+.card-name__stars-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
 }
-.card-name__bottom .network__item {
-  width: 29px;
-  height: 29px;
+.card-name__network {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.card-name__network .network__item {
+  width: 25px;
+  height: 25px;
   border-radius: 5px;
 }
-.card-name__bottom .network__item:not(:last-child) {
-  margin-right: 4px;
-}
-.card-name__bottom .network__item:before {
-  font-size: 17px;
+.card-name__network .network__item:before {
+  font-size: 15px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;

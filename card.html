@@ -361,25 +361,25 @@
                               <div class="card-name__photo" id="seller-photo-wrap">
                                  <img loading="lazy" src="icon/man.svg" alt="" class="img-cover" id="seller-avatar-img">
                               </div>
-                              <div class="card-name__bottom">
-                                 <div class="network">
-                                    <a href="#" class="network__item icon-wp"></a>
-                                    <a href="#" class="network__item icon-tg"></a>
-                                    <a href="#" class="network__item icon-vb"></a>
-                                 </div>
-                              </div>
                            </div>
                            <div class="card-name__right">
                               <div class="card-name__info">
-                                 <div class="stars">
-                                    <ul class="stars__body">
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                       <li class="stars__item icon-star-full active"></li>
-                                    </ul>
-                                    <a href="#" class="stars__link link-hover"></a>
+                                 <div class="card-name__stars-row">
+                                    <div class="stars">
+                                       <ul class="stars__body">
+                                          <li class="stars__item icon-star-full active"></li>
+                                          <li class="stars__item icon-star-full active"></li>
+                                          <li class="stars__item icon-star-full active"></li>
+                                          <li class="stars__item icon-star-full active"></li>
+                                          <li class="stars__item icon-star-full active"></li>
+                                       </ul>
+                                       <a href="#" class="stars__link link-hover"></a>
+                                    </div>
+                                    <div class="network card-name__network">
+                                       <a href="#" class="network__item icon-wp"></a>
+                                       <a href="#" class="network__item icon-tg"></a>
+                                       <a href="#" class="network__item icon-vb"></a>
+                                    </div>
                                  </div>
                                  <p class="card-name__name" id="seller-name">Andreas Xenofontos Construction &amp; Developers Ltd</p>
                               </div>
@@ -1503,11 +1503,11 @@
       if(phoneFull) { phoneFull.textContent = p.seller_phone; phoneFull.href = 'tel:' + p.seller_phone; }
 
       var cleanPhone = p.seller_phone.replace(/[^0-9]/g, '');
-      var wpLink = document.querySelector('.card-name__bottom .icon-wp');
+      var wpLink = document.querySelector('.card-name__network .icon-wp');
       if(wpLink) wpLink.href = 'https://wa.me/' + cleanPhone;
-      var tgLink = document.querySelector('.card-name__bottom .icon-tg');
+      var tgLink = document.querySelector('.card-name__network .icon-tg');
       if(tgLink) tgLink.href = 'https://t.me/+' + cleanPhone;
-      var vbLink = document.querySelector('.card-name__bottom .icon-vb');
+      var vbLink = document.querySelector('.card-name__network .icon-vb');
       if(vbLink) vbLink.href = 'viber://chat?number=' + cleanPhone;
 
       /* Show only selected messengers + Email.
