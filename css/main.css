@@ -2230,6 +2230,7 @@ body {
   flex-direction: row;
   gap: 25px;
   margin-right: 0;
+  align-items: flex-start;
 }
 .card-name__left {
   display: flex;
@@ -2290,26 +2291,24 @@ body {
   text-transform: uppercase;
   margin: 0;
 }
-.card-name__stars-row {
+.card-name__bottom {
   display: flex;
   align-items: center;
-  gap: 8px;
+  margin-top: 8px;
 }
 .card-name__network {
   display: flex;
   align-items: center;
   gap: 0;
-  flex-shrink: 0;
-  margin-left: auto;
 }
 .card-name__network .network__item {
-  width: 18px;
-  height: 18px;
-  border-radius: 3px;
-  flex: 0 0 18px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  flex: 0 0 22px;
 }
 .card-name__network .network__item:before {
-  font-size: 11px;
+  font-size: 13px;
 }
 .card-name__network .network__item:not(:last-child) {
   margin-right: 3px;
