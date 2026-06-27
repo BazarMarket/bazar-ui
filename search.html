@@ -3078,6 +3078,11 @@
               if (ad.bathrooms) arr.push(['icon-bath', ad.bathrooms + ' bath']);
               var a = ad.covered_area || ad.area;
               if (a) arr.push(['icon-house-area', a + ' m²']);
+              /* Car-specific fields */
+              if (ad.car_year)    arr.push(['icon-calendar', ad.car_year]);
+              if (ad.fuel_type)   arr.push(['icon-truck', ad.fuel_type]);
+              var mi = ad.mileage ? (Number(ad.mileage).toLocaleString('en-GB') + ' mi') : '';
+              if (mi) arr.push(['icon-namber', mi]);
               return arr;
             }
             /* Group API items by bucket preserving newest-first order */
@@ -3361,7 +3366,7 @@
           '<div class="product__center">'+
           '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""'+(item.uid?' data-uid="'+item.uid+'"':'')+' onerror="this.src=\'icon/man.svg\'"><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span>'+boostBtn+'</div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
-          '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>'+
+          (item.info && item.info.length > 0 ? '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>' : '')+
           '<div class="product__price-row"><span class="price-start">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
           '<p class="product__text">'+item.l+'</p>'+
           '<p class="product__desc">'+item.d+'</p>'+
