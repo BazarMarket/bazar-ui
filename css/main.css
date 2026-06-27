@@ -2300,7 +2300,7 @@ body {
 .card-name__bottom {
   display: flex;
   align-items: center;
-  margin-top: 3px;
+  margin-top: 8px;
 }
 .card-name__network {
   display: flex;
