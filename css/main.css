@@ -2290,18 +2290,17 @@ body {
   text-transform: uppercase;
   margin: 0;
 }
-.card-name__left .card-name__photo {
-  margin-top: 0;
-}
-.card-name__bottom {
+.card-name__stars-row {
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  gap: 8px;
 }
 .card-name__network {
   display: flex;
   align-items: center;
   gap: 0;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 .card-name__network .network__item {
   width: 18px;
