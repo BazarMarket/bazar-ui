@@ -2291,6 +2291,9 @@ body {
   text-transform: uppercase;
   margin: 0;
 }
+.card-name .card-name__text {
+  margin-top: 0 !important;
+}
 .card-name__bottom {
   display: flex;
   align-items: center;
