@@ -2293,19 +2293,12 @@ body {
 .card-name .card-name__text {
   margin-top: 0 !important;
 }
-.card-name__name-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.card-name__name-row .card-name__name {
-  margin: 0;
-}
 .card-name__network {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0;
+  vertical-align: middle;
+  margin-left: 6px;
 }
 .card-name__network .network__item {
   width: 22px;
