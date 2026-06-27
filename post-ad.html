@@ -2867,9 +2867,14 @@
          var el = document.getElementById('titleCharCount');
          var inp = document.getElementById('titleInput');
          if (!el || !inp) return;
+         var isJobsSection = reState.cat === 'jobs' &&
+            (reState.listingType === 'Job Vacancy' || reState.listingType === 'Looking for Work');
+         var max = isJobsSection ? 55 : 70;
+         inp.maxLength = max;
          var len = inp.value.length;
-         el.textContent = len + '/70';
-         el.className = len >= 70 ? 'pa-tc-over' : len >= 55 ? 'pa-tc-warn' : '';
+         el.textContent = len + '/' + max;
+         var warn = Math.round(max * 0.79);
+         el.className = len >= max ? 'pa-tc-over' : len >= warn ? 'pa-tc-warn' : '';
       }
 
       function onTitleManualEdit() {
@@ -3194,6 +3199,7 @@
                jobTypeSel.value = '';
                jobTypeSel.classList.add('pa-empty');
             }
+            _updateTitleCounter();
          }
 
          if (cat === 'phones' && sub === 'Mobile phones') {
