@@ -2296,16 +2296,30 @@ body {
 .card-name .card-name__links {
   margin-top: auto;
 }
-.card-name__stars {
-  margin-bottom: 6px;
-  justify-content: center;
+.card-name__left .card-name__photo {
+  margin-top: -8px;
 }
-.card-name__stars .stars__item::before {
-  font-size: 14px;
+.card-name__bottom {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
 }
 .card-name__network {
   display: flex;
   align-items: center;
+  gap: 0;
+}
+.card-name__network .network__item {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  flex: 0 0 22px;
+}
+.card-name__network .network__item:before {
+  font-size: 13px;
+}
+.card-name__network .network__item:not(:last-child) {
+  margin-right: 3px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
@@ -2315,6 +2329,9 @@ body {
   line-height: 130%;
   margin: 0;
   margin-top: auto !important;
+}
+.card-name__right .stars__item::before {
+  font-size: 22px;
 }
 .card-name__right .stars__link {
   font-size: 14px;
