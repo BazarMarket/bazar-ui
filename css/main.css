@@ -2298,7 +2298,7 @@ body {
 .card-name__network {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0;
   flex-shrink: 0;
 }
 .card-name__network .network__item {
@@ -2308,6 +2308,9 @@ body {
 }
 .card-name__network .network__item:before {
   font-size: 17px;
+}
+.card-name__network .network__item:not(:last-child) {
+  margin-right: 4px;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
