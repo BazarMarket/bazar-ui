@@ -444,9 +444,10 @@
       .job-card__plan{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;flex-shrink:0;position:relative;z-index:1;}
       .job-card__plan--vip{background:#fef2f2;color:#e31836;border:1px solid #fca5a5;}
       .job-card__plan--pro{background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
-      .job-card .card__heart{background:none;border:none;cursor:pointer;font-size:16px;color:#9ca3af;}
-      .job-card .jc-heart{position:absolute;bottom:12px;right:14px;z-index:1;padding:0;line-height:1;}
+      .job-card .card__heart{background:none;border:none;cursor:pointer;font-size:18px;color:#9ca3af;padding:0;line-height:1;opacity:0;transition:opacity .15s,color .15s;position:relative;z-index:2;}
+      .job-card:hover .card__heart{opacity:1;}
       .job-card .card__heart:hover{color:#e31836;}
+      .job-card .card__heart.active{color:#e31836;opacity:1;}
       .job-card__footer{display:flex;align-items:center;}
       /* Jobs in grid view: force single column */
       .cards__grid--jobs{grid-template-columns:1fr!important;}
@@ -3443,6 +3444,7 @@
               '<div class="job-card__right">' +
                 '<span class="job-card__date">'+dateStr+'</span>' +
                 (empBadge ? '<div style="margin-top:4px;text-align:right;">'+empBadge+'</div>' : '') +
+                '<button class="card__heart icon-heart" type="button" aria-label="Save" style="margin-top:6px;align-self:flex-end;"></button>' +
               '</div>' +
             '</div>' +
           '<div class="job-card__meta">' +
@@ -3453,7 +3455,6 @@
             '</div>' +
             (desc ? '<p class="job-card__desc">'+desc+'</p>' : '') +
           '</div>' +
-          '<button class="card__heart icon-heart jc-heart" type="button" aria-label="Save"></button>' +
         '</div>';
       }
 
@@ -4783,7 +4784,7 @@
          }
       }
       function _heartGetId(heart) {
-         var card = heart.closest('.card') || heart.closest('.product');
+         var card = heart.closest('.card') || heart.closest('.product') || heart.closest('.job-card');
          if (!card) return null;
          var link = card.querySelector('[href*="id="]');
          if (!link) return null;
