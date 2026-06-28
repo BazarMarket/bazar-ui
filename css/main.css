@@ -2294,11 +2294,10 @@ body {
   margin-top: 0 !important;
 }
 .card-name__network {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0;
-  vertical-align: middle;
-  margin-left: 12px;
+  margin-top: 4px;
 }
 .card-name__network .network__item {
   width: 18px;
