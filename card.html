@@ -1537,8 +1537,15 @@
       }
       var netWrap = document.querySelector('.card-name__network');
       if (netWrap) {
-         var visibleIcons = netWrap.querySelectorAll('.network__item:not([style*="display: none"]):not([style*="display:none"])').length;
-         netWrap.classList.toggle('card-name__network--inline', visibleIcons === 1);
+         var visibleCount = 0;
+         netWrap.querySelectorAll('.network__item').forEach(function(el) {
+            if (el.style.display !== 'none') visibleCount++;
+         });
+         if (visibleCount === 1) {
+            netWrap.classList.add('card-name__network--inline');
+         } else {
+            netWrap.classList.remove('card-name__network--inline');
+         }
       }
 
       var mobName = el('mob-seller-name');
