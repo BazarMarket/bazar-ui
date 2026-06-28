@@ -3,4 +3,5 @@
 - [SMS leads — mobile only](sms-mobile-only.md) — Only 07... numbers are valid for SMS; 01/02 are landlines, never store or send to them
 - [Jobs backup location](jobs-backup.md) — .local/jobs-backup/ содержит search/post-ad/card.html + Laravel files от сессии 27 июня 2026; RESTORE_INSTRUCTIONS.md с командами деплоя
 - [Slow previews after deploy](slow-previews-warning.md) — after Jobs section changes, homepage previews slowed dramatically; backup+restore fixed it; exact cause unknown — deploy carefully, test speed after each change
+- [Slow homepage root cause & fix](slow-homepage-root-cause.md) — recent-enriched делал 12 HTTP-запросов к show(); любое замедление show() = 5s на главной; фикс: batch MySQL вместо потоков; Decimal/datetime → не JSON-serializable
 - [card-name gap fix](card-name-gap.md) — gap between seller name and "1 month" text caused by margin-top:auto !important on .card-name__text when left column taller than right; fix: .card-name .card-name__text { margin-top:0 !important } + align-items:flex-start on .card-name
