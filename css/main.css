@@ -2299,6 +2299,12 @@ body {
   gap: 0;
   margin-top: 4px;
 }
+.card-name__network--inline {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-top: 0;
+  margin-left: 12px;
+}
 .card-name__network .network__item {
   width: 18px;
   height: 18px;

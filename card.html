@@ -1535,6 +1535,11 @@
          /* fallback: hide email button (no data) */
          if(emailBtn) emailBtn.style.display = 'none';
       }
+      var netWrap = document.querySelector('.card-name__network');
+      if (netWrap) {
+         var visibleIcons = netWrap.querySelectorAll('.network__item:not([style*="display: none"]):not([style*="display:none"])').length;
+         netWrap.classList.toggle('card-name__network--inline', visibleIcons === 1);
+      }
 
       var mobName = el('mob-seller-name');
       if(mobName) mobName.textContent = _displaySellerName;
