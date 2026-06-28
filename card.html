@@ -1541,18 +1541,26 @@
          netWrap.querySelectorAll('.network__item').forEach(function(iconEl) {
             if (iconEl.style.display !== 'none') visibleCount++;
          });
+         var iconSize = visibleCount === 1 ? '14px' : '18px';
+         var iconRadius = visibleCount === 1 ? '2px' : '3px';
+         var iconFont = visibleCount === 1 ? '9px' : '11px';
+         netWrap.querySelectorAll('.network__item').forEach(function(iconEl) {
+            iconEl.style.width = iconSize;
+            iconEl.style.height = iconSize;
+            iconEl.style.borderRadius = iconRadius;
+            iconEl.style.flex = '0 0 ' + iconSize;
+         });
+         netWrap.classList.toggle('card-name__network--multi', visibleCount > 1);
          if (visibleCount === 1) {
             netWrap.style.display = 'inline-flex';
             netWrap.style.verticalAlign = 'middle';
             netWrap.style.marginTop = '0';
             netWrap.style.marginLeft = '6px';
-            netWrap.classList.remove('card-name__network--multi');
          } else {
             netWrap.style.display = '';
             netWrap.style.verticalAlign = '';
             netWrap.style.marginTop = '';
             netWrap.style.marginLeft = '';
-            netWrap.classList.add('card-name__network--multi');
          }
       }
 
