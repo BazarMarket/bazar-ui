@@ -1538,13 +1538,19 @@
       var netWrap = document.querySelector('.card-name__network');
       if (netWrap) {
          var visibleCount = 0;
-         netWrap.querySelectorAll('.network__item').forEach(function(el) {
-            if (el.style.display !== 'none') visibleCount++;
+         netWrap.querySelectorAll('.network__item').forEach(function(iconEl) {
+            if (iconEl.style.display !== 'none') visibleCount++;
          });
          if (visibleCount === 1) {
-            netWrap.classList.add('card-name__network--inline');
+            netWrap.style.display = 'inline-flex';
+            netWrap.style.verticalAlign = 'middle';
+            netWrap.style.marginTop = '0';
+            netWrap.style.marginLeft = '12px';
          } else {
-            netWrap.classList.remove('card-name__network--inline');
+            netWrap.style.display = '';
+            netWrap.style.verticalAlign = '';
+            netWrap.style.marginTop = '';
+            netWrap.style.marginLeft = '';
          }
       }
 
