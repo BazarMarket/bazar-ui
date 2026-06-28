@@ -3378,7 +3378,7 @@
           '<button class="card__heart icon-heart" type="button" aria-label="Add to favorites"></button>'+
           '</div></div>'+
           '<div class="product__center">'+
-          '<div class="product__seller" style="'+sellerStyle+'"><img src="icon/man.svg" class="product__seller-avatar" alt=""'+(item.uid?' data-uid="'+item.uid+'"':'')+' onerror="this.src=\'icon/man.svg\'"><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span>'+boostBtn+'</div>'+
+          '<div class="product__seller" style="'+sellerStyle+'"><a href="'+cardHref+'" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;"><img src="icon/man.svg" class="product__seller-avatar" alt=""'+(item.uid?' data-uid="'+item.uid+'"':'')+' onerror="this.src=\'icon/man.svg\'"><span class="product__seller-name" style="'+sellerNameColor+'">'+item.s+'</span></a>'+boostBtn+'</div>'+
           '<a href="'+cardHref+'" class="product__title">'+item.t+'</a>'+
           (item.info && item.info.length > 0 ? '<div class="info-bord" style="margin:6px 0 4px;">'+_buildInfoItems(item.info)+'</div>' : '')+
           '<div class="product__price-row"><span class="price-start">'+_dispP(item.p)+'</span>'+_renderOldPrice(item)+'</div>'+
