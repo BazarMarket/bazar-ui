@@ -2298,7 +2298,7 @@ body {
   align-items: center;
   gap: 0;
   vertical-align: middle;
-  margin-left: 6px;
+  margin-left: 12px;
 }
 .card-name__network .network__item {
   width: 18px;
