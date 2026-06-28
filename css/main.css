@@ -2436,7 +2436,7 @@ body {
   font-size: 36px;
 }
 .card-price--single-price .card-price__right .price-last-new {
-  margin-top: 32px;
+  margin-top: 0;
 }
 .card-price__right .price__link,
 .card-price__right .price-last__link {
