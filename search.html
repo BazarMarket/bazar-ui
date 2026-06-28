@@ -2781,9 +2781,22 @@
           ['cfMoreBtn'].forEach(function(id) {
             var el = document.getElementById(id); if (el) el.style.display = 'none';
           });
-          /* Sort by: move to the right */
+          /* Sort by: move into same row as category badges */
           var heroSort = document.querySelector('.sr-hero-sort');
-          if (heroSort) heroSort.style.justifyContent = 'flex-end';
+          var sortRow = document.querySelector('.sr-sort-row');
+          var catTabsEl = document.getElementById('sellerCatTabs');
+          if (sortRow && catTabsEl) {
+            var tabsParent = catTabsEl.parentNode;
+            var tabsWrapper = document.createElement('div');
+            tabsWrapper.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;flex-wrap:wrap;';
+            catTabsEl.style.marginTop = '0';
+            tabsWrapper.appendChild(catTabsEl);
+            tabsWrapper.appendChild(sortRow);
+            tabsParent.appendChild(tabsWrapper);
+            if (heroSort) heroSort.style.display = 'none';
+          } else if (heroSort) {
+            heroSort.style.justifyContent = 'flex-end';
+          }
           /* Re-render with cleared category */
           try { if (typeof renderListings === 'function') renderListings(); } catch(ex) {}
         }, 180);
