@@ -4790,76 +4790,70 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                     ad['is_pro']    = False
                     # Leave expires_at as-is for free ads
 
-            # ── STEP 2: fetch extra detail fields (old_price, images, district) per ad ──
-            # These threads MUST NOT touch is_vip / is_pro.
-            lock = threading.Lock()
-            def _fetch_old_price(idx, ad_id):
+            # ── STEP 2: batch-fetch extra fields from MySQL in ONE query (no N HTTP calls) ──
+            ad_ids = [ad.get('id') for ad in enriched_list if ad.get('id')]
+            if ad_ids:
                 try:
-                    req = urllib.request.Request(
-                        f'{LARAVEL_API_BASE}/properties/{ad_id}',
-                        headers={'Accept': 'application/json'})
-                    with urllib.request.urlopen(req, timeout=4) as r:
-                        detail = json.loads(r.read().decode('utf-8'))
-                    # Get real view count from MySQL property_views table
-                    _real_views = 0
-                    try:
-                        import pymysql as _pymysql
-                        _vc = _pymysql.connect(
-                            host=os.environ.get('DB_HOST', '127.0.0.1'),
-                            user=os.environ.get('DB_USERNAME', 'bazar'),
-                            password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
-                            database=os.environ.get('DB_DATABASE', 'bazar_dev'),
-                            connect_timeout=2,
-                            cursorclass=_pymysql.cursors.DictCursor,
-                        )
-                        with _vc:
-                            with _vc.cursor() as _cur:
-                                _cur.execute(
-                                    'SELECT COUNT(*) AS cnt FROM property_views WHERE property_id=%s',
-                                    (ad_id,)
-                                )
-                                _row = _cur.fetchone()
-                                _real_views = int(_row['cnt']) if _row else 0
-                                _cur.execute(
-                                    'SELECT firebase_uid FROM properties WHERE id=%s',
-                                    (ad_id,)
-                                )
-                                _uid_row = _cur.fetchone()
-                                _firebase_uid = (_uid_row['firebase_uid'] if _uid_row else '') or ''
-                    except Exception:
-                        _real_views = detail.get('views_count') or detail.get('views') or 0
-                        _firebase_uid = ''
-                    with lock:
-                        enriched_list[idx]['old_price']    = detail.get('old_price')
-                        enriched_list[idx]['district']     = detail.get('district') or ''
-                        enriched_list[idx]['listing_type'] = detail.get('listing_type') or ''
-                        enriched_list[idx]['images']       = detail.get('images') or []
-                        enriched_list[idx]['car_make']     = detail.get('car_make') or ''
-                        enriched_list[idx]['phone_brand']  = detail.get('phone_brand') or ''
-                        enriched_list[idx]['job_type']          = detail.get('job_type') or ''
-                        enriched_list[idx]['employment_type']   = detail.get('employment_type') or ''
-                        enriched_list[idx]['workplace_type']    = detail.get('workplace_type') or ''
-                        enriched_list[idx]['salary_period']     = detail.get('salary_period') or ''
-                        enriched_list[idx]['description']  = detail.get('description') or ''
-                        enriched_list[idx]['views']        = _real_views
-                        if _firebase_uid:
-                            enriched_list[idx]['uid'] = _firebase_uid
-                        if detail.get('created_at') and not enriched_list[idx].get('created_at'):
-                            enriched_list[idx]['created_at'] = detail.get('created_at')
-                    # Refresh per-listing cache so card.html gets fresh data too
-                    _cache_set(f'listing_{ad_id}', detail)
+                    import pymysql as _pymysql
+                    _db = _pymysql.connect(
+                        host=os.environ.get('DB_HOST', '127.0.0.1'),
+                        user=os.environ.get('DB_USERNAME', 'bazar'),
+                        password=os.environ.get('DB_PASSWORD', 'BazarSecure2026'),
+                        database=os.environ.get('DB_DATABASE', 'bazar_dev'),
+                        connect_timeout=2,
+                        cursorclass=_pymysql.cursors.DictCursor,
+                    )
+                    with _db:
+                        with _db.cursor() as _cur:
+                            _ph = ','.join(['%s'] * len(ad_ids))
+                            # Fetch all extra fields in one query
+                            _cur.execute(
+                                f'SELECT id, old_price, district, listing_type, images, '
+                                f'car_make, phone_brand, job_type, employment_type, '
+                                f'workplace_type, salary_period, description, created_at, firebase_uid '
+                                f'FROM properties WHERE id IN ({_ph})',
+                                ad_ids
+                            )
+                            _prop_rows = {str(r['id']): r for r in _cur.fetchall()}
+                            # Fetch view counts in one query
+                            _cur.execute(
+                                f'SELECT property_id, COUNT(*) AS cnt FROM property_views '
+                                f'WHERE property_id IN ({_ph}) GROUP BY property_id',
+                                ad_ids
+                            )
+                            _view_rows = {str(r['property_id']): int(r['cnt']) for r in _cur.fetchall()}
+                    for idx, ad in enumerate(enriched_list):
+                        sid = str(ad.get('id', ''))
+                        row = _prop_rows.get(sid, {})
+                        if not row:
+                            continue
+                        # Decode images JSON
+                        _imgs = row.get('images') or '[]'
+                        if isinstance(_imgs, str):
+                            try: _imgs = json.loads(_imgs)
+                            except Exception: _imgs = []
+                        _img_urls = [
+                            'https://admin.bazar.uk/storage/' + p.lstrip('/')
+                            for p in (_imgs if isinstance(_imgs, list) else [])
+                        ]
+                        enriched_list[idx]['old_price']       = row.get('old_price')
+                        enriched_list[idx]['district']        = row.get('district') or ''
+                        enriched_list[idx]['listing_type']    = row.get('listing_type') or ''
+                        enriched_list[idx]['images']          = _img_urls
+                        enriched_list[idx]['car_make']        = row.get('car_make') or ''
+                        enriched_list[idx]['phone_brand']     = row.get('phone_brand') or ''
+                        enriched_list[idx]['job_type']        = row.get('job_type') or ''
+                        enriched_list[idx]['employment_type'] = row.get('employment_type') or ''
+                        enriched_list[idx]['workplace_type']  = row.get('workplace_type') or ''
+                        enriched_list[idx]['salary_period']   = row.get('salary_period') or ''
+                        enriched_list[idx]['description']     = row.get('description') or ''
+                        enriched_list[idx]['views']           = _view_rows.get(sid, ad.get('views', 0))
+                        if row.get('firebase_uid'):
+                            enriched_list[idx]['uid'] = row['firebase_uid']
+                        if row.get('created_at') and not enriched_list[idx].get('created_at'):
+                            enriched_list[idx]['created_at'] = str(row['created_at'])
                 except Exception:
                     pass
-            threads = []
-            for i, ad in enumerate(enriched_list):
-                ad_id = ad.get('id')
-                if ad_id:
-                    t = threading.Thread(target=_fetch_old_price, args=(i, ad_id))
-                    t.daemon = True
-                    t.start()
-                    threads.append(t)
-            for t in threads:
-                t.join(timeout=5)
 
             recent['data'] = enriched_list
             self._send_json(200, recent)
