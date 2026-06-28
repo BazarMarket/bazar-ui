@@ -1546,11 +1546,13 @@
             netWrap.style.verticalAlign = 'middle';
             netWrap.style.marginTop = '0';
             netWrap.style.marginLeft = '6px';
+            netWrap.classList.remove('card-name__network--multi');
          } else {
             netWrap.style.display = '';
             netWrap.style.verticalAlign = '';
             netWrap.style.marginTop = '';
             netWrap.style.marginLeft = '';
+            netWrap.classList.add('card-name__network--multi');
          }
       }
 

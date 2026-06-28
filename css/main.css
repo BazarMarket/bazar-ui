@@ -2314,6 +2314,15 @@ body {
 .card-name__network .network__item:before {
   font-size: 9px;
 }
+.card-name__network--multi .network__item {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  flex: 0 0 18px;
+}
+.card-name__network--multi .network__item:before {
+  font-size: 11px;
+}
 .card-name__network .network__item:not(:last-child) {
   margin-right: 3px;
 }
