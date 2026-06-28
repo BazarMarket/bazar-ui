@@ -1,4 +1,5 @@
 - [Auto-delete expired listings](auto-delete-expired.md) — Python thread in server.py calls Laravel daily; hard-deletes when expires_at < now() or created_at+30 < now()
+- [Filament deploy chain](filament-deploy-chain.md) — изменения JS/PHP нужно класть в bazar-dev + bazar-prod + bazar-dev-admin; иначе dev.sh перезатрёт файлы
 - [Avatars vs job logos](avatar-api-contract.md) — profile avatar (per-customer, cabinet) is separate from job company logo (per-listing image, Jobs previews only); /api/customers never returns empty avatar
 - [SMS leads — mobile only](sms-mobile-only.md) — Only 07... numbers are valid for SMS; 01/02 are landlines, never store or send to them
 - [Jobs backup location](jobs-backup.md) — .local/jobs-backup/ содержит search/post-ad/card.html + Laravel files от сессии 27 июня 2026; RESTORE_INSTRUCTIONS.md с командами деплоя
