@@ -2738,10 +2738,10 @@
           if (breadUl) breadUl.style.display = 'none';
           /* Inject seller block */
           var sellerDiv = document.createElement('div');
-          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:14px;flex-shrink:0;';
+          sellerDiv.style.cssText = 'display:flex;align-items:center;gap:14px;width:100%;';
           sellerDiv.innerHTML =
             '<img id="sellerBannerAvatar" src="icon/man.svg" style="width:57px;height:57px;border-radius:50%;object-fit:cover;border:2px solid #e2e4e8;">' +
-            '<div>' +
+            '<div style="flex:1;min-width:0;">' +
               '<div id="sellerBannerName" style="font-size:21px;font-weight:700;color:#1a1a2e;line-height:1.3;"></div>' +
               '<div style="font-size:13px;color:#888;margin-top:1px;">Ads from this seller</div>' +
               '<div id="sellerCatTabs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;"></div>' +
