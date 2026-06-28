@@ -2382,13 +2382,16 @@ body {
 .network__item:hover {
   transform: scale(1.1);
 }
-.network .icon-wp {
+.network .icon-wp,
+.card-name__network .icon-wp {
   background: #00af01;
 }
-.network .icon-tg {
+.network .icon-tg,
+.card-name__network .icon-tg {
   background: #2aabee;
 }
-.network .icon-vb {
+.network .icon-vb,
+.card-name__network .icon-vb {
   background: #6f00c6;
 }
 
