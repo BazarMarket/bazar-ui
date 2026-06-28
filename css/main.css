@@ -2284,9 +2284,9 @@ body {
 .card-name__name {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 18px;
   color: #1d1d1b;
-  line-height: 130%;
+  line-height: 18px;
   text-transform: uppercase;
   margin: 0;
 }
