@@ -4836,7 +4836,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                             'https://admin.bazar.uk/storage/' + p.lstrip('/')
                             for p in (_imgs if isinstance(_imgs, list) else [])
                         ]
-                        enriched_list[idx]['old_price']       = row.get('old_price')
+                        _op = row.get('old_price')
+                        enriched_list[idx]['old_price']       = float(_op) if _op is not None else None
                         enriched_list[idx]['district']        = row.get('district') or ''
                         enriched_list[idx]['listing_type']    = row.get('listing_type') or ''
                         enriched_list[idx]['images']          = _img_urls
@@ -4851,7 +4852,8 @@ class BazarHandler(http.server.SimpleHTTPRequestHandler):
                         if row.get('firebase_uid'):
                             enriched_list[idx]['uid'] = row['firebase_uid']
                         if row.get('created_at') and not enriched_list[idx].get('created_at'):
-                            enriched_list[idx]['created_at'] = str(row['created_at'])
+                            _cat = row['created_at']
+                            enriched_list[idx]['created_at'] = _cat.strftime('%Y-%m-%d %H:%M:%S') if hasattr(_cat, 'strftime') else str(_cat)
                 except Exception:
                     pass
 
