@@ -2306,13 +2306,13 @@ body {
   margin-left: 12px;
 }
 .card-name__network .network__item {
-  width: 18px;
-  height: 18px;
-  border-radius: 3px;
-  flex: 0 0 18px;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex: 0 0 14px;
 }
 .card-name__network .network__item:before {
-  font-size: 11px;
+  font-size: 9px;
 }
 .card-name__network .network__item:not(:last-child) {
   margin-right: 3px;
