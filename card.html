@@ -10,7 +10,7 @@
    <meta name="keywords" content="">
    <link rel="stylesheet" href="css/icon-style.css?v=2" type="text/css"> <!-- Иконки -->
    <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css"> <!-- Слайдер свайпер -->
-   <link rel="stylesheet" href="css/main.css?v=213" type="text/css"> <!-- Основные стили темы  -->
+   <link rel="stylesheet" href="css/main.css?v=214" type="text/css"> <!-- Основные стили темы  -->
    <link rel="stylesheet" href="css/cabinet.css?v=2" type="text/css">
    <link rel="icon" type="image/png" href="favicon.png?v=12">
 </head>
@@ -357,9 +357,14 @@
 
                      <div class="card-grid__right">
                         <div class="card-name card-tile">
-                           <div class="card-name__left">
+                           <div class="card-name__left" id="seller-photo-col">
                               <div class="card-name__photo" id="seller-photo-wrap">
                                  <img loading="lazy" src="icon/man.svg" alt="" class="img-cover" id="seller-avatar-img">
+                              </div>
+                              <div class="card-name__network">
+                                 <a href="#" class="network__item icon-wp"></a>
+                                 <a href="#" class="network__item icon-tg"></a>
+                                 <a href="#" class="network__item icon-vb"></a>
                               </div>
                            </div>
                            <div class="card-name__right">
@@ -376,11 +381,6 @@
                                  </div>
                                  <div class="card-name__name">
                                     <span id="seller-name">Andreas Xenofontos Construction &amp; Developers Ltd</span>
-                                    <div class="card-name__network">
-                                       <a href="#" class="network__item icon-wp"></a>
-                                       <a href="#" class="network__item icon-tg"></a>
-                                       <a href="#" class="network__item icon-vb"></a>
-                                    </div>
                                  </div>
                               </div>
                               <p class="card-name__text" id="seller-since">2 years with Bazar Market</p>
@@ -1536,31 +1536,37 @@
          if(emailBtn) emailBtn.style.display = 'none';
       }
       var netWrap = document.querySelector('.card-name__network');
+      var photoCol = document.getElementById('seller-photo-col');
       if (netWrap) {
          var visibleCount = 0;
          netWrap.querySelectorAll('.network__item').forEach(function(iconEl) {
             if (iconEl.style.display !== 'none') visibleCount++;
          });
-         var iconSize = visibleCount === 1 ? '14px' : '22px';
-         var iconRadius = visibleCount === 1 ? '2px' : '4px';
-         var iconFont = visibleCount === 1 ? '9px' : '11px';
-         netWrap.querySelectorAll('.network__item').forEach(function(iconEl) {
-            iconEl.style.width = iconSize;
-            iconEl.style.height = iconSize;
-            iconEl.style.borderRadius = iconRadius;
-            iconEl.style.flex = '0 0 ' + iconSize;
-         });
-         netWrap.classList.toggle('card-name__network--multi', visibleCount > 1);
-         if (visibleCount === 1) {
-            netWrap.style.display = 'inline-flex';
-            netWrap.style.verticalAlign = 'middle';
-            netWrap.style.marginTop = '0';
-            netWrap.style.marginLeft = '6px';
+         if (visibleCount >= 2) {
+            /* 2-3 мессенджера: показываем под аватаркой, аватарка уходит вверх */
+            netWrap.classList.add('card-name__network--multi');
+            netWrap.style.display = 'flex';
+            if (photoCol) photoCol.classList.add('card-name__left--top');
          } else {
-            netWrap.style.display = '';
-            netWrap.style.verticalAlign = '';
-            netWrap.style.marginTop = '';
-            netWrap.style.marginLeft = '';
+            /* 0 или 1 мессенджер: иконки под аватаркой не показываем */
+            netWrap.style.display = 'none';
+            if (photoCol) photoCol.classList.remove('card-name__left--top');
+            if (visibleCount === 1) {
+               /* 1 мессенджер: добавляем строку Contacts в таблицу specs */
+               var contactNames = [];
+               if (msgWa) contactNames.push('WhatsApp');
+               if (msgTg) contactNames.push('Telegram');
+               if (msgVb) contactNames.push('Viber');
+               if (msgEm) contactNames.push('Email');
+               if (contactNames.length) {
+                  var specTable = document.getElementById('spec-table');
+                  if (specTable) {
+                     var _ctr = document.createElement('tr');
+                     _ctr.innerHTML = '<th>Contacts:</th><td>' + contactNames.join(', ') + '</td>';
+                     specTable.appendChild(_ctr);
+                  }
+               }
+            }
          }
       }
 

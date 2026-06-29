@@ -2238,6 +2238,9 @@ body {
   justify-content: center;
   flex-shrink: 0;
 }
+.card-name__left--top {
+  justify-content: flex-start;
+}
 .card-name__right {
   display: flex;
   flex-direction: column;
@@ -2294,10 +2297,11 @@ body {
   margin-top: 0 !important;
 }
 .card-name__network {
-  display: flex;
+  display: none;
   align-items: center;
-  gap: 0;
-  margin-top: 4px;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
 }
 .card-name__network--inline {
   display: inline-flex !important;
