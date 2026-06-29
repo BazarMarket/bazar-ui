@@ -2295,7 +2295,7 @@ body {
   margin: 0;
 }
 .card-name .card-name__text {
-  margin-top: 5px !important;
+  margin-top: 4px !important;
 }
 .card-name__network {
   display: none;
