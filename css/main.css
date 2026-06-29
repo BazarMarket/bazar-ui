@@ -2321,13 +2321,13 @@ body {
   font-size: 9px;
 }
 .card-name__network--multi .network__item {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
-  flex: 0 0 30px;
+  flex: 0 0 28px;
 }
 .card-name__network--multi .network__item:before {
-  font-size: 18px;
+  font-size: 16px;
 }
 .card-name__network .network__item:not(:last-child) {
   margin-right: 0;
