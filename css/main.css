@@ -2241,6 +2241,7 @@ body {
 }
 .card-name__left--top {
   justify-content: flex-start;
+  margin-top: -14px;
 }
 .card-name__right {
   display: flex;
