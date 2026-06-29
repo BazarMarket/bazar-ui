@@ -2296,6 +2296,9 @@ body {
   margin: 0;
 }
 .card-name .card-name__text {
+  margin-top: 4px !important;
+}
+.card-name.has-messengers .card-name__text {
   margin-top: auto !important;
 }
 .card-name__network {

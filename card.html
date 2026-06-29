@@ -1542,15 +1542,18 @@
          netWrap.querySelectorAll('.network__item').forEach(function(iconEl) {
             if (iconEl.style.display !== 'none') visibleCount++;
          });
+         var cardNameEl = photoCol ? photoCol.parentElement : null;
          if (visibleCount >= 2) {
             /* 2-3 мессенджера: показываем под аватаркой, аватарка уходит вверх */
             netWrap.classList.add('card-name__network--multi');
             netWrap.style.display = 'flex';
             if (photoCol) photoCol.classList.add('card-name__left--top');
+            if (cardNameEl) cardNameEl.classList.add('has-messengers');
          } else {
             /* 0 или 1 мессенджер: иконки под аватаркой не показываем */
             netWrap.style.display = 'none';
             if (photoCol) photoCol.classList.remove('card-name__left--top');
+            if (cardNameEl) cardNameEl.classList.remove('has-messengers');
             if (visibleCount === 1) {
                /* 1 мессенджер: добавляем строку Contacts в таблицу specs */
                var contactNames = [];
