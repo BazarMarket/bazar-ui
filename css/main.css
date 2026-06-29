@@ -2296,7 +2296,7 @@ body {
   margin: 0;
 }
 .card-name .card-name__text {
-  margin-top: 8px !important;
+  margin-top: 6px !important;
 }
 .card-name.has-messengers .card-name__text {
   margin-top: auto !important;
