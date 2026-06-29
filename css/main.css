@@ -2320,16 +2320,16 @@ body {
   font-size: 9px;
 }
 .card-name__network--multi .network__item {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
-  flex: 0 0 22px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  flex: 0 0 30px;
 }
 .card-name__network--multi .network__item:before {
-  font-size: 14px;
+  font-size: 18px;
 }
 .card-name__network .network__item:not(:last-child) {
-  margin-right: 3px;
+  margin-right: 0;
 }
 .card-name__text {
   font-family: "Poppins", sans-serif;
